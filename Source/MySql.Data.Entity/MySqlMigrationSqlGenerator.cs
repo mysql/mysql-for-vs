@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -147,10 +147,10 @@ namespace MySql.Data.Entity
 
       sb.Append("(" + string.Join(",", op.DependentColumns.Select(c => "`" + c + "`")) + ") ");
       sb.Append("references `" + op.PrincipalTable + "` ( " + string.Join(",", op.PrincipalColumns.Select(c => "`" + c + "`")) + ") ");
-
+      
       if (op.CascadeDelete)
       {
-        sb.Append("on update cascade on delete restrict");
+        sb.Append(" on update cascade on delete cascade ");
       }
 
       return new MigrationStatement { Sql = sb.ToString() };

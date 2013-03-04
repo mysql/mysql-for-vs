@@ -14,6 +14,7 @@
 - Fix for "Error when saving after changing an existing stored routine name in SQL in the editor" (Oracle bug #16390757).
 - Fix for server explorer error opening a remote connection (Oracle bug #16357786).
 - Fix for password expiration, new password dialog failed (Oracle bug #16357752).
+- Fix for Specifying delete cascade in EF migrations does not work (MySql bug #68457, Oracle bug #16398432).
 
 
 6.6.5
