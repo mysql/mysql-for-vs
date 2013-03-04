@@ -15,6 +15,7 @@
 - Fix for server explorer error opening a remote connection (Oracle bug #16357786).
 - Fix for password expiration, new password dialog failed (Oracle bug #16357752).
 - Fix for Specifying delete cascade in EF migrations does not work (MySql bug #68457, Oracle bug #16398432).
+- Fix for InvalidCastException thrown when executing an stored function (MySql bug #64633, Oracle bug #13864627).
 
 
 6.6.5
