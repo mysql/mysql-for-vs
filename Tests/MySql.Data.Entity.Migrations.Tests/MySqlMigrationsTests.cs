@@ -1,4 +1,4 @@
-﻿// Copyright © 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2011, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -35,14 +35,19 @@ using System.Data.Metadata.Edm;
 using MySql.Data.Entity;
 using System.Diagnostics;
 using System.Data.Entity.Migrations.Model;
-
+using System.Data.Entity.Infrastructure;
+using System.Data.EntityClient;
 
 namespace MySql.Data.Entity.Migrations.Tests
 {
   public class MySqlMigrationsTests : BaseMigrationsTests
   {
-      
-    private MySqlProviderManifest ProviderManifest;      
+    private MySqlProviderManifest ProviderManifest;
+
+    private MySqlConnection GetConnectionFromContext(DbContext ctx)
+    {
+      return (MySqlConnection)((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext.Connection)).StoreConnection;
+    }
 
     /// <summary>
     /// Add int32 type column to existing table
@@ -192,8 +197,27 @@ namespace MySql.Data.Entity.Migrations.Tests
           Assert.AreEqual(1, rows);                    
           conn.Close();
         }
-      }      
 
+        // Test fix for 
+        MySqlConnection con = GetConnectionFromContext(context);
+        con.Open();
+        try
+        {
+          MySqlCommand cmd = new MySqlCommand("show create table `posts`", con);
+          using (MySqlDataReader r = cmd.ExecuteReader())
+          {
+            r.Read();
+            string sql = r.GetString(1);
+            Assert.IsTrue(sql.IndexOf(
+              " CONSTRAINT `FKBlogs` FOREIGN KEY (`BlogId`) REFERENCES `blogs` (`BlogId`) ON DELETE CASCADE ON UPDATE CASCADE",
+              StringComparison.OrdinalIgnoreCase) != -1);
+          }
+        }
+        finally
+        {
+          con.Close();
+        }
+      }
     }
 
 
