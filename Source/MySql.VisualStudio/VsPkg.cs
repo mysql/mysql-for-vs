@@ -28,13 +28,23 @@ using System.ComponentModel.Design;
 using Microsoft.Win32;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
 using MySql.Data.VisualStudio.Properties;
 using System.Reflection;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
 using MySql.Data.VisualStudio.Editors;
+using MySQL.Utility;
+using Microsoft.VisualStudio.Data;
+using Microsoft.VisualStudio.Data.Interop;
+using Microsoft.VisualStudio.Data.Services;
+using System.Data;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using Microsoft.VisualStudio.Data.Core;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.Shell;  
+
+
 
 namespace MySql.Data.VisualStudio
 {
@@ -59,7 +69,7 @@ namespace MySql.Data.VisualStudio
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0Exp")]
   // This attribute is used to register the informations needed to show the this package
   // in the Help/About dialog of Visual Studio.
-  [InstalledProductRegistration(true, null, null, null)]
+  [InstalledProductRegistration("MySqlProvider", null, null)]
   [ProvideEditorFactory(typeof(SqlEditorFactory), 200,
       TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
   [ProvideEditorExtension(typeof(SqlEditorFactory), ".mysql", 32,
@@ -96,8 +106,14 @@ namespace MySql.Data.VisualStudio
         throw new Exception("Creating second instance of package");
       Instance = this;
       Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-    }
+    }    
 
+    private bool isWBInstalled { 
+      get { 
+        return MySqlWorkbench.IsInstalled;
+      }
+    }
+   
     /////////////////////////////////////////////////////////////////////////////
     // Overriden Package Implementation
     #region Package Members
@@ -121,6 +137,7 @@ namespace MySql.Data.VisualStudio
 
       // Add our command handlers for menu (commands must exist in the .vsct file)
       OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+
       if (null != mcs)
       {
         // Create the command for the menu item.
@@ -128,7 +145,14 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand menuItem = new OleMenuCommand(ConfigCallback, menuCommandID);
         menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
         mcs.AddCommand(menuItem);
+
+        CommandID cmdOpenUtilitiesPrompt = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidOpenUtilitiesPrompt);
+        OleMenuCommand cmdItem = new OleMenuCommand(OpenMySQLUtilitiesCallback, cmdOpenUtilitiesPrompt);
+        cmdItem.BeforeQueryStatus += new EventHandler(cmdOpenUtilitiesPrompt_BeforeQueryStatus);
+        mcs.AddCommand(cmdItem);
+
       }
+      
 
       // Register and initialize language service
       MySqlLanguageService languageService = new MySqlLanguageService();
@@ -137,6 +161,16 @@ namespace MySql.Data.VisualStudio
     }
 
     #endregion
+
+    void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand openUtilities = sender as OleMenuCommand;
+      openUtilities.Visible = true;
+
+      if (!isWBInstalled)
+        openUtilities.Enabled = false;            
+    }
+
 
     void configWizard_BeforeQueryStatus(object sender, EventArgs e)
     {
@@ -157,6 +191,12 @@ namespace MySql.Data.VisualStudio
           break;
         }
       }
+    }
+
+
+    private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
+    {
+      MySqlWorkbench.LaunchUtilitiesShell();
     }
 
     private void ConfigCallback(object sender, EventArgs e)
