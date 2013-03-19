@@ -37,10 +37,7 @@ using MySql.Data.VisualStudio.Editors;
 using MySQL.Utility;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.Interop;
-using Microsoft.VisualStudio.Data.Services;
 using System.Data;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using Microsoft.VisualStudio.Data.Core;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;  
 
@@ -69,7 +66,7 @@ namespace MySql.Data.VisualStudio
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0Exp")]
   // This attribute is used to register the informations needed to show the this package
   // in the Help/About dialog of Visual Studio.
-  [InstalledProductRegistration("MySqlProvider", null, null)]
+  [InstalledProductRegistration(true, null, null, null)]
   [ProvideEditorFactory(typeof(SqlEditorFactory), 200,
       TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
   [ProvideEditorExtension(typeof(SqlEditorFactory), ".mysql", 32,
