@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?define ProductName="MySQL Tools Plugin $(var.Version)"?>
+<?define ProductName="MySQL Visual Studio Plugin $(var.Version)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="*" Name="$(var.ProductName)" Manufacturer="Oracle" Version="$(var.Version)"
            UpgradeCode="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7E" Language="1033">

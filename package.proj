@@ -9,7 +9,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <Postfix></Postfix>
     <ProductConfig>Release</ProductConfig>
-    <OutputName>MySql.Data</OutputName>
+    <OutputName>MySql.VisualStudio.Plugin</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
 
@@ -28,11 +28,11 @@
   </Target>
 
   <Target Name="PackageInstall">
-    <GetVersion Assembly="VS2008/Source/MySql.Data/bin/release/mysql.data.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="Source\MySql.VisualStudio\bin\Release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter = "AsString" PropertyName="Version"/>
     </GetVersion>
-    <Copy SourceFiles="Installer/bin/$(Configuration)/mysql.data.msi"
-          DestinationFiles="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix).msi"/>
+    <Copy SourceFiles="Installer/bin/$(Configuration)/MySql.VisualStudio.Plugin.msi"
+          DestinationFiles="bin/$(Configuration)/mysql-visualstudio-plugin-$(Version)$(Postfix).msi"/>
   </Target>
 
   <ItemGroup>
@@ -68,7 +68,7 @@
     <ItemGroup>
       <FilesToZip Include="tmp/**"/>
     </ItemGroup>
-    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
+    <Zip ZipFileName="bin/$(Configuration)/mysql-visualstudio-plugin-$(Version)$(Postfix)-src.zip"
          Files="@(FilesToZip)" WorkingDirectory="tmp"/>
 
     <!--    <RemoveDir Directories="tmp"/>-->
@@ -76,17 +76,17 @@
 
   <Target Name="PackageZip">
     <ItemGroup>
-      <V2Assemblies Include="VS2008\Source\MySql.Data\bin\release\mysql.data.dll"/>
-      <V2Assemblies Include="VS2008\Source\MySql.Data.CF\bin\release\mysql.data.cf.dll"/>
-      <V2Assemblies Include="VS2008\Source\MySql.Web\bin\release\mysql.web.dll"/>
-      <V2Assemblies Include="VS2008\Source\MySql.Data.Entity\bin\release\mysql.data.entity.dll"/>
+      <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.dll"/>
+      <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.cf.dll"/>
+      <V2Assemblies Include="Dependencies\v2.0\Release\mysql.web.dll"/>
+      <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.entity.dll"/>
       <V2Assemblies Include="VS2008\Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
     </ItemGroup>
 
     <ItemGroup>
-      <V4Assemblies Include="Source\MySql.Data\bin\release\mysql.data.dll"/>
-      <V4Assemblies Include="Source\MySql.Web\bin\release\mysql.web.dll"/>
-      <V4Assemblies Include="Source\MySql.Data.Entity\bin\release\mysql.data.entity.dll"/>
+      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll"/>
+      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll"/>
+      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll"/>
       <V4Assemblies Include="Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
     </ItemGroup>
 
@@ -120,7 +120,7 @@
     <ItemGroup>
       <ZipFiles Include="tmp/**"/>
     </ItemGroup>
-    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
+    <Zip ZipFileName="bin/$(Configuration)/mysql-visualstudio-plugin-$(Version)$(Postfix)-noinstall.zip"
          Files="@(ZipFiles)" workingDirectory="tmp"/>
   </Target>
 </Project>
