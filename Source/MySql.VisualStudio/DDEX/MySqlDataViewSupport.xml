@@ -25,6 +25,10 @@
             <Parameter value="Query"/>
             <Parameter value="HighLevel"/>
           </CommandBinding>
+          <CommandBinding name="LaunchUtilities" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
+                          cmdid="505" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+            <Parameter value="HighLevel"/>
+          </CommandBinding>
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>

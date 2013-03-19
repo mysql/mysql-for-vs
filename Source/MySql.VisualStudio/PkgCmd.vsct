@@ -220,6 +220,16 @@
           <ButtonText>Debug Routine</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>        
+        <Strings>
+          <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
+          <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
+        </Strings>
+      </Button>
+
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -235,6 +245,10 @@
 
   <CommandPlacements>
     <!-- we have to place our group under each of our two menus -->
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
+    
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
     </CommandPlacement>
@@ -257,7 +271,9 @@
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidMySqlProviderPkg" value="{79A115C9-B133-4891-9E7B-242509DAD272}" />
-    
+    <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
+      <IDSymbol name="IDG_DV_CONNECTION" value="0x4101" />
+    </GuidSymbol>
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
       <IDSymbol name="menuGlobal" value="0x1000"/>
@@ -281,6 +297,7 @@
       <IDSymbol name="cmdidDebugRoutine" value="0x122" />
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
       <IDSymbol name="cmdidDelete" value="0x160"/>
+      <IDSymbol name="cmdidOpenUtilitiesPrompt" value="505"/>      
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
