@@ -46,7 +46,8 @@ namespace MySql.Data.VisualStudio
     public const uint cmdAlterTrigger = 0x141;
 
     public const uint cmdCreateUDF = 0x150;
-    public const uint cmdDelete = 0x160;       
+    public const uint cmdDelete = 0x160;    
+
 
     //public const uint cmdidConfig = 0x170;
 
@@ -55,7 +56,9 @@ namespace MySql.Data.VisualStudio
     public const uint cmdidGlobalCreateProcedure = 502;
     public const uint cmdidGlobalCreateFunction = 503;
     public const uint cmdidGlobalCreateUDF = 504;    
-    public const uint cmdidOpenUtilitiesPrompt = 505;
+    public const uint cmdidOpenUtilitiesPrompt = 505;    
+    public const uint cmdidLaunchWorkbench = 506;
+
   };
 
   static class SharedCommands

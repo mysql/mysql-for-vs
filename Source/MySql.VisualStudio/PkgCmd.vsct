@@ -220,7 +220,6 @@
           <ButtonText>Debug Routine</ButtonText>
         </Strings>
       </Button>
-
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>        
@@ -229,7 +228,14 @@
           <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>        
+        <Strings>
+          <CommandName>cmdidLaunchWorkbench</CommandName>
+          <ButtonText>&amp;Launch Workbench</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -248,7 +254,9 @@
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
-    
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
     </CommandPlacement>
@@ -298,6 +306,7 @@
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
       <IDSymbol name="cmdidDelete" value="0x160"/>
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="505"/>      
+      <IDSymbol name="cmdidLaunchWorkbench" value="506"/>      
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">

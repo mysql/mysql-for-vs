@@ -36,8 +36,11 @@ using Microsoft.VisualStudio.CommandBars;
 using MySql.Data.VisualStudio.Editors;
 using MySQL.Utility;
 using Microsoft.VisualStudio.Data;
+using Microsoft.VisualStudio.Data.Services;
 using Microsoft.VisualStudio.Data.Interop;
+using System.Linq;
 using System.Data;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;  
 
@@ -84,7 +87,7 @@ namespace MySql.Data.VisualStudio
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
   // This attribute registers a tool window exposed by this package.
-  [Guid(GuidStrings.Package)]
+  [Guid(GuidStrings.Package)]  
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
   {
     public static MySqlDataProviderPackage Instance;
@@ -103,14 +106,10 @@ namespace MySql.Data.VisualStudio
         throw new Exception("Creating second instance of package");
       Instance = this;
       Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-    }    
-
-    private bool isWBInstalled { 
-      get { 
-        return MySqlWorkbench.IsInstalled;
-      }
     }
-   
+
+    internal string ConnectionName { get; set; }
+
     /////////////////////////////////////////////////////////////////////////////
     // Overriden Package Implementation
     #region Package Members
@@ -143,13 +142,19 @@ namespace MySql.Data.VisualStudio
         menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
         mcs.AddCommand(menuItem);
 
+
         CommandID cmdOpenUtilitiesPrompt = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidOpenUtilitiesPrompt);
         OleMenuCommand cmdItem = new OleMenuCommand(OpenMySQLUtilitiesCallback, cmdOpenUtilitiesPrompt);
         cmdItem.BeforeQueryStatus += new EventHandler(cmdOpenUtilitiesPrompt_BeforeQueryStatus);
         mcs.AddCommand(cmdItem);
 
+
+        CommandID cmdLaunchWB = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidLaunchWorkbench);
+        OleMenuCommand cmdMenuLaunchWB = new OleMenuCommand(LaunchWBCallback, cmdLaunchWB);
+        cmdMenuLaunchWB.BeforeQueryStatus += new EventHandler(cmdLaunchWB_BeforeQueryStatus);
+        mcs.AddCommand(cmdMenuLaunchWB);
+
       }
-      
 
       // Register and initialize language service
       MySqlLanguageService languageService = new MySqlLanguageService();
@@ -162,11 +167,51 @@ namespace MySql.Data.VisualStudio
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand openUtilities = sender as OleMenuCommand;
-      openUtilities.Visible = true;
-
-      if (!isWBInstalled)
-        openUtilities.Enabled = false;            
+            
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+      
+      if (selectedItems != null)            
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;      
+      if (GetConnection(ConnectionName) != null)
+      {
+        if (MySqlWorkbench.IsInstalled)
+          openUtilities.Visible = openUtilities.Enabled = true;
+        else
+          openUtilities.Enabled = false;
+      }
+      else
+        openUtilities.Visible =  openUtilities.Enabled = false;
     }
+
+
+    private EnvDTE80.DTE2 GetDTE2()
+    {
+      return GetGlobalService(typeof(DTE)) as EnvDTE80.DTE2;
+    }
+
+    void cmdLaunchWB_BeforeQueryStatus(object sender, EventArgs e)
+    {      
+      OleMenuCommand launchWBbtn = sender as OleMenuCommand;            
+            
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+      
+      if (selectedItems != null)            
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      
+      if (GetConnection(ConnectionName) != null)
+      {
+        if (MySqlWorkbench.IsInstalled)
+          launchWBbtn.Visible = launchWBbtn.Enabled = true;          
+        else
+          launchWBbtn.Enabled = false;        
+      }
+      else
+        launchWBbtn.Visible = launchWBbtn.Enabled = false;                  
+     }
 
 
     void configWizard_BeforeQueryStatus(object sender, EventArgs e)
@@ -196,10 +241,102 @@ namespace MySql.Data.VisualStudio
       MySqlWorkbench.LaunchUtilitiesShell();
     }
 
+    private void LaunchWBCallback(object sender, EventArgs e)
+    {  
+      IVsDataExplorerConnection connection = GetConnection(ConnectionName);
+      if (connection != null)
+      {
+        var connList = MySqlWorkbench.Connections;
+        var connStr = connection.Connection.DisplayConnectionString;
+        ConnectionParameters parameters = ParseConnectionString(connStr);                         
+        MySqlWorkbench.LaunchSQLEditor(FindMathchingWorkbenchConnection(parameters));      
+      }           
+    }
+
     private void ConfigCallback(object sender, EventArgs e)
     {
       WebConfig.WebConfigDlg w = new WebConfig.WebConfigDlg();
       w.ShowDialog();
+    }
+
+
+    public IVsDataExplorerConnection GetConnection(string connectionName)
+    {
+     IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+            if (connectionManager == null) return null;
+
+      System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
+
+      foreach (var connection in connections)
+      {
+          if (Guids.Provider.Equals(connection.Value.Provider) && connection.Value.DisplayName.Equals(connectionName))
+              return connection.Value;                
+      }
+      return null;
+    }
+
+    public ConnectionParameters ParseConnectionString(string connStr)
+    {
+
+      var connStringBuilder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(connStr);
+      var parameters = new ConnectionParameters();
+      parameters.UserId = connStringBuilder.UserID;
+      parameters.HostName = connStringBuilder.Server;
+      parameters.HostIPv4 = Utility.GetIPv4ForHostName(connStringBuilder.Server);
+      parameters.Port = Convert.ToInt32(connStringBuilder.Port);
+      parameters.DataBaseName = connStringBuilder.Database;
+      parameters.NamedPipesEnabled = String.IsNullOrEmpty(connStringBuilder.PipeName) ? false : true;
+      parameters.PipeName = connStringBuilder.PipeName;
+
+      return parameters;
+    }
+
+    private string FindMathchingWorkbenchConnection(ConnectionParameters parameters)
+    {
+      var filteredConnections = MySqlWorkbench.Connections.Where(t => !String.IsNullOrEmpty(t.Name) && t.Port == parameters.Port);
+
+      if (filteredConnections != null)
+      {
+        foreach (MySqlWorkbenchConnection c in filteredConnections)
+        {
+          switch (c.DriverType)
+          {
+
+            case MySqlWorkbenchConnectionType.NamedPipes:
+              if (!parameters.NamedPipesEnabled || String.Compare(c.Socket, parameters.PipeName, true) != 0) continue;
+              break;
+            case MySqlWorkbenchConnectionType.Ssh:
+              continue;
+            case MySqlWorkbenchConnectionType.Tcp:
+              if (c.Port != parameters.Port) continue;
+              break;
+            case MySqlWorkbenchConnectionType.Unknown:
+              continue;
+          }
+
+          if (!Utility.IsValidIpAddress(c.Host)) //matching connections by Ip
+          {
+            if (Utility.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
+          }
+          else
+          {
+            if (c.Host != parameters.HostIPv4) continue;
+          }
+          return c.Name;
+        }
+      }
+      return String.Empty;
+    }
+
+    public struct ConnectionParameters
+    {      
+      public string HostName;
+      public string HostIPv4;
+      public int Port;
+      public string PipeName;
+      public bool NamedPipesEnabled;
+      public string UserId;
+      public string DataBaseName;
     }
 
     #region IVsInstalledProduct Members
