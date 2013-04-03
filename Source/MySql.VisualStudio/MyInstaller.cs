@@ -183,10 +183,10 @@ namespace MySql.Data.VisualStudio
       string assemblyVersion = String.Format("{0}.{1}.{2}", v.Major, v.Minor, v.Build);
 
       // Installed products
-      keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\InstalledProducts\MySQL Connector Net {1}",
+      keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\InstalledProducts\MySQL Tools for Visual Studio {1}",
           version, assemblyVersion);
       RegistryKey ipKey = rootKey.CreateSubKey(keyPath);
-      ipKey.SetValue(null, String.Format("MySQL Connector Net {0}", assemblyVersion));
+      ipKey.SetValue(null, String.Format("MySQL Tools for Visual Studio {0}", assemblyVersion));
       ipKey.SetValue("Package", Guids.Package.ToString("B"));
       ipKey.SetValue("UseInterface", 1);
 
@@ -201,7 +201,7 @@ namespace MySql.Data.VisualStudio
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
           version, Guids.Package.ToString("B"));
       RegistryKey packageKey = rootKey.CreateSubKey(keyPath);
-      packageKey.SetValue(null, String.Format("MySQL Connector Net {0}", assemblyVersion));
+      packageKey.SetValue(null, String.Format("MySQL Tools for Visual Studio {0}", assemblyVersion));
       packageKey.SetValue("InprocServer32",
           String.Format(@"{0}\system32\mscoree.dll",
           Environment.GetEnvironmentVariable("windir")));
@@ -310,7 +310,7 @@ namespace MySql.Data.VisualStudio
       string assemblyVersion = a.GetName().Version.ToString();
 
       // Installed products
-      keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\InstalledProducts\MySQL Connector/Net {1}",
+      keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\InstalledProducts\MySQL Tools for Visual Studio {1}",
           version, assemblyVersion);
       key = rootKey.OpenSubKey(keyPath);
       if (key != null)
