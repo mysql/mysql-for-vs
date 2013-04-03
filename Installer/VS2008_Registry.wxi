@@ -1,14 +1,14 @@
 <Include>
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall" 
-               Key="Software\Microsoft\VisualStudio\9.0\InstalledProducts\MySQL Connector Net $(var.Version)">
-    <RegistryValue Value="MySQL Connector Net $(var.Version)" Type="string"/>
+               Key="Software\Microsoft\VisualStudio\9.0\InstalledProducts\MySQL Tools for Visual Studio $(var.Version)">
+    <RegistryValue Value="MySQL Tools for Visual Studio $(var.Version)" Type="string"/>
     <RegistryValue Name="Package" Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string" />
     <RegistryValue Name="UseInterface" Value="1" Type="integer" />
   </RegistryKey>
 
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
                Key="Software\Microsoft\VisualStudio\9.0\Packages\{79a115c9-b133-4891-9e7b-242509dad272}">
-    <RegistryValue Value="MySQL Connector Net $(var.Version)" Type="string"/>
+    <RegistryValue Value="MySQL Tools for Visual Studio $(var.Version)" Type="string"/>
     <RegistryValue Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
     <RegistryValue Name="Class" Value="MySql.Data.VisualStudio.MySqlDataProviderPackage" Type="string" />
     <RegistryValue Name="CodeBase" Value="[#MySQL.VisualStudio]" Type="string"/>
