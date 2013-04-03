@@ -245,6 +245,14 @@
           <ButtonText>Generate Table Script</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidGenerateDatabaseScript</CommandName>
+          <ButtonText>&amp;Generate Database Script</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -264,6 +272,9 @@
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
@@ -317,6 +328,7 @@
       <IDSymbol name="cmdidDelete" value="0x160"/>
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="505"/>      
       <IDSymbol name="cmdidLaunchWorkbench" value="506"/>      
+      <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
