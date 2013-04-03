@@ -1,23 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment Id='EntityFramework'>
-    <!-- Entity framework 2.0 feature -->
-    <DirectoryRef Id='assemblies_v2'>
-      <Component Id="EF.v2" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
-        <Condition>NETFRAMEWORK20</Condition>
-        <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v2.0\release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>  
-    </DirectoryRef>
-
-    <!-- Entity framework 4.0 feature -->
-    <DirectoryRef Id='assemblies_v4'>
-      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
-        <Condition>NETFRAMEWORK40FULL</Condition>
-        <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>  
-    </DirectoryRef>
+  <Fragment Id='EntityFramework'>    
 
     <DirectoryRef Id="VS10_DBGenDir">
       <Component Id="EF.T4.VS10" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
@@ -41,9 +24,7 @@
 
     <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
              Description="Support for the entity framework">
-      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
-      <ComponentRef Id="EF.v2"/>
-      <ComponentRef Id="EF.v4"/>      
+      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>      
       <ComponentRef Id="EF.T4.VS10"/>
       <ComponentRef Id="EF.T4.VS11"/>
     </Feature>

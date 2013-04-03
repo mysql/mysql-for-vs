@@ -106,13 +106,11 @@
     </WixVariables>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="cf.wxs" />
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
     <Compile Include="main.wxs" />
     <Compile Include="ui.wxs" />
     <Compile Include="visualstudio.wxs" />
-    <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
     <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
