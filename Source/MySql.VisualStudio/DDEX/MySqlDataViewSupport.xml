@@ -70,7 +70,7 @@
           <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
             <Parameter value="NewQuery"/>
             <Parameter value="Query"/>
-          </CommandBinding>
+          </CommandBinding>          
           <CommandBinding name="CreateTable"
                           guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="256"
@@ -95,6 +95,8 @@
                           cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
+          <CommandBinding name="GenerateTableScript" guid="5036786C-CB64-4C3F-8AD4-6F147BD25D17" cmdid="258"
+            handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         </CommandBindings>
         <Children>
           <Selection type="Table" restrictions="null,{Root.Schema}" hideWhen="False AND False">
@@ -453,7 +455,9 @@
           <Parameter value="NewQuery"/>
           <Parameter value="Query"/>
         </CommandBinding>
-
+        <CommandBinding name="GenerateTableScript" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="258"
+            handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+        
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                         cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">

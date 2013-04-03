@@ -129,6 +129,12 @@
     <Compile Include="DDEX\MySqlNewPasswordDialog.Designer.cs">
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DDEX\MySqlScriptDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DDEX\MySqlScriptDialog.Designer.cs">
+      <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -317,6 +323,9 @@
   <ItemGroup>
     <EmbeddedResource Include="DDEX\MySqlNewPasswordDialog.resx">
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DDEX\MySqlScriptDialog.resx">
+      <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
