@@ -33,55 +33,20 @@
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
           <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
         </RegistryKey>
-      </Component>
-      <Component Id="MU.v2" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5d">
-        <File Id="MySQLUtility.v2" Name="MySQL.Utility.dll" Source="..\Dependencies\v2.0\release\MySQL.Utility.dll" DiskId="1" />
-      </Component>
-
-      <Directory Id="MySql.Data.DummyDir.2" Name="GAC">
-        <Component Id="C.v2.GAC" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
-          <Condition>NETFRAMEWORK20</Condition>
-          <File Id="MySql.Data.v2.GAC" Name="MySql.Data.dll"
-                Source="..\Dependencies\v2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>         
-        </Component>
-        
-        <Component Id="Utility.v2.GAC" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c0A">
-          <Condition>NETFRAMEWORK20</Condition>          
-          <File Id="MySql.Utility.v2.GAC" Name="MySql.Utility.dll"
-                Source="..\Dependencies\v2.0\release\MySQL.Utility.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
-        </Component>
-      </Directory>
+      </Component>    
     </DirectoryRef>
 
     <!-- .Net 4.0 Binaries -->
     <DirectoryRef Id='assemblies_v4'>
       <Component Id="C.v4" Guid="C66D3DF6-A151-4F29-B388-A9803C89131A">
         <File Id="MySql.Data.v4" Name="MySql.Data.dll"
-              Source="..\Dependencies\v4.0\release\mysql.data.dll" DiskId="1"/>        
+              Source="..\Dependencies\v4.0\release\mysql.data.dll" DiskId="1"/>
         <RemoveFile Id="RemoveStateFile.v4" Name="*.InstallState" On="uninstall"/>
         <RegistryKey Id="AssemblyFolderExV4" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v4.0">
           <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>
-      
-      <Component Id="MU.v4" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5c">
-        <File Id="MySQLUtility.v4" Name="MySQL.Utility.dll" Source="..\Dependencies\v4.0\release\MySQL.Utility.dll" DiskId="1" />
-      </Component>
-      
-      <Directory Id="MySql.Data.DummyDir.4" Name="GAC">
-        <Component Id="C.v4.GAC" Guid="34B6C828-355D-405F-82BC-F18BBC13871D">
-          <Condition>NETFRAMEWORK40FULL</Condition>
-          <File Id="MySql.Data.v4.GAC" Name="MySql.Data.dll"
-                Source="..\Dependencies\v4.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>          
-        </Component>
-        
-        <Component Id="Utility.v4.GAC" Guid="34B6C828-355D-405F-82BC-F18BBC13871E">
-          <Condition>NETFRAMEWORK40FULL</Condition>          
-          <File Id="MySql.Utility.v4.GAC" Name="MySql.Utility.dll"
-                Source="..\Dependencies\v4.0\release\MySQL.Utility.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
-        </Component>
-      </Directory>
     </DirectoryRef>
 
     <!-- Start menu junk -->
@@ -106,20 +71,15 @@
     </DirectoryRef>
 
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
-             ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
+              ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
       <ComponentRef Id="BaseFiles"/>
       <ComponentRef Id="C.v2"/>
-      <ComponentRef Id="C.v2.GAC"/>      
       <ComponentRef Id="C.v4"/>
-      <ComponentRef Id="C.v4.GAC"/>      
-      <ComponentRef Id="MU.v2"/>
-      <ComponentRef Id="MU.v4"/>
-      <ComponentRef Id="Utility.v2.GAC"/>
-      <ComponentRef Id="Utility.v4.GAC"/>      
       <ComponentRef Id="PerfMon"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
-
+    
+    
     <InstallExecuteSequence>
       <!-- v2 custom action scheduling -->
       <Custom Action="Setv2InstallUtil" After="InstallValidate"/>
