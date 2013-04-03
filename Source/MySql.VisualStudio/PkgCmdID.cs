@@ -59,7 +59,7 @@ namespace MySql.Data.VisualStudio
     public const uint cmdidGlobalCreateUDF = 504;    
     public const uint cmdidOpenUtilitiesPrompt = 505;    
     public const uint cmdidLaunchWorkbench = 506;
-
+    public const uint cmdidGenerateDatabaseScript = 507;
   };
 
   static class SharedCommands

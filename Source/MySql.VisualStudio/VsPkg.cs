@@ -41,9 +41,11 @@ using Microsoft.VisualStudio.Data.Interop;
 using System.Linq;
 using System.Data;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using Microsoft.VisualStudio.Data.Core;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;  
-
+using MySql.Data.MySqlClient;
+using System.Text;
 
 
 namespace MySql.Data.VisualStudio
@@ -154,6 +156,10 @@ namespace MySql.Data.VisualStudio
         cmdMenuLaunchWB.BeforeQueryStatus += new EventHandler(cmdLaunchWB_BeforeQueryStatus);
         mcs.AddCommand(cmdMenuLaunchWB);
 
+        CommandID menuGenDbScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
+        OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
+        menuItem.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
+        mcs.AddCommand(menuItemGenDbScript);
       }
 
       // Register and initialize language service
@@ -183,13 +189,7 @@ namespace MySql.Data.VisualStudio
       }
       else
         openUtilities.Visible =  openUtilities.Enabled = false;
-    }
-
-
-    private EnvDTE80.DTE2 GetDTE2()
-    {
-      return GetGlobalService(typeof(DTE)) as EnvDTE80.DTE2;
-    }
+    }   
 
     void cmdLaunchWB_BeforeQueryStatus(object sender, EventArgs e)
     {      
@@ -199,20 +199,19 @@ namespace MySql.Data.VisualStudio
       UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
       
-      if (selectedItems != null)            
+      if (selectedItems != null)
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       
       if (GetConnection(ConnectionName) != null)
       {
         if (MySqlWorkbench.IsInstalled)
-          launchWBbtn.Visible = launchWBbtn.Enabled = true;          
+          launchWBbtn.Visible = launchWBbtn.Enabled = true;
         else
-          launchWBbtn.Enabled = false;        
+          launchWBbtn.Enabled = false;
       }
       else
-        launchWBbtn.Visible = launchWBbtn.Enabled = false;                  
-     }
-
+        launchWBbtn.Visible = launchWBbtn.Enabled = false;
+    }
 
     void configWizard_BeforeQueryStatus(object sender, EventArgs e)
     {
@@ -239,6 +238,11 @@ namespace MySql.Data.VisualStudio
       }
     }
 
+    void GenDbScript_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand cmd = sender as OleMenuCommand;
+      cmd.Visible = true;
+    }
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
@@ -263,6 +267,139 @@ namespace MySql.Data.VisualStudio
       w.ShowDialog();
     }
 
+    private void GenDbScriptCallback(object sender, EventArgs e)
+    {
+      // Get current connection
+      string conStr = "";
+      string script = "";
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+
+      if (selectedItems != null)
+        conStr = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+
+      IVsDataExplorerConnection con = GetConnection(conStr);
+      // Get script
+      MySqlConnection myCon = new MySqlConnection(con.Connection.DisplayConnectionString);
+      myCon.Open();
+      try
+      {
+        script = GetDbScript(myCon);
+      }
+      finally
+      {
+        myCon.Close();
+      }
+      // show script window
+      MySqlScriptDialog dlg = new MySqlScriptDialog();
+      dlg.TextScript = script;
+      dlg.ShowDialog();
+    }
+
+    private string GetDbScript(MySqlConnection con)
+    {
+      MySqlConnection con2 = new MySqlConnection(con.ConnectionString);
+      StringBuilder sb = new StringBuilder();
+      sb.AppendLine(" delimiter // ");
+      con2.Open();
+      try
+      {
+        // Get Stuff
+        GetTables(con, con2, sb);   // this is for both tables & views
+        GetProcedures(con, con2, sb);
+        GetFunctions(con, con2, sb);
+        GetTriggers(con, con2, sb);
+      }
+      finally
+      {
+        con2.Close();
+      }
+      return sb.ToString();
+    }
+
+    private void GetTables(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
+    {
+      MySqlCommand cmd = new MySqlCommand("show tables", con);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          MySqlCommand cmd2 = new MySqlCommand(string.Format("show create table `{0}`", r.GetString(0)), con2);
+          using (MySqlDataReader r2 = cmd2.ExecuteReader())
+          {
+            r2.Read();
+            sb.AppendLine(r2.GetString(1)).AppendLine(" // ");
+          }
+        }
+      }
+    }
+
+    private void GetProcedures(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
+    {
+      MySqlCommand cmd = new MySqlCommand( string.Format( 
+        "select `name` as routinename from mysql.proc where type = 'PROCEDURE' and db = '{0}'", con.Database), con);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          MySqlCommand cmd2 = new MySqlCommand(string.Format("show create procedure `{0}`", r.GetString(0)), con2);
+          using (MySqlDataReader r2 = cmd2.ExecuteReader())
+          {
+            r2.Read();
+            sb.AppendLine(r2.GetString(2)).AppendLine(" // ");
+          }
+        }
+      }
+    }
+
+    private void GetFunctions(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
+    {
+      MySqlCommand cmd = new MySqlCommand(string.Format(
+        "select `name` as routinename from mysql.proc where type = 'FUNCTION' and db = '{0}'", con.Database), con);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          MySqlCommand cmd2 = new MySqlCommand(string.Format("show create function `{0}`", r.GetString(0)), con2);
+          using (MySqlDataReader r2 = cmd2.ExecuteReader())
+          {
+            r2.Read();
+            sb.AppendLine(r2.GetString(2)).AppendLine(" // ");
+          }
+        }
+      }
+    }
+
+    private void GetTriggers(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
+    {
+      MySqlCommand cmd = new MySqlCommand(string.Format(
+        @"select trigger_schema, trigger_name, event_manipulation, event_object_schema, 
+          event_object_table, action_statement, action_timing, `definer`
+          from information_schema.triggers
+          where event_object_schema = '{0}';", con.Database), con);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          string TriggerSchema = r.GetString(0);
+          string Name = r.GetString(1);
+          string EventManipulation = r.GetString(2);
+          string EventObjectSchema = r.GetString(3);
+          string EventObjectTable = r.GetString(4);
+          string ActionStmt = r.GetString(5);
+          string ActionTiming = r.GetString(6);
+          string Definer = r.GetString(7);
+          sb.AppendFormat("create trigger {0} {1} {2} on {3} for each row {4}", Name, ActionTiming, EventManipulation,
+            string.Format("{0}.{1}", EventObjectSchema, EventObjectTable), ActionStmt).AppendLine(" // ");
+        }
+      }
+    }
+
+    private EnvDTE80.DTE2 GetDTE2()
+    {
+      return GetGlobalService(typeof(DTE)) as EnvDTE80.DTE2;
+    }
 
     public IVsDataExplorerConnection GetConnection(string connectionName)
     {
