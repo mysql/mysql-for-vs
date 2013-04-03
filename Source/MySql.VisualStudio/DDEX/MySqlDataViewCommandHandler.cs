@@ -97,7 +97,8 @@ namespace MySql.Data.VisualStudio
 
       if (command.CommandId == PkgCmdIDList.cmdDebugProcedure)
         result.Visible = DataViewHierarchyAccessor.GetNodeId(itemIds[0]).Equals("StoredProcedure", StringComparison.OrdinalIgnoreCase);
-
+      else if( command.CommandId == PkgCmdIDList.cmdGenerateTableScript )
+        result.Visible = DataViewHierarchyAccessor.GetNodeId(itemIds[0]).Equals("Table", StringComparison.OrdinalIgnoreCase);
       return result;
       /*            // Get command handler instance
                   ICommand commandHandler = CommandFactory.Instance.CreateCommandHandler(command.GroupGuid, command.CommandId);

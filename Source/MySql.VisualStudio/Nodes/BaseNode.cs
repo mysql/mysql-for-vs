@@ -187,6 +187,10 @@ namespace MySql.Data.VisualStudio
         case PkgCmdIDList.cmdDebugProcedure:
           LaunchDebugger();
           break;
+
+        case PkgCmdIDList.cmdGenerateTableScript:
+          GenerateTableScript();
+          break;
       }
     }
 
@@ -208,6 +212,11 @@ namespace MySql.Data.VisualStudio
     }
 
     public virtual void LaunchDebugger()
+    {
+      throw new NotImplementedException();
+    }
+
+    public virtual void GenerateTableScript()
     {
       throw new NotImplementedException();
     }

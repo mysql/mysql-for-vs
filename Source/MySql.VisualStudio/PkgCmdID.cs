@@ -32,6 +32,7 @@ namespace MySql.Data.VisualStudio
 
     public const uint cmdCreateTable = 0x100;
     public const uint cmdAlterTable = 0x101;
+    public const uint cmdGenerateTableScript = 0x102;
 
     public const uint cmdCreateView = 0x110;
     public const uint cmdAlterView = 0x111;

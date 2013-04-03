@@ -143,5 +143,27 @@ namespace MySql.Data.VisualStudio
       else
         base.ExecuteCommand(command);
     }
+
+    public override void GenerateTableScript()
+    {
+      // Popup Window if table script.
+      MySqlScriptDialog dlg = new MySqlScriptDialog();
+      DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
+      try
+      {
+        DbCommand cmd = conn.CreateCommand();
+        cmd.CommandText = string.Format("show create table `{0}`", base.Name );
+        using (DbDataReader r = cmd.ExecuteReader())
+        {
+          r.Read();
+          dlg.TextScript = r.GetString(1);
+        }
+        dlg.ShowDialog();
+      }
+      finally
+      {
+        HierarchyAccessor.Connection.UnlockProviderObject();
+      }
+    }
   }
 }

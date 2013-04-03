@@ -1,3 +1,5 @@
-1.0
+
+1.0.0
 - Added new option on Connection Node for Server Explorer Window in Visual Studio to give the user the option when WB is Installed to open the MySQL Utilities console window.
 - Added new option on Connection Node for Server Explorer Window in Visual Studio to give the user the option when WB is Installed to open the SQL Editor Window using the same connection.
+- Implementing menu option to generate table script from server explorer context menu (Tracker task 433).
