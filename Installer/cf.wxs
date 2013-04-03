@@ -6,17 +6,11 @@
         <File Id="MySql.Data.CF" Name="MySql.Data.CF.dll"
               Source="..\Dependencies\v2.0\release\mysql.data.CF.dll" DiskId="1"/>
       </Component>
-      <Component Id="CFBinariesGAC" Guid="ADA23A51-4198-470f-B114-D95A5F9E46D0">
-        <File Id="MySql.Data.CF.GAC" Name="MySql.Data.CF.dll"
-              Source="..\Dependencies\v2.0\release\mysql.data.CF.dll" DiskId="1" 
-              Assembly=".net" KeyPath="yes"/>
-      </Component>
     </DirectoryRef>
 
     <Feature Id='CompactFramework' Display='9' Level='1' Title='Compact Framework Support'
              Description='Support for .NET Compact Framework 2.0'>
-      <ComponentRef Id='CFBinaries'/>
-      <ComponentRef Id='CFBinariesGAC'/>
+      <ComponentRef Id='CFBinaries'/>      
     </Feature>
 
   </Fragment>

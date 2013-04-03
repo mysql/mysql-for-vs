@@ -82,6 +82,12 @@
         </Directory>
       </Directory>
 
+
+      <!-- VS2008 folders -->
+      <Directory Id="VS_2008_PATH">
+        <Directory Id="VS90_PrivateAssemblies" Name="PrivateAssemblies" />
+      </Directory>
+
       <!-- VS2010 Extension folders -->
       <Directory Id="VS_2010_PATH" Name="VSPath">
         <Directory Id="VS10.T4.ExtensionDir" Name="Extensions">
@@ -91,13 +97,14 @@
             </Directory>
           </Directory>
           <Directory Id="VS10_OracleDir" Name="Oracle">
-            <Directory Id="VS10_ExtensionDir" Name="MySQL Connector Net ">
+            <Directory Id="VS10_ExtensionDir" Name="MySQL Tools for Visual Studio ">
               <Directory Id="VS10_ExtVersionDir" Name="$(var.Version)">
                 <Directory Id='VS10_TemplatesDir' Name='Templates'/>
               </Directory>
             </Directory>
           </Directory>
         </Directory>
+        <Directory Id="VS10_PrivateAssemblies" Name="PrivateAssemblies" />
       </Directory>
 
       <!-- VS2012 Extension folders -->
@@ -109,13 +116,14 @@
             </Directory>
           </Directory>
           <Directory Id="VS11_OracleDir" Name="Oracle">
-            <Directory Id="VS11_ExtensionDir" Name="MySQL Connector Net ">
+            <Directory Id="VS11_ExtensionDir" Name="MySQL Tools for Visual Studio ">
               <Directory Id="VS11_ExtVersionDir" Name="$(var.Version)">
                 <Directory Id='VS11_TemplatesDir' Name='Templates'/>
               </Directory>
             </Directory>
           </Directory>
         </Directory>
+        <Directory Id="VS11_PrivateAssemblies" Name="PrivateAssemblies" />
       </Directory>
 
       <!-- Visual Studio 2010 Extension and template folder --><!--
@@ -225,7 +233,7 @@
                   ExeCommand ='/product VS /version 100 /locale en-us /brandingPackage Dev10.mshc /sourceMedia "[#MSHA_File]"'
                   Property='HelpLibManager' Return='check'/>
     <CustomAction Id="UnRegister2010Help"
-                  ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'
+                  ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Tools for Visual Studio" /productName "MySQL Tools for Visual Studio" > NUL'
                   Property='HelpLibManager' Return='check'/>
 
     <!-- Setup should not continue is a newer version is installed. -->

@@ -7,13 +7,7 @@
         <Condition>NETFRAMEWORK20</Condition>
         <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
               Source="..\Dependencies\v2.0\release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-      <Component Id="EF.v2.GAC" Guid="12218CCC-B085-46af-AA5F-FB9306FE621E" DiskId="1">
-        <Condition>NETFRAMEWORK20</Condition>
-        <File Id="MySql.Data.EF.GAC" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v2.0\release\mysql.data.entity.dll" DiskId="1"
-              Assembly=".net" KeyPath="yes"/>
-      </Component>
+      </Component>  
     </DirectoryRef>
 
     <!-- Entity framework 4.0 feature -->
@@ -22,13 +16,7 @@
         <Condition>NETFRAMEWORK40FULL</Condition>
         <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
               Source="..\Dependencies\v4.0\release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-      <Component Id="EF.v4.GAC" Guid="A9C03468-5A59-443f-85DC-C0149EBB55C8" DiskId="1">
-        <Condition>NETFRAMEWORK40FULL</Condition>
-        <File Id="MySql.Data.EF.v4.GAC" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\release\mysql.data.entity.dll" DiskId="1"
-              Assembly=".net" KeyPath="yes"/>
-      </Component>
+      </Component>  
     </DirectoryRef>
 
     <DirectoryRef Id="VS10_DBGenDir">
@@ -55,13 +43,10 @@
              Description="Support for the entity framework">
       <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
       <ComponentRef Id="EF.v2"/>
-      <ComponentRef Id="EF.v2.GAC"/>
-      <ComponentRef Id="EF.v4"/>
-      <ComponentRef Id="EF.v4.GAC"/>
+      <ComponentRef Id="EF.v4"/>      
       <ComponentRef Id="EF.T4.VS10"/>
       <ComponentRef Id="EF.T4.VS11"/>
     </Feature>
-
   </Fragment>
 </Wix>
 

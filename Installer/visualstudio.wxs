@@ -20,14 +20,16 @@
         <File Id='MySql.Debugger_2008' Name='MySql.Debugger.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio_2008' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
+              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>        
         <File Id='MySqlParser.2008' Name='MySql.Parser.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime_2008' Name='Antlr3.Runtime.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\Antlr3.Runtime.dll'/>
-      </Component>
+        <File Id='MySql.Utility_2008' Name='MySql.Utility.dll' DiskId='1'
+            Source='..\Dependencies\v2.0\release\MySQL.Utility.dll'/>
+      </Component>      
 
-      <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
+        <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
         <!--<RegistryKey Id="VS_2008_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VS_2008_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
@@ -64,13 +66,21 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS90_PrivateAssemblies'>
+      <Component Id='VS2008_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250A'>
+        <File Id='VS2008_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v2.0\Release\MySql.Data.dll'/>
+      </Component>
+    </DirectoryRef>
+
+
     <!-- Visual Studio 2010 -->
     <DirectoryRef Id='VS10_ExtVersionDir'>
       <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
         <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
         <File Id='MySqlParser.2010' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>
+          Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>        
         <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
               Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
@@ -81,6 +91,8 @@
               Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySql.Utility' Name='MySql.Utility.dll' DiskId='1'
+              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -92,12 +104,19 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
     </DirectoryRef>
+
+    <DirectoryRef Id='VS10_PrivateAssemblies'>
+      <Component Id='VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250F'>        
+        <File Id='VS2010_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+    </DirectoryRef>
     
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
       <Component Id='VS2012_Extension' Guid='ECB3633C-4169-4074-A527-3FDA825DDB2F'>
         <File Id='MySQL.VisualStudio.2012' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
+              Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>        
         <File Id='MySql.Parser.2012' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
@@ -110,6 +129,8 @@
               Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2012' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
+              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -122,23 +143,33 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS11_PrivateAssemblies'>
+      <Component Id='VS2012_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250C'>
+        <File Id='VS2012_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+    </DirectoryRef>
+        
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2008_Common'/>
       <ComponentRef Id='PFTemplates'/>
       <ComponentRef Id='VS_2008_Registry'/>
+      <ComponentRef Id='VS2008_MD.Library'/>
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2010_Extension'/>
       <ComponentRef Id='VS2010_Templates'/>
+      <ComponentRef Id='VS2010_MD.Library' />      
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
       <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2012_Extension'/>
       <ComponentRef Id='VS2012_Templates'/>
+      <ComponentRef Id='VS2012_MD.Library' />
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
