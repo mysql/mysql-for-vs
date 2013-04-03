@@ -219,6 +219,10 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand configButton = sender as OleMenuCommand;
       configButton.Visible = false;
 
+      //this feature can be shown only if Connector/Net is installed too
+      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Connector/Net")))
+        return;
+
       DTE dte = GetService(typeof(DTE)) as DTE;
       Array a = (Array)dte.ActiveSolutionProjects;
       if (a.Length != 1) return;
