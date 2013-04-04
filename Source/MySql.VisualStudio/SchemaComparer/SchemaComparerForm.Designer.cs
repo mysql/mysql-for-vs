@@ -29,8 +29,6 @@
     private void InitializeComponent()
     {
       this.dgDiffSummary = new System.Windows.Forms.DataGridView();
-      this.txtLeft = new System.Windows.Forms.TextBox();
-      this.txtRight = new System.Windows.Forms.TextBox();
       this.btnGetLeftChange = new System.Windows.Forms.Button();
       this.btnGetAllLeftChanges = new System.Windows.Forms.Button();
       this.btnGetRightChange = new System.Windows.Forms.Button();
@@ -41,28 +39,10 @@
       // dgDiffSummary
       // 
       this.dgDiffSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dgDiffSummary.Location = new System.Drawing.Point(241, 45);
+      this.dgDiffSummary.Location = new System.Drawing.Point(12, 48);
       this.dgDiffSummary.Name = "dgDiffSummary";
-      this.dgDiffSummary.Size = new System.Drawing.Size(388, 313);
+      this.dgDiffSummary.Size = new System.Drawing.Size(846, 319);
       this.dgDiffSummary.TabIndex = 0;
-      // 
-      // txtLeft
-      // 
-      this.txtLeft.Location = new System.Drawing.Point(12, 45);
-      this.txtLeft.Multiline = true;
-      this.txtLeft.Name = "txtLeft";
-      this.txtLeft.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.txtLeft.Size = new System.Drawing.Size(223, 313);
-      this.txtLeft.TabIndex = 1;
-      // 
-      // txtRight
-      // 
-      this.txtRight.Location = new System.Drawing.Point(635, 45);
-      this.txtRight.Multiline = true;
-      this.txtRight.Name = "txtRight";
-      this.txtRight.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.txtRight.Size = new System.Drawing.Size(223, 313);
-      this.txtRight.TabIndex = 2;
       // 
       // btnGetLeftChange
       // 
@@ -115,23 +95,18 @@
       this.Controls.Add(this.btnGetRightChange);
       this.Controls.Add(this.btnGetAllLeftChanges);
       this.Controls.Add(this.btnGetLeftChange);
-      this.Controls.Add(this.txtRight);
-      this.Controls.Add(this.txtLeft);
       this.Controls.Add(this.dgDiffSummary);
       this.Name = "SchemaComparerForm";
       this.Text = "MySql Schema Comparer";
       this.Load += new System.EventHandler(this.SchemaComparerForm_Load);
       ((System.ComponentModel.ISupportInitialize)(this.dgDiffSummary)).EndInit();
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 
     #endregion
 
     private System.Windows.Forms.DataGridView dgDiffSummary;
-    private System.Windows.Forms.TextBox txtLeft;
-    private System.Windows.Forms.TextBox txtRight;
     private System.Windows.Forms.Button btnGetLeftChange;
     private System.Windows.Forms.Button btnGetAllLeftChanges;
     private System.Windows.Forms.Button btnGetRightChange;
