@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;  
 using MySql.Data.MySqlClient;
 using System.Text;
+using MySql.Data.VisualStudio.SchemaComparer;
 
 
 namespace MySql.Data.VisualStudio
@@ -144,12 +145,10 @@ namespace MySql.Data.VisualStudio
         menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
         mcs.AddCommand(menuItem);
 
-
         CommandID cmdOpenUtilitiesPrompt = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidOpenUtilitiesPrompt);
         OleMenuCommand cmdItem = new OleMenuCommand(OpenMySQLUtilitiesCallback, cmdOpenUtilitiesPrompt);
         cmdItem.BeforeQueryStatus += new EventHandler(cmdOpenUtilitiesPrompt_BeforeQueryStatus);
         mcs.AddCommand(cmdItem);
-
 
         CommandID cmdLaunchWB = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidLaunchWorkbench);
         OleMenuCommand cmdMenuLaunchWB = new OleMenuCommand(LaunchWBCallback, cmdLaunchWB);
@@ -160,6 +159,16 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
         menuItem.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
         mcs.AddCommand(menuItemGenDbScript);
+
+        CommandID cmdSchemaCompare = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidSchemaCompare );
+        OleMenuCommand cmdMenuSchemaCompare = new OleMenuCommand(SchemaCompareCallback, cmdSchemaCompare);
+        cmdMenuSchemaCompare.BeforeQueryStatus += new EventHandler(cmdSchemaCompare_BeforeQueryStatus);
+        mcs.AddCommand(cmdMenuSchemaCompare);
+
+        CommandID cmdSchemaCompareTo = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidSchemaCompareTo);
+        OleMenuCommand cmdMenuSchemaCompareTo = new OleMenuCommand(SchemaCompareToCallback, cmdSchemaCompareTo);
+        cmdMenuSchemaCompareTo.BeforeQueryStatus += new EventHandler(cmdSchemaCompareTo_BeforeQueryStatus);
+        mcs.AddCommand(cmdMenuSchemaCompareTo);
       }
 
       // Register and initialize language service
@@ -244,6 +253,23 @@ namespace MySql.Data.VisualStudio
       cmd.Visible = true;
     }
 
+    private MySqlConnection firstCon = null;
+    private MySqlConnection secondCon = null;
+
+    void cmdSchemaCompare_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand configButton = sender as OleMenuCommand;
+      configButton.Visible = false;
+      if( firstCon != null )
+        configButton.Visible = true;
+    }
+
+    void cmdSchemaCompareTo_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand configButton = sender as OleMenuCommand;
+      configButton.Visible = true;
+    }
+
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
       MySqlWorkbench.LaunchUtilitiesShell();
@@ -295,6 +321,47 @@ namespace MySql.Data.VisualStudio
       MySqlScriptDialog dlg = new MySqlScriptDialog();
       dlg.TextScript = script;
       dlg.ShowDialog();
+    }
+
+    /// <summary>
+    /// Compare stores the second connection and triggers the comparison.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void SchemaCompareCallback(object sender, EventArgs e)
+    {
+      secondCon = GetCurrentConnection();
+      SchemaComparerForm form = new SchemaComparerForm();
+      form.SourceConnection = firstCon;
+      form.DestinyConnection = secondCon;
+      form.ShowDialog();
+    }
+
+    /// <summary>
+    /// CompareTo just stores the first connection
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void SchemaCompareToCallback(object sender, EventArgs e)
+    {
+      firstCon = GetCurrentConnection();
+    }
+
+    private MySqlConnection GetCurrentConnection()
+    {
+      // Get current connection
+      string conStr = "";
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+
+      if (selectedItems != null)
+        conStr = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+
+      IVsDataExplorerConnection con = GetConnection(conStr);
+      
+      MySqlConnection myCon = new MySqlConnection(con.Connection.DisplayConnectionString);
+      return myCon;
     }
 
     private string GetDbScript(MySqlConnection con)

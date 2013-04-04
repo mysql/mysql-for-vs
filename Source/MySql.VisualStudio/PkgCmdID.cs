@@ -60,6 +60,8 @@ namespace MySql.Data.VisualStudio
     public const uint cmdidOpenUtilitiesPrompt = 505;    
     public const uint cmdidLaunchWorkbench = 506;
     public const uint cmdidGenerateDatabaseScript = 507;
+    public const uint cmdidSchemaCompareTo = 508;
+    public const uint cmdidSchemaCompare = 509;
   };
 
   static class SharedCommands
