@@ -64,6 +64,7 @@
     <Reference Include="Microsoft.Data.ConnectionUI, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Data, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Package.LanguageService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -102,6 +103,14 @@
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.designer.cs">
       <Link>DDEX\MySqlNewPasswordDialog.designer.cs</Link>
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlScriptDialog.cs">
+      <Link>DDEX\MySqlScriptDialog.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlScriptDialog.designer.cs">
+      <Link>DDEX\MySqlScriptDialog.designer.cs</Link>
+      <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
@@ -372,6 +381,20 @@
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\SchemaComparer\Comparer.cs">
+      <Link>SchemaComparer\Comparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\SchemaComparer\MetaObject.cs">
+      <Link>SchemaComparer\MetaObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\SchemaComparer\SchemaComparerForm.cs">
+      <Link>SchemaComparer\SchemaComparerForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\SchemaComparer\SchemaComparerForm.designer.cs">
+      <Link>SchemaComparer\SchemaComparerForm.designer.cs</Link>
+      <DependentUpon>SchemaComparerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\VsPkg.cs" />
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
@@ -448,6 +471,10 @@
       <Link>DDEX\MySqlNewPasswordDialog.resx</Link>
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlScriptDialog.resx">
+      <Link>DDEX\MySqlScriptDialog.resx</Link>
+      <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\Editors\ConnectDialog.resx">
       <DependentUpon>ConnectDialog.cs</DependentUpon>
       <Link>Editors\ConnectDialog.resx</Link>
@@ -487,6 +514,10 @@
       <DependentUpon>UDFEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
       <Link>Editors\UDFEditor.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\SchemaComparer\SchemaComparerForm.resx">
+      <Link>SchemaComparer\SchemaComparerForm.resx</Link>
+      <DependentUpon>SchemaComparerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\WebConfig\ConnectionStringEditorDlg.resx">
       <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
