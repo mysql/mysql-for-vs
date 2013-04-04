@@ -4,3 +4,4 @@
 - Added new option on Connection Node for Server Explorer Window in Visual Studio to give the user the option when WB is Installed to open the SQL Editor Window using the same connection.
 - Implemented a menu option to generate table script from server explorer context menu (Tracker task 433).
 - Implemented a context menu for Server explorer connections to allow to export database as script (Tracker task 432).
+- Implemented Schema comparer as context menu for Server explorer connections (Tracker task id 449).

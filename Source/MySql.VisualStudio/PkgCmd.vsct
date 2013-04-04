@@ -253,6 +253,22 @@
           <ButtonText>&amp;Generate Database Script</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidSchemaCompare" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>        
+        <Strings>
+          <CommandName>cmdidSchemaCompare</CommandName>
+          <ButtonText>Compare Schema...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidSchemaCompareTo" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <CommandName>cmdidSchemaCompareTo</CommandName>
+          <ButtonText>Compare Schema To</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -277,6 +293,15 @@
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidSchemaCompareTo" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidSchemaCompare" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
+      <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
+    </CommandPlacement>  
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
     </CommandPlacement>
@@ -329,6 +354,8 @@
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="505"/>      
       <IDSymbol name="cmdidLaunchWorkbench" value="506"/>      
       <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
+      <IDSymbol name="cmdidSchemaCompareTo" value="508"/>
+      <IDSymbol name="cmdidSchemaCompare" value="509"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">

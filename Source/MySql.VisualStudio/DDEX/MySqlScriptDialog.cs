@@ -26,5 +26,11 @@ namespace MySql.Data.VisualStudio
       get { return txtScript.Text; }
       set { txtScript.Text = value; }
     }
+
+    public string Title
+    {
+      get { return this.Text; }
+      set { this.Text = value; }
+    }
   }
 }

@@ -293,6 +293,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\VersionInfo.cs" />
+    <Compile Include="SchemaComparer\Comparer.cs" />
+    <Compile Include="SchemaComparer\MetaObject.cs" />
+    <Compile Include="SchemaComparer\SchemaComparerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SchemaComparer\SchemaComparerForm.Designer.cs">
+      <DependentUpon>SchemaComparerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebConfig\ConnectionStringEditorDlg.cs">
@@ -375,6 +383,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\UDFEditor.resx">
       <DependentUpon>UDFEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SchemaComparer\SchemaComparerForm.resx">
+      <DependentUpon>SchemaComparerForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WebConfig\ConnectionStringEditorDlg.resx">
