@@ -34,12 +34,12 @@ namespace MySql.Debugger.Tests
     public void Setup()
     {
       MySqlConnection con = new MySqlConnection(TestUtils.CONNECTION_STRING_WITHOUT_DB);
-      MySqlCommand cmd = new MySqlCommand("drop database if exists test6", con);
+      MySqlCommand cmd = new MySqlCommand("drop database if exists test", con);
       con.Open();
       try
       {
         cmd.ExecuteNonQuery();
-        cmd.CommandText = "create database test6;";
+        cmd.CommandText = "create database test;";
         cmd.ExecuteNonQuery();
       }
       finally
@@ -52,7 +52,7 @@ namespace MySql.Debugger.Tests
     public void Teardown()
     {
       MySqlConnection con = new MySqlConnection(TestUtils.CONNECTION_STRING_WITHOUT_DB);
-      MySqlCommand cmd = new MySqlCommand("drop database if exists test6", con);
+      MySqlCommand cmd = new MySqlCommand("drop database if exists test", con);
       con.Open();
       try
       {
