@@ -57,12 +57,6 @@ namespace MySql.Data.VisualStudio.SchemaComparer
 
     private void SchemaComparerForm_Load(object sender, EventArgs e)
     {
-      // TODO: Connections for now hardcoded, until Server Explorer connection context menu is enabled:
-      MySqlConnection src = new MySqlConnection("server=localhost; userid=root; database=DbCmp1;");
-      MySqlConnection dst = new MySqlConnection("server=localhost; userid=root; database=DbCmp2;");
-      SourceConnection = src;
-      DestinyConnection = dst;
-
       DataTable tbl = new DataTable();
       // Left Script, Item (db1.Custmers, Table), Status, Right Script
       tbl.Columns.Add("Left Script", typeof(string));
@@ -99,11 +93,11 @@ namespace MySql.Data.VisualStudio.SchemaComparer
       dgDiffSummary.DataSource = tbl;
       foreach (DataGridViewRow row in dgDiffSummary.Rows)
       {
-        if ((string)row.Cells[0].Value == "")
-        {
-          row.DefaultCellStyle.BackColor = Color.Red;
-          //row.Cells[0].ToolTipText = "";
-        }
+        //if ( ((string)row.Cells[0].Value == "") && (( string )row.Cells[ 3 ].Value != "" ))
+        //{
+        //  // differences in right side
+        //  row.DefaultCellStyle.BackColor = Color.Red;          
+        //}
       }
     }
 
