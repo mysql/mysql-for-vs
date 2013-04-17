@@ -122,6 +122,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBExport\DbExportSaveWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBExport\DbExportSaveWindow.Designer.cs">
+      <DependentUpon>DbExportSaveWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBExport\DBExportSelectObjects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBExport\DBExportSelectObjects.Designer.cs">
+      <DependentUpon>DBExportSelectObjects.cs</DependentUpon>
+    </Compile>
     <Compile Include="DDEX\MySqlDataObjectIdentifierConverter.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
       <SubType>Form</SubType>
@@ -329,6 +341,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DBExport\DbExportSaveWindow.resx">
+      <DependentUpon>DbExportSaveWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBExport\DBExportSelectObjects.resx">
+      <DependentUpon>DBExportSelectObjects.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlNewPasswordDialog.resx">
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -462,6 +480,7 @@
       <Name>MySql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <RegisterOutputPackage>false</RegisterOutputPackage>
