@@ -24,7 +24,7 @@
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
     <Condition Message="The .NET Framework 2.0 or 4.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20 OR NETFRAMEWORK40FULL</Condition>
 
-    <!-- now make sure that we don't have an old version still around -->
+    <!-- now make sure that we don't have an old version still around --><!--
     <Property Id="OLDVERSION">
       <RegistrySearch Id="Ver5081" Key="Software\MySQL AB\MySQL Connector/Net 5.0.8.1" Name="Location" Root="HKLM" Type="raw"/>
       <RegistrySearch Id="Ver507" Key="Software\MySQL AB\MySQL Connector/Net 5.0.7" Name="Location" Root="HKLM" Type="raw"/>
@@ -36,7 +36,7 @@
       <RegistrySearch Id="Ver501" Key="Software\MySQL AB\MySQL Connector/Net 5.0.1" Name="Location" Root="HKLM" Type="raw"/>
       <RegistrySearch Id="Ver500" Key="Software\MySQL AB\MySQL Connector/Net 5.0.0" Name="Location" Root="HKLM" Type="raw"/>
     </Property>
-    <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
+    <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>-->
 
     <!-- now make sure that we don't have an old version that doesn't support upgrades -->
     <Property Id="PREUPGRADEVERSION">
