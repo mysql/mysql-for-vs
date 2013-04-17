@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Deployment.WindowsInstaller;
+using System.IO;
+using System.Reflection;
+using MySQL.Utility;
 
 namespace MySql.ConnectorInstaller
 {
@@ -15,6 +18,46 @@ namespace MySql.ConnectorInstaller
       System.IO.File.WriteAllText(VSpath, string.Empty);
 
       return ActionResult.Success;
+    }
+
+    [CustomAction]
+    public static ActionResult UpdateMachineConfigFile(Session session)
+    {
+      var installedPath = Utility.GetInstallLocation("MySQL Visual Studio Plugin");
+
+      if (String.IsNullOrEmpty(installedPath))
+        return ActionResult.NotExecuted;
+
+      installedPath = System.IO.Path.Combine(installedPath + @"\Assemblies\v2.0\MySql.data.dll");
+      
+      Assembly a = Assembly.LoadFile(installedPath);        
+      Type customInstallerType = a.GetType("MySql.Data.MySqlClient.CustomInstaller");
+        
+      if (customInstallerType != null)
+        {          
+          try
+          {
+            session.Log("about to invoke method on customInstallerType");            
+            var method = customInstallerType.GetMethod("AddProviderToMachineConfig", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
+            
+            if (method != null)                          
+              method.Invoke(null, null);                                       
+            else
+              session.Log("Method information was null ");
+
+            return ActionResult.Success;
+          }
+         catch (Exception ex)
+         {
+            session.Log("error when calling the method " + ex.Message + " " + ex.InnerException.Message);
+            return ActionResult.NotExecuted;
+         }
+        }
+        else
+        {
+          session.Log("Assembly wasn't loaded correctly");
+          return ActionResult.NotExecuted;
+        }
     }
   }
 }
