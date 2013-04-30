@@ -1,32 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">9.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{247973E1-8535-4930-8940-83B06097D5DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MySql.Parser.Tests</RootNamespace>
     <AssemblyName>MySql.Parser.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
+
+  <Choose>
+	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.5</Framework>
+		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(VisualStudioVersion)' == '10.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.0</Framework>
+		<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- When Condition=" '$(VisualStudioVersion)' == ''" > -->
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>3.5</Framework>
+		<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
+    <OutputPath>bin\$(TargetFrameworkVersion)\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
+    <OutputPath>bin\$(TargetFrameworkVersion)\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

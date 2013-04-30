@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">9.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -14,15 +14,12 @@
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <ProjectGuid>{DC3517FF-AC26-4755-9B7A-EF658FF69593}</ProjectGuid>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <OldToolsVersion>4.0</OldToolsVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -35,92 +32,295 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
+  
+  <Choose>
+	  <When Condition=" '$(VisualStudioVersion)' == '11.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.5</Framework>
+		    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(VisualStudioVersion)' == '10.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.0</Framework>
+		    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER</DefineConstants>
+        <OldToolsVersion>4.0</OldToolsVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- When Condition=" '$(VisualStudioVersion)' == ''" > -->
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>3.5</Framework>
+	      <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <OldToolsVersion>3.5</OldToolsVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CLR4</DefineConstants>
+    <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
+    <OutputPath>bin\$(TargetFrameworkVersion)\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG;CLR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>false</RegisterForComInterop>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DeployExtension>True</DeployExtension>
+	<DeployExtension>True</DeployExtension>
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CLR4</DefineConstants>
+    <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
+    <OutputPath>bin\$(TargetFrameworkVersion)\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE;CLR4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DeployExtension>False</DeployExtension>
+	<DeployExtension>False</DeployExtension>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.ConnectionUI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Package.LanguageService.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="MySql.Data, Version=6.6.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\Dependencies\v4.0\Debug\MySql.Data.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySQL.Utility, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Configuration.Install" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
+  
+  <Choose>
+	  <When Condition=" '$(VisualStudioVersion)' == '11.0'">
+		  <ItemGroup>
+			  <Reference Include="Antlr3.Runtime">
+			    <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
+			  </Reference>
+			  <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.CSharp" />
+			  <Reference Include="Microsoft.Data.ConnectionUI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Package.LanguageService.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+			    <EmbedInteropTypes>True</EmbedInteropTypes>
+			  </Reference>
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+			    <EmbedInteropTypes>True</EmbedInteropTypes>
+			  </Reference>
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+			    <HintPath>..\..\Dependencies\v4.0\Debug\MySql.Data.dll</HintPath>
+			    <SpecificVersion>False</SpecificVersion>
+			    <Private>True</Private>
+			  </Reference>
+			  <Reference Include="MySQL.Utility, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+			    <SpecificVersion>False</SpecificVersion>
+			    <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
+			  </Reference>
+			  <Reference Include="PresentationCore" />
+			  <Reference Include="PresentationFramework" />
+			  <Reference Include="System" />
+			  <Reference Include="System.ComponentModel.Composition" />
+			  <Reference Include="System.configuration" />
+			  <Reference Include="System.Configuration.Install" />
+			  <Reference Include="System.Data" />
+			  <Reference Include="System.Design" />
+			  <Reference Include="System.Drawing" />
+			  <Reference Include="System.Web" />
+			  <Reference Include="System.Web.ApplicationServices" />
+			  <Reference Include="System.Windows.Forms" />
+			  <Reference Include="System.Xaml" />
+			  <Reference Include="System.Xml" />
+			  <Reference Include="WindowsBase" />
+			  <Reference Include="System.Linq" />
+			  <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+			    <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
+			    <Name>MySql.Parser</Name>
+			  </ProjectReference>
+		  </ItemGroup>
+	  </When>
+	  <When Condition=" '$(VisualStudioVersion)' == '10.0'">
+		  <ItemGroup>
+			  <Reference Include="Antlr3.Runtime">
+			    <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
+			  </Reference>
+			  <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.CSharp" />
+			  <Reference Include="Microsoft.Data.ConnectionUI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Package.LanguageService.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+			    <EmbedInteropTypes>True</EmbedInteropTypes>
+			  </Reference>
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+			    <EmbedInteropTypes>True</EmbedInteropTypes>
+			  </Reference>
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+			    <HintPath>..\..\Dependencies\v4.0\Debug\MySql.Data.dll</HintPath>
+			    <SpecificVersion>False</SpecificVersion>
+			    <Private>True</Private>
+			  </Reference>
+			  <Reference Include="MySQL.Utility, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+			    <SpecificVersion>False</SpecificVersion>
+			    <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
+			  </Reference>
+			  <Reference Include="PresentationCore" />
+			  <Reference Include="PresentationFramework" />
+			  <Reference Include="System" />
+			  <Reference Include="System.ComponentModel.Composition" />
+			  <Reference Include="System.configuration" />
+			  <Reference Include="System.Configuration.Install" />
+			  <Reference Include="System.Data" />
+			  <Reference Include="System.Design" />
+			  <Reference Include="System.Drawing" />
+			  <Reference Include="System.Web" />
+			  <Reference Include="System.Web.ApplicationServices" />
+			  <Reference Include="System.Windows.Forms" />
+			  <Reference Include="System.Xaml" />
+			  <Reference Include="System.Xml" />
+			  <Reference Include="WindowsBase" />
+			  <Reference Include="System.Linq" />
+			  <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+			    <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
+			    <Name>MySql.Parser</Name>
+			  </ProjectReference>
+		  </ItemGroup>
+	  </When>
+	  <When Condition=" '$(VisualStudioVersion)' == '9.0'">
+		  <ItemGroup><!--
+			  <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
+			    <SpecificVersion>False</SpecificVersion>
+			    <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
+			  </Reference>-->
+			  <Reference Include="Antlr3.Runtime">
+			    <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
+			  </Reference>
+			  <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.Data.ConnectionUI, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Data, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Package.LanguageService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+			  <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+			    <SpecificVersion>False</SpecificVersion>
+			    <HintPath>..\..\Dependencies\v2.0\Debug\MySql.Data.dll</HintPath>
+			  </Reference>
+			  <Reference Include="MySQL.Utility, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+			    <SpecificVersion>False</SpecificVersion>
+			    <HintPath>..\..\Dependencies\v2.0\Release\MySQL.Utility.dll</HintPath>
+			    <Private>True</Private>
+			  </Reference>
+			  <Reference Include="System" />
+			  <Reference Include="System.configuration" />
+			  <Reference Include="System.Configuration.Install" />
+			  <Reference Include="System.Core">
+			    <RequiredTargetFramework>3.5</RequiredTargetFramework>
+			  </Reference>
+			  <Reference Include="System.Data" />
+			  <Reference Include="System.Design" />
+			  <Reference Include="System.Drawing" />
+			  <Reference Include="System.Web" />
+			  <Reference Include="System.Windows.Forms" />
+			  <Reference Include="System.Xml" />
+			  <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+			    <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
+			    <Name>MySql.Parser</Name>
+			  </ProjectReference>
+		  </ItemGroup>
+	  </When>
+  </Choose>
+  
+  <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '11.0'">
+	  <ItemGroup>
+		  <Compile Include="Properties\v4.x\Resources.Designer.cs">
+			  <AutoGen>True</AutoGen>
+			  <DesignTime>True</DesignTime>
+			  <DependentUpon>Resources.resx</DependentUpon>			  
+		  </Compile>		  
+			<EmbeddedResource Include="Properties\v4.x\Resources.resx">
+			  <Generator>PublicResXFileCodeGenerator</Generator>
+			  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			  <SubType>Designer</SubType>
+			  <MergeWithCTO>true</MergeWithCTO>
+			  <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+			</EmbeddedResource>  
+	  </ItemGroup>
+	</When>
+	<Otherwise>
+	  <ItemGroup>
+		  <Compile Include="Properties\v3.5\Resources.Designer.cs">
+			  <AutoGen>True</AutoGen>
+			  <DesignTime>True</DesignTime>
+			  <DependentUpon>Resources.resx</DependentUpon>
+			  <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+		  </Compile>
+		  <EmbeddedResource Include="Properties\v3.5\Resources.resx">
+			  <Generator>PublicResXFileCodeGenerator</Generator>
+			  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			  <SubType>Designer</SubType>
+			  <MergeWithCTO>true</MergeWithCTO>
+			  <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+			</EmbeddedResource>  
+	  </ItemGroup>
+	</Otherwise>
+  </Choose>
+  
+
   <ItemGroup>
     <Compile Include="DBExport\DbExportSaveWindow.cs">
       <SubType>Form</SubType>
@@ -134,38 +334,53 @@
     <Compile Include="DBExport\DBExportSelectObjects.Designer.cs">
       <DependentUpon>DBExportSelectObjects.cs</DependentUpon>
     </Compile>
-    <Compile Include="DDEX\MySqlDataObjectIdentifierConverter.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DDEX\MySqlNewPasswordDialog.Designer.cs">
+    <Compile Include="DDEX\MySqlNewPasswordDialog.designer.cs">
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="DDEX\MySqlScriptDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DDEX\MySqlScriptDialog.Designer.cs">
+    <Compile Include="DDEX\MySqlScriptDialog.designer.cs">
       <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DbObjects\CollationTypeConverter.cs" />
-    <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
-    <Compile Include="DbObjects\DataRowHelpers.cs" />
-    <Compile Include="DbObjects\DataTypeConverter.cs" />
-    <Compile Include="DbObjects\ForeignKey.cs" />
-    <Compile Include="DbObjects\Index.cs" />
-    <Compile Include="DbObjects\IndexColumnTypeConverter.cs" />
-    <Compile Include="DbObjects\Metadata.cs" />
-    <Compile Include="DbObjects\NumericTypeConverter.cs" />
-    <Compile Include="DbObjects\ObjectComparer.cs" />
-    <Compile Include="DbObjects\TableEngineTypeConverters.cs" />
-    <Compile Include="DbObjects\Enums.cs" />
-    <Compile Include="DbObjects\Table.cs" />
-    <Compile Include="DbObjects\TablePartCollection.cs" />
-    <Compile Include="DDEX\MySqlConnectionProperties.cs" />
-    <Compile Include="DDEX\MySqlConnectionSupport.cs" />
+    <Compile Include="DbObjects\CollationTypeConverter.cs">
+    </Compile>
+    <Compile Include="DbObjects\CharacterSetTypeConverter.cs">
+    </Compile>
+    <Compile Include="DbObjects\DataRowHelpers.cs">
+    </Compile>
+    <Compile Include="DbObjects\DataTypeConverter.cs">
+    </Compile>
+    <Compile Include="DbObjects\ForeignKey.cs">
+    </Compile>
+    <Compile Include="DbObjects\Index.cs">
+    </Compile>
+    <Compile Include="DbObjects\IndexColumnTypeConverter.cs">
+    </Compile>
+    <Compile Include="DbObjects\Metadata.cs">
+    </Compile>
+    <Compile Include="DbObjects\NumericTypeConverter.cs">
+    </Compile>
+    <Compile Include="DbObjects\ObjectComparer.cs">
+    </Compile>
+    <Compile Include="DbObjects\TableEngineTypeConverters.cs">
+    </Compile>
+    <Compile Include="DbObjects\Enums.cs">
+    </Compile>
+    <Compile Include="DbObjects\Table.cs">
+    </Compile>
+    <Compile Include="DbObjects\TablePartCollection.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlConnectionProperties.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlConnectionSupport.cs">
+    </Compile>
     <Compile Include="DDEX\MySqlConnectionUIControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -178,14 +393,24 @@
     <Compile Include="DDEX\MySqlDataConnectionPromptDialog.Designer.cs">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="DDEX\MySqlDataObjectEnumerator.cs" />
-    <Compile Include="DDEX\MySqlDataObjectSupport.cs" />
-    <Compile Include="DDEX\MySqlDataSourceInformation.cs" />
-    <Compile Include="DDEX\MySqlDataSourceSpecializer.cs" />
-    <Compile Include="DDEX\MySqlDataViewCommandHandler.cs" />
-    <Compile Include="DDEX\MySqlDataViewSupport.cs" />
-    <Compile Include="DbObjects\ColumnWithTypeDescriptor.cs" />
-    <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs" />
+    <Compile Include="DDEX\MySqlDataObjectEnumerator.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlDataObjectIdentifierConverter.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlDataObjectSupport.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlDataSourceInformation.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlDataSourceSpecializer.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlDataViewCommandHandler.cs">
+    </Compile>
+    <Compile Include="DDEX\MySqlDataViewSupport.cs">
+    </Compile>
+    <Compile Include="DbObjects\ColumnWithTypeDescriptor.cs">
+    </Compile>
+    <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs">
+    </Compile>
     <Compile Include="Editors\VSCodeEditorUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -195,7 +420,8 @@
     <Compile Include="Editors\ConnectDialog.Designer.cs">
       <DependentUpon>ConnectDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\CustomPropertyDescriptor.cs" />
+    <Compile Include="Editors\CustomPropertyDescriptor.cs">
+    </Compile>
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -208,7 +434,8 @@
     <Compile Include="Editors\GenerateChangeScriptDialog.Designer.cs">
       <DependentUpon>GenerateChangeScriptDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\IEditor.cs" />
+    <Compile Include="Editors\IEditor.cs">
+    </Compile>
     <Compile Include="Editors\IndexColumnEditorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,21 +445,27 @@
     <Compile Include="Editors\MyComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Editors\MyDataGridViewRowHeaderCell.cs" />
-    <Compile Include="Editors\MyDescriptionAttribute.cs" />
+    <Compile Include="Editors\MyDataGridViewRowHeaderCell.cs">
+    </Compile>
+    <Compile Include="Editors\MyDescriptionAttribute.cs">
+    </Compile>
     <Compile Include="Editors\MySplitter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Editors\ServiceBroker.cs" />
+    <Compile Include="Editors\ServiceBroker.cs">
+    </Compile>
     <Compile Include="Editors\SqlEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editors\SqlEditor.Designer.cs">
       <DependentUpon>SqlEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\SqlEditorFactory.cs" />
-    <Compile Include="Editors\SqlEditorPane.cs" />
-    <Compile Include="Editors\TableEditorPane.cs" />
+    <Compile Include="Editors\SqlEditorFactory.cs">
+    </Compile>
+    <Compile Include="Editors\SqlEditorPane.cs">
+    </Compile>
+    <Compile Include="Editors\TableEditorPane.cs">
+    </Compile>
     <Compile Include="Editors\TableIndexDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,88 +484,91 @@
     <Compile Include="Editors\UDFEditor.Designer.cs">
       <DependentUpon>UDFEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\VS2005ColorTable.cs" />
+    <Compile Include="Editors\VS2005ColorTable.cs">
+    </Compile>
     <Compile Include="Editors\VS2005PropertyGrid.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Editors\VSCodeEditor.cs" />
-    <Compile Include="Editors\VSCodeEditorWindow.cs">
-      <SubType>Code</SubType>
+    <Compile Include="Editors\VSCodeEditor.cs">
     </Compile>
-    <Compile Include="Editors\YesNoTypeConverter.cs" />
+    <Compile Include="Editors\VSCodeEditorWindow.cs">
+    </Compile>
+    <Compile Include="Editors\YesNoTypeConverter.cs">
+    </Compile>
+    <Compile Include="LanguageService\LanguageServiceUtil.cs">
+    </Compile>
+    <Compile Include="LanguageService\MySqlLanguageService.cs">
+    </Compile>
     <Compile Include="Editors\TableEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Guids.cs" />
-    <Compile Include="LanguageService\MySqlLanguageService.cs" />
-    <Compile Include="LanguageService\MySqlScanner.cs" />
-    <Compile Include="LanguageService\LanguageServiceConnection.cs" />
-    <Compile Include="LanguageService\MySqlClassifier.cs" />
-    <Compile Include="LanguageService\MySqlClassifierFormat.cs" />
-    <Compile Include="LanguageService\MySqlClassifierProvider.cs" />
-    <Compile Include="LanguageService\MySqlClassifierType.cs" />
-    <Compile Include="LanguageService\MySqlCompletionCommandHandler.cs" />
-    <Compile Include="LanguageService\MySqlCompletionHandlerProvider.cs" />
-    <Compile Include="LanguageService\MySqlCompletionSource.cs" />
-    <Compile Include="LanguageService\MySqlCompletionSourceProvider .cs" />
-    <Compile Include="LanguageService\MySqlQuickInfoController.cs" />
-    <Compile Include="LanguageService\MySqlQuickInfoControllerProvider.cs" />
-    <Compile Include="LanguageService\MySqlQuickInfoSource.cs" />
-    <Compile Include="LanguageService\MySqlQuickInfoSourceProvider.cs" />
-    <Compile Include="LanguageService\MySqlTokenizer.cs" />
-    <Compile Include="LanguageService\MySqlTokenTag.cs" />
-    <Compile Include="LanguageService\MySqlTokenTagger.cs" />
-    <Compile Include="LanguageService\MySqlTokenTagProvider.cs" />
-    <Compile Include="LanguageService\MySqlTokenType.cs" />
-    <Compile Include="LanguageService\Tokenizer.cs" />
-    <Compile Include="LanguageService\LanguageServiceUtil.cs" />
+    <Compile Include="LanguageService\MySqlScanner.cs">
+    </Compile>
+    <Compile Include="LanguageService\MySqlTokenizer.cs">
+    </Compile>
+    <Compile Include="LanguageService\Tokenizer.cs">
+    </Compile>
     <Compile Include="MyInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MySqlProviderObjectFactory.cs" />
-    <Compile Include="Nodes\BaseNode.cs" />
-    <Compile Include="DbObjects\Column.cs" />
-    <Compile Include="Nodes\TriggerNode.cs" />
-    <Compile Include="Nodes\UDFNode.cs" />
-    <Compile Include="Nodes\DocumentNode.cs" />
-    <Compile Include="Nodes\ViewNode.cs" />
-    <Compile Include="Nodes\StoredProcedureNode.cs" />
-    <Compile Include="Nodes\TableNode.cs" />
-    <Compile Include="PkgCmdID.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
+    <Compile Include="Nodes\BaseNode.cs">
     </Compile>
-    <Compile Include="Properties\VersionInfo.cs" />
-    <Compile Include="SchemaComparer\Comparer.cs" />
-    <Compile Include="SchemaComparer\MetaObject.cs" />
+    <Compile Include="DbObjects\Column.cs">
+    </Compile>
+    <Compile Include="Nodes\TriggerNode.cs">
+    </Compile>
+    <Compile Include="Nodes\UDFNode.cs">
+    </Compile>
+    <Compile Include="Nodes\DocumentNode.cs">
+    </Compile>
+    <Compile Include="Nodes\ViewNode.cs">
+    </Compile>
+    <Compile Include="Nodes\StoredProcedureNode.cs">
+    </Compile>
+    <Compile Include="Nodes\TableNode.cs">
+    </Compile>
+    <Compile Include="PkgCmdID.cs" />    
+    <Compile Include="Properties\VersionInfo.cs">      
+    </Compile>
+    <Compile Include="SchemaComparer\Comparer.cs">
+    </Compile>
+    <Compile Include="SchemaComparer\MetaObject.cs">
+    </Compile>
     <Compile Include="SchemaComparer\SchemaComparerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SchemaComparer\SchemaComparerForm.Designer.cs">
+    <Compile Include="SchemaComparer\SchemaComparerForm.designer.cs">
       <DependentUpon>SchemaComparerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="VsPkg.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+    </Compile>
     <Compile Include="WebConfig\ConnectionStringEditorDlg.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WebConfig\ConnectionStringEditorDlg.Designer.cs">
       <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebConfig\GenericConfig.cs" />
-    <Compile Include="WebConfig\MembershipConfig.cs" />
+    <Compile Include="WebConfig\GenericConfig.cs">
+    </Compile>
+    <Compile Include="WebConfig\MembershipConfig.cs">
+    </Compile>
     <Compile Include="WebConfig\MembershipOptionsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WebConfig\MembershipOptionsDlg.Designer.cs">
       <DependentUpon>MembershipOptionsDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebConfig\ProfileConfig.cs" />
-    <Compile Include="WebConfig\RoleConfig.cs" />
-    <Compile Include="WebConfig\SessionStateConfig.cs" />
-    <Compile Include="WebConfig\WebConfig.cs" />
+    <Compile Include="WebConfig\ProfileConfig.cs">
+    </Compile>
+    <Compile Include="WebConfig\RoleConfig.cs">
+    </Compile>
+    <Compile Include="WebConfig\SessionStateConfig.cs">
+    </Compile>
+    <Compile Include="WebConfig\WebConfig.cs">
+    </Compile>
     <Compile Include="WebConfig\WebConfigDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -340,26 +576,31 @@
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DBExport\DbExportSaveWindow.resx">
-      <DependentUpon>DbExportSaveWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DBExport\DBExportSelectObjects.resx">
-      <DependentUpon>DBExportSelectObjects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DDEX\MySqlNewPasswordDialog.resx">
-      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DDEX\MySqlScriptDialog.resx">
-      <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-      <MergeWithCTO>true</MergeWithCTO>
-    </EmbeddedResource>
-  </ItemGroup>
+  
+  <Choose>
+	  <When Condition=" '$(VisualStudioVersion)' != '9.0'">
+		  <ItemGroup>
+			  <Compile Include="LanguageService\LanguageServiceConnection.cs" />
+			  <Compile Include="LanguageService\MySqlClassifier.cs" />
+			  <Compile Include="LanguageService\MySqlClassifierFormat.cs" />
+			  <Compile Include="LanguageService\MySqlClassifierProvider.cs" />
+			  <Compile Include="LanguageService\MySqlClassifierType.cs" />
+			  <Compile Include="LanguageService\MySqlCompletionCommandHandler.cs" />
+			  <Compile Include="LanguageService\MySqlCompletionHandlerProvider.cs" />
+			  <Compile Include="LanguageService\MySqlCompletionSource.cs" />
+			  <Compile Include="LanguageService\MySqlCompletionSourceProvider .cs" />
+			  <Compile Include="LanguageService\MySqlQuickInfoController.cs" />
+			  <Compile Include="LanguageService\MySqlQuickInfoControllerProvider.cs" />
+			  <Compile Include="LanguageService\MySqlQuickInfoSource.cs" />
+			  <Compile Include="LanguageService\MySqlQuickInfoSourceProvider.cs" />
+			  <Compile Include="LanguageService\MySqlTokenTag.cs" />
+			  <Compile Include="LanguageService\MySqlTokenTagger.cs" />
+			  <Compile Include="LanguageService\MySqlTokenTagProvider.cs" />
+			  <Compile Include="LanguageService\MySqlTokenType.cs" />
+		  </ItemGroup>
+	  </When>
+  </Choose>    
+  
   <ItemGroup>
     <EmbeddedResource Include="DDEX\MySqlConnectionUIControl.resx">
       <DependentUpon>MySqlConnectionUIControl.cs</DependentUpon>
@@ -368,9 +609,15 @@
     <EmbeddedResource Include="DDEX\MySqlDataConnectionPromptDialog.resx">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DDEX\MySqlDataObjectSupport.xml" />
+    <EmbeddedResource Include="DDEX\MySqlDataObjectSupport.xml">
+    </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlDataViewSupport.xml">
-      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DDEX\MySqlNewPasswordDialog.resx">
+      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DDEX\MySqlScriptDialog.resx">
+      <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ConnectDialog.resx">
       <DependentUpon>ConnectDialog.cs</DependentUpon>
@@ -405,7 +652,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SchemaComparer\SchemaComparerForm.resx">
       <DependentUpon>SchemaComparerForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WebConfig\ConnectionStringEditorDlg.resx">
       <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
@@ -416,95 +662,170 @@
     <EmbeddedResource Include="WebConfig\WebConfigDlg.resx">
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Resources\ArrowKey.bmp" />
-    <None Include="Resources\Key.bmp" />
-    <None Include="Resources\bannrbmp.bmp" />
-    <None Include="Resources\sql_editor_validatesql.bmp" />
-    <None Include="Resources\sql_editor_executionplan.bmp" />
-    <None Include="Resources\sql_editor_banner.bmp" />
-    <Content Include="MySql.VisualStudio.pkgdef">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
+    <None Include="Resources\ArrowKey.bmp">
+    </None>
+    <None Include="Resources\Key.bmp">
+    </None>
+    <None Include="Resources\bannrbmp.bmp">
+    </None>
+    <None Include="Resources\sql_editor_banner.bmp">
+    </None>
+    <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
-    <Content Include="Resources\sql_editor_connect.png" />
-    <Content Include="Resources\sql_editor_disconnect.png" />
-    <Content Include="Resources\sql_editor_runsql.png" />
-    <None Include="Resources\sql_editor_validatesql.png" />
-    <None Include="source.extension.vsixmanifest" />
+    <Content Include="Resources\sql_editor_executionplan.png">
+    </Content>
+    <Content Include="Resources\sql_editor_runsql.png">
+    </Content>
+    <Content Include="Resources\sql_editor_validatesql.png">
+    </Content>
     <Content Include="Templates\MySQL Script.mysql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\MySqlDataProviderPackage.vsdir">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\401.ico" />
-    <Content Include="Resources\icon.bmp" />
-    <Content Include="Resources\Package.ico" />
+    <None Include="Resources\401.ico">
+    </None>
+    <Content Include="Resources\icon.bmp">
+    </Content>
+    <Content Include="Resources\Package.ico">
+    </Content>
   </ItemGroup>
+  
+  <Choose>
+	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
+	  <ItemGroup>
+	    <None Include="source.extension.vsixmanifest" />
+	  </ItemGroup>
+	</When>
+	<When Condition=" '$(VisualStudioVersion)' == '10.0'">
+	  <ItemGroup>
+	    <None Include="source.extension.vsixmanifest" />
+	  </ItemGroup>
+	</When>
+  </Choose>
+  
   <ItemGroup>
     <VSCTCompile Include="PkgCmd.vsct">
       <ResourceName>1000</ResourceName>
-      <SubType>Designer</SubType>
+	  <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
+  <ItemGroup>    
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
-      <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
-      <Name>MySql.Parser</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
+  
+  <Choose>
+	  <When Condition=" '$(VisualStudioVersion)' == '11.0'">
+		  <ItemGroup>
+			  <Content Include="MySql.VisualStudio.pkgdef">
+				  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <IncludeInVSIX>true</IncludeInVSIX>
+			  </Content>
+			  <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+			    <Install>true</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.5</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.5 SP1</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+		  </ItemGroup>
+      </When>
+	  <When Condition=" '$(VisualStudioVersion)' == '10.0'">
+		  <ItemGroup>
+			  <Content Include="MySql.VisualStudio.pkgdef">
+				  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <IncludeInVSIX>true</IncludeInVSIX>
+			  </Content>
+			  <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+			    <Install>true</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.5</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+			  <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+			    <Visible>False</Visible>
+			    <ProductName>.NET Framework 3.5 SP1</ProductName>
+			    <Install>false</Install>
+			  </BootstrapperPackage>
+		  </ItemGroup>
+	  </When>
+  </Choose>
+  
+  <Choose>
+    <When Condition=" '$(VisualStudioVersion)' != '9.0'">
+	  <PropertyGroup>
+		<GeneratePkgDefFile>false</GeneratePkgDefFile>
+      </PropertyGroup>
+	</When>
+  </Choose>	
+  
   <PropertyGroup>
-    <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <RegisterOutputPackage>false</RegisterOutputPackage>
     <RegisterWithCodebase>true</RegisterWithCodebase>
+    <!-- Make sure we are 2005 compatible, and don't rely on RegPkg.exe 
+         of VS2008 which uses Microsoft.VisualStudio.Shell.9.0 -->
+    <UseVS2005MPF>true</UseVS2005MPF>
     <!-- Don't try to run as a normal user (RANA), 
          create experimental hive in HKEY_LOCAL_MACHINE -->
     <RegisterWithRanu>false</RegisterWithRanu>
   </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
+  
+  <Choose>
+		<When Condition=" '$(VisualStudioVersion)' != '9.0'">
+		  <PropertyGroup>
+			  <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+		  </PropertyGroup>
+		</When>
+  </Choose>
+  
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" Condition="false" />
-  <PropertyGroup>
-    <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
-  </PropertyGroup>
+  <Import Project="ImportProjects4.x.targets" Condition="'$(Framework)' == '4.0' or '$(Framework)' == '4.5'" />
+  <Import Project="ImportProjects3.5.targets" Condition="'$(Framework)' == '3.5'" />
+
+  <Choose>
+	<When Condition=" '$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '11.0'">
+		<PropertyGroup>
+			<PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+      </PropertyGroup>
+    </When>
+  </Choose>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
+    -->
 </Project>

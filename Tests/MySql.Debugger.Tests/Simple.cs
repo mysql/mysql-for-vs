@@ -229,7 +229,7 @@ end;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
         dbg.OnBreakpoint += (bp) => {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
-          if ( (bp.RoutineName == "test6.DoSum") && ( bp.Line == 9 ) )
+          if ( (bp.RoutineName == "test.DoSum") && ( bp.Line == 9 ) )
           {
             dbg.CurrentScope.Variables["a1"].Value = 100;
             dbg.CommitLocals(); 
@@ -920,7 +920,7 @@ create procedure DoInsertTriggerTable()
         dbg.OnBreakpoint += (bp) =>
         {
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
-          if ( bp.RoutineName == "test6.trTriggerTable")
+          if ( bp.RoutineName == "test.trTriggerTable")
           {
             if (bp.Line == 3)
             {
@@ -1123,7 +1123,7 @@ end ;
     {
       string sql =
         @"
-CREATE TABLE Customer
+CREATE TABLE customer
 (
   `customer_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,  
   `store_id` int(11) DEFAULT NULL,  
@@ -1143,7 +1143,7 @@ drop procedure if exists `new_customer` //
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `new_customer`() 
 BEGIN 
-  INSERT INTO `test6`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
+  INSERT INTO `customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
   VALUES ( 1, ""Armando"", ""Lopez"", ""armand2099@gmail.com"", 1, NOW() ); 
 END
 //
@@ -1160,7 +1160,7 @@ END
         sql =
 @"CREATE DEFINER=`root`@`localhost` PROCEDURE `new_customer`() 
 BEGIN 
-  INSERT INTO `test6`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
+  INSERT INTO `customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
   VALUES ( 1, ""Armando"", ""Lopez"", ""armand2099@gmail.com"", 1, NOW() ); 
 END;
 ";
