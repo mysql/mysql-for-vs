@@ -484,7 +484,7 @@ Would you like to create it?</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Key.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\Key.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DisplayName_Column_Default" xml:space="preserve">
     <value>Default Value</value>
@@ -892,7 +892,7 @@ Would you like to create it?</value>
     <value>Type</value>
   </data>
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\package.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\package.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Description_Trigger_Orientation" xml:space="preserve">
     <value>An atomic object of a trigger action</value>
@@ -1018,7 +1018,7 @@ Would you like to create it?</value>
     <value>The specified connection string is invalid.</value>
   </data>
   <data name="ArrowKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ArrowKey.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\ArrowKey.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Description_StoredProcedure_LastModified" xml:space="preserve">
     <value>Time of the last modification of the routine</value>
@@ -1063,7 +1063,7 @@ Would you like to create it?</value>
     <value>Algorithm</value>
   </data>
   <data name="bannrbmp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bannrbmp.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\bannrbmp.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="WebConfigConnStrNoEmpty" xml:space="preserve">
     <value>The connection string must not be empty.</value>
@@ -1081,25 +1081,25 @@ Would you like to create it?</value>
     <value>A blank mysql file.</value>
   </data>
   <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sql_editor_banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_banner.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\sql_editor_banner.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sql_editor_connect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_connect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\sql_editor_connect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sql_editor_disconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_disconnect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\sql_editor_disconnect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sql_editor_runsql" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_runsql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\sql_editor_runsql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sql_editor_validatesql" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_validatesql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\sql_editor_validatesql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sql_editor_executionplan" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_executionplan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\sql_editor_executionplan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ErrorCaption" xml:space="preserve">
     <value>Error</value>
