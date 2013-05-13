@@ -592,10 +592,7 @@
 			  <Compile Include="LanguageService\MySqlQuickInfoController.cs" />
 			  <Compile Include="LanguageService\MySqlQuickInfoControllerProvider.cs" />
 			  <Compile Include="LanguageService\MySqlQuickInfoSource.cs" />
-			  <Compile Include="LanguageService\MySqlQuickInfoSourceProvider.cs" />
-			  <Compile Include="LanguageService\MySqlTokenTag.cs" />
-			  <Compile Include="LanguageService\MySqlTokenTagger.cs" />
-			  <Compile Include="LanguageService\MySqlTokenTagProvider.cs" />
+			  <Compile Include="LanguageService\MySqlQuickInfoSourceProvider.cs" />			  
 			  <Compile Include="LanguageService\MySqlTokenType.cs" />
 		  </ItemGroup>
 	  </When>
