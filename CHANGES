@@ -9,3 +9,4 @@
 - Fix for bug "Can't change the name for a view in view editor" (Oracle bug #13805346).
 - Fix for Debugger cannot debug stored procedures with a main begin labeled and declare statements included (Oracle bug #16002371).
 - Fix for bug If using repair option, then vs2010 doesnt allow to connect to db (Oracle bug #16238242).
+- Fix for "Cannot change the name for a Foreign Key in table designer" (Oracle bug #16238068).
