@@ -65,7 +65,6 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\Source\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -75,6 +74,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+<Reference Include="xunit, Version=1.9.1.1600, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DDL\Alter\AlterDatabase.cs" />
