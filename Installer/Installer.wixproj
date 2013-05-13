@@ -113,7 +113,7 @@
     <Compile Include="visualstudio.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
-    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\v4.0\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
     </GetVersion>
     <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">

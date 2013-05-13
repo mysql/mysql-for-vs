@@ -16,15 +16,15 @@
       <!-- common DDEX component to be installed if VS2008 is selected -->
       <Component Id='VS2008_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
         <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\VS2008\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
+              Source='..\Source\MySql.VisualStudio\bin\v3.5\release\MySQL.VisualStudio.dll' />
         <File Id='MySql.Debugger_2008' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\VS2008\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\v3.5\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio_2008' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>        
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Debugger.VisualStudio.dll'/>        
         <File Id='MySqlParser.2008' Name='MySql.Parser.dll' DiskId='1'
-              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Parser.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime_2008' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v3.5\release\Antlr3.Runtime.dll'/>
         <File Id='MySql.Utility_2008' Name='MySql.Utility.dll' DiskId='1'
             Source='..\Dependencies\v2.0\release\MySQL.Utility.dll'/>
       </Component>      
@@ -78,19 +78,19 @@
     <DirectoryRef Id='VS10_ExtVersionDir'>
       <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
         <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySQL.VisualStudio.dll'/>
         <File Id='MySqlParser.2010' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>        
+          Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>        
         <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\v4.0\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\extension.vsixmanifest'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\MySql.VisualStudio.pkgdef'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\v4.0\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
       </Component>
@@ -116,19 +116,19 @@
     <DirectoryRef Id='VS11_ExtVersionDir'>
       <Component Id='VS2012_Extension' Guid='ECB3633C-4169-4074-A527-3FDA825DDB2F'>
         <File Id='MySQL.VisualStudio.2012' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>        
+              Source='..\Source\MySql.VisualStudio\bin\v4.5\release\MySQL.VisualStudio.dll'/>
         <File Id='MySql.Parser.2012' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>
+          Source='..\Source\MySql.VisualStudio\bin\v4.5\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\v4.5\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\extension.vsixmanifest'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2012' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\release\MySql.VisualStudio.pkgdef'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.5\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2012' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\v4.5\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2012' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
       </Component>
@@ -162,7 +162,7 @@
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2010_Extension'/>
       <ComponentRef Id='VS2010_Templates'/>
-      <ComponentRef Id='VS2010_MD.Library' />      
+      <ComponentRef Id='VS2010_MD.Library' />
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -193,7 +193,7 @@
     </Property>
 
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
-    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
     <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
