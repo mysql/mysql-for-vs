@@ -16,12 +16,12 @@
     <OldToolsVersion>3.5</OldToolsVersion>
   </PropertyGroup>
   <Choose>
-	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
+    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.5</Framework>
-		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
@@ -30,7 +30,7 @@
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.0</Framework>
-		<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
@@ -40,11 +40,11 @@
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
-		<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Any CPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -54,7 +54,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Any CPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
