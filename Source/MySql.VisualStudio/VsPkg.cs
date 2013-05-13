@@ -157,7 +157,7 @@ namespace MySql.Data.VisualStudio
 
         CommandID menuGenDbScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
         OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
-        menuItem.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
+        menuItemGenDbScript.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
         mcs.AddCommand(menuItemGenDbScript);
 
         CommandID cmdSchemaCompare = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidSchemaCompare );
@@ -250,7 +250,7 @@ namespace MySql.Data.VisualStudio
     void GenDbScript_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand cmd = sender as OleMenuCommand;
-      cmd.Visible = true;
+      cmd.Visible = false;
     }
 
     private MySqlConnection firstCon = null;
@@ -260,14 +260,14 @@ namespace MySql.Data.VisualStudio
     {
       OleMenuCommand configButton = sender as OleMenuCommand;
       configButton.Visible = false;
-      if( firstCon != null )
-        configButton.Visible = true;
+      //if( firstCon != null )
+      //  configButton.Visible = true;
     }
 
     void cmdSchemaCompareTo_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand configButton = sender as OleMenuCommand;
-      configButton.Visible = true;
+      configButton.Visible = false;
     }
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
