@@ -1,4 +1,4 @@
-﻿// Copyright © 2004, 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -24,21 +24,29 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
 using MySql.Debugger;
 using MySql.Parser;
 using MySql.Data.MySqlClient;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
+using Xunit;
 
 namespace MySql.Debugger.Tests
 {
-  [TestFixture]
-  public class Simple : BaseTest
+  public class Simple : IUseFixture<SetUp>
   {
-    [Test]
+    private SetUp st;
+
+    public void SetFixture(SetUp data)
+    {
+      st = data;
+    }
+
+
+    [Fact]
     public void VerySimpleTest()
     {
       string sql = 
@@ -83,19 +91,19 @@ end;
           }
           if (bp.Line == 8)
           {
-            Assert.AreEqual(++i, val);
+            Assert.Equal(++i, val);
             Debug.Write(val);
             Debug.WriteLine(" within simpleproc");
           }
           else if (bp.Line == 13)
           {
-            Assert.AreEqual( 5, val );
+            Assert.Equal( 5, val );
             Debug.Write(val);
             Debug.WriteLine(" within simpleproc");
           }
         };
         dbg.Run(new string[0], null);
-        Assert.IsTrue(bpHit);
+        Assert.True(bpHit);
       }
       finally
       {
@@ -103,7 +111,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void NonScalarFunction()
     {
       string sql =
@@ -171,7 +179,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void ScalarFunctionCall2()
     {
       string sql =
@@ -229,7 +237,7 @@ end;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
         dbg.OnBreakpoint += (bp) => {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
-          if ( (bp.RoutineName == "test.DoSum") && ( bp.Line == 9 ) )
+          if ( (bp.RoutineName == "test6.DoSum") && ( bp.Line == 9 ) )
           {
             dbg.CurrentScope.Variables["a1"].Value = 100;
             dbg.CommitLocals(); 
@@ -243,7 +251,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void NestedCall()
     {
       string sql =
@@ -305,7 +313,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void NestedCallWithVars()
     {
       string sql =
@@ -369,7 +377,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void ScalarFunctionCall()
     {
       string sql =
@@ -436,7 +444,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void CommaSeparatedDeclare()
     {
       string sql =
@@ -446,18 +454,18 @@ drop procedure if exists spTest2 //
 create DEFINER=`root`@`localhost` PROCEDURE `spTest2`()
 begin
     declare n,x,y,z int;
-	declare str varchar(1100);
+  declare str varchar(1100);
     set n = 1;
-	set str = 'Armando';
+  set str = 'Armando';
 
     while n < 1000 do
     begin
     
         set n = n + 1;
-		set x = n * 2;
-		set y = n * 5;
-		set z = n * 10;
-		set str = CONCAT(str, 'o');
+    set x = n * 2;
+    set y = n * 5;
+    set z = n * 10;
+    set str = CONCAT(str, 'o');
     
     end;
     end while;
@@ -478,18 +486,18 @@ end
 @"create DEFINER=`root`@`localhost` PROCEDURE `spTest2`()
 begin
     declare n,x,y,z int;
-	declare str varchar(1100);
+  declare str varchar(1100);
     set n = 1;
-	set str = 'Armando';
+  set str = 'Armando';
 
     while n < 10 do
     begin
     
         set n = n + 1;
-		set x = n * 2;
-		set y = n * 5;
-		set z = n * 10;
-		set str = CONCAT(str, 'o');
+    set x = n * 2;
+    set y = n * 5;
+    set z = n * 10;
+    set str = CONCAT(str, 'o');
     
     end;
     end while;
@@ -509,7 +517,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void LoopWithIfs()
     {
       string sql =
@@ -519,16 +527,16 @@ drop procedure if exists doloopif //
 DELIMITER //
 CREATE PROCEDURE doloopif (p1 INT)
 BEGIN
-	DECLARE var_x INT;
-	SET var_x=0;
-	loop_test: LOOP
-		IF var_x < p1 THEN
-			SET var_x = var_x+1;
-		ELSE
-			LEAVE loop_test;
-		END IF;
-	END LOOP loop_test;
-	SELECT CONCAT ('The final LOOP and IF number is: ', var_x) AS Results;
+  DECLARE var_x INT;
+  SET var_x=0;
+  loop_test: LOOP
+    IF var_x < p1 THEN
+      SET var_x = var_x+1;
+    ELSE
+      LEAVE loop_test;
+    END IF;
+  END LOOP loop_test;
+  SELECT CONCAT ('The final LOOP and IF number is: ', var_x) AS Results;
 END
 //
 ";
@@ -544,16 +552,16 @@ END
         sql =
 @"CREATE PROCEDURE doloopif (p1 INT)
 BEGIN
-	DECLARE var_x INT;
-	SET var_x=0;
-	loop_test: LOOP
-		IF var_x < p1 THEN
-			SET var_x = var_x+1;
-		ELSE
-			LEAVE loop_test;
-		END IF;
-	END LOOP loop_test;
-	SELECT CONCAT ('The final LOOP and IF number is: ', var_x) AS Results;
+  DECLARE var_x INT;
+  SET var_x=0;
+  loop_test: LOOP
+    IF var_x < p1 THEN
+      SET var_x = var_x+1;
+    ELSE
+      LEAVE loop_test;
+    END IF;
+  END LOOP loop_test;
+  SELECT CONCAT ('The final LOOP and IF number is: ', var_x) AS Results;
 END;
 ";
         dbg.SqlInput = sql;
@@ -570,7 +578,7 @@ END;
       }
     }
 
-    [Test]
+    [Fact]
     public void DoHandler()
     {
       string sql =
@@ -586,13 +594,13 @@ drop procedure if exists dohandler //
 DELIMITER //
 CREATE PROCEDURE dohandler()
 BEGIN
-	DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
-	DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
-	SET @x = 1;
-	INSERT INTO d_table2 VALUES (1);
-	SET @x = 2;
-	INSERT INTO d_table2 VALUES (1);
-	set @x = 3;
+  DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
+  DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
+  SET @x = 1;
+  INSERT INTO d_table2 VALUES (1);
+  SET @x = 2;
+  INSERT INTO d_table2 VALUES (1);
+  set @x = 3;
 
 END //
 ";
@@ -608,13 +616,13 @@ END //
         sql =
 @"CREATE PROCEDURE dohandler()
 BEGIN
-	DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
-	DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
-	SET @x = 1;
-	INSERT INTO d_table2 VALUES (1);
-	SET @x = 2;
-	INSERT INTO d_table2 VALUES (1);
-	set @x = 3;
+  DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
+  DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
+  SET @x = 1;
+  INSERT INTO d_table2 VALUES (1);
+  SET @x = 2;
+  INSERT INTO d_table2 VALUES (1);
+  set @x = 3;
 
 END;
 ";
@@ -632,7 +640,7 @@ END;
       }
     }
 
-    [Test]
+    [Fact]
     public void DoRepeat()
     {
       string sql =
@@ -704,7 +712,7 @@ END;
       }
     }
 
-    [Test]
+    [Fact]
     public void MutipleInsert()
     {
       string sql =
@@ -718,8 +726,8 @@ drop table if exists test3 //
 DELIMITER //
 create procedure MultipleInsert( id int, name varchar( 10 ))
 begin
-	create table test3( id2 int );
-	insert into test3 values (1);
+  create table test3( id2 int );
+  insert into test3 values (1);
 end //
 ";
       Debugger dbg = new Debugger();
@@ -734,8 +742,8 @@ end //
         sql =
 @"create procedure MultipleInsert( id int, name varchar( 10 ))
 begin
-	create table test3( id2 int );
-	insert into test3 values (1);
+  create table test3( id2 int );
+  insert into test3 values (1);
 end;
 ";
         dbg.SqlInput = sql;
@@ -752,7 +760,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void SteppingIntoTriggers()
     {
       string sql =
@@ -813,7 +821,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void SteppingIntoTriggers2()
     {
       string sql =
@@ -874,7 +882,7 @@ end;
       }
     }
 
-    [Test]
+    [Fact]
     public void RoutineWithoutBeginEndBlock()
     {
       string sql =
@@ -920,14 +928,14 @@ create procedure DoInsertTriggerTable()
         dbg.OnBreakpoint += (bp) =>
         {
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
-          if ( bp.RoutineName == "test.trTriggerTable")
+          if ( bp.RoutineName == "test6.trTriggerTable")
           {
             if (bp.Line == 3)
             {
               Debug.WriteLine("Checking new & old object in trigger scope");
-              Assert.AreEqual(1, Convert.ToInt32(w.Eval()));
+              Assert.Equal(1, Convert.ToInt32(w.Eval()));
               //Assert.AreEqual(1, Convert.ToInt32(w3.Eval()));
-              Assert.AreEqual("val", w2.Eval());
+              Assert.Equal("val", w2.Eval());
               //Assert.AreEqual("Val", w4.Eval());
             }
           }
@@ -941,7 +949,7 @@ create procedure DoInsertTriggerTable()
       }
     }
 
-    [Test]
+    [Fact]
     public void InformationFunctions()
     {
       string sql =
@@ -1032,10 +1040,10 @@ end;
           if (bp.Line == 23)
           {
             Debug.WriteLine("At line 23, checking locals values");
-            Assert.AreEqual(1, Convert.ToInt32( w.Eval() ) );
-            Assert.AreEqual(3, Convert.ToInt32(w2.Eval()));
-            Assert.AreEqual(3, Convert.ToInt32(w3.Eval()));
-            Assert.AreEqual(3, Convert.ToInt32(w4.Eval()));
+            Assert.Equal(1, Convert.ToInt32( w.Eval() ) );
+            Assert.Equal(3, Convert.ToInt32(w2.Eval()));
+            Assert.Equal(3, Convert.ToInt32(w3.Eval()));
+            Assert.Equal(3, Convert.ToInt32(w4.Eval()));
             Debug.WriteLine("Locals values just right");
           }
         };
@@ -1051,7 +1059,7 @@ end;
     /// These test checks that debugger fix works for evaluating & changing session variables
     /// in the debugger.
     /// </summary>
-    [Test]
+    [Fact]
     public void EvaluatingAndChangingSessionVariables()
     {
       string sql =
@@ -1098,13 +1106,13 @@ end ;
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
           if (bp.Line == 6)
           { 
-            Assert.AreEqual(1, Convert.ToInt32(w.Eval()));
+            Assert.Equal(1, Convert.ToInt32(w.Eval()));
             dbg.CurrentScope.Variables["@x1"].Value = 5;
             dbg.CommitLocals();
           }
           else if (bp.Line == 7)
           {
-            Assert.AreEqual(5, Convert.ToInt32(w.Eval()));
+            Assert.Equal(5, Convert.ToInt32(w.Eval()));
           }
         };
         dbg.Run(new string[0], null);
@@ -1118,9 +1126,9 @@ end ;
     /// <summary>
     /// This test assumes existence of sakila db.
     /// </summary>
-    [Test]
+    [Fact]
     public void DataIsNull()
-    {
+    {      
       string sql =
         @"
 CREATE TABLE customer
@@ -1136,7 +1144,6 @@ CREATE TABLE customer
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 delimiter //
 
 drop procedure if exists `new_customer` //
@@ -1179,7 +1186,7 @@ END;
     }
 
 
-    [Test]
+    [Fact]
     public void CharsetIssue()
     {
       string sql =
@@ -1228,7 +1235,7 @@ END ;
       }
     }
 
-    [Test]
+    [Fact]
     public void ColumnNumber()
     {
       string sql =
@@ -1250,7 +1257,7 @@ BEGIN
  set n = n + 1; set x = n * 2;
  set y = n * 5;
  set z = n * 10;
-	 set str = CONCAT(str, 'o'); end;
+   set str = CONCAT(str, 'o'); end;
  end while;
 END //
 ";
@@ -1277,7 +1284,7 @@ BEGIN
  set n = n + 1; set x = n * 2;
  set y = n * 5;
  set z = n * 10;
-	 set str = CONCAT(str, 'o'); end;
+   set str = CONCAT(str, 'o'); end;
  end while;
 END ;
 ";
@@ -1295,7 +1302,7 @@ END ;
       }
     }
 
-    [Test]
+    [Fact]
     public void NameIsKeyword()
     {
       string sql =
@@ -1352,7 +1359,7 @@ END;
       }
     }
 
-    [Test]
+    [Fact]
     public void FibonacciGeneration()
     {
       string sql =
@@ -1465,7 +1472,7 @@ end;
     /// <summary>
     /// Test for In, Out and InOut Parameters
     /// </summary>
-    [Test]
+    [Fact]
     public void ArgumentsTest()
     {
       string fullSql = @"DELIMITER //
@@ -1496,17 +1503,17 @@ END
 
         dbg.SqlInput = procedureSql;
         dbg.Run(new string[] { "1", "@dbg_var1", "@dbg_var2", "@dbg_var3" }, new string[] { "@dbg_var2 = '3'", "@dbg_var3 = 'abc'" });
-        Assert.AreEqual("1", dbg.ScopeVariables["param1"].Value);
-        Assert.AreEqual("1", dbg.ScopeVariables["param2"].Value);
-        Assert.AreEqual("4", dbg.ScopeVariables["param3"].Value);
-        Assert.AreEqual("xyz", dbg.ScopeVariables["param4"].Value);
+        Assert.Equal("1", dbg.ScopeVariables["param1"].Value);
+        Assert.Equal("1", dbg.ScopeVariables["param2"].Value);
+        Assert.Equal("4", dbg.ScopeVariables["param3"].Value);
+        Assert.Equal("xyz", dbg.ScopeVariables["param4"].Value);
         dbg.RestoreRoutinesBackup();
 
         dbg.Run(new string[] { "1", "@dbg_var1", "@dbg_var2", "@dbg_var3" }, new string[] { "@dbg_var2 = '3'", "@dbg_var3 = 'mysql'" });
-        Assert.AreEqual("1", dbg.ScopeVariables["param1"].Value);
-        Assert.AreEqual("1", dbg.ScopeVariables["param2"].Value);
-        Assert.AreEqual("4", dbg.ScopeVariables["param3"].Value);
-        Assert.AreEqual(DBNull.Value, dbg.ScopeVariables["param4"].Value);
+        Assert.Equal("1", dbg.ScopeVariables["param1"].Value);
+        Assert.Equal("1", dbg.ScopeVariables["param2"].Value);
+        Assert.Equal("4", dbg.ScopeVariables["param3"].Value);
+        Assert.Equal(DBNull.Value, dbg.ScopeVariables["param4"].Value);
       }
       finally
       {
@@ -1518,7 +1525,7 @@ END
     /// <summary>
     /// This fixes BUG 16002371 - MYSQL.DEBUGGER MODULE PARSES INCORRECTLY CAUSING SYNTAX ERROR.
     /// </summary>
-    [Test]
+    [Fact]
     public void BrokenInstrumentation()
     {
       string sql =

@@ -70,7 +70,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v2.0\Debug\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -78,9 +77,12 @@
     <!--<Reference Include="Microsoft.CSharp" /> -->
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTest.cs" />
+    <Compile Include="SetUp.cs" />
     <Compile Include="Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtils.cs" />

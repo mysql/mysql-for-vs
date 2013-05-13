@@ -24,30 +24,42 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
-using Xunit;
+using MySql.Data.MySqlClient;
 
-namespace MySql.Parser.Tests
+namespace MySql.Debugger.Tests
 {
+  public class SetUp : IDisposable
+  {    
+    public SetUp()
+    {
+      MySqlConnection con = new MySqlConnection(TestUtils.CONNECTION_STRING_WITHOUT_DB);
+      MySqlCommand cmd = new MySqlCommand("drop database if exists test", con);
+      con.Open();
+      try
+      {
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = "create database test;";
+        cmd.ExecuteNonQuery();
+      }
+      finally
+      {
+        con.Close();
+      }
+    }
   
-  public class CreateLog
-  {
-    [Fact]
-    public void Simple()
+    public void Dispose()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE LOGFILE GROUP lg1 
-        ADD UNDOFILE 'undo.dat' INITIAL_SIZE = 10M ENGINE = INNODB;
-        ");
-    }
-
-    [Fact]
-    public void Simple2()
-    {
-      MySQL51Parser.program_return r = Utility.ParseSql(@" CREATE LOGFILE GROUP lg1 
-        ADD UNDOFILE 'undo.dat' INITIAL_SIZE = 10M
-        ENGINE = NDB;
-        ");
-    }
+      MySqlConnection con = new MySqlConnection(TestUtils.CONNECTION_STRING_WITHOUT_DB);
+      MySqlCommand cmd = new MySqlCommand("drop database if exists test", con);
+      con.Open();
+      try
+      {
+        cmd.ExecuteNonQuery();
+      }
+      finally
+      {
+        con.Close();
+      }
+    }    
   }
 }
