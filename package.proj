@@ -28,7 +28,7 @@
   </Target>
 
   <Target Name="PackageInstall">
-    <GetVersion Assembly="Source\MySql.VisualStudio\bin\Release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="Source\MySql.VisualStudio\bin\v4.0\Release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter = "AsString" PropertyName="Version"/>
     </GetVersion>
     <Copy SourceFiles="Installer/bin/$(Configuration)/MySql.VisualStudio.Plugin.msi"
@@ -80,14 +80,14 @@
       <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.cf.dll"/>
       <V2Assemblies Include="Dependencies\v2.0\Release\mysql.web.dll"/>
       <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.entity.dll"/>
-      <V2Assemblies Include="VS2008\Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
+      <V2Assemblies Include="Source\MySql.VisualStudio\bin\v3.5\release\mysql.visualstudio.dll"/>
     </ItemGroup>
 
     <ItemGroup>
       <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll"/>
       <V4Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll"/>
       <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll"/>
-      <V4Assemblies Include="Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
+      <V4Assemblies Include="Source\MySql.VisualStudio\bin\v4.0\release\mysql.visualstudio.dll"/>
     </ItemGroup>
 
     <ItemGroup>

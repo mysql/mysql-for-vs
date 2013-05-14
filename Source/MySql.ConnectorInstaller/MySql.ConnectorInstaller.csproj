@@ -2,6 +2,8 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">9.0</VisualStudioVersion>
+    <!-- Normalize platform -->
+    <!-- <Platform Condition="'$(Platform)' == 'AnyCPU' or '$(Platform)' == ''">Any CPU</Platform> -->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}</ProjectGuid>
@@ -11,7 +13,6 @@
     <AssemblyName>MySql.ConnectorInstaller</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <WixCATargetsPath Condition=" '$(WixCATargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.CA.targets</WixCATargetsPath>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">9.0</VisualStudioVersion>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <OldToolsVersion>3.5</OldToolsVersion>
   </PropertyGroup>
@@ -56,6 +57,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Any CPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
+    <OutputPath>bin\$(TargetFrameworkVersion)\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
