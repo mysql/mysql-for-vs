@@ -1,9 +1,9 @@
-Connector/Net 6.6  Release Notes
+MySQL for Visual Studio 1.x  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 6.6
+Welcome to the release notes for MySQL for Visual Studio 1.x
 
-What's new in 6.6
+What's new in 1.0
 --------------------
 
 Be sure and check the documenation for more information on these new features.
