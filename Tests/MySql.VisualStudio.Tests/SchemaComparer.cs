@@ -24,17 +24,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Xunit;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.MySqlClient;
 
 
 namespace MySql.VisualStudio.Tests
 {
-  [TestFixture]
   public class SchemaComparerTests
   {
-    [Test]
+    [Fact]
     public void Comparison1()
     {
       MySqlConnection src = new MySqlConnection( "server=localhost; userid=root; database=DbCmp1;" );
@@ -98,8 +97,8 @@ namespace MySql.VisualStudio.Tests
         new ComparerResultItem( ComparerResultItemType.Different, null, "simpleproc", ObjectType.StoredProcedure, "dbcmp2" )
       };
 
-      Assert.AreEqual(validResultDst.Length, result.DiffsInDst.Count);
-      Assert.AreEqual(validResultSrc.Length, result.DiffsInSrc.Count);
+      Assert.True(validResultDst.Length == result.DiffsInDst.Count);
+      Assert.True(validResultSrc.Length == result.DiffsInSrc.Count);
 
       string scriptSrc;
       string scriptDst;
