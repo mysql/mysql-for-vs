@@ -39,7 +39,7 @@ namespace MySql.Data.VisualStudio.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.VisualStudio.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.VisualStudio.Properties.v4.x.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -141,6 +141,15 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("ArrowKey", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Any autoincrement columns needs to be set as primary key..
+        /// </summary>
+        public static string AutoIncrementPrimaryKey {
+            get {
+                return ResourceManager.GetString("AutoIncrementPrimaryKey", resourceCulture);
             }
         }
         
