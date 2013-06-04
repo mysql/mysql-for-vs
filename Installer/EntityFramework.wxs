@@ -1,6 +1,27 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment Id='EntityFramework'>    
+  <Fragment Id='EntityFramework'>
+    <DirectoryRef Id='assemblies_v2'>
+      <Component Id="EF.v2" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">        
+        <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
+              Source="..\Dependencies\v2.0\Release\mysql.data.entity.dll" DiskId="1"/>        
+      </Component>     
+    </DirectoryRef>
+
+    <!-- Entity framework 4.0 feature -->
+    <DirectoryRef Id='assemblies_v4'>
+      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">        
+        <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
+              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
+      </Component>   
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS10_PublicAssemblies'>
+      <Component Id="EF.PA.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C8" DiskId="1">
+        <File Id="MySql.EF.PA.v4" Name="MySql.Data.Entity.dll"
+              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
 
     <DirectoryRef Id="VS10_DBGenDir">
       <Component Id="EF.T4.VS10" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
@@ -8,13 +29,12 @@
         <File Id="VS10.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\SSDLToMySQL.tt"/>
         <File Id="VS10.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\GenerateMySQL.Utility.ttinclude"/>
+               Source="..\Source\MySql.VisualStudio\T4Templates\GenerateMySQL.Utility.ttinclude"/>
       </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="VS11_DBGenDir">
-      <Component Id="EF.T4.VS11" Guid="6555D339-120C-4D62-B60C-08764D8CA740">
-        <Condition>VS_2012_PATH</Condition>
+      <Component Id="EF.T4.VS11" Guid="6555D339-120C-4D62-B60C-08764D8CA740">              
         <File Id="VS11.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\SSDLToMySQL.tt"/>
         <File Id="VS11.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
@@ -22,12 +42,30 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS11_PublicAssemblies'>
+      <Component Id="EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C9" DiskId="1">      
+        <File Id="MySql.EF.PA11.v4" Name="MySql.Data.Entity.dll"
+              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+
     <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
              Description="Support for the entity framework">
-      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>      
-      <ComponentRef Id="EF.T4.VS10"/>
-      <ComponentRef Id="EF.T4.VS11"/>
+      <Condition Level="0">Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>      
+      <ComponentRef Id="EF.T4.VS10"/>      
+      <ComponentRef Id="EF.PA.v4"/>      
+      <ComponentRef Id="EF.v2"/>      
+      <ComponentRef Id="EF.v4"/>      
     </Feature>
+
+    <Feature Id="EntityFramework2012" Level="1" Title="Entity Framework Support"
+                 Description="Support for the entity framework">
+      <!--<Condition Level="0">VS2012_ROOT_FOLDER</Condition>-->
+    <ComponentRef Id="EF.T4.VS11"/>
+    <ComponentRef Id="EF.PA11.v4"/>
+    </Feature>
+    
   </Fragment>
 </Wix>
 

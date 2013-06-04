@@ -110,6 +110,14 @@
         <File Id='VS2010_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
       </Component>
+      <!--<Component Id='VS2010_EF.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250C'>
+        <File Id='VS2010_MySql.Data.Entity.Lib' Name='MySql.Data.Entity.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.Entity.dll'/>
+      </Component>-->
+      <Component Id='VS2010_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251B'>
+        <File Id='VS2010_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
     </DirectoryRef>
     
     <!-- Visual Studio 2012 -->
@@ -144,9 +152,17 @@
     </DirectoryRef>
 
     <DirectoryRef Id='VS11_PrivateAssemblies'>
-      <Component Id='VS2012_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250C'>
+      <Component Id='VS2012_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250E'>
         <File Id='VS2012_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+      <!--<Component Id='VS2012_EF.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250D'>
+        <File Id='VS2012_MySql.Data.Entity.Lib' Name='MySql.Data.Entity.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.Entity.dll'/>
+      </Component>-->
+      <Component Id='VS2012_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251E'>
+        <File Id='VS2012_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
     </DirectoryRef>
         
@@ -163,13 +179,16 @@
       <ComponentRef Id='VS2010_Extension'/>
       <ComponentRef Id='VS2010_Templates'/>
       <ComponentRef Id='VS2010_MD.Library' />
+      <!--<ComponentRef Id='VS2010_EF.Library' />-->
+      <ComponentRef Id='VS2010_Web.Library' />
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
       <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2012_Extension'/>
       <ComponentRef Id='VS2012_Templates'/>
-      <ComponentRef Id='VS2012_MD.Library' />
+      <ComponentRef Id='VS2012_MD.Library' />    
+      <ComponentRef Id='VS2012_Web.Library' />
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
@@ -183,12 +202,6 @@
     <!-- Visual Studio 2010 installation location -->
     <Property Id='VS_2010_PATH' Secure='yes'>
       <RegistrySearch Id='Find_VS2010_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
-    </Property>
-
-    <!-- Visual Studio 2012 installation location -->
-    <Property Id='VS_2012_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2012_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
 

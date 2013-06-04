@@ -7,7 +7,7 @@
       <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
 
       <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
-      <Property Id="WixUI_Mode" Value="Mondo" />
+      <Property Id="WixUI_Mode" Value="Mondo" />      
 
       <DialogRef Id="ErrorDlg" />
       <DialogRef Id="FatalError" />
@@ -65,6 +65,14 @@
 
     <UIRef Id="WixUI_Common" />
 
+    <!-- make sure a connector net integrated version is not installed -->
+    <Binary Id="ConnectorInstaller.CA.dll" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />    
+    <CustomAction Id="CheckCNet" DllEntry="GetConnectorNetVersion" BinaryKey="ConnectorInstaller.CA.dll" Execute="immediate"  Return="check" Impersonate="no" />
+    
+    <Condition Message="An integrated version of Connector/Net is installed in the system and should be remove it manually first. Please uninstall it before proceeding.">
+      Not (CNETINSTALLED = "1" AND Not Installed)
+    </Condition>
+
     <UI>
       <Dialog Id="MySQL_ExitDialog" Width="370" Height="270" Title="!(loc.ExitDialog_Title)">
         <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="$(loc.WixUIFinish)">
@@ -79,6 +87,7 @@
       </Dialog>
 
       <InstallUISequence>
+        <Custom Action="CheckCNet" Before="LaunchConditions">NOT Installed</Custom>        
         <Show Dialog="MySQL_ExitDialog" OnExit="success" />
       </InstallUISequence>
 
