@@ -15,7 +15,7 @@
 <#@ assembly name="System.Data.Entity" #>
 <#@ assembly name="System.Data.Entity.Design" #>
 <#@ assembly name="$(DevEnvDir)Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
-<#@ assembly name="MySql.Data.Entity" #>
+<#@ assembly name="MySql.Data.Entity.dll" #>
 <#@ assembly name="EnvDTE" #>
 <#@ assembly name="System.Configuration.dll" #>
 <#@ import namespace="System.Linq" #>

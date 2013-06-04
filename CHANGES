@@ -4,6 +4,11 @@
 - Fix for "README" file and "Release Notes" file referes to connector 6.6.
 - Fix for Parser fails to recognizes a complex view (Oracle bug #16815427).
 - Fix for Altering table's primary key in designer not working (Oracle bug #16866053).
+- Fix for Web configuration tool is not shown on mysql for visual studio (Oracle bug # 16902696).
+- Fix for Model first is not supported using mysql for visual studio (Oracle bug # 16902743).
+- Fix for Mysql for vs should not be installed with connector/net version < 6.7 (Oracle bug # 16902774).
+- Fix for Resolve assemblies dependencies between MySql.Data (Connector/Net version) and MySql.Data (WI # 460).
+- Fix for Showing an exception related to resources (Oracle bug #16903039).
 
 
 1.0.0
