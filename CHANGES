@@ -1,5 +1,4 @@
 
-
 1.0.1
 - Fix for "README" file and "Release Notes" file referes to connector 6.6.
 - Fix for Parser fails to recognizes a complex view (Oracle bug #16815427).
@@ -9,6 +8,7 @@
 - Fix for Mysql for vs should not be installed with connector/net version < 6.7 (Oracle bug # 16902774).
 - Fix for Resolve assemblies dependencies between MySql.Data (Connector/Net version) and MySql.Data (WI # 460).
 - Fix for Showing an exception related to resources (Oracle bug #16903039).
+- Fix for Documentation not found (Oracle bug #6915712).
 
 
 1.0.0

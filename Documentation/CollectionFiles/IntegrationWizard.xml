@@ -3,8 +3,8 @@
 <IntegrationWizard>
     <ProjectType>MergeModule</ProjectType>
     <Target>VS_2005_VSIPCC</Target>
-    <Namespace>mysql.connectornet.en</Namespace>
-    <Description>MySQL Connector Net Documentation</Description>
+    <Namespace>mysql.for.visualstudio</Namespace>
+    <Description>MySQL for Visual Studio</Description>
     <ParentNamespaces>
         <ParentNamespace>
             <Name>MS_VSIPCC_v80</Name>
