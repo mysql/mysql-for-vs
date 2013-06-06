@@ -1,31 +1,23 @@
 <topic id="9f3f194e-ad35-4379-b04d-5dce4b34ce6a" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <section address="connector-net-visual-studio">
-      <title>Connector/Net Visual Studio Integration</title>
+      <title>MySql for Visual Studio Integration</title>
       <content>
         <autoOutline />
         <para>
-    When  is installed on Microsoft Windows, Visual Studio
-    integration components are also installed and initialized. This
-    enables the developer to work seamlessly with  in the familiar
-    Visual Studio environment, as described in the following sections of
-    the manual.
+    When MySql For Visual Studio is installed on Microsoft Windows, 
+	a new set of tools of MySql for Visual Studio are installed and
+	initialized. This enables the developer to work seamlessly with
+	all Visual Studio environments, as described in the following 
+	sections of the manual.
   </para>
         <para>
-     supports Visual Studio versions 2005, 2008, and 2010.
-    However, only  version 6.3 and higher fully integrate with
-    Visual Studio 2010, although applications using earlier versions of
-    the connector can be built with the Visual Studio 2010 environment
-    using .NET 2.x frameworks.
+    MySql For Visual Studio supports Visual Studio versions 2008, 
+	2010 and 2012. 
   </para>
         <para>
-    Visual Studio 2010 support was introduced with  6.3.2. From
-    version 6.3.2 the connector ships with both .NET 2.x and .NET 4.x
-    versions of the entity framework support files,
-    <legacyBold>mysql.data.ef.dll</legacyBold> and
-    <legacyBold>mysql.visualstudio.dll</legacyBold>. The .NET 4.x versions
-    are required to enable new integration features supported in Visual
-    Studio 2010, including:
+     The .NET 4.x versions are required to enable new integration 
+	features supported in Visual Studio 2010 and 2012, including:
   </para>
         <list class="bullet">
           <listItem>
@@ -58,9 +50,10 @@
       <title>Making a Connection</title>
       <content>
         <para>
-      Once the connector is installed, you can use it to create, modify,
-      and delete connections to MySQL databases. To create a connection
-      with a MySQL database, perform the following steps:
+      Once the MySQL for Visual Studio is installed, you can use it
+	  to create, modify, and delete connections to MySQL databases. 
+	  To create a connection with a MySQL database, perform the 
+	  following steps:
     </para>
         <list class="bullet">
           <listItem>
@@ -163,8 +156,8 @@
       <content>
         <autoOutline />
         <para>
-      Connector/Net contains a table editor, which enables the visual
-      creation and modification of tables.
+      MySql For Visual Studio contains a table editor, which enables
+	  the visual creation and modification of tables.
     </para>
         <para>
       The Table Designer can be accessed through a mouse action on
@@ -950,8 +943,8 @@
           </listItem>
         </list>
         <para>
-      Connector/Net integrates with Visual Studio 2008 to provide a
-      range of helpful tools to assist the developer.
+      MySql for Visual Studio integrates with Visual Studio 2008 to
+	  provide a range of helpful tools to assist the developer.
     </para>
         <para>
       A full treatment of ADO.NET Entity Framework is beyond the scope

@@ -8,7 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5c97df05-1229-4b30-9711-789d0d6ff81b}</ProjectGuid>
-    <SHFBSchemaVersion>1.9.3.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>1.9.5.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
          Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
@@ -18,17 +18,17 @@
     <OutputPath>.\Output\</OutputPath>
     <HtmlHelpName>MySql.Data</HtmlHelpName>
     <ApiFilter>
-      <Filter entryType="Namespace" fullName="MySql.Data.MySqlClient" isExposed="True" xmlns="">
+      <Filter entryType="Namespace" fullName="MySql.Data.MySqlClient" isExposed="False" xmlns="">
         <Filter entryType="Class" fullName="MySql.Data.MySqlClient.CustomInstaller" filterName="CustomInstaller" isExposed="False" />
       </Filter>
-      <Filter entryType="Namespace" fullName="MySql.Web.Security" isExposed="True" xmlns="">
+      <Filter entryType="Namespace" fullName="MySql.Web.Security" isExposed="False" xmlns="">
         <Filter entryType="Class" fullName="MySql.Web.Security.CustomInstaller" filterName="CustomInstaller" isExposed="False" />
       </Filter>
     </ApiFilter>
     <ProjectSummary>
     </ProjectSummary>
     <MissingTags>None</MissingTags>
-    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <VisibleItems>Protected, SealedProtected</VisibleItems>
     <HtmlHelp1xCompilerPath>C:\Program Files (x86)\HTML Help Workshop\</HtmlHelp1xCompilerPath>
     <HtmlHelp2xCompilerPath>C:\Program Files (x86)\Common Files\microsoft shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <SandcastlePath>
@@ -39,28 +39,26 @@
     <BuildLogFile>
     </BuildLogFile>
     <HelpFileFormat>HtmlHelp1, MSHelp2, MSHelpViewer</HelpFileFormat>
-    <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
+    <FrameworkVersion>.NET Framework 4.0</FrameworkVersion>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Reference</RootNamespaceTitle>
-    <HelpTitle>MySQL Connector/Net</HelpTitle>
+    <HelpTitle>MySQL for Visual Studio</HelpTitle>
     <CopyrightHref>http://www.mysql.com</CopyrightHref>
-    <CopyrightText>Copyright &amp;#169%3b 2004,2012, Oracle and/or its affiliates.  All rights reserved.</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b 2004, 2013, Oracle and/or its affiliates.  All rights reserved.</CopyrightText>
     <FeedbackEMailAddress>support%40oracle.com</FeedbackEMailAddress>
     <PresentationStyle>vs2005</PresentationStyle>
     <NamingMethod>MemberName</NamingMethod>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\Dependencies\v4.0\Release\MySql.Data.dll" />
-      <DocumentationSource sourceFile="..\Dependencies\v4.0\Release\MySql.Data.xml" />
-      <DocumentationSource sourceFile="..\Dependencies\v4.0\release\MySql.Web.dll" />
     </DocumentationSources>
     <NamespaceSummaries>
-      <NamespaceSummaryItem name="(global)" isDocumented="False" xmlns="" />
-      <NamespaceSummaryItem name="MySql.Data.Common" isDocumented="False" xmlns="" />
-      <NamespaceSummaryItem name="MySql.Data.MySqlClient" isDocumented="True" xmlns="" />
-      <NamespaceSummaryItem name="MySql.Data.Types" isDocumented="True" xmlns="" />
+      <NamespaceSummaryItem name="(global)" isDocumented="True" xmlns="" />
       <NamespaceSummaryItem name="zlib" isDocumented="False" xmlns="" />
     </NamespaceSummaries>
     <PlugInConfigurations>
+      <PlugInConfig id="Additional Content Only" enabled="True">
+        <configuration />
+      </PlugInConfig>
     </PlugInConfigurations>
     <VendorName>Oracle</VendorName>
   </PropertyGroup>
@@ -76,13 +74,9 @@
     <Folder Include="Users Guide\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Users Guide\connector-net-connection-options.aml" />
-    <None Include="Users Guide\connector-net-tutorials.aml" />
+    <None Include="Users Guide\connector-net-install.aml" />
     <None Include="Users Guide\connector-net-versions.aml" />
     <None Include="Users Guide\connector-net-support.aml" />
-    <None Include="Users Guide\connector-net-programming.aml" />
-    <None Include="Users Guide\connector-net-install.aml" />
-    <None Include="Users Guide\connector-net-core.aml" />
     <None Include="Users Guide\connector-net-visual-studio.aml" />
   </ItemGroup>
   <ItemGroup>
