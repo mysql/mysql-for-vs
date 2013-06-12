@@ -145,17 +145,17 @@
 
     <DirectoryRef Id='DocsDir'>
       <Component Id="Docs" Guid="8f9d25c7-1eba-4391-b764-eb1f7d39243e">
-        <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\Documentation\Output\MySql.Data.chm" DiskId="1" />
+        <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\Documentation\Output\MySqlForVisualStudio.chm" DiskId="1" />
         <File Id="docs2" Name="COL_Master.HxC" Source="..\Documentation\CollectionFiles\COL_Master.HxC" DiskId="1"/>
         <File Id="docs3" Name="COL_Master.HxT" Source="..\Documentation\CollectionFiles\COL_Master.HxT" DiskId="1"/>
         <File Id="docs4" Name="COL_Master_A.HxK" Source="..\Documentation\CollectionFiles\COL_Master_A.HxK" DiskId="1"/>
         <File Id="docs5" Name="COL_Master_F.HxK" Source="..\Documentation\CollectionFiles\COL_Master_F.HxK" DiskId="1"/>
         <File Id="docs6" Name="COL_Master_K.HxK" Source="..\Documentation\CollectionFiles\COL_Master_K.HxK" DiskId="1"/>
         <File Id="docs7" Name="COL_Master_N.HxK" Source="..\Documentation\CollectionFiles\COL_Master_N.HxK" DiskId="1"/>
-        <File Id="docs8" Name="MySql.Data.HxS" Source="..\Documentation\Output\MySql.Data.HxS" DiskId="1"/>
+        <File Id="docs8" Name="MySql.Data.HxS" Source="..\Documentation\Output\MySqlForVisualStudio.HxS" DiskId="1"/>
         <File Id="H2Reg.ini" Name="help.cmd" Source="Binary\h2reg.ini" DiskId="1"/>
-        <File Id="MSHA_File" Name="HelpContentSetup.msha" Source="..\Documentation\Output\MySql.Data.msha" DiskId="1"/>
-        <File Id="MSHC_File" Name="MySql.Data.mshc" Source="..\Documentation\Output\MySql.Data.mshc" DiskId="1"/>
+        <File Id="MSHA_File" Name="HelpContentSetup.msha" Source="..\Documentation\Output\MySqlForVisualStudio.msha" DiskId="1"/>
+        <File Id="MSHC_File" Name="MySql.Data.mshc" Source="..\Documentation\Output\MySqlForVisualStudio.mshc" DiskId="1"/>
       </Component>
     </DirectoryRef>
 

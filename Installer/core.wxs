@@ -72,7 +72,7 @@
 
     <!-- Custom Action (updates machine.config after a repair) -->    
     <CustomAction Id="UpdateMachineConfigFile" DllEntry="UpdateMachineConfigFile" BinaryKey="MySql.Data.DependencyFile" Execute="deferred" Return="check" Impersonate="no" />
-    <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
        
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
               ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
