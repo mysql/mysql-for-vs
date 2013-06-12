@@ -100,7 +100,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <DocFiles Include="Documentation\Output\MySql.Data.chm"/>
+      <DocFiles Include="Documentation\Output\MySqlForVisualStudio.chm"/>
     </ItemGroup>
 
     <ItemGroup>
