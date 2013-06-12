@@ -155,36 +155,33 @@ namespace MySql.Debugger
     }
 
     private void ExecuteSetupScripts()
-    {
-      MySqlConnection con = new MySqlConnection(_connection.ConnectionString);      
-      Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Debugger.MySql_Scripts.Schema.sql");
-      StreamReader sr = new StreamReader(stream);
-      string sql = sr.ReadToEnd();
-      sr.Close();
-
-      con.Open();
-      try
-      {
-        MySqlScript script = new MySqlScript(con);
-        script.Query = sql;
-        script.Delimiter = "//";
-        script.Execute();
-
-        stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Debugger.MySql_Scripts.Logic.sql");
-        sr = new StreamReader(stream);
-        sql = sr.ReadToEnd();
+    {        
+        Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Debugger.MySql_Scripts.Schema.sql");
+        StreamReader sr = new StreamReader(stream);
+        string sql = sr.ReadToEnd();
         sr.Close();
-        script.Query = sql;
-        script.Execute();
-      }
-      finally
-      {
-        con.Close();
-      }
+
+        try
+        {
+            MySqlScript script = new MySqlScript(_utilCon);
+            script.Query = sql;
+            script.Delimiter = "//";
+            script.Execute();
+
+            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Debugger.MySql_Scripts.Logic.sql");
+            sr = new StreamReader(stream);
+            sql = sr.ReadToEnd();
+            sr.Close();
+            script.Query = sql;
+            script.Execute();
+        }
+        catch { }
+        
     }
 
     public void Run(string[] values, string[] InOutValues)
-    { 
+    {
+      string binLog_Format = null;
       _stopping = false;
       /*
        * - Start stepping in code.
@@ -206,7 +203,20 @@ namespace MySql.Debugger
         _lockingCon.Open();
       try
       {
+        // config binlo
+        MySqlCommand cmd = new MySqlCommand();
+        cmd.Connection = _utilCon;
+        cmd.CommandText = string.Format("SELECT @@GLOBAL.binlog_format;");
+        binLog_Format = (string)cmd.ExecuteScalar();
+        cmd.CommandText = "set session binlog_format = 'row';";
+        cmd.ExecuteNonQuery();
+
+        var dbName = _connection.Database;
+
+        // setup database
         ExecuteSetupScripts();
+
+        _utilCon.ChangeDatabase(dbName);
         // for now hardcoded
         DebugSessionId = 1;
         // Clean debugscope table.
@@ -334,7 +344,12 @@ namespace MySql.Debugger
           try { this.Stop(); }
           catch { }
         }
-        try { _utilCon.Close(); } catch { }
+        try {
+          MySqlCommand cmd = new MySqlCommand("", _utilCon);
+          cmd.CommandText = string.Format("set session binlog_format = '{0}'", binLog_Format);
+          cmd.ExecuteNonQuery();
+          _utilCon.Close(); 
+        } catch { }
         try { _lockingCon.Close(); } catch { }
         try { _connection.Close(); } catch { }
         IsRunning = false;
@@ -512,17 +527,28 @@ namespace MySql.Debugger
     private bool _stopping = false;
     public void Stop()
     {
+      string binLog_Format = String.Empty;
       _stopping = true;
       this._worker.CancelAsync();
       _completed = true;
-      try {
-        MySqlConnection con = new MySqlConnection(_connection.ConnectionString);
-        con.Open();
-        MySqlCommand cmd = new MySqlCommand(string.Format("kill {0}", _connection.ServerThread), con);
-        cmd.ExecuteNonQuery();
-        con.Close();        
+      try
+      {
+          MySqlConnection con = new MySqlConnection(_connection.ConnectionString);
+          con.Open();
+          var cmd = new MySqlCommand("SELECT @@GLOBAL.binlog_format;", con);
+          binLog_Format = (string)cmd.ExecuteScalar();
+          cmd.CommandText = "set session binlog_format = 'row';";
+          cmd.ExecuteNonQuery();
+
+          cmd.CommandText = string.Format("kill {0}", _connection.ServerThread);
+          cmd.ExecuteNonQuery();
+
+          //restore to the old value
+          cmd.CommandText = string.Format("set session binlog_format = '{0}'", binLog_Format);          
+          cmd.ExecuteNonQuery();
+          con.Close();
       }
-      catch { }
+      catch { }      
       try { _connection.Close(); }
       catch { }
     }
@@ -941,6 +967,7 @@ namespace MySql.Debugger
     private void worker_DoWork(object sender, DoWorkEventArgs e)
     {
       MySqlCommand cmd = new MySqlCommand("", _connection);
+      string binLog_Format = string.Empty;
       try
       {
         // long command timeout so it spans the full debug session time.
@@ -958,6 +985,10 @@ namespace MySql.Debugger
         cmd.CommandText = string.Format("set {0} = found_rows();", VAR_DBG_FOUND_ROWS);
         cmd.ExecuteNonQuery();
         cmd.CommandText = string.Format("set {0} = row_count();", VAR_DBG_ROW_COUNT);
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = string.Format("SELECT @@GLOBAL.binlog_format;");
+        binLog_Format = (string)cmd.ExecuteScalar();
+        cmd.CommandText = "set session binlog_format = 'row';";
         cmd.ExecuteNonQuery();
         SetNoDebuggingFlag(0, _connection);
         //cmd.CommandText = string.Format("set {0} = 0;", VAR_DBG_SCOPE_LEVEL);
@@ -988,6 +1019,8 @@ namespace MySql.Debugger
           cmd.ExecuteNonQuery();
           ReleaseDebuggeeLock();
         }
+        cmd.CommandText = string.Format("set session binlog_format = '{0}'", binLog_Format);
+        cmd.ExecuteNonQuery();
         _completed = true;
       }
     }
