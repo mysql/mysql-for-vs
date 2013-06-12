@@ -66,7 +66,7 @@
     <UIRef Id="WixUI_Common" />
 
     <!-- make sure a connector net integrated version is not installed -->
-    <Binary Id="ConnectorInstaller.CA.dll" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />    
+    <Binary Id="ConnectorInstaller.CA.dll" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />    
     <CustomAction Id="CheckCNet" DllEntry="GetConnectorNetVersion" BinaryKey="ConnectorInstaller.CA.dll" Execute="immediate"  Return="check" Impersonate="no" />
     
     <Condition Message="An integrated version of Connector/Net is installed in the system and should be remove it manually first. Please uninstall it before proceeding.">

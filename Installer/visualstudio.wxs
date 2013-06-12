@@ -206,7 +206,7 @@
     </Property>
 
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
-    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
     <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
