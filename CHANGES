@@ -1,4 +1,12 @@
 
+1.0.2
+- Fix for Documentation not found (Oracle bug #6915712).
+- Fix for intellisense completion, now Views are displayed together with Tables calling intellisense (Oracle Bug #16881451).
+- Fix for parser syntax, now the parser supports the clause ALTER TABLE table_name RENAME {INDEX|KEY} old_index_name TO new_index_name introduced in MySql 5.7. (Oracle Bug #16881481)
+- Fix for Debugging a routine produces an error when binary log is enabled (Oracle bug #16941181).
+- Fix for WorkItem 552: MySql for Visual Studio Installer fails when installing against VS2008.
+
+
 1.0.1
 - Fix for "README" file and "Release Notes" file referes to connector 6.6.
 - Fix for Parser fails to recognizes a complex view (Oracle bug #16815427).
@@ -8,11 +16,6 @@
 - Fix for Mysql for vs should not be installed with connector/net version < 6.7 (Oracle bug # 16902774).
 - Fix for Resolve assemblies dependencies between MySql.Data (Connector/Net version) and MySql.Data (WI # 460).
 - Fix for Showing an exception related to resources (Oracle bug #16903039).
-- Fix for Documentation not found (Oracle bug #6915712).
-- Fix for intellisense completion, now Views are displayed together with Tables calling intellisense (Oracle Bug #16881451).
-- Fix for parser syntax, now the parser supports the clause ALTER TABLE table_name RENAME {INDEX|KEY} old_index_name TO new_index_name introduced in MySql 5.7. (Oracle Bug #16881481)
-- Fix for Debugging a routine produces an error when binary log is enabled (Oracle bug #16941181).
-- Fix for WorkItem 552: MySql for Visual Studio Installer fails when installing against VS2008.
 
 
 1.0.0
