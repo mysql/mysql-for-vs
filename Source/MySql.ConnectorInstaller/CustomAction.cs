@@ -64,34 +64,40 @@ namespace MySql.ConnectorInstaller
     [CustomAction]
     public static ActionResult GetConnectorNetVersion(Session session)
     {
-
       var installedPath = Utility.GetInstallLocation("MySQL Connector/Net");
 
       session["CNETINSTALLED"] = "0";
-      session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);      
+      session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
 
-      if (!String.IsNullOrEmpty(installedPath))      
+      try
       {
-        installedPath = System.IO.Path.Combine(installedPath, @"\Assemblies\v2.0\MySql.data.dll");
-
-        Assembly a = Assembly.LoadFile(installedPath);
-
-        if (a != null)
+        if (!String.IsNullOrEmpty(installedPath))
         {
+          installedPath = System.IO.Path.Combine(installedPath, @"Assemblies\v2.0\MySql.data.dll");
 
-          var version = a.GetName().Version;
-          if (version < new Version(6, 7))
+          Assembly a = Assembly.LoadFile(installedPath);
+
+          if (a != null)
           {
-            session["CNETINSTALLED"] = "1";
-            session.Log("Cnet installed is 1");
-            return ActionResult.Success;
-          }
-        }
-        else                 
-          session.Log("Error - Assembly of Connector Net not found");        
-      }
 
-      return ActionResult.Success;
+            var version = a.GetName().Version;
+            if (version < new Version(6, 7))
+            {
+              session["CNETINSTALLED"] = "1";
+              session.Log("Cnet Installed is 1");
+              return ActionResult.Success;
+            }
+          }
+          else
+            session.Log("Error - Assembly of Connector Net not found");
+        }
+        return ActionResult.Success;
+      }
+      catch (Exception ex)
+      {
+        session.Log("An exception has been caught " + ex.Message);
+        return ActionResult.Failure;
+      }      
     }
   }
 }
