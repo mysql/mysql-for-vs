@@ -6,6 +6,7 @@
 - Fix for Debugging a routine produces an error when binary log is enabled (Oracle bug #16941181).
 - Fix for WorkItem 552: MySql for Visual Studio Installer fails when installing against VS2008.
 - Fix for bug Vs plugin installer is not working (Oracle bug #16973339).
+- Fix for bug Release notes file has no notes about (Oracle bug #16973326).
 
 
 1.0.1
