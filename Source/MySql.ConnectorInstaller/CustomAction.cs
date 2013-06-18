@@ -27,9 +27,12 @@ namespace MySql.ConnectorInstaller
 
       if (String.IsNullOrEmpty(installedPath))
         return ActionResult.NotExecuted;
-
-      installedPath = System.IO.Path.Combine(installedPath, @"\Assemblies\v2.0\MySql.data.dll");
       
+      installedPath = System.IO.Path.Combine(installedPath, @"Assemblies\v2.0\MySql.data.dll");
+
+      if (!File.Exists(installedPath))
+        return ActionResult.NotExecuted;
+            
       Assembly a = Assembly.LoadFile(installedPath);        
       Type customInstallerType = a.GetType("MySql.Data.MySqlClient.CustomInstaller");
         
