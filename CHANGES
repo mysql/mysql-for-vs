@@ -1,4 +1,5 @@
 
+
 1.0.2
 - Fix for Documentation not found (Oracle bug #6915712).
 - Fix for intellisense completion, now Views are displayed together with Tables calling intellisense (Oracle Bug #16881451).
