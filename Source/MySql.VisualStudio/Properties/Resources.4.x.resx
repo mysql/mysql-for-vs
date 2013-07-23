@@ -441,7 +441,7 @@ Would you like to create it?</value>
     <value>Triggers</value>
   </data>
   <data name="ConnectionPropertiesNull" xml:space="preserve">
-    <value>An error occurred that is normally caused by not having Connector/Net properly installed.</value>
+    <value>An error occurred that is normally caused by not having for Visual Studio properly installed.</value>
   </data>
   <data name="DisplayName_Column_SqlType" xml:space="preserve">
     <value>SQL Type</value>
@@ -832,7 +832,7 @@ Would you like to create it?</value>
     <value>Character Set</value>
   </data>
   <data name="ProductName" xml:space="preserve">
-    <value>MySQL Connector/Net</value>
+    <value>MySQL for Visual Studio</value>
   </data>
   <data name="TableNameDesc" xml:space="preserve">
     <value>The name of this table.</value>
