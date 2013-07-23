@@ -23,7 +23,7 @@ namespace MySql.ConnectorInstaller
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utility.GetInstallLocation("MySQL Visual Studio Plugin");
+      var installedPath = Utility.GetInstallLocation("MySQL for Visual Studio");
 
       if (String.IsNullOrEmpty(installedPath))
         return ActionResult.NotExecuted;

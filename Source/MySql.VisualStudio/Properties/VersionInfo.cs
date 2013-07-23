@@ -1,6 +1,6 @@
 // Copyright (C) 2004-2007 MySQL AB
 //
-// MySQL Connector/NET is licensed under the terms of the GPLv2
+// MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
 // MySQL Connectors. There are special exceptions to the terms and 
 // conditions of the GPLv2 as it is applied to this software, see the 
