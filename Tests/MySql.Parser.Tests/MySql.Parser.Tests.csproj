@@ -74,11 +74,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-<<<<<<< TREE
-<Reference Include="xunit">
-=======
     <Reference Include="xunit">
->>>>>>> MERGE-SOURCE
       <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
