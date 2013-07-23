@@ -1,6 +1,6 @@
 // Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
 //
-// MySQL Connector/NET is licensed under the terms of the GPLv2
+// MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
 // MySQL Connectors. There are special exceptions to the terms and 
 // conditions of the GPLv2 as it is applied to this software, see the 
@@ -44,7 +44,7 @@ namespace MySql.Data.VisualStudio
     }
 
     public override object CreateObject(Type objType)
-    {
+    {         
       if (objType == typeof(DataConnectionUIControl))
         return new MySqlDataConnectionUI();
       else if (objType == typeof(DataConnectionProperties))
