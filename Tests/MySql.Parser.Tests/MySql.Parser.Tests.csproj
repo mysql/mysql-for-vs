@@ -74,7 +74,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-<Reference Include="xunit">
+    <Reference Include="xunit">
       <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -111,6 +111,7 @@
     <Compile Include="Other\CompoundStatements.cs" />
     <Compile Include="Other\Explain.cs" />
     <Compile Include="Other\Expression.cs" />
+    <Compile Include="Other\FlowControlStmts.cs" />
     <Compile Include="Other\GatheringTables.cs" />
     <Compile Include="Other\GetDiagnostics.cs" />
     <Compile Include="Other\Handler.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Infrastructure\TokenStreamRemovable.cs" />
     <Compile Include="Other\LoadDataInfile.cs" />
     <Compile Include="Other\Other.cs" />
+    <Compile Include="Other\Other2.cs" />
+    <Compile Include="Other\Other3.cs" />
     <Compile Include="Other\RenameDatabase.cs" />
     <Compile Include="Other\RenameTable.cs" />
     <Compile Include="Other\Replace.cs" />
