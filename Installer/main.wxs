@@ -38,6 +38,11 @@
     </Property>
     <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
 
+    <Property Id="PLUGININSTALLED">
+      <RegistrySearch Id="VSPlugin" Key="Software\MySQL AB\MySql Visual Studio Plugin" Name="Location" Root="HKLM" Type="raw"/>
+    </Property>
+    <Condition Message="There is a MySql Visual Studio Plugin version installed, you need to install Connector/Net 6.7 or higher version to work with. Please uninstall MySql Visual Studio Plugin or install Connector/Net 6.7 or higher.">Not PLUGININSTALLED</Condition>
+
     <!-- now make sure that we don't have an old version that doesn't support upgrades -->
     <Property Id="PREUPGRADEVERSION">
       <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
