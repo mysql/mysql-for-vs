@@ -142,7 +142,7 @@
       <Custom Action='Setv4InstallUtil' After='InstallValidate'>NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
       <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
-      <Custom Action='UpdateMachineConfigFile' Before="InstallFinalize">REINSTALL</Custom>
+      <Custom Action='UpdateMachineConfigFile' Before="InstallFinalize">Installed AND NOT REMOVE</Custom>
       <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
       <Custom Action='ManagedDataUnInstall' After="ManagedDataUnInstallSetup">Installed</Custom>
     </InstallExecuteSequence>
