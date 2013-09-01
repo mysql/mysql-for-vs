@@ -21,6 +21,26 @@
           <RegistryValue Id="Version" Name="Version" Value="$(var.Version)" Type="string"/>
         </RegistryKey>
       </Component>
+      
+      <!-- Until we have installers for both 32 & 64 bit platforms, we deal with registry redirection with dual keys -->
+      <!--
+      <Component Id="RegistryInstallFlag64" Guid="3C4E556B-2815-405C-8701-14E9A1584D67" DiskId="1">        
+          <Condition>NOT(%PROCESSOR_ARCHITECTURE = "x86")</Condition>
+          <RegistryKey Id="MySqlKey64" Root="HKLM" Action="createAndRemoveOnUninstall"
+                      Key="Software\Wow6432Node\MySQL AB\MySQL for Visual Studio">
+            <RegistryValue Id="Location64" Name="Location" Value="[INSTALLDIR]" Type="string"/>
+            <RegistryValue Id="Version64" Name="Version" Value="$(var.Version)" Type="string"/>
+          </RegistryKey>
+      </Component>
+      <Component Id="RegistryInstallFlag32" Guid="6D3FD584-DAD2-42D6-9D59-D0D127A72724" DiskId="1">
+        <Condition>%PROCESSOR_ARCHITECTURE = "x86"</Condition>
+        <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="Software\MySQL AB\MySQL for Visual Studio">
+          <RegistryValue Id="Location" Name="Location" Value="[INSTALLDIR]" Type="string"/>
+          <RegistryValue Id="Version" Name="Version" Value="$(var.Version)" Type="string"/>
+        </RegistryKey>
+      </Component>
+      -->
     </DirectoryRef>
 
     <!-- .Net 2.0 Binaries -->
@@ -79,13 +99,16 @@
       </Component>
     </DirectoryRef>
 
-    <!-- Custom Action (updates machine.config after a repair) -->
+    <!-- Custom Action (updates machine.config after a repair) -->    
     <CustomAction Id="UpdateMachineConfigFile" DllEntry="UpdateMachineConfigFile" BinaryKey="MySql.Data.DependencyFile" Execute="deferred" Return="check" Impersonate="no" />
     <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
        
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
               ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
       <ComponentRef Id="BaseFiles"/>
+      <!--
+      <ComponentRef Id="RegistryInstallFlag64"/>
+      <ComponentRef Id="RegistryInstallFlag32"/> -->
       <ComponentRef Id="C.v2"/>
       <ComponentRef Id="C.v4"/>
       <ComponentRef Id="PerfMon"/>
@@ -93,14 +116,13 @@
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
     
-    
     <InstallExecuteSequence>
       <!-- v2 custom action scheduling -->
       <Custom Action="Setv2InstallUtil" After="InstallValidate"/>
       <Custom Action='Setv4InstallUtil' After='InstallValidate'>NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
-      <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
-      <Custom Action='UpdateMachineConfigFile' Before="InstallFinalize">Installed AND NOT REMOVE</Custom>
+      <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>      
+      <Custom Action='UpdateMachineConfigFile' Before="InstallFinalize">(NOT Installed) OR (REINSTALL)</Custom>
       <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
       <Custom Action='ManagedDataUnInstall' After="ManagedDataUnInstallSetup">Installed</Custom>
     </InstallExecuteSequence>

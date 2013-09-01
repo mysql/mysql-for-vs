@@ -50,7 +50,7 @@
     </DirectoryRef>
 
 
-    <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
+    <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support" Display="hidden"
              Description="Support for the entity framework">
       <Condition Level="0">Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>      
       <ComponentRef Id="EF.T4.VS10"/>      
@@ -59,7 +59,7 @@
       <ComponentRef Id="EF.v4"/>      
     </Feature>
 
-    <Feature Id="EntityFramework2012" Level="1" Title="Entity Framework Support"
+    <Feature Id="EntityFramework2012" Level="1" Display="hidden" Title="Entity Framework Support"
                  Description="Support for the entity framework">
       <!--<Condition Level="0">VS2012_ROOT_FOLDER</Condition>-->
     <ComponentRef Id="EF.T4.VS11"/>
