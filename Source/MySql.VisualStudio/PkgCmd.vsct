@@ -220,6 +220,14 @@
           <ButtonText>Debug Routine</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidDBExport</CommandName>
+          <ButtonText>&amp;MySql Database Export</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>        
@@ -284,6 +292,9 @@
 
   <CommandPlacements>
     <!-- we have to place our group under each of our two menus -->
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidDBExport" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
@@ -356,6 +367,7 @@
       <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
       <IDSymbol name="cmdidSchemaCompareTo" value="508"/>
       <IDSymbol name="cmdidSchemaCompare" value="509"/>
+      <IDSymbol name="cmdidDBExport" value="510" />
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
