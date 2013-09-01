@@ -110,10 +110,6 @@
         <File Id='VS2010_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
       </Component>
-      <!--<Component Id='VS2010_EF.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250C'>
-        <File Id='VS2010_MySql.Data.Entity.Lib' Name='MySql.Data.Entity.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.Entity.dll'/>
-      </Component>-->
       <Component Id='VS2010_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251B'>
         <File Id='VS2010_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
@@ -156,16 +152,56 @@
         <File Id='VS2012_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
       </Component>
-      <!--<Component Id='VS2012_EF.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250D'>
-        <File Id='VS2012_MySql.Data.Entity.Lib' Name='MySql.Data.Entity.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.Entity.dll'/>
-      </Component>-->
       <Component Id='VS2012_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251E'>
         <File Id='VS2012_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
     </DirectoryRef>
-        
+
+
+    <!-- Visual Studio 2013 -->
+    <DirectoryRef Id='VS12_ExtVersionDir'>
+      <Component Id='VS2013_Extension' Guid='AFD7D38E-D166-4256-B1A5-637E7B33134B'>
+        <File Id='MySQL.VisualStudio.2013' Name='MySQL.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySQL.VisualStudio.dll'/>
+        <File Id='MySql.Parser.2013' Name='MySql.Parser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll'/>
+        <File Id='Antlr3.Runtime.2013' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\Source\MySql.Parser\bin\v4.5.1\Release\Antlr3.Runtime.dll'/>
+        <File Id='VsixManifest.2013' Name='extension.vsixmanifest' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\extension.vsixmanifest'/>
+        <File Id='VSPkgdef.2013' Name='MySql.VisualStudio.pkgdef' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.VisualStudio.pkgdef'/>
+        <File Id='MySql.Debugger.2013' Name='MySql.Debugger.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger\bin\v4.5.1\release\MySql.Debugger.dll'/>
+        <File Id='MySql.Debugger.VisualStudio.2013' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySql.Utility_2013' Name='MySql.Utility.dll' DiskId='1'
+              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS12_TemplatesDir'>
+      <Component Id='VS2013_Templates' Guid='299BAC3E-82EB-4FC2-9ECA-4E1C0F50F34C'>
+        <File Id='VS2013_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2013_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS12_PrivateAssemblies'>
+      <Component Id='VS2013_MD.Library' Guid='4D8A38C2-9750-4C35-B89D-FD7FA6789BAC'>
+        <File Id='VS2013_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+      <Component Id='VS2013_Web.Library' Guid='0707943C-D00B-4D81-8722-E10CB4F77558'>
+        <File Id='VS2013_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+    </DirectoryRef>
+
+
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2008_Common'/>
@@ -191,9 +227,17 @@
       <ComponentRef Id='VS2012_Web.Library' />
     </Feature>
 
+    <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
+      <Condition Level='0'>Not VS_2013_PATH AND Not Installed</Condition>
+      <ComponentRef Id='VS2013_Extension'/>
+      <ComponentRef Id='VS2013_Templates'/>
+      <ComponentRef Id='VS2013_MD.Library' />
+      <ComponentRef Id='VS2013_Web.Library' />
+    </Feature>
+
     <!-- Visual Studio 2008 integration actions -->
     <Property Id='VS_2008_PATH'>
-      <RegistrySearch Id='Find_VS2008_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\9.0\Setup\VS'
+      <RegistrySearch Id='Find_VS2008_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\9.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
     <CustomAction Id="VS_2008_SETUP" Property="VS_2008_SETUP_EXEC" Value='"[VS_2008_PATH]\devenv.com" /setup'/>
@@ -201,8 +245,21 @@
 
     <!-- Visual Studio 2010 installation location -->
     <Property Id='VS_2010_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2010_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
+      <RegistrySearch Id='Find_VS2010_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
+    </Property>
+
+    <!-- Visual Studio 2012 installation location -->
+    <Property Id='VS_2012_PATH' Secure='yes'>
+      <RegistrySearch Id='Find_VS2012_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
+          Name='EnvironmentDirectory' Type='raw'/>
+    </Property>
+
+    <!-- Visual Studio 2013 installation location -->
+    <!-- way to get VS2013 is clumsy due to Wix not currently having VS2013 support -->
+    <Property Id='VS_2013_PATH' Secure='yes'>
+      <RegistrySearch Id='Find_VS2013_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\12.0\'
+          Name='ShellFolder' Type='raw'/>
     </Property>
 
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
@@ -210,12 +267,19 @@
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
     <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
+    <!-- Visual Studio 2013 Custom Action (update packages file) -->
+    <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
+    <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
+    <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+
     <InstallExecuteSequence>
       <!-- now vs2008 scheduling -->
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action='VS2013_SetPathProp' Before='VS12_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>      
       <Custom Action="VS11_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action="VS12_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
