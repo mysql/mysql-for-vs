@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -62,6 +62,7 @@ namespace MySql.Data.VisualStudio
     public const uint cmdidGenerateDatabaseScript = 507;
     public const uint cmdidSchemaCompareTo = 508;
     public const uint cmdidSchemaCompare = 509;
+    public const uint cmdidDBExport = 510;
   };
 
   static class SharedCommands

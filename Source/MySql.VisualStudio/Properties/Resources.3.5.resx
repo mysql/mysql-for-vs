@@ -1129,4 +1129,25 @@ Check that the server is running, the database exists and the user Error establi
   <data name="AutoIncrementPrimaryKey" xml:space="preserve">
     <value>Any autoincrement columns needs to be set as primary key.</value>
   </data>
+  <data name="MySqlDumpEndingInfoLog" xml:space="preserve">
+    <value>{0} Export of {1} has finished.</value>
+  </data>
+  <data name="MySqlDumpStartInfoLog" xml:space="preserve">
+    <value>{0} Dumping {1} ({2}).</value>
+  </data>
+  <data name="MySqlDumpRunning" xml:space="preserve">
+    <value>Running: mysqldump.exe {0}</value>
+  </data>
+  <data name="DbExportToolCaptionFrame" xml:space="preserve">
+    <value>MySql Database Export</value>
+  </data>
+  <data name ="DbExportPathNotProvided" xml:space="preserve">
+	<value>A path to a file was not provided.</value>
+  </data>
+  <data name="PathNotValid" xml:space="preserve">
+	<value>The given path is not valid.</value>
+  </data>
+  <data name="MySqlDumpPathNotFound" xml:space="preserve">
+    <value>MySql dump file was not found.</value>
+  </data>
 </root>

@@ -71,7 +71,7 @@
             <Directory Id='AssembliesDir' Name='Assemblies'>
               <Directory Id='assemblies_v2' Name='v2.0'/>
               <Directory Id='assemblies_v4' Name='v4.0'/>
-            </Directory>
+            </Directory>            
             <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
               <Directory Id='PFTemplatesDir' Name='Templates'/>
               <Directory Id='VS2008Integration' Name='2008'/>
@@ -80,6 +80,7 @@
               <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
             </Directory>
             <Directory Id='SampleDir' Name='Samples'/>
+            <Directory Id='Dependencies' Name='Dependencies' />                          
           </Directory>
         </Directory>
       </Directory>
