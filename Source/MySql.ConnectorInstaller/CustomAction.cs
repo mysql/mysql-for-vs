@@ -6,6 +6,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using System.IO;
 using System.Reflection;
 using MySQL.Utility;
+using System.Runtime.InteropServices;
 
 namespace MySql.ConnectorInstaller
 {
@@ -21,17 +22,32 @@ namespace MySql.ConnectorInstaller
     }
 
     [CustomAction]
+    public static ActionResult UpdateFlagPackagesFileForVS2013(Session session)
+    {
+      string VSpath = System.IO.Path.Combine(session.CustomActionData["VS2013_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
+      System.IO.File.WriteAllText(VSpath, string.Empty);
+
+      return ActionResult.Success;
+    }
+
+    [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
       var installedPath = Utility.GetInstallLocation("MySQL for Visual Studio");
 
       if (String.IsNullOrEmpty(installedPath))
+      {
+        session.Log("UpdateMachineConfig: not found installed path");
         return ActionResult.NotExecuted;
+      }
       
       installedPath = System.IO.Path.Combine(installedPath, @"Assemblies\v2.0\MySql.data.dll");
 
       if (!File.Exists(installedPath))
+      {
+        session.Log("UpdateMachineConfig: MySql.data.dll does not exists.");
         return ActionResult.NotExecuted;
+      }
             
       Assembly a = Assembly.LoadFile(installedPath);        
       Type customInstallerType = a.GetType("MySql.Data.MySqlClient.CustomInstaller");

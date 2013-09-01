@@ -4,7 +4,7 @@
   <Product Id="*" Name="$(var.ProductName)" Manufacturer="Oracle" Version="$(var.Version)"
            UpgradeCode="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7A" Language="1033">
     <Package Compressed="yes" InstallerVersion="200" InstallScope="perMachine"/>
-
+   
     <Upgrade Id="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7A">
       <UpgradeVersion OnlyDetect="yes" Minimum="$(var.Version)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
       <UpgradeVersion OnlyDetect="no" Maximum="$(var.Version)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="yes" />
@@ -55,12 +55,6 @@
 
     <Property Id="HLM_LOCATION">
       <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
-    </Property>
-
-    <!-- Visual Studio 2012 installation location -->
-    <Property Id='VS_2012_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2012_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
     </Property>
 
     <!-- Our directory structure -->
@@ -119,8 +113,8 @@
 
       <!-- VS2012 Extension folders -->      
       <Directory Id="VS2012_ROOT_FOLDER">
-        <Directory Id="VSCommon7Folder" Name="Common7">
-          <Directory Id="VSIDEFolder" Name="IDE">
+        <Directory Id="VS11.Common7Folder" Name="Common7">
+          <Directory Id="VS11.IDEFolder" Name="IDE">
             <Directory Id="VS11.T4.ExtensionDir" Name="Extensions">
               <Directory Id="VS11.T4.MicrosoftDir" Name="Microsoft">
                 <Directory Id="VS11.T4.EFToolsDir" Name="Entity Framework Tools">
@@ -139,10 +133,34 @@
             <Directory Id="VS11_PublicAssemblies" Name="PublicAssemblies" />
           </Directory>
         </Directory>
-      </Directory> 
-      
-    </Directory>
+      </Directory>
 
+      <!-- VS2013 Extension folders -->
+      <Directory Id="VS_2013_PATH" Name="VSPath2013">
+        <Directory Id="VS12.Common7Folder" Name="Common7">
+          <Directory Id="VS12.IDEFolder" Name="IDE">
+            <Directory Id="VS12.T4.ExtensionDir" Name="Extensions">
+              <Directory Id="VS12.T4.MicrosoftDir" Name="Microsoft">
+                <Directory Id="VS12.T4.EFToolsDir" Name="Entity Framework Tools">
+                  <Directory Id="VS12_DBGenDir" Name="DBGen"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS12_OracleDir" Name="Oracle">
+                <Directory Id="VS12_ExtensionDir" Name="MySQL Tools for Visual Studio ">
+                  <Directory Id="VS12_ExtVersionDir" Name="$(var.Version)">
+                    <Directory Id='VS12_TemplatesDir' Name='Templates'/>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="VS12_PrivateAssemblies" Name="PrivateAssemblies" />
+            <Directory Id="VS12_PublicAssemblies" Name="PublicAssemblies" />
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>      
+
+    <!-- Docs -->
     <DirectoryRef Id='DocsDir'>
       <Component Id="Docs" Guid="8f9d25c7-1eba-4391-b764-eb1f7d39243e">
         <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\Documentation\Output\MySqlForVisualStudio.chm" DiskId="1" />
@@ -176,7 +194,7 @@
     <FeatureRef Id='Core.Feature'/>
     <FeatureRef Id="WebProviders"/>
 
-    <Feature Id='EFIntegration2012' Level='1' Display='10'
+    <Feature Id='EFIntegration2012' Level='1' Display='hidden'
              Title='EF Integration' Description='DDEX and Server Explorer Integration'>      
       <FeatureRef Id="EntityFramework2012"/>
     </Feature>
@@ -186,7 +204,8 @@
       <FeatureRef Id='VS2008Int'/>
       <FeatureRef Id='VS2010Int'/>
       <FeatureRef Id='VS2012Int'/>
-      <FeatureRef Id="EntityFramework"/>
+      <FeatureRef Id='VS2013Int'/>
+      <!-- <FeatureRef Id="EntityFramework" /> -->
     </Feature>
 
     <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>
