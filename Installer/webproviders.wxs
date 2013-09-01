@@ -32,7 +32,7 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id='WebProviders' Display='7' Level='1' Title='Web Providers'
+    <Feature Id='WebProviders' Display='hidden' Level='1' Title='Web Providers'
              Description='ASP.Net Web Providers'>
       <ComponentRef Id='C.Web.v2'/>
       <ComponentRef Id='C.Web.v2.GAC'/>
