@@ -413,6 +413,7 @@
           <LastGenOutput>Resources.4.x.Designer.cs</LastGenOutput>
           <MergeWithCTO>true</MergeWithCTO>
           <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+          <SubType>Designer</SubType>
         </EmbeddedResource>
       </ItemGroup>
     </When>
@@ -439,18 +440,17 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Compile Include="DBExport\DbExportSaveWindow.cs">
-      <SubType>Form</SubType>
+    <Compile Include="DBExport\DbExportPanel.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DBExport\DbExportSaveWindow.Designer.cs">
-      <DependentUpon>DbExportSaveWindow.cs</DependentUpon>
+    <Compile Include="DBExport\DbExportPanel.Designer.cs">
+      <DependentUpon>DbExportPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="DBExport\DBExportSelectObjects.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DBExport\DBExportSelectObjects.Designer.cs">
-      <DependentUpon>DBExportSelectObjects.cs</DependentUpon>
-    </Compile>
+    <Compile Include="DBExport\DbExportWindowPane.cs" />
+    <Compile Include="DBExport\MySqlDbExport.cs" />
+    <Compile Include="DBExport\MySqlDbExportOptions.cs" />
+    <Compile Include="DBExport\MySqlDumpFacade.cs" />
+    <Compile Include="DBExport\SchemaColumn.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -659,6 +659,7 @@
     <Compile Include="SchemaComparer\SchemaComparerForm.designer.cs">
       <DependentUpon>SchemaComparerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SchemaComparer\SelectObjects.cs" />
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
@@ -714,6 +715,9 @@
     </When>
   </Choose>
   <ItemGroup>
+    <EmbeddedResource Include="DBExport\DbExportPanel.resx">
+      <DependentUpon>DbExportPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlConnectionUIControl.resx">
       <DependentUpon>MySqlConnectionUIControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -774,6 +778,7 @@
     <EmbeddedResource Include="WebConfig\WebConfigDlg.resx">
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions.datasource" />
     <None Include="Resources\ArrowKey.bmp">
     </None>
     <None Include="Resources\Key.bmp">
@@ -826,6 +831,7 @@
       <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>

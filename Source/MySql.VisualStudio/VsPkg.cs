@@ -47,6 +47,8 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using System.Text;
 using MySql.Data.VisualStudio.SchemaComparer;
+using MySql.Data.VisualStudio.DBExport;
+using System.Windows.Forms;
 
 
 namespace MySql.Data.VisualStudio
@@ -89,6 +91,7 @@ namespace MySql.Data.VisualStudio
   [ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
+  [ProvideToolWindow(typeof(DbExportWindowPane),Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]    
   // This attribute registers a tool window exposed by this package.
   [Guid(GuidStrings.Package)]  
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
@@ -169,6 +172,12 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdMenuSchemaCompareTo = new OleMenuCommand(SchemaCompareToCallback, cmdSchemaCompareTo);
         cmdMenuSchemaCompareTo.BeforeQueryStatus += new EventHandler(cmdSchemaCompareTo_BeforeQueryStatus);
         mcs.AddCommand(cmdMenuSchemaCompareTo);
+
+        CommandID cmdDbExportTool = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidDBExport);
+        OleMenuCommand cmdMenuDbExport = new OleMenuCommand(cmdDbExport_Callback, cmdDbExportTool);
+        cmdMenuDbExport.BeforeQueryStatus += new EventHandler(cmdMenuDbExport_BeforeQueryStatus);
+        mcs.AddCommand(cmdMenuDbExport);
+
       }
 
       // Register and initialize language service
@@ -178,7 +187,7 @@ namespace MySql.Data.VisualStudio
     }
 
     #endregion
-
+    
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand openUtilities = sender as OleMenuCommand;
@@ -270,6 +279,53 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
     }
 
+    void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand dbExportButton = sender as OleMenuCommand;
+      dbExportButton.Visible = true;
+    }
+
+    private void cmdDbExport_Callback(object sender, EventArgs e)
+    {
+      MySqlConnection connection = GetCurrentConnection();
+      string currentConnectionName = GetCurrentConnectionName();
+      if (connection != null)
+      {
+          for (int i = 0; ; i++)
+          {
+              ToolWindowPane existingDbExportToolWindow = this.FindToolWindow(typeof(DbExportWindowPane), i, false);
+              if (existingDbExportToolWindow == null)
+              {
+                  var window = (ToolWindowPane)this.CreateToolWindow(typeof(DbExportWindowPane), i);
+                  if (window == null || window.Frame == null)
+                      throw new Exception("Cannot create new window");
+
+                  window.Caption = String.Format(Resources.DbExportToolCaptionFrame, currentConnectionName);
+                
+                  IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+
+                  DbExportWindowPane windowPanel = (DbExportWindowPane)window;
+
+                  windowPanel.Connections = GetMySqlConnections();
+                  windowPanel.SelectedConnectionName = currentConnectionName;
+                  windowPanel.InitializeDbExportPanel();
+
+                  GetDTE2().Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Visible = true;
+
+                  object currentFrameMode;
+                  windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, out currentFrameMode);
+                  // switch to dock mode.                  
+                  if ((VSFRAMEMODE)currentFrameMode == VSFRAMEMODE.VSFM_Float)                  
+                      windowFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_Dock);
+                  
+                
+                  Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                  break;
+              }
+          }
+      }   
+    }
+
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
       MySqlWorkbench.LaunchUtilitiesShell();
@@ -311,7 +367,7 @@ namespace MySql.Data.VisualStudio
       myCon.Open();
       try
       {
-        script = GetDbScript(myCon);
+          script = SelectObjects.GetDbScript(myCon);
       }
       finally
       {
@@ -347,121 +403,35 @@ namespace MySql.Data.VisualStudio
       firstCon = GetCurrentConnection();
     }
 
-    private MySqlConnection GetCurrentConnection()
+
+    private string GetCurrentConnectionName()
     {
-      // Get current connection
-      string conStr = "";
-      EnvDTE80.DTE2 _applicationObject = GetDTE2();
-      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
-      Array selectedItems = (Array)uih.SelectedItems;
+        EnvDTE80.DTE2 _applicationObject = GetDTE2();
+        UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+        Array selectedItems = (Array)uih.SelectedItems;
 
-      if (selectedItems != null)
-        conStr = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-
-      IVsDataExplorerConnection con = GetConnection(conStr);
-      
-      MySqlConnection myCon = new MySqlConnection(con.Connection.DisplayConnectionString);
-      return myCon;
+        if (selectedItems != null)
+            return ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+        
+        return string.Empty;
     }
 
-    private string GetDbScript(MySqlConnection con)
-    {
-      MySqlConnection con2 = new MySqlConnection(con.ConnectionString);
-      StringBuilder sb = new StringBuilder();
-      sb.AppendLine(" delimiter // ");
-      con2.Open();
+
+    private MySqlConnection GetCurrentConnection()
+    {      
+      IVsDataExplorerConnection con = GetConnection(GetCurrentConnectionName());
       try
       {
-        // Get Stuff
-        GetTables(con, con2, sb);   // this is for both tables & views
-        GetProcedures(con, con2, sb);
-        GetFunctions(con, con2, sb);
-        GetTriggers(con, con2, sb);
+        MySqlConnection connection = (MySqlConnection)con.Connection.GetLockedProviderObject();
+        if (connection != null)
+          return new MySqlConnection(connection.ConnectionString);
+        return null;
       }
-      finally
+      catch 
       {
-        con2.Close();
+        return null;
       }
-      return sb.ToString();
-    }
-
-    private void GetTables(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
-    {
-      MySqlCommand cmd = new MySqlCommand("show tables", con);
-      using (MySqlDataReader r = cmd.ExecuteReader())
-      {
-        while (r.Read())
-        {
-          MySqlCommand cmd2 = new MySqlCommand(string.Format("show create table `{0}`", r.GetString(0)), con2);
-          using (MySqlDataReader r2 = cmd2.ExecuteReader())
-          {
-            r2.Read();
-            sb.AppendLine(r2.GetString(1)).AppendLine(" // ");
-          }
-        }
-      }
-    }
-
-    private void GetProcedures(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
-    {
-      MySqlCommand cmd = new MySqlCommand( string.Format( 
-        "select `name` as routinename from mysql.proc where type = 'PROCEDURE' and db = '{0}'", con.Database), con);
-      using (MySqlDataReader r = cmd.ExecuteReader())
-      {
-        while (r.Read())
-        {
-          MySqlCommand cmd2 = new MySqlCommand(string.Format("show create procedure `{0}`", r.GetString(0)), con2);
-          using (MySqlDataReader r2 = cmd2.ExecuteReader())
-          {
-            r2.Read();
-            sb.AppendLine(r2.GetString(2)).AppendLine(" // ");
-          }
-        }
-      }
-    }
-
-    private void GetFunctions(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
-    {
-      MySqlCommand cmd = new MySqlCommand(string.Format(
-        "select `name` as routinename from mysql.proc where type = 'FUNCTION' and db = '{0}'", con.Database), con);
-      using (MySqlDataReader r = cmd.ExecuteReader())
-      {
-        while (r.Read())
-        {
-          MySqlCommand cmd2 = new MySqlCommand(string.Format("show create function `{0}`", r.GetString(0)), con2);
-          using (MySqlDataReader r2 = cmd2.ExecuteReader())
-          {
-            r2.Read();
-            sb.AppendLine(r2.GetString(2)).AppendLine(" // ");
-          }
-        }
-      }
-    }
-
-    private void GetTriggers(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
-    {
-      MySqlCommand cmd = new MySqlCommand(string.Format(
-        @"select trigger_schema, trigger_name, event_manipulation, event_object_schema, 
-          event_object_table, action_statement, action_timing, `definer`
-          from information_schema.triggers
-          where event_object_schema = '{0}';", con.Database), con);
-      using (MySqlDataReader r = cmd.ExecuteReader())
-      {
-        while (r.Read())
-        {
-          string TriggerSchema = r.GetString(0);
-          string Name = r.GetString(1);
-          string EventManipulation = r.GetString(2);
-          string EventObjectSchema = r.GetString(3);
-          string EventObjectTable = r.GetString(4);
-          string ActionStmt = r.GetString(5);
-          string ActionTiming = r.GetString(6);
-          string Definer = r.GetString(7);
-          sb.AppendFormat("create trigger {0} {1} {2} on {3} for each row {4}", Name, ActionTiming, EventManipulation,
-            string.Format("{0}.{1}", EventObjectSchema, EventObjectTable), ActionStmt).AppendLine(" // ");
-        }
-      }
-    }
+    }   
 
     private EnvDTE80.DTE2 GetDTE2()
     {
@@ -482,6 +452,23 @@ namespace MySql.Data.VisualStudio
       }
       return null;
     }
+
+    internal List<IVsDataExplorerConnection> GetMySqlConnections()
+    {
+      IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+      if (connectionManager == null) return null;
+
+      System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
+
+      List<IVsDataExplorerConnection> mysqlConnections = new List<IVsDataExplorerConnection>();        
+      foreach (var connection in connections)
+      {
+          if (Guids.Provider.Equals(connection.Value.Provider))
+              mysqlConnections.Add(connection.Value);              
+      }
+      return mysqlConnections;
+    }
+
 
     public ConnectionParameters ParseConnectionString(string connStr)
     {

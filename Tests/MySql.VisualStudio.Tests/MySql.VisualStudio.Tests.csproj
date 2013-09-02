@@ -10,6 +10,8 @@
     <RootNamespace>MySql.VisualStudio.Tests</RootNamespace>
     <AssemblyName>MySql.VisualStudio.Tests</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <Choose>
 	<When Condition=" '$(VisualStudioVersion)' == '12.0'">
@@ -58,6 +60,7 @@
     <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -67,6 +70,7 @@
     <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Choose>
 	<When Condition=" '$(VisualStudioVersion)' == '12.0'">
@@ -92,9 +96,6 @@
         <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\$(Configuration)\MySql.Data.dll</HintPath>
-        </Reference>
-        <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
@@ -136,20 +137,33 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="DbExportTests.cs" />
     <Compile Include="SchemaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetUp.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\MySql.VisualStudio\MySql.VisualStudio.csproj">
-      <Project>{DC3517FF-AC26-4755-9B7A-EF658FF69593}</Project>
-      <Name>MySql.VisualStudio</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="xunit">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Setup.sql">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\MySql.VisualStudio\MySql.VisualStudio.csproj">
+      <Project>{dc3517ff-ac26-4755-9b7a-ef658ff69593}</Project>
+      <Name>MySql.VisualStudio</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
