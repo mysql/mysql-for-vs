@@ -68,6 +68,15 @@
         </RegistryKey>
       </Component>
     </DirectoryRef>
+    
+    <!-- Dependencies with mysqldump -->
+    <DirectoryRef Id='Dependencies'>
+      <Component Id="MySqldumpx86" Guid="C66D3DF6-A151-4F29-B388-A9803C89131D" >
+        <File Id="MySqldumpx86File" Name="mysqldump.exe"
+              Source="..\Dependencies\MySql\mysqldump.exe" DiskId="1"/>
+        <RemoveFile Id="MySqldumpx86File" Name="mysqldump.exe" On="uninstall"/>
+      </Component>      
+    </DirectoryRef>
 
     <!-- Start menu junk -->
     <DirectoryRef Id='ShortCutDir'>
@@ -103,6 +112,7 @@
       <ComponentRef Id="C.v2"/>
       <ComponentRef Id="C.v4"/>
       <ComponentRef Id="PerfMon"/>
+      <ComponentRef Id="MySqldumpx86"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
     
