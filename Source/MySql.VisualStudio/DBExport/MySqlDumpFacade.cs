@@ -102,17 +102,12 @@ namespace MySql.Data.VisualStudio.DBExport
         outWindow.GetPane(ref generalPaneGuid, out _generalPane);
       }
 
-      
-      //get path of mysqldump      
       _dumpFilePath  = Utility.GetInstallLocation("MySQL for Visual Studio");
 
-      //_dumpFilePath = @"D:\servers\mysql-5.5.15-winx64\mysql-5.5.15-winx64\bin\mysqldump.exe";
-      _dumpFilePath = @"D:\servers\mysql-5.6.10-winx64\bin\mysqldump.exe";
-
-      //if (!String.IsNullOrEmpty(_dumpFilePath))
-      //  _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
-      //else
-      //  throw new Exception(Resources.MySqlDumpPathNotFound);
+      if (!String.IsNullOrEmpty(_dumpFilePath))
+        _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
+      else
+        throw new Exception(Resources.MySqlDumpPathNotFound);
 
       _tables = null;
 
@@ -186,14 +181,17 @@ namespace MySql.Data.VisualStudio.DBExport
                 break;
           }                   
         }
-      }      
+      }
+      //TODO add a new property to define variables
+      // so we can accept a ON/OFF value
+      _arguments.Append(" --set-gtid-purged=OFF ");
       _arguments.AppendFormat(" \"{0}\"", _database);     
     }
 
     internal void ProcessRequest()
     {            
       Process mysqldumpProcess = new Process();
-
+      
       var startInfo = new ProcessStartInfo
       {        
         CreateNoWindow = true,
