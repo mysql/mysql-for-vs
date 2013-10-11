@@ -62,13 +62,12 @@
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <ItemGroup>
-        <Reference Include="MySql.Data, Version=6.6.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Debug\MySql.Data.dll</HintPath>
-        </Reference>
         <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
         </Reference>
+		<Reference Include="MySql.Data">
+			<HintPath>..\..\Dependencies\v2.0\Release\MySql.Data.dll</HintPath>
+		</Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Xml.Linq" />
@@ -80,10 +79,9 @@
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
       <ItemGroup>
-        <Reference Include="MySql.Data, Version=6.6.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Debug\MySql.Data.dll</HintPath>
-        </Reference>
+         <Reference Include="MySql.Data">
+			<HintPath>..\..\Dependencies\v2.0\Release\MySql.Data.dll</HintPath>
+		</Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Xml.Linq" />
@@ -95,10 +93,9 @@
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '9.0'">
       <ItemGroup>
-        <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v2.0\Debug\MySql.Data.dll</HintPath>
-        </Reference>
+        <Reference Include="MySql.Data">
+			<HintPath>..\..\Dependencies\v2.0\Release\MySql.Data.dll</HintPath>
+		</Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Xml.Linq" />
@@ -118,7 +115,7 @@
       <Name>MySql.VisualStudio</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>    
     <Reference Include="xunit">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>

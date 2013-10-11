@@ -86,7 +86,7 @@ namespace MySql.Data.VisualStudio
   // package needs to have a valid load key (it can be requested at 
   // http://msdn.microsoft.com/vstudio/extend/). This attributes tells the shell that this 
   // package has a load key embedded in its resources.
-  [ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
+  [ProvideLoadKey("Standard", "1.0", "MySQL for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
   // This attribute registers a tool window exposed by this package.
