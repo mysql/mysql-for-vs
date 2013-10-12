@@ -174,7 +174,7 @@
     </Feature>
     
     <FeatureRef Id='Core.Feature'/>
-    <FeatureRef Id="WebProviders"/>
+    <!--<FeatureRef Id="WebProviders"/>-->
 
     <Feature Id='EFIntegration2012' Level='1' Display='10'
              Title='EF Integration' Description='DDEX and Server Explorer Integration'>      
