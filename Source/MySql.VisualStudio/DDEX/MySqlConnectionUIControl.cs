@@ -60,8 +60,8 @@ namespace MySql.Data.VisualStudio
       Button okButton = this.ParentForm.AcceptButton as Button;
       okButton.Click += new EventHandler(okButton_Click);
 
-      AdoDotNetConnectionProperties prop =
-                (ConnectionProperties as AdoDotNetConnectionProperties);
+      MySqlConnectionProperties prop =
+                (ConnectionProperties as MySqlConnectionProperties);
       DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
 
       loadingInProcess = true;
@@ -162,8 +162,8 @@ namespace MySql.Data.VisualStudio
     {
       if (dbListPopulated) return;
 
-      AdoDotNetConnectionProperties prop =
-          (ConnectionProperties as AdoDotNetConnectionProperties);
+      MySqlConnectionProperties prop =
+          (ConnectionProperties as MySqlConnectionProperties);
       DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
 
       try
@@ -195,8 +195,8 @@ namespace MySql.Data.VisualStudio
 
     private bool DatabaseExists()
     {
-      AdoDotNetConnectionProperties prop =
-          (ConnectionProperties as AdoDotNetConnectionProperties);
+      MySqlConnectionProperties prop =
+          (ConnectionProperties as MySqlConnectionProperties);
       DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
 
       try
@@ -212,15 +212,15 @@ namespace MySql.Data.VisualStudio
       catch (DbException ex)
       {
         string msg = ex.Message.ToLowerInvariant();
-        if (msg.StartsWith("unknown database", StringComparison.OrdinalIgnoreCase)) return false;
+        if (msg.ToLower().Contains("unknown database")) return false;
         throw;
       }
     }
 
     private bool AttemptToCreateDatabase()
     {
-      AdoDotNetConnectionProperties prop =
-          (ConnectionProperties as AdoDotNetConnectionProperties);
+      MySqlConnectionProperties prop =
+          (ConnectionProperties as MySqlConnectionProperties);
       DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
 
       string olddb = (string)cb["Database"];
