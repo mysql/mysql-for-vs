@@ -1,6 +1,6 @@
 <Include>
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall" 
-               Key="Software\Microsoft\VisualStudio\9.0\InstalledProducts\MySQL Tools for Visual Studio $(var.Version)">
+               Key="Software\Microsoft\VisualStudio\9.0\InstalledProducts\MySQL for Visual Studio $(var.Version)">
     <RegistryValue Value="MySQL Tools for Visual Studio $(var.Version)" Type="string"/>
     <RegistryValue Name="Package" Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string" />
     <RegistryValue Name="UseInterface" Value="1" Type="integer" />
@@ -8,14 +8,14 @@
 
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
                Key="Software\Microsoft\VisualStudio\9.0\Packages\{79a115c9-b133-4891-9e7b-242509dad272}">
-    <RegistryValue Value="MySQL Tools for Visual Studio $(var.Version)" Type="string"/>
+    <RegistryValue Value="MySQL for Visual Studio $(var.Version)" Type="string"/>
     <RegistryValue Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
     <RegistryValue Name="Class" Value="MySql.Data.VisualStudio.MySqlDataProviderPackage" Type="string" />
     <RegistryValue Name="CodeBase" Value="[#MySQL.VisualStudio]" Type="string"/>
     <RegistryValue Name="ID" Value="100" Type="integer" />
     <RegistryValue Name="MinEdition" Value="Standard" Type="string" />
     <RegistryValue Name="ProductVersion" Value="1.1" Type="string" />
-    <RegistryValue Name="ProductName" Value="MySQL Tools for Visual Studio" Type="string" />
+    <RegistryValue Name="ProductName" Value="MySQL for Visual Studio" Type="string" />
     <RegistryValue Name="CompanyName" Value="MySQL AB c/o MySQL, Inc." Type="string" />
   </RegistryKey>
 
@@ -56,7 +56,7 @@
 
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
                Key="Software\Microsoft\VisualStudio\9.0\Editors\{CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581}">
-    <RegistryValue Value="MySql Tools for Visual Studio" Type="string"/>
+    <RegistryValue Value="MySql for Visual Studio" Type="string"/>
     <RegistryValue Name="DisplayName" Value="#105" Type="string"/>
     <RegistryValue Name="Package" Value="{79A115C9-B133-4891-9E7B-242509DAD272}" Type="string"/>
     <RegistryKey Key="Extensions">
