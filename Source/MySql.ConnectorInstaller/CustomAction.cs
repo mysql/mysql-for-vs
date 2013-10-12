@@ -92,7 +92,11 @@ namespace MySql.ConnectorInstaller
       {
         if (!String.IsNullOrEmpty(installedPath))
         {
+          
           installedPath = System.IO.Path.Combine(installedPath, @"Assemblies\v2.0\MySql.data.dll");
+
+          if (!File.Exists(installedPath))
+            return ActionResult.Success;
 
           Assembly a = Assembly.LoadFile(installedPath);
 

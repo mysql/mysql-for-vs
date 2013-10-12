@@ -36,6 +36,9 @@ using MySql.Data.VisualStudio.Properties;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using Microsoft.VisualStudio.Data.Services;
+using Microsoft.VisualStudio.Data.Services.SupportEntities;
+using Microsoft.VisualStudio.Data;
 
 
 namespace MySql.Data.VisualStudio
@@ -48,6 +51,14 @@ namespace MySql.Data.VisualStudio
       : base(MySqlConnectionProperties.InvariantName)
     {
     }
+
+    public override void Initialize(object providerObj)
+    {
+      if (providerObj == null)
+        providerObj = new MySqlConnection();
+      base.Initialize(providerObj);
+    }
+
 
     /// <summary>
     /// Retrieves a service of the specified type. Following services are 
