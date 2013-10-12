@@ -101,7 +101,7 @@
             </Directory>
           </Directory>
           <Directory Id="VS10_OracleDir" Name="Oracle">
-            <Directory Id="VS10_ExtensionDir" Name="MySQL Tools for Visual Studio ">
+            <Directory Id="VS10_ExtensionDir" Name="MySQL for Visual Studio ">
               <Directory Id="VS10_ExtVersionDir" Name="$(var.Version)">
                 <Directory Id='VS10_TemplatesDir' Name='Templates'/>
               </Directory>
@@ -123,7 +123,7 @@
                 </Directory>
               </Directory>
               <Directory Id="VS11_OracleDir" Name="Oracle">
-                <Directory Id="VS11_ExtensionDir" Name="MySQL Tools for Visual Studio ">
+                <Directory Id="VS11_ExtensionDir" Name="MySQL for Visual Studio ">
                   <Directory Id="VS11_ExtVersionDir" Name="$(var.Version)">
                     <Directory Id='VS11_TemplatesDir' Name='Templates'/>
                   </Directory>
@@ -238,7 +238,7 @@
                   ExeCommand ='/product VS /version 100 /locale en-us /brandingPackage Dev10.mshc /sourceMedia "[#MSHA_File]"'
                   Property='HelpLibManager' Return='check'/>
     <CustomAction Id="UnRegister2010Help"
-                  ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Tools for Visual Studio" /productName "MySQL Tools for Visual Studio" > NUL'
+                  ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL for Visual Studio" /productName "MySQL for Visual Studio" > NUL'
                   Property='HelpLibManager' Return='check'/>
 
     <!-- Setup should not continue is a newer version is installed. -->

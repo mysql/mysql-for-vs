@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MySQL Tools for Visual Studio Tests")]
+[assembly: AssemblyTitle("MySQL for Visual Studio Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle Corporation")]
-[assembly: AssemblyProduct("MySQL Tools for Visual Studio Tests")]
+[assembly: AssemblyProduct("MySQL for Visual Studio Tests")]
 [assembly: AssemblyCopyright("Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
