@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -25,6 +25,11 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using Microsoft.VisualStudio.Data;
 using System.Data.Common;
+using Microsoft.Win32;
+using MySQL.Utility;
+using System.Reflection;
+using System.IO;
+
 
 namespace MySql.Data.VisualStudio
 {
@@ -37,8 +42,38 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
-        if (factory == null)
+        if (factory != null)
+          return factory;
+
+        //try to get it from DbProviders table
+        try
+        {
           factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        }
+        catch 
+        { }
+        
+        if (factory == null)
+        {
+         
+#if DEBUG
+          var installedPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v2.0\Release\MySql.Data.dll"); 
+#else          
+          var installedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"PrivateAssemblies\MySql.Data.dll");
+#endif
+          if (!File.Exists(installedPath))
+           {
+             return null;
+           }
+          
+          Assembly a = Assembly.LoadFile(installedPath);
+          Type dbProviderInstance = a.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
+          if (dbProviderInstance != null)
+          {
+            var fieldInfo = dbProviderInstance.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
+            factory = (DbProviderFactory)fieldInfo.GetValue(dbProviderInstance);
+          }
+        }
         return factory;
       }
     }
