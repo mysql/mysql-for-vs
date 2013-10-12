@@ -41,8 +41,8 @@
       <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
       <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
 
-      <ProgressText Action="ManagedDataInstall">Registering data provider in machine.config</ProgressText>
-      <ProgressText Action="ManagedDataUnInstall">Unregistering data provider from machine.config</ProgressText>
+      <ProgressText Action="ManagedDataInstall">Registering provider</ProgressText>
+      <ProgressText Action="ManagedDataUnInstall">Unregistering provider</ProgressText>
       <ProgressText Action="ManagedWebInstall">Registering web providers in machine.config</ProgressText>
       <ProgressText Action="ManagedWebUnInstall">Unregistering web providers from machine.config</ProgressText>
 
