@@ -237,8 +237,8 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
 
       ////this feature can be shown only if Connector/Net is installed too
-      //if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Connector/Net")))
-      //  return;
+      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Connector/Net")))
+        return;
 
       DTE dte = GetService(typeof(DTE)) as DTE;
       Array a = (Array)dte.ActiveSolutionProjects;
