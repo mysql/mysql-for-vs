@@ -184,7 +184,7 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand openUtilities = sender as OleMenuCommand;
             
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
-      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
       
       if (selectedItems != null)            
@@ -205,7 +205,7 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand launchWBbtn = sender as OleMenuCommand;            
             
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
-      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
       
       if (selectedItems != null)
@@ -299,7 +299,7 @@ namespace MySql.Data.VisualStudio
       string conStr = "";
       string script = "";
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
-      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
 
       if (selectedItems != null)
@@ -352,7 +352,7 @@ namespace MySql.Data.VisualStudio
       // Get current connection
       string conStr = "";
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
-      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow("Server Explorer") as UIHierarchy;
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
 
       if (selectedItems != null)
