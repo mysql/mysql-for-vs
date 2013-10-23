@@ -3128,6 +3128,14 @@ namespace MySql.Data.VisualStudio.Properties {
             }
 		}
 		
+		/// <summary>
+        ///   Looks up a localized string similar to Invalid value on max-allowed-packet option..
+        /// </summary>
+        internal static string InvalidMaxAllowedPacketValue {
+            get {
+                return ResourceManager.GetString("InvalidMaxAllowedPacketValue", resourceCulture);
+            }
+        }
 		
     }
 }

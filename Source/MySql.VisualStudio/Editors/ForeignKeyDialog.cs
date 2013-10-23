@@ -95,7 +95,7 @@ namespace MySql.Data.VisualStudio.Editors
           (str1.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)) ||
           (str2.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)))
         {
-          MessageBox.Show( Resources.FkDlgBeforeClose );
+          MessageBox.Show(Resources.FkDlgBeforeClose, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           return false;
         }
       }
@@ -104,7 +104,7 @@ namespace MySql.Data.VisualStudio.Editors
         ForeignKey fk = ( ForeignKey )o;
         if( fk.Columns.Count == 0 )
         {
-          MessageBox.Show( string.Format( Resources.FkNoColumnsForForeignKey, fk.Name ), Resources.ErrorCaption );
+          MessageBox.Show(string.Format(Resources.FkNoColumnsForForeignKey, fk.Name), Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
           return false;
         }
       }

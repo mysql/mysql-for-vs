@@ -109,7 +109,7 @@ namespace MySql.Data.VisualStudio
         }
         catch (Exception ex)
         {
-          MessageBox.Show("Unable to load view with error: " + ex.Message);
+          MessageBox.Show("Unable to load view with error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
     }
