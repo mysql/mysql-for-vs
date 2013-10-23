@@ -186,6 +186,7 @@ namespace MySql.Data.VisualStudio.SchemaComparer
                   while (reader.Read())
                   {
                     string dbName = reader.GetItem(0).ToString().ToLowerInvariant();
+                    if (dbName == "performance_schema") continue;
                     if (dbName == "information_schema") continue;
                     if (dbName == "mysql") continue;
                     schemas.Add(dbName);
