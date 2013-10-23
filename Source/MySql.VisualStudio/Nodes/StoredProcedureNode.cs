@@ -148,7 +148,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show("Unable to load the stored procedure for editing");
+        MessageBox.Show("Unable to load the stored procedure for editing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
       return sql;
     }
@@ -209,7 +209,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         return false;
       }
     }

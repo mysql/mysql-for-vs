@@ -189,7 +189,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(Resources.UnableToRetrieveDatabaseList);
+        MessageBox.Show(Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
