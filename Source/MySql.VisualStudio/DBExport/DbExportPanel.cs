@@ -46,11 +46,13 @@ namespace MySql.Data.VisualStudio.DBExport
       private IVsOutputWindowPane _generalPane;
       private List<IVsDataExplorerConnection> _explorerMySqlConnections;
       private string _ownerSchema { get; set; }
+      private string _prevSchema;
       
       internal MySqlDbExportOptions bndOptions;
       internal List<Schema> schemas = new List<Schema>();      
       internal BindingList<DbSelectedObjects> dbObjects = new BindingList<DbSelectedObjects>();      
-      internal Dictionary<string, BindingList<DbSelectedObjects>> dictionary = new Dictionary<string, BindingList<DbSelectedObjects>>();
+      internal Dictionary<string, BindingList<DbSelectedObjects>> dictionary = 
+        new Dictionary<string, BindingList<DbSelectedObjects>>();
 
       public MySqlServerExplorerConnection SelectedConnection { get; set; }
       public List<MySqlServerExplorerConnection> Connections { get; set; }
@@ -65,12 +67,9 @@ namespace MySql.Data.VisualStudio.DBExport
           dbSchemasList.CellClick += dbSchemasList_CellClick;
           dbSchemasList.RowLeave += dbSchemasList_RowLeave;
           dbSchemasList.RowEnter += dbSchemasList_RowEnter;
-
-          dbSchemasList.CurrentCellDirtyStateChanged += dbSchemasList_CurrentCellDirtyStateChanged;
-          dbObjectsList.CurrentCellDirtyStateChanged += dbObjectsList_CurrentCellDirtyStateChanged;      
-          
-        
-          dbObjectsList.CellClick += dbObjectsList_CellClick;
+          // TODO:
+          //dbSchemasList.CurrentCellDirtyStateChanged += dbSchemasList_CurrentCellDirtyStateChanged;
+          //dbObjectsList.CurrentCellDirtyStateChanged += dbObjectsList_CurrentCellDirtyStateChanged;
         
           cmbConnections.SelectedIndexChanged += cmbConnections_SelectedIndexChanged;
 
@@ -86,15 +85,19 @@ namespace MySql.Data.VisualStudio.DBExport
           mySqlDbExportOptionsBindingSource.Add(bndOptions);          
       }
 
-      void dbObjectsList_CellClick(object sender, DataGridViewCellEventArgs e)
-      {
-        //TODO: Check if we still need this event
-      }      
-
       void dbSchemasList_RowEnter(object sender, DataGridViewCellEventArgs e)
       {
-        if (e.ColumnIndex == 1)         
-          LoadDbObjects((string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value);        
+        if (e.ColumnIndex == 1)
+        {
+          string schemaSelected = (string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value;
+          if (_prevSchema != schemaSelected )
+          {
+            if (!string.IsNullOrEmpty(_prevSchema))
+              PullObjectListFromTree(_prevSchema);
+            _prevSchema = schemaSelected;
+            LoadDbObjects(schemaSelected);
+          }
+        }
       }
 
       void dbSchemasList_RowLeave(object sender, DataGridViewCellEventArgs e)
@@ -116,13 +119,13 @@ namespace MySql.Data.VisualStudio.DBExport
 	      {}        
       }
 
-      void dbSchemasList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-      {
-        if (dbSchemasList.IsCurrentCellDirty)
-        {
-          dbSchemasList.CommitEdit(DataGridViewDataErrorContexts.Commit);
-        }
-      }
+      //void dbSchemasList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+      //{
+      //  if (dbSchemasList.IsCurrentCellDirty)
+      //  {
+      //    dbSchemasList.CommitEdit(DataGridViewDataErrorContexts.Commit);
+      //  }
+      //}
 
       void dbSchemasList_CellValueChanged(object sender, ListChangedEventArgs e)
       {
@@ -141,7 +144,7 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         else
         {
-          currentSchema = (new MySqlConnection(SelectedConnection.ConnectionString)).Database;
+          currentSchema = (new MySqlConnectionStringBuilder(SelectedConnection.ConnectionString)).Database;
         }
 
         if (_ownerSchema.Equals(currentSchema, StringComparison.InvariantCultureIgnoreCase))
@@ -184,7 +187,8 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         if (e.ColumnIndex == 0)
         {
-          var selected = schemas.Single(t => t.Name.Equals((string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value, StringComparison.InvariantCultureIgnoreCase));
+          var selected = schemas.Single(t => t.Name.Equals((string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value, 
+            StringComparison.InvariantCultureIgnoreCase));
           selected.CheckSchema(!selected.Export);
           //sourceSchemas.DataSource = schemas;
           dbSchemasList.Refresh();
@@ -192,8 +196,9 @@ namespace MySql.Data.VisualStudio.DBExport
         
         if (e.ColumnIndex == 1)
         {
-          var schemaSelected = (string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value;                  
+          var schemaSelected = (string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value;
           LoadDbObjects(schemaSelected);
+          _prevSchema = schemaSelected;
         }        
       }
 
@@ -209,8 +214,8 @@ namespace MySql.Data.VisualStudio.DBExport
         var connectionString = String.Empty;        
 
         _ownerSchema = databaseName;
-        
-        dbObjects = new BindingList<DbSelectedObjects>();
+
+        dbObjects = null;
 
         if (dictionary.ContainsKey(databaseName))
           dictionary.TryGetValue(databaseName, out dbObjects);
@@ -219,50 +224,19 @@ namespace MySql.Data.VisualStudio.DBExport
           dbObjects = GetDbObjects(_ownerSchema);
         }       
 
-
-        dbObjects.ListChanged += new ListChangedEventHandler(dbObjectsList_ListChanged);
-        dbObjectsList.DataSource = dbObjects;
-        dbObjectsList.Refresh();
-                
-        dbObjectsList.Columns[0].HeaderText = "Export";
-        dbObjectsList.Columns[0].Width = 45;        
-        dbObjectsList.Columns[1].HeaderText = "Object Name";
-        dbObjectsList.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        // TODO:
+        //dbObjects.ListChanged += new ListChangedEventHandler(dbObjectsList_ListChanged);
+        BindDbObjectsToTree(dbObjects, databaseName);
       }
 
-
-      void dbObjectsList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-      {
-        if (dbObjectsList.IsCurrentCellDirty)
-        {
-          dbObjectsList.CommitEdit(DataGridViewDataErrorContexts.Commit);
-        }
-      }
-
-
-
-      void dbObjectsList_ListChanged(object sender, ListChangedEventArgs e)
-      {
-        //add logic if a db object is selected then make sure the db is selected too
-        if (dbObjectsList.CurrentCell == null || dbObjectsList.CurrentCell.ColumnIndex != 0 || dbObjectsList.CurrentCell.RowIndex < 0)
-          return;
-
-        if (dbObjects.Count == 0)
-          return;
-        
-        if (dbObjectsList.CurrentCell.Value != null && (bool)dbObjectsList.CurrentCell.Value)
-        {
-          if (dictionary.ContainsKey(_ownerSchema))
-            dictionary.Remove(_ownerSchema);
-
-          var dictionaryValue = new BindingList<DbSelectedObjects>(dbObjects.ToList());
-          dictionary.Add(_ownerSchema, dictionaryValue);
-
-          schemas.Single(t => t.Name == _ownerSchema).CheckSchema(true);
-          dbSchemasList.Refresh();          
-        }
-
-      }
+      // TODO:
+      //void dbObjectsList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+      //{
+      //  if (dbObjectsList.IsCurrentCellDirty)
+      //  {
+      //    dbObjectsList.CommitEdit(DataGridViewDataErrorContexts.Commit);
+      //  }
+      //}
 
       private void SetConnectionsList()
       {
@@ -276,7 +250,6 @@ namespace MySql.Data.VisualStudio.DBExport
         cmbConnections.DisplayMember = "DisplayName";
         cmbConnections.ValueMember = "ConnectionString";
       }
-
 
       private void LoadSchemasForSelectedConnection()
       {
@@ -354,6 +327,9 @@ namespace MySql.Data.VisualStudio.DBExport
           MessageBox.Show(Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           return;           
         }
+        // pull last version of db objects
+        if (!string.IsNullOrEmpty(_ownerSchema))
+          PullObjectListFromTree(_ownerSchema);
 
         var maxAllowedPacket = 0;
 
@@ -384,7 +360,11 @@ namespace MySql.Data.VisualStudio.DBExport
           foreach (var dbObject in item.Value)
           {
             if (dbObject.Selected == false)
+            {
               allObjectsSelected = false;
+              // exit as soon as possible
+              break;
+            }
           }
 
           MySqlDbExport mysqlDbExport = null;
@@ -457,36 +437,6 @@ namespace MySql.Data.VisualStudio.DBExport
 
         return true;
       }
-
-      private void btnUnSelect_Click(object sender, EventArgs e)
-      {
-        ChangeAllSelectedDbObjects(false);
-      }
-
-      private void ChangeAllSelectedDbObjects(bool selected)
-      { 
-
-        string schema = _ownerSchema;
-
-        if (dbObjects != null)
-        {
-          foreach (var item in dbObjects)
-          {
-            item.Selected = selected;
-          }
-        }
-       
-        dbObjectsList.DataSource = dbObjects;
-        dbObjectsList.Update();
-
-        if (dictionary.ContainsKey(schema))
-          dictionary.Remove(schema);
-
-        var dictionaryValue = new BindingList<DbSelectedObjects>(dbObjects.ToList());
-        
-        dictionary.Add(schema, dictionaryValue);
-        return;      
-      }
       
       private BindingList<DbSelectedObjects> GetDbObjects(string currentSchema)
       {       
@@ -508,8 +458,10 @@ namespace MySql.Data.VisualStudio.DBExport
           csb.Database = currentSchema;
           connectionString = csb.ConnectionString;
         }
-        SelectObjects.GetTables(new MySqlConnection(connectionString), null, null, false).ForEach(t => { databaseObjects.Add(new DbSelectedObjects(t)); });
-        SelectObjects.GetViews(new MySqlConnection(connectionString)).ForEach(v => { databaseObjects.Add(new DbSelectedObjects(v)); });
+        SelectObjects.GetTables(new MySqlConnection(connectionString), null, null, false).
+          ForEach(t => { databaseObjects.Add(new DbSelectedObjects(t, DbObjectKind.Table)); });
+        SelectObjects.GetViews(new MySqlConnection(connectionString)).
+          ForEach(v => { databaseObjects.Add(new DbSelectedObjects(v, DbObjectKind.View)); });
 
         return databaseObjects;            
       }
@@ -522,17 +474,35 @@ namespace MySql.Data.VisualStudio.DBExport
         if (currentRow >= 0)
         {
           dbSchemasList.Rows[currentRow].Cells[0].Value = addToSelection;
-          return dbSchemasList.Rows[currentRow].Cells[1].Value.ToString();
+          return _ownerSchema = dbSchemasList.Rows[currentRow].Cells[1].Value.ToString();
         }
         else
         {
-          return new MySqlConnection(SelectedConnection.ConnectionString).Database;
+          return _ownerSchema = ( new MySqlConnectionStringBuilder(SelectedConnection.ConnectionString)).Database;
         }
       }
 
       private void btnSelectAll_Click(object sender, EventArgs e)
-      {
+      { 
         ChangeAllSelectedDbObjects(true);
+      }
+
+      private void btnUnSelect_Click(object sender, EventArgs e)
+      {
+        ChangeAllSelectedDbObjects(false);
+      }
+
+      private void ChangeAllSelectedDbObjects(bool selected)
+      {
+        // Unselect is done in tree itself, to avoid rebuilding it with the consequential collapsing.
+        if (dbObjectsList.Nodes.Count == 0) return;
+        TreeNode node = dbObjectsList.Nodes[0];
+        node.Checked = selected;
+        EnableDbObjectsListAfterCheck(false);
+        try { UpdateCheckState(node, selected); }
+        finally { EnableDbObjectsListAfterCheck(true); }
+        string schema = GetSelectedSchema(true);
+        PullObjectListFromTree( schema );
       }
 
       private void btnFilter_Click(object sender, EventArgs e)
@@ -571,6 +541,116 @@ namespace MySql.Data.VisualStudio.DBExport
       private void btnRefresh_Click(object sender, EventArgs e)
       {
         LoadSchemasForSelectedConnection();       
+      }
+
+      private bool _afterCheckRunning = false;
+
+      private void EnableDbObjectsListAfterCheck(bool enable)
+      {
+        _afterCheckRunning = !enable;
+      }
+
+      private void dbObjectsList_AfterCheck(object sender, TreeViewEventArgs e)
+      {
+        if (_afterCheckRunning) return;
+        EnableDbObjectsListAfterCheck(false);
+        try
+        {
+          UpdateCheckState(e.Node, e.Node.Checked);
+        }
+        finally
+        {
+          if( _afterCheckRunning ) 
+          {
+            EnableDbObjectsListAfterCheck(true);
+            // Propagate results into schema list
+            if (e.Node.Checked)
+            {
+              string schemaName = dbObjectsList.Nodes[ 0 ].Text;
+              Schema s = null;
+              for (int i = 0; i < schemas.Count; i++)
+              {
+                if (schemas[i].Name == schemaName)
+                {
+                  schemas[i].CheckSchema(true);
+                  dbSchemasList.Refresh();
+                }
+              }
+            }
+          }
+        }
+      }
+
+      private void UpdateCheckState(TreeNode node, bool check)
+      {
+        for (int i = 0; i < node.Nodes.Count; i++)
+        {
+          TreeNode n = node.Nodes[i];
+          n.Checked = check;
+          UpdateCheckState(n, check);
+        }
+      }
+
+      private void PullObjectListFromTree( string schema )
+      {
+        BindingList<DbSelectedObjects> dbList = new BindingList<DbSelectedObjects>();
+        TreeNode tnParent = null;
+        TreeNodeCollection nodes = dbObjectsList.Nodes;
+        
+        if (nodes.Count != 0 && nodes[0].Nodes.Count != 0)
+        {
+          tnParent = nodes[0];
+          for (int j = 0; j < tnParent.Nodes.Count; j++)
+          {
+            TreeNode tnParent2 = tnParent.Nodes[j];
+            for (int i = 0; i < tnParent2.Nodes.Count; i++)
+            {
+              TreeNode node = tnParent2.Nodes[i];
+              DbObjectKind kind = (j == 0) ? DbObjectKind.Table : DbObjectKind.View;
+              dbList.Add(new DbSelectedObjects(node.Text, kind) { Selected = node.Checked });
+            }
+          }
+        }
+        
+        dbObjects = dbList;
+        dictionary[schema] = dbObjects;
+      }
+
+      private void BindDbObjectsToTree(BindingList<DbSelectedObjects> data, string schema)
+      {
+        TreeNode root = null;
+        dbObjectsList.BeginUpdate();
+        try
+        {
+          dbObjectsList.Nodes.Clear();
+          root = dbObjectsList.Nodes.Add(schema);
+          TreeNode tnTables = root.Nodes.Add("Tables");
+          TreeNode tnViews = root.Nodes.Add("Views");
+          for (int i = 0; i < data.Count; i++)
+          {
+            TreeNode node = null;
+            DbSelectedObjects dbo = data[i];
+            if (dbo.Kind == DbObjectKind.Table)
+            {
+              node = tnTables.Nodes.Add(dbo.DbObjectName);
+            }
+            else if (dbo.Kind == DbObjectKind.View)
+            {
+              node = tnViews.Nodes.Add(dbo.DbObjectName);
+            }
+            node.Checked = dbo.Selected;
+          }
+        }
+        finally
+        {
+          dbObjectsList.EndUpdate();
+        }
+      }
+
+      private void dbObjectsList_DoubleClick(object sender, EventArgs e)
+      {
+        // Inhibite normal double click behavior
+        return;
       }
    }
 
@@ -619,12 +699,18 @@ namespace MySql.Data.VisualStudio.DBExport
         NotifyPropertyChanged("Export");
       }
     }
-  
+
+  public enum DbObjectKind : int
+  {
+    Table = 1,
+    View = 2
+  }
 
   public class DbSelectedObjects : INotifyPropertyChanged
   {    
     bool _selected;
-    string _dbObjectName;    
+    string _dbObjectName;
+    DbObjectKind _kind;
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -647,25 +733,44 @@ namespace MySql.Data.VisualStudio.DBExport
     {
       get
       {
-        return _dbObjectName;      
+        return _dbObjectName;
       }     
     }
 
-    private void NotifyPropertyChanged(String propertyName)
+    [DisplayName("Kind")]
+    public DbObjectKind Kind
     {
-      if (PropertyChanged != null)
+      get
       {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        return _kind;
       }
     }
-    
 
-    public DbSelectedObjects(string objectName)
+    private bool _notifiedProperty = false;
+    private void NotifyPropertyChanged(String propertyName)
     {
-      _dbObjectName = objectName.ToLowerInvariant();
-      _selected = false;      
+      // Avoid reentrancy
+      if (_notifiedProperty) return;
+      _notifiedProperty = true;
+      try
+      {
+        if (PropertyChanged != null)
+        {
+          PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+      }
+      finally
+      {
+        if( _notifiedProperty ) _notifiedProperty = false;
+      }
     }
 
+    public DbSelectedObjects(string objectName, DbObjectKind kind)
+    {
+      _dbObjectName = objectName.ToLowerInvariant();
+      _selected = false;
+      _kind = kind;
+    }
   }
 
   public class MySqlServerExplorerConnection

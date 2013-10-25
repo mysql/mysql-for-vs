@@ -31,10 +31,10 @@
       this.components = new System.ComponentModel.Container();
       this.mySqlDbExportOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.groupBox3 = new System.Windows.Forms.GroupBox();
+	  this.dbObjectsList = new System.Windows.Forms.TreeView();
       this.btnRefresh = new System.Windows.Forms.Button();
       this.btnUnSelect = new System.Windows.Forms.Button();
       this.btnSelectAll = new System.Windows.Forms.Button();
-      this.dbObjectsList = new System.Windows.Forms.DataGridView();
       this.txtFilter = new System.Windows.Forms.TextBox();
       this.btnFilter = new System.Windows.Forms.Button();
       this.dbSchemasList = new System.Windows.Forms.DataGridView();
@@ -85,7 +85,6 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).BeginInit();
       this.groupBox3.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.dbObjectsList)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).BeginInit();
       this.groupBox2.SuspendLayout();
       this.pnlGeneral.SuspendLayout();
@@ -117,6 +116,16 @@
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Select objects to export";
       // 
+      // dbObjectsList
+      // 
+      this.dbObjectsList.CheckBoxes = true;
+      this.dbObjectsList.Location = new System.Drawing.Point(414, 32);
+      this.dbObjectsList.Name = "dbObjectsList";
+      this.dbObjectsList.Size = new System.Drawing.Size(354, 208);
+      this.dbObjectsList.TabIndex = 16;
+      this.dbObjectsList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.dbObjectsList_AfterCheck);
+      this.dbObjectsList.DoubleClick += new System.EventHandler(this.dbObjectsList_DoubleClick);
+      // 
       // btnRefresh
       // 
       this.btnRefresh.Location = new System.Drawing.Point(13, 246);
@@ -146,16 +155,6 @@
       this.btnSelectAll.Text = "Select All";
       this.btnSelectAll.UseVisualStyleBackColor = true;
       this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
-      // 
-      // dbObjectsList
-      // 
-      this.dbObjectsList.BackgroundColor = System.Drawing.Color.White;
-      this.dbObjectsList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dbObjectsList.Location = new System.Drawing.Point(358, 31);
-      this.dbObjectsList.Name = "dbObjectsList";
-      this.dbObjectsList.RowHeadersVisible = false;
-      this.dbObjectsList.Size = new System.Drawing.Size(417, 206);
-      this.dbObjectsList.TabIndex = 3;
       // 
       // txtFilter
       // 
@@ -678,7 +677,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).EndInit();
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.dbObjectsList)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).EndInit();
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
@@ -706,7 +704,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnUnSelect;
         private System.Windows.Forms.Button btnSelectAll;
-        private System.Windows.Forms.DataGridView dbObjectsList;
+        private System.Windows.Forms.TreeView dbObjectsList;
         private System.Windows.Forms.TextBox txtFilter;
         private System.Windows.Forms.Button btnFilter;
         private System.Windows.Forms.DataGridView dbSchemasList;
