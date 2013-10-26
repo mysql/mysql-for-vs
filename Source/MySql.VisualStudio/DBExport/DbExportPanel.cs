@@ -46,7 +46,6 @@ namespace MySql.Data.VisualStudio.DBExport
       private IVsOutputWindowPane _generalPane;
       private List<IVsDataExplorerConnection> _explorerMySqlConnections;
       private string _ownerSchema { get; set; }
-      private string _prevSchema;
       
       internal MySqlDbExportOptions bndOptions;
       internal List<Schema> schemas = new List<Schema>();      
@@ -67,9 +66,6 @@ namespace MySql.Data.VisualStudio.DBExport
           dbSchemasList.CellClick += dbSchemasList_CellClick;
           dbSchemasList.RowLeave += dbSchemasList_RowLeave;
           dbSchemasList.RowEnter += dbSchemasList_RowEnter;
-          // TODO:
-          //dbSchemasList.CurrentCellDirtyStateChanged += dbSchemasList_CurrentCellDirtyStateChanged;
-          //dbObjectsList.CurrentCellDirtyStateChanged += dbObjectsList_CurrentCellDirtyStateChanged;
         
           cmbConnections.SelectedIndexChanged += cmbConnections_SelectedIndexChanged;
 
@@ -90,11 +86,11 @@ namespace MySql.Data.VisualStudio.DBExport
         if (e.ColumnIndex == 1)
         {
           string schemaSelected = (string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value;
-          if (_prevSchema != schemaSelected )
+          string prevSchema = GetTreeViewDb();
+          if ( prevSchema != schemaSelected )
           {
-            if (!string.IsNullOrEmpty(_prevSchema))
-              PullObjectListFromTree(_prevSchema);
-            _prevSchema = schemaSelected;
+            if (!string.IsNullOrEmpty( prevSchema ))
+              PullObjectListFromTree(prevSchema);
             LoadDbObjects(schemaSelected);
           }
         }
@@ -118,14 +114,6 @@ namespace MySql.Data.VisualStudio.DBExport
 	      catch
 	      {}        
       }
-
-      //void dbSchemasList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-      //{
-      //  if (dbSchemasList.IsCurrentCellDirty)
-      //  {
-      //    dbSchemasList.CommitEdit(DataGridViewDataErrorContexts.Commit);
-      //  }
-      //}
 
       void dbSchemasList_CellValueChanged(object sender, ListChangedEventArgs e)
       {
@@ -171,8 +159,7 @@ namespace MySql.Data.VisualStudio.DBExport
           if (currentRow >= 0 && (bool)dbSchemasList.Rows[currentRow].Cells[currentColumn].Value)
             dictionary.Add(currentSchema, databaseObjects);
         }
-      }    
-
+      }
 
       void cmbConnections_SelectedIndexChanged(object sender, EventArgs e)
       {
@@ -190,16 +177,25 @@ namespace MySql.Data.VisualStudio.DBExport
           var selected = schemas.Single(t => t.Name.Equals((string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value, 
             StringComparison.InvariantCultureIgnoreCase));
           selected.CheckSchema(!selected.Export);
-          //sourceSchemas.DataSource = schemas;
+          string prevSchema = GetTreeViewDb();
+          if (prevSchema != selected.Name)
+          {
+            if (!string.IsNullOrEmpty(prevSchema))
+              PullObjectListFromTree(prevSchema);
+            LoadDbObjects(selected.Name);
+          }
+          ChangeAllSelectedDbObjects(selected.Export);
           dbSchemasList.Refresh();
         }
         
         if (e.ColumnIndex == 1)
         {
           var schemaSelected = (string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value;
+          string prevSchema = GetTreeViewDb();
+          if (!string.IsNullOrEmpty(prevSchema))
+            PullObjectListFromTree(prevSchema);
           LoadDbObjects(schemaSelected);
-          _prevSchema = schemaSelected;
-        }        
+        }
       }
 
       void cmbConnections_DropDown(object sender, EventArgs e)
@@ -224,19 +220,8 @@ namespace MySql.Data.VisualStudio.DBExport
           dbObjects = GetDbObjects(_ownerSchema);
         }       
 
-        // TODO:
-        //dbObjects.ListChanged += new ListChangedEventHandler(dbObjectsList_ListChanged);
         BindDbObjectsToTree(dbObjects, databaseName);
       }
-
-      // TODO:
-      //void dbObjectsList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-      //{
-      //  if (dbObjectsList.IsCurrentCellDirty)
-      //  {
-      //    dbObjectsList.CommitEdit(DataGridViewDataErrorContexts.Commit);
-      //  }
-      //}
 
       private void SetConnectionsList()
       {
@@ -466,7 +451,6 @@ namespace MySql.Data.VisualStudio.DBExport
         return databaseObjects;            
       }
 
-
       private string GetSelectedSchema(bool addToSelection)
       {
         int currentRow = dbSchemasList.CurrentRow.Index;
@@ -490,6 +474,14 @@ namespace MySql.Data.VisualStudio.DBExport
       private void btnUnSelect_Click(object sender, EventArgs e)
       {
         ChangeAllSelectedDbObjects(false);
+      }
+
+      private string GetTreeViewDb()
+      {
+        if (dbObjectsList.Nodes.Count != 0)
+          return dbObjectsList.Nodes[0].Text;
+        else
+          return "";
       }
 
       private void ChangeAllSelectedDbObjects(bool selected)
@@ -519,13 +511,11 @@ namespace MySql.Data.VisualStudio.DBExport
         pnlGeneral.Visible = this.pnlGeneral.Visible == false ? true : false;
       }
 
-
       private void btnAdvanced_Click(object sender, EventArgs e)
       {
         pnlGeneral.Visible = this.pnlGeneral.Visible ? false : true;
         pnlAdvanced.Visible = this.pnlAdvanced.Visible == false ? true : false;
       }
-
         
       private string GetCompleteConnectionString(string connectionDisplayName)
       {
@@ -640,6 +630,7 @@ namespace MySql.Data.VisualStudio.DBExport
             }
             node.Checked = dbo.Selected;
           }
+          dbObjectsList.ExpandAll();
         }
         finally
         {
