@@ -74,11 +74,11 @@ namespace MySql.Data.VisualStudio.DBExport
           if (outWindow != null)
           {
             outWindow.CreatePane(ref generalPaneGuid, "General", 1, 0);
-            outWindow.GetPane(ref generalPaneGuid, out _generalPane);            
+            outWindow.GetPane(ref generalPaneGuid, out _generalPane);    
           }
           bndOptions = new MySqlDbExportOptions();
           max_allowed_packet.Text = bndOptions.max_allowed_packet.ToString();
-          mySqlDbExportOptionsBindingSource.Add(bndOptions);          
+          mySqlDbExportOptionsBindingSource.Add(bndOptions);
       }
 
       void dbSchemasList_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -301,84 +301,93 @@ namespace MySql.Data.VisualStudio.DBExport
 
       private void btnExport_Click(object sender, EventArgs e)
       {
-        if (String.IsNullOrEmpty(txtFileName.Text))
+        Cursor cursor = this.Cursor;
+        try
         {
-          MessageBox.Show(Resources.DbExportPathNotProvided, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;                
-        }
-
-        if (CheckPathIsValid(txtFileName.Text))
-        {
-          MessageBox.Show(Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;           
-        }
-        // pull last version of db objects
-        if (!string.IsNullOrEmpty(_ownerSchema))
-          PullObjectListFromTree(_ownerSchema);
-
-        var maxAllowedPacket = 0;
-
-        if (!int.TryParse(max_allowed_packet.Text, out maxAllowedPacket))
-        {
-          MessageBox.Show(Resources.InvalidMaxAllowedPacketValue, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;
-        }
-
-        bndOptions.default_character_set = default_character_set.Text.Trim();
-        bndOptions.max_allowed_packet = maxAllowedPacket;
-        
-        foreach (var item in dictionary)
-        {
-          MySqlConnectionStringBuilder csb;
-          if (!SelectedConnection.ConnectionString.ToLower().Contains("password"))
+          this.Cursor = Cursors.WaitCursor;
+          if (String.IsNullOrEmpty(txtFileName.Text))
           {
-            csb = new MySqlConnectionStringBuilder(GetCompleteConnectionString(SelectedConnection.DisplayName));
+            MessageBox.Show(Resources.DbExportPathNotProvided, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
           }
-          else
-            csb = new MySqlConnectionStringBuilder(SelectedConnection.ConnectionString);
 
-          csb.Database = item.Key;
-          bndOptions.database = item.Key;          
-          
-          var allObjectsSelected = true;
-          
-          foreach (var dbObject in item.Value)
+          if (CheckPathIsValid(txtFileName.Text))
           {
-            if (dbObject.Selected == false)
+            MessageBox.Show(Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+          }
+          // pull last version of db objects
+          if (!string.IsNullOrEmpty(_ownerSchema))
+            PullObjectListFromTree(_ownerSchema);
+
+          var maxAllowedPacket = 0;
+
+          if (!int.TryParse(max_allowed_packet.Text, out maxAllowedPacket))
+          {
+            MessageBox.Show(Resources.InvalidMaxAllowedPacketValue, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+          }
+
+          bndOptions.default_character_set = default_character_set.Text.Trim();
+          bndOptions.max_allowed_packet = maxAllowedPacket;
+
+          foreach (var item in dictionary)
+          {
+            MySqlConnectionStringBuilder csb;
+            if (!SelectedConnection.ConnectionString.ToLower().Contains("password"))
             {
-              allObjectsSelected = false;
-              // exit as soon as possible
-              break;
+              csb = new MySqlConnectionStringBuilder(GetCompleteConnectionString(SelectedConnection.DisplayName));
             }
-          }
+            else
+              csb = new MySqlConnectionStringBuilder(SelectedConnection.ConnectionString);
 
-          MySqlDbExport mysqlDbExport = null;
+            csb.Database = item.Key;
+            bndOptions.database = item.Key;
 
-          if (allObjectsSelected)
-            mysqlDbExport = new MySqlDbExport(bndOptions, txtFileName.Text.Trim(), new MySqlConnection(csb.ConnectionString), null);
-          else
-          {
-            if (item.Value != null)
+            var allObjectsSelected = true;
+
+            foreach (var dbObject in item.Value)
             {
-              List<String> objects = (from s in item.Value
-                                      where s.Selected
-                                      select s.DbObjectName).ToList();
-              mysqlDbExport = new MySqlDbExport(bndOptions, txtFileName.Text.Trim(), new MySqlConnection(csb.ConnectionString), objects);
-            }
-          }
-
-          if (mysqlDbExport != null)
-          {
-            mysqlDbExport.Export();
-            if (mysqlDbExport.ErrorsOutput != null)
-            {
-              if (_generalPane != null)
+              if (dbObject.Selected == false)
               {
-                _generalPane.OutputString(Environment.NewLine + mysqlDbExport.ErrorsOutput.ToString());
-                _generalPane.Activate();
+                allObjectsSelected = false;
+                // exit as soon as possible
+                break;
+              }
+            }
+
+            MySqlDbExport mysqlDbExport = null;
+
+            if (allObjectsSelected)
+              mysqlDbExport = new MySqlDbExport(bndOptions, txtFileName.Text.Trim(), new MySqlConnection(csb.ConnectionString), null);
+            else
+            {
+              if (item.Value != null)
+              {
+                List<String> objects = (from s in item.Value
+                                        where s.Selected
+                                        select s.DbObjectName).ToList();
+                mysqlDbExport = new MySqlDbExport(bndOptions, txtFileName.Text.Trim(), new MySqlConnection(csb.ConnectionString), objects);
+              }
+            }
+
+            if (mysqlDbExport != null)
+            {
+              mysqlDbExport.Export();
+              if (mysqlDbExport.ErrorsOutput != null)
+              {
+                if (_generalPane != null)
+                {
+                  _generalPane.OutputString(Environment.NewLine + mysqlDbExport.ErrorsOutput.ToString());
+                  _generalPane.Activate();
+                }
               }
             }
           }
+        }
+        finally
+        {
+          this.Cursor = cursor;
         }
       }
 
@@ -642,6 +651,11 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         // Inhibite normal double click behavior
         return;
+      }
+
+      private void btnCancel_Click(object sender, EventArgs e)
+      {
+        // TODO
       }
    }
 
