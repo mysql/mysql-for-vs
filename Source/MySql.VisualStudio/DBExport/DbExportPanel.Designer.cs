@@ -31,10 +31,10 @@
       this.components = new System.ComponentModel.Container();
       this.mySqlDbExportOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.groupBox3 = new System.Windows.Forms.GroupBox();
-	  this.dbObjectsList = new System.Windows.Forms.TreeView();
       this.btnRefresh = new System.Windows.Forms.Button();
       this.btnUnSelect = new System.Windows.Forms.Button();
       this.btnSelectAll = new System.Windows.Forms.Button();
+      this.dbObjectsList = new System.Windows.Forms.TreeView();
       this.txtFilter = new System.Windows.Forms.TextBox();
       this.btnFilter = new System.Windows.Forms.Button();
       this.dbSchemasList = new System.Windows.Forms.DataGridView();
@@ -43,12 +43,18 @@
       this.label1 = new System.Windows.Forms.Label();
       this.pnlGeneral = new System.Windows.Forms.Panel();
       this.pnlAdvanced = new System.Windows.Forms.Panel();
-      this.groupBox9 = new System.Windows.Forms.GroupBox();
-      this.no_create_info = new System.Windows.Forms.CheckBox();
-      this.add_drop_table = new System.Windows.Forms.CheckBox();
-      this.create_options = new System.Windows.Forms.CheckBox();
-      this.add_locks = new System.Windows.Forms.CheckBox();
-      this.btnReturn = new System.Windows.Forms.Button();
+      this.groupBox8 = new System.Windows.Forms.GroupBox();
+      this.replace = new System.Windows.Forms.CheckBox();
+      this.insert_ignore = new System.Windows.Forms.CheckBox();
+      this.disable_keys = new System.Windows.Forms.CheckBox();
+      this.extended_insert = new System.Windows.Forms.CheckBox();
+      this.delayed_insert = new System.Windows.Forms.CheckBox();
+      this.complete_insert = new System.Windows.Forms.CheckBox();
+      this.groupBox5 = new System.Windows.Forms.GroupBox();
+      this.events = new System.Windows.Forms.CheckBox();
+      this.lock_tables = new System.Windows.Forms.CheckBox();
+      this.allow_keywords = new System.Windows.Forms.CheckBox();
+      this.add_drop_database = new System.Windows.Forms.CheckBox();
       this.groupBox6 = new System.Windows.Forms.GroupBox();
       this.max_allowed_packet = new System.Windows.Forms.TextBox();
       this.quote_names = new System.Windows.Forms.CheckBox();
@@ -58,21 +64,15 @@
       this.comments = new System.Windows.Forms.CheckBox();
       this.default_character_set = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.groupBox5 = new System.Windows.Forms.GroupBox();
-      this.events = new System.Windows.Forms.CheckBox();
-      this.lock_tables = new System.Windows.Forms.CheckBox();
-      this.allow_keywords = new System.Windows.Forms.CheckBox();
-      this.add_drop_database = new System.Windows.Forms.CheckBox();
+      this.groupBox9 = new System.Windows.Forms.GroupBox();
+      this.no_create_info = new System.Windows.Forms.CheckBox();
+      this.add_drop_table = new System.Windows.Forms.CheckBox();
+      this.create_options = new System.Windows.Forms.CheckBox();
+      this.add_locks = new System.Windows.Forms.CheckBox();
+      this.btnReturn = new System.Windows.Forms.Button();
       this.schemaColumn1 = new MySql.Data.VisualStudio.DBExport.SchemaColumn();
       this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.groupBox8 = new System.Windows.Forms.GroupBox();
-      this.replace = new System.Windows.Forms.CheckBox();
-      this.insert_ignore = new System.Windows.Forms.CheckBox();
-      this.disable_keys = new System.Windows.Forms.CheckBox();
-      this.extended_insert = new System.Windows.Forms.CheckBox();
-      this.delayed_insert = new System.Windows.Forms.CheckBox();
-      this.complete_insert = new System.Windows.Forms.CheckBox();
       this.btnAdvanced = new System.Windows.Forms.Button();
       this.txtFileName = new System.Windows.Forms.TextBox();
       this.btnSaveFile = new System.Windows.Forms.Button();
@@ -89,10 +89,10 @@
       this.groupBox2.SuspendLayout();
       this.pnlGeneral.SuspendLayout();
       this.pnlAdvanced.SuspendLayout();
-      this.groupBox9.SuspendLayout();
-      this.groupBox6.SuspendLayout();
-      this.groupBox5.SuspendLayout();
       this.groupBox8.SuspendLayout();
+      this.groupBox5.SuspendLayout();
+      this.groupBox6.SuspendLayout();
+      this.groupBox9.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -115,16 +115,6 @@
       this.groupBox3.TabIndex = 11;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Select objects to export";
-      // 
-      // dbObjectsList
-      // 
-      this.dbObjectsList.CheckBoxes = true;
-      this.dbObjectsList.Location = new System.Drawing.Point(414, 32);
-      this.dbObjectsList.Name = "dbObjectsList";
-      this.dbObjectsList.Size = new System.Drawing.Size(354, 208);
-      this.dbObjectsList.TabIndex = 16;
-      this.dbObjectsList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.dbObjectsList_AfterCheck);
-      this.dbObjectsList.DoubleClick += new System.EventHandler(this.dbObjectsList_DoubleClick);
       // 
       // btnRefresh
       // 
@@ -155,6 +145,16 @@
       this.btnSelectAll.Text = "Select All";
       this.btnSelectAll.UseVisualStyleBackColor = true;
       this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
+      // 
+      // dbObjectsList
+      // 
+      this.dbObjectsList.CheckBoxes = true;
+      this.dbObjectsList.Location = new System.Drawing.Point(414, 32);
+      this.dbObjectsList.Name = "dbObjectsList";
+      this.dbObjectsList.Size = new System.Drawing.Size(354, 208);
+      this.dbObjectsList.TabIndex = 16;
+      this.dbObjectsList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.dbObjectsList_AfterCheck);
+      this.dbObjectsList.DoubleClick += new System.EventHandler(this.dbObjectsList_DoubleClick);
       // 
       // txtFilter
       // 
@@ -214,10 +214,10 @@
       // 
       // pnlGeneral
       // 
-      this.pnlGeneral.Controls.Add(this.pnlAdvanced);
       this.pnlGeneral.Controls.Add(this.groupBox2);
       this.pnlGeneral.Controls.Add(this.groupBox3);
-      this.pnlGeneral.Location = new System.Drawing.Point(6, 5);
+      this.pnlGeneral.Controls.Add(this.pnlAdvanced);
+      this.pnlGeneral.Location = new System.Drawing.Point(3, 3);
       this.pnlGeneral.Name = "pnlGeneral";
       this.pnlGeneral.Size = new System.Drawing.Size(801, 344);
       this.pnlGeneral.TabIndex = 13;
@@ -235,72 +235,143 @@
       this.pnlAdvanced.TabIndex = 15;
       this.pnlAdvanced.Visible = false;
       // 
-      // groupBox9
+      // groupBox8
       // 
-      this.groupBox9.Controls.Add(this.no_create_info);
-      this.groupBox9.Controls.Add(this.add_drop_table);
-      this.groupBox9.Controls.Add(this.create_options);
-      this.groupBox9.Controls.Add(this.add_locks);
-      this.groupBox9.Location = new System.Drawing.Point(13, 227);
-      this.groupBox9.Name = "groupBox9";
-      this.groupBox9.Size = new System.Drawing.Size(768, 92);
-      this.groupBox9.TabIndex = 7;
-      this.groupBox9.TabStop = false;
-      this.groupBox9.Text = "Table Options";
+      this.groupBox8.Controls.Add(this.replace);
+      this.groupBox8.Controls.Add(this.insert_ignore);
+      this.groupBox8.Controls.Add(this.disable_keys);
+      this.groupBox8.Controls.Add(this.extended_insert);
+      this.groupBox8.Controls.Add(this.delayed_insert);
+      this.groupBox8.Controls.Add(this.complete_insert);
+      this.groupBox8.Location = new System.Drawing.Point(13, 329);
+      this.groupBox8.Name = "groupBox8";
+      this.groupBox8.Size = new System.Drawing.Size(726, 138);
+      this.groupBox8.TabIndex = 15;
+      this.groupBox8.TabStop = false;
+      this.groupBox8.Text = "Insert Options";
       // 
-      // no_create_info
+      // replace
       // 
-      this.no_create_info.AutoSize = true;
-      this.no_create_info.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "no_create_info", true));
-      this.no_create_info.Location = new System.Drawing.Point(417, 19);
-      this.no_create_info.Name = "no_create_info";
-      this.no_create_info.Size = new System.Drawing.Size(329, 17);
-      this.no_create_info.TabIndex = 11;
-      this.no_create_info.Text = "Do not write CREATE TABLE that re-create each dumped table.";
-      this.no_create_info.UseVisualStyleBackColor = true;
+      this.replace.AutoSize = true;
+      this.replace.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "replace", true));
+      this.replace.Location = new System.Drawing.Point(417, 19);
+      this.replace.Name = "replace";
+      this.replace.Size = new System.Drawing.Size(200, 17);
+      this.replace.TabIndex = 13;
+      this.replace.Text = "Write REPLACE rather than INSERT";
+      this.replace.UseVisualStyleBackColor = true;
       // 
-      // add_drop_table
+      // insert_ignore
       // 
-      this.add_drop_table.AutoSize = true;
-      this.add_drop_table.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.mySqlDbExportOptionsBindingSource, "add_drop_table", true));
-      this.add_drop_table.Location = new System.Drawing.Point(14, 19);
-      this.add_drop_table.Name = "add_drop_table";
-      this.add_drop_table.Size = new System.Drawing.Size(259, 17);
-      this.add_drop_table.TabIndex = 3;
-      this.add_drop_table.Text = "Add DROP TABLE before each CREATE TABLE";
-      this.add_drop_table.UseVisualStyleBackColor = true;
+      this.insert_ignore.AutoSize = true;
+      this.insert_ignore.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "insert_ignore", true));
+      this.insert_ignore.Location = new System.Drawing.Point(14, 85);
+      this.insert_ignore.Name = "insert_ignore";
+      this.insert_ignore.Size = new System.Drawing.Size(233, 17);
+      this.insert_ignore.TabIndex = 12;
+      this.insert_ignore.Text = "Use INSERT IGNORE rather than INSERT.";
+      this.insert_ignore.UseVisualStyleBackColor = true;
       // 
-      // create_options
+      // disable_keys
       // 
-      this.create_options.AutoSize = true;
-      this.create_options.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "create_options", true));
-      this.create_options.Location = new System.Drawing.Point(14, 60);
-      this.create_options.Name = "create_options";
-      this.create_options.Size = new System.Drawing.Size(365, 17);
-      this.create_options.TabIndex = 10;
-      this.create_options.Text = "Include all MySQL-specific table options in CREATE TABLE statements.";
-      this.create_options.UseVisualStyleBackColor = true;
+      this.disable_keys.AutoSize = true;
+      this.disable_keys.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "disable_keys", true));
+      this.disable_keys.Location = new System.Drawing.Point(14, 107);
+      this.disable_keys.Name = "disable_keys";
+      this.disable_keys.Size = new System.Drawing.Size(342, 17);
+      this.disable_keys.TabIndex = 11;
+      this.disable_keys.Text = "INSERT with statements to disable and enable keys for each table.";
+      this.disable_keys.UseVisualStyleBackColor = true;
       // 
-      // add_locks
+      // extended_insert
       // 
-      this.add_locks.AutoSize = true;
-      this.add_locks.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.mySqlDbExportOptionsBindingSource, "add_locks", true));
-      this.add_locks.Location = new System.Drawing.Point(14, 38);
-      this.add_locks.Name = "add_locks";
-      this.add_locks.Size = new System.Drawing.Size(232, 17);
-      this.add_locks.TabIndex = 5;
-      this.add_locks.Text = "Add LOCK TABLES and UNLOCK TABLES";
-      this.add_locks.UseVisualStyleBackColor = true;
+      this.extended_insert.AutoSize = true;
+      this.extended_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "extended_insert", true));
+      this.extended_insert.Location = new System.Drawing.Point(14, 63);
+      this.extended_insert.Name = "extended_insert";
+      this.extended_insert.Size = new System.Drawing.Size(342, 17);
+      this.extended_insert.TabIndex = 11;
+      this.extended_insert.Text = "Use multiple-row INSERT syntax that include several VALUES lists.";
+      this.extended_insert.UseVisualStyleBackColor = true;
       // 
-      // btnReturn
+      // delayed_insert
       // 
-      this.btnReturn.Location = new System.Drawing.Point(642, 473);
-      this.btnReturn.Name = "btnReturn";
-      this.btnReturn.Size = new System.Drawing.Size(138, 24);
-      this.btnReturn.TabIndex = 4;
-      this.btnReturn.Text = "Return";
-      this.btnReturn.UseVisualStyleBackColor = true;
-      this.btnReturn.Click += new System.EventHandler(this.btnReturn_Click);
+      this.delayed_insert.AutoSize = true;
+      this.delayed_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "delayed_insert", true));
+      this.delayed_insert.Location = new System.Drawing.Point(14, 41);
+      this.delayed_insert.Name = "delayed_insert";
+      this.delayed_insert.Size = new System.Drawing.Size(241, 17);
+      this.delayed_insert.TabIndex = 10;
+      this.delayed_insert.Text = "Use INSERT DELAYED rather than INSERT.";
+      this.delayed_insert.UseVisualStyleBackColor = true;
+      // 
+      // complete_insert
+      // 
+      this.complete_insert.AutoSize = true;
+      this.complete_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "complete_insert", true));
+      this.complete_insert.Location = new System.Drawing.Point(14, 19);
+      this.complete_insert.Name = "complete_insert";
+      this.complete_insert.Size = new System.Drawing.Size(320, 17);
+      this.complete_insert.TabIndex = 9;
+      this.complete_insert.Text = "Use complete INSERT statements that include column names.";
+      this.complete_insert.UseVisualStyleBackColor = true;
+      // 
+      // groupBox5
+      // 
+      this.groupBox5.Controls.Add(this.events);
+      this.groupBox5.Controls.Add(this.lock_tables);
+      this.groupBox5.Controls.Add(this.allow_keywords);
+      this.groupBox5.Controls.Add(this.add_drop_database);
+      this.groupBox5.Location = new System.Drawing.Point(13, 129);
+      this.groupBox5.Name = "groupBox5";
+      this.groupBox5.Size = new System.Drawing.Size(768, 92);
+      this.groupBox5.TabIndex = 2;
+      this.groupBox5.TabStop = false;
+      this.groupBox5.Text = "Database Options";
+      // 
+      // events
+      // 
+      this.events.AutoSize = true;
+      this.events.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "events", true));
+      this.events.Location = new System.Drawing.Point(14, 61);
+      this.events.Name = "events";
+      this.events.Size = new System.Drawing.Size(226, 17);
+      this.events.TabIndex = 13;
+      this.events.Text = "Dump events from the dumped databases.";
+      this.events.UseVisualStyleBackColor = true;
+      // 
+      // lock_tables
+      // 
+      this.lock_tables.AutoSize = true;
+      this.lock_tables.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "lock_tables", true));
+      this.lock_tables.Location = new System.Drawing.Point(417, 17);
+      this.lock_tables.Name = "lock_tables";
+      this.lock_tables.Size = new System.Drawing.Size(199, 17);
+      this.lock_tables.TabIndex = 12;
+      this.lock_tables.Text = "Lock all tables before dumping them.";
+      this.lock_tables.UseVisualStyleBackColor = true;
+      // 
+      // allow_keywords
+      // 
+      this.allow_keywords.AutoSize = true;
+      this.allow_keywords.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "allow_keywords", true));
+      this.allow_keywords.Location = new System.Drawing.Point(14, 40);
+      this.allow_keywords.Name = "allow_keywords";
+      this.allow_keywords.Size = new System.Drawing.Size(265, 17);
+      this.allow_keywords.TabIndex = 6;
+      this.allow_keywords.Text = "Allow creation of column names that are keywords.";
+      this.allow_keywords.UseVisualStyleBackColor = true;
+      // 
+      // add_drop_database
+      // 
+      this.add_drop_database.AutoSize = true;
+      this.add_drop_database.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "add_drop_database", true));
+      this.add_drop_database.Location = new System.Drawing.Point(14, 19);
+      this.add_drop_database.Name = "add_drop_database";
+      this.add_drop_database.Size = new System.Drawing.Size(308, 17);
+      this.add_drop_database.TabIndex = 2;
+      this.add_drop_database.Text = "Add DROP DATABASE before each CREATE DATABASE ";
+      this.add_drop_database.UseVisualStyleBackColor = true;
       // 
       // groupBox6
       // 
@@ -397,62 +468,72 @@
       this.label3.TabIndex = 0;
       this.label3.Text = "Charset name as the default character set:";
       // 
-      // groupBox5
+      // groupBox9
       // 
-      this.groupBox5.Controls.Add(this.events);
-      this.groupBox5.Controls.Add(this.lock_tables);
-      this.groupBox5.Controls.Add(this.allow_keywords);
-      this.groupBox5.Controls.Add(this.add_drop_database);
-      this.groupBox5.Location = new System.Drawing.Point(13, 129);
-      this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(768, 92);
-      this.groupBox5.TabIndex = 2;
-      this.groupBox5.TabStop = false;
-      this.groupBox5.Text = "Database Options";
+      this.groupBox9.Controls.Add(this.no_create_info);
+      this.groupBox9.Controls.Add(this.add_drop_table);
+      this.groupBox9.Controls.Add(this.create_options);
+      this.groupBox9.Controls.Add(this.add_locks);
+      this.groupBox9.Location = new System.Drawing.Point(13, 227);
+      this.groupBox9.Name = "groupBox9";
+      this.groupBox9.Size = new System.Drawing.Size(768, 92);
+      this.groupBox9.TabIndex = 7;
+      this.groupBox9.TabStop = false;
+      this.groupBox9.Text = "Table Options";
       // 
-      // events
+      // no_create_info
       // 
-      this.events.AutoSize = true;
-      this.events.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "events", true));
-      this.events.Location = new System.Drawing.Point(14, 61);
-      this.events.Name = "events";
-      this.events.Size = new System.Drawing.Size(226, 17);
-      this.events.TabIndex = 13;
-      this.events.Text = "Dump events from the dumped databases.";
-      this.events.UseVisualStyleBackColor = true;
+      this.no_create_info.AutoSize = true;
+      this.no_create_info.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "no_create_info", true));
+      this.no_create_info.Location = new System.Drawing.Point(417, 19);
+      this.no_create_info.Name = "no_create_info";
+      this.no_create_info.Size = new System.Drawing.Size(329, 17);
+      this.no_create_info.TabIndex = 11;
+      this.no_create_info.Text = "Do not write CREATE TABLE that re-create each dumped table.";
+      this.no_create_info.UseVisualStyleBackColor = true;
       // 
-      // lock_tables
+      // add_drop_table
       // 
-      this.lock_tables.AutoSize = true;
-      this.lock_tables.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "lock_tables", true));
-      this.lock_tables.Location = new System.Drawing.Point(417, 17);
-      this.lock_tables.Name = "lock_tables";
-      this.lock_tables.Size = new System.Drawing.Size(199, 17);
-      this.lock_tables.TabIndex = 12;
-      this.lock_tables.Text = "Lock all tables before dumping them.";
-      this.lock_tables.UseVisualStyleBackColor = true;
+      this.add_drop_table.AutoSize = true;
+      this.add_drop_table.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.mySqlDbExportOptionsBindingSource, "add_drop_table", true));
+      this.add_drop_table.Location = new System.Drawing.Point(14, 19);
+      this.add_drop_table.Name = "add_drop_table";
+      this.add_drop_table.Size = new System.Drawing.Size(259, 17);
+      this.add_drop_table.TabIndex = 3;
+      this.add_drop_table.Text = "Add DROP TABLE before each CREATE TABLE";
+      this.add_drop_table.UseVisualStyleBackColor = true;
       // 
-      // allow_keywords
+      // create_options
       // 
-      this.allow_keywords.AutoSize = true;
-      this.allow_keywords.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "allow_keywords", true));
-      this.allow_keywords.Location = new System.Drawing.Point(14, 40);
-      this.allow_keywords.Name = "allow_keywords";
-      this.allow_keywords.Size = new System.Drawing.Size(265, 17);
-      this.allow_keywords.TabIndex = 6;
-      this.allow_keywords.Text = "Allow creation of column names that are keywords.";
-      this.allow_keywords.UseVisualStyleBackColor = true;
+      this.create_options.AutoSize = true;
+      this.create_options.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "create_options", true));
+      this.create_options.Location = new System.Drawing.Point(14, 60);
+      this.create_options.Name = "create_options";
+      this.create_options.Size = new System.Drawing.Size(365, 17);
+      this.create_options.TabIndex = 10;
+      this.create_options.Text = "Include all MySQL-specific table options in CREATE TABLE statements.";
+      this.create_options.UseVisualStyleBackColor = true;
       // 
-      // add_drop_database
+      // add_locks
       // 
-      this.add_drop_database.AutoSize = true;
-      this.add_drop_database.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "add_drop_database", true));
-      this.add_drop_database.Location = new System.Drawing.Point(14, 19);
-      this.add_drop_database.Name = "add_drop_database";
-      this.add_drop_database.Size = new System.Drawing.Size(308, 17);
-      this.add_drop_database.TabIndex = 2;
-      this.add_drop_database.Text = "Add DROP DATABASE before each CREATE DATABASE ";
-      this.add_drop_database.UseVisualStyleBackColor = true;
+      this.add_locks.AutoSize = true;
+      this.add_locks.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.mySqlDbExportOptionsBindingSource, "add_locks", true));
+      this.add_locks.Location = new System.Drawing.Point(14, 38);
+      this.add_locks.Name = "add_locks";
+      this.add_locks.Size = new System.Drawing.Size(232, 17);
+      this.add_locks.TabIndex = 5;
+      this.add_locks.Text = "Add LOCK TABLES and UNLOCK TABLES";
+      this.add_locks.UseVisualStyleBackColor = true;
+      // 
+      // btnReturn
+      // 
+      this.btnReturn.Location = new System.Drawing.Point(642, 473);
+      this.btnReturn.Name = "btnReturn";
+      this.btnReturn.Size = new System.Drawing.Size(138, 24);
+      this.btnReturn.TabIndex = 4;
+      this.btnReturn.Text = "Return";
+      this.btnReturn.UseVisualStyleBackColor = true;
+      this.btnReturn.Click += new System.EventHandler(this.btnReturn_Click);
       // 
       // schemaColumn1
       // 
@@ -477,87 +558,6 @@
       this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
       this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
       this.dataGridViewTextBoxColumn2.Width = 200;
-      // 
-      // groupBox8
-      // 
-      this.groupBox8.Controls.Add(this.replace);
-      this.groupBox8.Controls.Add(this.insert_ignore);
-      this.groupBox8.Controls.Add(this.disable_keys);
-      this.groupBox8.Controls.Add(this.extended_insert);
-      this.groupBox8.Controls.Add(this.delayed_insert);
-      this.groupBox8.Controls.Add(this.complete_insert);
-      this.groupBox8.Location = new System.Drawing.Point(13, 329);
-      this.groupBox8.Name = "groupBox8";
-      this.groupBox8.Size = new System.Drawing.Size(726, 138);
-      this.groupBox8.TabIndex = 15;
-      this.groupBox8.TabStop = false;
-      this.groupBox8.Text = "Insert Options";
-      // 
-      // replace
-      // 
-      this.replace.AutoSize = true;
-      this.replace.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "replace", true));
-      this.replace.Location = new System.Drawing.Point(417, 19);
-      this.replace.Name = "replace";
-      this.replace.Size = new System.Drawing.Size(200, 17);
-      this.replace.TabIndex = 13;
-      this.replace.Text = "Write REPLACE rather than INSERT";
-      this.replace.UseVisualStyleBackColor = true;
-      // 
-      // insert_ignore
-      // 
-      this.insert_ignore.AutoSize = true;
-      this.insert_ignore.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "insert_ignore", true));
-      this.insert_ignore.Location = new System.Drawing.Point(14, 85);
-      this.insert_ignore.Name = "insert_ignore";
-      this.insert_ignore.Size = new System.Drawing.Size(233, 17);
-      this.insert_ignore.TabIndex = 12;
-      this.insert_ignore.Text = "Use INSERT IGNORE rather than INSERT.";
-      this.insert_ignore.UseVisualStyleBackColor = true;
-      // 
-      // disable_keys
-      // 
-      this.disable_keys.AutoSize = true;
-      this.disable_keys.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "disable_keys", true));
-      this.disable_keys.Location = new System.Drawing.Point(14, 107);
-      this.disable_keys.Name = "disable_keys";
-      this.disable_keys.Size = new System.Drawing.Size(342, 17);
-      this.disable_keys.TabIndex = 11;
-      this.disable_keys.Text = "INSERT with statements to disable and enable keys for each table.";
-      this.disable_keys.UseVisualStyleBackColor = true;
-      // 
-      // extended_insert
-      // 
-      this.extended_insert.AutoSize = true;
-      this.extended_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "extended_insert", true));
-      this.extended_insert.Location = new System.Drawing.Point(14, 63);
-      this.extended_insert.Name = "extended_insert";
-      this.extended_insert.Size = new System.Drawing.Size(342, 17);
-      this.extended_insert.TabIndex = 11;
-      this.extended_insert.Text = "Use multiple-row INSERT syntax that include several VALUES lists.";
-      this.extended_insert.UseVisualStyleBackColor = true;
-      // 
-      // delayed_insert
-      // 
-      this.delayed_insert.AutoSize = true;
-      this.delayed_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "delayed_insert", true));
-      this.delayed_insert.Location = new System.Drawing.Point(14, 41);
-      this.delayed_insert.Name = "delayed_insert";
-      this.delayed_insert.Size = new System.Drawing.Size(241, 17);
-      this.delayed_insert.TabIndex = 10;
-      this.delayed_insert.Text = "Use INSERT DELAYED rather than INSERT.";
-      this.delayed_insert.UseVisualStyleBackColor = true;
-      // 
-      // complete_insert
-      // 
-      this.complete_insert.AutoSize = true;
-      this.complete_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "complete_insert", true));
-      this.complete_insert.Location = new System.Drawing.Point(14, 19);
-      this.complete_insert.Name = "complete_insert";
-      this.complete_insert.Size = new System.Drawing.Size(320, 17);
-      this.complete_insert.TabIndex = 9;
-      this.complete_insert.Text = "Use complete INSERT statements that include column names.";
-      this.complete_insert.UseVisualStyleBackColor = true;
       // 
       // btnAdvanced
       // 
@@ -646,6 +646,7 @@
       this.btnCancel.TabIndex = 6;
       this.btnCancel.Text = "Cancel";
       this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
       // 
       // groupBox1
       // 
@@ -665,13 +666,14 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Options";
       // 
-      // grpInsertOptions
+      // dbExportPanel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScroll = true;
       this.AutoSize = true;
-      this.Controls.Add(this.pnlGeneral);
       this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.pnlGeneral);
       this.Name = "dbExportPanel";
       this.Size = new System.Drawing.Size(818, 511);
       ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).EndInit();
@@ -682,14 +684,14 @@
       this.groupBox2.PerformLayout();
       this.pnlGeneral.ResumeLayout(false);
       this.pnlAdvanced.ResumeLayout(false);
-      this.groupBox9.ResumeLayout(false);
-      this.groupBox9.PerformLayout();
-      this.groupBox6.ResumeLayout(false);
-      this.groupBox6.PerformLayout();
-      this.groupBox5.ResumeLayout(false);
-      this.groupBox5.PerformLayout();
       this.groupBox8.ResumeLayout(false);
       this.groupBox8.PerformLayout();
+      this.groupBox5.ResumeLayout(false);
+      this.groupBox5.PerformLayout();
+      this.groupBox6.ResumeLayout(false);
+      this.groupBox6.PerformLayout();
+      this.groupBox9.ResumeLayout(false);
+      this.groupBox9.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
