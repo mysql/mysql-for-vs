@@ -39,6 +39,22 @@
       this.btnFilter = new System.Windows.Forms.Button();
       this.dbSchemasList = new System.Windows.Forms.DataGridView();
       this.pnlGeneral = new System.Windows.Forms.Panel();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.btnSaveSettings = new System.Windows.Forms.Button();
+      this.btnLoadSettingsFile = new System.Windows.Forms.Button();
+      this.cmbConnections = new System.Windows.Forms.ComboBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.chkAlwaysCreateNewFile = new System.Windows.Forms.CheckBox();
+      this.btnCancel = new System.Windows.Forms.Button();
+      this.btnExport = new System.Windows.Forms.Button();
+      this.single_transaction = new System.Windows.Forms.CheckBox();
+      this.routines = new System.Windows.Forms.CheckBox();
+      this.no_data = new System.Windows.Forms.CheckBox();
+      this.label2 = new System.Windows.Forms.Label();
+      this.btnSaveFile = new System.Windows.Forms.Button();
+      this.txtFileName = new System.Windows.Forms.TextBox();
+      this.btnAdvanced = new System.Windows.Forms.Button();
       this.pnlAdvanced = new System.Windows.Forms.Panel();
       this.groupBox8 = new System.Windows.Forms.GroupBox();
       this.replace = new System.Windows.Forms.CheckBox();
@@ -67,36 +83,20 @@
       this.create_options = new System.Windows.Forms.CheckBox();
       this.add_locks = new System.Windows.Forms.CheckBox();
       this.btnReturn = new System.Windows.Forms.Button();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.btnSaveSettings = new System.Windows.Forms.Button();
-      this.btnLoadSettingsFile = new System.Windows.Forms.Button();
-      this.cmbConnections = new System.Windows.Forms.ComboBox();
-      this.label1 = new System.Windows.Forms.Label();
-      this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnExport = new System.Windows.Forms.Button();
-      this.single_transaction = new System.Windows.Forms.CheckBox();
-      this.routines = new System.Windows.Forms.CheckBox();
-      this.no_data = new System.Windows.Forms.CheckBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.btnSaveFile = new System.Windows.Forms.Button();
-      this.txtFileName = new System.Windows.Forms.TextBox();
-      this.btnAdvanced = new System.Windows.Forms.Button();
       this.schemaColumn1 = new MySql.Data.VisualStudio.DBExport.SchemaColumn();
       this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.chkAlwaysCreateNewFile = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).BeginInit();
       this.groupBox3.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).BeginInit();
       this.pnlGeneral.SuspendLayout();
+      this.groupBox2.SuspendLayout();
+      this.groupBox1.SuspendLayout();
       this.pnlAdvanced.SuspendLayout();
       this.groupBox8.SuspendLayout();
       this.groupBox5.SuspendLayout();
       this.groupBox6.SuspendLayout();
       this.groupBox9.SuspendLayout();
-      this.groupBox2.SuspendLayout();
-      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // mySqlDbExportOptionsBindingSource
@@ -127,7 +127,6 @@
       this.btnRefresh.TabIndex = 15;
       this.btnRefresh.Text = "Refresh";
       this.btnRefresh.UseVisualStyleBackColor = true;
-      this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
       // 
       // btnUnSelect
       // 
@@ -137,7 +136,6 @@
       this.btnUnSelect.TabIndex = 14;
       this.btnUnSelect.Text = "Unselect All";
       this.btnUnSelect.UseVisualStyleBackColor = true;
-      this.btnUnSelect.Click += new System.EventHandler(this.btnUnSelect_Click);
       // 
       // btnSelectAll
       // 
@@ -147,7 +145,6 @@
       this.btnSelectAll.TabIndex = 13;
       this.btnSelectAll.Text = "Select All";
       this.btnSelectAll.UseVisualStyleBackColor = true;
-      this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
       // 
       // dbObjectsList
       // 
@@ -174,7 +171,6 @@
       this.btnFilter.TabIndex = 11;
       this.btnFilter.Text = "Filter schemas";
       this.btnFilter.UseVisualStyleBackColor = true;
-      this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
       // 
       // dbSchemasList
       // 
@@ -197,6 +193,169 @@
       this.pnlGeneral.Size = new System.Drawing.Size(801, 497);
       this.pnlGeneral.TabIndex = 13;
       // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.btnSaveSettings);
+      this.groupBox2.Controls.Add(this.btnLoadSettingsFile);
+      this.groupBox2.Controls.Add(this.cmbConnections);
+      this.groupBox2.Controls.Add(this.label1);
+      this.groupBox2.Location = new System.Drawing.Point(8, 8);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(787, 44);
+      this.groupBox2.TabIndex = 14;
+      this.groupBox2.TabStop = false;
+      // 
+      // btnSaveSettings
+      // 
+      this.btnSaveSettings.Location = new System.Drawing.Point(618, 13);
+      this.btnSaveSettings.Name = "btnSaveSettings";
+      this.btnSaveSettings.Size = new System.Drawing.Size(99, 21);
+      this.btnSaveSettings.TabIndex = 7;
+      this.btnSaveSettings.Text = "Save to File";
+      this.btnSaveSettings.UseVisualStyleBackColor = true;
+      // 
+      // btnLoadSettingsFile
+      // 
+      this.btnLoadSettingsFile.Location = new System.Drawing.Point(505, 13);
+      this.btnLoadSettingsFile.Name = "btnLoadSettingsFile";
+      this.btnLoadSettingsFile.Size = new System.Drawing.Size(99, 21);
+      this.btnLoadSettingsFile.TabIndex = 6;
+      this.btnLoadSettingsFile.Text = "Load Settings";
+      this.btnLoadSettingsFile.UseVisualStyleBackColor = true;
+      // 
+      // cmbConnections
+      // 
+      this.cmbConnections.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cmbConnections.FormattingEnabled = true;
+      this.cmbConnections.Location = new System.Drawing.Point(157, 13);
+      this.cmbConnections.Name = "cmbConnections";
+      this.cmbConnections.Size = new System.Drawing.Size(333, 21);
+      this.cmbConnections.TabIndex = 3;
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(12, 17);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(133, 13);
+      this.label1.TabIndex = 2;
+      this.label1.Text = "MySQL Server Connection";
+      // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.chkAlwaysCreateNewFile);
+      this.groupBox1.Controls.Add(this.btnCancel);
+      this.groupBox1.Controls.Add(this.btnExport);
+      this.groupBox1.Controls.Add(this.single_transaction);
+      this.groupBox1.Controls.Add(this.routines);
+      this.groupBox1.Controls.Add(this.no_data);
+      this.groupBox1.Controls.Add(this.label2);
+      this.groupBox1.Controls.Add(this.btnSaveFile);
+      this.groupBox1.Controls.Add(this.txtFileName);
+      this.groupBox1.Controls.Add(this.btnAdvanced);
+      this.groupBox1.Location = new System.Drawing.Point(8, 342);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(787, 145);
+      this.groupBox1.TabIndex = 12;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "Options";
+      // 
+      // chkAlwaysCreateNewFile
+      // 
+      this.chkAlwaysCreateNewFile.AutoSize = true;
+      this.chkAlwaysCreateNewFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
+      this.chkAlwaysCreateNewFile.Location = new System.Drawing.Point(211, 67);
+      this.chkAlwaysCreateNewFile.Name = "chkAlwaysCreateNewFile";
+      this.chkAlwaysCreateNewFile.Size = new System.Drawing.Size(172, 17);
+      this.chkAlwaysCreateNewFile.TabIndex = 7;
+      this.chkAlwaysCreateNewFile.Text = "Always create a new .mysql file";
+      this.chkAlwaysCreateNewFile.UseVisualStyleBackColor = true;
+      // 
+      // btnCancel
+      // 
+      this.btnCancel.Location = new System.Drawing.Point(682, 108);
+      this.btnCancel.Name = "btnCancel";
+      this.btnCancel.Size = new System.Drawing.Size(99, 21);
+      this.btnCancel.TabIndex = 6;
+      this.btnCancel.Text = "Cancel";
+      this.btnCancel.UseVisualStyleBackColor = true;
+      // 
+      // btnExport
+      // 
+      this.btnExport.Location = new System.Drawing.Point(572, 108);
+      this.btnExport.Name = "btnExport";
+      this.btnExport.Size = new System.Drawing.Size(99, 21);
+      this.btnExport.TabIndex = 5;
+      this.btnExport.Text = "Export";
+      this.btnExport.UseVisualStyleBackColor = true;
+      // 
+      // single_transaction
+      // 
+      this.single_transaction.AutoSize = true;
+      this.single_transaction.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "single_transaction", true));
+      this.single_transaction.Location = new System.Drawing.Point(136, 112);
+      this.single_transaction.Name = "single_transaction";
+      this.single_transaction.Size = new System.Drawing.Size(139, 17);
+      this.single_transaction.TabIndex = 1;
+      this.single_transaction.Text = "Use a single transaction";
+      this.single_transaction.UseVisualStyleBackColor = true;
+      // 
+      // routines
+      // 
+      this.routines.AutoSize = true;
+      this.routines.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
+      this.routines.Location = new System.Drawing.Point(298, 112);
+      this.routines.Name = "routines";
+      this.routines.Size = new System.Drawing.Size(133, 17);
+      this.routines.TabIndex = 3;
+      this.routines.Text = "Include stored routines";
+      this.routines.UseVisualStyleBackColor = true;
+      // 
+      // no_data
+      // 
+      this.no_data.AutoSize = true;
+      this.no_data.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "no_data", true));
+      this.no_data.Location = new System.Drawing.Point(16, 112);
+      this.no_data.Name = "no_data";
+      this.no_data.Size = new System.Drawing.Size(97, 17);
+      this.no_data.TabIndex = 4;
+      this.no_data.Text = "Skip table data";
+      this.no_data.UseVisualStyleBackColor = true;
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(13, 34);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(192, 13);
+      this.label2.TabIndex = 4;
+      this.label2.Text = "Select path to save export file (*.mysql):";
+      // 
+      // btnSaveFile
+      // 
+      this.btnSaveFile.Location = new System.Drawing.Point(610, 31);
+      this.btnSaveFile.Name = "btnSaveFile";
+      this.btnSaveFile.Size = new System.Drawing.Size(30, 20);
+      this.btnSaveFile.TabIndex = 3;
+      this.btnSaveFile.Text = "...";
+      this.btnSaveFile.UseVisualStyleBackColor = true;
+      // 
+      // txtFileName
+      // 
+      this.txtFileName.Location = new System.Drawing.Point(211, 32);
+      this.txtFileName.Name = "txtFileName";
+      this.txtFileName.Size = new System.Drawing.Size(393, 20);
+      this.txtFileName.TabIndex = 2;
+      // 
+      // btnAdvanced
+      // 
+      this.btnAdvanced.Location = new System.Drawing.Point(652, 30);
+      this.btnAdvanced.Name = "btnAdvanced";
+      this.btnAdvanced.Size = new System.Drawing.Size(127, 25);
+      this.btnAdvanced.TabIndex = 0;
+      this.btnAdvanced.Text = "Advanced";
+      this.btnAdvanced.UseVisualStyleBackColor = true;
+      // 
       // pnlAdvanced
       // 
       this.pnlAdvanced.Controls.Add(this.groupBox8);
@@ -204,7 +363,7 @@
       this.pnlAdvanced.Controls.Add(this.groupBox6);
       this.pnlAdvanced.Controls.Add(this.groupBox9);
       this.pnlAdvanced.Controls.Add(this.btnReturn);
-      this.pnlAdvanced.Location = new System.Drawing.Point(819, 4);
+      this.pnlAdvanced.Location = new System.Drawing.Point(822, 4);
       this.pnlAdvanced.Name = "pnlAdvanced";
       this.pnlAdvanced.Size = new System.Drawing.Size(795, 497);
       this.pnlAdvanced.TabIndex = 15;
@@ -502,165 +661,12 @@
       // 
       // btnReturn
       // 
-      this.btnReturn.Location = new System.Drawing.Point(642, 468);
+      this.btnReturn.Location = new System.Drawing.Point(642, 463);
       this.btnReturn.Name = "btnReturn";
       this.btnReturn.Size = new System.Drawing.Size(138, 24);
       this.btnReturn.TabIndex = 4;
       this.btnReturn.Text = "Return";
       this.btnReturn.UseVisualStyleBackColor = true;
-      this.btnReturn.Click += new System.EventHandler(this.btnReturn_Click);
-      // 
-      // groupBox2
-      // 
-      this.groupBox2.Controls.Add(this.btnSaveSettings);
-      this.groupBox2.Controls.Add(this.btnLoadSettingsFile);
-      this.groupBox2.Controls.Add(this.cmbConnections);
-      this.groupBox2.Controls.Add(this.label1);
-      this.groupBox2.Location = new System.Drawing.Point(8, 8);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(787, 44);
-      this.groupBox2.TabIndex = 14;
-      this.groupBox2.TabStop = false;
-      // 
-      // btnSaveSettings
-      // 
-      this.btnSaveSettings.Location = new System.Drawing.Point(618, 13);
-      this.btnSaveSettings.Name = "btnSaveSettings";
-      this.btnSaveSettings.Size = new System.Drawing.Size(99, 21);
-      this.btnSaveSettings.TabIndex = 7;
-      this.btnSaveSettings.Text = "Save to File";
-      this.btnSaveSettings.UseVisualStyleBackColor = true;
-      // 
-      // btnLoadSettingsFile
-      // 
-      this.btnLoadSettingsFile.Location = new System.Drawing.Point(505, 13);
-      this.btnLoadSettingsFile.Name = "btnLoadSettingsFile";
-      this.btnLoadSettingsFile.Size = new System.Drawing.Size(99, 21);
-      this.btnLoadSettingsFile.TabIndex = 6;
-      this.btnLoadSettingsFile.Text = "Load Settings";
-      this.btnLoadSettingsFile.UseVisualStyleBackColor = true;
-      // 
-      // cmbConnections
-      // 
-      this.cmbConnections.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.cmbConnections.FormattingEnabled = true;
-      this.cmbConnections.Location = new System.Drawing.Point(157, 13);
-      this.cmbConnections.Name = "cmbConnections";
-      this.cmbConnections.Size = new System.Drawing.Size(333, 21);
-      this.cmbConnections.TabIndex = 3;
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(12, 17);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(133, 13);
-      this.label1.TabIndex = 2;
-      this.label1.Text = "MySQL Server Connection";
-      // 
-      // groupBox1
-      // 
-      this.groupBox1.Controls.Add(this.chkAlwaysCreateNewFile);
-      this.groupBox1.Controls.Add(this.btnCancel);
-      this.groupBox1.Controls.Add(this.btnExport);
-      this.groupBox1.Controls.Add(this.single_transaction);
-      this.groupBox1.Controls.Add(this.routines);
-      this.groupBox1.Controls.Add(this.no_data);
-      this.groupBox1.Controls.Add(this.label2);
-      this.groupBox1.Controls.Add(this.btnSaveFile);
-      this.groupBox1.Controls.Add(this.txtFileName);
-      this.groupBox1.Controls.Add(this.btnAdvanced);
-      this.groupBox1.Location = new System.Drawing.Point(8, 342);
-      this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(787, 145);
-      this.groupBox1.TabIndex = 12;
-      this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Options";
-      // 
-      // btnCancel
-      // 
-      this.btnCancel.Location = new System.Drawing.Point(682, 108);
-      this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(99, 21);
-      this.btnCancel.TabIndex = 6;
-      this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
-      // 
-      // btnExport
-      // 
-      this.btnExport.Location = new System.Drawing.Point(572, 108);
-      this.btnExport.Name = "btnExport";
-      this.btnExport.Size = new System.Drawing.Size(99, 21);
-      this.btnExport.TabIndex = 5;
-      this.btnExport.Text = "Export";
-      this.btnExport.UseVisualStyleBackColor = true;
-      // 
-      // single_transaction
-      // 
-      this.single_transaction.AutoSize = true;
-      this.single_transaction.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "single_transaction", true));
-      this.single_transaction.Location = new System.Drawing.Point(136, 112);
-      this.single_transaction.Name = "single_transaction";
-      this.single_transaction.Size = new System.Drawing.Size(139, 17);
-      this.single_transaction.TabIndex = 1;
-      this.single_transaction.Text = "Use a single transaction";
-      this.single_transaction.UseVisualStyleBackColor = true;
-      // 
-      // routines
-      // 
-      this.routines.AutoSize = true;
-      this.routines.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
-      this.routines.Location = new System.Drawing.Point(298, 112);
-      this.routines.Name = "routines";
-      this.routines.Size = new System.Drawing.Size(133, 17);
-      this.routines.TabIndex = 3;
-      this.routines.Text = "Include stored routines";
-      this.routines.UseVisualStyleBackColor = true;
-      // 
-      // no_data
-      // 
-      this.no_data.AutoSize = true;
-      this.no_data.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "no_data", true));
-      this.no_data.Location = new System.Drawing.Point(16, 112);
-      this.no_data.Name = "no_data";
-      this.no_data.Size = new System.Drawing.Size(97, 17);
-      this.no_data.TabIndex = 4;
-      this.no_data.Text = "Skip table data";
-      this.no_data.UseVisualStyleBackColor = true;
-      // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(13, 34);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(192, 13);
-      this.label2.TabIndex = 4;
-      this.label2.Text = "Select path to save export file (*.mysql):";
-      // 
-      // btnSaveFile
-      // 
-      this.btnSaveFile.Location = new System.Drawing.Point(610, 31);
-      this.btnSaveFile.Name = "btnSaveFile";
-      this.btnSaveFile.Size = new System.Drawing.Size(30, 20);
-      this.btnSaveFile.TabIndex = 3;
-      this.btnSaveFile.Text = "...";
-      this.btnSaveFile.UseVisualStyleBackColor = true;
-      // 
-      // txtFileName
-      // 
-      this.txtFileName.Location = new System.Drawing.Point(211, 32);
-      this.txtFileName.Name = "txtFileName";
-      this.txtFileName.Size = new System.Drawing.Size(393, 20);
-      this.txtFileName.TabIndex = 2;
-      // 
-      // btnAdvanced
-      // 
-      this.btnAdvanced.Location = new System.Drawing.Point(652, 30);
-      this.btnAdvanced.Name = "btnAdvanced";
-      this.btnAdvanced.Size = new System.Drawing.Size(127, 25);
-      this.btnAdvanced.TabIndex = 0;
-      this.btnAdvanced.Text = "Advanced";
-      this.btnAdvanced.UseVisualStyleBackColor = true;
       // 
       // schemaColumn1
       // 
@@ -686,17 +692,6 @@
       this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
       this.dataGridViewTextBoxColumn2.Width = 200;
       // 
-      // chkAlwaysCreateNewFile
-      // 
-      this.chkAlwaysCreateNewFile.AutoSize = true;
-      this.chkAlwaysCreateNewFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
-      this.chkAlwaysCreateNewFile.Location = new System.Drawing.Point(211, 67);
-      this.chkAlwaysCreateNewFile.Name = "chkAlwaysCreateNewFile";
-      this.chkAlwaysCreateNewFile.Size = new System.Drawing.Size(172, 17);
-      this.chkAlwaysCreateNewFile.TabIndex = 7;
-      this.chkAlwaysCreateNewFile.Text = "Always create a new .mysql file";
-      this.chkAlwaysCreateNewFile.UseVisualStyleBackColor = true;
-      // 
       // dbExportPanel
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -706,12 +701,16 @@
       this.Controls.Add(this.pnlAdvanced);
       this.Controls.Add(this.pnlGeneral);
       this.Name = "dbExportPanel";
-      this.Size = new System.Drawing.Size(1617, 504);
+      this.Size = new System.Drawing.Size(1620, 504);
       ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).EndInit();
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).EndInit();
       this.pnlGeneral.ResumeLayout(false);
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
+      this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
       this.pnlAdvanced.ResumeLayout(false);
       this.groupBox8.ResumeLayout(false);
       this.groupBox8.PerformLayout();
@@ -721,10 +720,6 @@
       this.groupBox6.PerformLayout();
       this.groupBox9.ResumeLayout(false);
       this.groupBox9.PerformLayout();
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
-      this.groupBox1.ResumeLayout(false);
-      this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
 
         }
