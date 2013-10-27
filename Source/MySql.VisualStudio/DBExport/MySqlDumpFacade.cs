@@ -47,6 +47,7 @@ namespace MySql.Data.VisualStudio.DBExport
     private string _database = string.Empty;
     private string _credentialsFile;
     private List<String> _tables { get; set; }
+    private Process _mysqldumpProcess;
 
     private IVsOutputWindowPane _generalPane;
 
@@ -103,7 +104,7 @@ namespace MySql.Data.VisualStudio.DBExport
       }
 
       _dumpFilePath  = Utility.GetInstallLocation("MySQL for Visual Studio");
-
+      
       if (!String.IsNullOrEmpty(_dumpFilePath))
         _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
       else
@@ -188,9 +189,14 @@ namespace MySql.Data.VisualStudio.DBExport
       _arguments.AppendFormat(" \"{0}\"", _database);     
     }
 
+    internal void CancelRequest()
+    {
+      _mysqldumpProcess.Kill();
+    }
+
     internal void ProcessRequest()
     {            
-      Process mysqldumpProcess = new Process();
+      _mysqldumpProcess = new Process();
       
       var startInfo = new ProcessStartInfo
       {        
@@ -202,18 +208,18 @@ namespace MySql.Data.VisualStudio.DBExport
         RedirectStandardOutput = true,
         RedirectStandardError = true
       };
-      mysqldumpProcess.StartInfo = startInfo;
+      _mysqldumpProcess.StartInfo = startInfo;
 
-      mysqldumpProcess.OutputDataReceived += new DataReceivedEventHandler(dumpProcess_DataOutputReceived);
-      mysqldumpProcess.ErrorDataReceived += new DataReceivedEventHandler(dumpProcess_ErrorDataReceived);
+      _mysqldumpProcess.OutputDataReceived += new DataReceivedEventHandler(dumpProcess_DataOutputReceived);
+      _mysqldumpProcess.ErrorDataReceived += new DataReceivedEventHandler(dumpProcess_ErrorDataReceived);
 
       AppendToLog(string.Format(Resources.MySqlDumpStartInfoLog, string.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.Now), _database, _tables == null ? "all tables" : string.Join(", ", _tables.ToArray())));      
 
-      mysqldumpProcess.Start();                 
-      mysqldumpProcess.BeginOutputReadLine();
-      mysqldumpProcess.BeginErrorReadLine();
-      mysqldumpProcess.WaitForExit();
-      mysqldumpProcess.Close();
+      _mysqldumpProcess.Start();                 
+      _mysqldumpProcess.BeginOutputReadLine();
+      _mysqldumpProcess.BeginErrorReadLine();
+      _mysqldumpProcess.WaitForExit();
+      _mysqldumpProcess.Close();
 
       AppendToLog(string.Format(Resources.MySqlDumpRunning, _arguments));
       
