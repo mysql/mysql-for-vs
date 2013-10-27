@@ -82,6 +82,10 @@ namespace MySql.Data.VisualStudio.DBExport
           bndOptions = new MySqlDbExportOptions();
           max_allowed_packet.Text = bndOptions.max_allowed_packet.ToString();
           mySqlDbExportOptionsBindingSource.Add(bndOptions);
+
+          btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
+          btnSaveSettings.Click += btnSaveSettings_Click;
+
       }
 
       void dbSchemasList_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -747,6 +751,116 @@ namespace MySql.Data.VisualStudio.DBExport
               "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
           }));
         }
+      }
+
+
+      private void btnLoadSettingsFile_Click(object sender, EventArgs e)
+      {
+        string settingsFile = string.Empty;
+
+        OpenFileDialog openSettingsFileDlg = new OpenFileDialog();
+        
+        openSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";        
+        openSettingsFileDlg.FilterIndex = 1;
+        openSettingsFileDlg.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
+        openSettingsFileDlg.RestoreDirectory = true;
+
+        if (openSettingsFileDlg.ShowDialog() == DialogResult.OK)
+        {
+          settingsFile = openSettingsFileDlg.FileName;
+          string completeConnectionString = String.Empty;
+
+          if (File.Exists(settingsFile))
+          {
+            MySqlDbExportSaveOptions settings = MySqlDbExportSaveOptions.LoadSettingsFile(settingsFile);
+            if (settings != null)
+            {
+              //TODO create the connection if it not exists              
+              string DisplayConnectionName = (from cnn in _explorerMySqlConnections
+                                              where cnn.Connection.DisplayConnectionString.Equals(settings.Connection, StringComparison.InvariantCultureIgnoreCase)
+                                              select cnn.DisplayName).FirstOrDefault();
+
+              if (DisplayConnectionName != null)
+              {
+                completeConnectionString = GetCompleteConnectionString(DisplayConnectionName);
+                if (String.IsNullOrEmpty(completeConnectionString))
+                {
+                  MessageBox.Show("The saved connection string was not correctly set. No Database objects are loaded", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                  return;
+                }
+
+                SelectedConnection = new MySqlServerExplorerConnection();
+                SelectedConnection.DisplayName = DisplayConnectionName;
+                SelectedConnection.ConnectionString = completeConnectionString;
+                LoadSchemasForSelectedConnection();
+                // load the path of dump file
+                txtFileName.Text = settings.PathToMySqlFile;
+                var listObjectsInSettings = settings.Dictionary.ToList();
+                var listOfSchemas = from t in listObjectsInSettings
+                                    group t by t.DatabaseName into d
+                                    select d;
+
+                foreach (var schema in listOfSchemas)
+                {
+                  var listDbObjectsSelected = from o in listObjectsInSettings
+                                              where o.DatabaseName == schema.Key
+                                              select o;
+                  dbObjects = new BindingList<DbSelectedObjects>();
+                  foreach (var dbObject in listDbObjectsSelected)
+                  {
+                    dbObjects.Add(new DbSelectedObjects(dbObject.ObjectName, dbObject.ObjectType));
+                  }
+                  dictionary.Add(schema.Key, dbObjects);
+                }
+              }
+              else
+                MessageBox.Show("Connection was not found on available connections", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+          }
+          else
+            MessageBox.Show("File was not found. Please check the path");
+        }
+      }
+
+      private void btnSaveSettings_Click(object sender, EventArgs e)
+      {
+          string settingsFile = string.Empty;
+
+        SaveFileDialog saveSettingsFileDlg = new SaveFileDialog();
+        saveSettingsFileDlg.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
+        saveSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";
+        saveSettingsFileDlg.FilterIndex = 1;
+        if (saveSettingsFileDlg.ShowDialog() == DialogResult.OK)
+        {
+          string connectionStringInUse = String.Empty;          
+
+          if (SelectedConnection != null)
+          {
+            connectionStringInUse = GetCompleteConnectionString(SelectedConnection.DisplayName);
+          }
+          else if (Connections.Count > 0)
+            connectionStringInUse = GetCompleteConnectionString(Connections[0].ConnectionString);
+
+          if (String.IsNullOrEmpty(connectionStringInUse))
+          {
+            MessageBox.Show("No connection is selected. Please select one to continue.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+          }
+
+          var saveToFile = new MySqlDbExportSaveOptions(bndOptions, txtFileName.Text, dictionary, connectionStringInUse);
+      
+          try
+          {
+            this.Cursor = Cursors.WaitCursor;
+            saveToFile.WriteSettingsFile(Path.GetDirectoryName(saveSettingsFileDlg.FileName), Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
+            this.Cursor = Cursors.Default;
+          }
+          catch (Exception ex)
+          {
+            this.Cursor = Cursors.Default;
+            MessageBox.Show("An error occured when saving the settings file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          }
+        }      
       }
    }
 

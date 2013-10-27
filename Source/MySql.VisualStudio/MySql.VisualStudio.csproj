@@ -125,31 +125,31 @@
         <Reference Include="Microsoft.VisualStudio.Package.LanguageService.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
         <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
         <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>      
+          <SpecificVersion>False</SpecificVersion>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>      
+          <SpecificVersion>False</SpecificVersion>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <SpecificVersion>False</SpecificVersion>      
+          <SpecificVersion>False</SpecificVersion>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
-          <EmbedInteropTypes>True</EmbedInteropTypes>      
+          <EmbedInteropTypes>True</EmbedInteropTypes>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
-          <EmbedInteropTypes>True</EmbedInteropTypes>      
+          <EmbedInteropTypes>True</EmbedInteropTypes>
         </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">			
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
-          <EmbedInteropTypes>True</EmbedInteropTypes>      
+          <EmbedInteropTypes>True</EmbedInteropTypes>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <SpecificVersion>False</SpecificVersion>			
+          <SpecificVersion>False</SpecificVersion>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <SpecificVersion>False</SpecificVersion>			
+          <SpecificVersion>False</SpecificVersion>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Text.Data, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
         <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -252,7 +252,7 @@
         <Reference Include="System.Xml" />
         <Reference Include="WindowsBase" />
         <Reference Include="System.Linq" />
-		<ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+        <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
           <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
           <Name>MySql.Parser</Name>
         </ProjectReference>
@@ -468,6 +468,7 @@
     <Compile Include="DBExport\DbExportWindowPane.cs" />
     <Compile Include="DBExport\MySqlDbExport.cs" />
     <Compile Include="DBExport\MySqlDbExportOptions.cs" />
+    <Compile Include="DBExport\MySqlDbExportSaveOptions.cs" />
     <Compile Include="DBExport\MySqlDumpFacade.cs" />
     <Compile Include="DBExport\SchemaColumn.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
@@ -849,7 +850,7 @@
       <ResourceName>1000</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
-  </ItemGroup> 
+  </ItemGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>

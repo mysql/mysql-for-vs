@@ -4,6 +4,7 @@
 - Implemented WI #775, Improvements for TreeView in DbExport.
 - Fix for WI #758, visual feedback to user that export is busy.
 - Fix for WI #759, DbExport UI gets unresponsive when exporting big tables.
+- Implemented WI #750 to Save Settings of Database Export tool.
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
