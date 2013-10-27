@@ -32,6 +32,7 @@ using System.IO;
 using System.Reflection;
 using System.IO.IsolatedStorage;
 using Microsoft.VisualStudio.Data.Services;
+using System.ComponentModel;
 
 
 namespace MySql.VisualStudio.Tests
@@ -42,6 +43,7 @@ namespace MySql.VisualStudio.Tests
     private MySqlDbExportOptions options;
     private MySqlConnection conn;
     private string saveToFile;
+    private string settingsFile;
 
     public void SetFixture(SetUp data)
     {
@@ -49,75 +51,76 @@ namespace MySql.VisualStudio.Tests
       options = new MySqlDbExportOptions();
       conn = new MySqlConnection(st.GetConnectionString("test", "test", false, false));
       saveToFile = Environment.CurrentDirectory + @"\mydump.sql";
+      settingsFile = "SavedSettings";
     }
-    
-      
+
+
     [Fact]
     public void CanLoadAllOptions()
     {
-        var testOptions = new MySqlDbExportOptions();
-        testOptions.no_data = true;
-        testOptions.insert_ignore = true;
-        testOptions.ignore_table = "nameoftable";
-        testOptions.routines = true;
-        testOptions.lock_tables = true;        
-        testOptions.port = 3305;
-        testOptions.allow_keywords = true;
+      var testOptions = new MySqlDbExportOptions();
+      testOptions.no_data = true;
+      testOptions.insert_ignore = true;
+      testOptions.ignore_table = "nameoftable";
+      testOptions.routines = true;
+      testOptions.lock_tables = true;
+      testOptions.port = 3305;
+      testOptions.allow_keywords = true;
 
-        var fullPath = string.Empty;
+      var fullPath = string.Empty;
 
-        var _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);        
+      var _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
-        using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.CreateNew, _isoStore))
+      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.CreateNew, _isoStore))
+      {
+        using (StreamWriter writer = new StreamWriter(isoStream))
         {
-            using (StreamWriter writer = new StreamWriter(isoStream))
-            {
-                writer.WriteLine("[mysqldump]");
-                writer.WriteLine("user=test;");
-                writer.WriteLine("password=test;");              
-            }
-            fullPath = isoStream.GetType().GetField("m_FullPath", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(isoStream).ToString();
-        }        
-            
-        var mysqldumpFacade = new MySqlDumpFacade(testOptions, saveToFile, fullPath);        
-        var arguments = mysqldumpFacade.GetType().GetField("_arguments",BindingFlags.NonPublic | BindingFlags.Instance);
-        if (arguments != null)
-        {
-          _isoStore.DeleteFile("Testfile.cnf");
-          _isoStore.Close();
-
-          string expected = @"--add-drop-database=false  --add-drop-table=false  --add-drop-trigger=false  --add-locks=false  --all-databases=false  --allow-keywords  --comments=true  --compact=false  --complete-insert=false  --create-options  --default-character-set=utf8 --delayed-insert=false  --disable-keys  --events=false  --extended-insert  --hex-blob=false  --ignore-table=nameoftable --insert-ignore  --lock-tables  --no-data  --max_allowed_packet=1G --port=3305 --quote-names  --replace=false  --routines  """;
-          var value = arguments.GetValue(mysqldumpFacade);          
-          Assert.True(value.ToString().Contains(expected));          
+          writer.WriteLine("[mysqldump]");
+          writer.WriteLine("user=test;");
+          writer.WriteLine("password=test;");
         }
+        fullPath = isoStream.GetType().GetField("m_FullPath", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(isoStream).ToString();
+      }
+
+      var mysqldumpFacade = new MySqlDumpFacade(testOptions, saveToFile, fullPath);
+      var arguments = mysqldumpFacade.GetType().GetField("_arguments", BindingFlags.NonPublic | BindingFlags.Instance);
+      if (arguments != null)
+      {
+        _isoStore.DeleteFile("Testfile.cnf");
+        _isoStore.Close();
+
+        string expected = @"--add-drop-database=false  --add-drop-table=false  --add-drop-trigger=false  --add-locks=false  --all-databases=false  --allow-keywords  --comments=true  --compact=false  --complete-insert=false  --create-options  --default-character-set=utf8 --delayed-insert=false  --disable-keys  --events=false  --extended-insert  --hex-blob=false  --ignore-table=nameoftable --insert-ignore  --lock-tables  --no-data  --max_allowed_packet=1G --port=3305 --quote-names  --replace=false  --routines  """;
+        var value = arguments.GetValue(mysqldumpFacade);
+        Assert.True(value.ToString().Contains(expected));
+      }
     }
 
     [Fact]
     public void CanDumpAListOfDatabases()
     {
-        var databases = new List<String>();
-        databases.Add("DumpTest");
-        databases.Add("SecondTest");
-        databases.Add("ThirdTest");
-        foreach (var database in databases)
+      var databases = new List<String>();
+      databases.Add("DumpTest");
+      databases.Add("SecondTest");
+      databases.Add("ThirdTest");
+      foreach (var database in databases)
+      {
+        conn.ConnectionString = st.GetConnectionString("test", "test", false, false);
+        conn.ConnectionString += ";database=" + database + ";";
+        var mysqldump = new MySqlDbExport(options, saveToFile, conn, null);
+        mysqldump.Export();
+        if (File.Exists(mysqldump.OutputFilePath))
         {
-          conn.ConnectionString = st.GetConnectionString("test", "test", false, false);
-          conn.ConnectionString += ";database=" + database +";";
-          var mysqldump = new MySqlDbExport(options, saveToFile, conn, null);
-          mysqldump.Export();
-          if (File.Exists(mysqldump.OutputFilePath))
+          using (var dump = new StreamReader(mysqldump.OutputFilePath))
           {
-              using (var dump = new StreamReader(mysqldump.OutputFilePath))
-              {
-                  var content = dump.ReadToEnd();
-                  Assert.True(content.Contains(database));
-              }
+            var content = dump.ReadToEnd();
+            Assert.True(content.Contains(database));
           }
-          if (mysqldump.ErrorsOutput != null)
-          {
-              Assert.False(1 == 1, "CanDumpAListOfDatabases: Test Failed"); 
-          }          
-        }    
+        }
+        if (mysqldump.ErrorsOutput != null)
+        {
+          Assert.False(1 == 1, "CanDumpAListOfDatabases: Test Failed");
+        }
+      }
     }
 
     [Fact]
@@ -135,7 +138,7 @@ namespace MySql.VisualStudio.Tests
 
     [Fact]
     public void CanThrowExceptionWhenNoFilePath()
-    {      
+    {
       Exception ex = Assert.Throws<Exception>(() => (new MySqlDbExport(options, "", conn, null)));
       Assert.Equal("Path to save dump file is not set.", ex.Message);
     }
@@ -147,26 +150,90 @@ namespace MySql.VisualStudio.Tests
       //conn.ConnectionString += ";database=DumpTest;";
       //conn.ConnectionString  = st.GetConnectionString("root", "", false, false);
       //conn.ConnectionString += ";database=performance_schema;";
-      var mysqldump = new MySqlDbExport(options,saveToFile, conn, null);
+      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null);
       if (mysqldump.Export())
       {
-         if (!File.Exists(mysqldump.OutputFilePath))
+        if (!File.Exists(mysqldump.OutputFilePath))
           Assert.False(1 == 1, "CanDoDumpFileForDB: Creation of dump failed.");
-      }                     
+      }
     }
 
     [Fact]
     public void CanLoadConnections()
     {
-      var connections = new List<IVsDataExplorerConnection>();      
+      var connections = new List<IVsDataExplorerConnection>();
       //TODO
+    }
+
+    [Fact]
+    public void CanSaveDBExportSettings()
+    {
+
+      var databases = new List<String>();
+      //pick some db objects      
+      databases.Add("DumpTest");
+      databases.Add("SecondTest");
+      databases.Add("ThirdTest");
+
+      Dictionary<string, BindingList<DbSelectedObjects>> dictionaryToDBObjects = new Dictionary<string, BindingList<DbSelectedObjects>>();
+      BindingList<DbSelectedObjects> selectedObjects = null;
+
+      foreach (var database in databases)
+      {
+        selectedObjects = new BindingList<DbSelectedObjects>();
+        DbSelectedObjects objectTable;
+
+        switch (database)
+        {
+          case "DumpTest":
+            objectTable = new DbSelectedObjects("items", DbObjectKind.Table);
+            objectTable.Selected = true;            
+            selectedObjects.Add(objectTable);
+
+            objectTable = new DbSelectedObjects("stores", DbObjectKind.Table);
+            objectTable.Selected = true;            
+            selectedObjects.Add(objectTable);
+
+            objectTable = new DbSelectedObjects("employees", DbObjectKind.Table);
+            objectTable.Selected = true;            
+            selectedObjects.Add(objectTable);
+            break;
+          case "SecondTest":
+            objectTable = new DbSelectedObjects("stuff", DbObjectKind.Table);
+            objectTable.Selected = true;            
+            selectedObjects.Add(objectTable);
+
+            objectTable = new DbSelectedObjects("mylines", DbObjectKind.Table);
+            objectTable.Selected = true;      
+            selectedObjects.Add(objectTable);
+
+            objectTable = new DbSelectedObjects("products", DbObjectKind.Table);
+            objectTable.Selected = true;
+            selectedObjects.Add(objectTable);
+            break;
+          case "ThirdTest":
+            objectTable = new DbSelectedObjects("brands",DbObjectKind.Table);
+            objectTable.Selected = true;
+            selectedObjects.Add(objectTable);
+            break;
+        }
+        dictionaryToDBObjects.Add(database, selectedObjects);
+      }
+
+      string connectionToUse = conn.ConnectionString;
+      MySqlDbExportSaveOptions optionsToSave = new MySqlDbExportSaveOptions(options, saveToFile, dictionaryToDBObjects, connectionToUse);
+      optionsToSave.WriteSettingsFile(Environment.CurrentDirectory, "SavedSettings");
+      MySqlDbExportSaveOptions.LoadSettingsFile(Environment.CurrentDirectory + @"\SavedSettings.dumps");
     }
 
 
     public virtual void Dispose()
     {
       if (File.Exists(saveToFile))
-          File.Delete(saveToFile);
+        File.Delete(saveToFile);
+      if (File.Exists(Environment.CurrentDirectory + @"\settingsFile.dumps"))
+        File.Delete(Environment.CurrentDirectory + @"\settingsFile.dumps");
+
     }
   }
 }
