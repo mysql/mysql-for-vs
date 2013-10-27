@@ -226,7 +226,7 @@ namespace MySql.Data.VisualStudio.DBExport
       if (!String.IsNullOrEmpty(_errorsOutput.ToString()))      
           AppendToLog(_errorsOutput.ToString().Trim() + ".");
 
-      AppendToLog(string.Format(Resources.MySqlDumpEndingInfoLog, string.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.Now), saveTofilePath));      
+      AppendToLog(string.Format(Resources.MySqlDumpEndingInfoLog, string.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.Now), _database));      
     }
 
     private void AppendToLog(string line)
