@@ -1130,7 +1130,7 @@ Check that the server is running, the database exists and the user Error establi
     <value>Any autoincrement columns needs to be set as primary key.</value>
   </data>
   <data name="MySqlDumpEndingInfoLog" xml:space="preserve">
-    <value>{0} Export of {1} has finished.</value>
+    <value>{0} Export of database {1} has finished.</value>
   </data>
   <data name="MySqlDumpStartInfoLog" xml:space="preserve">
     <value>{0} Dumping {1} ({2}).</value>
@@ -1152,5 +1152,8 @@ Check that the server is running, the database exists and the user Error establi
   </data>
   <data name="InvalidMaxAllowedPacketValue" xml:space="preserve">
     <value>Invalid value on max-allowed-packet option.</value>
+  </data>
+   <data name="MySqlDumpSummary" xml:space="preserve">
+    <value>Exported {0} and its schema selected objects.</value>
   </data>
 </root>
