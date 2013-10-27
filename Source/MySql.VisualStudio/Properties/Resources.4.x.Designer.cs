@@ -3169,5 +3169,14 @@ namespace MySql.Data.VisualStudio.Properties {
                 return ResourceManager.GetString("WebConfigConnStrNoEmpty", resourceCulture);
             }
         }
+		
+		/// <summary>
+        ///   Looks up a localized string similar to Exported {0} and its schema selected objects..
+        /// </summary>
+        internal static string MySqlDumpSummary {
+            get {
+                return ResourceManager.GetString("MySqlDumpSummary", resourceCulture);
+            }
+        }
     }
 }

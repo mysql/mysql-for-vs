@@ -86,6 +86,8 @@ namespace MySql.Data.VisualStudio.DBExport
           btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
           btnSaveSettings.Click += btnSaveSettings_Click;
 
+          txtFilter.KeyDown += txtFilter_KeyDown;
+
       }
 
       void dbSchemasList_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -172,6 +174,7 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         if ((cmbConnections.SelectedItem as MySqlServerExplorerConnection) == null) return;
 
+        SelectedConnection = new MySqlServerExplorerConnection();
         SelectedConnection.ConnectionString = ((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString;
         SelectedConnection.DisplayName = ((MySqlServerExplorerConnection)cmbConnections.SelectedItem).DisplayName;
         LoadSchemasForSelectedConnection();
@@ -284,7 +287,9 @@ namespace MySql.Data.VisualStudio.DBExport
       }
 
       public void LoadConnections(List<IVsDataExplorerConnection> connections, string selectedConnectionName)
-      {           
+      {
+        MySqlServerExplorerConnection selected = null;
+        
         try
         {
           _explorerMySqlConnections = connections;
@@ -294,11 +299,12 @@ namespace MySql.Data.VisualStudio.DBExport
               Connections.Add(new MySqlServerExplorerConnection { DisplayName = item.DisplayName, ConnectionString = item.Connection.DisplayConnectionString });
               if (selectedConnectionName.Equals(item.DisplayName, StringComparison.InvariantCultureIgnoreCase))
               {
-                  SelectedConnection = new MySqlServerExplorerConnection { DisplayName = item.DisplayName, ConnectionString = item.Connection.DisplayConnectionString};
+                selected = new MySqlServerExplorerConnection { DisplayName = item.DisplayName, ConnectionString = item.Connection.DisplayConnectionString };
               }
           }
           SetConnectionsList();
-          cmbConnections.SelectedValue = SelectedConnection.ConnectionString;
+          cmbConnections.SelectedValue = selected.ConnectionString;
+          SelectedConnection = selected;
         }
         catch (Exception)
         {
@@ -428,12 +434,20 @@ namespace MySql.Data.VisualStudio.DBExport
                   if (_generalPane != null)
                   {
                     // Wrap in Invoke API since now is a background thread
-                    this.Invoke( ( Action )( () => 
+                    this.Invoke((Action)(() =>
                     {
                       _generalPane.OutputString(Environment.NewLine + _mysqlDbExport.ErrorsOutput.ToString());
                       _generalPane.Activate();
-                    } ) );
+                    }));
                   }
+                }
+                else
+                {
+                  this.Invoke((Action)(() =>
+                  {
+                    _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, dictionary.Count()));
+                    _generalPane.Activate();
+                  }));
                 }
               }
             }
@@ -574,10 +588,12 @@ namespace MySql.Data.VisualStudio.DBExport
 
       private void btnFilter_Click(object sender, EventArgs e)
       {
-        DataView dvSchemas = new DataView((DataTable)dbSchemasList.DataSource);        
-        dvSchemas.RowFilter = string.Format("schema LIKE '{0}%'", txtFilter.Text.Trim());
-        dbSchemasList.DataSource = dvSchemas;               
+        sourceSchemas.DataSource = from s in schemas
+                                   where s.Name.StartsWith(txtFilter.Text.Trim())
+                                   select s;
+        dbSchemasList.DataSource = sourceSchemas;                                                                             
         dbSchemasList.Update();
+        dbSchemasList.Refresh();
       }
 
       private void btnReturn_Click(object sender, EventArgs e)
@@ -812,6 +828,7 @@ namespace MySql.Data.VisualStudio.DBExport
                   }
                   dictionary.Add(schema.Key, dbObjects);
                 }
+                MessageBox.Show("The saved settings loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               }
               else
                 MessageBox.Show("Connection was not found on available connections", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -854,6 +871,7 @@ namespace MySql.Data.VisualStudio.DBExport
             this.Cursor = Cursors.WaitCursor;
             saveToFile.WriteSettingsFile(Path.GetDirectoryName(saveSettingsFileDlg.FileName), Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
             this.Cursor = Cursors.Default;
+            MessageBox.Show("All selected settings were saved correctly.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
           }
           catch (Exception ex)
           {
@@ -862,6 +880,22 @@ namespace MySql.Data.VisualStudio.DBExport
           }
         }      
       }
+
+
+      void txtFilter_KeyDown(object sender, KeyEventArgs e)
+      {
+        if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
+        {
+          if (String.IsNullOrEmpty(txtFilter.Text) && (dbSchemasList.RowCount < schemas.Count))
+          {
+            sourceSchemas.DataSource = schemas;
+            dbSchemasList.DataSource = sourceSchemas;
+            dbSchemasList.Update();
+            dbSchemasList.Refresh();
+          }
+        }
+      }
+
    }
 
 
