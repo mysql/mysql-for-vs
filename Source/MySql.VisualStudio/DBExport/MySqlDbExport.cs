@@ -37,7 +37,8 @@ namespace MySql.Data.VisualStudio.DBExport
     private string _outputFilePath;
     private MySqlDbExportOptions _options;
     private string _fileName;
-    private IsolatedStorageFile _isoStore;    
+    private IsolatedStorageFile _isoStore;
+    private MySqlDumpFacade mysqlDumpFacade;
 
     public string OutputFilePath 
     {
@@ -122,10 +123,13 @@ namespace MySql.Data.VisualStudio.DBExport
       }            
     }
 
+    public void CancelExport()
+    {
+      mysqlDumpFacade.CancelRequest();
+    }
 
     public bool Export()
     {
-      MySqlDumpFacade mysqlDumpFacade;
 
       try 
       {
