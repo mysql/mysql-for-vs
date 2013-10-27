@@ -39,6 +39,7 @@ namespace MySql.Data.VisualStudio.DBExport
     private string _fileName;
     private IsolatedStorageFile _isoStore;
     private MySqlDumpFacade mysqlDumpFacade;
+    private bool _appendToFile;
 
     public string OutputFilePath 
     {
@@ -62,10 +63,17 @@ namespace MySql.Data.VisualStudio.DBExport
         private set;
     }
 
+    public bool OverwriteFile
+    {
+      get {
+        return !_appendToFile;
+      }
+    }
+
     private List<String> _Tables { get; set; }
 
 
-    public MySqlDbExport(MySqlDbExportOptions options, string OutputFilePath, MySqlConnection conn, List<String> tables )
+    public MySqlDbExport(MySqlDbExportOptions options, string outputFilePath, MySqlConnection conn, List<String> tables, bool overwriteFile)
     {
       if (options == null)
         throw new Exception("Export options are not valid");      
@@ -73,7 +81,7 @@ namespace MySql.Data.VisualStudio.DBExport
       if (conn == null)
         throw new Exception("Connection is not valid for the Export operation");
 
-      if (String.IsNullOrEmpty(OutputFilePath))
+      if (String.IsNullOrEmpty(outputFilePath))
           throw new Exception("Path to save dump file is not set.");
 
       if (tables != null)
@@ -82,7 +90,7 @@ namespace MySql.Data.VisualStudio.DBExport
       }
 
       _options = options;
-      _outputFilePath = OutputFilePath;
+      _outputFilePath = outputFilePath;
 
       var connBuilder = new MySqlConnectionStringBuilder(conn.ConnectionString);
 
@@ -94,6 +102,7 @@ namespace MySql.Data.VisualStudio.DBExport
         _options.ssl_cert = connBuilder.CertificateFile;
 
       _fileName = string.Empty;
+      _appendToFile = !overwriteFile;
       CreateIsolatedFile(conn);
     }
 
@@ -152,7 +161,7 @@ namespace MySql.Data.VisualStudio.DBExport
           }
           else
           {
-            using (StreamWriter outputStream = new System.IO.StreamWriter(OutputFilePath, true))
+            using (StreamWriter outputStream = new System.IO.StreamWriter(OutputFilePath, _appendToFile))
             {
               outputStream.Write(mysqlDumpFacade.DumpOutput);
               outputStream.WriteLine();
