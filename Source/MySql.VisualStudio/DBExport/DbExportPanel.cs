@@ -92,6 +92,7 @@ namespace MySql.Data.VisualStudio.DBExport
           btnSelectAll.Click += btnSelectAll_Click;
           btnUnSelect.Click += btnUnSelect_Click;
           btnFilter.Click += btnFilter_Click;
+          btnSaveFile.Click += btnSaveFile_Click;
           btnSaveSettings.Click += btnSaveSettings_Click;
           btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
           txtFilter.KeyDown += txtFilter_KeyDown;
