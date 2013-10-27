@@ -106,14 +106,14 @@ namespace MySql.VisualStudio.Tests
       {
         conn.ConnectionString = st.GetConnectionString("test", "test", false, false);
         conn.ConnectionString += ";database=" + database + ";";
-        var mysqldump = new MySqlDbExport(options, saveToFile, conn, null);
+        var mysqldump = new MySqlDbExport(options, saveToFile, conn, null, false);
         mysqldump.Export();
         if (File.Exists(mysqldump.OutputFilePath))
         {
           using (var dump = new StreamReader(mysqldump.OutputFilePath))
           {
             var content = dump.ReadToEnd();
-            Assert.True(content.Contains(database));
+            Assert.True(content.Contains(database), "A database is missed in the dump file");
           }
         }
         if (mysqldump.ErrorsOutput != null)
@@ -128,7 +128,7 @@ namespace MySql.VisualStudio.Tests
     {
       conn.ConnectionString = st.GetConnectionString("root", "", false, false);
       conn.ConnectionString += ";database=unknown;";
-      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null);
+      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null, true);
       mysqldump.Export();
       var errors = mysqldump.ErrorsOutput.ToString();
       Assert.True(errors.Contains("mysqldump: Got error: 1049: Unknown database 'unknown' when selecting the database"));
@@ -139,7 +139,7 @@ namespace MySql.VisualStudio.Tests
     [Fact]
     public void CanThrowExceptionWhenNoFilePath()
     {
-      Exception ex = Assert.Throws<Exception>(() => (new MySqlDbExport(options, "", conn, null)));
+      Exception ex = Assert.Throws<Exception>(() => (new MySqlDbExport(options, "", conn, null, true)));
       Assert.Equal("Path to save dump file is not set.", ex.Message);
     }
 
@@ -150,7 +150,7 @@ namespace MySql.VisualStudio.Tests
       //conn.ConnectionString += ";database=DumpTest;";
       //conn.ConnectionString  = st.GetConnectionString("root", "", false, false);
       //conn.ConnectionString += ";database=performance_schema;";
-      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null);
+      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null, true);
       if (mysqldump.Export())
       {
         if (!File.Exists(mysqldump.OutputFilePath))
