@@ -83,9 +83,17 @@ namespace MySql.Data.VisualStudio.DBExport
           max_allowed_packet.Text = bndOptions.max_allowed_packet.ToString();
           mySqlDbExportOptionsBindingSource.Add(bndOptions);
 
-          btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
+          //Click commands
+          btnExport.Click += btnExport_Click;
+          btnAdvanced.Click += btnAdvanced_Click;
+          btnCancel.Click += btnCancel_Click;
+          btnRefresh.Click += btnRefresh_Click;
+          btnReturn.Click += btnReturn_Click;
+          btnSelectAll.Click += btnSelectAll_Click;
+          btnUnSelect.Click += btnUnSelect_Click;
+          btnFilter.Click += btnFilter_Click;
           btnSaveSettings.Click += btnSaveSettings_Click;
-
+          btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
           txtFilter.KeyDown += txtFilter_KeyDown;
 
       }
@@ -112,13 +120,15 @@ namespace MySql.Data.VisualStudio.DBExport
           return;
 
         try 
-	       {	        	        
-          if (dictionary.ContainsKey(_ownerSchema))
-            dictionary.Remove(_ownerSchema);
+	       {
+           if (dbSchemasList.CurrentCell.ColumnIndex == 0 && (bool)dbSchemasList.CurrentCell.Value)
+           {
+             if (dictionary.ContainsKey(_ownerSchema))
+               dictionary.Remove(_ownerSchema);
 
-          var dictionaryValue = new BindingList<DbSelectedObjects>(dbObjects.ToList());          
-          dictionary.Add(_ownerSchema, dictionaryValue );               
-
+             var dictionaryValue = new BindingList<DbSelectedObjects>(dbObjects.ToList());
+             dictionary.Add(_ownerSchema, dictionaryValue);
+           }
 	       }
 	      catch
 	      {}        
@@ -330,6 +340,9 @@ namespace MySql.Data.VisualStudio.DBExport
         single_transaction.Enabled = enabled;
         routines.Enabled = enabled;
         btnExport.Enabled = enabled;
+        btnSaveSettings.Enabled = enabled;
+        btnLoadSettingsFile.Enabled = enabled;
+        chkAlwaysCreateNewFile.Enabled = enabled;
       }
 
       private void LockUI()
@@ -354,26 +367,51 @@ namespace MySql.Data.VisualStudio.DBExport
       }
 
       private void btnExport_Click(object sender, EventArgs e)
-      { 
+      {
+
+        string mysqlFilePath = txtFileName.Text.Trim();
+
         try
         {
+          if (dictionary.Count == 0)
+          {
+            MessageBox.Show("No database or objects are selected" , "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+          }
+          
           LockUI();
-          if (String.IsNullOrEmpty(txtFileName.Text))
+          if (String.IsNullOrEmpty(mysqlFilePath))
           {
             MessageBox.Show(Resources.DbExportPathNotProvided, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            txtFileName.Focus();
             return;
           }
 
-          if (CheckPathIsValid(txtFileName.Text))
+          if (String.IsNullOrEmpty(Path.GetDirectoryName(mysqlFilePath)))
           {
-            MessageBox.Show(Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
+            mysqlFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + Path.GetFileNameWithoutExtension(mysqlFilePath);
           }
+          else
+          {
+            if (CheckPathIsValid(mysqlFilePath))
+            {
+              MessageBox.Show(Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+              return;
+            }
+            else
+            {
+              mysqlFilePath = Path.GetFullPath(Path.GetDirectoryName(mysqlFilePath)) + @"\" + Path.GetFileNameWithoutExtension(mysqlFilePath);
+            }
+          }
+
+          mysqlFilePath += ".mysql";
+
           // pull last version of db objects
           if (!string.IsNullOrEmpty(_ownerSchema))
             PullObjectListFromTree(_ownerSchema);
 
           var maxAllowedPacket = 0;
+          bool overWriteExistingFile = chkAlwaysCreateNewFile.Checked;
 
           if (!int.TryParse(max_allowed_packet.Text, out maxAllowedPacket))
           {
@@ -382,7 +420,21 @@ namespace MySql.Data.VisualStudio.DBExport
           }
 
           bndOptions.default_character_set = default_character_set.Text.Trim();
-          bndOptions.max_allowed_packet = maxAllowedPacket;          
+          bndOptions.max_allowed_packet = maxAllowedPacket;
+          try
+          {
+            if (dictionary.Count > 1 && overWriteExistingFile && File.Exists(mysqlFilePath))
+            {
+              File.Delete(mysqlFilePath);
+              overWriteExistingFile = false;
+            }
+          }
+          catch 
+          {
+            MessageBox.Show("An error occured when creating a new file for the Export operation. File is locked.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+          }
+
 
           DoWorkEventHandler doWorker = (worker, doWorkerArgs) =>
           {
@@ -414,7 +466,7 @@ namespace MySql.Data.VisualStudio.DBExport
               _mysqlDbExport = null;
 
               if (allObjectsSelected)
-                _mysqlDbExport = new MySqlDbExport(bndOptions, txtFileName.Text.Trim(), new MySqlConnection(csb.ConnectionString), null);
+                _mysqlDbExport = new MySqlDbExport(bndOptions, mysqlFilePath, new MySqlConnection(csb.ConnectionString), null, overWriteExistingFile);
               else
               {
                 if (item.Value != null)
@@ -422,7 +474,7 @@ namespace MySql.Data.VisualStudio.DBExport
                   List<String> objects = (from s in item.Value
                                           where s.Selected
                                           select s.DbObjectName).ToList();
-                  _mysqlDbExport = new MySqlDbExport(bndOptions, txtFileName.Text.Trim(), new MySqlConnection(csb.ConnectionString), objects);
+                  _mysqlDbExport = new MySqlDbExport(bndOptions, mysqlFilePath, new MySqlConnection(csb.ConnectionString), objects, overWriteExistingFile);
                 }
               }
 
