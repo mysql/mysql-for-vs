@@ -698,8 +698,8 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoScroll = true;
       this.AutoSize = true;
-      this.Controls.Add(this.pnlAdvanced);
       this.Controls.Add(this.pnlGeneral);
+      this.Controls.Add(this.pnlAdvanced);
       this.Name = "dbExportPanel";
       this.Size = new System.Drawing.Size(1620, 504);
       this.groupBox3.ResumeLayout(false);
