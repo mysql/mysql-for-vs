@@ -289,6 +289,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         else
           props.AppendFormat(" DEFAULT {0}", DefaultValue);
       }
+      ColumnName = ColumnName.Trim();
 
       if (newTable)
         return String.Format("`{0}`{1}", ColumnName, props.ToString());
