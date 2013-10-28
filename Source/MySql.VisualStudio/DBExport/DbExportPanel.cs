@@ -688,7 +688,14 @@ namespace MySql.Data.VisualStudio.DBExport
                                  where cnn.DisplayName.Equals(connectionDisplayName, StringComparison.InvariantCultureIgnoreCase)
                                  select cnn.Connection).First();
           connection = (MySqlConnection)s.GetLockedProviderObject();
-          csb = (MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
+          try
+          {
+            csb = (MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
+          }
+          finally
+          {
+            s.UnlockProviderObject();
+          }
           csb.PersistSecurityInfo = true;
         };
         if (this.InvokeRequired)
