@@ -107,7 +107,7 @@ namespace MySql.Data.VisualStudio.DBExport
       void sourceSchemas_ListChanged(object sender, ListChangedEventArgs e)
       {
         if (_windowHandler == null) return;
-        if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame))
+        if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame) && dictionary.Count > 0)
           _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);
 
          _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;
