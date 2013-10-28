@@ -138,15 +138,12 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         foreach (var item in items.Value)
 	        {
-            if (item.Selected)
-            {
               var objectToExport = new DictionaryDbObjects();
               objectToExport.DatabaseName = items.Key;
               objectToExport.ObjectName = item.DbObjectName;
               objectToExport.ObjectType = item.Kind;
-              objectToExport.Selected = true;
+              objectToExport.Selected = item.Selected;
               _dictionary.Add(objectToExport);
-            }
 	        }        
       }
     }
@@ -274,7 +271,7 @@ namespace MySql.Data.VisualStudio.DBExport
   {
     [XmlAttribute("DatabaseName")]
     public string DatabaseName;
-    [XmlIgnore]
+    [XmlAttribute("Selected")]
     public bool Selected;
     [XmlAttribute("ObjectName")]
     public string ObjectName;

@@ -603,9 +603,9 @@ namespace MySql.Data.VisualStudio.DBExport
           connectionString = csb.ConnectionString;
         }
         SelectObjects.GetTables(new MySqlConnection(connectionString), null, null, false).
-          ForEach(t => { databaseObjects.Add(new DbSelectedObjects(t, DbObjectKind.Table)); });
+          ForEach(t => { databaseObjects.Add(new DbSelectedObjects(t, DbObjectKind.Table, false )); });
         SelectObjects.GetViews(new MySqlConnection(connectionString)).
-          ForEach(v => { databaseObjects.Add(new DbSelectedObjects(v, DbObjectKind.View)); });
+          ForEach(v => { databaseObjects.Add(new DbSelectedObjects(v, DbObjectKind.View, false )); });
 
         return databaseObjects;            
       }
@@ -780,7 +780,7 @@ namespace MySql.Data.VisualStudio.DBExport
             {
               TreeNode node = tnParent2.Nodes[i];
               DbObjectKind kind = (j == 0) ? DbObjectKind.Table : DbObjectKind.View;
-              dbList.Add(new DbSelectedObjects(node.Text, kind) { Selected = node.Checked });
+              dbList.Add(new DbSelectedObjects(node.Text, kind, node.Checked ) );
             }
           }
         }
@@ -905,7 +905,7 @@ namespace MySql.Data.VisualStudio.DBExport
                   dbObjects = new BindingList<DbSelectedObjects>();
                   foreach (var dbObject in listDbObjectsSelected)
                   {
-                    dbObjects.Add(new DbSelectedObjects(dbObject.ObjectName, dbObject.ObjectType));
+                    dbObjects.Add(new DbSelectedObjects(dbObject.ObjectName, dbObject.ObjectType, dbObject.Selected ));
                   }
                   dictionary.Add(schema.Key, dbObjects);
                 }
@@ -922,9 +922,11 @@ namespace MySql.Data.VisualStudio.DBExport
 
       private void btnSaveSettings_Click(object sender, EventArgs e)
       {
+        string prevSchema = GetTreeViewDb();
+        if (!string.IsNullOrEmpty(prevSchema))
+          PullObjectListFromTree(prevSchema);
         SaveSettings(false);
       }
-
 
       void txtFilter_KeyDown(object sender, KeyEventArgs e)
       {
@@ -1117,10 +1119,10 @@ namespace MySql.Data.VisualStudio.DBExport
       }
     }
 
-    public DbSelectedObjects(string objectName, DbObjectKind kind)
+    public DbSelectedObjects(string objectName, DbObjectKind kind, bool selected)
     {
       _dbObjectName = objectName.ToLowerInvariant();
-      _selected = false;
+      _selected = selected;
       _kind = kind;
     }
   }
