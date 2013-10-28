@@ -300,7 +300,7 @@ namespace MySql.Data.VisualStudio
                   if (window == null || window.Frame == null)
                       throw new Exception("Cannot create new window");
 
-                  window.Caption = String.Format(Resources.DbExportToolCaptionFrame, currentConnectionName);
+                  window.Caption = Resources.DbExportToolCaptionFrame;
                 
                   IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
 
@@ -308,6 +308,7 @@ namespace MySql.Data.VisualStudio
 
                   windowPanel.Connections = GetMySqlConnections();
                   windowPanel.SelectedConnectionName = currentConnectionName;
+                  windowPanel.WindowHandler = window;
                   windowPanel.InitializeDbExportPanel();
 
                   GetDTE2().Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Visible = true;
