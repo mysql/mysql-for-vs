@@ -186,34 +186,27 @@ namespace MySql.VisualStudio.Tests
         switch (database)
         {
           case "DumpTest":
-            objectTable = new DbSelectedObjects("items", DbObjectKind.Table);
-            objectTable.Selected = true;            
+            objectTable = new DbSelectedObjects("items", DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
 
-            objectTable = new DbSelectedObjects("stores", DbObjectKind.Table);
-            objectTable.Selected = true;            
+            objectTable = new DbSelectedObjects("stores", DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
 
-            objectTable = new DbSelectedObjects("employees", DbObjectKind.Table);
-            objectTable.Selected = true;            
+            objectTable = new DbSelectedObjects("employees", DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
             break;
           case "SecondTest":
-            objectTable = new DbSelectedObjects("stuff", DbObjectKind.Table);
-            objectTable.Selected = true;            
+            objectTable = new DbSelectedObjects("stuff", DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
 
-            objectTable = new DbSelectedObjects("mylines", DbObjectKind.Table);
-            objectTable.Selected = true;      
+            objectTable = new DbSelectedObjects("mylines", DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
 
-            objectTable = new DbSelectedObjects("products", DbObjectKind.Table);
-            objectTable.Selected = true;
+            objectTable = new DbSelectedObjects("products", DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
             break;
           case "ThirdTest":
-            objectTable = new DbSelectedObjects("brands",DbObjectKind.Table);
-            objectTable.Selected = true;
+            objectTable = new DbSelectedObjects("brands",DbObjectKind.Table, true);
             selectedObjects.Add(objectTable);
             break;
         }
