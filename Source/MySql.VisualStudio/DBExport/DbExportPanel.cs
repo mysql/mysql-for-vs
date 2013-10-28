@@ -49,6 +49,7 @@ namespace MySql.Data.VisualStudio.DBExport
       private BackgroundWorker _worker;
       private Cursor _cursor;
       private MySqlDbExport _mysqlDbExport;
+      private ToolWindowPane _windowHandler;
       
       internal MySqlDbExportOptions bndOptions;
       internal List<Schema> schemas = new List<Schema>();      
@@ -95,9 +96,24 @@ namespace MySql.Data.VisualStudio.DBExport
           btnSaveFile.Click += btnSaveFile_Click;
           btnSaveSettings.Click += btnSaveSettings_Click;
           btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
+        
+          //KeyDown events
           txtFilter.KeyDown += txtFilter_KeyDown;
+          txtFileName.KeyDown += txtFileName_KeyDown;
+          sourceSchemas.ListChanged += sourceSchemas_ListChanged;        
+        
+      }      
 
+      void sourceSchemas_ListChanged(object sender, ListChangedEventArgs e)
+      {
+        if (_windowHandler == null) return;
+        if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame))
+          _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);
+
+         _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;
+        
       }
+      
 
       void dbSchemasList_RowEnter(object sender, DataGridViewCellEventArgs e)
       {
@@ -297,7 +313,7 @@ namespace MySql.Data.VisualStudio.DBExport
         dbSchemasList.Refresh();
       }
 
-      public void LoadConnections(List<IVsDataExplorerConnection> connections, string selectedConnectionName)
+      public void LoadConnections(List<IVsDataExplorerConnection> connections, string selectedConnectionName, ToolWindowPane windowHandler)
       {
         MySqlServerExplorerConnection selected = null;
         
@@ -316,6 +332,7 @@ namespace MySql.Data.VisualStudio.DBExport
           SetConnectionsList();
           cmbConnections.SelectedValue = selected.ConnectionString;
           SelectedConnection = selected;
+          _windowHandler = windowHandler;            
         }
         catch (Exception)
         {
@@ -526,8 +543,8 @@ namespace MySql.Data.VisualStudio.DBExport
 
       private void btnSaveFile_Click(object sender, EventArgs e)
       {
-        SaveFileDialog saveFileDlg = new SaveFileDialog(); 
-        saveFileDlg.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments); 
+        SaveFileDialog saveFileDlg = new SaveFileDialog();
+        saveFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         saveFileDlg.Filter = "(*.mysql)|*.mysql|All Files (*.*)|*.*" ; 
         saveFileDlg.FilterIndex = 1;
         if (saveFileDlg.ShowDialog() == DialogResult.OK)
@@ -687,7 +704,16 @@ namespace MySql.Data.VisualStudio.DBExport
 
       private void btnRefresh_Click(object sender, EventArgs e)
       {
-        LoadSchemasForSelectedConnection();       
+        LoadSchemasForSelectedConnection();
+        if (!String.IsNullOrEmpty(txtFilter.Text))
+        {
+          sourceSchemas.DataSource = schemas;
+          dbSchemasList.DataSource = sourceSchemas;
+          dbSchemasList.Update();
+          dbSchemasList.Refresh();
+          txtFilter.Text = string.Empty;
+          return;
+        }
       }
 
       private bool _afterCheckRunning = false;
@@ -826,12 +852,14 @@ namespace MySql.Data.VisualStudio.DBExport
       private void btnLoadSettingsFile_Click(object sender, EventArgs e)
       {
         string settingsFile = string.Empty;
+        
+        dictionary = new Dictionary<string, BindingList<DbSelectedObjects>>();
 
         OpenFileDialog openSettingsFileDlg = new OpenFileDialog();
         
         openSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";        
         openSettingsFileDlg.FilterIndex = 1;
-        openSettingsFileDlg.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
+        openSettingsFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         openSettingsFileDlg.RestoreDirectory = true;
 
         if (openSettingsFileDlg.ShowDialog() == DialogResult.OK)
@@ -881,28 +909,67 @@ namespace MySql.Data.VisualStudio.DBExport
                   }
                   dictionary.Add(schema.Key, dbObjects);
                 }
-                MessageBox.Show("The saved settings loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The saved settings were loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               }
               else
                 MessageBox.Show("Connection was not found on available connections", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
           }
           else
-            MessageBox.Show("File was not found. Please check the path");
+            MessageBox.Show("File was not found. Please check the path.");
         }
       }
 
       private void btnSaveSettings_Click(object sender, EventArgs e)
       {
-          string settingsFile = string.Empty;
+        SaveSettings(false);
+      }
 
+
+      void txtFilter_KeyDown(object sender, KeyEventArgs e)
+      {
+        if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
+        {
+          if (String.IsNullOrEmpty(txtFilter.Text) && (dbSchemasList.RowCount < schemas.Count))
+          {
+            sourceSchemas.DataSource = schemas;
+            dbSchemasList.DataSource = sourceSchemas;
+            dbSchemasList.Update();
+            dbSchemasList.Refresh();
+            return;
+          }
+        }
+        if (e.KeyCode == Keys.Enter)
+        {
+          btnFilter_Click(sender, null);
+        }
+      }
+
+      void txtFileName_KeyDown(object sender, KeyEventArgs e)
+      {
+        if (e.KeyCode == Keys.Enter)
+        {
+          btnSaveFile_Click(sender, null);
+        }
+      }
+
+      public void SaveSettings(bool useDefaults)
+      {
+        string settingsFile = string.Empty;
+        DialogResult result = DialogResult.OK;
         SaveFileDialog saveSettingsFileDlg = new SaveFileDialog();
-        saveSettingsFileDlg.InitialDirectory = Convert.ToString(Environment.SpecialFolder.MyDocuments);
+        saveSettingsFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         saveSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";
         saveSettingsFileDlg.FilterIndex = 1;
-        if (saveSettingsFileDlg.ShowDialog() == DialogResult.OK)
+        saveSettingsFileDlg.FileName = _windowHandler.Caption.Replace("*", "");
+
+        if (!useDefaults)                 
+          result = saveSettingsFileDlg.ShowDialog();
+        
+        
+        if (result == DialogResult.OK)
         {
-          string connectionStringInUse = String.Empty;          
+          string connectionStringInUse = String.Empty;
 
           if (SelectedConnection != null)
           {
@@ -918,13 +985,17 @@ namespace MySql.Data.VisualStudio.DBExport
           }
 
           var saveToFile = new MySqlDbExportSaveOptions(bndOptions, txtFileName.Text, dictionary, connectionStringInUse);
-      
+
           try
           {
+            string completePath = String.IsNullOrEmpty(Path.GetDirectoryName(saveSettingsFileDlg.FileName)) ?
+                                  Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) :
+                                  Path.GetDirectoryName(saveSettingsFileDlg.FileName);
             this.Cursor = Cursors.WaitCursor;
-            saveToFile.WriteSettingsFile(Path.GetDirectoryName(saveSettingsFileDlg.FileName), Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
+            saveToFile.WriteSettingsFile(completePath, Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
             this.Cursor = Cursors.Default;
             MessageBox.Show("All selected settings were saved correctly.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _windowHandler.Caption = _windowHandler.Caption.Replace("*", "");
           }
           catch (Exception ex)
           {
@@ -932,23 +1003,7 @@ namespace MySql.Data.VisualStudio.DBExport
             MessageBox.Show("An error occured when saving the settings file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           }
         }      
-      }
-
-
-      void txtFilter_KeyDown(object sender, KeyEventArgs e)
-      {
-        if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
-        {
-          if (String.IsNullOrEmpty(txtFilter.Text) && (dbSchemasList.RowCount < schemas.Count))
-          {
-            sourceSchemas.DataSource = schemas;
-            dbSchemasList.DataSource = sourceSchemas;
-            dbSchemasList.Update();
-            dbSchemasList.Refresh();
-          }
-        }
-      }
-
+      }     
    }
 
 
