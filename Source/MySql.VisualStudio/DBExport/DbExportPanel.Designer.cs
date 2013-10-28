@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
       this.components = new System.ComponentModel.Container();
-      this.mySqlDbExportOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.groupBox3 = new System.Windows.Forms.GroupBox();
       this.btnRefresh = new System.Windows.Forms.Button();
       this.btnUnSelect = new System.Windows.Forms.Button();
@@ -46,6 +45,7 @@
       this.label1 = new System.Windows.Forms.Label();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.chkAlwaysCreateNewFile = new System.Windows.Forms.CheckBox();
+      this.mySqlDbExportOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnExport = new System.Windows.Forms.Button();
       this.single_transaction = new System.Windows.Forms.CheckBox();
@@ -86,22 +86,18 @@
       this.schemaColumn1 = new MySql.Data.VisualStudio.DBExport.SchemaColumn();
       this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).BeginInit();
       this.groupBox3.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).BeginInit();
       this.pnlGeneral.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).BeginInit();
       this.pnlAdvanced.SuspendLayout();
       this.groupBox8.SuspendLayout();
       this.groupBox5.SuspendLayout();
       this.groupBox6.SuspendLayout();
       this.groupBox9.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // mySqlDbExportOptionsBindingSource
-      // 
-      this.mySqlDbExportOptionsBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions);
       // 
       // groupBox3
       // 
@@ -209,16 +205,16 @@
       // 
       this.btnSaveSettings.Location = new System.Drawing.Point(618, 13);
       this.btnSaveSettings.Name = "btnSaveSettings";
-      this.btnSaveSettings.Size = new System.Drawing.Size(99, 21);
+      this.btnSaveSettings.Size = new System.Drawing.Size(99, 25);
       this.btnSaveSettings.TabIndex = 7;
-      this.btnSaveSettings.Text = "Save to File";
+      this.btnSaveSettings.Text = "Save Settings";
       this.btnSaveSettings.UseVisualStyleBackColor = true;
       // 
       // btnLoadSettingsFile
       // 
       this.btnLoadSettingsFile.Location = new System.Drawing.Point(505, 13);
       this.btnLoadSettingsFile.Name = "btnLoadSettingsFile";
-      this.btnLoadSettingsFile.Size = new System.Drawing.Size(99, 21);
+      this.btnLoadSettingsFile.Size = new System.Drawing.Size(99, 25);
       this.btnLoadSettingsFile.TabIndex = 6;
       this.btnLoadSettingsFile.Text = "Load Settings";
       this.btnLoadSettingsFile.UseVisualStyleBackColor = true;
@@ -270,6 +266,10 @@
       this.chkAlwaysCreateNewFile.TabIndex = 7;
       this.chkAlwaysCreateNewFile.Text = "Always create a new .mysql file";
       this.chkAlwaysCreateNewFile.UseVisualStyleBackColor = true;
+      // 
+      // mySqlDbExportOptionsBindingSource
+      // 
+      this.mySqlDbExportOptionsBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions);
       // 
       // btnCancel
       // 
@@ -363,7 +363,7 @@
       this.pnlAdvanced.Controls.Add(this.groupBox6);
       this.pnlAdvanced.Controls.Add(this.groupBox9);
       this.pnlAdvanced.Controls.Add(this.btnReturn);
-      this.pnlAdvanced.Location = new System.Drawing.Point(822, 4);
+      this.pnlAdvanced.Location = new System.Drawing.Point(15, 3);
       this.pnlAdvanced.Name = "pnlAdvanced";
       this.pnlAdvanced.Size = new System.Drawing.Size(795, 497);
       this.pnlAdvanced.TabIndex = 15;
@@ -702,7 +702,6 @@
       this.Controls.Add(this.pnlGeneral);
       this.Name = "dbExportPanel";
       this.Size = new System.Drawing.Size(1620, 504);
-      ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).EndInit();
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).EndInit();
@@ -711,6 +710,7 @@
       this.groupBox2.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.mySqlDbExportOptionsBindingSource)).EndInit();
       this.pnlAdvanced.ResumeLayout(false);
       this.groupBox8.ResumeLayout(false);
       this.groupBox8.PerformLayout();

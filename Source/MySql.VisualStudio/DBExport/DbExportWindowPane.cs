@@ -26,15 +26,18 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Data.Services;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
     [Guid("4469031d-23e0-483c-8566-ce978f6c9a6f")]
-    public class DbExportWindowPane : ToolWindowPane
+  public class DbExportWindowPane : ToolWindowPane, IVsWindowFrameNotify2
     {
         public dbExportPanel DbExportPanelControl;
         public List<IVsDataExplorerConnection> Connections {get; set;}
         public string SelectedConnectionName { get; set; }
+        public ToolWindowPane WindowHandler { get; set; }
 
         public DbExportWindowPane() : base(null)
         {
@@ -43,7 +46,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
         public void InitializeDbExportPanel()
         {
-          DbExportPanelControl.LoadConnections(Connections, SelectedConnectionName);        
+          DbExportPanelControl.LoadConnections(Connections, SelectedConnectionName, WindowHandler);        
         }
 
         override public IWin32Window Window
@@ -51,5 +54,16 @@ namespace MySql.Data.VisualStudio.DBExport
           get { return (IWin32Window)DbExportPanelControl; }
         }
 
+        public int OnClose(ref uint pgrfSaveOptions)
+        {
+          if (WindowHandler.Caption.Contains("*"))
+          {
+            if (MessageBox.Show("Do you want to save the selected settings?", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+              DbExportPanelControl.SaveSettings(true);
+            }
+          }
+          return VSConstants.S_OK;
+        }
     }
 }
