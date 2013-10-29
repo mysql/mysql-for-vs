@@ -108,10 +108,10 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         if (_windowHandler == null) return;
         if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame) && dictionary.Count > 0)
+        {
           _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);
-
-         _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;
-        
+          _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;
+        }        
       }
       
 
@@ -158,9 +158,10 @@ namespace MySql.Data.VisualStudio.DBExport
                
         int currentRow = dbSchemasList.CurrentRow.Index;
         int currentColumn = dbSchemasList.CurrentCell.ColumnIndex;
-
-
         var currentSchema = string.Empty;
+
+        if (dbSchemasList.Rows[currentRow].Cells.Count <= 1)
+          return;
 
         if (currentRow >= 0)
         {       
@@ -209,6 +210,9 @@ namespace MySql.Data.VisualStudio.DBExport
 
       void dbSchemasList_CellClick(object sender, DataGridViewCellEventArgs e)
       {
+        if (String.IsNullOrEmpty(dbSchemasList.Rows[e.RowIndex].Cells[1].Value as string))
+          return;
+
         if (e.ColumnIndex == 0)
         {
           var selected = schemas.Single(t => t.Name.Equals((string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value, 
@@ -298,19 +302,28 @@ namespace MySql.Data.VisualStudio.DBExport
         });
         
         sourceSchemas.DataSource = schemas;        
-        sourceSchemas.ListChanged += new ListChangedEventHandler(dbSchemasList_CellValueChanged); 
-
-
+        sourceSchemas.ListChanged += new ListChangedEventHandler(dbSchemasList_CellValueChanged);
         dbSchemasList.DataSource = sourceSchemas;
+        FormatSchemasList();       
         
-        dbSchemasList.Columns[0].HeaderText = "Export";
-        dbSchemasList.Columns[0].Width = 45;
+      }
 
-        dbSchemasList.Columns[1].HeaderText = "Schema";        
-        dbSchemasList.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        dbSchemasList.Columns[1].ReadOnly = true;
+      public void FormatSchemasList()
+      {
+        if (dbSchemasList.Rows.Count <= 1 && dbSchemasList.Columns.Count == 1)
+        {
+          sourceSchemas.DataSource = new BindingList<Schema>();
+          dbSchemasList.DataSource = sourceSchemas;
+          dbSchemasList.Update();
+        }
+          dbSchemasList.Columns[0].HeaderText = "Export";
+          dbSchemasList.Columns[0].Width = 45;
 
-        dbSchemasList.Refresh();
+          dbSchemasList.Columns[1].HeaderText = "Schema";
+          dbSchemasList.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+          dbSchemasList.Columns[1].ReadOnly = true;
+        
+        dbSchemasList.Refresh();      
       }
 
       public void LoadConnections(List<IVsDataExplorerConnection> connections, string selectedConnectionName, ToolWindowPane windowHandler)
@@ -547,6 +560,7 @@ namespace MySql.Data.VisualStudio.DBExport
         saveFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         saveFileDlg.Filter = "(*.mysql)|*.mysql|All Files (*.*)|*.*" ; 
         saveFileDlg.FilterIndex = 1;
+        saveFileDlg.FileName = txtFileName.Text;
         if (saveFileDlg.ShowDialog() == DialogResult.OK)
         {
           txtFileName.Text = saveFileDlg.FileName;
@@ -663,7 +677,7 @@ namespace MySql.Data.VisualStudio.DBExport
                                    select s;
         dbSchemasList.DataSource = sourceSchemas;                                                                             
         dbSchemasList.Update();
-        dbSchemasList.Refresh();
+        FormatSchemasList();
       }
 
       private void btnReturn_Click(object sender, EventArgs e)
@@ -944,7 +958,7 @@ namespace MySql.Data.VisualStudio.DBExport
             sourceSchemas.DataSource = schemas;
             dbSchemasList.DataSource = sourceSchemas;
             dbSchemasList.Update();
-            dbSchemasList.Refresh();
+            FormatSchemasList();
             return;
           }
         }
