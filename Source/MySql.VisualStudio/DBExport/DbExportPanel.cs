@@ -285,10 +285,10 @@ namespace MySql.Data.VisualStudio.DBExport
 
         if (SelectedConnection != null)
         {
-          schemaNames = SelectObjects.GetSchemas(new MySqlConnectionStringBuilder(GetCompleteConnectionString(SelectedConnection.DisplayName)));
+          schemaNames = SelectObjects.GetSchemas(new MySqlConnectionStringBuilder(GetCompleteConnectionString(SelectedConnection.DisplayName, true)));
         }
         else if (Connections.Count > 0)
-          schemaNames = SelectObjects.GetSchemas(new MySqlConnectionStringBuilder(GetCompleteConnectionString(Connections[0].ConnectionString)));
+          schemaNames = SelectObjects.GetSchemas(new MySqlConnectionStringBuilder(GetCompleteConnectionString(Connections[0].ConnectionString, true)));
 
         if (schemaNames == null)
           return;
@@ -474,7 +474,7 @@ namespace MySql.Data.VisualStudio.DBExport
               MySqlConnectionStringBuilder csb;
               if (!SelectedConnection.ConnectionString.ToLower().Contains("password"))
               {
-                csb = new MySqlConnectionStringBuilder(GetCompleteConnectionString(SelectedConnection.DisplayName));
+                csb = new MySqlConnectionStringBuilder(GetCompleteConnectionString(SelectedConnection.DisplayName, true));
               }
               else
                 csb = new MySqlConnectionStringBuilder(SelectedConnection.ConnectionString);
@@ -602,7 +602,7 @@ namespace MySql.Data.VisualStudio.DBExport
         BindingList<DbSelectedObjects> databaseObjects = new BindingList<DbSelectedObjects>();
 
         if (SelectedConnection != null)
-          connectionString = GetCompleteConnectionString(SelectedConnection.DisplayName);
+          connectionString = GetCompleteConnectionString(SelectedConnection.DisplayName, true);
         else
           connectionString = Connections[0].ConnectionString;
 
@@ -692,13 +692,14 @@ namespace MySql.Data.VisualStudio.DBExport
         pnlAdvanced.Visible = this.pnlAdvanced.Visible == false ? true : false;
       }
         
-      private string GetCompleteConnectionString(string connectionDisplayName)
+      private string GetCompleteConnectionString(string connectionDisplayName, bool persistSecurityInfo)
       {
         MySqlConnection connection = null;
         MySqlConnectionStringBuilder csb = null;
+        IVsDataConnection s = null;
         Action a = () => 
         {
-          IVsDataConnection s = (from cnn in _explorerMySqlConnections
+          s = (from cnn in _explorerMySqlConnections
                                  where cnn.DisplayName.Equals(connectionDisplayName, StringComparison.InvariantCultureIgnoreCase)
                                  select cnn.Connection).First();
           connection = (MySqlConnection)s.GetLockedProviderObject();
@@ -710,7 +711,6 @@ namespace MySql.Data.VisualStudio.DBExport
           {
             s.UnlockProviderObject();
           }
-          csb.PersistSecurityInfo = true;
         };
         if (this.InvokeRequired)
         {
@@ -720,7 +720,18 @@ namespace MySql.Data.VisualStudio.DBExport
         {
           a();
         }
-        return csb.ConnectionString;
+
+        if (persistSecurityInfo)
+        {
+          csb.PersistSecurityInfo = true;
+          return csb.ConnectionString;
+        }
+        else
+        { 
+          if (s != null)  
+           return s.DisplayConnectionString;
+        }
+        return string.Empty;
       }
 
       private void btnRefresh_Click(object sender, EventArgs e)
@@ -900,7 +911,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
               if (DisplayConnectionName != null)
               {
-                completeConnectionString = GetCompleteConnectionString(DisplayConnectionName);
+                completeConnectionString = GetCompleteConnectionString(DisplayConnectionName, true);
                 if (String.IsNullOrEmpty(completeConnectionString))
                 {
                   MessageBox.Show("The saved connection string was not correctly set. No Database objects are loaded", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1002,10 +1013,10 @@ namespace MySql.Data.VisualStudio.DBExport
 
           if (SelectedConnection != null)
           {
-            connectionStringInUse = GetCompleteConnectionString(SelectedConnection.DisplayName);
+            connectionStringInUse = GetCompleteConnectionString(SelectedConnection.DisplayName, false);
           }
           else if (Connections.Count > 0)
-            connectionStringInUse = GetCompleteConnectionString(Connections[0].ConnectionString);
+            connectionStringInUse = GetCompleteConnectionString(Connections[0].ConnectionString, false);
 
           if (String.IsNullOrEmpty(connectionStringInUse))
           {
