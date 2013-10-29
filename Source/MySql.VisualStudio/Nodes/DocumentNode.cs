@@ -90,7 +90,15 @@ namespace MySql.Data.VisualStudio
       BaseNode node = null;
       if (dic.TryGetValue(curDoc, out node))
       {
-        return (DbConnection)node.HierarchyAccessor.Connection.GetLockedProviderObject();
+        DbConnection c = (DbConnection)node.HierarchyAccessor.Connection.GetLockedProviderObject();
+        try
+        {
+          return c;
+        }
+        finally
+        {
+          node.HierarchyAccessor.Connection.UnlockProviderObject();
+        }
       }
       return null;
     }

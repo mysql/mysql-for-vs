@@ -424,9 +424,16 @@ namespace MySql.Data.VisualStudio
       try
       {
         MySqlConnection connection = (MySqlConnection)con.Connection.GetLockedProviderObject();
-        if (connection != null)
-          return new MySqlConnection(connection.ConnectionString);
-        return null;
+        try
+        {
+          if (connection != null)
+            return new MySqlConnection(connection.ConnectionString);
+          return null;
+        }
+        finally
+        {
+          con.Connection.UnlockProviderObject();
+        }
       }
       catch 
       {

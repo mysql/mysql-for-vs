@@ -5,6 +5,7 @@
 - Fix for WI #758, visual feedback to user that export is busy.
 - Fix for WI #759, DbExport UI gets unresponsive when exporting big tables.
 - Implemented WI #750 to Save Settings of Database Export tool.
+- Fix for WI# 782, After using DbExport, trying 'Retrieve Data' on a table fails (gets hanged with message "waiting datasource").
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
