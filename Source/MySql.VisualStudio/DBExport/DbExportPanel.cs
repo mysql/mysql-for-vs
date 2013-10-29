@@ -920,16 +920,22 @@ namespace MySql.Data.VisualStudio.DBExport
 
                 foreach (var schema in listOfSchemas)
                 {
-                  var listDbObjectsSelected = from o in listObjectsInSettings
-                                              where o.DatabaseName == schema.Key
-                                              select o;
-                  dbObjects = new BindingList<DbSelectedObjects>();
-                  foreach (var dbObject in listDbObjectsSelected)
+                  var selected = schemas.Single(t => t.Name.Equals(schema.Key));
+                  if (selected != null)
                   {
-                    dbObjects.Add(new DbSelectedObjects(dbObject.ObjectName, dbObject.ObjectType, dbObject.Selected ));
+                    selected.CheckSchema(true);
+                    var listDbObjectsSelected = from o in listObjectsInSettings
+                                                where o.DatabaseName == schema.Key
+                                                select o;
+                    dbObjects = new BindingList<DbSelectedObjects>();
+                    foreach (var dbObject in listDbObjectsSelected)
+                    {
+                      dbObjects.Add(new DbSelectedObjects(dbObject.ObjectName, dbObject.ObjectType, dbObject.Selected));
+                    }
+                    dictionary.Add(schema.Key, dbObjects);
                   }
-                  dictionary.Add(schema.Key, dbObjects);
                 }
+                dbSchemasList.Refresh();
                 MessageBox.Show("The saved settings were loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               }
               else
