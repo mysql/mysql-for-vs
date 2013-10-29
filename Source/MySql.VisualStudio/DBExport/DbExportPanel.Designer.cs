@@ -119,8 +119,8 @@
       // 
       this.btnRefresh.Location = new System.Drawing.Point(13, 246);
       this.btnRefresh.Name = "btnRefresh";
-      this.btnRefresh.Size = new System.Drawing.Size(99, 21);
-      this.btnRefresh.TabIndex = 15;
+      this.btnRefresh.Size = new System.Drawing.Size(99, 22);
+      this.btnRefresh.TabIndex = 7;
       this.btnRefresh.Text = "Refresh";
       this.btnRefresh.UseVisualStyleBackColor = true;
       // 
@@ -128,8 +128,8 @@
       // 
       this.btnUnSelect.Location = new System.Drawing.Point(665, 246);
       this.btnUnSelect.Name = "btnUnSelect";
-      this.btnUnSelect.Size = new System.Drawing.Size(103, 21);
-      this.btnUnSelect.TabIndex = 14;
+      this.btnUnSelect.Size = new System.Drawing.Size(103, 22);
+      this.btnUnSelect.TabIndex = 10;
       this.btnUnSelect.Text = "Unselect All";
       this.btnUnSelect.UseVisualStyleBackColor = true;
       // 
@@ -137,8 +137,8 @@
       // 
       this.btnSelectAll.Location = new System.Drawing.Point(556, 246);
       this.btnSelectAll.Name = "btnSelectAll";
-      this.btnSelectAll.Size = new System.Drawing.Size(103, 21);
-      this.btnSelectAll.TabIndex = 13;
+      this.btnSelectAll.Size = new System.Drawing.Size(103, 22);
+      this.btnSelectAll.TabIndex = 9;
       this.btnSelectAll.Text = "Select All";
       this.btnSelectAll.UseVisualStyleBackColor = true;
       // 
@@ -148,7 +148,7 @@
       this.dbObjectsList.Location = new System.Drawing.Point(414, 32);
       this.dbObjectsList.Name = "dbObjectsList";
       this.dbObjectsList.Size = new System.Drawing.Size(354, 208);
-      this.dbObjectsList.TabIndex = 16;
+      this.dbObjectsList.TabIndex = 8;
       this.dbObjectsList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.dbObjectsList_AfterCheck);
       this.dbObjectsList.DoubleClick += new System.EventHandler(this.dbObjectsList_DoubleClick);
       // 
@@ -157,14 +157,14 @@
       this.txtFilter.Location = new System.Drawing.Point(13, 32);
       this.txtFilter.Name = "txtFilter";
       this.txtFilter.Size = new System.Drawing.Size(222, 20);
-      this.txtFilter.TabIndex = 12;
+      this.txtFilter.TabIndex = 4;
       // 
       // btnFilter
       // 
       this.btnFilter.Location = new System.Drawing.Point(241, 31);
       this.btnFilter.Name = "btnFilter";
-      this.btnFilter.Size = new System.Drawing.Size(90, 21);
-      this.btnFilter.TabIndex = 11;
+      this.btnFilter.Size = new System.Drawing.Size(90, 22);
+      this.btnFilter.TabIndex = 5;
       this.btnFilter.Text = "Filter schemas";
       this.btnFilter.UseVisualStyleBackColor = true;
       // 
@@ -177,10 +177,11 @@
       this.dbSchemasList.Name = "dbSchemasList";
       this.dbSchemasList.RowHeadersVisible = false;
       this.dbSchemasList.Size = new System.Drawing.Size(318, 169);
-      this.dbSchemasList.TabIndex = 10;
+      this.dbSchemasList.TabIndex = 6;
       // 
       // pnlGeneral
       // 
+      this.pnlGeneral.Controls.Add(this.pnlAdvanced);
       this.pnlGeneral.Controls.Add(this.groupBox2);
       this.pnlGeneral.Controls.Add(this.groupBox1);
       this.pnlGeneral.Controls.Add(this.groupBox3);
@@ -205,8 +206,8 @@
       // 
       this.btnSaveSettings.Location = new System.Drawing.Point(618, 13);
       this.btnSaveSettings.Name = "btnSaveSettings";
-      this.btnSaveSettings.Size = new System.Drawing.Size(99, 25);
-      this.btnSaveSettings.TabIndex = 7;
+      this.btnSaveSettings.Size = new System.Drawing.Size(99, 22);
+      this.btnSaveSettings.TabIndex = 3;
       this.btnSaveSettings.Text = "Save Settings";
       this.btnSaveSettings.UseVisualStyleBackColor = true;
       // 
@@ -214,8 +215,8 @@
       // 
       this.btnLoadSettingsFile.Location = new System.Drawing.Point(505, 13);
       this.btnLoadSettingsFile.Name = "btnLoadSettingsFile";
-      this.btnLoadSettingsFile.Size = new System.Drawing.Size(99, 25);
-      this.btnLoadSettingsFile.TabIndex = 6;
+      this.btnLoadSettingsFile.Size = new System.Drawing.Size(99, 22);
+      this.btnLoadSettingsFile.TabIndex = 2;
       this.btnLoadSettingsFile.Text = "Load Settings";
       this.btnLoadSettingsFile.UseVisualStyleBackColor = true;
       // 
@@ -226,7 +227,7 @@
       this.cmbConnections.Location = new System.Drawing.Point(157, 13);
       this.cmbConnections.Name = "cmbConnections";
       this.cmbConnections.Size = new System.Drawing.Size(333, 21);
-      this.cmbConnections.TabIndex = 3;
+      this.cmbConnections.TabIndex = 1;
       // 
       // label1
       // 
@@ -263,7 +264,7 @@
       this.chkAlwaysCreateNewFile.Location = new System.Drawing.Point(211, 67);
       this.chkAlwaysCreateNewFile.Name = "chkAlwaysCreateNewFile";
       this.chkAlwaysCreateNewFile.Size = new System.Drawing.Size(172, 17);
-      this.chkAlwaysCreateNewFile.TabIndex = 7;
+      this.chkAlwaysCreateNewFile.TabIndex = 14;
       this.chkAlwaysCreateNewFile.Text = "Always create a new .mysql file";
       this.chkAlwaysCreateNewFile.UseVisualStyleBackColor = true;
       // 
@@ -275,8 +276,8 @@
       // 
       this.btnCancel.Location = new System.Drawing.Point(682, 108);
       this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(99, 21);
-      this.btnCancel.TabIndex = 6;
+      this.btnCancel.Size = new System.Drawing.Size(99, 22);
+      this.btnCancel.TabIndex = 19;
       this.btnCancel.Text = "Cancel";
       this.btnCancel.UseVisualStyleBackColor = true;
       // 
@@ -284,8 +285,8 @@
       // 
       this.btnExport.Location = new System.Drawing.Point(572, 108);
       this.btnExport.Name = "btnExport";
-      this.btnExport.Size = new System.Drawing.Size(99, 21);
-      this.btnExport.TabIndex = 5;
+      this.btnExport.Size = new System.Drawing.Size(99, 22);
+      this.btnExport.TabIndex = 18;
       this.btnExport.Text = "Export";
       this.btnExport.UseVisualStyleBackColor = true;
       // 
@@ -296,7 +297,7 @@
       this.single_transaction.Location = new System.Drawing.Point(136, 112);
       this.single_transaction.Name = "single_transaction";
       this.single_transaction.Size = new System.Drawing.Size(139, 17);
-      this.single_transaction.TabIndex = 1;
+      this.single_transaction.TabIndex = 16;
       this.single_transaction.Text = "Use a single transaction";
       this.single_transaction.UseVisualStyleBackColor = true;
       // 
@@ -307,7 +308,7 @@
       this.routines.Location = new System.Drawing.Point(298, 112);
       this.routines.Name = "routines";
       this.routines.Size = new System.Drawing.Size(133, 17);
-      this.routines.TabIndex = 3;
+      this.routines.TabIndex = 17;
       this.routines.Text = "Include stored routines";
       this.routines.UseVisualStyleBackColor = true;
       // 
@@ -318,7 +319,7 @@
       this.no_data.Location = new System.Drawing.Point(16, 112);
       this.no_data.Name = "no_data";
       this.no_data.Size = new System.Drawing.Size(97, 17);
-      this.no_data.TabIndex = 4;
+      this.no_data.TabIndex = 15;
       this.no_data.Text = "Skip table data";
       this.no_data.UseVisualStyleBackColor = true;
       // 
@@ -335,8 +336,8 @@
       // 
       this.btnSaveFile.Location = new System.Drawing.Point(610, 31);
       this.btnSaveFile.Name = "btnSaveFile";
-      this.btnSaveFile.Size = new System.Drawing.Size(30, 20);
-      this.btnSaveFile.TabIndex = 3;
+      this.btnSaveFile.Size = new System.Drawing.Size(30, 22);
+      this.btnSaveFile.TabIndex = 12;
       this.btnSaveFile.Text = "...";
       this.btnSaveFile.UseVisualStyleBackColor = true;
       // 
@@ -345,14 +346,14 @@
       this.txtFileName.Location = new System.Drawing.Point(211, 32);
       this.txtFileName.Name = "txtFileName";
       this.txtFileName.Size = new System.Drawing.Size(393, 20);
-      this.txtFileName.TabIndex = 2;
+      this.txtFileName.TabIndex = 11;
       // 
       // btnAdvanced
       // 
       this.btnAdvanced.Location = new System.Drawing.Point(652, 30);
       this.btnAdvanced.Name = "btnAdvanced";
-      this.btnAdvanced.Size = new System.Drawing.Size(127, 25);
-      this.btnAdvanced.TabIndex = 0;
+      this.btnAdvanced.Size = new System.Drawing.Size(127, 22);
+      this.btnAdvanced.TabIndex = 13;
       this.btnAdvanced.Text = "Advanced";
       this.btnAdvanced.UseVisualStyleBackColor = true;
       // 
@@ -363,7 +364,7 @@
       this.pnlAdvanced.Controls.Add(this.groupBox6);
       this.pnlAdvanced.Controls.Add(this.groupBox9);
       this.pnlAdvanced.Controls.Add(this.btnReturn);
-      this.pnlAdvanced.Location = new System.Drawing.Point(15, 3);
+      this.pnlAdvanced.Location = new System.Drawing.Point(3, 1);
       this.pnlAdvanced.Name = "pnlAdvanced";
       this.pnlAdvanced.Size = new System.Drawing.Size(795, 497);
       this.pnlAdvanced.TabIndex = 15;
@@ -663,7 +664,7 @@
       // 
       this.btnReturn.Location = new System.Drawing.Point(642, 463);
       this.btnReturn.Name = "btnReturn";
-      this.btnReturn.Size = new System.Drawing.Size(138, 24);
+      this.btnReturn.Size = new System.Drawing.Size(138, 22);
       this.btnReturn.TabIndex = 4;
       this.btnReturn.Text = "Return";
       this.btnReturn.UseVisualStyleBackColor = true;
@@ -701,7 +702,7 @@
       this.Controls.Add(this.pnlGeneral);
       this.Controls.Add(this.pnlAdvanced);
       this.Name = "dbExportPanel";
-      this.Size = new System.Drawing.Size(1620, 504);
+      this.Size = new System.Drawing.Size(816, 504);
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).EndInit();
