@@ -861,6 +861,17 @@ namespace MySql.Data.VisualStudio.DBExport
 
       private void btnCancel_Click(object sender, EventArgs e)
       {
+
+        try
+        {
+          if (!_worker.IsBusy)
+            return;
+        }
+        catch 
+        {
+          return;
+        }
+
         _worker.CancelAsync();
         _mysqlDbExport.CancelExport();
         UnlockUI();
