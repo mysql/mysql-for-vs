@@ -943,6 +943,10 @@ namespace MySql.Data.VisualStudio.DBExport
                     {
                       dbObjects.Add(new DbSelectedObjects(dbObject.ObjectName, dbObject.ObjectType, dbObject.Selected));
                     }
+                    
+                    if (dictionary.ContainsKey(schema.Key))
+                      dictionary.Remove(schema.Key);
+
                     dictionary.Add(schema.Key, dbObjects);
                   }
                 }
