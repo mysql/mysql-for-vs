@@ -1,4 +1,7 @@
 
+1.0.4
+- Fix for WI# 788, Installer must no longer register the MySql ADO.NET provider at machine.config file.
+
 1.0.3
 - Several fixes for the parser:
 a) Added a all server supported keywords as identifiers to grammar.
