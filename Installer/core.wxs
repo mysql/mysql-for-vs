@@ -99,8 +99,7 @@
       </Component>
     </DirectoryRef>
 
-    <!-- Custom Action (updates machine.config after a repair) -->    
-    <CustomAction Id="UpdateMachineConfigFile" DllEntry="UpdateMachineConfigFile" BinaryKey="MySql.Data.DependencyFile" Execute="deferred" Return="check" Impersonate="no" />
+    <!-- Custom Action (updates machine.config after a repair) -->        
     <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
        
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
@@ -121,8 +120,7 @@
       <Custom Action="Setv2InstallUtil" After="InstallValidate"/>
       <Custom Action='Setv4InstallUtil' After='InstallValidate'>NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
-      <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>      
-      <Custom Action='UpdateMachineConfigFile' Before="InstallFinalize">(NOT Installed) OR (REINSTALL)</Custom>
+      <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
       <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
       <Custom Action='ManagedDataUnInstall' After="ManagedDataUnInstallSetup">Installed</Custom>
     </InstallExecuteSequence>
