@@ -118,7 +118,7 @@
   <ItemGroup>    
     <Reference Include="xunit">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\XUnit_1.9.1\xunit.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\XUnit-1.9.2\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
