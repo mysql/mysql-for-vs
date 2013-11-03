@@ -187,26 +187,28 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
-      <ComponentRef Id='Docs'/>
-      <ComponentRef Id='Licenses'/>
-    </Feature>
-    
-    <FeatureRef Id='Core.Feature'/>
+   <FeatureRef Id='Core.Feature'/>
     <!--<FeatureRef Id="WebProviders"/>-->
-
-    <Feature Id='EFIntegration2012' Level='1' Display='hidden'
-             Title='EF Integration' Description='DDEX and Server Explorer Integration'>      
-      <FeatureRef Id="EntityFramework2012"/>
-    </Feature>
     
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
       <FeatureRef Id='VS2008Int'/>
       <FeatureRef Id='VS2010Int'/>
       <FeatureRef Id='VS2012Int'/>
-      <FeatureRef Id='VS2013Int'/>
-      <!-- <FeatureRef Id="EntityFramework" /> -->
+      <FeatureRef Id='VS2013Int'/>      
+    </Feature>
+
+    <Feature Id="EntityFramework"  Title="Entity Framework Designer Integration" Display="expand"
+        Description="Support for the entity framework">
+      <Condition Level="0">Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
+      <FeatureRef Id="EntityFramework2010"/>
+      <FeatureRef Id="EntityFramework2012"/>
+      <FeatureRef Id="EntityFramework2013"/>
+    </Feature>
+
+    <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
+      <ComponentRef Id='Docs'/>
+      <ComponentRef Id='Licenses'/>
     </Feature>
 
     <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>
