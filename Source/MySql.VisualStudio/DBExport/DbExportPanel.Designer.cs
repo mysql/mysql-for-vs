@@ -181,7 +181,6 @@
       // 
       // pnlGeneral
       // 
-      this.pnlGeneral.Controls.Add(this.pnlAdvanced);
       this.pnlGeneral.Controls.Add(this.groupBox2);
       this.pnlGeneral.Controls.Add(this.groupBox1);
       this.pnlGeneral.Controls.Add(this.groupBox3);
@@ -270,6 +269,7 @@
       // 
       // mySqlDbExportOptionsBindingSource
       // 
+      this.mySqlDbExportOptionsBindingSource.AllowNew = false;
       this.mySqlDbExportOptionsBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions);
       // 
       // btnCancel
@@ -760,7 +760,6 @@
         private System.Windows.Forms.CheckBox events;
         private System.Windows.Forms.CheckBox quote_names;
         private System.Windows.Forms.CheckBox no_create_info;
-        private System.Windows.Forms.BindingSource mySqlDbExportOptionsBindingSource;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnExport;
@@ -784,5 +783,6 @@
         private System.Windows.Forms.ComboBox cmbConnections;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkAlwaysCreateNewFile;
+        public System.Windows.Forms.BindingSource mySqlDbExportOptionsBindingSource;
     }
 }

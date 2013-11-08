@@ -32,60 +32,494 @@ namespace MySql.Data.VisualStudio.DBExport
 {
   public class MySqlDbExportOptions : INotifyPropertyChanged
   {
+
+    private bool _add_drop_database;
+    private bool _add_drop_table;
+    private bool _add_locks;
+    private bool _all_databases;
+    private bool _allow_keywords;
+    private bool _comments;
+    private bool _compact;
+    private bool _complete_insert;
+    private bool _create_options;
+    private string _database;
+    private bool _databases;
+    private string _default_character_set;
+    private bool _delayed_insert;
+    private bool _disable_keys;
+    private bool _events;
+    private bool _extended_insert;
+    private bool _flush_logs;
+    private bool _hex_blob;
+    private string _host;
+    private string _ignore_table;
+    private bool _insert_ignore;
+    private bool _lock_tables;
+    private string _log_error;
+    private bool _no_data;
+    private bool _no_create_info;
+    private int _max_allowed_packet;
+    private bool _order_by_primary;
+    private int _port;
+    private bool _quote_names;
+    private bool _replace;
+    private string _result_file;
+    private bool _routines;
+    private bool _single_transaction;
+    private string _ssl_ca;
+    private string _ssl_cert;
+    private string _ssl_key;
+
+    public  bool add_drop_database 
+    {
+      get {
+        return _add_drop_database;
+      }
+
+      set {
+        _add_drop_database = value;
+        NotifyPropertyChanged("add_drop_database");
+      }
+    }
+
+    public bool add_drop_table
+    {
+      get
+      {
+        return _add_drop_database;
+      }
+      set
+      {
+        _add_drop_database = value;
+        NotifyPropertyChanged("add_drop_table");
+      }
+    }
+    public bool add_locks
+    {
+      get
+      {
+        return _add_locks;
+      }
+      set
+      {
+        _add_locks = value;
+        NotifyPropertyChanged("add_locks");
+      }
+    }
+
+    public bool all_databases
+    {
+      get
+      {
+        return _all_databases;      
+      }
+      set
+      {
+        _all_databases = value;
+        NotifyPropertyChanged("all_databases");
+      }
+    }
+    public bool allow_keywords
+    {
+      get
+      {
+        return _allow_keywords;
+      }
+
+      set
+      {
+        _allow_keywords = value;
+        NotifyPropertyChanged("allow_keywords");
+      }
+    }
+
+    public bool comments
+    {
+      get
+      {
+        return _comments;      
+      }
+      set
+      {
+        _comments = value;
+        NotifyPropertyChanged("comments");
+      }
+    }
+    public bool compact
+    {
+      get
+      {
+        return _compact;
+      }
+      set
+      {
+        _compact = value;
+        NotifyPropertyChanged("compact");
+      }
+    }
+
+    public bool complete_insert {
+     get    
+      {
+        return _complete_insert;
+      }
     
-    public  bool add_drop_database { get; set; }
-    public bool add_drop_table { get; set; }    
-    public bool add_locks{ get; set; }
-    public bool all_databases { get; set; }        
-    public bool allow_keywords { get; set; }
-       
-    public bool comments { get; set; }
-    public bool compact { get; set; }
-    public bool complete_insert { get; set; }    
-    public bool create_options { get; set; }
+      set
+      {
+        _complete_insert = value;
+        NotifyPropertyChanged("complete_insert");
+      }
+    }
+    public bool create_options
+    {
+      get {
+        return _create_options;      
+      }
+      set
+      {
+        _create_options = value;
+        NotifyPropertyChanged("create_options");
+      }
+    }
 
-    public string database { get; set; }
-    public bool databases { get; set; }
-       
-    public string default_character_set { get; set; }
-    public bool delayed_insert { get; set; }    
-    public bool disable_keys { get; set; }
+    public string database
+    {
+      get
+      {
+        return _database;
+      }
+      set
+      {
+        _database = value;
+        NotifyPropertyChanged("database");
+      }
+    }
+    public bool databases
+    {
+      get
+      {
+        return _databases;
+      }
+      set
+      {
+        _databases = value;
+        NotifyPropertyChanged("databases");
+      }
+    }
 
-    public bool events {get; set;}
-    public bool extended_insert { get; set; }
+    public string default_character_set
+    {
+      get
+      {
+        return _default_character_set;
+      }
+      set
+      {
+        _default_character_set = value;
+        NotifyPropertyChanged("default_character_set");
+      }
+    }
 
-    public bool flush_logs { get; set; }
+    public bool delayed_insert
+    {
+      get
+      {
+        return _delayed_insert;
+      }
+      set
+      {
+        _delayed_insert = value;
+        NotifyPropertyChanged("delayed_insert");
+      }
+    }
+    public bool disable_keys
+    {
+      get
+      {
+        return _disable_keys;
+      }
+      set
+      {
+        _disable_keys = value;
+        NotifyPropertyChanged("disable_keys");
+      }
+    }
 
-    public bool hex_blob { get; set; }
-    public string host { get; set; }
+    public bool events
+    {
+      get {
+        return _events;
+      }
 
-    public string ignore_table { get; set; }
-    public bool insert_ignore { get; set; }
+      set
+      {
+        _events = value;
+        NotifyPropertyChanged("events");
+      }
+    }
 
-    public bool lock_tables { get; set; }
-    public string log_error { get; set; }
-    
-    public bool no_data { get; set; }
+    public bool extended_insert
+    {
+      get
+      {
+        return _extended_insert;
+      }
+      set
+      {
+        _extended_insert = value;
+        NotifyPropertyChanged("extended_insert");
+      }
+    }
 
-    public bool no_create_info { get; set; }
+    public bool flush_logs
+    {
+      get
+      {
+        return _flush_logs;      
+      }
+      set
+      {
+        _flush_logs = value;
+        NotifyPropertyChanged("flush_logs");
+      }
+    }
+
+    public bool hex_blob
+    {
+      get
+      {        
+        return _hex_blob;
+      }
+      set
+      {
+        _hex_blob = value;
+        NotifyPropertyChanged("hex_blob");
+      }
+    }
+    public string host
+    {
+      get
+      {
+        return _host;
+      }
+
+      set
+      {
+        _host = value;
+        NotifyPropertyChanged("host");
+      }
+    }
+
+    public string ignore_table
+    {
+      get {
+        return _ignore_table;      
+      }
+      set
+      {
+        _ignore_table = value;
+        NotifyPropertyChanged("ignore_table");
+      }
+    }
+    public bool insert_ignore
+    {
+      get
+      {
+        return _insert_ignore;
+      }
+      set
+      {
+        _insert_ignore = value;
+        NotifyPropertyChanged("insert_ignore");
+      }
+    }
+
+    public bool lock_tables
+    {
+      get {
+        return _lock_tables;      
+      }
+      set
+      {
+        _lock_tables = value;
+        NotifyPropertyChanged("lock_tables");
+      }
+    }
+    public string log_error
+    {
+      get {
+        return _log_error;
+      }
+      set
+      {
+        _log_error = value;
+        NotifyPropertyChanged("log_error");
+      }
+    }
+
+    public bool no_data
+    {
+      get
+      {
+        return _no_data;
+      }
+      set
+      {
+        _no_data = value;
+        NotifyPropertyChanged("no_data");
+      }
+    }
+
+    public bool no_create_info
+    {
+      get {
+        return _no_create_info;      
+      }
+
+      set
+      {
+        _no_create_info = value;
+        NotifyPropertyChanged("no_create_info");
+      }
+    }
 
     //Megabytes value    
-    public int max_allowed_packet { get; set; }
+    public int max_allowed_packet
+    {
+      get
+      {
+        return _max_allowed_packet;
+      }
+      set
+      {
+        _max_allowed_packet = value;
+        NotifyPropertyChanged("max_allowed_packet");
+      }
+    }
 
-    public bool order_by_primary { get; set; }
+    public bool order_by_primary
+    {
+      get
+      {
+        return _order_by_primary;
+      }
+      set
+      {
+        _order_by_primary = value;
+        NotifyPropertyChanged("order_by_primary");
+      }
+    }
 
-    public int port { get; set; }
-    
-    public bool quote_names { get; set; }
+    public int port
+    {
+      get
+      {
+        return _port;
+      }
+      set
+      {
+        _port = value;
+        NotifyPropertyChanged("add_drop_table");
+      }
+    }
 
-    public bool replace { get; set; }
-    public string result_file { get; set; }
-    public bool routines { get; set; }
-    public bool single_transaction { get; set; }
+    public bool quote_names
+    {
+      get
+      {
+        return _quote_names;
+      }
+      set
+      {
+        _quote_names = value;
+        NotifyPropertyChanged("quote_names");
+      }
+    }
 
-    public string ssl_ca { get; set; }
-    public string ssl_cert { get; set; }
-    public string ssl_key { get; set; }    
+    public bool replace
+    {
+      get {
+        return _replace;
+      }
+      set
+      {
+        _replace = value;
+        NotifyPropertyChanged("replace");
+      }
+    }
+    public string result_file
+    {
+      get
+      {
+        return _result_file;
+      }
+      set
+      {
+        _result_file = value;
+        NotifyPropertyChanged("result_file");
+      }
+    }
+    public bool routines
+    {
+      get
+      {
+        return _routines;
+      }
+      set
+      {
+        _routines = value;
+        NotifyPropertyChanged("routines");
+      }
+    }
+    public bool single_transaction
+    {
+      get
+      {
+        return _single_transaction;
+      }
+      set
+      {
+        _single_transaction = value;
+        NotifyPropertyChanged("single_transaction");
+      }
+    }
+
+    public string ssl_ca
+    {
+      get
+      {
+        return _ssl_ca;
+      }
+      set
+      {
+        _ssl_ca = value;
+        NotifyPropertyChanged("ssl_ca");
+      }
+    }
+    public string ssl_cert
+    {
+      get
+      {
+        return _ssl_cert;
+      }
+      set
+      {
+        _ssl_cert = value;
+        NotifyPropertyChanged("ssl_cert");
+      }
+    }
+    public string ssl_key
+    {
+      get
+      {
+        return _ssl_key;
+      }
+      set
+      {
+        _ssl_key = value;
+        NotifyPropertyChanged("ssl_key");
+      }
+    }    
 
     internal Dictionary<PropertyInfo, string> dictionary = new Dictionary<PropertyInfo, string>();
 
