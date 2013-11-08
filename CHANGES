@@ -8,6 +8,7 @@
 - Fix for WI# 788, Installer must no longer register the MySql ADO.NET provider at machine.config file.
 - Added support for Model First Db generation with EF 6 and VS 2013 WI #784.
 - Fix for Debugging routine throws error of data too long for column 'pvarname' at row 1 error (MySql bug #70159, Oracle bug #17568158).
+- Fixing Load Settings from Db Export Tool doesn't load the saved settings options (WI # 809).
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
