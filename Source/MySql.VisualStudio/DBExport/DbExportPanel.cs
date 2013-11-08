@@ -82,7 +82,7 @@ namespace MySql.Data.VisualStudio.DBExport
           }
           bndOptions = new MySqlDbExportOptions();
           max_allowed_packet.Text = bndOptions.max_allowed_packet.ToString();
-          mySqlDbExportOptionsBindingSource.Add(bndOptions);
+          mySqlDbExportOptionsBindingSource.Add(bndOptions);          
 
           //Click commands
           btnExport.Click += btnExport_Click;
@@ -771,8 +771,7 @@ namespace MySql.Data.VisualStudio.DBExport
             // Propagate results into schema list
             if (e.Node.Checked)
             {
-              string schemaName = dbObjectsList.Nodes[ 0 ].Text;
-              Schema s = null;
+              string schemaName = dbObjectsList.Nodes[ 0 ].Text;              
               for (int i = 0; i < schemas.Count; i++)
               {
                 if (schemas[i].Name == schemaName)
@@ -917,7 +916,7 @@ namespace MySql.Data.VisualStudio.DBExport
             {
               //TODO create the connection if it not exists              
               string DisplayConnectionName = (from cnn in _explorerMySqlConnections
-                                              where cnn.Connection.DisplayConnectionString.Equals(settings.Connection, StringComparison.InvariantCultureIgnoreCase)
+                                              where cnn.Connection.DisplayConnectionString.Contains(settings.Connection)
                                               select cnn.DisplayName).FirstOrDefault();
 
               if (DisplayConnectionName != null)
@@ -962,6 +961,13 @@ namespace MySql.Data.VisualStudio.DBExport
                   }
                 }
                 dbSchemasList.Refresh();
+                bndOptions = settings.DumpOptions;
+                max_allowed_packet.Text = bndOptions.max_allowed_packet.ToString();                
+                mySqlDbExportOptionsBindingSource.RemoveAt(0);
+                mySqlDbExportOptionsBindingSource.Add(bndOptions);
+                mySqlDbExportOptionsBindingSource.ResetBindings(true);
+                
+                Application.DoEvents();
                 MessageBox.Show("The saved settings were loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               }
               else
