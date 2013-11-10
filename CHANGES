@@ -10,6 +10,7 @@
 - Fix for Debugging routine throws error of data too long for column 'pvarname' at row 1 error (MySql bug #70159, Oracle bug #17568158).
 - Fixing Load Settings from Db Export Tool doesn't load the saved settings options (WI # 809).
 - Fixing WI# 796, Lost connection to MySQL server when exporting a big_db remote schema.
+- Fix for MySQL website Configuration Icon , raise an error window (WI # 819).
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
