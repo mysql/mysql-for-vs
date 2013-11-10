@@ -124,6 +124,8 @@ namespace MySql.Data.VisualStudio.DBExport
       {
           using (StreamWriter writer = new StreamWriter(isoStream))
           {
+              writer.WriteLine("[mysqld]");
+              writer.WriteLine("wait_timeout=1000000");
               writer.WriteLine("[mysqldump]");
               writer.WriteLine("user=" + userId);
               writer.WriteLine("password=" + pwd);              
