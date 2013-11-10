@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -197,6 +197,9 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       XmlNode webNode = null;
       XmlNode systemWebNode = webDoc.GetElementsByTagName("system.web")[0];
+      if (systemWebNode == null)
+        return null;
+
       foreach (XmlNode node in systemWebNode.ChildNodes)
         if (node.Name == name)
         {
@@ -227,6 +230,10 @@ namespace MySql.Data.VisualStudio.WebConfig
     public XmlElement AddProvider(string sectionName, string defaultName, string name)
     {
       XmlElement e = (XmlElement)GetSystemWebNode(sectionName, true, true);
+
+      if (e == null)
+        return null;
+
       e = e.FirstChild as XmlElement;
 
       // if we are adding a provider def with the same name as default then we

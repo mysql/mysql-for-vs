@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -64,15 +64,17 @@ namespace MySql.Data.VisualStudio.WebConfig
     public virtual void GetDefaults()
     {
       ProviderSettings p = GetMachineSettings();
-      ProviderType = p.Type;
-
-      defaults.ProviderName = p.Name;
-      defaults.ConnectionStringName = GetStringValue(p.Parameters["connectionStringName"]);
-      defaults.AppName = GetStringValue(p.Parameters["applicationName"]);
-      defaults.AppDescription = GetStringValue(p.Parameters["description"]);
-      defaults.AutoGenSchema = GetBoolValue(p.Parameters["autogenerateschema"], false);
-      defaults.WriteExceptionToLog = GetBoolValue(p.Parameters["writeExceptionsToEventLog"], false);
-      defaults.EnableExpireCallback = GetBoolValue(p.Parameters["enableExpireCallback"], false);
+      if (p != null)
+      {
+        ProviderType = p.Type;
+        defaults.ProviderName = p.Name;
+        defaults.ConnectionStringName = GetStringValue(p.Parameters["connectionStringName"]);
+        defaults.AppName = GetStringValue(p.Parameters["applicationName"]);
+        defaults.AppDescription = GetStringValue(p.Parameters["description"]);
+        defaults.AutoGenSchema = GetBoolValue(p.Parameters["autogenerateschema"], false);
+        defaults.WriteExceptionToLog = GetBoolValue(p.Parameters["writeExceptionsToEventLog"], false);
+        defaults.EnableExpireCallback = GetBoolValue(p.Parameters["enableExpireCallback"], false);
+      }
     }
 
     protected string GetStringValue(string s)
