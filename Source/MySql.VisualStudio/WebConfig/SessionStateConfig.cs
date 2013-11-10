@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -38,10 +38,15 @@ namespace MySql.Data.VisualStudio.WebConfig
       Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
       MembershipSection section = (MembershipSection)machineConfig.SectionGroups["system.web"].Sections["membership"];
       foreach (ProviderSettings p in section.Providers)
-        if (p.Type.Contains("MySql"))
-          ProviderType = p.Type;
-      ProviderType = ProviderType.Replace("MySql.Web.Security.MySQLMembershipProvider",
-          "MySql.Web.SessionState.MySqlSessionStateStore");
+        if (p.Type != null)
+        {
+          if (p.Type.Contains("MySql"))
+            ProviderType = p.Type;
+
+          if (ProviderType != null)
+            ProviderType = ProviderType.Replace("MySql.Web.Security.MySQLMembershipProvider",
+            "MySql.Web.SessionState.MySqlSessionStateStore");
+        }
     }
 
     public override void GetDefaults()
