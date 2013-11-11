@@ -134,10 +134,14 @@ private static string GetProviderManifestToken(string edmxPath)
     XmlDocument xmlDocument = new XmlDocument();
     xmlDocument.Load(edmxPath);
     XmlNamespaceManager namespaceMgr = new XmlNamespaceManager(xmlDocument.NameTable);
-    
-    string edmxNamespace = "http://schemas.microsoft.com/ado/2008/10/edmx";
-    
-    namespaceMgr.AddNamespace("edmx", edmxNamespace);
+        
+    namespaceMgr.AddNamespace("edmx", "http://schemas.microsoft.com/ado/2008/10/edmx"); 
+    namespaceMgr.AddNamespace("edmx", "http://schemas.microsoft.com/ado/2009/11/edmx"); 
+	
+	
+    if (xmlDocument.SelectSingleNode("/edmx:Edmx/edmx:Runtime/edmx:StorageModels", namespaceMgr) == null)
+      return String.Empty;
+
      
     foreach (var node in xmlDocument.SelectSingleNode("/edmx:Edmx/edmx:Runtime/edmx:StorageModels", namespaceMgr).ChildNodes)
     {
