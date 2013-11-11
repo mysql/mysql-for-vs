@@ -153,7 +153,7 @@ namespace MySql.Data.VisualStudio.DBExport
             mysqlDumpFacade = new MySqlDumpFacade(_options, OutputFilePath, _fileName);
           }
 
-          mysqlDumpFacade.ProcessRequest();
+          mysqlDumpFacade.ProcessRequest(OutputFilePath);
           _isoStore.DeleteFile(Path.GetFileName(_fileName));
           _isoStore.Close();
           if (mysqlDumpFacade.ErrorsOutput != null && !String.IsNullOrEmpty(mysqlDumpFacade.ErrorsOutput.ToString()))
@@ -163,11 +163,6 @@ namespace MySql.Data.VisualStudio.DBExport
           }
           else
           {
-            using (StreamWriter outputStream = new System.IO.StreamWriter(OutputFilePath, _appendToFile))
-            {
-              outputStream.Write(mysqlDumpFacade.DumpOutput);
-              outputStream.WriteLine();
-            }
             return true;
           }
       }
