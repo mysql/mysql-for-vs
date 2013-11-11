@@ -120,12 +120,27 @@ SET foreign_key_checks = 1;
     EnvDTE.DTE env = (EnvDTE.DTE)((IServiceProvider)this.Host).GetService(typeof(EnvDTE.DTE));      
     string serverVersion = GetProviderManifestToken(edmxPath);
     string connection = String.Empty;
+    bool getConnection = false;
     
-    if (String.IsNullOrEmpty(serverVersion))
-     {
+    if (String.IsNullOrEmpty(serverVersion))  getConnection = true; 	
+    try
+    {
+      if (!String.IsNullOrEmpty(serverVersion))
+      {
+        var tryVersion = new Version(serverVersion);       
+      }
+    }
+    catch
+    {
+      serverVersion =  "5.6";
+      getConnection= true;
+    }
+	
+    if (getConnection)
+    {
         connection = GetConnectionString(edmxPath, (EnvDTE.Project)((Array)env.ActiveSolutionProjects).GetValue(0));	
         connection = !String.IsNullOrEmpty(connection) ? connection.Substring(connection.IndexOf(";provider connection string=", StringComparison.OrdinalIgnoreCase) + ";provider connection string=".Length): connection;
-     }
+    }
 
     foreach (EntitySet entitySet in Store.GetAllEntitySets())
     {
