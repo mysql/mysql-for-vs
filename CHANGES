@@ -11,6 +11,7 @@
 - Fixing Load Settings from Db Export Tool doesn't load the saved settings options (WI # 809).
 - Fixing WI# 796, Lost connection to MySQL server when exporting a big_db remote schema.
 - Fix for MySQL website Configuration Icon , raise an error window (WI # 819).
+- Fix for Model First with a new model throws error version string portion was too short or too long. (WI # 828).
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
