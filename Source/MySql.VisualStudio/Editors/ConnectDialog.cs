@@ -28,6 +28,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.Common;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio
 {
@@ -42,7 +43,7 @@ namespace MySql.Data.VisualStudio
     public ConnectDialog()
     {
       InitializeComponent();
-      factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      factory = MySqlClientFactory.Instance;
       if (factory == null)
         throw new Exception("MySql Data Provider is not correctly registered");
       connectionStringBuilder = factory.CreateConnectionStringBuilder();
