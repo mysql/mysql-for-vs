@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -24,6 +24,7 @@ using System;
 using System.Data.Common;
 using System.Windows.Forms;
 using System.Reflection;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
@@ -35,7 +36,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       InitializeComponent();
 
-      DbProviderFactory factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      DbProviderFactory factory = MySqlClientFactory.Instance;
       builder = factory.CreateConnectionStringBuilder();
       connStrProps.SelectedObject = builder;
     }
