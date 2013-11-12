@@ -13,6 +13,7 @@
 - Fixing WI# 796, Lost connection to MySQL server when exporting a big_db remote schema.
 - Fix for MySQL website Configuration Icon , raise an error window (WI # 819).
 - Fix for Model First with a new model throws error version string portion was too short or too long. (WI # 828).
+- Fix for WI# 814, On Server Explorer After Create Table, does not allow to fill up data.
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.

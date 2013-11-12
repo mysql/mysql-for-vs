@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2010, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -124,6 +124,54 @@ namespace MySql.Data.VisualStudio
       if (sourceInformation != null)
         sourceInformation.Refresh();
       return true;
+    }
+
+    public override Microsoft.VisualStudio.Data.DataParameter CreateParameter()
+    {
+      return new AdoDotNetParameter("MySql.Data.MySqlClient", MySqlClientFactory.Instance.CreateParameter());
+    }
+
+    public override Microsoft.VisualStudio.Data.DataReader Execute(string command, int commandType, Microsoft.VisualStudio.Data.DataParameter[] parameters, int commandTimeout)
+    {
+      MySqlCommand cmd = DoExecute(command, commandType, parameters, commandTimeout);
+      MySqlDataReader r = cmd.ExecuteReader();
+      AdoDotNetDataReader reader = new AdoDotNetDataReader(r, cmd, parameters);
+      return reader;
+    }
+
+    public override int ExecuteWithoutResults(string command, int commandType, Microsoft.VisualStudio.Data.DataParameter[] parameters, int commandTimeout)
+    {
+      MySqlCommand cmd = DoExecute(command, commandType, parameters, commandTimeout);
+      return cmd.ExecuteNonQuery();
+    }
+
+    private MySqlCommand DoExecute(string command, int commandType, Microsoft.VisualStudio.Data.DataParameter[] parameters, int commandTimeout)
+    {
+      MySqlConnection con = (MySqlConnection)this.Connection;
+      MySqlCommand cmd = new MySqlCommand(command, con);
+      cmd.Transaction = (MySqlTransaction)this.Transaction;
+      cmd.CommandType = (CommandType)commandType;
+      cmd.CommandTimeout = commandTimeout;
+      if( parameters == null ) return cmd;
+      for (int i = 0; i < parameters.Length; i++)
+      {
+        DataParameter p = parameters[i];
+        MySqlParameter par = new MySqlParameter(p.Name, p.Value);
+        switch (p.Direction)
+        {
+          case Microsoft.VisualStudio.Data.DataParameterDirection.In: par.Direction = ParameterDirection.Input; break;
+          case Microsoft.VisualStudio.Data.DataParameterDirection.InOut: par.Direction = ParameterDirection.InputOutput; break;
+          case Microsoft.VisualStudio.Data.DataParameterDirection.Out: par.Direction = ParameterDirection.Output; break;
+          case Microsoft.VisualStudio.Data.DataParameterDirection.ReturnValue: par.Direction = ParameterDirection.ReturnValue; break;
+          default: break; /* nothing */
+        }
+        par.IsNullable = p.IsNullable;
+        par.Precision = p.Precision;
+        par.Scale = p.Scale;
+        par.Size = p.Size;
+        cmd.Parameters.Add(par);
+      }
+      return cmd;
     }
   }
 }
