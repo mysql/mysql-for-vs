@@ -104,7 +104,7 @@ namespace MySql.Data.VisualStudio.DBExport
       }
 
       _dumpFilePath  = Utility.GetInstallLocation("MySQL for Visual Studio");
-      
+
       if (!String.IsNullOrEmpty(_dumpFilePath))
         _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
       else
@@ -194,32 +194,31 @@ namespace MySql.Data.VisualStudio.DBExport
       _mysqldumpProcess.Kill();
     }
 
-    internal void ProcessRequest()
+    internal void ProcessRequest( string outputPath )
     {            
       _mysqldumpProcess = new Process();
-      
+
+      _arguments.Append(" --result-file=\"").Append(outputPath).Append('"');
       var startInfo = new ProcessStartInfo
       {        
         CreateNoWindow = true,
         WorkingDirectory = Path.GetDirectoryName(_dumpFilePath),
         FileName = "\"" + @_dumpFilePath + "\"",
-        Arguments = "--defaults-extra-file=\"" + @_credentialsFile + "\"" + _arguments.ToString(),
+        Arguments = " --defaults-extra-file=\"" + @_credentialsFile + "\"" + _arguments.ToString(),  
         UseShellExecute = false,
-        RedirectStandardOutput = true,
-        RedirectStandardError = true
+        RedirectStandardError = true,
+        RedirectStandardOutput = false
       };
       _mysqldumpProcess.StartInfo = startInfo;
-
-      _mysqldumpProcess.OutputDataReceived += new DataReceivedEventHandler(dumpProcess_DataOutputReceived);
+      
       _mysqldumpProcess.ErrorDataReceived += new DataReceivedEventHandler(dumpProcess_ErrorDataReceived);
 
-      AppendToLog(string.Format(Resources.MySqlDumpStartInfoLog, string.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.Now), _database, _tables == null ? "all tables" : string.Join(", ", _tables.ToArray())));      
-
-      _mysqldumpProcess.Start();                 
-      _mysqldumpProcess.BeginOutputReadLine();
+      AppendToLog(string.Format(Resources.MySqlDumpStartInfoLog, string.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.Now), _database, _tables == null ? "all tables" : string.Join(", ", _tables.ToArray())));
+      
+      _mysqldumpProcess.Start();
       _mysqldumpProcess.BeginErrorReadLine();
       _mysqldumpProcess.WaitForExit();
-      _mysqldumpProcess.Close();
+      _mysqldumpProcess.Close();      
 
       AppendToLog(string.Format(Resources.MySqlDumpRunning, _arguments));
       
@@ -243,12 +242,6 @@ namespace MySql.Data.VisualStudio.DBExport
     {
       if (!String.IsNullOrEmpty(e.Data))       
         _errorsOutput.AppendLine(e.Data.Trim());      
-    }
-
-    private void dumpProcess_DataOutputReceived(object sendingProcess, DataReceivedEventArgs e)
-    {
-      if (!String.IsNullOrEmpty(e.Data))
-        _dumpOutput.AppendLine(e.Data.Trim());
     }
   }
 }
