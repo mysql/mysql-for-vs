@@ -46,7 +46,7 @@ namespace MySql.Data.VisualStudio.Editors
     public SqlEditor()
     {
       InitializeComponent();
-      factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      factory = MySqlClientFactory.Instance;
       if (factory == null)
         throw new Exception("MySql Data Provider is not correctly registered");
       tabControl1.TabPages.Remove(resultsPage);
