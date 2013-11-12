@@ -210,6 +210,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
       void dbSchemasList_CellClick(object sender, DataGridViewCellEventArgs e)
       {
+        if (e.RowIndex == -1) return;
         if (String.IsNullOrEmpty(dbSchemasList.Rows[e.RowIndex].Cells[1].Value as string))
           return;
 
