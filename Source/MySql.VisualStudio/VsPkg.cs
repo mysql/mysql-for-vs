@@ -48,6 +48,9 @@ using MySql.Data.MySqlClient;
 using System.Text;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.DBExport;
+using MySQL.Utility.Classes;
+using MySQL.Utility.Classes.MySQLWorkbench;
+using System.IO;
 using System.Windows.Forms;
 
 
@@ -329,7 +332,26 @@ namespace MySql.Data.VisualStudio
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      MySqlWorkbench.LaunchUtilitiesShell();
+      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Utilities")))
+      {
+        var pathWorkbench = Utility.GetInstallLocation("Workbench");
+        var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
+
+        if (!Directory.Exists(pathUtilities))
+        {
+          if (MessageBox.Show("The command line MySQL Utilities could not be found." + Environment.NewLine
+                         + @"To use them you must download and install the utilities package from http://dev.mysql.com/downloads/tools/utilities/" +
+                          Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Information", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+          {
+            ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/tools/utilities/");
+            System.Diagnostics.Process.Start(browserInfo);
+          }
+          else
+            return;
+        }
+      }
+      else
+        MySqlWorkbench.LaunchUtilitiesShell();
     }
 
     private void LaunchWBCallback(object sender, EventArgs e)
@@ -340,7 +362,7 @@ namespace MySql.Data.VisualStudio
         var connList = MySqlWorkbench.Connections;
         var connStr = connection.Connection.DisplayConnectionString;
         ConnectionParameters parameters = ParseConnectionString(connStr);                         
-        MySqlWorkbench.LaunchSQLEditor(FindMathchingWorkbenchConnection(parameters));      
+        MySqlWorkbench.LaunchSqlEditor(FindMathchingWorkbenchConnection(parameters));      
       }           
     }
 

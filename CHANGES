@@ -1,5 +1,4 @@
 
-
 1.1.1
 - Implemented WI #775, Improvements for TreeView in DbExport.
 - Fix for WI #758, visual feedback to user that export is busy.
@@ -15,6 +14,7 @@
 - Fix for Model First with a new model throws error version string portion was too short or too long. (WI # 828).
 - Fix for WI# 814, On Server Explorer After Create Table, does not allow to fill up data.
 - Fix for WI# 805, Not able to create a new script (File->New->Item->Mysql Script).
+- Fix for WI #832, Utilities not found.
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
