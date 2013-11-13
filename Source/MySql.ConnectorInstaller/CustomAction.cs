@@ -5,8 +5,8 @@ using System.Text;
 using Microsoft.Deployment.WindowsInstaller;
 using System.IO;
 using System.Reflection;
-using MySQL.Utility;
 using System.Runtime.InteropServices;
+using MySQL.Utility.Classes;
 
 namespace MySql.ConnectorInstaller
 {

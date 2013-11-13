@@ -33,6 +33,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
 using MySQL.Utility;
+using MySQL.Utility.Classes;
 
 
 namespace MySql.Data.VisualStudio.DBExport
