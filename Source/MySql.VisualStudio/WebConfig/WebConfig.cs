@@ -75,8 +75,11 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         if (String.Compare(node.Name, "remove", true) == 0 ||
             String.Compare(node.Name, "clear", true) == 0) continue;
-        string typeName = node.Attributes["type"].Value;
-        if (typeName.StartsWith("MySql.Web.", StringComparison.OrdinalIgnoreCase)) return node as XmlElement;
+        if (node.Attributes != null)
+        {
+          string typeName = node.Attributes["type"].Value;
+          if (typeName.StartsWith("MySql.Web.", StringComparison.OrdinalIgnoreCase)) return node as XmlElement;
+        }
       }
 
       return null;
