@@ -32,6 +32,7 @@ v) Added 200+ extra unit tests.
 - Fix for LINQ to Entities error for bad aliasing in column for expression (MySql bug #69922, Oracle bug #17285548).
 - Fix for In stored routine debugger, after a case else a begin-end is badly instrumented (Oracle bug #17284598).
 - Fix for WI #782, Visual Studio package is missing calls to UnlockProviderObject.
+- Fix for WI #832, Utilities not found.
 
 1.0.2
 - Fix for Documentation not found (Oracle bug #6915712).
