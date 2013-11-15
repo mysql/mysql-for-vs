@@ -11,12 +11,15 @@
 // Note: We will resolve all paths in assembly directives at runtime, taking 
 // macros into account (e.g. $(DevEnvDir), $(ProjectDir), etc.)
 #>
+
 <#@ assembly name="System.Core" #>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\EntityFramework.dll"#>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\EntityFramework.SqlServer.dll" #>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\EntityFramework.SqlServerCompact.dll" #>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\PrivateAssemblies\MySql.Data.Entity.EF6.dll" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Configuration.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -26,7 +29,9 @@
 <#@ import namespace="System.Runtime.Remoting.Messaging" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="MySql.Data.MySqlClient" #>
+<#@ import namespace="System.Configuration" #>
 <#@ import namespace="MySql.Data.Entity" #>
+<#@ import namespace="System.Diagnostics" #>
 <#@ template language="C#" debug="true" hostspecific="true" #>
 <#
     //DbConfiguration.SetConfiguration(new MySqlEFConfiguration());
@@ -118,16 +123,37 @@ SET foreign_key_checks = 1;
 -- --------------------------------------------------
 
 <#
+    EnvDTE.DTE env = (EnvDTE.DTE)((IServiceProvider)this.Host).GetService(typeof(EnvDTE.DTE));      
     string serverVersion = GetProviderManifestToken(edmxPath);
-    if (String.IsNullOrEmpty(serverVersion))
+    string connection = String.Empty;
+    bool getConnection = false;
+    
+    if (String.IsNullOrEmpty(serverVersion))  getConnection = true; 	
+    try
     {
-       serverVersion = "5.6";
+      if (!String.IsNullOrEmpty(serverVersion))
+      {
+        var tryVersion = new Version(serverVersion);       
+      }
+    }
+    catch
+    {
+      serverVersion =  "5.6";
+      getConnection= true;
+    }
+	
+    if (getConnection)
+    {
+        //EnvDTE.Project curProject = (EnvDTE.Project)((Array)env.ActiveSolutionProjects).GetValue(0);
+        EnvDTE.Project curProject = env.ActiveDocument.ProjectItem.ContainingProject;
+        connection = GetConnectionString(edmxPath, curProject);
+        connection = !String.IsNullOrEmpty(connection) ? connection.Substring(connection.IndexOf(";provider connection string=", StringComparison.OrdinalIgnoreCase) + ";provider connection string=".Length): connection;
     }
 
     foreach (EntitySet entitySet in MySQLStore.GetAllEntitySets())
     {
         string tableName = MyId(entitySet.GetTableName());		
-        string tableScript = service.GetTableCreateScript(entitySet, null, serverVersion);
+        string tableScript = service.GetTableCreateScript(entitySet, connection, serverVersion);
 #>
 <#=tableScript#>
 

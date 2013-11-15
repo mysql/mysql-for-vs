@@ -16,6 +16,7 @@
 - Fix for WI# 805, Not able to create a new script (File->New->Item->Mysql Script).
 - Fix for WI #832, Utilities not found.
 - Fix for WI #831, The First selected schema is exported.
+- Fix for bug Generate database from simple model fails in Visual Studio 2012 (MySql bug #67964, Oracle bug #17800707).
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
