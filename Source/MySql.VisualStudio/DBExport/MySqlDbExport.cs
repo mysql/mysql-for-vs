@@ -70,7 +70,7 @@ namespace MySql.Data.VisualStudio.DBExport
       }
     }
 
-    private List<String> _Tables { get; set; }
+    private List<String> _tables { get; set; }
 
 
     public MySqlDbExport(MySqlDbExportOptions options, string outputFilePath, MySqlConnection conn, List<String> tables, bool overwriteFile)
@@ -86,7 +86,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
       if (tables != null)
       {
-        _Tables = tables;      
+        _tables = tables;      
       }
 
       _options = options;
@@ -144,9 +144,9 @@ namespace MySql.Data.VisualStudio.DBExport
 
       try 
       {
-          if (_Tables != null)
+          if (_tables != null)
           {
-            mysqlDumpFacade = new MySqlDumpFacade(_options, OutputFilePath, _fileName, _Tables);
+            mysqlDumpFacade = new MySqlDumpFacade(_options, OutputFilePath, _fileName, _tables);
           }
           else
           {

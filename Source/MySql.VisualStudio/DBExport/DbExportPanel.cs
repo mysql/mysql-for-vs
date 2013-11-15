@@ -181,9 +181,9 @@ namespace MySql.Data.VisualStudio.DBExport
           }
           
           dbObjectsList.Refresh();
+
         }
-        else
-        {
+   
           var databaseObjects = GetDbObjects(currentSchema);
           foreach (var item in databaseObjects)
           {
@@ -195,7 +195,6 @@ namespace MySql.Data.VisualStudio.DBExport
 
           if (currentRow >= 0 && (bool)dbSchemasList.Rows[currentRow].Cells[currentColumn].Value)
             dictionary.Add(currentSchema, databaseObjects);
-        }
       }
 
       void cmbConnections_SelectedIndexChanged(object sender, EventArgs e)
@@ -467,6 +466,7 @@ namespace MySql.Data.VisualStudio.DBExport
             return;
           }
 
+          List<String> files = new List<string>();
 
           DoWorkEventHandler doWorker = (worker, doWorkerArgs) =>
           {
@@ -497,8 +497,9 @@ namespace MySql.Data.VisualStudio.DBExport
 
               _mysqlDbExport = null;
 
+              string resultsTempFile = dictionary.Count > 1 ? Path.GetTempFileName() : mysqlFilePath; 
               if (allObjectsSelected)
-                _mysqlDbExport = new MySqlDbExport(bndOptions, mysqlFilePath, new MySqlConnection(csb.ConnectionString), null, overWriteExistingFile);
+                _mysqlDbExport = new MySqlDbExport(bndOptions, resultsTempFile, new MySqlConnection(csb.ConnectionString), null, overWriteExistingFile);
               else
               {
                 if (item.Value != null)
@@ -506,13 +507,14 @@ namespace MySql.Data.VisualStudio.DBExport
                   List<String> objects = (from s in item.Value
                                           where s.Selected
                                           select s.DbObjectName).ToList();
-                  _mysqlDbExport = new MySqlDbExport(bndOptions, mysqlFilePath, new MySqlConnection(csb.ConnectionString), objects, overWriteExistingFile);
+                  _mysqlDbExport = new MySqlDbExport(bndOptions, resultsTempFile, new MySqlConnection(csb.ConnectionString), objects, overWriteExistingFile);
                 }
               }
 
               if (_mysqlDbExport != null)
               {
                 _mysqlDbExport.Export();
+                files.Add(resultsTempFile);
                 if (_mysqlDbExport.ErrorsOutput != null)
                 {
                   if (_generalPane != null)
@@ -520,20 +522,38 @@ namespace MySql.Data.VisualStudio.DBExport
                     // Wrap in Invoke API since now is a background thread
                     this.Invoke((Action)(() =>
                     {
-                      _generalPane.OutputString(Environment.NewLine + _mysqlDbExport.ErrorsOutput.ToString());
-                      _generalPane.Activate();
-                    }));
+                      _generalPane.OutputString(Environment.NewLine + _mysqlDbExport.ErrorsOutput.ToString());                     
+                    }));                    
                   }
-                }
-                else
+                }                  
+              }
+            }
+            //concentrate all files on the user's results file
+            if (dictionary.Count > 1)
+            {
+              using (var finalFile = new FileStream(mysqlFilePath, FileMode.Append))
+              {
+                foreach (var file in files)
                 {
-                  this.Invoke((Action)(() =>
+                  using (var sourceStream = File.Open(file, FileMode.Open))
                   {
-                    _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, dictionary.Count()));
-                    _generalPane.Activate();
-                  }));
+                    byte[] buffer = new byte[32768];
+                    while (true)
+                    {
+                      int qty = sourceStream.Read(buffer, 0, (int)buffer.Length);
+                      if (qty == 0)
+                        break;
+                      finalFile.Write(buffer, 0, qty);
+                    }
+                  }
+                  File.Delete(file);
                 }
               }
+            }
+            if (_generalPane != null)
+            {
+              _generalPane.OutputString(Environment.NewLine + "File: " + mysqlFilePath);
+              _generalPane.Activate();
             }
           };
           if (_worker != null)
@@ -818,7 +838,10 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         
         dbObjects = dbList;
-        dictionary[schema] = dbObjects;
+
+        if (dictionary.ContainsKey(schema))
+          dictionary[schema] = dbObjects;
+
       }
 
       private void BindDbObjectsToTree(BindingList<DbSelectedObjects> data, string schema)
@@ -885,9 +908,14 @@ namespace MySql.Data.VisualStudio.DBExport
           this.Invoke((Action)(() =>
           {
             MessageBox.Show(
-              string.Format( "The following error ocurred while exporting: {0}", e.Error.Message ),
-              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
+              string.Format("The following error ocurred while exporting: {0}", e.Error.Message),
+              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           }));
+        }
+        else
+        {
+          _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, dictionary.Count()));
+          _generalPane.Activate();
         }
       }
 
@@ -1065,8 +1093,9 @@ namespace MySql.Data.VisualStudio.DBExport
             MessageBox.Show("An error occured when saving the settings file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           }
         }      
-      }     
-   }
+      }
+
+    }
 
 
     public class Schema : INotifyPropertyChanged
