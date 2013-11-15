@@ -225,7 +225,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidDBExport</CommandName>
-          <ButtonText>&amp;MySql Database Export</ButtonText>
+          <ButtonText>&amp;MySQL Database Export</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
