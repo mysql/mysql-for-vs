@@ -184,9 +184,9 @@
       this.pnlGeneral.Controls.Add(this.groupBox2);
       this.pnlGeneral.Controls.Add(this.groupBox1);
       this.pnlGeneral.Controls.Add(this.groupBox3);
-      this.pnlGeneral.Location = new System.Drawing.Point(12, 3);
+      this.pnlGeneral.Location = new System.Drawing.Point(3, 1);
       this.pnlGeneral.Name = "pnlGeneral";
-      this.pnlGeneral.Size = new System.Drawing.Size(801, 497);
+      this.pnlGeneral.Size = new System.Drawing.Size(801, 465);
       this.pnlGeneral.TabIndex = 13;
       // 
       // groupBox2
@@ -251,7 +251,7 @@
       this.groupBox1.Controls.Add(this.btnAdvanced);
       this.groupBox1.Location = new System.Drawing.Point(8, 342);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(787, 145);
+      this.groupBox1.Size = new System.Drawing.Size(787, 109);
       this.groupBox1.TabIndex = 12;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Options";
@@ -260,7 +260,7 @@
       // 
       this.chkAlwaysCreateNewFile.AutoSize = true;
       this.chkAlwaysCreateNewFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
-      this.chkAlwaysCreateNewFile.Location = new System.Drawing.Point(211, 67);
+      this.chkAlwaysCreateNewFile.Location = new System.Drawing.Point(211, 49);
       this.chkAlwaysCreateNewFile.Name = "chkAlwaysCreateNewFile";
       this.chkAlwaysCreateNewFile.Size = new System.Drawing.Size(172, 17);
       this.chkAlwaysCreateNewFile.TabIndex = 14;
@@ -274,7 +274,7 @@
       // 
       // btnCancel
       // 
-      this.btnCancel.Location = new System.Drawing.Point(682, 108);
+      this.btnCancel.Location = new System.Drawing.Point(682, 74);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(99, 22);
       this.btnCancel.TabIndex = 19;
@@ -283,7 +283,7 @@
       // 
       // btnExport
       // 
-      this.btnExport.Location = new System.Drawing.Point(572, 108);
+      this.btnExport.Location = new System.Drawing.Point(572, 74);
       this.btnExport.Name = "btnExport";
       this.btnExport.Size = new System.Drawing.Size(99, 22);
       this.btnExport.TabIndex = 18;
@@ -294,7 +294,7 @@
       // 
       this.single_transaction.AutoSize = true;
       this.single_transaction.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "single_transaction", true));
-      this.single_transaction.Location = new System.Drawing.Point(136, 112);
+      this.single_transaction.Location = new System.Drawing.Point(136, 78);
       this.single_transaction.Name = "single_transaction";
       this.single_transaction.Size = new System.Drawing.Size(139, 17);
       this.single_transaction.TabIndex = 16;
@@ -305,7 +305,7 @@
       // 
       this.routines.AutoSize = true;
       this.routines.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
-      this.routines.Location = new System.Drawing.Point(298, 112);
+      this.routines.Location = new System.Drawing.Point(298, 78);
       this.routines.Name = "routines";
       this.routines.Size = new System.Drawing.Size(133, 17);
       this.routines.TabIndex = 17;
@@ -316,7 +316,7 @@
       // 
       this.no_data.AutoSize = true;
       this.no_data.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "no_data", true));
-      this.no_data.Location = new System.Drawing.Point(16, 112);
+      this.no_data.Location = new System.Drawing.Point(16, 78);
       this.no_data.Name = "no_data";
       this.no_data.Size = new System.Drawing.Size(97, 17);
       this.no_data.TabIndex = 15;
@@ -326,7 +326,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(13, 34);
+      this.label2.Location = new System.Drawing.Point(13, 25);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(192, 13);
       this.label2.TabIndex = 4;
@@ -334,7 +334,7 @@
       // 
       // btnSaveFile
       // 
-      this.btnSaveFile.Location = new System.Drawing.Point(610, 31);
+      this.btnSaveFile.Location = new System.Drawing.Point(610, 22);
       this.btnSaveFile.Name = "btnSaveFile";
       this.btnSaveFile.Size = new System.Drawing.Size(30, 22);
       this.btnSaveFile.TabIndex = 12;
@@ -343,14 +343,14 @@
       // 
       // txtFileName
       // 
-      this.txtFileName.Location = new System.Drawing.Point(211, 32);
+      this.txtFileName.Location = new System.Drawing.Point(211, 23);
       this.txtFileName.Name = "txtFileName";
       this.txtFileName.Size = new System.Drawing.Size(393, 20);
       this.txtFileName.TabIndex = 11;
       // 
       // btnAdvanced
       // 
-      this.btnAdvanced.Location = new System.Drawing.Point(652, 30);
+      this.btnAdvanced.Location = new System.Drawing.Point(652, 21);
       this.btnAdvanced.Name = "btnAdvanced";
       this.btnAdvanced.Size = new System.Drawing.Size(127, 22);
       this.btnAdvanced.TabIndex = 13;
@@ -364,9 +364,9 @@
       this.pnlAdvanced.Controls.Add(this.groupBox6);
       this.pnlAdvanced.Controls.Add(this.groupBox9);
       this.pnlAdvanced.Controls.Add(this.btnReturn);
-      this.pnlAdvanced.Location = new System.Drawing.Point(3, 1);
+      this.pnlAdvanced.Location = new System.Drawing.Point(9, 1);
       this.pnlAdvanced.Name = "pnlAdvanced";
-      this.pnlAdvanced.Size = new System.Drawing.Size(795, 497);
+      this.pnlAdvanced.Size = new System.Drawing.Size(789, 465);
       this.pnlAdvanced.TabIndex = 15;
       this.pnlAdvanced.Visible = false;
       // 
@@ -378,9 +378,9 @@
       this.groupBox8.Controls.Add(this.extended_insert);
       this.groupBox8.Controls.Add(this.delayed_insert);
       this.groupBox8.Controls.Add(this.complete_insert);
-      this.groupBox8.Location = new System.Drawing.Point(13, 323);
+      this.groupBox8.Location = new System.Drawing.Point(13, 306);
       this.groupBox8.Name = "groupBox8";
-      this.groupBox8.Size = new System.Drawing.Size(767, 130);
+      this.groupBox8.Size = new System.Drawing.Size(767, 114);
       this.groupBox8.TabIndex = 16;
       this.groupBox8.TabStop = false;
       this.groupBox8.Text = "Insert Options";
@@ -389,7 +389,7 @@
       // 
       this.replace.AutoSize = true;
       this.replace.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "replace", true));
-      this.replace.Location = new System.Drawing.Point(417, 19);
+      this.replace.Location = new System.Drawing.Point(381, 19);
       this.replace.Name = "replace";
       this.replace.Size = new System.Drawing.Size(200, 17);
       this.replace.TabIndex = 13;
@@ -411,7 +411,7 @@
       // 
       this.disable_keys.AutoSize = true;
       this.disable_keys.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "disable_keys", true));
-      this.disable_keys.Location = new System.Drawing.Point(14, 107);
+      this.disable_keys.Location = new System.Drawing.Point(381, 42);
       this.disable_keys.Name = "disable_keys";
       this.disable_keys.Size = new System.Drawing.Size(342, 17);
       this.disable_keys.TabIndex = 11;
@@ -611,7 +611,7 @@
       this.groupBox9.Controls.Add(this.add_locks);
       this.groupBox9.Location = new System.Drawing.Point(13, 225);
       this.groupBox9.Name = "groupBox9";
-      this.groupBox9.Size = new System.Drawing.Size(768, 92);
+      this.groupBox9.Size = new System.Drawing.Size(768, 73);
       this.groupBox9.TabIndex = 7;
       this.groupBox9.TabStop = false;
       this.groupBox9.Text = "Table Options";
@@ -620,7 +620,7 @@
       // 
       this.no_create_info.AutoSize = true;
       this.no_create_info.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "no_create_info", true));
-      this.no_create_info.Location = new System.Drawing.Point(417, 19);
+      this.no_create_info.Location = new System.Drawing.Point(381, 19);
       this.no_create_info.Name = "no_create_info";
       this.no_create_info.Size = new System.Drawing.Size(329, 17);
       this.no_create_info.TabIndex = 11;
@@ -642,7 +642,7 @@
       // 
       this.create_options.AutoSize = true;
       this.create_options.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "create_options", true));
-      this.create_options.Location = new System.Drawing.Point(14, 60);
+      this.create_options.Location = new System.Drawing.Point(381, 42);
       this.create_options.Name = "create_options";
       this.create_options.Size = new System.Drawing.Size(365, 17);
       this.create_options.TabIndex = 10;
@@ -662,7 +662,7 @@
       // 
       // btnReturn
       // 
-      this.btnReturn.Location = new System.Drawing.Point(642, 463);
+      this.btnReturn.Location = new System.Drawing.Point(642, 426);
       this.btnReturn.Name = "btnReturn";
       this.btnReturn.Size = new System.Drawing.Size(138, 22);
       this.btnReturn.TabIndex = 4;
@@ -702,7 +702,7 @@
       this.Controls.Add(this.pnlGeneral);
       this.Controls.Add(this.pnlAdvanced);
       this.Name = "dbExportPanel";
-      this.Size = new System.Drawing.Size(816, 504);
+      this.Size = new System.Drawing.Size(811, 476);
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.dbSchemasList)).EndInit();
