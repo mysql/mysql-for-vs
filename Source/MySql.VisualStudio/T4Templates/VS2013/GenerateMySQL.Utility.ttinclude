@@ -18,6 +18,7 @@
 <#@ import namespace="System.Data.Entity.SqlServerCompact" #>
 <#@ import namespace="System.Runtime.Remoting.Messaging" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.IO" #>
 <#@ import namespace="System.Xml" #>
 <#+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -126,7 +127,7 @@ private static string WriteMySqlType(EdmProperty property)
             return "TEXT";
         } else if( ( len >= 65536  ) && ( len < 16777216 ) ) {
             return "MEDIUMTEXT";
-        } else if( ( len >= 16777216 ) && ( len < 4294967296 ) ) {
+        } else if( ( len >= 16777216 ) && ( len < int.MaxValue ) ) {
             return "LONGTEXT";
         }
 
@@ -136,7 +137,7 @@ private static string WriteMySqlType(EdmProperty property)
             return "BLOB";
         } else if( ( len >= 65536 ) && ( len < 16777216 ) ) {
             return "MEDIUMBLOB";
-        } else if( ( len >= 16777216 ) && ( len < 4294967296 ) ) {
+        } else if( ( len >= 16777216 ) && ( len < int.MaxValue ) ) {
             return "LONGBLOB";
         }
     } else if( property.TypeUsage.EdmType.Name == "decimal" ) {
@@ -199,6 +200,45 @@ private static string GetProviderManifestToken(string edmxPath)
       }
     }
     return String.Empty;
+}
+
+
+
+/// <summary>
+private static string GetConnectionString(string edmxPath, EnvDTE.Project project)
+{
+    string configurationFilename=null;	
+    Configuration config;
+    
+    if (project == null || String.IsNullOrEmpty(edmxPath)) return String.Empty;	
+                
+    // lookup for the config file
+    foreach (EnvDTE.ProjectItem item in project.ProjectItems)
+    {
+        if (Regex.IsMatch(item.Name,"(app|web).config",RegexOptions.IgnoreCase))
+        {
+            configurationFilename=item.get_FileNames(0);
+            break;
+        }
+    }
+
+    if(!string.IsNullOrEmpty(configurationFilename))
+    {		
+        ExeConfigurationFileMap configFile = null;
+        configFile = new ExeConfigurationFileMap();
+        configFile.ExeConfigFilename=configurationFilename;
+        config = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+
+        var modelName = Path.GetFileNameWithoutExtension(edmxPath);
+    
+        foreach(var item in config.ConnectionStrings.ConnectionStrings)
+        {				
+          var connectionString =((ConnectionStringSettings)(item));
+          if (connectionString.ConnectionString.IndexOf("provider=MySql.Data.MySqlClient",StringComparison.OrdinalIgnoreCase) >= 0 && connectionString.ConnectionString.IndexOf(modelName + ".msl", StringComparison.OrdinalIgnoreCase) >= 0)		  
+            return connectionString.ConnectionString;									  			
+        }
+    }
+    return String.Empty;	
 }
 
 #>
