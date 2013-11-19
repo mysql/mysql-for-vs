@@ -454,7 +454,7 @@ namespace MySql.Data.VisualStudio.DBExport
           bndOptions.max_allowed_packet = maxAllowedPacket;
           try
           {
-            if (dictionary.Count > 1 && overWriteExistingFile && File.Exists(mysqlFilePath))
+            if (overWriteExistingFile && File.Exists(mysqlFilePath))
             {
               File.Delete(mysqlFilePath);
               overWriteExistingFile = false;
@@ -497,7 +497,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
               _mysqlDbExport = null;
 
-              string resultsTempFile = dictionary.Count > 1 ? Path.GetTempFileName() : mysqlFilePath; 
+              string resultsTempFile = Path.GetTempFileName(); 
               if (allObjectsSelected)
                 _mysqlDbExport = new MySqlDbExport(bndOptions, resultsTempFile, new MySqlConnection(csb.ConnectionString), null, overWriteExistingFile);
               else
@@ -528,28 +528,26 @@ namespace MySql.Data.VisualStudio.DBExport
                 }                  
               }
             }
-            //concentrate all files on the user's results file
-            if (dictionary.Count > 1)
+            //concentrate all files on the user's results file          
+            using (var finalFile = new FileStream(mysqlFilePath, FileMode.Append))
             {
-              using (var finalFile = new FileStream(mysqlFilePath, FileMode.Append))
+              foreach (var file in files)
               {
-                foreach (var file in files)
+                using (var sourceStream = File.Open(file, FileMode.Open))
                 {
-                  using (var sourceStream = File.Open(file, FileMode.Open))
+                  byte[] buffer = new byte[32768];
+                  while (true)
                   {
-                    byte[] buffer = new byte[32768];
-                    while (true)
-                    {
-                      int qty = sourceStream.Read(buffer, 0, (int)buffer.Length);
-                      if (qty == 0)
-                        break;
-                      finalFile.Write(buffer, 0, qty);
-                    }
+                    int qty = sourceStream.Read(buffer, 0, (int)buffer.Length);
+                    if (qty == 0)
+                      break;
+                    finalFile.Write(buffer, 0, qty);
                   }
-                  File.Delete(file);
                 }
+                File.Delete(file);
               }
             }
+            
             if (_generalPane != null)
             {
               _generalPane.OutputString(Environment.NewLine + "File: " + mysqlFilePath);
