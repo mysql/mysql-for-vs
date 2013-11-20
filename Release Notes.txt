@@ -1,20 +1,14 @@
-MySQL for Visual Studio 1.0.2  Release Notes
+MySQL for Visual Studio 1.1.1  Release Notes
 ------------------------------------
 
-Welcome to the release notes for MySQL for Visual Studio 1.0.2
+Welcome to the release notes for MySQL for Visual Studio 1.1.1
 
-What's new in 1.0.2
+What's new in 1.1.1
 --------------------
-- Visual Studio integration support with versions 2008, 2010 and 2012.
-- Open and manage a connection to a MySQL database from Server Explorer Window.
-- Open an SQL Editor Window when Workbench is installed.
-- Open a Command Window with MySQL Utilities prompt.
-- Design time edition for all database objects.
-- Table script generation
-- Routine Debugging within Visual Studio
-- Intellisense support when editing Stored routines.
-- Intellisense custom colorizing within Options dialog from Visual Studio.
-- Web configuration tool for setting up MySQL Web providers.
-- Entity Framework Database First and Model First support.
+- Visual Studio integration support with versions 2008, 2010, 2012 and 2013.
+- Entity Framework version 6 Database First and Model First support is available when using Connector/Net 6.8.1 or later.
+- MySQL Database Export tool is a new option inside of the context menu of the Server Explorer window. The purpose of this tool is to ease 
+the creation of dump files of one or more MySQL databases.
 
-Be sure and check the documentation for more information on these new features.
+
+Be sure and check the documentation for more information on these new features. 
