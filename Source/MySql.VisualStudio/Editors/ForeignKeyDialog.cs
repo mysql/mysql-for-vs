@@ -297,12 +297,11 @@ namespace MySql.Data.VisualStudio.Editors
         e.Cancel = true;
         return;
       }
-      else if( 
-        ( refTable.SelectedValue.ToString() == tableNode.Table.Name ) &&
+      else if(
+        (((ForeignKey)foreignKeyBindingSource.Current).ReferencedTable == tableNode.Table.Name) &&
         ( parent == child ) )
       {
-        MessageBox.Show(Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        e.Cancel = true;
+        MessageBox.Show(Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);       
         return;
       }
       FKColumnPair pair = fkColumnsBindingSource.Current as FKColumnPair;

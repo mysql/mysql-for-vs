@@ -1,5 +1,4 @@
 
-
 1.1.1
 - Implemented WI #775, Improvements for TreeView in DbExport.
 - Fix for WI #758, visual feedback to user that export is busy.
@@ -19,6 +18,8 @@
 - Fix for WI #831, The First selected schema is exported.
 - Fix for bug Generate database from simple model fails in Visual Studio 2012 (MySql bug #67964, Oracle bug #17800707).
 - Fix for Error when editing/altering stored procedure/trigger (Oracle bug #17830161).
+- Fix for Error Creating FK and saving it does not allow to access to edit FK any more (WI # 817).
+
 
 1.1.0
 - Including implementation of MySql Database Export (mysqldump integration) WI #569.
