@@ -347,6 +347,9 @@ namespace MySql.Data.VisualStudio
       Debug.Assert(winFrame != null &&
              ErrorHandler.Succeeded(result), "Failed to initialize editor");
 
+      if (winFrame == null)
+        throw new Exception("Cannot create a design window for the selected object");
+
       // if our editor is a text buffer then hook up our language service
       //if (editor is TextBufferEditor)
       //{
@@ -355,7 +358,7 @@ namespace MySql.Data.VisualStudio
       //    (editor as TextBufferEditor).TextBuffer.SetLanguageServiceID(ref langSvcGuid);
       //}
 
-      winFrame.Show();
+       winFrame.Show();
     }
 
     protected void SaveNode()
