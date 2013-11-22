@@ -78,6 +78,7 @@
     <None Include="Users Guide\connector-net-versions.aml" />
     <None Include="Users Guide\connector-net-support.aml" />
     <None Include="Users Guide\connector-net-visual-studio.aml" />
+    <None Include="Users Guide\database-export.aml" />
   </ItemGroup>
   <ItemGroup>
     <ContentLayout Include="Layout.content" />
