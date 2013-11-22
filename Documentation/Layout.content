@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
-  <Topic id="402c0c55-28da-42ce-876b-5ad3ce8dd6b0" visible="True" noFile="true" isExpanded="true" isSelected="true" title="Users Guide">
+  <Topic id="402c0c55-28da-42ce-876b-5ad3ce8dd6b0" visible="True" noFile="true" isExpanded="true" title="Users Guide">
     <Topic id="733e518a-a16a-4bc2-b767-831875f277b6" visible="True" title="Installation" />
     <Topic id="9f3f194e-ad35-4379-b04d-5dce4b34ce6a" visible="True" title="Visual Studio Integration" />
+    <Topic id="733e518a-a16a-4bc2-b767-831875f277b9" visible="True" title="MySQL Database Export Tool" />
     <Topic id="67810605-cf21-4439-a4bd-86ee11af8f16" visible="True" title="Support" />
     <Topic id="069908d6-c522-49cc-a854-32494f1de72b" visible="True" title="Versions" />
   </Topic>

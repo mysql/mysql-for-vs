@@ -174,5 +174,41 @@
     <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-7.png">
       <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-7</ImageId>
     </Image>
+	 <Image Include="Users Guide\media\mysql-visualstudio-export-view-generated-script.png">
+      <ImageId>mysql-visualstudio-export-view-generated-script</ImageId>
+      <AlternateText>mysql-visualstudio-export-view-generated-script</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-selected-objects.png">
+      <ImageId>mysql-visualstudio-export-selected-objects</ImageId>
+      <AlternateText>mysql-visualstudio-export-selected-objects</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-save-settings.png">
+      <ImageId>mysql-visualstudio-export-save-settings</ImageId>
+      <AlternateText>mysql-visualstudio-export-save-settings</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-open-settings-file.png">
+      <ImageId>mysql-visualstudio-export-open-settings-file</ImageId>
+      <AlternateText>mysql-visualstudio-export-open-settings-file</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-main-window.png">
+      <ImageId>mysql-visualstudio-export-main-window</ImageId>
+      <AlternateText>mysql-visualstudio-export-main-window</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-filter-schemas.png">
+      <ImageId>mysql-visualstudio-export-filter-schemas</ImageId>
+      <AlternateText>mysql-visualstudio-export-filter-schemas</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-exporting-database.png">
+      <ImageId>mysql-visualstudio-export-exporting-database</ImageId>
+      <AlternateText>mysql-visualstudio-export-exporting-database</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-connection-context-menu.png">
+      <ImageId>mysql-visualstudio-export-connection-context-menu</ImageId>
+      <AlternateText>mysql-visualstudio-export-connection-context-menu</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-export-advanced-options .png">
+      <ImageId>mysql-visualstudio-export-advanced-options</ImageId>
+      <AlternateText>mysql-visualstudio-export-advanced-options</AlternateText>
+    </Image>
   </ItemGroup>
 </Project>

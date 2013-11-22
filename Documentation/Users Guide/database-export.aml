@@ -1,0 +1,100 @@
+<topic id="733e518a-a16a-4bc2-b767-831875f277b9" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <section address="mysql-visualstudio-tools">
+      <title>MySQL For Visual Studio - MySQL Database Export Tool</title>
+      <content>
+        <autoOutline />
+        <para>
+    MySQL for Visual Studio 1.1.x has a new option that allows to perform
+	a dump file of any MySQL database.	
+	  </para>	
+	    <mediaLink><para /><caption>MySQL Export Tool Main Window</caption><image xlink:href="mysql-visualstudio-export-main-window" /></mediaLink>
+      </content>
+    </section>
+    <section address="mysql-visualstudio-export">
+      <title>Creating a dump of an existing MySQL database</title>
+      <content>
+        <autoOutline />        
+        <para>
+      In order to open a new window of MySQL Database Export tool, the
+      user must create a new connection using the Server Explorer Window
+      inside Visual Studio.
+      Once the connection is stablished, a contextual menu can be open
+      by doing right click on the connection node. Inside of this menu
+      the MySQL Database Export option appears.
+      A new tabbed-window is open with the current connection. The user
+      can select one or more databases to include in the dump.      
+    	</para>
+    	 <mediaLink><para /><caption>Contextual Menu of a MySQL Connection</caption><image xlink:href="mysql-visualstudio-export-connection-context-menu" /></mediaLink>
+    	<list class="ordered">
+          <listItem>            
+            <para>
+             The first thing to do is to select all the databases
+             and their objects that will be included in the dump.
+            </para>          
+            <mediaLink><para /><caption>MySQL Export Tool - Selecting a database</caption><image xlink:href="mysql-visualstudio-export-selected-objects" /></mediaLink>
+            </listItem>
+            <listItem>            
+            <para>
+             A very important thing is to select the settings used
+             in the dump. Like if the dump will include the data,
+             if the insert operations will be logged in extended mode, etc.
+             In the main window of the MySQL Database Export tool are shown
+             the basic options for the dump. Also by clicking on the Advanced 
+             button more specific options can also be selected.
+			</para>          
+			<mediaLink><para /><caption>MySQL Export Tool - Advanced options for a dump operation</caption><image xlink:href="mysql-visualstudio-export-advanced-options" /></mediaLink>
+            </listItem>
+            <listItem>            
+            <para>
+            When the selection of the databases is done, is necessary to give
+      a name to be used for the results file that will be created. 
+      If no path is given on this window, the default path to be used is
+      My Documents, under the  user's folder.      
+            </para>
+            <mediaLink><para /><caption>MySQL Export Tool - Generating the dump file</caption><image xlink:href="mysql-visualstudio-export-exporting-database" /></mediaLink>
+            </listItem>
+             <listItem>            
+            <para>
+            A filter can be apply on the list of schemas for the selected connection. This way the user can locate with ease the database to be used in the dump.   
+            </para>
+            <mediaLink><para /><caption>MySQL Export Tool - Filtering the schemas list</caption><image xlink:href="mysql-visualstudio-export-filter-schemas" /></mediaLink>
+            </listItem>
+           <listItem>            
+            <para>
+            After selecting the options and the name for the dump file,
+            the user can make clic on the Export button. 
+            This way the dump will be created.
+            </para>          
+            <mediaLink><para /><caption>MySQL Export Tool - View of the script generated</caption><image xlink:href="mysql-visualstudio-export-view-generated-script" /></mediaLink>
+            </listItem>
+          </list>
+      </content>
+    </section>
+    <section address="mysql-visualstudio-export-save-settings">
+      <title></title>
+      <content>      
+        <para>
+         There are various  settings each dump can have, or
+         combinations of settings.          
+      </para>
+        <para>
+        Once the user has selected the settings that will be
+        used on the dump operation, these settings can be 
+        saved into a file of settings for a later use. This 
+        file includes: the connection selected, the name of
+        the file used in the creation of the dump, the database
+        or databases selected and their objects.
+      </para>      
+        <para>
+         The extension file for the settings is .dumps.
+      </para>        
+       <mediaLink><para /><caption>MySQL Export Tool - View of the script generated</caption><image xlink:href="mysql-visualstudio-export-save-settings" /></mediaLink>
+         <para>
+        A saved file of settings can be loaded in the MySQL Database Export tool by clicking on the Load Settings button.
+      </para>      
+      <mediaLink><para /><caption>MySQL Export Tool - Load an existing file of settings</caption><image xlink:href="mysql-visualstudio-export-open-settings-file" /></mediaLink>
+      </content>
+    </section>  
+  </developerConceptualDocument>
+</topic>
