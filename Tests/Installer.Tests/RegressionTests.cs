@@ -52,6 +52,16 @@ namespace Installer.Tests
       Assert.Equal(val, null /*"UpdateMachineConfigFile" */);
     }
 
+    [Fact]
+    public void NoInstallUtilCustomAction()
+    {
+      string val;
+      st.GetValue("select `Action` from `CustomAction` where `Action` = 'ManagedDataInstallSetup'", out val);
+      Assert.Equal(val, null);
+      st.GetValue("select `Action` from `CustomAction` where `Action` = 'ManagedDataUnInstallSetup'", out val);
+      Assert.Equal(val, null);
+    }
+
     public virtual void Dispose()
     {
     }
