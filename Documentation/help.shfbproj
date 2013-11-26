@@ -73,7 +73,8 @@
     <Folder Include="media\" />
     <Folder Include="Users Guide\" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>    
+    <None Include="Users Guide\debugging-sp-and-functions.aml" />    
     <None Include="Users Guide\connector-net-install.aml" />
     <None Include="Users Guide\connector-net-versions.aml" />
     <None Include="Users Guide\connector-net-support.aml" />

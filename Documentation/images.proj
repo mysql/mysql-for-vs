@@ -210,5 +210,53 @@
       <ImageId>mysql-visualstudio-export-advanced-options</ImageId>
       <AlternateText>mysql-visualstudio-export-advanced-options</AlternateText>
     </Image>
+	 <Image Include="Users Guide\media\mysql-visualstudio-debugger-stepping-into-a-routine.png">
+      <ImageId>mysql-visualstudio-debugger-stepping-into-a-routine</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-stepping-into-a-routine</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-stepping_additional.png">
+      <ImageId>mysql-visualstudio-debugger-stepping_additional</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-stepping additional</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-stepping.png">
+      <ImageId>mysql-visualstudio-debugger-stepping</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-stepping</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-locals-window.png">
+      <ImageId>mysql-visualstudio-debugger-locals-window</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-locals-window</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-locals-and-callstack-start.png">
+      <ImageId>mysql-visualstudio-debugger-locals-and-callstack-start</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-locals-and-callstack-start</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-locals-and-callstack-additional.png">
+      <ImageId>mysql-visualstudio-debugger-locals-and-callstack-additional</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-locals-and-callstack-additional</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-locals-and-callstack.png">
+      <ImageId>mysql-visualstudio-debugger-locals-and-callstack</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-locals-and-callstack</AlternateText>
+    </Image>    
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-enter-arguments-for-routine.png">
+      <ImageId>mysql-visualstudio-debugger-enter-arguments-for-routine</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-enter-arguments-for-routine</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-debug-routine-menu.png">
+      <ImageId>mysql-visualstudio-debugger-debug-routine-menu</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-debug-routine-menu</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-create-a-connection.png">
+      <ImageId>mysql-visualstudio-debugger-create-a-connection</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-create-a-connection</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-conditionalbreakpoints.png">
+      <ImageId>mysql-visualstudio-debugger-conditionalbreakpoints</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-conditionalbreakpoints</AlternateText>
+    </Image>
+    <Image Include="Users Guide\media\mysql-visualstudio-debugger-breakpoints.png">
+      <ImageId>mysql-visualstudio-debugger-breakpoints</ImageId>
+      <AlternateText>mysql-visualstudio-debugger-breakpoints</AlternateText>
+    </Image>
   </ItemGroup>
 </Project>
