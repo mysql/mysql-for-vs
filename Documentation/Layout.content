@@ -6,5 +6,6 @@
     <Topic id="733e518a-a16a-4bc2-b767-831875f277b9" visible="True" title="MySQL Database Export Tool" />
     <Topic id="67810605-cf21-4439-a4bd-86ee11af8f16" visible="True" title="Support" />
     <Topic id="069908d6-c522-49cc-a854-32494f1de72b" visible="True" title="Versions" />
+    <Topic id="8ee7e6af-6b92-412f-a062-05c5da6fa397" visible="True" title="Debugging Stored Procedures and Functions" />
   </Topic>
 </Topics>
