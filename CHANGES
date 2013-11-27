@@ -1,6 +1,8 @@
 
 1.1.2
 - Fix for WI #852,  MySql for Visual Studio uninstaller removes binding redirects put by Connector/NET 6.8.1.
+- Fix for Debugger fails to debug routine correctly with two functions in a single expression (Oracle bug #17865915).
+
 
 1.1.1
 - Implemented WI #775, Improvements for TreeView in DbExport.
