@@ -35,6 +35,8 @@ v) Added 200+ extra unit tests.
 - Fix for WI #832, Utilities not found.
 - Fix for Error when editing/altering stored procedure/trigger (Oracle bug #17830161).
 - Fix for WI #852,  MySql for Visual Studio uninstaller removes binding redirects put by Connector/NET 6.8.1.
+- Fix for Debugger fails to debug routine correctly with two functions in a single expression (Oracle bug #17865915).
+
 
 1.0.2
 - Fix for Documentation not found (Oracle bug #6915712).
