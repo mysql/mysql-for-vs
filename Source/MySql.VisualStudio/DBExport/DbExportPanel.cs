@@ -38,6 +38,9 @@ using System.IO;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
+using System.Runtime.InteropServices;
+using EnvDTE;
+
 
 namespace MySql.Data.VisualStudio.DBExport
 {
@@ -70,8 +73,8 @@ namespace MySql.Data.VisualStudio.DBExport
           dbSchemasList.CellClick += dbSchemasList_CellClick;
           dbSchemasList.RowLeave += dbSchemasList_RowLeave;
           dbSchemasList.RowEnter += dbSchemasList_RowEnter;
-        
-          cmbConnections.SelectedIndexChanged += cmbConnections_SelectedIndexChanged;
+
+          cmbConnections.SelectionChangeCommitted += cmbConnections_SelectionChangeCommitted;
 
           IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
           Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
@@ -96,7 +99,8 @@ namespace MySql.Data.VisualStudio.DBExport
           btnSaveFile.Click += btnSaveFile_Click;
           btnSaveSettings.Click += btnSaveSettings_Click;
           btnLoadSettingsFile.Click += btnLoadSettingsFile_Click;
-        
+          cmbConnections.DropDown += cmbConnections_DropDown;
+
           //KeyDown events
           txtFilter.KeyDown += txtFilter_KeyDown;
           txtFileName.KeyDown += txtFileName_KeyDown;
@@ -197,7 +201,7 @@ namespace MySql.Data.VisualStudio.DBExport
             dictionary.Add(currentSchema, databaseObjects);
       }
 
-      void cmbConnections_SelectedIndexChanged(object sender, EventArgs e)
+      void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
       {
         if ((cmbConnections.SelectedItem as MySqlServerExplorerConnection) == null) return;
 
@@ -222,8 +226,7 @@ namespace MySql.Data.VisualStudio.DBExport
           if (prevSchema != selected.Name)
           {
             if (!string.IsNullOrEmpty(prevSchema))
-              PullObjectListFromTree(prevSchema);
-            LoadDbObjects(selected.Name);
+              PullObjectListFromTree(prevSchema);            
           }
           ChangeAllSelectedDbObjects(selected.Export);
           dbSchemasList.Refresh();
@@ -239,11 +242,45 @@ namespace MySql.Data.VisualStudio.DBExport
         }
       }
 
-      void cmbConnections_DropDown(object sender, EventArgs e)
+      void cmbConnections_DropDown(object sender, EventArgs e) 
       {
-        //TODO
-        //check how to access server explorer window in case 
-        //there's a new connection
+        _cursor = this.Cursor;
+        this.Cursor = Cursors.WaitCursor;
+        
+        Application.DoEvents();
+
+        IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+        if (connectionManager == null) return;
+        System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
+
+        Connections = new List<MySqlServerExplorerConnection>();
+
+        _explorerMySqlConnections = new List<IVsDataExplorerConnection>();
+
+        foreach (var connection in connections)
+        {
+          if (Guids.Provider.Equals(connection.Value.Provider))
+          {
+            Connections.Add(new MySqlServerExplorerConnection { DisplayName = connection.Value.DisplayName, ConnectionString = connection.Value.Connection.DisplayConnectionString });
+            _explorerMySqlConnections.Add(connection.Value);
+          }
+        }
+        
+        SetConnectionsList();
+
+        cmbConnections.Refresh();
+
+        if (Connections.Count <= 0) 
+          return;
+
+        if (Connections.Where(t => t.ConnectionString == SelectedConnection.ConnectionString).SingleOrDefault() != null)
+          cmbConnections.SelectedValue = SelectedConnection.ConnectionString;
+        else          
+          cmbConnections.SelectedValue = Connections[0].ConnectionString;
+
+        dictionary.Clear();
+
+        this.Cursor = _cursor;
       }
 
       public void LoadDbObjects(string databaseName)
@@ -291,7 +328,12 @@ namespace MySql.Data.VisualStudio.DBExport
           schemaNames = SelectObjects.GetSchemas(new MySqlConnectionStringBuilder(GetCompleteConnectionString(Connections[0].ConnectionString, true)));
 
         if (schemaNames == null)
-          return;
+        {
+           MessageBox.Show("Cannot retrieve the list of schemas of the selected connection. Verify parameter's connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+           sourceSchemas.DataSource = null;
+           dbSchemasList.Refresh();
+           return;
+        }
 
         schemaNames.ForEach(t =>
         {
@@ -325,7 +367,7 @@ namespace MySql.Data.VisualStudio.DBExport
         
         dbSchemasList.Refresh();      
       }
-
+      
       public void LoadConnections(List<IVsDataExplorerConnection> connections, string selectedConnectionName, ToolWindowPane windowHandler)
       {
         MySqlServerExplorerConnection selected = null;
@@ -345,6 +387,7 @@ namespace MySql.Data.VisualStudio.DBExport
           SetConnectionsList();
           cmbConnections.SelectedValue = selected.ConnectionString;
           SelectedConnection = selected;
+          LoadSchemasForSelectedConnection();
           _windowHandler = windowHandler;            
         }
         catch (Exception)
@@ -719,8 +762,10 @@ namespace MySql.Data.VisualStudio.DBExport
         Action a = () => 
         {
           s = (from cnn in _explorerMySqlConnections
-                                 where cnn.DisplayName.Equals(connectionDisplayName, StringComparison.InvariantCultureIgnoreCase)
-                                 select cnn.Connection).First();
+               where cnn.DisplayName.Equals(connectionDisplayName, StringComparison.InvariantCultureIgnoreCase)
+               select cnn.Connection).FirstOrDefault();
+          if (s == null)
+            return;
           connection = (MySqlConnection)s.GetLockedProviderObject();
           try
           {
@@ -740,7 +785,7 @@ namespace MySql.Data.VisualStudio.DBExport
           a();
         }
 
-        if (persistSecurityInfo)
+        if (persistSecurityInfo && csb != null)
         {
           csb.PersistSecurityInfo = true;
           return csb.ConnectionString;
