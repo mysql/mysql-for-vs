@@ -259,7 +259,6 @@
       // chkAlwaysCreateNewFile
       // 
       this.chkAlwaysCreateNewFile.AutoSize = true;
-      this.chkAlwaysCreateNewFile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "routines", true));
       this.chkAlwaysCreateNewFile.Location = new System.Drawing.Point(211, 49);
       this.chkAlwaysCreateNewFile.Name = "chkAlwaysCreateNewFile";
       this.chkAlwaysCreateNewFile.Size = new System.Drawing.Size(172, 17);
