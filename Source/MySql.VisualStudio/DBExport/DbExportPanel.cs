@@ -881,9 +881,7 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         
         dbObjects = dbList;
-
-        if (dictionary.ContainsKey(schema))
-          dictionary[schema] = dbObjects;
+        dictionary[schema] = dbObjects;
 
       }
 
