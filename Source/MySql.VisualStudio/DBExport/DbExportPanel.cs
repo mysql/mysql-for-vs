@@ -226,7 +226,8 @@ namespace MySql.Data.VisualStudio.DBExport
           if (prevSchema != selected.Name)
           {
             if (!string.IsNullOrEmpty(prevSchema))
-              PullObjectListFromTree(prevSchema);            
+              PullObjectListFromTree(prevSchema);
+            LoadDbObjects(selected.Name);
           }
           ChangeAllSelectedDbObjects(selected.Export);
           dbSchemasList.Refresh();
@@ -881,7 +882,8 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         
         dbObjects = dbList;
-        dictionary[schema] = dbObjects;
+        if (dictionary.ContainsKey(schema))
+          dictionary[schema] = dbObjects;
 
       }
 
