@@ -222,6 +222,12 @@ namespace MySql.Data.VisualStudio.DBExport
           var selected = schemas.Single(t => t.Name.Equals((string)dbSchemasList.Rows[e.RowIndex].Cells[1].Value, 
             StringComparison.InvariantCultureIgnoreCase));
           selected.CheckSchema(!selected.Export);
+          if (!selected.Export)
+          {
+            ChangeAllSelectedDbObjects(false);
+            dictionary.Remove(selected.Name);
+            return;
+          }
           string prevSchema = GetTreeViewDb();
           if (prevSchema != selected.Name)
           {
@@ -551,6 +557,7 @@ namespace MySql.Data.VisualStudio.DBExport
                   List<String> objects = (from s in item.Value
                                           where s.Selected
                                           select s.DbObjectName).ToList();
+
                   _mysqlDbExport = new MySqlDbExport(bndOptions, resultsTempFile, new MySqlConnection(csb.ConnectionString), objects, overWriteExistingFile);
                 }
               }
@@ -715,7 +722,13 @@ namespace MySql.Data.VisualStudio.DBExport
       private string GetTreeViewDb()
       {
         if (dbObjectsList.Nodes.Count != 0)
-          return dbObjectsList.Nodes[0].Text;
+        {
+          string db = dbObjectsList.Nodes[0].Text;
+          if (schemas.Where(p => p.Name == db && p.Export ).Count() == 0)
+            return "";
+          else
+            return db;
+        }
         else
           return "";
       }
@@ -882,7 +895,7 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         
         dbObjects = dbList;
-        if (dictionary.ContainsKey(schema))
+        //if (dictionary.ContainsKey(schema))
           dictionary[schema] = dbObjects;
 
       }
@@ -893,6 +906,8 @@ namespace MySql.Data.VisualStudio.DBExport
         dbObjectsList.BeginUpdate();
         try
         {
+          // Optmization, temporarily disable recursive checks
+          EnableDbObjectsListAfterCheck(false);
           dbObjectsList.Nodes.Clear();
           root = dbObjectsList.Nodes.Add(schema);
           TreeNode tnTables = root.Nodes.Add("Tables");
@@ -915,6 +930,7 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         finally
         {
+          EnableDbObjectsListAfterCheck(true);
           dbObjectsList.EndUpdate();
         }
       }
@@ -1136,6 +1152,13 @@ namespace MySql.Data.VisualStudio.DBExport
             MessageBox.Show("An error occured when saving the settings file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           }
         }      
+      }
+
+      private void dbObjectsList_Leave(object sender, EventArgs e)
+      {
+        string db = GetTreeViewDb();
+        if (!string.IsNullOrEmpty(db))
+          PullObjectListFromTree(db);
       }
 
     }

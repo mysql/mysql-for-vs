@@ -45,10 +45,10 @@
       this.label1 = new System.Windows.Forms.Label();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.chkAlwaysCreateNewFile = new System.Windows.Forms.CheckBox();
-      this.mySqlDbExportOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.btnCancel = new System.Windows.Forms.Button();
       this.btnExport = new System.Windows.Forms.Button();
       this.single_transaction = new System.Windows.Forms.CheckBox();
+      this.mySqlDbExportOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.routines = new System.Windows.Forms.CheckBox();
       this.no_data = new System.Windows.Forms.CheckBox();
       this.label2 = new System.Windows.Forms.Label();
@@ -151,6 +151,7 @@
       this.dbObjectsList.TabIndex = 8;
       this.dbObjectsList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.dbObjectsList_AfterCheck);
       this.dbObjectsList.DoubleClick += new System.EventHandler(this.dbObjectsList_DoubleClick);
+      this.dbObjectsList.Leave += new System.EventHandler(this.dbObjectsList_Leave);
       // 
       // txtFilter
       // 
@@ -266,11 +267,6 @@
       this.chkAlwaysCreateNewFile.Text = "Always create a new .mysql file";
       this.chkAlwaysCreateNewFile.UseVisualStyleBackColor = true;
       // 
-      // mySqlDbExportOptionsBindingSource
-      // 
-      this.mySqlDbExportOptionsBindingSource.AllowNew = false;
-      this.mySqlDbExportOptionsBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions);
-      // 
       // btnCancel
       // 
       this.btnCancel.Location = new System.Drawing.Point(682, 74);
@@ -299,6 +295,11 @@
       this.single_transaction.TabIndex = 16;
       this.single_transaction.Text = "Use a single transaction";
       this.single_transaction.UseVisualStyleBackColor = true;
+      // 
+      // mySqlDbExportOptionsBindingSource
+      // 
+      this.mySqlDbExportOptionsBindingSource.AllowNew = false;
+      this.mySqlDbExportOptionsBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions);
       // 
       // routines
       // 
