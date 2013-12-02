@@ -147,7 +147,7 @@
                 </Directory>
               </Directory>
               <Directory Id="VS12_OracleDir" Name="Oracle">
-                <Directory Id="VS12_ExtensionDir" Name="MySQL Tools for Visual Studio ">
+                <Directory Id="VS12_ExtensionDir" Name="MySQL for Visual Studio ">
                   <Directory Id="VS12_ExtVersionDir" Name="$(var.Version)">
                     <Directory Id='VS12_TemplatesDir' Name='Templates'/>
                   </Directory>
