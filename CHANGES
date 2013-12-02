@@ -6,7 +6,7 @@
 - Fix for WI #857, DbExport: If a connection is added to Server Explorer, the connection list does not get refreshed.
 - Fix for WI #861, DbExport: Saving/loading settings when more than one db objects are selected does not work (only remembers the objects of the first db).
 - Fix for WI #862, DbExport: If table is directly selected from the tree, then exporting will complain of no tables selected (seems to work only when db is selected from the left list).
-
+- Fix for WI #797, "MySQL Database export..." option appears in all objects within server Explorer.
 
 1.1.1
 - Implemented WI #775, Improvements for TreeView in DbExport.
