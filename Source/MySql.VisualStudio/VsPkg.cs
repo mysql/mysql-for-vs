@@ -285,7 +285,18 @@ namespace MySql.Data.VisualStudio
     void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand dbExportButton = sender as OleMenuCommand;
-      dbExportButton.Visible = true;
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+
+      dbExportButton.Visible = false;
+
+      if (selectedItems != null)            
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      if (GetConnection(ConnectionName) != null)
+      {        
+        dbExportButton.Visible = true;
+      }
     }
 
     private void cmdDbExport_Callback(object sender, EventArgs e)
