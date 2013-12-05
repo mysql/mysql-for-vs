@@ -1,14 +1,13 @@
-MySQL for Visual Studio 1.1.1  Release Notes
+MySQL for Visual Studio 1.1  Release Notes
 ------------------------------------
 
-Welcome to the release notes for MySQL for Visual Studio 1.1.1
+Welcome to the release notes for MySQL for Visual Studio 1.1
 
-What's new in 1.1.1
+What's new in 1.1
 --------------------
 - Visual Studio integration support with versions 2008, 2010, 2012 and 2013.
 - Entity Framework version 6 Database First and Model First support is available when using Connector/Net 6.8.1 or later.
 - MySQL Database Export tool is a new option inside of the context menu of the Server Explorer window. The purpose of this tool is to ease 
 the creation of dump files of one or more MySQL databases.
-
 
 Be sure and check the documentation for more information on these new features. 
