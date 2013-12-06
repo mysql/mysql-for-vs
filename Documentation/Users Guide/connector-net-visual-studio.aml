@@ -1080,11 +1080,11 @@
       <math>Finish</math> to exit the wizard.
     </para>
         <para>
-      At this point, it is necessary to select the
-       to . Launch the ASP.NET Configuration Tool and
-      select the Security tab. Click the  link and ensure that the  radio button is selected. You can now examine
+       At this point, select the <math>Authentication Type</math> to <math>From Internet</math>.
+       Launch the ASP.NET Configuration Tool and select the Security tab. Click the link 
+	   and ensure that the  radio button is selected. You can now examine
       the database you created to store membership information. All the
-      necessary tables will have been created for you:
+      necessary tables have been created for you:
     </para>
         <mediaLink>
           <para />
@@ -1161,8 +1161,9 @@
         <para />
         <para>
       Right-clicking the model design area will display a
-      context-sensitive menu. Selecting  from the menu will display the . The wizard can then be used to
-      generate MySQL DDL code.
+      context-sensitive menu. Selecting <math>Generate Database from Model</math>  
+	  from the menu will display the <math>Generate Database Wizard</math>. The wizard
+	  will display a MySQL script that can be used to generate the MySQL database.
     </para>
         <mediaLink>
           <para />
