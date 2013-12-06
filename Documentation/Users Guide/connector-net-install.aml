@@ -96,7 +96,7 @@
         <para>
         Unless you choose otherwise, MySql For Visual Studio is 
 		installed in <literal>C:\Program Files\MySQL\MySQL For Visual 
-		Studio X.X.X</literal>, where is replaced with the version 
+		Studio X.X.X</literal>, where X.X.X is replaced with the version 
         you are installing. 
       </para>
         <para>

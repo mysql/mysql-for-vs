@@ -9,8 +9,8 @@
 	of our users in the software development process. If you find MySql
 	For Visual Studio lacking some feature important to you, or if you
 	discover a bug and need to file a bug report, please use the 
-	instructions in
-    <link xlink:href="bug-reports"></link>.
+	instructions from Report a Bug section of the following page
+     <externalLink><linkText>http://bugs.mysql.com/</linkText><linkUri>http://bugs.mysql.com/</linkUri></externalLink>.
   </para>
       </content>
     </section>
