@@ -71,7 +71,7 @@ namespace MySql.Data.VisualStudio.DbObjects
       FullText = type == "FULLTEXT";
       Spatial = type == "SPATIAL";
 
-      string[] restrictions = new string[5] { null, table.OwningNode.Database, table.Name, Name, null };
+      string[] restrictions = new string[5] { "", table.OwningNode.Database, table.Name, Name, "" };
       DataTable dt = table.OwningNode.GetSchema("IndexColumns", restrictions);
       foreach (DataRow row in dt.Rows)
       {
