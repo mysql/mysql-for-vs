@@ -86,16 +86,17 @@
 
     <!-- Start menu junk -->
     <DirectoryRef Id='ShortCutDir'>
-      <Component Id="StartMenuComponent" Guid="31e1c7c6-e06d-4214-82ca-58e67e5232e2">
+      <Component Id="StartMenuComponent" Guid="C56D3DF6-A151-4F29-B388-A9803C89131A">
         <CreateFolder/>
         <!-- Clear ICE18 error -->
-        <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
+        <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for [ProductName]"
 					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
-        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector"
+        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for [ProductName]"
                   Directory="ShortCutDir" Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
         <Shortcut Id="S102" Name="Release Notes" Description="Release notes"
                   Directory="ShortCutDir" Target="[INSTALLDIR]/Release Notes.txt"/>
-      </Component>
+        <RemoveFolder Id="RemoveShortCutDir" Directory="ShortCutDir" On="uninstall"/>
+      </Component>      
       <Component Id="PerfMon" Guid="27A03933-72F0-45DB-9468-6FCA354D232E">
         <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL"
                                   MultiInstance="no" Help="This category includes a series of counters for MySQL.">

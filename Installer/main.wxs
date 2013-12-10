@@ -81,9 +81,9 @@
 
       <Directory Id="ProgramMenuFolder" Name="PMFolder">
         <Directory Id='PMCompanyDir' Name='MySQL'>
-          <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>
-        </Directory>
-      </Directory>
+          <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>          
+        </Directory>        
+      </Directory>      
 
 
       <!-- VS2008 folders -->
