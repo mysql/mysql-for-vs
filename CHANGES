@@ -1,5 +1,6 @@
 1.1.3
 - Fix for WI #884 On Memory table, create a HASH index get error. 
+- Fix for WI #892  On remove VSPlugin, the folder still on the Start->Programs->MYSQL.
 
 1.1.2
 - Fix for WI #852,  MySql for Visual Studio uninstaller removes binding redirects put by Connector/NET 6.8.1.
