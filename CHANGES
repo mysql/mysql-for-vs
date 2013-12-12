@@ -12,6 +12,7 @@
 - Fix for WI #797, "MySQL Database export..." option appears in all objects within server Explorer.
 - Fix for WI #837, M4VS 1.1 Installer does not remove key registry key at uninstallation.
 - Fix for Error when invoking intellisense in some corner case scenarios (Oracle bug #17890216).
+- Fix for MySql Stored Routine Debugger Fails with Stored Procedure with Leave statement (Oracle bug #17616344).
 
 
 1.1.1
