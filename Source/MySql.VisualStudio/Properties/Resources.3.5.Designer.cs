@@ -278,7 +278,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MySql Database Export Tool.
+        ///   Looks up a localized string similar to MySql Data Export Tool.
         /// </summary>
         internal static string DbExportToolCaptionFrame {
             get {
@@ -3143,6 +3143,16 @@ namespace MySql.Data.VisualStudio.Properties {
         internal static string MySqlDumpSummary {
             get {
                 return ResourceManager.GetString("MySqlDumpSummary", resourceCulture);
+            }
+        }
+		
+		 /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap page_title_mysql_export {
+            get {
+                object obj = ResourceManager.GetObject("page_title_mysql_export", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
 		
