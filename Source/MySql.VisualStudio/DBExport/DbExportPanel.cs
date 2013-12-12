@@ -53,6 +53,7 @@ namespace MySql.Data.VisualStudio.DBExport
       private Cursor _cursor;
       private MySqlDbExport _mysqlDbExport;
       private ToolWindowPane _windowHandler;
+      private bool _actionCancelled;
       
       internal MySqlDbExportOptions bndOptions;
       internal List<Schema> schemas = new List<Schema>();      
@@ -89,8 +90,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
           //Click commands
           btnExport.Click += btnExport_Click;
-          btnAdvanced.Click += btnAdvanced_Click;
-          btnCancel.Click += btnCancel_Click;
+          btnAdvanced.Click += btnAdvanced_Click;          
           btnRefresh.Click += btnRefresh_Click;
           btnReturn.Click += btnReturn_Click;
           btnSelectAll.Click += btnSelectAll_Click;
@@ -176,7 +176,7 @@ namespace MySql.Data.VisualStudio.DBExport
           currentSchema = (new MySqlConnectionStringBuilder(SelectedConnection.ConnectionString)).Database;
         }
 
-        if (_ownerSchema.Equals(currentSchema, StringComparison.InvariantCultureIgnoreCase))
+        if (_ownerSchema.Equals(currentSchema, StringComparison.InvariantCultureIgnoreCase) && dbObjects != null)
         {
           //update to UI
           foreach (var item in dbObjects)
@@ -209,6 +209,10 @@ namespace MySql.Data.VisualStudio.DBExport
         SelectedConnection.ConnectionString = ((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString;
         SelectedConnection.DisplayName = ((MySqlServerExplorerConnection)cmbConnections.SelectedItem).DisplayName;
         LoadSchemasForSelectedConnection();
+        dictionary.Clear();
+        dbObjects = null;
+        dbObjectsList.Nodes.Clear();
+        dbObjectsList.Refresh();
       }
 
       void dbSchemasList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -272,7 +276,9 @@ namespace MySql.Data.VisualStudio.DBExport
             _explorerMySqlConnections.Add(connection.Value);
           }
         }
-        
+
+        this.Cursor = _cursor;
+
         SetConnectionsList();
 
         cmbConnections.Refresh();
@@ -283,11 +289,7 @@ namespace MySql.Data.VisualStudio.DBExport
         if (Connections.Where(t => t.ConnectionString == SelectedConnection.ConnectionString).SingleOrDefault() != null)
           cmbConnections.SelectedValue = SelectedConnection.ConnectionString;
         else          
-          cmbConnections.SelectedValue = Connections[0].ConnectionString;
-
-        dictionary.Clear();
-
-        this.Cursor = _cursor;
+          cmbConnections.SelectedValue = Connections[0].ConnectionString;       
       }
 
       public void LoadDbObjects(string databaseName)
@@ -419,8 +421,7 @@ namespace MySql.Data.VisualStudio.DBExport
         btnAdvanced.Enabled = enabled;
         no_data.Enabled = enabled;
         single_transaction.Enabled = enabled;
-        routines.Enabled = enabled;
-        btnExport.Enabled = enabled;
+        routines.Enabled = enabled;        
         btnSaveSettings.Enabled = enabled;
         btnLoadSettingsFile.Enabled = enabled;
         chkAlwaysCreateNewFile.Enabled = enabled;
@@ -431,6 +432,7 @@ namespace MySql.Data.VisualStudio.DBExport
         _cursor = this.Cursor;
         this.Cursor = Cursors.WaitCursor;
         EnableControls(false);
+        btnExport.Text = "Cancel";
       }
 
       private void UnlockUI()
@@ -444,14 +446,21 @@ namespace MySql.Data.VisualStudio.DBExport
         {
           this.Cursor = _cursor;
           EnableControls(true);
+          btnExport.Text = "Start Export";
         }
       }
 
       private void btnExport_Click(object sender, EventArgs e)
       {
+        if (btnExport.Text != "Start Export" && _mysqlDbExport != null)
+        {
+          _actionCancelled = true;
+          CancelExport();          
+          return;
+        }
 
         string mysqlFilePath = txtFileName.Text.Trim();
-
+        _actionCancelled = false;
         try
         {
           if (dictionary.Count == 0)
@@ -631,6 +640,8 @@ namespace MySql.Data.VisualStudio.DBExport
         saveFileDlg.Filter = "(*.mysql)|*.mysql|All Files (*.*)|*.*" ; 
         saveFileDlg.FilterIndex = 1;
         saveFileDlg.FileName = txtFileName.Text;
+        saveFileDlg.AddExtension = true;
+        saveFileDlg.ValidateNames = true;
         if (saveFileDlg.ShowDialog() == DialogResult.OK)
         {
           txtFileName.Text = saveFileDlg.FileName;
@@ -941,7 +952,7 @@ namespace MySql.Data.VisualStudio.DBExport
         return;
       }
 
-      private void btnCancel_Click(object sender, EventArgs e)
+      private void CancelExport()
       {
 
         try
@@ -973,7 +984,11 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         else
         {
-          _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, dictionary.Count()));
+          if (_actionCancelled)
+            _generalPane.OutputString(Environment.NewLine + string.Format("Data Export cancelled by the user."));
+          else
+            _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, dictionary.Count()));
+
           _generalPane.Activate();
         }
       }
@@ -1159,7 +1174,7 @@ namespace MySql.Data.VisualStudio.DBExport
         string db = GetTreeViewDb();
         if (!string.IsNullOrEmpty(db))
           PullObjectListFromTree(db);
-      }
+      }     
 
     }
 
