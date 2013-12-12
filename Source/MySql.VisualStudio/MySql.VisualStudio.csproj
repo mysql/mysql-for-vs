@@ -666,7 +666,7 @@
     </Compile>
     <Compile Include="Nodes\TableNode.cs">
     </Compile>
-    <Compile Include="PkgCmdID.cs" />
+    <Compile Include="PkgCmdID.cs" />   
     <Compile Include="Properties\VersionInfo.cs">
     </Compile>
     <Compile Include="SchemaComparer\Comparer.cs">
@@ -785,7 +785,7 @@
     <EmbeddedResource Include="Editors\UDFEditor.resx">
       <DependentUpon>UDFEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
+    </EmbeddedResource>    
     <EmbeddedResource Include="SchemaComparer\SchemaComparerForm.resx">
       <DependentUpon>SchemaComparerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -807,6 +807,7 @@
     </None>
     <None Include="Resources\sql_editor_banner.bmp">
     </None>
+    <None Include="Resources\page-title-mysql-export.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">
