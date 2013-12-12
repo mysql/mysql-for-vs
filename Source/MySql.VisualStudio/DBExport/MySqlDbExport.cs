@@ -40,6 +40,7 @@ namespace MySql.Data.VisualStudio.DBExport
     private IsolatedStorageFile _isoStore;
     private MySqlDumpFacade mysqlDumpFacade;
     private bool _appendToFile;
+    private static Random rnd = new Random();
 
     public string OutputFilePath 
     {
@@ -113,10 +114,9 @@ namespace MySql.Data.VisualStudio.DBExport
       var connBuilder = new MySqlConnectionStringBuilder(conn.ConnectionString);
 
       var userId = connBuilder.UserID;
-      var pwd = connBuilder.Password;
-      Random rnd = new Random();
+      var pwd = connBuilder.Password;           
 
-      _fileName = string.Format("{0}{1}.cnf", userId, rnd.Next(1000));
+      _fileName = string.Format("{0}{1}.cnf", userId, rnd.Next(999, 10000));
 
       _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
@@ -136,7 +136,8 @@ namespace MySql.Data.VisualStudio.DBExport
 
     public void CancelExport()
     {
-      mysqlDumpFacade.CancelRequest();
+      if (mysqlDumpFacade != null)
+         mysqlDumpFacade.CancelRequest();
     }
 
     public bool Export()
