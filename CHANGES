@@ -2,6 +2,7 @@
 - Fix for WI #884 On Memory table, create a HASH index get error. 
 - Fix for WI #892 On remove VSPlugin, the folder still on the Start->Programs->MYSQL.
 - Fix for WI #849 Changing connection keeps selected DB.
+- Fix for WI #830 *.* save option do not respect the extension.
 
 1.1.2
 - Fix for WI #852,  MySql for Visual Studio uninstaller removes binding redirects put by Connector/NET 6.8.1.
