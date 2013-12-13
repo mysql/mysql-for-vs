@@ -2639,6 +2639,15 @@ namespace MySql.Data.VisualStudio.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Missing Server and User in Credentials..
+        /// </summary>
+        public static string MissingServerAndUser {
+            get {
+                return ResourceManager.GetString("MissingServerAndUser", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} Export of database {1} has finished..
