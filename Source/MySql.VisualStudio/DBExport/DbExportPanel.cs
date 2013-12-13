@@ -637,11 +637,11 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         SaveFileDialog saveFileDlg = new SaveFileDialog();
         saveFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        saveFileDlg.Filter = "(*.mysql)|*.mysql|All Files (*.*)|*.*" ; 
+        saveFileDlg.Filter = "(*.mysql)|*.mysql" ; 
         saveFileDlg.FilterIndex = 1;
-        saveFileDlg.FileName = txtFileName.Text;
-        saveFileDlg.AddExtension = true;
+        saveFileDlg.FileName = txtFileName.Text;        
         saveFileDlg.ValidateNames = true;
+        saveFileDlg.SupportMultiDottedExtensions = false;
         if (saveFileDlg.ShowDialog() == DialogResult.OK)
         {
           txtFileName.Text = saveFileDlg.FileName;
