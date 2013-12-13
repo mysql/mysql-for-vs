@@ -54,6 +54,7 @@ namespace MySql.Data.VisualStudio.DBExport
       private MySqlDbExport _mysqlDbExport;
       private ToolWindowPane _windowHandler;
       private bool _actionCancelled;
+      private string _fileSavedSettingsName;
       
       internal MySqlDbExportOptions bndOptions;
       internal List<Schema> schemas = new List<Schema>();      
@@ -104,18 +105,24 @@ namespace MySql.Data.VisualStudio.DBExport
           //KeyDown events
           txtFilter.KeyDown += txtFilter_KeyDown;
           txtFileName.KeyDown += txtFileName_KeyDown;
-          sourceSchemas.ListChanged += sourceSchemas_ListChanged;        
+          sourceSchemas.ListChanged += sourceSchemas_ListChanged;       
+          _fileSavedSettingsName = string.Empty;
         
-      }      
+      }     
 
       void sourceSchemas_ListChanged(object sender, ListChangedEventArgs e)
       {
         if (_windowHandler == null) return;
-        if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame) && dictionary.Count > 0)
+       
+        if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame))
         {
-          _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);
-          _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;
-        }        
+          _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);            
+        }
+        if (_fileSavedSettingsName != String.Empty)
+        {
+          _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);          
+        }
+        _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;        
       }
       
 
@@ -1017,7 +1024,9 @@ namespace MySql.Data.VisualStudio.DBExport
             MySqlDbExportSaveOptions settings = MySqlDbExportSaveOptions.LoadSettingsFile(settingsFile);
             if (settings != null)
             {
-              //TODO create the connection if it not exists              
+              //TODO create the connection if it not exists 
+              _fileSavedSettingsName = settingsFile;
+              _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);
               string DisplayConnectionName = (from cnn in _explorerMySqlConnections
                                               where cnn.Connection.DisplayConnectionString.Contains(settings.Connection)
                                               select cnn.DisplayName).FirstOrDefault();
@@ -1122,7 +1131,17 @@ namespace MySql.Data.VisualStudio.DBExport
         string settingsFile = string.Empty;
         DialogResult result = DialogResult.OK;
         SaveFileDialog saveSettingsFileDlg = new SaveFileDialog();
-        saveSettingsFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        if (_fileSavedSettingsName != String.Empty)
+        {
+          saveSettingsFileDlg.InitialDirectory = Path.GetFullPath(_fileSavedSettingsName);
+        }
+        else
+        {
+          saveSettingsFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
+
+
         saveSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";
         saveSettingsFileDlg.FilterIndex = 1;
         saveSettingsFileDlg.FileName = _windowHandler.Caption.Replace("*", "");

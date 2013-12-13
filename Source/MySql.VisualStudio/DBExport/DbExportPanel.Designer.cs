@@ -285,6 +285,7 @@
       // 
       this.mySqlDbExportOptionsBindingSource.AllowNew = false;
       this.mySqlDbExportOptionsBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions);
+      this.mySqlDbExportOptionsBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.sourceSchemas_ListChanged);
       // 
       // routines
       // 
