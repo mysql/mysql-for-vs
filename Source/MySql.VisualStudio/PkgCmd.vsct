@@ -241,7 +241,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>        
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
-          <ButtonText>&amp;Launch Workbench</ButtonText>
+          <ButtonText>&amp;Launch MySQL Workbench</ButtonText>
         </Strings>
       </Button>
         <Button guid="guidMySqlProviderCmdSet" id="cmdidGenerateTableScript" type="Button" priority ="0x100">
