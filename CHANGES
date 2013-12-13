@@ -16,6 +16,7 @@
 - Fix for Error when invoking intellisense in some corner case scenarios (Oracle bug #17890216).
 - Fix for MySql Stored Routine Debugger Fails with Stored Procedure with Leave statement (Oracle bug #17616344).
 - Fix for WI #886 MySql script does not show result set if comment "-- " is used at the beginning.
+- Fix for WI #855, At Server Explorer Table node is incorrectly removed (temporarily).
 
 
 1.1.1
