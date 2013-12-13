@@ -39,6 +39,7 @@ v) Added 200+ extra unit tests.
 - Fix for WI #853, Intellisense only works the first time.
 - Fix for Error when invoking intellisense in some corner case scenarios (Oracle bug #17890216).
 - Fix for MySql Stored Routine Debugger Fails with Stored Procedure with Leave statement (Oracle bug #17616344).
+- Fix for WI #886 MySql script does not show result set if comment "-- " is used at the beginning.
 
 
 1.0.2
