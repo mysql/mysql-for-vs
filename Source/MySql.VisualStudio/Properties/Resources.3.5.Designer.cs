@@ -2599,6 +2599,14 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing Server and User in Credentials..
+        /// </summary>
+        public static string MissingServerAndUser {
+            get {
+                return ResourceManager.GetString("MissingServerAndUser", resourceCulture);
+            }
+        }
+
         ///   Looks up a localized string similar to Passwords don&apos;t match.
         /// </summary>
         internal static string NewPassword_PasswordNotMatch {
