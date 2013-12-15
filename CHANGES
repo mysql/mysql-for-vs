@@ -43,6 +43,7 @@ v) Added 200+ extra unit tests.
 - Fix for WI #855, At Server Explorer Table node is incorrectly removed (temporarily).
 - Fix for WI #850, At Server Explorer when Openning a MySQL connection, leaving empty all fields, opens a windows with confusing message.
 - Fix for WI #843, Error occurs when displaying blob columns in results set for MySql script.
+- Fix for Intellisense shows views from all databases, instead of only the current one (Oracle bug #17954412).
 
 
 1.0.2
