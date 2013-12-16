@@ -858,6 +858,16 @@ namespace MySql.Data.VisualStudio.DBExport
         try
         {
           UpdateCheckState(e.Node, e.Node.Checked);
+          // If marked, mark parents all the way up
+          if (e.Node.Checked)
+          { 
+            TreeNode parent = e.Node.Parent;
+            while( parent != null )
+            {
+              parent.Checked = true;
+              parent = parent.Parent;
+            }
+          }
         }
         finally
         {
