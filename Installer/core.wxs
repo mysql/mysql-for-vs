@@ -48,32 +48,6 @@
       </Component>
       -->
     </DirectoryRef>
-
-    <!-- .Net 2.0 Binaries -->
-    <DirectoryRef Id='assemblies_v2'>
-      <Component Id="C.v2" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
-        <File Id="MySql.Data.v2" Name="MySql.Data.dll"
-              Source="..\Dependencies\v2.0\Release\mysql.data.dll" DiskId="1"/>        
-        <RemoveFile Id="RemoveStateFile.v2" Name="*.InstallState" On="uninstall"/>
-        <RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL for Visual Studio $(var.Version) v2.0">
-          <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
-        </RegistryKey>
-      </Component>    
-    </DirectoryRef>
-
-    <!-- .Net 4.0 Binaries -->
-    <DirectoryRef Id='assemblies_v4'>
-      <Component Id="C.v4" Guid="C66D3DF6-A151-4F29-B388-A9803C89131A">
-        <File Id="MySql.Data.v4" Name="MySql.Data.dll"
-              Source="..\Dependencies\v4.0\release\mysql.data.dll" DiskId="1"/>
-        <RemoveFile Id="RemoveStateFile.v4" Name="*.InstallState" On="uninstall"/>
-        <RegistryKey Id="AssemblyFolderExV4" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL for Visual Studio $(var.Version) v4.0">
-          <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
     
     <!-- Dependencies with mysqldump -->
     <DirectoryRef Id='Dependencies'>
@@ -115,9 +89,7 @@
       <ComponentRef Id="AddRegistryValuesForProduct"/>      
       <!--
       <ComponentRef Id="RegistryInstallFlag64"/>
-      <ComponentRef Id="RegistryInstallFlag32"/> -->
-      <ComponentRef Id="C.v2"/>
-      <ComponentRef Id="C.v4"/>
+      <ComponentRef Id="RegistryInstallFlag32"/> -->      
       <ComponentRef Id="PerfMon"/>
       <ComponentRef Id="MySqldumpx86"/>
       <ComponentRef Id="StartMenuComponent"/>
