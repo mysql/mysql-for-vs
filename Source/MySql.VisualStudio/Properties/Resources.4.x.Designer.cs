@@ -22,7 +22,7 @@ namespace MySql.Data.VisualStudio.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class Resources{
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -2639,11 +2639,11 @@ namespace MySql.Data.VisualStudio.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Missing Server and User in Credentials..
         /// </summary>
-        public static string MissingServerAndUser {
+        internal static string MissingServerAndUser {
             get {
                 return ResourceManager.GetString("MissingServerAndUser", resourceCulture);
             }
@@ -2786,7 +2786,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2007-2011 Oracle, Inc..
+        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2007-2013 Oracle, Inc..
         /// </summary>
         internal static string ProductDetails {
             get {
