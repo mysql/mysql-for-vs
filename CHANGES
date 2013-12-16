@@ -13,6 +13,7 @@
 - Fix for WI #829, On Database Export, parent boxes not checked when all schema is selected.
 - Fix for WI #841, On MySql script, Intellisense not working if the DB is not selected in the connection parameters
   (additionally, now if a "use <database>" is executed, Intellisense now uses that database).
+- Fix for In parser 'describe' keyword must be treated as synonym of 'explain' keyword (Oracle bug #17956087).
 
 
 1.1.2
