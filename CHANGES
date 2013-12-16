@@ -11,6 +11,8 @@
 - Fix for WI #843, Error occurs when displaying blob columns in results set for MySql script.
 - Fix for Intellisense shows views from all databases, instead of only the current one (Oracle bug #17954412).
 - Fix for WI #829, On Database Export, parent boxes not checked when all schema is selected.
+- Fix for WI #841, On MySql script, Intellisense not working if the DB is not selected in the connection parameters
+  (additionally, now if a "use <database>" is executed, Intellisense now uses that database).
 
 
 1.1.2
