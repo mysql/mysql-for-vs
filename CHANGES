@@ -47,6 +47,7 @@ v) Added 200+ extra unit tests.
 - Fix for WI #841, On MySql script, Intellisense not working if the DB is not selected in the connection parameters
   (additionally, now if a "use <database>" is executed, Intellisense now uses that database).
 - Fix for In parser 'describe' keyword must be treated as synonym of 'explain' keyword (Oracle bug #17956087).
+- Fix for WI #912, MySql for Visual Studio is broken in Visual Studio 2008.
 
 
 1.0.2
