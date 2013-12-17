@@ -16,6 +16,7 @@
 - Fix for In parser 'describe' keyword must be treated as synonym of 'explain' keyword (Oracle bug #17956087).
 - Fix for WI #909 VS shows assemblies for internal use.
 - Fix for WI #876 Wrong Copyright Year on Help->About Visual Studio ->Mysql for Visual Studio.
+- Fix for WI #912, MySql for Visual Studio is broken in Visual Studio 2008.
 
 
 1.1.2
