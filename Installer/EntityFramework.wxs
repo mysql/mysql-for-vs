@@ -46,7 +46,7 @@
     <DirectoryRef Id='VS11_PublicAssemblies'>
       <Component Id="EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C9" DiskId="1">
         <File Id="MySql.EF.PA11.v4" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
+              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>        
       </Component>
     </DirectoryRef>
 
@@ -68,13 +68,41 @@
       </Component>
     </DirectoryRef>
 
-      <Feature Id="EntityFramework2010" Level="1" Display="expand" Title="Entity Framework Support for VS 2010"
+    
+    <!--Removing files from Public Assemblies Folders-->
+
+    <DirectoryRef Id='VS10_PublicAssemblies'>
+      <Component Id="Remove.EF.PA.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E8" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA.v4" Name="MySql.Data.Entity.dll" On="uninstall"/>
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+    
+    
+    <DirectoryRef Id='VS11_PublicAssemblies'>
+      <Component Id="Remove.EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E9" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA11.v4" Name="MySql.Data.Entity.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!--Removing files from Private Assemblies Folders-->
+
+    <DirectoryRef Id='VS12_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61A9" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+    
+    <Feature Id="EntityFramework2010" Level="1" Display="expand" Title="Entity Framework Support for VS 2010"
                  Description="Support for the entity framework">      
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id="EF.T4.VS10"/>
       <ComponentRef Id="EF.PA.v4"/>
       <ComponentRef Id="EF.v2"/>
       <ComponentRef Id="EF.v4"/>
+      <ComponentRef Id="Remove.EF.PA.v4"/>
     </Feature>
     
 
@@ -83,6 +111,7 @@
     <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
     <ComponentRef Id="EF.T4.VS11"/>    
     <ComponentRef Id="EF.PA11.v4"/>
+    <ComponentRef Id="Remove.EF.PA11.v4"/>
     </Feature>
 
     <Feature Id="EntityFramework2013" Level="1" Display="expand" Title="Entity Framework Support for VS 2013"
@@ -90,6 +119,7 @@
       <Condition Level='0'>Not VS_2013_PATH AND Not Installed</Condition>
       <ComponentRef Id="EF.T4.VS12" />
       <ComponentRef Id="EF.PA12.v45"/>
+      <ComponentRef Id="Remove.EF.PA12.v45"/>
     </Feature>
     
     

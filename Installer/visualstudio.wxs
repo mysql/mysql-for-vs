@@ -201,6 +201,55 @@
       </Component>
     </DirectoryRef>
 
+    <!--Removing files from Private Assemblies Folders-->
+
+    <DirectoryRef Id='VS90_PrivateAssemblies'>
+      <Component Id='Remove.VS2008_MD.Library' Guid='AA082C85-9D64-4B79-8910-C6C25655250A'>
+        <RemoveFile Id='RemoveVS2008_MySql.DataLib' Name='MySql.Data.dll' On='uninstall'/>
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+    
+    
+    <DirectoryRef Id='VS10_PrivateAssemblies'>
+      <Component Id='Remove.VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C2565525CA'>
+        <RemoveFile Id='RemoveVS2010_MySql.DataLib' Name='MySql.Data.dll' On='uninstall' />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id='Remove.VS2010_Web.Library' Guid='CA082C85-9D64-4B79-8910-C6C2565525CA'>
+        <RemoveFile Id='RemoveVS2010_MySql.Web.Lib' Name='MySql.Web.dll' On='uninstall'/>
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS11_PrivateAssemblies'>
+      <Component Id='Remove.VS2012_MD.Library' Guid='AF082C85-9D64-4B79-8910-C6C25655250A'>
+        <RemoveFile Id='RemoveVS2012_MySql.DataLib' Name='MySql.Data.dll' On='uninstall'/>
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id='Remove.VS2012_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251A'>
+        <RemoveFile Id='RemoveVS2012_MySql.Web.Lib' Name='MySql.Web.dll' On='uninstall'/>
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+    
+    
+    
+    <DirectoryRef Id='VS12_PrivateAssemblies'>
+      <Component Id="Remove.VS2013_MD.Library" Guid="4D8A38C2-9750-4C35-B89D-FD7FA6789BAA" DiskId="1">
+        <RemoveFile Id="RemoveVS2013_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS12_PrivateAssemblies'>
+      <Component Id="Remove.VS2013_Web.Library" Guid="0707943C-D00B-4D81-8722-E10CB4F7755A" DiskId="1">
+        <RemoveFile Id="RemoveVS2013_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+    
+
 
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH AND Not Installed</Condition>
@@ -208,6 +257,7 @@
       <ComponentRef Id='PFTemplates'/>
       <ComponentRef Id='VS_2008_Registry'/>
       <ComponentRef Id='VS2008_MD.Library'/>
+      <ComponentRef Id='Remove.VS2008_MD.Library'/>      
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
@@ -217,6 +267,8 @@
       <ComponentRef Id='VS2010_MD.Library' />
       <!--<ComponentRef Id='VS2010_EF.Library' />-->
       <ComponentRef Id='VS2010_Web.Library' />
+      <ComponentRef Id='Remove.VS2010_MD.Library'/>
+      <ComponentRef Id='Remove.VS2010_Web.Library'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -225,6 +277,8 @@
       <ComponentRef Id='VS2012_Templates'/>
       <ComponentRef Id='VS2012_MD.Library' />    
       <ComponentRef Id='VS2012_Web.Library' />
+      <ComponentRef Id='Remove.VS2012_MD.Library'/>
+      <ComponentRef Id='Remove.VS2012_Web.Library'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
@@ -233,6 +287,8 @@
       <ComponentRef Id='VS2013_Templates'/>
       <ComponentRef Id='VS2013_MD.Library' />
       <ComponentRef Id='VS2013_Web.Library' />
+      <ComponentRef Id='Remove.VS2013_MD.Library'/>
+      <ComponentRef Id='Remove.VS2013_Web.Library'/>
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
