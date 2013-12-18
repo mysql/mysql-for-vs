@@ -1019,7 +1019,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
         OpenFileDialog openSettingsFileDlg = new OpenFileDialog();
         
-        openSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";        
+        openSettingsFileDlg.Filter = "(*.dumps)|*.dumps";        
         openSettingsFileDlg.FilterIndex = 1;
         openSettingsFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         openSettingsFileDlg.RestoreDirectory = true;
@@ -1035,8 +1035,7 @@ namespace MySql.Data.VisualStudio.DBExport
             if (settings != null)
             {
               //TODO create the connection if it not exists 
-              _fileSavedSettingsName = settingsFile;
-              _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);
+              _fileSavedSettingsName = settingsFile;              
               string DisplayConnectionName = (from cnn in _explorerMySqlConnections
                                               where cnn.Connection.DisplayConnectionString.Contains(settings.Connection)
                                               select cnn.DisplayName).FirstOrDefault();
@@ -1090,6 +1089,7 @@ namespace MySql.Data.VisualStudio.DBExport
                 mySqlDbExportOptionsBindingSource.ResetBindings(true);
                 
                 Application.DoEvents();
+                _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);
                 MessageBox.Show("The saved settings were loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               }
               else
@@ -1152,7 +1152,7 @@ namespace MySql.Data.VisualStudio.DBExport
         }
 
 
-        saveSettingsFileDlg.Filter = "(*.dumps)|*.dumps|All Files (*.*)|*.*";
+        saveSettingsFileDlg.Filter = "(*.dumps)|*.dumps";
         saveSettingsFileDlg.FilterIndex = 1;
         saveSettingsFileDlg.FileName = _windowHandler.Caption.Replace("*", "");
 
@@ -1187,8 +1187,9 @@ namespace MySql.Data.VisualStudio.DBExport
             this.Cursor = Cursors.WaitCursor;
             saveToFile.WriteSettingsFile(completePath, Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
             this.Cursor = Cursors.Default;
+            _fileSavedSettingsName = Path.Combine(completePath, saveSettingsFileDlg.FileName);
             MessageBox.Show("All selected settings were saved correctly.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            _windowHandler.Caption = _windowHandler.Caption.Replace("*", "");
+            _windowHandler.Caption = Path.GetFileName(saveSettingsFileDlg.FileName);
           }
           catch (Exception ex)
           {
