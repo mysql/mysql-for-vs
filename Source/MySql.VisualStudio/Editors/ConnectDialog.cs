@@ -103,8 +103,9 @@ namespace MySql.Data.VisualStudio
       if (populated) return;
       try
       {
+        ReadFields();
         using (DbConnection c = factory.CreateConnection())
-        {
+        {          
           c.ConnectionString = connectionStringBuilder.ConnectionString;
           c.Open();
           DbCommand cmd = c.CreateCommand();
@@ -151,5 +152,12 @@ namespace MySql.Data.VisualStudio
       database_Leave(serverName, EventArgs.Empty);
     }
 
+    private void ReadFields()
+    {
+      connectionStringBuilder["server"] = serverName.Text.Trim();
+      connectionStringBuilder["userid"] = userId.Text.Trim();
+      connectionStringBuilder["password"] = password.Text.Trim();
+      connectionStringBuilder["database"] = database.Text.Trim();
+    }
   }
 }
