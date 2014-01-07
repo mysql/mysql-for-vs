@@ -22,7 +22,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using MySql.Data.MySqlClient;
 
@@ -33,13 +35,22 @@ namespace MySql.Debugger.Tests
     public SetUp()
     {
       MySqlConnection con = new MySqlConnection(TestUtils.CONNECTION_STRING_WITHOUT_DB);
-      MySqlCommand cmd = new MySqlCommand("drop database if exists test", con);
       con.Open();
+     
+      Assembly executingAssembly = Assembly.GetExecutingAssembly();
+
+      Stream stream = executingAssembly.GetManifestResourceStream("MySql.Debugger.Tests.Properties.Setup.sql");
+      StreamReader sr = new StreamReader(stream);
+      string sql = sr.ReadToEnd();
+      sr.Close();
+      MySqlCommand cmd = new MySqlCommand("drop database if exists test", con);
+      MySqlScript s = new MySqlScript(con, sql);      
       try
       {
         cmd.ExecuteNonQuery();
         cmd.CommandText = "create database test;";
         cmd.ExecuteNonQuery();
+        s.Execute();
       }
       finally
       {
