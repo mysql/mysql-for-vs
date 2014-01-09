@@ -42,16 +42,14 @@ namespace MySql.VisualStudio.Tests
     private SetUp st;
     private MySqlDbExportOptions options;
     private MySqlConnection conn;
-    private string saveToFile;
-    private string settingsFile;
+    private string saveToFile;    
 
     public void SetFixture(SetUp data)
     {
       st = data;
       options = new MySqlDbExportOptions();
       conn = new MySqlConnection(st.GetConnectionString("test", "test", false, false));
-      saveToFile = Environment.CurrentDirectory + @"\mydump.sql";
-      settingsFile = "SavedSettings";
+      saveToFile = Environment.CurrentDirectory + @"\mydump.sql";      
     }
 
 
@@ -71,7 +69,7 @@ namespace MySql.VisualStudio.Tests
 
       var _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
-      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.CreateNew, _isoStore))
+      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.OpenOrCreate, _isoStore))
       {
         using (StreamWriter writer = new StreamWriter(isoStream))
         {
@@ -89,7 +87,7 @@ namespace MySql.VisualStudio.Tests
         _isoStore.DeleteFile("Testfile.cnf");
         _isoStore.Close();
 
-        string expected = @"--add-drop-database=false  --add-drop-table=false  --add-drop-trigger=false  --add-locks=false  --all-databases=false  --allow-keywords  --comments=true  --compact=false  --complete-insert=false  --create-options  --default-character-set=utf8 --delayed-insert=false  --disable-keys  --events=false  --extended-insert  --hex-blob=false  --ignore-table=nameoftable --insert-ignore  --lock-tables  --no-data  --max_allowed_packet=1G --port=3305 --quote-names  --replace=false  --routines  """;
+        string expected = @"--add-drop-database  --add-drop-table  --add-locks=false  --all-databases=false  --allow-keywords  --comments  --compact=false  --complete-insert=false  --create-options  --databases  --default-character-set=utf8 --delayed-insert=false  --disable-keys  --events=false  --extended-insert  --flush-logs=false  --hex-blob=false  --ignore-table=nameoftable --insert-ignore  --lock-tables  --no-data  --no-create-info=false  --max_allowed_packet=1G --order-by-primary=false  --port=3305 --quote-names  --replace=false  --routines  --single-transaction=false  --set-gtid-purged=OFF  """;
         var value = arguments.GetValue(mysqldumpFacade);
         Assert.True(value.ToString().Contains(expected));
       }
@@ -98,41 +96,78 @@ namespace MySql.VisualStudio.Tests
     [Fact]
     public void CanDumpAListOfDatabases()
     {
+
+      var fullPath = string.Empty;
+
+      var _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.OpenOrCreate, _isoStore))
+      {
+        using (StreamWriter writer = new StreamWriter(isoStream))
+        {
+          writer.WriteLine("[mysqldump]");
+          writer.WriteLine("user=test");
+          writer.WriteLine("password=test");
+        }
+        fullPath = isoStream.GetType().GetField("m_FullPath", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(isoStream).ToString();
+      }
+      
       var databases = new List<String>();
       databases.Add("DumpTest");
       databases.Add("SecondTest");
       databases.Add("ThirdTest");
       foreach (var database in databases)
-      {
-        conn.ConnectionString = st.GetConnectionString("test", "test", false, false);
-        conn.ConnectionString += ";database=" + database + ";";
-        var mysqldump = new MySqlDbExport(options, saveToFile, conn, null, false);
-        mysqldump.Export();
-        if (File.Exists(mysqldump.OutputFilePath))
+      {        
+        options.database = database;
+        options.port = 3305;        
+        var mysqldump = new MySqlDumpFacade(options, saveToFile, fullPath);
+        mysqldump._dumpFilePath = Path.GetFullPath(@"..\..\..\..\..\Dependencies\MySql\mysqldump.exe");
+        
+        mysqldump.ProcessRequest(saveToFile);
+
+        if (File.Exists(saveToFile))
         {
-          using (var dump = new StreamReader(mysqldump.OutputFilePath))
+          using (var dump = new StreamReader(saveToFile))
           {
             var content = dump.ReadToEnd();
             Assert.True(content.Contains(database), "A database is missed in the dump file");
           }
         }
-        if (mysqldump.ErrorsOutput != null)
+        if (!String.IsNullOrEmpty(mysqldump.ErrorsOutput.ToString()))
         {
           Assert.False(1 == 1, "CanDumpAListOfDatabases: Test Failed");
         }
       }
+
     }
 
     [Fact]
     public void CanThrowExceptionWhenUnknownDatabase()
     {
-      conn.ConnectionString = st.GetConnectionString("root", "", false, false);
-      conn.ConnectionString += ";database=unknown;";
-      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null, true);
-      mysqldump.Export();
+
+      var fullPath = string.Empty;
+      var _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.OpenOrCreate, _isoStore))
+      {
+        using (StreamWriter writer = new StreamWriter(isoStream))
+        {
+          writer.WriteLine("[mysqldump]");
+          writer.WriteLine("user=test");
+          writer.WriteLine("password=test");
+        }
+        fullPath = isoStream.GetType().GetField("m_FullPath", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(isoStream).ToString();
+      }
+
+      options.database = "unknown";
+      options.port = 3305;
+      var mysqldump = new MySqlDumpFacade(options, saveToFile, fullPath);
+      mysqldump._dumpFilePath = Path.GetFullPath(@"..\..\..\..\..\Dependencies\MySql\mysqldump.exe");
+
+      mysqldump.ProcessRequest(saveToFile);
+      
       var errors = mysqldump.ErrorsOutput.ToString();
-      Assert.True(errors.Contains("mysqldump: Got error: 1049: Unknown database 'unknown' when selecting the database"));
-      Assert.False(File.Exists(saveToFile));
+      Assert.True(errors.Contains("mysqldump: Got error: 1044: Access denied for user 'test'@'localhost' to database 'unknown' when selecting the database"));      
     }
 
 
@@ -146,15 +181,35 @@ namespace MySql.VisualStudio.Tests
     [Fact]
     public void CanDoDumpFileForDB()
     {
-      conn.ConnectionString = "server=10.159.228.235;userid=root;pwd=toor;database=sakila;";
-      //conn.ConnectionString += ";database=DumpTest;";
-      //conn.ConnectionString  = st.GetConnectionString("root", "", false, false);
-      //conn.ConnectionString += ";database=performance_schema;";
-      var mysqldump = new MySqlDbExport(options, saveToFile, conn, null, true);
-      if (mysqldump.Export())
+
+      var fullPath = string.Empty;
+      var _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("Testfile.cnf", FileMode.OpenOrCreate, _isoStore))
       {
-        if (!File.Exists(mysqldump.OutputFilePath))
-          Assert.False(1 == 1, "CanDoDumpFileForDB: Creation of dump failed.");
+        using (StreamWriter writer = new StreamWriter(isoStream))
+        {
+          writer.WriteLine("[mysqldump]");
+          writer.WriteLine("user=test");
+          writer.WriteLine("password=test");
+        }
+        fullPath = isoStream.GetType().GetField("m_FullPath", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(isoStream).ToString();
+      }
+
+      options.database = "DumpTest";
+      options.port = 3305;
+      var mysqldump = new MySqlDumpFacade(options, saveToFile, fullPath);
+      mysqldump._dumpFilePath = Path.GetFullPath(@"..\..\..\..\..\Dependencies\MySql\mysqldump.exe");
+
+      mysqldump.ProcessRequest(saveToFile);
+
+      if (File.Exists(saveToFile))
+      {
+        using (var dump = new StreamReader(saveToFile))
+        {
+          var content = dump.ReadToEnd();
+          Assert.True(content.Contains("DumpTest"), "A database is missed in the dump file");
+        }
       }
     }
 
