@@ -11,23 +11,22 @@
     <AssemblyName>MySql.Parser.Tests</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.5.1</Framework>
-		<TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
-	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
+    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.5</Framework>
-		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
@@ -36,7 +35,7 @@
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.0</Framework>
-		<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
@@ -46,11 +45,10 @@
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
-		<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
-
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -83,7 +81,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit">
+    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\XUnit-1.9.2\xunit.dll</HintPath>
     </Reference>
   </ItemGroup>

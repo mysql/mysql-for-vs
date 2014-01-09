@@ -36,10 +36,10 @@ namespace MySql.VisualStudio.Tests
     [Fact]
     public void Comparison1()
     {
-      MySqlConnection src = new MySqlConnection( "server=localhost; userid=root; database=DbCmp1;" );
-      MySqlConnection dst = new MySqlConnection( "server=localhost; userid=root; database=DbCmp2;" );
-      
-      MySqlConnection mon = new MySqlConnection("server=localhost; userid=root; database=mysql;");
+      MySqlConnection src = new MySqlConnection( "server=localhost; userid=root; database=DbCmp1; port=3305;" );
+      MySqlConnection dst = new MySqlConnection("server=localhost; userid=root; database=DbCmp2; port=3305;");
+
+      MySqlConnection mon = new MySqlConnection("server=localhost; userid=root; database=mysql; port=3305;");
       try
       {
         mon.Open();
