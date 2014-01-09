@@ -108,7 +108,9 @@ namespace MySql.Data.VisualStudio.SchemaComparer
       MaxLength = r.IsDBNull(6) ? null : (int?)Convert.ToInt32(r.GetValue(6));
       NumericPrecision = r.IsDBNull(7) ? null : (int?)Convert.ToInt32(r.GetString(7));
       NumericScale = r.IsDBNull(8) ? null : (int?)Convert.ToInt32(r.GetString(8));
-      DatetimePrecision = r.IsDBNull(9) ? null : (int?)Convert.ToInt32(r.GetString(9));
+      //TODO add validation when using 5.6 since datetimeprecision is no used by 5.5
+      //DatetimePrecision = r.IsDBNull(9) ? null : (int?)Convert.ToInt32(r.GetString(9));
+      DatetimePrecision = null;
     }
 
     internal override string ParentName { get { return TableName; } }

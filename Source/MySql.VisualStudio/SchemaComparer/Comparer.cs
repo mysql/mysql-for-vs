@@ -237,10 +237,10 @@ namespace MySql.Data.VisualStudio.SchemaComparer
       string sqlFilter = string.Format(
         "select t.table_name from information_schema.tables t where ( t.table_schema = '{0}' )",
         con.Database);
+       // TODO: add validatioin to include datetime_precision when using 5.6 
       string sqlData = string.Format(
         @"select c.table_schema, c.table_name, c.column_name, c.column_default, c.is_nullable, c.data_type, 
-          c.character_maximum_length, c.numeric_precision, c.numeric_scale, c.datetime_precision,
-          c.column_type 
+          c.character_maximum_length, c.numeric_precision, c.numeric_scale,  c.column_type 
           from information_schema.columns c where ( c.table_schema = '{0}' ) and ( c.table_name in {1} )",
           con.Database, "{0}" );
       Dictionary<string, Column> dic = GetMetadata<Column>(con, sqlFilter, sqlData);
