@@ -77,9 +77,9 @@ namespace MySql.Data.VisualStudio.DBExport
       get {
         return _dumpOutput;
       }    
-    }
+    }   
 
-    public MySqlDumpFacade(MySqlDbExportOptions options, string saveToFile, string credentialsFile)
+    public MySqlDumpFacade(MySqlDbExportOptions options, string saveToFile, string credentialsFile) 
     {
       if (options == null)
         throw new Exception("MySqlDump start options are not valid");
@@ -88,13 +88,18 @@ namespace MySql.Data.VisualStudio.DBExport
         throw new Exception("MySqlDump file Path is not set");
 
       if (String.IsNullOrEmpty(credentialsFile))
-            throw new Exception("Options to start export action are not completed.");
+        throw new Exception("Options to start export action are not completed.");
+
+      _credentialsFile = credentialsFile;
 
       _arguments = new StringBuilder();
       _dumpOutput = new StringBuilder();
       _errorsOutput = new StringBuilder();
       _logInfo = new StringBuilder();
-      _credentialsFile = credentialsFile;
+      
+      _dumpFilePath = Utility.GetInstallLocation("MySQL for Visual Studio");
+      if (!String.IsNullOrEmpty(_dumpFilePath))
+        _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
 
       IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
@@ -103,13 +108,6 @@ namespace MySql.Data.VisualStudio.DBExport
         outWindow.CreatePane(ref generalPaneGuid, "General", 1, 0);
         outWindow.GetPane(ref generalPaneGuid, out _generalPane);
       }
-
-      _dumpFilePath  = Utility.GetInstallLocation("MySQL for Visual Studio");
-
-      if (!String.IsNullOrEmpty(_dumpFilePath))
-        _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
-      else
-        throw new Exception(Resources.MySqlDumpPathNotFound);
 
       _tables = null;
 
@@ -196,7 +194,9 @@ namespace MySql.Data.VisualStudio.DBExport
     }
 
     internal void ProcessRequest( string outputPath )
-    {            
+    {      
+      if(String.IsNullOrEmpty(_dumpFilePath))
+        throw new Exception(Resources.MySqlDumpPathNotFound);
       _mysqldumpProcess = new Process();
 
       _arguments.Append(" --result-file=\"").Append(outputPath).Append('"');
