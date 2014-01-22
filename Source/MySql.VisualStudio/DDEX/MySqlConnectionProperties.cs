@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -152,7 +152,7 @@ namespace MySql.Data.VisualStudio
       System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>> list = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>>();
       foreach (PropertyDescriptor descriptor in properties)
       {
-        string str = descriptor.ToString();
+        string str = descriptor.DisplayName;
         if (ConnectionStringBuilder.ShouldSerialize(str))
         {
           list.Add(new System.Collections.Generic.KeyValuePair<string, object>(str, ConnectionStringBuilder[str]));
