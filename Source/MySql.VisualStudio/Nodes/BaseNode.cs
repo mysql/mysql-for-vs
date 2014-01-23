@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -80,7 +80,9 @@ namespace MySql.Data.VisualStudio
     protected DbConnection AcquireHierarchyAccessorConnection()
     {
       DbConnection con = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
-      _con = new MySqlConnection(string.Format("{0};Allow User Variables=true;", con.ConnectionString));
+      var connStringBuilder = ((MySqlConnectionStringBuilder)con.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(con, null));
+      connStringBuilder.AllowUserVariables = true;
+      _con = new MySqlConnection(connStringBuilder.ConnectionString);     
       _con.Open();
       return _con;
     }
