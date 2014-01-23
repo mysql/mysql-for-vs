@@ -44,6 +44,13 @@
           <ButtonText>&amp;Add New</ButtonText>
         </Strings>
       </Menu>
+      <Menu guid="guidIDEToolbarCmdSet" id="Toolbar" type="Toolbar" >
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <ButtonText>MySQL Toolbar</ButtonText>
+          <CommandName>MySQL Toolbar</CommandName>
+        </Strings>
+      </Menu>
     </Menus>
 
 
@@ -55,6 +62,9 @@
       <Group guid="guidMySqlProviderCmdSet" id="groupGlobal" priority ="0x100"/>
       <Group guid="guidMySqlProviderCmdSet" id="groupConfig" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN"/>
+      </Group>
+      <Group guid="guidIDEToolbarCmdSet" id="ToolbarGroup" priority="0x0000">
+        <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
       </Group>
     </Groups>
     
@@ -135,8 +145,17 @@
           <ButtonText>Create View</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidDBExport</CommandName>
+          <ButtonText>&amp;MySQL Data Export</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateProcedure" type="Button" priority ="0x100">
-        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>        
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
@@ -337,6 +356,10 @@
     <GuidSymbol name="guidMySqlProviderPkg" value="{79A115C9-B133-4891-9E7B-242509DAD272}" />
     <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
       <IDSymbol name="IDG_DV_CONNECTION" value="0x4101" />
+    </GuidSymbol>
+    <GuidSymbol name="guidIDEToolbarCmdSet" value="{3422F9B0-3BD1-4E81-BF4A-2A0ECB9ADA99}">
+      <IDSymbol name="Toolbar" value="0x1000"/>
+      <IDSymbol name="ToolbarGroup" value="0x1050"/>
     </GuidSymbol>
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
