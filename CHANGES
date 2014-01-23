@@ -1,9 +1,10 @@
+
 1.1.4
 - Fix for bug Cannot create a new model with EF6 and VS 2013 (Oracle bug # 18105394 MySQL Bug# 71427).
 - Fix for Connection properties for MySql shows the password.
+- Fix for wrong persistency on password in Connection node.
 - Fix for MySql Debugger does not evaluate last_insert_id function in watch expression correctly 
   (although it uses the right value in user debuggee code). (Oracle bug #18111085).
-
 
 1.1.3
 - Fix for WI #884 On Memory table, create a HASH index get error. 
