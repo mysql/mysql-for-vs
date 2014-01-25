@@ -6,6 +6,7 @@
 - Fix for MySql Debugger does not evaluate last_insert_id function in watch expression correctly 
   (although it uses the right value in user debuggee code). (Oracle bug #18111085).
 - Infrastructure changes to enable a custom toolbar in Visual Studio.
+- Changed debugger's database name to ".serversidedebugger" so it is hidden by default in MySql Workbench.
 
 1.1.3
 - Fix for WI #884 On Memory table, create a HASH index get error. 
