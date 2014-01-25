@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -353,6 +353,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
         schemaNames.ForEach(t =>
         {
+          if (t.StartsWith(".")) return;
           if (dictionary.ContainsKey(t))
             schemas.Add(new Schema(true, t));
           else
