@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -100,7 +100,7 @@ namespace MySql.Data.VisualStudio.DBExport
       _dumpFilePath = Utility.GetInstallLocation("MySQL for Visual Studio");
       if (!String.IsNullOrEmpty(_dumpFilePath))
         _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
-
+      
       IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
       if (outWindow != null)
@@ -184,8 +184,8 @@ namespace MySql.Data.VisualStudio.DBExport
       }
       //TODO add a new property to define variables
       // so we can accept a ON/OFF value
-      _arguments.Append(" --set-gtid-purged=OFF ");
-      _arguments.AppendFormat(" \"{0}\"", _database);     
+      _arguments.Append(" --set-gtid-purged=OFF --protocol=TCP ");
+      _arguments.AppendFormat(" \"{0}\"", _database);
     }
 
     internal void CancelRequest()
