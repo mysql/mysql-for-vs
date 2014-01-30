@@ -16,7 +16,6 @@
 
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
   <!--<Extern href="stdidcmd.h"/>-->
-
   <!--This header contains the command ids for the menus provided by the shell. -->
   <!--<Extern href="vsshlids.h"/>-->
 
@@ -144,14 +143,15 @@
         <Strings>
           <ButtonText>Create View</ButtonText>
         </Strings>
-      </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
+      </Button>     
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySqlScript" type="Button">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidImages" id="bmpMySqlScript" />
         <Strings>
-          <CommandName>cmdidDBExport</CommandName>
-          <ButtonText>&amp;MySQL Data Export</ButtonText>
+          <CommandName>cmdidNewMySQLScript</CommandName>
+            <ButtonText>New MySQL Script</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateProcedure" type="Button" priority ="0x100">
@@ -225,45 +225,91 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Icon guid="guidImages" id="bmpConfig" />
-        <Strings>
+        <Strings> 
           <CommandName>cmdidConfig</CommandName>
           <ButtonText>MySQL Website Configuration</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDebugRoutine" type="Button">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidImages" id="bmpDebugRoutineToolBar" />
+        <Strings>
+          <CommandName>cmdidDebugRoutine</CommandName>
+          <ButtonText>Debug MySQL Routine</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidDebugRoutine" type="Button" priority ="0x100">
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Icon guid="guidImages" id="bmpDebugRoutineToolBar" />
         <Strings>
-          <ButtonText>Debug Routine</ButtonText>
+          <CommandName>cmdidDebugRoutine</CommandName>
+          <ButtonText>Debug MySQL Routine</ButtonText>
         </Strings>
-      </Button>
+      </Button>      
       <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidImages" id="bmpDbExport" />
         <Strings>
           <CommandName>cmdidDBExport</CommandName>
           <ButtonText>&amp;MySQL Data Export</ButtonText>
         </Strings>
       </Button>
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
+	   <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidImages" id="bmpDbExport" />
+        <Strings>
+          <CommandName>cmdidDBExport</CommandName>
+          <ButtonText>MySQL Data Export</ButtonText>
+        </Strings>
+      </Button>
+	  
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
+        <CommandFlag>DynamicVisibility</CommandFlag>  
+        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
+	    <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>  
+        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
+        <Strings>
+          <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
+          <ButtonText>Open MySQL Utilities Console</ButtonText>
+        </Strings>
+      </Button>
+	 	  
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">	  
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>        
+        <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
           <ButtonText>&amp;Launch MySQL Workbench</ButtonText>
         </Strings>
       </Button>
-        <Button guid="guidMySqlProviderCmdSet" id="cmdidGenerateTableScript" type="Button" priority ="0x100">
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
+		<Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>        
+        <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
+        <Strings>
+          <CommandName>cmdidLaunchWorkbench</CommandName>
+          <ButtonText>Launch MySQL Workbench</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGenerateTableScript" type="Button" priority ="0x100">
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
@@ -272,6 +318,7 @@
           <ButtonText>Generate Table Script</ButtonText>
         </Strings>
       </Button>
+
       <Button guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -304,7 +351,7 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
             inside a button definition. An important aspect of this declaration is that the element id 
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig"/>
+      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar"/>
     </Bitmaps>
   </Commands>
 
@@ -384,13 +431,14 @@
       <IDSymbol name="cmdidAlterRoutine" value="0x121" />
       <IDSymbol name="cmdidDebugRoutine" value="0x122" />
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
-      <IDSymbol name="cmdidDelete" value="0x160"/>
-      <IDSymbol name="cmdidOpenUtilitiesPrompt" value="505"/>      
-      <IDSymbol name="cmdidLaunchWorkbench" value="506"/>      
+      <IDSymbol name="cmdidDelete" value="0x160"/>     
       <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
       <IDSymbol name="cmdidSchemaCompareTo" value="508"/>
-      <IDSymbol name="cmdidSchemaCompare" value="509"/>
-      <IDSymbol name="cmdidDBExport" value="510" />
+      <IDSymbol name="cmdidSchemaCompare" value="509"/>      
+      <IDSymbol name="cmdidNewMySqlScript" value="0x119" />	 <!-- A smaller value than debug routine button so this one appears first -->  		  
+      <IDSymbol name="cmdidDBExport" value="511" />
+      <IDSymbol name="cmdidLaunchWorkbench" value="512"/>  
+      <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>                	  	  
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
@@ -429,6 +477,11 @@
     </GuidSymbol>
     <GuidSymbol name="guidImages" value="{db91e508-7dbc-49d4-a0b3-5e4920e43655}" >
       <IDSymbol name="bmpConfig" value="1" />
+      <IDSymbol name="bmpMySqlScript" value="2" />	  	  	 
+      <IDSymbol name="bmpDebugRoutineToolBar" value="3" />
+      <IDSymbol name="bmpDbExport" value="4" />	  
+      <IDSymbol name="bmpLaunchWorkbenchToolBar" value="5" />
+      <IDSymbol name="bmpOpenUtilitiesPromptToolBar" value="6" />
     </GuidSymbol>
   </Symbols>
 
