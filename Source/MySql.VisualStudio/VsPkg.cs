@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -155,7 +155,7 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdItem = new OleMenuCommand(OpenMySQLUtilitiesCallback, cmdOpenUtilitiesPrompt);
         cmdItem.BeforeQueryStatus += new EventHandler(cmdOpenUtilitiesPrompt_BeforeQueryStatus);
         mcs.AddCommand(cmdItem);
-
+        
         CommandID cmdLaunchWB = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidLaunchWorkbench);
         OleMenuCommand cmdMenuLaunchWB = new OleMenuCommand(LaunchWBCallback, cmdLaunchWB);
         cmdMenuLaunchWB.BeforeQueryStatus += new EventHandler(cmdLaunchWB_BeforeQueryStatus);
@@ -164,22 +164,16 @@ namespace MySql.Data.VisualStudio
         CommandID menuGenDbScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
         OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
         menuItemGenDbScript.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
-        mcs.AddCommand(menuItemGenDbScript);
-
-        CommandID cmdSchemaCompare = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidSchemaCompare );
-        OleMenuCommand cmdMenuSchemaCompare = new OleMenuCommand(SchemaCompareCallback, cmdSchemaCompare);
-        cmdMenuSchemaCompare.BeforeQueryStatus += new EventHandler(cmdSchemaCompare_BeforeQueryStatus);
-        mcs.AddCommand(cmdMenuSchemaCompare);
-
-        CommandID cmdSchemaCompareTo = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidSchemaCompareTo);
-        OleMenuCommand cmdMenuSchemaCompareTo = new OleMenuCommand(SchemaCompareToCallback, cmdSchemaCompareTo);
-        cmdMenuSchemaCompareTo.BeforeQueryStatus += new EventHandler(cmdSchemaCompareTo_BeforeQueryStatus);
-        mcs.AddCommand(cmdMenuSchemaCompareTo);
+        mcs.AddCommand(menuItemGenDbScript);       
 
         CommandID cmdDbExportTool = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidDBExport);
         OleMenuCommand cmdMenuDbExport = new OleMenuCommand(cmdDbExport_Callback, cmdDbExportTool);
         cmdMenuDbExport.BeforeQueryStatus += new EventHandler(cmdMenuDbExport_BeforeQueryStatus);
         mcs.AddCommand(cmdMenuDbExport);
+
+        CommandID cmdNewMySqlScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidNewMySqlScript);
+        OleMenuCommand cmdMenuNewMySqlScript = new OleMenuCommand(cmdNewMySqlScript_Callback, cmdNewMySqlScript);        
+        mcs.AddCommand(cmdMenuNewMySqlScript);       
 
       }
 
@@ -188,9 +182,9 @@ namespace MySql.Data.VisualStudio
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
-
+  
     #endregion
-    
+
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand openUtilities = sender as OleMenuCommand;
@@ -206,7 +200,10 @@ namespace MySql.Data.VisualStudio
         if (MySqlWorkbench.IsInstalled)
           openUtilities.Visible = openUtilities.Enabled = true;
         else
+        {
           openUtilities.Enabled = false;
+          openUtilities.Visible = true;
+        }
       }
       else
         openUtilities.Visible =  openUtilities.Enabled = false;
@@ -228,7 +225,10 @@ namespace MySql.Data.VisualStudio
         if (MySqlWorkbench.IsInstalled)
           launchWBbtn.Visible = launchWBbtn.Enabled = true;
         else
+        {
           launchWBbtn.Enabled = false;
+          launchWBbtn.Visible = true;
+        }
       }
       else
         launchWBbtn.Visible = launchWBbtn.Enabled = false;
@@ -264,23 +264,7 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand cmd = sender as OleMenuCommand;
       cmd.Visible = false;
     }
-
-    private MySqlConnection firstCon = null;
-    private MySqlConnection secondCon = null;
-
-    void cmdSchemaCompare_BeforeQueryStatus(object sender, EventArgs e)
-    {
-      OleMenuCommand configButton = sender as OleMenuCommand;
-      configButton.Visible = false;
-      //if( firstCon != null )
-      //  configButton.Visible = true;
-    }
-
-    void cmdSchemaCompareTo_BeforeQueryStatus(object sender, EventArgs e)
-    {
-      OleMenuCommand configButton = sender as OleMenuCommand;
-      configButton.Visible = false;
-    }
+  
 
     void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
     {
@@ -294,9 +278,21 @@ namespace MySql.Data.VisualStudio
       if (selectedItems != null)            
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       if (GetConnection(ConnectionName) != null)
-      {        
+      {
         dbExportButton.Visible = true;
+        dbExportButton.Enabled = true;
       }
+      else {
+        dbExportButton.Enabled = false;
+      }
+    }
+
+
+    private void cmdNewMySqlScript_Callback(object sender, EventArgs e)
+    {
+      DTE env = (DTE)GetService(typeof(DTE));      
+      var ItemOp = env.ItemOperations;
+      ItemOp.NewFile(@"MySQL\MySQL Script",  null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
     }
 
     private void cmdDbExport_Callback(object sender, EventArgs e)
@@ -305,40 +301,40 @@ namespace MySql.Data.VisualStudio
       string currentConnectionName = GetCurrentConnectionName();
       if (connection != null)
       {
-          for (int i = 0; ; i++)
+        for (int i = 0; ; i++)
+        {
+          ToolWindowPane existingDbExportToolWindow = this.FindToolWindow(typeof(DbExportWindowPane), i, false);
+          if (existingDbExportToolWindow == null)
           {
-              ToolWindowPane existingDbExportToolWindow = this.FindToolWindow(typeof(DbExportWindowPane), i, false);
-              if (existingDbExportToolWindow == null)
-              {
-                  var window = (ToolWindowPane)this.CreateToolWindow(typeof(DbExportWindowPane), i);
-                  if (window == null || window.Frame == null)
-                      throw new Exception("Cannot create new window");
+            var window = (ToolWindowPane)this.CreateToolWindow(typeof(DbExportWindowPane), i);
+            if (window == null || window.Frame == null)
+              throw new Exception("Cannot create a new window for data export");
 
-                  window.Caption = Resources.DbExportToolCaptionFrame;
-                
-                  IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            window.Caption = Resources.DbExportToolCaptionFrame;
 
-                  DbExportWindowPane windowPanel = (DbExportWindowPane)window;
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
 
-                  windowPanel.Connections = GetMySqlConnections();
-                  windowPanel.SelectedConnectionName = currentConnectionName;
-                  windowPanel.WindowHandler = window;
-                  windowPanel.InitializeDbExportPanel();
+            DbExportWindowPane windowPanel = (DbExportWindowPane)window;
 
-                  GetDTE2().Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Visible = true;
+            windowPanel.Connections = GetMySqlConnections();
+            windowPanel.SelectedConnectionName = currentConnectionName;
+            windowPanel.WindowHandler = window;
+            windowPanel.InitializeDbExportPanel();
 
-                  object currentFrameMode;
-                  windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, out currentFrameMode);
-                  // switch to dock mode.                  
-                  if ((VSFRAMEMODE)currentFrameMode == VSFRAMEMODE.VSFM_Float)                  
-                      windowFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_Dock);
-                  
-                
-                  Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-                  break;
-              }
+            GetDTE2().Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Visible = true;
+
+            object currentFrameMode;
+            windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, out currentFrameMode);
+            // switch to dock mode.                  
+            if ((VSFRAMEMODE)currentFrameMode == VSFRAMEMODE.VSFM_Float)
+              windowFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_Dock);
+
+
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            break;
           }
-      }   
+        }
+      }     
     }
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
@@ -412,31 +408,7 @@ namespace MySql.Data.VisualStudio
       dlg.TextScript = script;
       dlg.ShowDialog();
     }
-
-    /// <summary>
-    /// Compare stores the second connection and triggers the comparison.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void SchemaCompareCallback(object sender, EventArgs e)
-    {
-      secondCon = GetCurrentConnection();
-      SchemaComparerForm form = new SchemaComparerForm();
-      form.SourceConnection = firstCon;
-      form.DestinyConnection = secondCon;
-      form.ShowDialog();
-    }
-
-    /// <summary>
-    /// CompareTo just stores the first connection
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void SchemaCompareToCallback(object sender, EventArgs e)
-    {
-      firstCon = GetCurrentConnection();
-    }
-
+  
 
     private string GetCurrentConnectionName()
     {
