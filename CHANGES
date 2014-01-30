@@ -9,6 +9,8 @@
 - Changed debugger's database name to ".serversidedebugger" so it is hidden by default in MySql Workbench.
 - Fix for DbExport mysqldump don't always connect to the expected MySql Server database (by adding "--protocol=TCP" so always binds to the right port").
 - Change names and references to update name mysql-for-visualstudio-X.X.X.msi.
+- Implementation completed and design for MySQL toolbar inside Visual Studio.
+
 
 1.1.3
 - Fix for WI #884 On Memory table, create a HASH index get error. 
