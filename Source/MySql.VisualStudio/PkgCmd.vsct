@@ -46,8 +46,8 @@
       <Menu guid="guidIDEToolbarCmdSet" id="Toolbar" type="Toolbar" >
         <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
-          <ButtonText>MySQL Toolbar</ButtonText>
-          <CommandName>MySQL Toolbar</CommandName>
+          <ButtonText>MySQL</ButtonText>
+          <CommandName>MySQL</CommandName>
         </Strings>
       </Menu>
     </Menus>
