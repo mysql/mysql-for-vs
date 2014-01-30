@@ -9,5 +9,7 @@ What's new in 1.1
 - Entity Framework version 6 Database First and Model First support is available when using Connector/Net 6.8.1 or later.
 - MySQL Database Export tool is a new option inside of the context menu of the Server Explorer window. The purpose of this tool is to ease 
 the creation of dump files of one or more MySQL databases.
+- A new MySQL toolbar inside Visual Studio with shortcuts to MySQL specific tasks like Debug Routine, Create a MySQL Script, Launch MySQL Workbench, 
+Launch MySQL Utilities Console and MySQL Database Export tool window.
 
 Be sure and check the documentation for more information on these new features. 
