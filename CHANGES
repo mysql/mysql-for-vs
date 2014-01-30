@@ -1,5 +1,6 @@
 
 
+
 1.1.4
 - Fix for bug Cannot create a new model with EF6 and VS 2013 (Oracle bug # 18105394 MySQL Bug# 71427).
 - Fix for Connection properties for MySql shows the password.
