@@ -12,4 +12,4 @@ the creation of dump files of one or more MySQL databases.
 - A new MySQL toolbar inside Visual Studio with shortcuts to MySQL specific tasks like Debug Routine, Create a MySQL Script, Launch MySQL Workbench, 
 Launch MySQL Utilities Console and MySQL Database Export tool window.
 
-Be sure and check the documentation for more information on these new features. 
+Be sure to check the documentation for more information on these new features. 
