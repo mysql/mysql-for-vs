@@ -1,11 +1,11 @@
 <Project DefaultTargets="NugetPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  
 
   <PropertyGroup>
-     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>	 
      <OutputPathCore>NugetPkgs\$(Configuration)\MySql.Data</OutputPathCore>
 	 <OutputPathCoreEF>NugetPkgs\$(Configuration)\MySql.Data.Entity</OutputPathCoreEF>
 	 <OutputPathWeb>NugetPkgs\$(Configuration)\MySql.Web</OutputPathWeb>
-     <NuGetExePath>assets\nuget.exe</NuGetExePath>     
+     <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">Nuget\nuget.exe</NuGetExePath>     
   </PropertyGroup>
 
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
