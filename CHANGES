@@ -9,6 +9,7 @@
 - Fix for DbExport mysqldump don't always connect to the expected MySql Server database (by adding "--protocol=TCP" so always binds to the right port").
 - Change names and references to update name mysql-for-visualstudio-X.X.X.msi.
 - Implementation completed and design for MySQL toolbar inside Visual Studio.
+- Fix for Parser does not parse "If (" with uneven spaces (Oracle bug #17981407).
 
 
 1.1.3
