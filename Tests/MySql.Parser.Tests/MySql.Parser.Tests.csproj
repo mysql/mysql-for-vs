@@ -124,6 +124,7 @@
     <Compile Include="Other\GetDiagnostics.cs" />
     <Compile Include="Other\Handler.cs" />
     <Compile Include="Other\Intellisense.cs" />
+    <Compile Include="Other\Literal.cs" />
     <Compile Include="Infrastructure\TokenStreamRemovable.cs" />
     <Compile Include="Other\LoadDataInfile.cs" />
     <Compile Include="Other\Other.cs" />
