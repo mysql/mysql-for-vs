@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -40,8 +40,7 @@ namespace MySql.Data.VisualStudio
     public static readonly Guid Package = new Guid(GuidStrings.Package);
     public static readonly Guid Provider = new Guid(GuidStrings.Provider);
     public static readonly Guid CmdSet = new Guid(GuidStrings.CmdSet);
-    public static readonly Guid SqlEditorFactory = new Guid(GuidStrings.SqlEditorFactory);
-    //public static readonly Guid SqlEditorCmdSet = new Guid(GuidStrings.SqlEditorCmdSet);
+    public static readonly Guid SqlEditorFactory = new Guid(GuidStrings.SqlEditorFactory);   
   }
 
   static class GuidList
@@ -54,6 +53,10 @@ namespace MySql.Data.VisualStudio
         "732ABE75-CD80-11D0-A2DB-00AA00A3EFFF");
 
     public static readonly Guid StandardCommandSet = new Guid("{5efc7975-14bc-11cf-9b2b-00aa00573819}");
+
+    public const string guidIDEToolbarCmdSetString = "fd607f05-3661-4e12-a327-6d71ad2e269b";
+    public static readonly Guid guidIDEToolbarCmdSet = new Guid(guidIDEToolbarCmdSetString);
+
   };
 
 }

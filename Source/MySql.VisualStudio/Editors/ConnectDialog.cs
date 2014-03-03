@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -29,6 +29,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
@@ -56,7 +57,34 @@ namespace MySql.Data.VisualStudio
       {
         DbConnection c = factory.CreateConnection();
         c.ConnectionString = connectionStringBuilder.ConnectionString;
-        c.Open();
+        try
+        {
+          c.Open();
+        }
+        catch (MySqlException mysqlException)
+        {
+          if (((System.Exception)(mysqlException).InnerException) != null)
+          {
+            var messageInnerException = ((System.Exception)(mysqlException).InnerException).Message;
+            if (String.Compare(messageInnerException, String.Format("Unknown database '{0}'", database.Text), StringComparison.InvariantCultureIgnoreCase) == 0)
+            {
+              if (MessageBox.Show(String.Format("The database '{0}' doesn't exist or you don't have permission to see it." + "\n\r" + "Would you like to create it?", database.Text), "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+              {
+                try
+                {
+                  if (AttemptToCreateDatabase(c.ConnectionString))
+                    c.Open();
+                }
+                catch { throw; }
+              }
+            }
+            else { throw; }
+          }
+          else
+          {
+            throw;
+          }
+        }
         return c;
       }
       set
@@ -158,6 +186,28 @@ namespace MySql.Data.VisualStudio
       connectionStringBuilder["userid"] = userId.Text.Trim();
       connectionStringBuilder["password"] = password.Text.Trim();
       connectionStringBuilder["database"] = database.Text.Trim();
+    }
+
+    private bool AttemptToCreateDatabase(string connectionString)
+    {           
+      try
+      {
+        using (MySqlConnectionSupport conn = new MySqlConnectionSupport())
+        {
+          var csb = new MySqlConnectionStringBuilder(connectionString);
+          csb.Database = string.Empty;
+          conn.Initialize(null);
+          conn.ConnectionString = csb.ConnectionString;
+          conn.Open(false);
+          conn.ExecuteWithoutResults("CREATE DATABASE `" + database.Text + "`", 1, null, 0);
+        }
+        return true;
+      }
+      catch (Exception)
+      {
+        MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, database.Text));
+        return false;
+      }      
     }
   }
 }
