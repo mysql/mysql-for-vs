@@ -48,10 +48,7 @@ namespace MySql.Data.VisualStudio
     public const uint cmdAlterTrigger = 0x141;
 
     public const uint cmdCreateUDF = 0x150;
-    public const uint cmdDelete = 0x160;    
-
-
-    //public const uint cmdidConfig = 0x170;
+    public const uint cmdDelete = 0x160;        
 
     public const uint cmdidGlobalCreateTable = 500;
     public const uint cmdidGlobalCreateView = 501;
@@ -60,11 +57,13 @@ namespace MySql.Data.VisualStudio
     public const uint cmdidGlobalCreateUDF = 504;        
     public const uint cmdidGenerateDatabaseScript = 507;
     public const uint cmdidSchemaCompareTo = 508;
-    public const uint cmdidSchemaCompare = 509;    
-    public const uint cmdidNewMySqlScript = 0x119;
+    public const uint cmdidSchemaCompare = 509;        
     public const uint cmdidDBExport = 511;
     public const uint cmdidLaunchWorkbench = 512;
     public const uint cmdidOpenUtilitiesPrompt = 513;
+
+    public const uint cmdidAddConnection = 0x301;
+    public const uint cmdidMRUList = 0x0401;
        
   };
 

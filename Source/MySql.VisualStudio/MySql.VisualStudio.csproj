@@ -83,7 +83,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
     <OutputPath>bin\$(TargetFrameworkVersion)\Debug\</OutputPath>
-    <DefineConstants>$(DefineConstants);TRACE;DEBUG;CLR4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>false</RegisterForComInterop>
@@ -98,7 +98,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <BaseIntermediateOutputPath>obj\$(TargetFrameworkVersion)\</BaseIntermediateOutputPath>
     <OutputPath>bin\$(TargetFrameworkVersion)\Release\</OutputPath>
-    <DefineConstants>$(DefineConstants);TRACE;CLR4</DefineConstants>
+    <DefineConstants>TRACE;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -170,6 +170,10 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>True</SpecificVersion>
+          <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_12.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+        </Reference>
         <Reference Include="PresentationCore" />
         <Reference Include="PresentationFramework" />
         <Reference Include="System" />
@@ -236,6 +240,10 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a,processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_11.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+        </Reference>
         <Reference Include="PresentationCore" />
         <Reference Include="PresentationFramework" />
         <Reference Include="System" />
@@ -301,6 +309,10 @@
         <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.VSDesigner.dll, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VSDesigner\v4.0_10.0.0.0__b03f5f7f11d50a3a\Microsoft.VSDesigner.dll</HintPath>
         </Reference>
         <Reference Include="PresentationCore" />
         <Reference Include="PresentationFramework" />
@@ -471,6 +483,8 @@
     <Compile Include="DBExport\MySqlDbExportSaveOptions.cs" />
     <Compile Include="DBExport\MySqlDumpFacade.cs" />
     <Compile Include="DBExport\SchemaColumn.cs" />
+    <Compile Include="DDEX\DynamicItemMenuCommand.cs" />
+    <Compile Include="DDEX\MySqlConnectionListMenu.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -483,6 +497,7 @@
     <Compile Include="DDEX\MySqlScriptDialog.designer.cs">
       <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DDEX\ServerExplorerHierarchyEventsListener.cs" />
     <Compile Include="Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -666,7 +681,7 @@
     </Compile>
     <Compile Include="Nodes\TableNode.cs">
     </Compile>
-    <Compile Include="PkgCmdID.cs" />   
+    <Compile Include="PkgCmdID.cs" />
     <Compile Include="Properties\VersionInfo.cs">
     </Compile>
     <Compile Include="SchemaComparer\Comparer.cs">
@@ -785,7 +800,7 @@
     <EmbeddedResource Include="Editors\UDFEditor.resx">
       <DependentUpon>UDFEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>    
+    </EmbeddedResource>
     <EmbeddedResource Include="SchemaComparer\SchemaComparerForm.resx">
       <DependentUpon>SchemaComparerForm.cs</DependentUpon>
     </EmbeddedResource>
