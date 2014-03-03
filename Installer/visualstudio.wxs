@@ -257,7 +257,8 @@
       <ComponentRef Id='PFTemplates'/>
       <ComponentRef Id='VS_2008_Registry'/>
       <ComponentRef Id='VS2008_MD.Library'/>
-      <ComponentRef Id='Remove.VS2008_MD.Library'/>      
+      <ComponentRef Id='Remove.VS2008_MD.Library'/>
+      <ComponentRef Id='AutoLoadPackageVS2008'/>
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
@@ -269,6 +270,7 @@
       <ComponentRef Id='VS2010_Web.Library' />
       <ComponentRef Id='Remove.VS2010_MD.Library'/>
       <ComponentRef Id='Remove.VS2010_Web.Library'/>
+      <ComponentRef Id='AutoLoadPackageVS2010'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -279,6 +281,7 @@
       <ComponentRef Id='VS2012_Web.Library' />
       <ComponentRef Id='Remove.VS2012_MD.Library'/>
       <ComponentRef Id='Remove.VS2012_Web.Library'/>
+      <ComponentRef Id='AutoLoadPackageVS2012'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
@@ -289,6 +292,7 @@
       <ComponentRef Id='VS2013_Web.Library' />
       <ComponentRef Id='Remove.VS2013_MD.Library'/>
       <ComponentRef Id='Remove.VS2013_Web.Library'/>
+      <ComponentRef Id='AutoLoadPackageVS2013'/>
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
@@ -327,6 +331,53 @@
     <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
     <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+
+    <!-- Adding AutoLoadPackage option so our connections are available -->
+    
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="AutoLoadPackageVS2008" Guid="*">
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Microsoft\VisualStudio\9.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}" 
+                       ForceCreateOnInstall="yes"
+                       Action="createAndRemoveOnUninstall">
+            <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />          
+          </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="AutoLoadPackageVS2010" Guid="*">
+          <RegistryKey Root="HKLM"
+                       Key="SOFTWARE\Microsoft\VisualStudio\10.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}" 
+                       ForceCreateOnInstall="yes"
+                       Action="createAndRemoveOnUninstall">
+            <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />          
+          </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="AutoLoadPackageVS2012" Guid="*">
+        <RegistryKey Root="HKLM"
+                     Key="SOFTWARE\Microsoft\VisualStudio\11.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
+                     ForceCreateOnInstall="yes"
+                     Action="createAndRemoveOnUninstall">
+          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="AutoLoadPackageVS2013" Guid="*">
+        <RegistryKey Root="HKLM"
+                     Key="SOFTWARE\Microsoft\VisualStudio\12.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
+                     ForceCreateOnInstall="yes"
+                     Action="createAndRemoveOnUninstall">
+          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
 
     <InstallExecuteSequence>
       <!-- now vs2008 scheduling -->

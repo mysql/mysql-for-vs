@@ -43,6 +43,7 @@
           <ButtonText>&amp;Add New</ButtonText>
         </Strings>
       </Menu>
+      
       <Menu guid="guidIDEToolbarCmdSet" id="Toolbar" type="Toolbar" >
         <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
@@ -50,6 +51,19 @@
           <CommandName>MySQL</CommandName>
         </Strings>
       </Menu>
+
+      <!--New item representing the menu controller-->
+      <Menu guid="guidIDEToolbarCmdSet" id="VSCTMenuController" priority="0x0200" type="MenuController">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup"/>
+        <!--<CommandFlag>IconAndText</CommandFlag> by ommitting this line the toolbar doesn't show any text for this menu-->
+        <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>TextIsAnchorCommand</CommandFlag>
+        <Strings>
+          <ButtonText>No Connections Loaded</ButtonText>
+          <CommandName></CommandName>
+        </Strings>
+      </Menu>
+
     </Menus>
 
 
@@ -65,6 +79,18 @@
       <Group guid="guidIDEToolbarCmdSet" id="ToolbarGroup" priority="0x0000">
         <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
       </Group>
+      
+      <!-- New group for the items in the menu controller -->
+      <Group guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" priority="0x0600">
+        <Parent guid="guidIDEToolbarCmdSet" id="VSCTMenuController"/>
+      </Group>
+
+      <!-- New group for the Dynamic List that will be on the menu controller-->
+      <Group guid="guidIDEToolbarCmdSet" id="MRUListGroup" priority="0x100">
+        <Parent guid="guidIDEToolbarCmdSet" id="VSCTMenuController"/>
+      </Group>
+      <!-- end of the dynamic list group-->
+      
     </Groups>
     
     <!--Buttons section. -->
@@ -144,16 +170,14 @@
           <ButtonText>Create View</ButtonText>
         </Strings>
       </Button>     
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySqlScript" type="Button">
-        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>
+	  <!--<Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySqlScript" type="Button" priority="0x103">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />                
         <Icon guid="guidImages" id="bmpMySqlScript" />
         <Strings>
           <CommandName>cmdidNewMySQLScript</CommandName>
             <ButtonText>New MySQL Script</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
       <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateProcedure" type="Button" priority ="0x100">
         <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>        
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -230,7 +254,7 @@
           <ButtonText>MySQL Website Configuration</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidDebugRoutine" type="Button">
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDebugRoutine" type="Button" priority="0x204">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -259,7 +283,7 @@
           <ButtonText>&amp;MySQL Data Export</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button" priority ="0x207">
 	   <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -279,7 +303,7 @@
           <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
 	    <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>  
@@ -299,7 +323,7 @@
           <ButtonText>&amp;Launch MySQL Workbench</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
+	  <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
 		<Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>        
@@ -343,6 +367,36 @@
           <ButtonText>Compare Schema To</ButtonText>
         </Strings>
       </Button>
+      
+      <!-- Placeholder button for the dynamic list-->
+      <Button guid="guidIDEToolbarCmdSet" id="cmdidMRUList" type="Button" priority="0x0104">
+        <Parent guid="guidIDEToolbarCmdSet" id="MRUListGroup" />
+        <Icon guid="guidImages" id="bmpMySqlScript" />
+        <CommandFlag>DynamicItemStart</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>                
+        <Strings>
+          <CommandName>cmdidMRUList</CommandName>
+          <ButtonText>No Connections found</ButtonText>
+        </Strings>
+      </Button>
+      <!-- end of the placeholder-->
+
+      <!-- Menu Controller buttons-->
+      <Button guid="guidIDEToolbarCmdSet" id="cmdidAddConnection" priority="0x105"
+        type="Button">
+        <Parent guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" />
+        <Icon guid="guidImages" id="bmpAddMySqlConnection" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <CommandFlag>FixMenuController</CommandFlag>
+        <Strings>
+          <CommandName>cmdidAddConnection</CommandName>
+          <ButtonText>MySQL Script with New Connection</ButtonText>
+        </Strings>
+      </Button>     
+     
+      <!-- End Menu Controller buttons-->
+      
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -351,7 +405,7 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
             inside a button definition. An important aspect of this declaration is that the element id 
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar"/>
+      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,bmpAddMySqlConnection"/>
     </Bitmaps>
   </Commands>
 
@@ -382,10 +436,6 @@
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
     </CommandPlacement>
-    <!--<CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
-      <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal2005" />
-    </CommandPlacement>-->
-
     <!-- no real idea what is going on here.  We need to place this guid:id parent under
          the IDG_DV_GLOBAL1 object to make it work -->
     <!--<CommandPlacement guid="WhoKnows" id="WhoKnowsId" priority="0x1001">
@@ -404,9 +454,20 @@
     <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
       <IDSymbol name="IDG_DV_CONNECTION" value="0x4101" />
     </GuidSymbol>
-    <GuidSymbol name="guidIDEToolbarCmdSet" value="{3422F9B0-3BD1-4E81-BF4A-2A0ECB9ADA99}">
+    <GuidSymbol name="guidIDEToolbarCmdSet" value="{fd607f05-3661-4e12-a327-6d71ad2e269b}">
       <IDSymbol name="Toolbar" value="0x1000"/>
       <IDSymbol name="ToolbarGroup" value="0x1050"/>
+      <!-- Menu controller commands-->
+      <IDSymbol name="cmdidAddConnection" value="0x301" />      
+      <!-- end Menu controller commands-->
+      <!-- ID's of the menu controller -->
+      <IDSymbol name="VSCTMenuController" value="0x0101" />
+      <IDSymbol name="VSCTControllerGroup" value="0x0201" />
+      <!-- end of the id's of the menu controller -->
+      <!-- ID's for the Dynamic List-->
+      <IDSymbol name="MRUListGroup" value="0x0400" />
+      <IDSymbol name="cmdidMRUList" value="0x0401" />
+      <!--end of the Dynamic List-->
     </GuidSymbol>
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
@@ -435,7 +496,7 @@
       <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
       <IDSymbol name="cmdidSchemaCompareTo" value="508"/>
       <IDSymbol name="cmdidSchemaCompare" value="509"/>      
-      <IDSymbol name="cmdidNewMySqlScript" value="0x119" />	 <!-- A smaller value than debug routine button so this one appears first -->  		  
+      <!--<IDSymbol name="cmdidNewMySqlScript" value="0x119" />	 --><!-- A smaller value than debug routine button so this one appears first -->  		  
       <IDSymbol name="cmdidDBExport" value="511" />
       <IDSymbol name="cmdidLaunchWorkbench" value="512"/>  
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>                	  	  
@@ -482,6 +543,7 @@
       <IDSymbol name="bmpDbExport" value="4" />	  
       <IDSymbol name="bmpLaunchWorkbenchToolBar" value="5" />
       <IDSymbol name="bmpOpenUtilitiesPromptToolBar" value="6" />
+      <IDSymbol name="bmpAddMySqlConnection" value="7" />
     </GuidSymbol>
   </Symbols>
 

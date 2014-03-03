@@ -11,6 +11,7 @@
 - Implementation completed and design for MySQL toolbar inside Visual Studio.
 - Fix for Parser does not parse "If (" with uneven spaces (Oracle bug #17981407).
 - Fix for Parser does not recognize full string literal syntax (charsets, collation) (Oracle bug #18169145).
+- Added Toolbar functionality for integration with Server Explorer Window.
 
 
 1.1.3

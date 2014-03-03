@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -62,14 +62,19 @@ namespace MySql.Data.VisualStudio.Editors
       Pane = pane;
       serviceProvider = sp;
       codeEditor.Init(sp, this);
-    }
 
-    //public SqlEditor(ServiceProvider sp)
-    //  : this()
-    //{
-    //  serviceProvider = sp;
-    //  codeEditor.Init(sp, this);      
-    //}
+      var package = MySqlDataProviderPackage.Instance;
+      if (package != null)
+      {
+        if (package.MysqlConnectionSelected != null)
+        {
+          connection = package.MysqlConnectionSelected;
+          if (connection.State != ConnectionState.Open)
+            connection.Open();
+          UpdateButtons();
+        }
+      }          
+    }
 
     #region Overrides
 
@@ -114,14 +119,17 @@ namespace MySql.Data.VisualStudio.Editors
       try
       {
         connection = d.Connection;
-        //LanguageServiceConnection.Current.Connection = this.connection;
         UpdateButtons();
       }
       catch (MySqlException)
       {
         MessageBox.Show(
 @"Error establishing the database connection.
-Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);          
+Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
+      }
+      finally
+      {
+        d.Dispose();
       }
     }
 
