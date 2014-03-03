@@ -374,10 +374,11 @@
         <Icon guid="guidImages" id="bmpMySqlScript" />
         <CommandFlag>DynamicItemStart</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>                
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>FixMenuController</CommandFlag>
         <Strings>
           <CommandName>cmdidMRUList</CommandName>
-          <ButtonText>No Connections found</ButtonText>
+          <ButtonText>No connections loaded</ButtonText>
         </Strings>
       </Button>
       <!-- end of the placeholder-->
@@ -387,8 +388,7 @@
         type="Button">
         <Parent guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" />
         <Icon guid="guidImages" id="bmpAddMySqlConnection" />
-        <CommandFlag>IconAndText</CommandFlag>
-        <CommandFlag>FixMenuController</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>                
         <Strings>
           <CommandName>cmdidAddConnection</CommandName>
           <ButtonText>MySQL Script with New Connection</ButtonText>
