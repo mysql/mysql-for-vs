@@ -50,7 +50,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(2, 10);
+      this.label1.Location = new System.Drawing.Point(51, 10);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(70, 13);
       this.label1.TabIndex = 0;
@@ -58,9 +58,9 @@
       // 
       // serverName
       // 
-      this.serverName.Location = new System.Drawing.Point(109, 7);
+      this.serverName.Location = new System.Drawing.Point(145, 7);
       this.serverName.Name = "serverName";
-      this.serverName.Size = new System.Drawing.Size(318, 20);
+      this.serverName.Size = new System.Drawing.Size(282, 20);
       this.serverName.TabIndex = 1;
       this.serverName.Text = "localhost";
       this.serverName.Leave += new System.EventHandler(this.serverName_Leave);
@@ -68,17 +68,17 @@
       // database
       // 
       this.database.FormattingEnabled = true;
-      this.database.Location = new System.Drawing.Point(145, 95);
+      this.database.Location = new System.Drawing.Point(145, 94);
       this.database.Name = "database";
       this.database.Size = new System.Drawing.Size(282, 21);
-      this.database.TabIndex = 9;
+      this.database.TabIndex = 4;
       this.database.DropDown += new System.EventHandler(this.database_DropDown);
       this.database.Leave += new System.EventHandler(this.database_Leave);
       // 
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(65, 98);
+      this.label5.Location = new System.Drawing.Point(65, 97);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(56, 13);
       this.label5.TabIndex = 8;
@@ -86,17 +86,17 @@
       // 
       // password
       // 
-      this.password.Location = new System.Drawing.Point(145, 68);
+      this.password.Location = new System.Drawing.Point(145, 65);
       this.password.Name = "password";
       this.password.PasswordChar = '*';
       this.password.Size = new System.Drawing.Size(282, 20);
-      this.password.TabIndex = 5;
+      this.password.TabIndex = 3;
       this.password.Leave += new System.EventHandler(this.password_Leave);
       // 
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(77, 43);
+      this.label2.Location = new System.Drawing.Point(77, 39);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(44, 13);
       this.label2.TabIndex = 2;
@@ -105,7 +105,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(65, 71);
+      this.label3.Location = new System.Drawing.Point(65, 68);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(56, 13);
       this.label3.TabIndex = 4;
@@ -113,10 +113,10 @@
       // 
       // userId
       // 
-      this.userId.Location = new System.Drawing.Point(145, 40);
+      this.userId.Location = new System.Drawing.Point(145, 36);
       this.userId.Name = "userId";
       this.userId.Size = new System.Drawing.Size(282, 20);
-      this.userId.TabIndex = 3;
+      this.userId.TabIndex = 2;
       this.userId.Leave += new System.EventHandler(this.userId_Leave);
       // 
       // cancelButton
@@ -126,7 +126,7 @@
       this.cancelButton.Location = new System.Drawing.Point(270, 246);
       this.cancelButton.Name = "cancelButton";
       this.cancelButton.Size = new System.Drawing.Size(75, 23);
-      this.cancelButton.TabIndex = 3;
+      this.cancelButton.TabIndex = 6;
       this.cancelButton.Text = "Cancel";
       this.cancelButton.UseVisualStyleBackColor = true;
       // 
@@ -137,7 +137,7 @@
       this.connectButton.Location = new System.Drawing.Point(189, 246);
       this.connectButton.Name = "connectButton";
       this.connectButton.Size = new System.Drawing.Size(75, 23);
-      this.connectButton.TabIndex = 4;
+      this.connectButton.TabIndex = 5;
       this.connectButton.Text = "Connect";
       this.connectButton.UseVisualStyleBackColor = true;
       this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
@@ -145,7 +145,7 @@
       // pictureBox1
       // 
       this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
-      this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_banner;
+	  this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_banner;
       this.pictureBox1.Location = new System.Drawing.Point(0, 0);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(450, 89);
@@ -158,7 +158,7 @@
       this.advancedButton.Location = new System.Drawing.Point(351, 246);
       this.advancedButton.Name = "advancedButton";
       this.advancedButton.Size = new System.Drawing.Size(90, 23);
-      this.advancedButton.TabIndex = 10;
+      this.advancedButton.TabIndex = 7;
       this.advancedButton.Text = "Advanced >>";
       this.advancedButton.UseVisualStyleBackColor = true;
       this.advancedButton.Click += new System.EventHandler(this.advancedButton_Click);
@@ -183,10 +183,10 @@
       this.simplePanel.Controls.Add(this.password);
       this.simplePanel.Controls.Add(this.label1);
       this.simplePanel.Controls.Add(this.serverName);
-      this.simplePanel.Location = new System.Drawing.Point(12, 100);
+      this.simplePanel.Location = new System.Drawing.Point(8, 95);
       this.simplePanel.Name = "simplePanel";
       this.simplePanel.Size = new System.Drawing.Size(440, 133);
-      this.simplePanel.TabIndex = 13;
+      this.simplePanel.TabIndex = 0;
       // 
       // connectionProperties
       // 

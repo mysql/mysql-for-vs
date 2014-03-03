@@ -52,6 +52,9 @@ using MySQL.Utility.Classes;
 using MySQL.Utility.Classes.MySQLWorkbench;
 using System.IO;
 using System.Windows.Forms;
+#if NET_40_OR_GREATER
+using Microsoft.VSDesigner.ServerExplorer;
+#endif
 
 
 namespace MySql.Data.VisualStudio
@@ -94,12 +97,14 @@ namespace MySql.Data.VisualStudio
   [ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
-  [ProvideToolWindow(typeof(DbExportWindowPane),Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]    
+  [ProvideToolWindow(typeof(DbExportWindowPane),Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
+  [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
   // This attribute registers a tool window exposed by this package.
   [Guid(GuidStrings.Package)]  
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
   {
     public static MySqlDataProviderPackage Instance;
+    public MySqlConnection MysqlConnectionSelected;    
 
     /// <summary>
     /// Default constructor of the package.
@@ -114,12 +119,14 @@ namespace MySql.Data.VisualStudio
       if (Instance != null)
         throw new Exception("Creating second instance of package");
       Instance = this;
-      Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
+      Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));            
     }
 
     internal string ConnectionName { get; set; }
 
-    /////////////////////////////////////////////////////////////////////////////
+    internal List<IVsDataExplorerConnection> _mysqlConnectionsList;
+      
+     /////////////////////////////////////////////////////////////////////////////
     // Overriden Package Implementation
     #region Package Members
 
@@ -139,6 +146,26 @@ namespace MySql.Data.VisualStudio
       base.Initialize();
 
       RegisterEditorFactory(new SqlEditorFactory());
+
+      // load our connections
+      _mysqlConnectionsList = GetMySqlConnections();
+
+#if NET_40_OR_GREATER
+      
+      IVsServerExplorer explorer = (IVsServerExplorer)Package.GetGlobalService(typeof(IVsServerExplorer));
+      IVsUIHierarchy hierarchy;
+      if ((hierarchy = explorer as IVsUIHierarchy) != null)
+      {
+        // subscribe to SE notifications        
+        var seEventsListener = new ServerExplorerHierarchyEventsListener(hierarchy);
+        uint cookie = 0;
+        int result = hierarchy.AdviseHierarchyEvents(seEventsListener, out cookie);
+        if (result != VSConstants.S_OK)
+        {
+          ErrorHandler.ThrowOnFailure(result);
+        }
+      }
+#endif
 
       // Add our command handlers for menu (commands must exist in the .vsct file)
       OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -171,10 +198,11 @@ namespace MySql.Data.VisualStudio
         cmdMenuDbExport.BeforeQueryStatus += new EventHandler(cmdMenuDbExport_BeforeQueryStatus);
         mcs.AddCommand(cmdMenuDbExport);
 
-        CommandID cmdNewMySqlScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidNewMySqlScript);
-        OleMenuCommand cmdMenuNewMySqlScript = new OleMenuCommand(cmdNewMySqlScript_Callback, cmdNewMySqlScript);        
-        mcs.AddCommand(cmdMenuNewMySqlScript);       
+        CommandID cmdAddConnection = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdidAddConnection);
+        OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
+        mcs.AddCommand(cmdMenuAddConnection);
 
+        var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
       }
 
       // Register and initialize language service
@@ -182,7 +210,7 @@ namespace MySql.Data.VisualStudio
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
-  
+ 
     #endregion
 
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
@@ -287,14 +315,6 @@ namespace MySql.Data.VisualStudio
       }
     }
 
-
-    private void cmdNewMySqlScript_Callback(object sender, EventArgs e)
-    {
-      DTE env = (DTE)GetService(typeof(DTE));      
-      var ItemOp = env.ItemOperations;
-      ItemOp.NewFile(@"MySQL\MySQL Script",  null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
-    }
-
     private void cmdDbExport_Callback(object sender, EventArgs e)
     {
       MySqlConnection connection = GetCurrentConnection();
@@ -316,7 +336,7 @@ namespace MySql.Data.VisualStudio
 
             DbExportWindowPane windowPanel = (DbExportWindowPane)window;
 
-            windowPanel.Connections = GetMySqlConnections();
+            windowPanel.Connections = _mysqlConnectionsList;
             windowPanel.SelectedConnectionName = currentConnectionName;
             windowPanel.WindowHandler = window;
             windowPanel.InitializeDbExportPanel();
@@ -408,7 +428,31 @@ namespace MySql.Data.VisualStudio
       dlg.TextScript = script;
       dlg.ShowDialog();
     }
+
+    private void cmdAddConnection_Callback(object sender, EventArgs e)
+    {
+      ConnectDialog d = new ConnectDialog();
+      DialogResult r = d.ShowDialog();
+      if (r == DialogResult.Cancel) return;
+      try
+      {
+        MysqlConnectionSelected = (MySqlConnection)d.Connection;        
+        DTE env = (DTE)GetService(typeof(DTE));
+        Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)env);
+        IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
+        seConnectionsMgr.AddConnection(string.Format("{0}({1})", MysqlConnectionSelected.DataSource, MysqlConnectionSelected.Database), Guids.Provider, MysqlConnectionSelected.ConnectionString, false);
+        ItemOperations ItemOp = env.ItemOperations;
+        ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
+      }
+      catch (MySqlException)
+      {        
+        MessageBox.Show(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
+        return;
+      }
+      MysqlConnectionSelected = null;
+    }
   
+
 
     private string GetCurrentConnectionName()
     {
@@ -421,7 +465,6 @@ namespace MySql.Data.VisualStudio
         
         return string.Empty;
     }
-
 
     private MySqlConnection GetCurrentConnection()
     {      
@@ -446,7 +489,7 @@ namespace MySql.Data.VisualStudio
       }
     }   
 
-    private EnvDTE80.DTE2 GetDTE2()
+    internal EnvDTE80.DTE2 GetDTE2()
     {
       return GetGlobalService(typeof(DTE)) as EnvDTE80.DTE2;
     }
@@ -466,20 +509,26 @@ namespace MySql.Data.VisualStudio
       return null;
     }
 
-    internal List<IVsDataExplorerConnection> GetMySqlConnections()
+    public List<IVsDataExplorerConnection> GetMySqlConnections()
     {
-      IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
-      if (connectionManager == null) return null;
-
-      System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
-
-      List<IVsDataExplorerConnection> mysqlConnections = new List<IVsDataExplorerConnection>();        
-      foreach (var connection in connections)
+      try
       {
+        IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+        if (connectionManager == null) return new List<IVsDataExplorerConnection>();
+
+        System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
+        _mysqlConnectionsList = new List<IVsDataExplorerConnection>();
+        foreach (var connection in connections)
+        {
           if (Guids.Provider.Equals(connection.Value.Provider))
-              mysqlConnections.Add(connection.Value);              
+            _mysqlConnectionsList.Add(connection.Value);
+        }
+        return _mysqlConnectionsList;
       }
-      return mysqlConnections;
+      catch
+      { }
+
+      return new List<IVsDataExplorerConnection>();     
     }
 
 
