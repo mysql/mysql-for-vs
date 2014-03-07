@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2014 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -111,8 +111,23 @@ namespace MySql.Data.VisualStudio
       catch (MySqlException ex)
       {
         // If can prompt user data and is error 1045: Access denied for user
-        if (doPromptCheck && ex.Number == 1045)
-          return false;       
+        // Connector/NET with authentication plugin returns the original MySqlException as InnerException
+        MySqlException exInner = ex.InnerException as MySqlException;
+        if (doPromptCheck && ((ex.Number == 1045) || (exInner != null && exInner.Number == 1045)))
+        {
+          var packInstance = MySqlDataProviderPackage.Instance;
+          if (packInstance != null)
+          {
+            var nodeSelected = packInstance.GetCurrentConnectionName();
+            string connString = packInstance.GetConnectionStringBasedOnNode(nodeSelected);
+            if (connString != null)
+            {
+              base.Connection.ConnectionString = connString;
+              base.Connection.Open();
+              return true;
+            }
+          }
+        }
 
         // If can't prompt user for new authentication data, re-throw exception
         if (string.IsNullOrEmpty(base.Connection.ConnectionString))

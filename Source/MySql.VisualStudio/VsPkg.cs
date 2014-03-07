@@ -454,7 +454,7 @@ namespace MySql.Data.VisualStudio
   
 
 
-    private string GetCurrentConnectionName()
+    public string GetCurrentConnectionName()
     {
         EnvDTE80.DTE2 _applicationObject = GetDTE2();
         UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
@@ -529,6 +529,57 @@ namespace MySql.Data.VisualStudio
       { }
 
       return new List<IVsDataExplorerConnection>();     
+    }
+
+
+
+    public string GetConnectionStringBasedOnNode(string name)
+    {
+      try
+      {
+        IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+        if (connectionManager == null) return null;
+
+        System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
+        string activeConnectionString = string.Empty;
+
+        foreach (var connection in connections)
+        {
+          if (Guids.Provider.Equals(connection.Value.Provider))
+          {
+            var selectedNodes = connection.Value.SelectedNodes;
+            foreach (var node in selectedNodes)
+            {
+              if (node.Caption.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+              {
+                try
+                {
+                  var activeConnection = (MySqlConnection)connection.Value.Connection.GetLockedProviderObject();
+                  if (activeConnection != null)
+                  {
+                    var csb = (MySqlConnectionStringBuilder)activeConnection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(activeConnection, null);
+                    if (csb != null)
+                    {
+                      activeConnectionString = csb.ConnectionString;
+                    }
+                  }
+                }
+                catch { }
+                finally
+                {
+                  connection.Value.Connection.UnlockProviderObject();
+                }
+              }
+            }
+          }
+        }
+        return activeConnectionString;
+      }
+      catch
+      { }
+
+      return null;
+
     }
 
 
