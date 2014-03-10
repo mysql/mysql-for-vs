@@ -32,7 +32,7 @@
       <Output TaskParameter = "AsString" PropertyName="Version"/>
     </GetVersion>
     <Copy SourceFiles="Installer/bin/$(Configuration)/MySql.VisualStudio.Plugin.msi"
-          DestinationFiles="bin/$(Configuration)/mysql-for-visualstudio-$(Version)$(Postfix).msi"/>
+          DestinationFiles="bin/$(Configuration)/mysql-for-visualstudio$(Postfix)-$(Version).msi"/>
   </Target>
 
   <ItemGroup>
@@ -68,7 +68,7 @@
     <ItemGroup>
       <FilesToZip Include="tmp/**"/>
     </ItemGroup>
-    <Zip ZipFileName="bin/$(Configuration)/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip"
+    <Zip ZipFileName="bin/$(Configuration)/mysql-for-visualstudio$(Postfix)-$(Version)-src.zip"
          Files="@(FilesToZip)" WorkingDirectory="tmp"/>
 
     <!--    <RemoveDir Directories="tmp"/>-->
@@ -151,7 +151,7 @@
     <ItemGroup>
       <ZipFiles Include="tmp/**"/>
     </ItemGroup>
-    <Zip ZipFileName="bin/$(Configuration)/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip"
+    <Zip ZipFileName="bin/$(Configuration)/mysql-for-visualstudio$(Postfix)-$(Version)-noinstall.zip"
          Files="@(ZipFiles)" workingDirectory="tmp"/>
   </Target>
 </Project>
