@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Commercial' ">
-    <Postfix>-com</Postfix>
+    <Postfix>-commercial</Postfix>
   </PropertyGroup>
 
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
@@ -32,7 +32,7 @@
       <Output TaskParameter = "AsString" PropertyName="Version"/>
     </GetVersion>
     <Copy SourceFiles="Installer/bin/$(Configuration)/mysql.data.msi"
-          DestinationFiles="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix).msi"/>
+          DestinationFiles="bin/$(Configuration)/mysql-connector-net$(Postfix)-$(Version).msi"/>
   </Target>
 
   <ItemGroup>
@@ -68,7 +68,7 @@
     <ItemGroup>
       <FilesToZip Include="tmp/**"/>
     </ItemGroup>
-    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
+    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net$(Postfix)-$(Version)-src.zip"
          Files="@(FilesToZip)" WorkingDirectory="tmp"/>
 
     <!--    <RemoveDir Directories="tmp"/>-->
@@ -120,7 +120,7 @@
     <ItemGroup>
       <ZipFiles Include="tmp/**"/>
     </ItemGroup>
-    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
+    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net$(Postfix)-$(Version)-noinstall.zip"
          Files="@(ZipFiles)" workingDirectory="tmp"/>
   </Target>
 </Project>
