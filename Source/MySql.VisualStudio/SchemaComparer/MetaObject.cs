@@ -37,6 +37,7 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     internal abstract void Initialize(DbDataReader r);
     internal abstract string ParentName { get; }
     internal abstract string FullName { get; }
+    internal virtual string Name { get { return ""; } }
 
     /// <summary>
     /// Returns the script to apply in other database when this object is different in that
@@ -92,6 +93,13 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     internal int? NumericScale { get; set; }
     internal int? DatetimePrecision { get; set; }
     TypeScript TypeScript { get; set; }
+    internal override string Name
+    {
+      get
+      {
+        return ColumnName;
+      }
+    }
 
     // public to avoid CS0310
     public Column()
