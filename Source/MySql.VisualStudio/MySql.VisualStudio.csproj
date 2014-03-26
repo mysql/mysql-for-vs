@@ -728,6 +728,42 @@
     <Compile Include="WebConfig\WebConfigDlg.Designer.cs">
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\BaseWizard.cs" />
+    <Compile Include="Wizards\BaseWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\BaseWizardForm.Designer.cs">
+      <DependentUpon>BaseWizardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\EntityFrameworkGenerator.cs" />
+    <Compile Include="Wizards\ModelGenerator.cs" />
+    <Compile Include="Wizards\TypedDataSetGenerator.cs" />
+    <Compile Include="Wizards\WindowsForms\DataAccessConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\DataAccessConfig.Designer.cs">
+      <DependentUpon>DataAccessConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\ValidationConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\ValidationConfig.Designer.cs">
+      <DependentUpon>ValidationConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\WindowsFormsWizard.cs" />
+    <Compile Include="Wizards\WindowsForms\WindowsFormsWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\WindowsFormsWizardForm.Designer.cs">
+      <DependentUpon>WindowsFormsWizardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\WizardException.cs" />
+    <Compile Include="Wizards\WizardPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\WizardPage.Designer.cs">
+      <DependentUpon>WizardPage.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' != '9.0'">
@@ -813,6 +849,21 @@
     <EmbeddedResource Include="WebConfig\WebConfigDlg.resx">
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\BaseWizardForm.resx">
+      <DependentUpon>BaseWizardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\DataAccessConfig.resx">
+      <DependentUpon>DataAccessConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\ValidationConfig.resx">
+      <DependentUpon>ValidationConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\WindowsFormsWizardForm.resx">
+      <DependentUpon>WindowsFormsWizardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WizardPage.resx">
+      <DependentUpon>WizardPage.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions.datasource" />
     <None Include="Resources\ArrowKey.bmp">
     </None>
@@ -866,6 +917,14 @@
       <ResourceName>1000</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
