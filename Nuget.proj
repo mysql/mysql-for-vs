@@ -1,177 +1,214 @@
-<Project DefaultTargets="NugetPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  
-
+<Project DefaultTargets="NugetPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>	 
-     <OutputPathCore>NugetPkgs\$(Configuration)\MySql.Data</OutputPathCore>
-	 <OutputPathCoreEF>NugetPkgs\$(Configuration)\MySql.Data.Entity</OutputPathCoreEF>
-	 <OutputPathWeb>NugetPkgs\$(Configuration)\MySql.Web</OutputPathWeb>
-     <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">Nuget\nuget.exe</NuGetExePath>     
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <OutputPath>NugetPkgs</OutputPath>
+    <OutputPathPackage>$(OutputPath)\Package</OutputPathPackage>
+    <OutputPathNuspec>$(OutputPath)\nuspec</OutputPathNuspec>
+    <OutputPathTransformedFiles>$(OutputPath)\transform</OutputPathTransformedFiles>
+    <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">Nuget\nuget.exe</NuGetExePath>
+    <!-- Packages general data -->
+    <PackageNameCore>MySql.Data</PackageNameCore>
+    <PackageNameEntity>MySql.Data.Entity</PackageNameEntity>
+    <PackageNameWeb>MySql.Web</PackageNameWeb>
+    <TagsCore>MySql MySql.Data Connector/NET</TagsCore>
+    <TagsEntity>MySql MySql.Data.Entity Connector/NET EntityFramework</TagsEntity>
+    <TagsWeb>MySql MySql.Web Connector/NET</TagsWeb>
+    <licenseUrl>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html</licenseUrl>
+    <projectUrl>http://dev.mysql.com/downloads/</projectUrl>
+    <iconUrl>http://www.mysql.com/common/logos/logo-mysql-170x115.png</iconUrl>
+    <releaseNotes>Review Readme.txt for details.</releaseNotes>
   </PropertyGroup>
 
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
-  
+
   <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
- 
-  <Target Name="NugetPackage" DependsOnTargets="PackageClean;BuildNugetPackageMySqlData;BuildNugetPackageEntity;BuildNugetPackageMySqlDataWeb">   
-  </Target>
-  
-  <Target Name="PackageClean">  
-   <RemoveDir Directories ="NugetPkgs\$(Configuration)" ContinueOnError ="true"/>  
-   <RemoveDir Directories ="NugetPkgs" ContinueOnError ="true"/>  
-   <MakeDir Directories="NugetPkgs" />
-  </Target>
-  
-   <Target Name="BuildNugetPackageMySqlData">   
-	   <MakeDir Directories="$(OutputPathCore)" />
-	   <MakeDir Directories="$(OutputPathCore)\Package" />
-	   <MakeDir Directories="$(OutputPathCore)\lib\net40" />
-	   <MakeDir Directories="$(OutputPathCore)\lib\net20" />	  
-	   <MakeDir Directories="$(OutputPathCore)\lib\net20-cf" />	  
 
-       <Copy
-           DestinationFolder="$(OutputPathCore)\lib\net40" 
-           SourceFiles="Source\MySql.Data\bin\$(Configuration)\MySql.data.dll" />
-		
-		<Copy
-           DestinationFolder="$(OutputPathCore)\lib\net20" 
-           SourceFiles="VS2008\Source\MySql.Data\bin\$(Configuration)\MySql.data.dll" />
-		
-		<Copy
-           DestinationFolder="$(OutputPathCore)\lib\net20-cf" 
-           SourceFiles="VS2008\Source\MySql.Data.CF\bin\$(Configuration)\MySql.Data.CF.dll" />
-		                
-       <Copy DestinationFolder="$(OutputPathCore)\content" SourceFiles="CHANGES" />
-	   
-	   <Copy SourceFiles="Release Notes.txt" DestinationFiles="$(OutputPathCore)\Readme.txt" />
+  <Target Name="NugetPackage" DependsOnTargets="PackageClean;BuildNugetPackageMySqlData;BuildNugetPackageEntity;BuildNugetPackageMySqlDataWeb">
+  </Target>
 
-	   <Exec Command="&quot;$(NuGetExePath)&quot; spec -a  &quot;$(OutputPathCore)\lib\net40\mysql.data.dll&quot;" />       	    
-	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/licenseUrl" Value="http://www.mysql.com/about/legal/licensing/index.html" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/projectUrl" Value="http://www.mysql.com/downloads/connector/net/" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/iconUrl" Value="http://www.mysql.com/common/logos/logo-mysql-110x57.png" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/tags" Value="MySql MySql.Data" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/releaseNotes" Value="Review readme.txt for details." />  
-		
-	<ItemGroup>      
-	  <file Include="Source\MySql.Data\bin\$(Configuration)\MySql.Data.dll"/>
-	  <file Include="VS2008\Source\MySql.Data\bin\$(Configuration)\MySql.Data.dll"/>
-	  <file Include="VS2008\Source\MySql.Data.CF\bin\$(Configuration)\MySql.Data.CF.dll"/>	  
-	  <file Include="$(OutputPathCore)\Readme.txt"/>
+  <Target Name="PackageClean">
+    <RemoveDir Directories ="$(OutputPath)" ContinueOnError ="true"/>
+    <MakeDir Directories="$(OutputPathPackage)" />
+    <MakeDir Directories="$(OutputPathNuspec)" />
+    <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="Source\MySql.Data\bin\$(Configuration)\MySql.Data.dll">
+      <Output TaskParameter="OutputItems" ItemName="Info"/>
+    </MSBuild.ExtensionPack.Framework.Assembly>
+    <PropertyGroup>
+      <Version>$([System.Version]::Parse(%(Info.AssemblyVersion)).ToString(3))</Version>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="BuildNugetPackageMySqlData">
+    <ItemGroup>
+      <root Include="Release Notes.txt">
+        <NewFileName>Readme.txt</NewFileName>
+      </root>
+      <root Include="CHANGES"/>
     </ItemGroup>
-    	
-	<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="RemoveElement" File="MySql.Data.nuspec" Element="dependencies" XPath="//package/metadata/dependencies" />
-	
-	<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="src" Value="%(file.Identity)" Element="file" XPath="//package/files" />
-	
-	<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/*[1]"  Key="target" Value="lib\net40" />
-	<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/*[2]"  Key="target" Value="lib\net20" />
-	<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/*[3]"  Key="target" Value="lib\net20-cf"/>
-	<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/*[4]"  Key="target" Value=""/>	
-	
-	<Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Data.nuspec -OutputDirectory &quot;$(OutputPathCore)\Package&quot; -NoPackageAnalysis" />	
-	
-	<Delete Files ="MySql.Data.nuspec" /> 		
-	
-   </Target>   
-   
-   <Target Name="BuildNugetPackageEntity">      
-   
-       <MakeDir Directories="$(OutputPathCoreEF)" />
-	   <MakeDir Directories="$(OutputPathCoreEF)\Package" />
-	   <MakeDir Directories="$(OutputPathCoreEF)\lib\net40" />
-	   <MakeDir Directories="$(OutputPathCoreEF)\lib\net20" />	  	   
 
-       <Copy
-           DestinationFolder="$(OutputPathCoreEF)\lib\net40" 
-           SourceFiles="Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll" />
-		
-		<Copy
-           DestinationFolder="$(OutputPathCoreEF)\lib\net20" 
-           SourceFiles="VS2008\Source\MySql.Data.Entity\bin\$(Configuration)\MySql.data.Entity.dll" />				
-		                
-       <Copy DestinationFolder="$(OutputPathCoreEF)\content" SourceFiles="CHANGES" />
-	   
-	   <Copy SourceFiles="Release Notes.txt" DestinationFiles="$(OutputPathCoreEF)\Readme.txt" />
-	   	   
-	    <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="Source\MySql.Data\bin\$(Configuration)\MySql.data.dll">
-            <Output TaskParameter="OutputItems" ItemName="Info"/>
-        </MSBuild.ExtensionPack.Framework.Assembly>
+    <ItemGroup>
+      <contentSource Include="Nuget\Data\*"/>
+    </ItemGroup>
 
-	    <Exec Command="&quot;$(NuGetExePath)&quot; spec -a  &quot;$(OutputPathCoreEF)\lib\net40\mySql.data.entity.dll&quot;" />       	    
-		
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency/@id" Value="MySql.Data" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency/@version" Value="%(Info.AssemblyVersion)" />  	   	   
-	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/licenseUrl" Value="http://www.mysql.com/about/legal/licensing/index.html" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/projectUrl" Value="http://www.mysql.com/downloads/connector/net/" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/iconUrl" Value="http://www.mysql.com/common/logos/logo-mysql-110x57.png" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/tags" Value="MySql MySql.Data.Entity" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/releaseNotes" Value="Review readme.txt for details." />  
-		
-		<ItemGroup>      
-			<fileEF Include="Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>
-			<fileEF Include="VS2008\Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>			
-			<fileEF Include="$(OutputPathCoreEF)\Readme.txt"/>
-		</ItemGroup>
-		
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(fileEF.Identity)" Element="file" XPath="//package/files" />
-	
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/*[1]"  Key="target" Value="lib\net40" />
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/*[2]"  Key="target" Value="lib\net20" />		
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/*[3]"  Key="target" Value=""/>	
-	   	   
-		<Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Data.Entity.nuspec -OutputDirectory &quot;$(OutputPathCoreEF)\Package&quot; -NoPackageAnalysis" />	
-		<Delete Files ="MySql.Data.Entity.nuspec" /> 			  	   
-   </Target>   
-     
-  <Target Name="BuildNugetPackageMySqlDataWeb"> 
-       <MakeDir Directories="$(OutputPathWeb)" />
-	   <MakeDir Directories="$(OutputPathWeb)\Package" />
-	   <MakeDir Directories="$(OutputPathWeb)\lib\net40" />
-	   <MakeDir Directories="$(OutputPathWeb)\lib\net20" />	  	   
+    <ItemGroup>
+      <net40 Include="Source\MySql.Data\bin\$(Configuration)\MySql.Data.dll"/>
+    </ItemGroup>
 
-       <Copy
-           DestinationFolder="$(OutputPathWeb)\lib\net40" 
-           SourceFiles="Source\MySql.Web\bin\$(Configuration)\MySql.Web.dll" />
-		
-		<Copy
-           DestinationFolder="$(OutputPathWeb)\lib\net20" 
-           SourceFiles="VS2008\Source\MySql.Web\bin\$(Configuration)\MySql.Web.dll" />				
-		                
-       <Copy DestinationFolder="$(OutputPathWeb)\content" SourceFiles="CHANGES" />
-	   
-	   <Copy SourceFiles="Release Notes.txt" DestinationFiles="$(OutputPathWeb)\Readme.txt" />
+    <ItemGroup>
+      <net20 Include="VS2008\Source\MySql.Data\bin\$(Configuration)\MySql.Data.dll"/>
+    </ItemGroup>
 
-	   <Exec Command="&quot;$(NuGetExePath)&quot; spec -a  &quot;$(OutputPathWeb)\lib\net40\MySql.Web.dll&quot;" />       	    
-	   
-	   <XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/dependencies/dependency/@id" Value="MySql.Data" />  	   	   
-	   <XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/dependencies/dependency/@version" Value="%(Info.AssemblyVersion)" />  	   	   
-	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/licenseUrl" Value="http://www.mysql.com/about/legal/licensing/index.html" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/projectUrl" Value="http://www.mysql.com/downloads/connector/net/" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/iconUrl" Value="http://www.mysql.com/common/logos/logo-mysql-110x57.png" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/tags" Value="MySql MySql.Web" />  	   	   
-		<XmlUpdate Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/releaseNotes" Value="Review readme.txt for details." />  
-		
-		<ItemGroup>      
-			<fileweb Include="Source\MySql.Web\bin\$(Configuration)\MySql.Web.dll"/>
-			<fileweb Include="VS2008\Source\MySql.Web\bin\$(Configuration)\MySql.Web.dll"/>			
-			<fileweb Include="$(OutputPathWeb)\Readme.txt"/>
-		</ItemGroup>
-		
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="src" Value="%(fileweb.Identity)" Element="file" XPath="//package/files" />
-	
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/*[1]"  Key="target" Value="lib\net40" />
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/*[2]"  Key="target" Value="lib\net20" />		
-		<MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/*[3]"  Key="target" Value=""/>	
-		
-		<Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Web.nuspec -OutputDirectory &quot;$(OutputPathWeb)\Package&quot; -NoPackageAnalysis" />	
-		
-		<Delete Files ="MySql.Web.nuspec" /> 		
-		
-   </Target>   
-   
+    <ItemGroup>
+      <net20-cf Include="VS2008\Source\MySql.Data.CF\bin\$(Configuration)\MySql.Data.CF.dll"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(contentSource)" DestinationFolder="$(OutputPath)\Transformation\Data"/>
+
+    <ItemGroup>
+      <content Include="$(OutputPath)\Transformation\Data\*"/>
+    </ItemGroup>
+
+    <XmlUpdate XmlFileName="%(content.Identity)" XPath="//configuration/system.data/DbProviderFactories/add/@type" Value="MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data, Version=$(Version).0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
+
+    <Exec Command="&quot;$(NuGetExePath)&quot; spec -f -a &quot;%(net40.Identity)&quot;" />
+
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/id" Value="$(PackageNameCore)" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/version" Value="$(Version)" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/licenseUrl" Value="$(licenseUrl)" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/projectUrl" Value="$(projectUrl)" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/iconUrl" Value="$(iconUrl)" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/requireLicenseAcceptance" Value="true" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/tags" Value="$(TagsCore)" />
+    <XmlUpdate XmlFileName="MySql.Data.nuspec" XPath="//package/metadata/releaseNotes" Value="$(releaseNotes)" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="RemoveElement" File="MySql.Data.nuspec" Element="dependencies" XPath="//package/metadata/dependencies" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="src" Value="%(root.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="src" Value="%(content.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="src" Value="%(net40.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="src" Value="%(net20.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.nuspec" Key="src" Value="%(net20-cf.Identity)" Element="file" XPath="//package/files" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/file[@src='%(root.Identity)']"  Key="target" Value="%(root.NewFileName)" Condition="%(root.NewFileName)!=''"/>
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/file[@src='%(content.Identity)']"  Key="target" Value="content" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/file[@src='%(net40.Identity)']"  Key="target" Value="lib\net40" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/file[@src='%(net20.Identity)']"  Key="target" Value="lib\net20" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.nuspec" XPath="//package/files/file[@src='%(net20-cf.Identity)']"  Key="target" Value="lib\net20-cf" />
+
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Data.nuspec -OutputDirectory &quot;$(OutputPathPackage)&quot;" />
+
+    <Move SourceFiles="MySql.Data.nuspec" DestinationFolder="$(OutputPathNuspec)"/>
+  </Target>
+
+  <Target Name="BuildNugetPackageEntity">
+    <ItemGroup>
+      <rootEntity Include="@(root)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <contentSourceEntity Include="Nuget\Entity\*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <net40Entity Include="Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <net20Entity Include="VS2008\Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(contentSourceEntity)" DestinationFolder="$(OutputPath)\Transformation\Entity"/>
+
+    <ItemGroup>
+      <contentEntity Include="$(OutputPath)\Transformation\Entity\*"/>
+    </ItemGroup>
+
+    <XmlUpdate XmlFileName="%(contentEntity.Identity)" XPath="//configuration/entityFramework/providers/provider/@type" Value="MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity, Version=$(Version).0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
+
+    <Exec Command="&quot;$(NuGetExePath)&quot; spec -f -a &quot;%(net40Entity.Identity)&quot;" />
+
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/id" Value="$(PackageNameEntity)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/version" Value="$(Version)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/licenseUrl" Value="$(licenseUrl)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/projectUrl" Value="$(projectUrl)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/iconUrl" Value="$(iconUrl)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/requireLicenseAcceptance" Value="true" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/tags" Value="$(TagsEntity)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/releaseNotes" Value="$(releaseNotes)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency/@id" Value="$(PackageNameCore)" />
+    <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency/@version" Value="$(Version)" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(rootEntity.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(contentEntity.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(net40Entity.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(net20Entity.Identity)" Element="file" XPath="//package/files" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(rootEntity.Identity)']"  Key="target" Value="%(rootEntity.NewFileName)" Condition="%(rootEntity.NewFileName)!=''"/>
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(contentEntity.Identity)']"  Key="target" Value="content" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(net40Entity.Identity)']"  Key="target" Value="lib\net40" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(net20Entity.Identity)']"  Key="target" Value="lib\net20" />
+
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Data.Entity.nuspec -OutputDirectory &quot;$(OutputPathPackage)&quot;" />
+
+    <Move SourceFiles="MySql.Data.Entity.nuspec" DestinationFolder="$(OutputPathNuspec)"/>
+  </Target>
+
+  <Target Name="BuildNugetPackageMySqlDataWeb">
+    <ItemGroup>
+      <rootWeb Include="@(root)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <contentSourceWeb Include="Nuget\Web\*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <net40Web Include="Source\MySql.Web\bin\$(Configuration)\MySql.Web.dll"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <net20Web Include="VS2008\Source\MySql.Web\bin\$(Configuration)\MySql.Web.dll"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(contentSourceWeb)" DestinationFolder="$(OutputPath)\Transformation\Web"/>
+
+    <ItemGroup>
+      <contentWeb Include="$(OutputPath)\Transformation\Web\*"/>
+    </ItemGroup>
+
+    <XmlUpdate XmlFileName="%(contentWeb.Identity)" XPath="//configuration/system.web/membership/providers/add/@type" Value="MySql.Web.Security.MySQLMembershipProvider, MySql.Web, Version=$(Version).0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
+    <XmlUpdate XmlFileName="%(contentWeb.Identity)" XPath="//configuration/system.web/profile/providers/add/@type" Value="MySql.Web.Profile.MySQLProfileProvider, MySql.Web, Version=$(Version).0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
+    <XmlUpdate XmlFileName="%(contentWeb.Identity)" XPath="//configuration/system.web/roleManager/providers/add/@type" Value="MySql.Web.Security.MySQLRoleProvider, MySql.Web, Version=$(Version).0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
+
+    <Exec Command="&quot;$(NuGetExePath)&quot; spec -f -a &quot;%(net40Web.Identity)&quot;" />
+
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/id" Value="$(PackageNameWeb)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/version" Value="$(Version)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/licenseUrl" Value="$(licenseUrl)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/projectUrl" Value="$(projectUrl)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/iconUrl" Value="$(iconUrl)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/requireLicenseAcceptance" Value="true" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/tags" Value="$(TagsWeb)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/releaseNotes" Value="$(releaseNotes)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/dependencies/dependency/@id" Value="$(PackageNameCore)" />
+    <XmlUpdate XmlFileName="MySql.Web.nuspec" XPath="//package/metadata/dependencies/dependency/@version" Value="$(Version)" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="src" Value="%(rootWeb.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="src" Value="%(contentWeb.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="src" Value="%(net40Web.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Web.nuspec" Key="src" Value="%(net20Web.Identity)" Element="file" XPath="//package/files" />
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/file[@src='%(rootWeb.Identity)']"  Key="target" Value="%(rootWeb.NewFileName)" Condition="%(rootWeb.NewFileName)!=''"/>
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/file[@src='%(contentWeb.Identity)']"  Key="target" Value="content" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/file[@src='%(net40Web.Identity)']"  Key="target" Value="lib\net40" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Web.nuspec" XPath="//package/files/file[@src='%(net20Web.Identity)']"  Key="target" Value="lib\net20" />
+
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Web.nuspec -OutputDirectory &quot;$(OutputPathPackage)&quot;" />
+
+    <Move SourceFiles="MySql.Web.nuspec" DestinationFolder="$(OutputPathNuspec)"/>
+  </Target>
+
 </Project>
