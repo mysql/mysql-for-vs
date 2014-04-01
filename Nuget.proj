@@ -107,24 +107,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <contentSourceEntity Include="Nuget\Entity\*"/>
-    </ItemGroup>
-
-    <ItemGroup>
       <net40Entity Include="Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>
     </ItemGroup>
 
     <ItemGroup>
-      <net20Entity Include="VS2008\Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>
+      <net35Entity Include="VS2008\Source\MySql.Data.Entity\bin\$(Configuration)\MySql.Data.Entity.dll"/>
     </ItemGroup>
-
-    <Copy SourceFiles="@(contentSourceEntity)" DestinationFolder="$(OutputPath)\Transformation\Entity"/>
-
-    <ItemGroup>
-      <contentEntity Include="$(OutputPath)\Transformation\Entity\*"/>
-    </ItemGroup>
-
-    <XmlUpdate XmlFileName="%(contentEntity.Identity)" XPath="//configuration/entityFramework/providers/provider/@type" Value="MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity, Version=$(Version).0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
 
     <Exec Command="&quot;$(NuGetExePath)&quot; spec -f -a &quot;%(net40Entity.Identity)&quot;" />
 
@@ -139,16 +127,17 @@
     <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency/@id" Value="$(PackageNameCore)" />
     <XmlUpdate XmlFileName="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency/@version" Value="$(Version)" />
 
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="id" Value="EntityFramework" Element="dependency" XPath="//package/metadata/dependencies"/>
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/metadata/dependencies/dependency[@id='EntityFramework']"  Key="version" Value="4.3.1" />
+
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="" Value="" Element="files" XPath="//package" InsertAfterXPath="//package" />
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(rootEntity.Identity)" Element="file" XPath="//package/files" />
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(contentEntity.Identity)" Element="file" XPath="//package/files" />
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(net40Entity.Identity)" Element="file" XPath="//package/files" />
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(net20Entity.Identity)" Element="file" XPath="//package/files" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddElement" File="MySql.Data.Entity.nuspec" Key="src" Value="%(net35Entity.Identity)" Element="file" XPath="//package/files" />
 
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(rootEntity.Identity)']"  Key="target" Value="%(rootEntity.NewFileName)" Condition="%(rootEntity.NewFileName)!=''"/>
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(contentEntity.Identity)']"  Key="target" Value="content" />
     <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(net40Entity.Identity)']"  Key="target" Value="lib\net40" />
-    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(net20Entity.Identity)']"  Key="target" Value="lib\net20" />
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="AddAttribute" File="MySql.Data.Entity.nuspec" XPath="//package/files/file[@src='%(net35Entity.Identity)']"  Key="target" Value="lib\net35" />
 
     <Exec Command="&quot;$(NuGetExePath)&quot; pack MySql.Data.Entity.nuspec -OutputDirectory &quot;$(OutputPathPackage)&quot;" />
 
