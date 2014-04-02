@@ -190,7 +190,10 @@ namespace MySql.Data.VisualStudio.Wizards
     /// <param name="Version"></param>
     protected void AddEntityFrameworkReference( VSProject VsProj, string BasePath, string Version)
     {
-      string packagePath = Path.Combine(BasePath, "packages", string.Format("EntityFramework.{0}\\lib", Version));
+      
+      string efPath = "packages" + string.Format("EntityFramework.{0}\\lib", Version);
+      string packagePath = Path.Combine(BasePath, efPath);
+
       if (NetFxVersion.StartsWith("4.5"))
       {
         packagePath = Path.Combine(packagePath, "net45");

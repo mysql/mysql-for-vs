@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
-
     <DirectoryRef Id='PFTemplatesDir'>
       <Component Id='PFTemplates' Guid='CB74DD46-A5D0-402f-9413-63A8DEFB3A26'>
         <File Id='PFScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
@@ -73,6 +72,15 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS90_CSharpPTMySQL'>
+      <Component Id='VS2008_VSTDIR' Guid='BA082C85-9D64-8B79-8910-C6C25655250A'>        
+        <File Id='VS2008_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2008_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />
+      </Component>      
+    </DirectoryRef>
+
 
     <!-- Visual Studio 2010 -->
     <DirectoryRef Id='VS10_ExtVersionDir'>
@@ -115,6 +123,16 @@
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
     </DirectoryRef>
+
+    <DirectoryRef Id='VS10_CSharpPTMySQL'>
+      <Component Id='VS2010_VSTDIR' Guid='BA082C85-9D64-1079-8910-C6C25655250A'>        
+        <File Id='VS2010_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2010_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'              
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />          
+      </Component>    
+    </DirectoryRef>
+
     
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
@@ -158,6 +176,32 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS11_CSharpPTMySQL'>
+      <Component Id='VS2012_VSTDIR' Guid='BA082C85-9D64-1279-8910-C6C25655250A'>        
+        <File Id='VS2012_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2012_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />
+      </Component>
+    </DirectoryRef>
+
+    
+    
+    
+    <!--<ComponentGroup Id='MvcCsharpTemplateDirectoryComponents'>
+      <Component Id='ContentsMvcCsharpTemplateDirectoryComponents' Directory='MySQLTestingMvcTemplate.zip' Guid='BB082C85-9D64-4B79-8910-C6C25655250A'/>
+    </ComponentGroup>-->      
+    
+    <Feature Id='AddProjectTemplateToCache' Title='ProjectTemplatesCache' Level='1' >
+      <ComponentGroupRef Id='MvcCsharpTemplateDirectoryComponents'/>
+    </Feature>
+
+      
+    <!-- Add folder to ProjectTemplatesCache --><!--
+    <DirectoryRef Id='MySQLTestingMvcTemplate.zip' >
+      
+    </DirectoryRef>-->
+    
 
     <!-- Visual Studio 2013 -->
     <DirectoryRef Id='VS12_ExtVersionDir'>
@@ -201,6 +245,15 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS12_CSharpPTMySQL'>
+      <Component Id='VS2013_VSTDIR' Guid='BA082C85-9D64-1379-8910-C6C25655250A'>        
+        <File Id='VS2013_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2013_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />
+      </Component>
+    </DirectoryRef>
+    
     <!--Removing files from Private Assemblies Folders-->
 
     <DirectoryRef Id='VS90_PrivateAssemblies'>
@@ -259,6 +312,7 @@
       <ComponentRef Id='VS2008_MD.Library'/>
       <ComponentRef Id='Remove.VS2008_MD.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2008'/>
+      <ComponentRef Id='VS2008_VSTDIR'/>
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
@@ -271,6 +325,7 @@
       <ComponentRef Id='Remove.VS2010_MD.Library'/>
       <ComponentRef Id='Remove.VS2010_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2010'/>
+      <ComponentRef Id='VS2010_VSTDIR'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -282,6 +337,8 @@
       <ComponentRef Id='Remove.VS2012_MD.Library'/>
       <ComponentRef Id='Remove.VS2012_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2012'/>
+      <ComponentRef Id='VS2012_VSTDIR' />
+      <ComponentGroupRef Id='MvcCsharpTemplateDirectoryComponents'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
@@ -293,6 +350,7 @@
       <ComponentRef Id='Remove.VS2013_MD.Library'/>
       <ComponentRef Id='Remove.VS2013_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2013'/>
+      <ComponentRef Id='VS2013_VSTDIR'/>
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
@@ -314,7 +372,7 @@
       <RegistrySearch Id='Find_VS2012_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
-
+    
     <!-- Visual Studio 2013 installation location -->
     <!-- way to get VS2013 is clumsy due to Wix not currently having VS2013 support -->
     <Property Id='VS_2013_PATH' Secure='yes'>
@@ -331,7 +389,7 @@
     <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
     <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
-
+      
     <!-- Adding AutoLoadPackage option so our connections are available -->
     
     <DirectoryRef Id="INSTALLDIR">
@@ -386,7 +444,7 @@
       <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action='VS2013_SetPathProp' Before='VS12_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>      
       <Custom Action="VS11_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action="VS12_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
+      <Custom Action="VS12_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>      
     </InstallExecuteSequence>
   </Fragment>
 </Wix>

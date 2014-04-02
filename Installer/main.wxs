@@ -88,6 +88,14 @@
 
       <!-- VS2008 folders -->
       <Directory Id="VS_2008_PATH">
+        <Directory Id="VS90_ProjectTemplates" Name="ProjectTemplates" >
+          <Directory Id="VS90_CSharpPT" Name="CSharp">
+            <Directory Id="VS90_CSharpPTMySQL" Name="MySQL"/>
+          </Directory>
+          <Directory Id="VS90_VisualBasicPT" Name="VisualBasic">
+            <Directory Id="VS90_VisualBasicPTMySQL" Name="MySQL"/>
+          </Directory>
+        </Directory>
         <Directory Id="VS90_PrivateAssemblies" Name="PrivateAssemblies" />
         <Directory Id="VS90_PublicAssemblies" Name="PublicAssemblies" />
       </Directory>
@@ -110,6 +118,22 @@
         </Directory>
         <Directory Id="VS10_PrivateAssemblies" Name="PrivateAssemblies" />
         <Directory Id="VS10_PublicAssemblies" Name="PublicAssemblies" />
+        <Directory Id="VS10_ProjectTemplates" Name="ProjectTemplates"  >
+          <Directory Id="VS10_CSharpPT" Name="CSharp">
+            <Directory Id="VS10_CSharpPTMySQL" Name="MySQL"/>
+          </Directory>
+          <Directory Id="VS10_VisualBasicPT" Name="VisualBasic">
+            <Directory Id="VS10_VisualBasicPTMySQL" Name="MySQL"/>
+          </Directory>
+        </Directory>
+        <Directory Id="VS10_ProjectTemplatesCache" Name="ProjectTemplatesCache">
+          <Directory Id="VS10_CSharpPTCache" Name="CSharp">
+            <Directory Id="VS10_CSharpPTMySQLCache" Name="MySQL"/>
+          </Directory>
+          <Directory Id="VS10_VisualBasicPTCache" Name="VisualBasic">
+            <Directory Id="VS10_VisualBasicPTMySQLCache" Name="MySQL"/>
+          </Directory>
+        </Directory>
       </Directory>
 
       <!-- VS2012 Extension folders -->      
@@ -132,6 +156,24 @@
             </Directory>
             <Directory Id="VS11_PrivateAssemblies" Name="PrivateAssemblies" />
             <Directory Id="VS11_PublicAssemblies" Name="PublicAssemblies" />
+            <Directory Id="VS11_ProjectTemplates" Name="ProjectTemplates" >
+              <Directory Id="VS11_CSharpPT" Name="CSharp">
+                <Directory Id="VS11_CSharpPTMySQL" Name="MySQL"/>
+              </Directory>
+              <Directory Id="VS11_VisualBasicPT" Name="VisualBasic">
+                <Directory Id="VS11_VisualBasicPTMySQL" Name="MySQL"/>
+              </Directory>
+            </Directory>
+            <Directory Id="VS11_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
+              <Directory Id="VS11_CSharpPTCache" Name="CSharp">
+                <Directory Id="VS11_CSharpPTMySQLCache" Name="MySQL">
+                  <Directory Id="MySQLTestingMvcTemplate.zip" Name="MySQLTestingMvcTemplate.zip"/>                                      
+                </Directory>
+              </Directory>
+              <Directory Id="VS11_VisualBasicPTCache" Name="VisualBasic">
+                <Directory Id="VS11_VisualBasicPTMySQLCache" Name="MySQL"/>
+              </Directory>
+            </Directory>
           </Directory>
         </Directory>
       </Directory>
@@ -156,6 +198,22 @@
             </Directory>
             <Directory Id="VS12_PrivateAssemblies" Name="PrivateAssemblies" />
             <Directory Id="VS12_PublicAssemblies" Name="PublicAssemblies" />
+            <Directory Id="VS12_ProjectTemplates" Name="ProjectTemplates" >
+              <Directory Id="VS12_CSharpPT" Name="CSharp">
+                <Directory Id="VS12_CSharpPTMySQL" Name="MySQL"/>
+              </Directory>
+               <Directory Id="VS12_VisualBasicPT" Name="VisualBasic">
+                <Directory Id="VS12_VisualBasicPTMySQL" Name="MySQL"/>
+              </Directory>
+            </Directory>
+            <Directory Id="VS12_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
+              <Directory Id="VS12_CSharpPTCache" Name="CSharp">
+                <Directory Id="VS12_CSharpPTMySQLCache" Name="MySQL"/>
+              </Directory>
+              <Directory Id="VS12_VisualBasicPTCache" Name="VisualBasic">
+                <Directory Id="VS12_VisualBasicPTMySQLCache" Name="MySQL"/>
+              </Directory>
+            </Directory>
           </Directory>
         </Directory>
       </Directory>
