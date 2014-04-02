@@ -41,6 +41,7 @@
       this.grdColumns.Name = "grdColumns";
       this.grdColumns.Size = new System.Drawing.Size(376, 242);
       this.grdColumns.TabIndex = 0;
+      this.grdColumns.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdColumns_CellValidating);
       // 
       // lblTitle
       // 

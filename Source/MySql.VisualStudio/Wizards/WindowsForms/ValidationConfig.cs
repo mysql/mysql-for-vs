@@ -41,7 +41,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     private string _table;
     private string _connectionString;
 
-    internal List<ColumnValidation> UserSettingsForColumnValidation {
+    internal List<ColumnValidation> ValidationColumns {
       get {
         if (chkValidation.Checked) return _colValidations;
         else return null;
@@ -87,26 +87,29 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         //binding.Add(cv);
       }
       grdColumns.AutoGenerateColumns = false;
-      grdColumns.AutoSize = true;
+      //grdColumns.AutoSize = true;
 
-      //binding.DataSource = _colValidations;
-      //grdColumns.DataSource = binding;
+      binding.DataSource = _colValidations;
+      grdColumns.DataSource = binding;
       DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn();
       colName.DataPropertyName = "Name";
       colName.HeaderText = "ColumnName";
       colName.Name = "colName";
+      colName.ReadOnly = true;
       grdColumns.Columns.Add(colName);
 
       DataGridViewCheckBoxColumn colRequired = new DataGridViewCheckBoxColumn();
       colRequired.DataPropertyName = "Required";
       colRequired.HeaderText = "Required";
       colRequired.Name = "colRequired";
+      colRequired.ReadOnly = true;
       grdColumns.Columns.Add(colRequired);
 
       DataGridViewTextBoxColumn colDataType = new DataGridViewTextBoxColumn();
       colDataType.DataPropertyName = "DataType";
       colDataType.HeaderText = "Data Type";
       colDataType.Name = "colDataType";
+      colDataType.ReadOnly = true;
       grdColumns.Columns.Add(colDataType);
 
       DataGridViewTextBoxColumn colDefaultValue = new DataGridViewTextBoxColumn();
@@ -135,6 +138,103 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       return true;
     }
+
+    private void grdColumns_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+    {
+      DataGridViewRow row = grdColumns.Rows[e.RowIndex];
+      object value = e.FormattedValue;
+      e.Cancel = false;
+      if (row.IsNewRow) return;
+      if (e.ColumnIndex == 4) // Min Value
+      {
+        int v = 0;
+        if ( (value is DBNull) || string.IsNullOrEmpty( value.ToString() )) { row.ErrorText = ""; return; }
+        if (!(value is int))
+        {
+          if (!int.TryParse((string)value, out v))
+          {
+            e.Cancel = true;
+            row.ErrorText = "The minimum value must be an integer.";
+            return;
+          }
+        }
+        else
+        {
+          v = ( int )value;
+        }
+        row.ErrorText = "";
+        // Compare min vs max value
+        object value2 = row.Cells[5].Value;
+        int v2 = 0;
+        if ((value2 is DBNull) || string.IsNullOrEmpty(row.Cells[5].FormattedValue.ToString()) ) { row.ErrorText = ""; return; }
+        if (!(value2 is int))
+        {
+          if (!int.TryParse((string)value2, out v2))
+          {
+            e.Cancel = true;
+            row.ErrorText = "The maximum value must be an integer.";
+            return;
+          }
+        }
+        else
+        {
+          v2 = (int)value2;
+        }
+        if (v2 < v)
+        {
+          e.Cancel = true;
+          row.ErrorText = "The minimum value must be less or equal than maximun value.";
+        }
+        else
+        {
+          row.ErrorText = "";
+        }
+      }
+      else if (e.ColumnIndex == 5)  // Max Value
+      {
+        int v = 0;
+        if ( (value is DBNull) || string.IsNullOrEmpty( value.ToString() )) { row.ErrorText = ""; return; }
+        if (!(value is int))
+        {
+          if (!int.TryParse((string)value, out v))
+          {
+            e.Cancel = true;
+            row.ErrorText = "The maximum value must be an integer.";
+            return;
+          }
+        }
+        else
+        {
+          v = (int)value;
+        }
+        row.ErrorText = "";
+        // Compare max vs min value
+        object value2 = row.Cells[4].Value;
+        int v2 = 0;
+        if ( (value2 is DBNull) || string.IsNullOrEmpty( row.Cells[ 4 ].FormattedValue.ToString() ) ) { row.ErrorText = ""; return; }
+        if (!(value2 is int))
+        {
+          if (!int.TryParse((string)value2, out v2))
+          {
+            e.Cancel = true;
+            row.ErrorText = "The minimun value must be an integer.";
+          }
+        }
+        else
+        {
+          v2 = ( int )value2;
+        }
+        if (v2 > v)
+        {
+          e.Cancel = true;
+          row.ErrorText = "The minimum value must be less or equal than maximum value.";
+        }
+        else
+        {
+          row.ErrorText = "";
+        }
+      }
+    }
   }
 
   internal class ColumnValidation
@@ -146,18 +246,45 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     private ColumnType _columnType;
     private object _defaultValue;
 
-    internal Column Column { get { return _column; } }
-    internal int? MaxValue { get { return _maxValue; } set { _maxValue = value; } }
-    internal int? MinValue { get { return _minValue; } set { _minValue = value; } }
-    internal bool Required { get { return _required; } set { _required = value; } }
-    internal ColumnType ColumnType { get { return _columnType; } set { _columnType = value; } }
-    internal object DefaultValue { get { return _defaultValue; } set { _defaultValue = value; } }
-    internal string Name { get { return _column.ColumnName; } set { _column.ColumnName = value; } }
-    internal string DataType { get { return _column.DataType; } set { _column.DataType = value; } }
+    // It is important to make the properties public, otherwise DataGridView doesn't like and doesn't display the real values
+    // (this seems to be a known issue with DataGridView over stackoverflow).
+    public Column Column { get { return _column; } }
+    public int? MaxValue { get { return _maxValue; } set { _maxValue = value; } }
+    public int? MinValue { get { return _minValue; } set { _minValue = value; } }
+    public bool Required { get { return _required; } set { _required = value; } }
+    public ColumnType ColumnType { get { return _columnType; } set { _columnType = value; } }
+    public object DefaultValue { get { return _defaultValue; } set { _defaultValue = value; } }
+    public string Name { get { return _column.ColumnName; } set { _column.ColumnName = value; } }
+    public string DataType { get { return _column.DataType; } set { _column.DataType = value; } }
 
     internal ColumnValidation(Column column)
     {
       _column = column;
+    }
+
+    internal bool IsNumericType()
+    {
+      return IsFloatingPointType() || IsIntegerType();
+    }
+
+    internal bool IsFloatingPointType()
+    {
+      string dt = DataType;
+      if (dt == "decimal" || dt == "numeric" || dt == "float" || dt == "double")
+      {
+        return true;
+      }
+      return false;
+    }
+
+    internal bool IsIntegerType()
+    {
+      string dt = DataType;
+      if (dt == "int" || dt == "integer" || dt == "smallint" || dt == "tinyint" || dt == "mediumint" || dt == "bigint")
+      {
+        return true;
+      }
+      return false;
     }
   }
 

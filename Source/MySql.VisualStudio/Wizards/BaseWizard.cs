@@ -65,8 +65,7 @@ namespace MySql.Data.VisualStudio.Wizards
     protected string NetFxVersion;
 
     /// <summary>
-    /// The column data. TODO: Change this to return more than just the name 
-    /// (at least the type will be also required).
+    /// The column metadata.
     /// </summary>
     internal Dictionary<string, Column> Columns;
 

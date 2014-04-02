@@ -49,6 +49,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal string ConstraintName { get { return dataAccessConfig1.ConstraintName; } }
 
+    internal List<ColumnValidation> ValidationColumns { get { return validationConfig1.ValidationColumns; } }
+
     #endregion
 
     public WindowsFormsWizardForm()
