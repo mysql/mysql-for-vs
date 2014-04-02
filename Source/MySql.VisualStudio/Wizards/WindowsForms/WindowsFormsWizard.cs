@@ -39,7 +39,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   ///  Wizard for generation of a Windows Forms based project.
   /// </summary>
   public class WindowsFormsWizard : BaseWizard<WindowsFormsWizardForm>
-  {
+  { 
+    private bool ValidationsEnabled
+    {
+      get
+      {
+        return WizardForm.ValidationColumns != null;
+      } 
+    }
+
     public WindowsFormsWizard()
       : base()
     {
@@ -120,6 +128,55 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         sw.WriteLine("ctx.{0}.Load();", _canonicalTableName);
         sw.WriteLine("{0}.DataSource = ctx.{1}.Local.ToBindingList();", _bindingSourceName, _canonicalTableName);
       }
+      else if (line.Trim() == "// <WizardGeneratedCode>Validation Events</WizardGeneratedCode>")
+      {
+        bool validationsEnabled = ValidationsEnabled;
+        List<ColumnValidation> validationColumns = WizardForm.ValidationColumns;
+        if (validationsEnabled)
+        {
+          for (int i = 0; i < validationColumns.Count; i++)
+          {
+            ColumnValidation cv = validationColumns[i];
+            string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+            sw.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);
+            sw.WriteLine("{");
+            sw.WriteLine("  e.Cancel = false;");
+            if (cv.Required)
+            {
+              sw.WriteLine("  if( string.IsNullOrEmpty( {0}TextBox.Text ) ) {{ ", idColumnCanonical);
+              sw.WriteLine("    e.Cancel = true;");
+              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} is required\" ); ", idColumnCanonical, cv.Name);
+              sw.WriteLine("  }");
+            }
+            if (cv.IsNumericType())
+            {
+              sw.WriteLine("  int v;");
+              sw.WriteLine("  string s = {0}TextBox.Text;", idColumnCanonical);
+              sw.WriteLine("  if( !int.TryParse( s, out v ) ) {");
+              sw.WriteLine("    e.Cancel = true;");
+              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} must be numeric.\" );", idColumnCanonical, cv.Name);
+              sw.WriteLine("  }");
+              if (cv.MinValue != null)
+              {
+                sw.WriteLine(" else if( cv.MinValue > v ) { ");
+                sw.WriteLine("   e.Cancel = true;");
+                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be greater or equal than {2}.\" );", idColumnCanonical, cv.Name, cv.MinValue);
+                sw.WriteLine(" } ");
+              }
+              if (cv.MaxValue != null)
+              {
+                sw.WriteLine(" else if( cv.MaxValue < v ) { ");
+                sw.WriteLine("   e.Cancel = true;");
+                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be lesser or equal than {2}\" );", idColumnCanonical, cv.Name, cv.MaxValue);
+                sw.WriteLine(" } ");
+              }
+            }
+            sw.WriteLine("  if( !e.Cancel ) {{ errorProvider1.SetError( {0}TextBox, \"\" ); }} ", idColumnCanonical);
+            sw.WriteLine("}");
+            sw.WriteLine();
+          }
+        }
+      }
       else
       {
         // just write same line
@@ -151,12 +208,66 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
       else if (line.Trim() == "// <WizardGeneratedCode>Save Event</WizardGeneratedCode>")
       {
-        // TODO: add special handling for all the date columns.
-        /*
-        ((DataRowView)tableBindingSource.Current)["last_update"] = last_updateDateTimePicker.Value;
-         */
+        foreach( KeyValuePair<string,Column> kvp in Columns )
+        {
+          if (kvp.Value.IsDateType())
+          {
+            string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
+            sw.WriteLine("((DataRowView){2}BindingSource.Current)[\"{0}\"] = {1}TextBox.Text;", 
+              kvp.Value.ColumnName, idColumnCanonical, _canonicalTableName);
+          }
+        }
         sw.WriteLine("{0}BindingSource.EndEdit();", _canonicalTableName );
         sw.WriteLine("ad.Update(this.newDataSet._Table);");
+      }
+      else if (line.Trim() == "// <WizardGeneratedCode>Validation Events</WizardGeneratedCode>")
+      {
+        bool validationsEnabled = ValidationsEnabled;
+        List<ColumnValidation> validationColumns = WizardForm.ValidationColumns;
+        if (validationsEnabled)
+        { 
+          for (int i = 0; i < validationColumns.Count; i++)
+          {
+            ColumnValidation cv = validationColumns[ i ];
+            string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+            sw.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical );
+            sw.WriteLine("{");
+            sw.WriteLine("  e.Cancel = false;");
+            if (cv.Required)
+            {
+              sw.WriteLine("  if( string.IsNullOrEmpty( {0}TextBox.Text ) ) {{ ", idColumnCanonical);
+              sw.WriteLine("    e.Cancel = true;");
+              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} is required\" ); ", idColumnCanonical, cv.Name);
+              sw.WriteLine("  }");
+            }
+            if (cv.IsNumericType() )
+            {
+              sw.WriteLine("  int v;");
+              sw.WriteLine("  string s = {0}TextBox.Text;", idColumnCanonical);
+              sw.WriteLine("  if( !int.TryParse( s, out v ) ) {");
+              sw.WriteLine("    e.Cancel = true;");
+              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} must be numeric.\" );", idColumnCanonical, cv.Name );
+              sw.WriteLine("  }");
+              if (cv.MinValue != null )
+              {
+                sw.WriteLine(" else if( {0} > v ) {{ ", cv.MinValue);
+                sw.WriteLine("   e.Cancel = true;");
+                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be greater or equal than {2}.\" );", idColumnCanonical, cv.Name, cv.MinValue );
+                sw.WriteLine(" } ");
+              }
+              if (cv.MaxValue != null)
+              {
+                sw.WriteLine(" else if( {0} < v ) {{ ", cv.MaxValue);
+                sw.WriteLine("   e.Cancel = true;");
+                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be lesser or equal than {2}\" );", idColumnCanonical, cv.Name, cv.MaxValue);
+                sw.WriteLine(" } ");
+              }
+            }
+            sw.WriteLine("  if( !e.Cancel ) {{ errorProvider1.SetError( {0}TextBox, \"\" ); }} ", idColumnCanonical);
+            sw.WriteLine("}");
+            sw.WriteLine();
+          }
+        }
       }
       else
       {
@@ -255,6 +366,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Point initLoc = new Point( szText.Width + 10, 50);
       Point xy = new Point( initLoc.X, initLoc.Y);
       int tabIdx = 1;
+      bool validationsEnabled = ValidationsEnabled;
 
       foreach( KeyValuePair<string,Column> kvp in Columns )
       {
@@ -286,6 +398,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         sw.WriteLine("this.{0}TextBox.Name = \"{1}\";", idColumnCanonical, colName);
         sw.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20 );
         sw.WriteLine("this.{0}TextBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
+
+        if (validationsEnabled)
+        {
+          sw.WriteLine("this.{0}TextBox.Validating += new System.ComponentModel.CancelEventHandler( this.{0}TextBox_Validating );",
+            idColumnCanonical);
+        }
         sw.WriteLine("this.Controls.Add( this.{0}TextBox);", idColumnCanonical);
         xy.Y += szText.Height * 2;
       }

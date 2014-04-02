@@ -95,6 +95,7 @@
       // radEF5
       // 
       this.radEF5.AutoSize = true;
+      this.radEF5.Enabled = false;
       this.radEF5.Location = new System.Drawing.Point(23, 44);
       this.radEF5.Name = "radEF5";
       this.radEF5.Size = new System.Drawing.Size(124, 17);
@@ -171,6 +172,7 @@
       // radMasterDetail
       // 
       this.radMasterDetail.AutoSize = true;
+      this.radMasterDetail.Enabled = false;
       this.radMasterDetail.Location = new System.Drawing.Point(36, 65);
       this.radMasterDetail.Name = "radMasterDetail";
       this.radMasterDetail.Size = new System.Drawing.Size(87, 17);
@@ -183,6 +185,7 @@
       // radGrid
       // 
       this.radGrid.AutoSize = true;
+      this.radGrid.Enabled = false;
       this.radGrid.Location = new System.Drawing.Point(36, 42);
       this.radGrid.Name = "radGrid";
       this.radGrid.Size = new System.Drawing.Size(44, 17);

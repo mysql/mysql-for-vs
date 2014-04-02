@@ -185,6 +185,14 @@ namespace MySql.Data.VisualStudio.SchemaComparer
         return "";
     }
 
+    internal bool IsDateType()
+    {
+      if (DataType == "datetime" || DataType == "timestamp" || DataType == "date" || DataType == "time")
+        return true;
+      else
+        return false;
+    }
+
     private string GetColumnDefinition()
     {
       return string.Format(" /* name */ `{0}` /* datatype */ {1}{2} {3} {4}",
