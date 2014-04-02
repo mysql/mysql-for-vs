@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data.Entity.Design;
 using System.Data.Metadata.Edm;
@@ -110,8 +109,10 @@ namespace MySql.Data.VisualStudio.Wizards
       FileInfo fi = new FileInfo(file);
       WriteEdmx(sCsdl, sSsdl, sMsl, fi);
 
+#if CLR4 || NET_40_OR_GREATER
       EntityCodeGenerator gen = new EntityCodeGenerator(LanguageOption.GenerateCSharpCode);
       errors = gen.GenerateCode(file, Path.Combine( _path, _modelName + ".Designer.cs.bak") );
+#endif
 
       return fi.FullName;
     }
