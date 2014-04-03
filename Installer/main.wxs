@@ -130,6 +130,7 @@
           <Directory Id="VS10_CSharpPTCache" Name="CSharp">
             <Directory Id="VS10_CSharpPTMySQLCache" Name="MySQL">
               <Directory Id="VS10_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
+              <Directory Id="VS10_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
             </Directory>
           </Directory>
           <Directory Id="VS10_VisualBasicPTCache" Name="VisualBasic">
@@ -169,7 +170,8 @@
             <Directory Id="VS11_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
               <Directory Id="VS11_CSharpPTCache" Name="CSharp">
                 <Directory Id="VS11_CSharpPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS11_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>                                      
+                  <Directory Id="VS11_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
+                  <Directory Id="VS11_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
                 </Directory>
               </Directory>
               <Directory Id="VS11_VisualBasicPTCache" Name="VisualBasic">
@@ -212,6 +214,7 @@
               <Directory Id="VS12_CSharpPTCache" Name="CSharp">
                 <Directory Id="VS12_CSharpPTMySQLCache" Name="MySQL">
                   <Directory Id="VS12_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
+                  <Directory Id="VS12_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
                 </Directory>
               </Directory>
               <Directory Id="VS12_VisualBasicPTCache" Name="VisualBasic">
