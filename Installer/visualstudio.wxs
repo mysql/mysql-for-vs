@@ -76,8 +76,8 @@
       <Component Id='VS2008_VSTDIR' Guid='BA082C85-9D64-8B79-8910-C6C25655250A'>        
         <File Id='VS2008_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
-        <File Id='VS2008_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />
+        <File Id='VS2008_VSCSharpTemplate' Name='CSharpMvc3.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
       </Component>      
     </DirectoryRef>
 
@@ -112,6 +112,10 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
     </DirectoryRef>
+    
+     <Feature Id='VS2010_AddProjectTemplateToCache' Title='ProjectTemplatesCache' Level='1' AllowAdvertise='no' >
+      <ComponentGroupRef Id='VS10_MvcCsharpTemplateDirectoryComponents'/>
+    </Feature>
 
     <DirectoryRef Id='VS10_PrivateAssemblies'>
       <Component Id='VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250F'>        
@@ -128,8 +132,8 @@
       <Component Id='VS2010_VSTDIR' Guid='BA082C85-9D64-1079-8910-C6C25655250A'>        
         <File Id='VS2010_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
-        <File Id='VS2010_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'              
-              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />          
+        <File Id='VS2010_VSCSharpTemplate' Name='CSharpMvc3.zip' DiskId='1'              
+              Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />          
       </Component>    
     </DirectoryRef>
 
@@ -181,26 +185,13 @@
         <File Id='VS2012_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
         <File Id='VS2012_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />
+              Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
       </Component>
     </DirectoryRef>
-
     
-    
-    
-    <!--<ComponentGroup Id='MvcCsharpTemplateDirectoryComponents'>
-      <Component Id='ContentsMvcCsharpTemplateDirectoryComponents' Directory='MySQLTestingMvcTemplate.zip' Guid='BB082C85-9D64-4B79-8910-C6C25655250A'/>
-    </ComponentGroup>-->      
-    
-    <Feature Id='AddProjectTemplateToCache' Title='ProjectTemplatesCache' Level='1' >
-      <ComponentGroupRef Id='MvcCsharpTemplateDirectoryComponents'/>
+    <Feature Id='VS2012_AddProjectTemplateToCache' Title='ProjectTemplatesCache' Level='1' AllowAdvertise='no' >
+      <ComponentGroupRef Id='VS11_MvcCsharpTemplateDirectoryComponents'/>
     </Feature>
-
-      
-    <!-- Add folder to ProjectTemplatesCache --><!--
-    <DirectoryRef Id='MySQLTestingMvcTemplate.zip' >
-      
-    </DirectoryRef>-->
     
 
     <!-- Visual Studio 2013 -->
@@ -249,10 +240,14 @@
       <Component Id='VS2013_VSTDIR' Guid='BA082C85-9D64-1379-8910-C6C25655250A'>        
         <File Id='VS2013_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
-        <File Id='VS2013_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplateCsharp.zip' />
+        <File Id='VS2013_VSCSharpTemplate' Name='CSharpMvc3.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
       </Component>
     </DirectoryRef>
+
+    <Feature Id='VS2013_AddProjectTemplateToCache' Title='ProjectTemplatesCache' Level='1' AllowAdvertise='no' >
+      <ComponentGroupRef Id='VS12_MvcCsharpTemplateDirectoryComponents'/>
+    </Feature>
     
     <!--Removing files from Private Assemblies Folders-->
 
@@ -326,6 +321,7 @@
       <ComponentRef Id='Remove.VS2010_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2010'/>
       <ComponentRef Id='VS2010_VSTDIR'/>
+      <ComponentGroupRef Id='VS10_MvcCsharpTemplateDirectoryComponents'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -338,7 +334,7 @@
       <ComponentRef Id='Remove.VS2012_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2012'/>
       <ComponentRef Id='VS2012_VSTDIR' />
-      <ComponentGroupRef Id='MvcCsharpTemplateDirectoryComponents'/>
+      <ComponentGroupRef Id='VS11_MvcCsharpTemplateDirectoryComponents'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
@@ -351,6 +347,7 @@
       <ComponentRef Id='Remove.VS2013_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2013'/>
       <ComponentRef Id='VS2013_VSTDIR'/>
+      <ComponentGroupRef Id='VS12_MvcCsharpTemplateDirectoryComponents'/>
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
@@ -441,10 +438,13 @@
       <!-- now vs2008 scheduling -->
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
+      <Custom Action='VS2010Setup' Before='InstallFinalize'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
       <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action='VS2013_SetPathProp' Before='VS12_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>      
+      <Custom Action='VS2012Setup' Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action='VS2013_SetPathProp' Before='VS12_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
+      <Custom Action='VS2013Setup' Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
       <Custom Action="VS11_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action="VS12_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>      
+      <Custom Action="VS12_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>       
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
