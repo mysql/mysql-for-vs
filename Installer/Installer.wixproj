@@ -106,7 +106,12 @@
     </WixVariables>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ComponentGroups\CSharpMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS10_CSharpMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS10_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS11_CSharpMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS11_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS12_CSharpMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS12_CSharpWindowsForms.zip.wxs" />
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
     <Compile Include="main.wxs" />
@@ -123,38 +128,47 @@
     </CreateProperty>
   </Target>
   <ItemGroup>
-    <WixExtension Include="WixUtilExtension">
-      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
-      <Name>WixUtilExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixNetFxExtension">
-      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
-      <Name>WixNetFxExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixUIExtension">
-      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
-      <Name>WixUIExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixVSExtension">
-      <HintPath>$(WixExtDir)\WixVSExtension.dll</HintPath>
-      <Name>WixVSExtension</Name>
-    </WixExtension>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="VS2008_Data.wxi" />
     <Content Include="VS2008_Registry.wxi" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ComponentGroups\" />
   </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixVSExtension">
+      <HintPath>$(WixExtDir)\WixVSExtension.dll</HintPath>
+      <Name>WixVSExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <PropertyGroup>
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"C:\Program Files (x86)\WiX Toolset v3.6\bin\heat.exe" dir "$(SolutionDir)Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplate.zip" -dr MySQLTestingMvcTemplate.zip -cg MvcCsharpTemplateDirectoryComponents  -gg -g1 -sf -srd -out "$(SolutionDir)Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQLTestingMvcTemplate.zip.wxs"</PreBuildEvent>
   </PropertyGroup>
-  <!--<Target Name="BeforeBuild">
-
-  </Target>-->
+  <Target Name="BeforeBuild">
+    <RemoveDir Directories="..\ProjectTemplatesZipFolder" ContinueOnError="true" />
+    <MakeDir Directories="..\ProjectTemplatesZipFolder" />
+    <ItemGroup>
+      <Mvc3CsharpTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\**" />
+    </ItemGroup>
+	<ItemGroup>
+      <WinFormsCsharpTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\**" />
+    </ItemGroup>
+    <Zip Files="@(Mvc3CsharpTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip" />
+	<Zip Files="@(WinFormsCsharpTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip" />
+  </Target>
 </Project>
