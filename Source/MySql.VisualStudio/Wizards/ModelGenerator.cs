@@ -37,6 +37,7 @@ namespace MySql.Data.VisualStudio.Wizards
     protected MySqlConnection _con;
     protected string _modelName;
     protected string _table;
+    protected List<string> _tables;
     protected string _path;
     protected string _artifactNamespace;
     protected List<string> _errors = new List<string>();
@@ -45,6 +46,20 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       get { return _errors.AsEnumerable(); }
     }
+
+    internal ModelGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace)
+    {
+      if (tables == null)
+        throw new ArgumentNullException("tables");
+
+      _con = con;
+      _modelName = modelName;
+      _tables = tables;
+      _path = path;
+      _artifactNamespace = artifactNamespace;
+    }
+
+
 
     internal ModelGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace)
     {

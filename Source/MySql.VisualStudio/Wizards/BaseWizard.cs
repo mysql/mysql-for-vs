@@ -121,12 +121,26 @@ namespace MySql.Data.VisualStudio.Wizards
       return true;
     }
 
-    protected void GenerateEntityFrameworkModel(VSProject VsProj, string Version, MySqlConnection con, string ModelName, string TableName )
-    {
-      // Run the generator
+
+    protected void GenerateEntityFrameworkModel(VSProject vsProj, string version, MySqlConnection con, string modelName, List<string> tables)
+    {      
       string ns = GetCanonicalIdentifier(ProjectNamespace);
-      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, ModelName, TableName, ProjectPath, ns);
+      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tables, ProjectPath, ns);
       gen.Generate();
+      TryErrorsAndAddDataEntityArtifactsToProject(gen, modelName, vsProj);    
+    }
+
+    protected void GenerateEntityFrameworkModel(VSProject vsProj, string version, MySqlConnection con, string modelName, string tableName )
+    {     
+      string ns = GetCanonicalIdentifier(ProjectNamespace);
+      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tableName, ProjectPath, ns);
+      gen.Generate();
+      TryErrorsAndAddDataEntityArtifactsToProject(gen, modelName, vsProj);      
+    }
+
+
+    private void TryErrorsAndAddDataEntityArtifactsToProject(EntityFrameworkGenerator gen, string modelName, VSProject vsProj)
+    {
       List<string> errors = gen.Errors.ToList();
       if (errors.Count != 0)
       {
@@ -136,20 +150,24 @@ namespace MySql.Data.VisualStudio.Wizards
           sb.Append(" - ").AppendLine(errors[i]);
         }
         throw new WizardException(string.Format("The Entity Framework generation failed with the following errors:\n\n",
-          sb.ToString()));
+          sb.ToString()));        
       }
-      else
+      try
       {
         // Add the Edmx artifacts to the project.
-        string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.edmx", ModelName));
-        VsProj.Project.ProjectItems.AddFromFile( artifactPath );
-        string dstFile = Path.Combine( ProjectPath, string.Format("{0}.Designer.cs", ModelName) );
+        string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.edmx", modelName));
+        vsProj.Project.ProjectItems.AddFromFile( artifactPath );
+        string dstFile = Path.Combine( ProjectPath, string.Format("{0}.Designer.cs", modelName) );
         if (File.Exists(dstFile))
           File.Delete(dstFile);
-        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.cs.bak", ModelName) ), dstFile );
+        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.cs.bak", modelName) ), dstFile );
         //artifactPath = Path.Combine(ProjectPath, string.Format("{0}.Designer.cs", ModelName));
-        //VsProj.Project.ProjectItems.AddFromFile(artifactPath);
+        //VsProj.Project.ProjectItems.AddFromFile(artifactPath);        
       }
+      catch
+      {        
+        new Exception("Failed operation when addin model to project");
+      }      
     }
 
     /// <summary>

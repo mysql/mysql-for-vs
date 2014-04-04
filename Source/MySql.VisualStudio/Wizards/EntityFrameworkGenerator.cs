@@ -40,10 +40,14 @@ namespace MySql.Data.VisualStudio.Wizards
   {
     private static readonly string ProviderName = "MySql.Data.MySqlClient";    
 
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string ArtifactNamespace) : 
-      base( con, modelName, table, path, ArtifactNamespace )
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace) : 
+      base( con, modelName, table, path, artifactNamespace )
     {
     }
+
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace) :
+      base(con, modelName, tables, path, artifactNamespace)
+    { }
 
     internal override string Generate()
     {
@@ -55,7 +59,19 @@ namespace MySql.Data.VisualStudio.Wizards
       EntityStoreSchemaGenerator essg =
           new EntityStoreSchemaGenerator(ProviderName, _con.ConnectionString, ssdlNamespace);
       List<EntityStoreSchemaFilterEntry> filters = new List<EntityStoreSchemaFilterEntry>();
-      filters.Add(new EntityStoreSchemaFilterEntry(null, null, _table, EntityStoreSchemaFilterObjectTypes.Table, EntityStoreSchemaFilterEffect.Allow));
+      if (_tables != null && _tables.Count > 0)
+      {
+        foreach (var tablename in _tables)
+        {
+          filters.Add(new EntityStoreSchemaFilterEntry(null, null, tablename, EntityStoreSchemaFilterObjectTypes.Table, EntityStoreSchemaFilterEffect.Allow));
+        }
+
+      }
+      else {
+        filters.Add(new EntityStoreSchemaFilterEntry(null, null, _table, EntityStoreSchemaFilterObjectTypes.Table, EntityStoreSchemaFilterEffect.Allow));
+      }
+
+      
       filters.Add(new EntityStoreSchemaFilterEntry(null, null, "%", EntityStoreSchemaFilterObjectTypes.View, EntityStoreSchemaFilterEffect.Exclude));
       errors = essg.GenerateStoreMetadata(filters);
 
