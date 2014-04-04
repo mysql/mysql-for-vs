@@ -738,6 +738,25 @@
     <Compile Include="Wizards\EntityFrameworkGenerator.cs" />
     <Compile Include="Wizards\ModelGenerator.cs" />
     <Compile Include="Wizards\TypedDataSetGenerator.cs" />
+    <Compile Include="Wizards\Web\WebWizard.cs" />
+    <Compile Include="Wizards\Web\WebWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\Web\WebWizardForm.Designer.cs">
+      <DependentUpon>WebWizardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\Web\ModelConfiguration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\Web\ModelConfiguration.Designer.cs">
+      <DependentUpon>ModelConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\Web\ProviderConfiguration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\Web\ProviderConfiguration.Designer.cs">
+      <DependentUpon>ProviderConfiguration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Wizards\WindowsForms\DataAccessConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -852,6 +871,15 @@
     <EmbeddedResource Include="Wizards\BaseWizardForm.resx">
       <DependentUpon>BaseWizardForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\Web\WebWizardForm.resx">
+      <DependentUpon>WebWizardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\Web\ModelConfiguration.resx">
+      <DependentUpon>ModelConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\Web\ProviderConfiguration.resx">
+      <DependentUpon>ProviderConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\DataAccessConfig.resx">
       <DependentUpon>DataAccessConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -874,6 +902,9 @@
     <None Include="Resources\sql_editor_banner.bmp">
     </None>
     <None Include="Resources\page-title-mysql-export.png" />
+    <Content Include="Resources\Background.png" />
+    <Content Include="Resources\Banner.png" />
+    <Content Include="Resources\MySQL.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">
@@ -920,12 +951,17 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Web, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\v2.0\Release\MySql.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>
