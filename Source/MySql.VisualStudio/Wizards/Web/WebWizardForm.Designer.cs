@@ -59,7 +59,7 @@
       // providerConfiguration1
       // 
       this.providerConfiguration1.BackColor = System.Drawing.SystemColors.Control;
-      this.providerConfiguration1.Location = new System.Drawing.Point(3, 2);
+      this.providerConfiguration1.Location = new System.Drawing.Point(3, 0);
       this.providerConfiguration1.Name = "providerConfiguration1";
       this.providerConfiguration1.Size = new System.Drawing.Size(861, 445);
       this.providerConfiguration1.TabIndex = 13;
