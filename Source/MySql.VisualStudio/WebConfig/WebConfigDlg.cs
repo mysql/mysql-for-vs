@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -47,7 +47,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     private Solution2 solution;
     private Project project;
     private int page;
-    private WizardPage[] pages = new WizardPage[4];
+    private WizardPage[] pages = new WizardPage[5];
 
     public WebConfigDlg()
     {
@@ -90,6 +90,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       LoadInitialRoleState();
       LoadInitialProfileState();
       LoadInitialSessionState();
+      LoadInitialSiteMapState();
 
       foreach (WizardPage page in pages)
         page.ProviderConfig.Initialize(wc);
@@ -125,6 +126,14 @@ namespace MySql.Data.VisualStudio.WebConfig
       pages[3].Description = "Set options for use with the session state provider";
       pages[3].EnabledString = "Use MySQL to manage my ASP.Net session state";
       pages[3].ProviderConfig = new SessionStateConfig();      
+    }
+
+    private void LoadInitialSiteMapState()
+    {
+      pages[4].Title = "Site Map";
+      pages[4].Description = "Set options for use with the sitemap provider";
+      pages[4].EnabledString = "Use MySQL to manage my ASP.NET site map";
+      pages[4].ProviderConfig = new SiteMapConfig();
     }
 
     private void advancedBtn_Click(object sender, EventArgs e)
@@ -214,6 +223,12 @@ namespace MySql.Data.VisualStudio.WebConfig
       enableExpCallback.Visible = page == 3;
       nextButton.Text = (page == pages.Length - 1) ? "Finish" : "Next";
       backButton.Enabled = page > 0;
+
+      if (config.NotInstalled)
+      {
+        useProvider.Checked = false;
+        useProvider.Enabled = false;
+      }
     }
 
     private void Finish()
@@ -223,6 +238,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       pages[1].ProviderConfig.Save(w);
       pages[2].ProviderConfig.Save(w);
       pages[3].ProviderConfig.Save(w);
+      pages[4].ProviderConfig.Save(w);
       w.Save();
       Close();
     }
