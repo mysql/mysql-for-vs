@@ -45,14 +45,21 @@
       this.radGrid = new System.Windows.Forms.RadioButton();
       this.radControls = new System.Windows.Forms.RadioButton();
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+      this.pictureBox2 = new System.Windows.Forms.PictureBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.label2 = new System.Windows.Forms.Label();
+      this.pictureBox1 = new System.Windows.Forms.PictureBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.grpboxTechnology.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
       this.grpboxType.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.SuspendLayout();
       // 
       // btnConnConfig
       // 
-      this.btnConnConfig.Location = new System.Drawing.Point(334, 55);
+      this.btnConnConfig.Location = new System.Drawing.Point(733, 77);
       this.btnConnConfig.Name = "btnConnConfig";
       this.btnConnConfig.Size = new System.Drawing.Size(32, 21);
       this.btnConnConfig.TabIndex = 0;
@@ -62,7 +69,7 @@
       // 
       // txtConnStr
       // 
-      this.txtConnStr.Location = new System.Drawing.Point(26, 55);
+      this.txtConnStr.Location = new System.Drawing.Point(425, 77);
       this.txtConnStr.Name = "txtConnStr";
       this.txtConnStr.ReadOnly = true;
       this.txtConnStr.Size = new System.Drawing.Size(302, 20);
@@ -73,7 +80,7 @@
       this.grpboxTechnology.Controls.Add(this.radEF6);
       this.grpboxTechnology.Controls.Add(this.radEF5);
       this.grpboxTechnology.Controls.Add(this.radTechTypedDataSet);
-      this.grpboxTechnology.Location = new System.Drawing.Point(26, 153);
+      this.grpboxTechnology.Location = new System.Drawing.Point(425, 162);
       this.grpboxTechnology.Name = "grpboxTechnology";
       this.grpboxTechnology.Size = new System.Drawing.Size(330, 98);
       this.grpboxTechnology.TabIndex = 2;
@@ -119,7 +126,7 @@
       // cmbTable
       // 
       this.cmbTable.FormattingEnabled = true;
-      this.cmbTable.Location = new System.Drawing.Point(26, 117);
+      this.cmbTable.Location = new System.Drawing.Point(425, 120);
       this.cmbTable.Name = "cmbTable";
       this.cmbTable.Size = new System.Drawing.Size(330, 21);
       this.cmbTable.TabIndex = 3;
@@ -127,7 +134,7 @@
       // lnlConnStr
       // 
       this.lnlConnStr.AutoSize = true;
-      this.lnlConnStr.Location = new System.Drawing.Point(23, 27);
+      this.lnlConnStr.Location = new System.Drawing.Point(276, 80);
       this.lnlConnStr.Name = "lnlConnStr";
       this.lnlConnStr.Size = new System.Drawing.Size(94, 13);
       this.lnlConnStr.TabIndex = 4;
@@ -136,7 +143,7 @@
       // lblTable
       // 
       this.lblTable.AutoSize = true;
-      this.lblTable.Location = new System.Drawing.Point(23, 88);
+      this.lblTable.Location = new System.Drawing.Point(276, 128);
       this.lblTable.Name = "lblTable";
       this.lblTable.Size = new System.Drawing.Size(37, 13);
       this.lblTable.TabIndex = 3;
@@ -152,7 +159,7 @@
       this.grpboxType.Controls.Add(this.radMasterDetail);
       this.grpboxType.Controls.Add(this.radGrid);
       this.grpboxType.Controls.Add(this.radControls);
-      this.grpboxType.Location = new System.Drawing.Point(26, 267);
+      this.grpboxType.Location = new System.Drawing.Point(425, 280);
       this.grpboxType.Name = "grpboxType";
       this.grpboxType.Size = new System.Drawing.Size(330, 100);
       this.grpboxType.TabIndex = 5;
@@ -211,10 +218,66 @@
       // 
       this.toolTip1.ShowAlways = true;
       // 
+      // pictureBox2
+      // 
+      this.pictureBox2.Image = global::MySql.Data.VisualStudio.Properties.Resources.MySQL;
+      this.pictureBox2.Location = new System.Drawing.Point(68, 182);
+      this.pictureBox2.Name = "pictureBox2";
+      this.pictureBox2.Size = new System.Drawing.Size(108, 111);
+      this.pictureBox2.TabIndex = 50;
+      this.pictureBox2.TabStop = false;
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label1.ForeColor = System.Drawing.Color.Black;
+      this.label1.Location = new System.Drawing.Point(58, 139);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(128, 26);
+      this.label1.TabIndex = 53;
+      this.label1.Text = "Configuration";
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Font = new System.Drawing.Font("Calibri", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label2.ForeColor = System.Drawing.Color.Black;
+      this.label2.Location = new System.Drawing.Point(35, 99);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(174, 33);
+      this.label2.TabIndex = 52;
+      this.label2.Text = "MVC Template";
+      // 
+      // pictureBox1
+      // 
+      this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
+	  this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.Background;
+      this.pictureBox1.Location = new System.Drawing.Point(245, 1);
+      this.pictureBox1.Name = "pictureBox1";
+      this.pictureBox1.Size = new System.Drawing.Size(614, 442);
+      this.pictureBox1.TabIndex = 51;
+      this.pictureBox1.TabStop = false;
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.label3.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label3.Location = new System.Drawing.Point(271, 17);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(216, 23);
+      this.label3.TabIndex = 55;
+      this.label3.Text = "Data Access Configuration";
+      // 
       // DataAccessConfig
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.label3);
+      this.Controls.Add(this.pictureBox2);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.label2);
       this.Controls.Add(this.grpboxType);
       this.Controls.Add(this.lblTable);
       this.Controls.Add(this.lnlConnStr);
@@ -222,14 +285,17 @@
       this.Controls.Add(this.grpboxTechnology);
       this.Controls.Add(this.txtConnStr);
       this.Controls.Add(this.btnConnConfig);
+      this.Controls.Add(this.pictureBox1);
       this.Name = "DataAccessConfig";
-      this.Size = new System.Drawing.Size(414, 393);
+      this.Size = new System.Drawing.Size(861, 443);
       this.Validating += new System.ComponentModel.CancelEventHandler(this.DataAccessConfig_Validating);
       this.grpboxTechnology.ResumeLayout(false);
       this.grpboxTechnology.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
       this.grpboxType.ResumeLayout(false);
       this.grpboxType.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -253,5 +319,10 @@
     private System.Windows.Forms.RadioButton radControls;
     private System.Windows.Forms.ComboBox cmbFkConstraints;
     private System.Windows.Forms.ToolTip toolTip1;
+    private System.Windows.Forms.PictureBox pictureBox2;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.PictureBox pictureBox1;
+    private System.Windows.Forms.Label label3;
   }
 }
