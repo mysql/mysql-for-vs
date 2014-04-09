@@ -714,6 +714,7 @@
     <Compile Include="WebConfig\MembershipOptionsDlg.Designer.cs">
       <DependentUpon>MembershipOptionsDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebConfig\PersonalizationConfig.cs" />
     <Compile Include="WebConfig\ProfileConfig.cs">
     </Compile>
     <Compile Include="WebConfig\RoleConfig.cs">

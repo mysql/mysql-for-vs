@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -69,13 +69,20 @@ namespace MySql.Data.VisualStudio.WebConfig
       XmlNode el = GetSystemWebNode(type, false, false);
       if (el == null || el.FirstChild == null) return null;
       el = el.FirstChild;  // move to the <providers> element
+
+      if (type.Equals("webParts", StringComparison.InvariantCultureIgnoreCase))
+      {
+        if (el.ChildNodes.Count > 0)
+          el = el.FirstChild;
+      }
+
       if (el.ChildNodes.Count == 0) return null;
 
       foreach (XmlNode node in el.ChildNodes)
       {
         if (String.Compare(node.Name, "remove", true) == 0 ||
             String.Compare(node.Name, "clear", true) == 0) continue;
-        if (node.Attributes != null)
+        if (node.Attributes != null && node.Attributes.Count > 0)
         {
           string typeName = node.Attributes["type"].Value;
           if (typeName.StartsWith("MySql.Web.", StringComparison.OrdinalIgnoreCase)) return node as XmlElement;
@@ -212,12 +219,20 @@ namespace MySql.Data.VisualStudio.WebConfig
       if (webNode == null && createTopNode)
       {
         webNode = (XmlNode)webDoc.CreateElement(name);
-        systemWebNode.InsertBefore(webNode, systemWebNode.FirstChild);
+        if (webNode.ChildNodes.Count == 0 && name.Equals("webParts", StringComparison.InvariantCultureIgnoreCase))
+        {
+          var personalizationNode = (XmlElement)webDoc.CreateNode(XmlNodeType.Element, "personalization", "");
+          webNode.AppendChild(personalizationNode);                 
+        }               
+        systemWebNode.InsertBefore(webNode, systemWebNode.FirstChild);        
       }
-      if (createProvidersNode)
+      if (createProvidersNode && webNode != null)
       {
-        if (webNode.ChildNodes.Count == 0)
-          webNode.AppendChild(webDoc.CreateElement("providers"));
+        if (webNode.ChildNodes.Count >0 && name.Equals("webParts", StringComparison.InvariantCultureIgnoreCase))
+        {
+          webNode = webNode.FirstChild; //locate on personalization section
+        }
+        webNode.AppendChild(webDoc.CreateElement("providers"));
       }
       return webNode;
     }
