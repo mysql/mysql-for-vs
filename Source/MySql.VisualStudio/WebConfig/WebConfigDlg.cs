@@ -47,7 +47,9 @@ namespace MySql.Data.VisualStudio.WebConfig
     private Solution2 solution;
     private Project project;
     private int page;
-    private WizardPage[] pages = new WizardPage[5];
+    private WizardPage[] pages = new WizardPage[6];
+    private const int MEMBERSHIP_INDEX = 0;
+    private const int PERSONALIZATION_INDEX = 5;
 
     public WebConfigDlg()
     {
@@ -91,6 +93,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       LoadInitialProfileState();
       LoadInitialSessionState();
       LoadInitialSiteMapState();
+      LoadInitialPersonalizationState();
 
       foreach (WizardPage page in pages)
         page.ProviderConfig.Initialize(wc);
@@ -98,10 +101,10 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void LoadInitialMembershipState()
     {
-      pages[0].Title = "Membership";
-      pages[0].Description = "Set options for use with the membership provider";
-      pages[0].EnabledString = "Use MySQL to manage my membership records";
-      pages[0].ProviderConfig = new MembershipConfig();
+      pages[MEMBERSHIP_INDEX].Title = "Membership";
+      pages[MEMBERSHIP_INDEX].Description = "Set options for use with the membership provider";
+      pages[MEMBERSHIP_INDEX].EnabledString = "Use MySQL to manage my membership records";
+      pages[MEMBERSHIP_INDEX].ProviderConfig = new MembershipConfig();
     }
 
     private void LoadInitialRoleState()
@@ -134,6 +137,16 @@ namespace MySql.Data.VisualStudio.WebConfig
       pages[4].Description = "Set options for use with the sitemap provider";
       pages[4].EnabledString = "Use MySQL to manage my ASP.NET site map";
       pages[4].ProviderConfig = new SiteMapConfig();
+    }
+
+
+    private void LoadInitialPersonalizationState()
+    {
+      pages[PERSONALIZATION_INDEX].Title = "Web Personalization";
+      pages[PERSONALIZATION_INDEX].Description = "Set options for use with the web personalization provider";
+      pages[PERSONALIZATION_INDEX].EnabledString = "Use MySQL to manage my web personalization data provider";
+      pages[PERSONALIZATION_INDEX].ProviderConfig = new PersonalizationConfig();      
+    
     }
 
     private void advancedBtn_Click(object sender, EventArgs e)
@@ -207,14 +220,14 @@ namespace MySql.Data.VisualStudio.WebConfig
       pageDesc.Text = pages[page].Description;
       useProvider.Text = pages[page].EnabledString;
 
-      GenericConfig config = pages[page].ProviderConfig;
-      useProvider.Checked = config.Enabled;
+      GenericConfig config = pages[page].ProviderConfig;      
       Options o = config.GenericOptions;
       appName.Text = o.AppName;
+      useProvider.Checked = config.Enabled; 
       appDescription.Text = o.AppDescription;
       writeExToLog.Checked = o.WriteExceptionToLog;
       autogenSchema.Checked = o.AutoGenSchema;
-      enableExpCallback.Checked = o.EnableExpireCallback;
+      enableExpCallback.Checked = o.EnableExpireCallback;      
       controlPanel.Enabled = config.Enabled;
       connectionString.Text = o.ConnectionString;
 
@@ -223,6 +236,11 @@ namespace MySql.Data.VisualStudio.WebConfig
       enableExpCallback.Visible = page == 3;
       nextButton.Text = (page == pages.Length - 1) ? "Finish" : "Next";
       backButton.Enabled = page > 0;
+      
+      if (page == PERSONALIZATION_INDEX)
+        useProvider.Enabled = IsMembershipSelected();
+      else
+        useProvider.Enabled = true;
 
       if (config.NotInstalled)
       {
@@ -234,11 +252,12 @@ namespace MySql.Data.VisualStudio.WebConfig
     private void Finish()
     {
       WebConfig w = new WebConfig(webConfigFileName);
-      pages[0].ProviderConfig.Save(w);
+      pages[MEMBERSHIP_INDEX].ProviderConfig.Save(w);
       pages[1].ProviderConfig.Save(w);
       pages[2].ProviderConfig.Save(w);
       pages[3].ProviderConfig.Save(w);
       pages[4].ProviderConfig.Save(w);
+      pages[PERSONALIZATION_INDEX].ProviderConfig.Save(w);
       w.Save();
       Close();
     }
@@ -264,6 +283,12 @@ namespace MySql.Data.VisualStudio.WebConfig
       controlPanel.Enabled = config.Enabled;
     }
 
+    private bool IsMembershipSelected()
+    {
+      MembershipConfig config = pages[MEMBERSHIP_INDEX].ProviderConfig as MembershipConfig;
+      return config.Enabled;
+    }
+
   }
 
   internal struct WizardPage
@@ -271,6 +296,6 @@ namespace MySql.Data.VisualStudio.WebConfig
     public string Title;
     public string Description;
     public string EnabledString;
-    public GenericConfig ProviderConfig;
+    public GenericConfig ProviderConfig;   
   }
 }

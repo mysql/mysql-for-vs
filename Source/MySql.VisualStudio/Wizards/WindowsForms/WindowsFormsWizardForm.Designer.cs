@@ -32,29 +32,45 @@
       this.validationConfig1 = new MySql.Data.VisualStudio.Wizards.WindowsForms.ValidationConfig();
       this.SuspendLayout();
       // 
+      // btnFinish
+      // 
+      this.btnFinish.Location = new System.Drawing.Point(757, 454);
+      // 
+      // btnNext
+      // 
+      this.btnNext.Location = new System.Drawing.Point(677, 454);
+      // 
+      // btnCancel
+      // 
+      this.btnCancel.Location = new System.Drawing.Point(515, 454);
+      // 
+      // btnBack
+      // 
+      this.btnBack.Location = new System.Drawing.Point(596, 454);
+      // 
       // dataAccessConfig1
       // 
-      this.dataAccessConfig1.Location = new System.Drawing.Point(12, 12);
+      this.dataAccessConfig1.Location = new System.Drawing.Point(5, 3);
       this.dataAccessConfig1.Name = "dataAccessConfig1";
-      this.dataAccessConfig1.Size = new System.Drawing.Size(414, 393);
+      this.dataAccessConfig1.Size = new System.Drawing.Size(858, 474);
       this.dataAccessConfig1.TabIndex = 4;
       // 
       // validationConfig1
       // 
-      this.validationConfig1.Location = new System.Drawing.Point(12, 12);
+      this.validationConfig1.Location = new System.Drawing.Point(5, 4);
       this.validationConfig1.Name = "validationConfig1";
-      this.validationConfig1.Size = new System.Drawing.Size(414, 393);
+      this.validationConfig1.Size = new System.Drawing.Size(861, 449);
       this.validationConfig1.TabIndex = 12;
       // 
       // WindowsFormsWizardForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(441, 446);
+      this.ClientSize = new System.Drawing.Size(869, 491);
       this.Controls.Add(this.validationConfig1);
       this.Controls.Add(this.dataAccessConfig1);
       this.Name = "WindowsFormsWizardForm";
-      this.Text = "WizardForm";
+      this.Text = "Windows Forms Configuration ";
       this.Load += new System.EventHandler(this.WizardForm_Load);
       this.Controls.SetChildIndex(this.dataAccessConfig1, 0);
       this.Controls.SetChildIndex(this.btnNext, 0);
