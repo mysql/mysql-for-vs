@@ -74,7 +74,7 @@
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
       this.Name = "WebWizardForm";
-      this.Text = "BaseWebWizardForm";
+      this.Text = "MySQL MVC Template Configuration";
       this.Load += new System.EventHandler(this.WebWizardForm_Load);
       this.Controls.SetChildIndex(this.btnNext, 0);
       this.Controls.SetChildIndex(this.btnBack, 0);
