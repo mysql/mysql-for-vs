@@ -61,7 +61,6 @@
       <Folder Name="Models" TargetFolderName="Models">
         <ProjectItem ReplaceParameters="true" TargetFileName="AccountModels.cs">AccountModels.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config</ProjectItem>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
@@ -112,7 +111,7 @@
     </Project>
   </TemplateContent>
    <WizardExtension>
-    <Assembly>MySql.VisualStudio, Version=1.1.4.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
+    <Assembly>MySql.VisualStudio, Version=1.2.0.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
     <FullClassName>MySql.Data.VisualStudio.Wizards.Web.WebWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>
