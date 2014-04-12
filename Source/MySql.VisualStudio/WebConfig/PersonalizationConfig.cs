@@ -69,7 +69,8 @@ namespace MySql.Data.VisualStudio.WebConfig
       //Personalization provider needs membership enabled
       XmlElement membership = wc.GetProviderSection("membership");
 
-      if (membership == null || !membership.Attributes["default"].Value.Equals("MySQLMembershipProvider", StringComparison.InvariantCultureIgnoreCase))
+      if (membership == null || membership.Attributes["defaultProvider"] == null ||
+         !membership.Attributes["defaultProvider"].Value.Equals("MySQLMembershipProvider", StringComparison.InvariantCultureIgnoreCase))      
       {
         _membershipEnabled = false;
         return;
@@ -83,8 +84,11 @@ namespace MySql.Data.VisualStudio.WebConfig
         return;
 
       var personalizationNode = e.FirstChild as XmlElement;  // move to the <personalization> element
-
-      string defaultProvider = personalizationNode.GetAttribute("default");
+		    
+      if (personalizationNode == null || personalizationNode.FirstChild == null)
+        return;			
+		
+      string defaultProvider = personalizationNode.GetAttribute("defaultProvider");
 
      
       Enabled = OriginallyEnabled = defaultProvider != null &&
