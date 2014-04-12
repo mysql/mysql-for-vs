@@ -1,5 +1,8 @@
+
 1.2.0
 - Added Implementation of IWizard to create MySQL MVC project.
 - Added implementation of Windows Forms Template project.
 - Fix for Project Templates Wizards shows error Cannot load MySql.Visual studio assembly.
+- Added changes for web configuration tool for Site Map provider.
+- Added changes for web configuration tool for Personalization Map provider.
 
