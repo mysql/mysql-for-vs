@@ -47,6 +47,7 @@
       // 
       // btnCancel
       // 
+      this.btnCancel.CausesValidation = false;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnCancel.Location = new System.Drawing.Point(112, 411);
       this.btnCancel.Name = "btnCancel";
