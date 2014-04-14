@@ -51,6 +51,21 @@ namespace MySql.Data.VisualStudio
       connectionProperties.SelectedObject = connectionStringBuilder;
     }
 
+    public ConnectDialog(MySqlConnectionStringBuilder settings)
+      : this()
+    {
+      if (settings != null)
+      {
+        serverName.Text = settings.Server;
+        userId.Text = settings.UserID;
+        password.Text = settings.Password;
+        database.Text = settings.Database;
+        ReadFields();
+        connectionStringBuilder["Port"] = settings.Port;
+      }    
+    }
+
+
     public DbConnection Connection
     {
       get

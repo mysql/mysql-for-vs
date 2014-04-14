@@ -133,10 +133,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     private void editConnString_Click(object sender, EventArgs e)
     {
-      ConnectDialog dlg = new ConnectDialog();
+      ConnectDialog dlg;
       try
       {
 
+        dlg = ConnectionStringTextBox.Tag == null || String.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString()) ? new ConnectDialog() :
+               new ConnectDialog(new MySqlConnectionStringBuilder(ConnectionStringTextBox.Tag.ToString()));
+        
         DialogResult res = dlg.ShowDialog();
         if (res == DialogResult.OK)
         {
