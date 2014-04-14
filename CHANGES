@@ -4,5 +4,7 @@
 <<<<<<< TREE
 =======
 - Fix for Project Templates Wizards shows error Cannot load MySql.Visual studio assembly.
+- Added changes for web configuration tool for Site Map provider.
+- Added changes for web configuration tool for Personalization Map provider.
 
 >>>>>>> MERGE-SOURCE
