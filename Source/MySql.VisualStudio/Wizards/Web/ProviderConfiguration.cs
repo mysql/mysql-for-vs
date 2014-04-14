@@ -47,7 +47,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       get
       {        
-        return ConnectionStringTextBox.Text;
+        return ConnectionStringTextBox.Tag.ToString();
       }
     }   
 
@@ -141,7 +141,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         if (res == DialogResult.OK)
         {
           ConnectionStringTextBox.Text = ((MySqlConnection)dlg.Connection).ConnectionString;
-          var conn = new MySqlConnection(ConnectionStringTextBox.Text);
+          var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
+          if (csb != null)
+          {
+            ConnectionStringTextBox.Tag = csb.ConnectionString;
+          }
+          var conn = new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
           conn.Open();
         }
       }
@@ -219,7 +224,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       if (String.IsNullOrEmpty(ConnectionStringTextBox.Text))
         return false;
 
-      var cnn = new MySqlConnection(ConnectionStringTextBox.Text);
+      var cnn = new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
       try
       {
         cnn.Open();
