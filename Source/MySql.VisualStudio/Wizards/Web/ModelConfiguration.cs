@@ -89,10 +89,17 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     void rdbNoModel_CheckedChanged(object sender, EventArgs e)
     {
       RadioButton control = (RadioButton)sender;
+      var previousColor = Color.Black;
       if (control.Checked)
       {
-        listTables.Enabled = false;
+        listTables.Enabled = false;        
+        listTables.ForeColor = Color.LightGray;
         _sourceTables = new BindingSource();
+      }
+      else
+      {
+        listTables.Enabled = true;
+        listTables.ForeColor = previousColor;        
       }
     }
 
