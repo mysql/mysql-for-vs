@@ -51,8 +51,7 @@ namespace MySql.Data.VisualStudio.Wizards
     internal override string Generate()
     {
       DataSet ds = new DataSet();
-      MySqlConnection con = new MySqlConnection( _con.ConnectionString );
-      MySqlDataAdapter da = new MySqlDataAdapter( string.Format( "select * from `{0}`", _table ), con);
+      MySqlDataAdapter da = new MySqlDataAdapter( string.Format( "select * from `{0}`", _table ), _con);
       MySqlCommandBuilder builder = new MySqlCommandBuilder(da);
       da.FillSchema(ds, SchemaType.Source);
 

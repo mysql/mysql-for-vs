@@ -31,6 +31,8 @@ using EnvDTE;
 using System.Windows.Forms;
 using VSLangProj;
 using MySql.Data.VisualStudio.SchemaComparer;
+using MySql.Data.MySqlClient;
+using System.Reflection;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
@@ -198,7 +200,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (line.Trim() == "// <WizardGeneratedCode>Form_Load</WizardGeneratedCode>")
       {
         // Write Form_Load code.
-        sw.WriteLine( "string strConn = \"{0};\";", WizardForm.Connection.ConnectionString );
+        Type t = typeof(MySqlConnection);
+        PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
+        object v = p.GetValue(WizardForm.Connection, null);
+        sw.WriteLine( "string strConn = \"{0};\";", v.ToString() );
         sw.WriteLine( "ad = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", WizardForm.TableName );
         sw.WriteLine("MySqlCommandBuilder builder = new MySqlCommandBuilder(ad);");
         sw.WriteLine("ad.Fill(this.newDataSet._Table);");
