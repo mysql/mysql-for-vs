@@ -92,7 +92,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     private void btnConnConfig_Click(object sender, EventArgs e)
     {
       // Code for openning connection dialog.
-      ConnectDialog dlg = new ConnectDialog();
+      ConnectDialog dlg;
+      
+      dlg = _con == null ?  new ConnectDialog() : new ConnectDialog(new MySqlConnectionStringBuilder(_con.ConnectionString));         
+
       DialogResult res = dlg.ShowDialog();
       if (res == DialogResult.OK)
       {
