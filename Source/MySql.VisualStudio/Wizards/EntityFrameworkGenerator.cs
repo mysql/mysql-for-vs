@@ -38,16 +38,20 @@ namespace MySql.Data.VisualStudio.Wizards
   /// </summary>
   internal class EntityFrameworkGenerator : ModelGenerator
   {
-    private static readonly string ProviderName = "MySql.Data.MySqlClient";    
+    private static readonly string ProviderName = "MySql.Data.MySqlClient";
+    private string efVersion;
 
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace) : 
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace, string EfVersion ) :
       base( con, modelName, table, path, artifactNamespace )
     {
+      efVersion = EfVersion;
     }
 
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace) :
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, string EfVersion ) :
       base(con, modelName, tables, path, artifactNamespace)
-    { }
+    {
+      efVersion = EfVersion;
+    }
 
     internal override string Generate()
     {
@@ -73,7 +77,12 @@ namespace MySql.Data.VisualStudio.Wizards
 
       
       filters.Add(new EntityStoreSchemaFilterEntry(null, null, "%", EntityStoreSchemaFilterObjectTypes.View, EntityStoreSchemaFilterEffect.Exclude));
+      Version entityVersion = new Version(2, 0, 0, 0);
+#if NET_40_OR_GREATER
+      errors = essg.GenerateStoreMetadata(filters, entityVersion);
+#else
       errors = essg.GenerateStoreMetadata(filters);
+#endif
 
       // write out errors
       if ((errors != null && errors.Count > 0) && !OnlyWarnings(errors))
@@ -92,7 +101,11 @@ namespace MySql.Data.VisualStudio.Wizards
       string csdlNamespace = _artifactNamespace; // _modelName + "Model";
       string csdlEntityContainerName = _modelName + "Entities";
       EntityModelSchemaGenerator emsg = new EntityModelSchemaGenerator( essg.EntityContainer, csdlNamespace, csdlEntityContainerName);
+#if NET_40_OR_GREATER
+      errors = emsg.GenerateMetadata(entityVersion);
+#else
       errors = emsg.GenerateMetadata();
+#endif
 
       // write out errors
       if (errors != null && errors.Count > 0 && !OnlyWarnings(errors))
@@ -127,10 +140,31 @@ namespace MySql.Data.VisualStudio.Wizards
 
 #if CLR4 || NET_40_OR_GREATER
       EntityCodeGenerator gen = new EntityCodeGenerator(LanguageOption.GenerateCSharpCode);
-      errors = gen.GenerateCode(file, Path.Combine( _path, _modelName + ".Designer.cs.bak") );
+      string outputPath = Path.Combine( _path, _modelName + ".Designer.cs.bak");
+      errors = gen.GenerateCode(file, outputPath );
+      FixUsings(outputPath);
 #endif
 
       return fi.FullName;
+    }
+
+    /// <summary>
+    /// Fixes several using's clauses generated wrong for EF6.
+    /// </summary>
+    /// <param name="outputPath"></param>
+    private void FixUsings( string outputPath )
+    {
+      if (efVersion == BaseWizard<BaseWizardForm>.ENTITY_FRAMEWORK_VERSION_6)
+      {
+        string contents = File.ReadAllText(outputPath);
+        contents = contents.Replace("using System.Data.EntityClient;",
+          "using System.Data.Entity.Core.EntityClient;");
+        contents = contents.Replace("using System.Data.Objects;",
+          "using System.Data.Entity.Core.Objects;");
+        contents = contents.Replace("using System.Data.Objects.DataClasses;",
+          "using System.Data.Entity.Core.Objects.DataClasses;");
+        File.WriteAllText(outputPath, contents);
+      }
     }
 
     private void WriteEdmx(string csdl, string ssdl, string msl, FileInfo f)
@@ -139,9 +173,10 @@ namespace MySql.Data.VisualStudio.Wizards
       StreamWriter sw = new StreamWriter(fs);
       try
       {
+        // http://schemas.microsoft.com/ado/2009/11/edmx
         sw.WriteLine(
           @"<?xml version=""1.0"" encoding=""utf-8""?>
-          <edmx:Edmx Version=""1.0"" xmlns:edmx=""http://schemas.microsoft.com/ado/2009/11/edmx"" >
+          <edmx:Edmx Version=""1.0"" xmlns:edmx=""http://schemas.microsoft.com/ado/2008/10/edmx"" >
   <edmx:Runtime>
     <edmx:StorageModels>");
         sw.WriteLine(ssdl);
@@ -151,7 +186,7 @@ namespace MySql.Data.VisualStudio.Wizards
         sw.WriteLine(msl);
         sw.WriteLine("</edmx:Mappings></edmx:Runtime>");
         sw.WriteLine(
-@"<Designer xmlns=""http://schemas.microsoft.com/ado/2009/11/edmx"">
+@"<Designer xmlns=""http://schemas.microsoft.com/ado/2008/10/edmx"">
     <Connection>
       <DesignerInfoPropertySet>
         <DesignerProperty Name=""MetadataArtifactProcessing"" Value=""EmbedInOutputAssembly"" />
@@ -162,7 +197,7 @@ namespace MySql.Data.VisualStudio.Wizards
         <DesignerProperty Name=""ValidateOnBuild"" Value=""true"" />
         <DesignerProperty Name=""EnablePluralization"" Value=""False"" />
         <DesignerProperty Name=""IncludeForeignKeysInModel"" Value=""True"" />
-        <DesignerProperty Name=""CodeGenerationStrategy"" Value=""None"" />
+        <DesignerProperty Name=""CodeGenerationStrategy"" Value=""Default"" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

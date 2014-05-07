@@ -47,31 +47,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       get
       {
         return WizardForm.ValidationColumns != null;
-      } 
+      }
     }
 
     public WindowsFormsWizard()
       : base()
     {
-      WizardForm = new WindowsFormsWizardForm();
+      WizardForm = new WindowsFormsWizardForm(this);
     }
 
     public override void ProjectFinishedGenerating(Project project)
     {
+      //Dictionary<string,object> dic = GetAllProperties(project.Properties);
       VSProject vsProj = project.Object as VSProject;
-      /*
-       * TODO:
-       * - Generate EF or TypedDataSet as per user selection
-       * - Add items to project.
-       * - Customize generated code for form (add bindings).
-       * */
       try
       {
         Columns = GetColumnsFromTable(WizardForm.TableName, WizardForm.Connection);
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5)
         {
-          AddEntityFrameworkNugetPackage(vsProj, ENTITY_FRAMEWORK_VERSION_5);
-          GenerateEntityFrameworkModel(vsProj, ENTITY_FRAMEWORK_VERSION_5, WizardForm.Connection, "Model1", WizardForm.TableName);
+          CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
+          AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, ENTITY_FRAMEWORK_VERSION_5);
+          GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", WizardForm.TableName);
         }
         else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
         {
@@ -79,13 +75,21 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         else if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
         {
-          throw new NotImplementedException("Entity Framework 6 is not supported in this version.");
+          CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
+          AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, ENTITY_FRAMEWORK_VERSION_6);
+          GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", WizardForm.TableName);
         }
         AddBindings(vsProj);
       }
       catch (WizardException e)
       {
         MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+      if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
+      {
+        // Change target version to 4.5 (only version currently supported for EF6).
+        project.DTE.SuppressUI = true;
+        project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
       }
       WizardForm.Dispose();
     }
@@ -121,14 +125,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       // TODO: this messy code generation may be better with CodeDom.
       if (line.Trim() == "// <WizardGeneratedCode>Namespace_UserCode</WizardGeneratedCode>")
       {
-        // nothing
+        if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5)
+        {
+          sw.WriteLine("using System.Data.Objects;");
+        }
+        else if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_6)
+        {
+          sw.WriteLine("using System.Data.Entity.Core.Objects;");
+          //sw.WriteLine("using System.Data.Entity;");
+        }
       }
       else if (line.Trim() == "// <WizardGeneratedCode>Form_Load</WizardGeneratedCode>")
       {
         // Write Form_Load code.
-        sw.WriteLine("Model1Entities ctx = new Model1Entities();");
-        sw.WriteLine("ctx.{0}.Load();", _canonicalTableName);
-        sw.WriteLine("{0}.DataSource = ctx.{1}.Local.ToBindingList();", _bindingSourceName, _canonicalTableName);
+        sw.WriteLine("ctx = new Model1Entities();");
+        sw.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", _canonicalTableName);
+        sw.WriteLine("{0}BindingSource.DataSource = _entities;", _canonicalTableName);
+
+        foreach (KeyValuePair<string, Column> kvp in Columns)
+        {
+          string colName = kvp.Key;
+          string idColumnCanonical = GetCanonicalIdentifier(colName);
+          sw.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
+            idColumnCanonical, colName, _canonicalTableName);
+        }
       }
       else if (line.Trim() == "// <WizardGeneratedCode>Validation Events</WizardGeneratedCode>")
       {
@@ -178,6 +198,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             sw.WriteLine();
           }
         }
+      }
+      else if (line.Trim() == "// <WizardGeneratedCode>Private Variables Frontend</WizardGeneratedCode>")
+      {
+        sw.WriteLine("private Model1Entities ctx;");
+      }
+      else if (line.Trim() == "// <WizardGeneratedCode>Save Event</WizardGeneratedCode>")
+      {
+        sw.WriteLine("{0}BindingSource.EndEdit();", _canonicalTableName);
+        sw.WriteLine("ctx.SaveChanges();");
       }
       else
       {
@@ -298,9 +327,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (line.Trim() == "// <WizardGeneratedCode>Control Initialization</WizardGeneratedCode>")
       {
         // Generate the InitializeComponent code to configure everything (including custom coordinates for the controls).
-        // TODO: The type may not always be the table name.
-        sw.WriteLine("this.{0}BindingSource.DataSource = typeof({1});", _canonicalTableName, _canonicalTableName);
-        WriteControlInitialization();
+        sw.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", _canonicalTableName);
+        WriteControlInitialization(false);
+      }
+      else if (line.Trim() == "// <WizardGeneratedCode>BeforeSuspendLayout</WizardGeneratedCode>")
+      {
+        sw.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", _canonicalTableName);
+      }
+      else if (line.Trim() == "// <WizardGeneratedCode>AfterSuspendLayout</WizardGeneratedCode>")
+      {
+        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", _canonicalTableName);
+      }
+      else if (line.Trim() == "// <WizardGeneratedCode>BeforeResumeSuspendLayout</WizardGeneratedCode>")
+      {
+        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", _canonicalTableName);
       }
       else
       {
@@ -340,7 +380,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         sw.WriteLine("this.{0}BindingSource.DataMember = \"Table\";", _canonicalTableName);
         sw.WriteLine("this.{0}BindingSource.DataSource = this.newDataSet;", _canonicalTableName);
 
-        WriteControlInitialization();
+        WriteControlInitialization(true);
       }
       else if (line.Trim() == "// <WizardGeneratedCode>BeforeSuspendLayout</WizardGeneratedCode>")
       {
@@ -364,7 +404,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    private void WriteControlInitialization()
+    private void WriteControlInitialization(bool addBindings)
     {
       Label l = new Label();
       Size szText = TextRenderer.MeasureText(GetMaxWidthString(Columns), l.Font);
@@ -397,8 +437,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         sw.WriteLine("// {0}TextBox", idColumnCanonical);
         sw.WriteLine("//");
         sw.WriteLine("this.{0}TextBox = new System.Windows.Forms.TextBox();", idColumnCanonical);
-        sw.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
-          idColumnCanonical, colName, _canonicalTableName);
+
+        if (addBindings)
+        {
+          sw.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
+            idColumnCanonical, colName, _canonicalTableName);
+        }
+
         sw.WriteLine("this.{0}TextBox.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical, xy.X, xy.Y);
         sw.WriteLine("this.{0}TextBox.Name = \"{1}\";", idColumnCanonical, colName);
         sw.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20 );

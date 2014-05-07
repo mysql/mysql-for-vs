@@ -52,8 +52,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     #endregion
 
-    public WindowsFormsWizardForm()
+    internal protected WindowsFormsWizard Wizard = null;
+
+    public WindowsFormsWizardForm(WindowsFormsWizard Wizard)
+      : base()
     {
+      this.Wizard = Wizard;
       InitializeComponent();
     }
 
