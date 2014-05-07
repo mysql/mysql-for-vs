@@ -102,7 +102,6 @@
       // radEF5
       // 
       this.radEF5.AutoSize = true;
-      this.radEF5.Enabled = false;
       this.radEF5.Location = new System.Drawing.Point(23, 44);
       this.radEF5.Name = "radEF5";
       this.radEF5.Size = new System.Drawing.Size(124, 17);

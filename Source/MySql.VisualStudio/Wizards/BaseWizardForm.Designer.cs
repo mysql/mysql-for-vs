@@ -90,7 +90,6 @@
       this.Controls.Add(this.btnNext);
       this.Name = "BaseWizardForm";
       this.Text = "BaseWizardForm";
-      this.Load += new System.EventHandler(this.BaseWizardForm_Load);
       this.ResumeLayout(false);
 
     }

@@ -44,6 +44,7 @@ namespace MySql.Data.VisualStudio.Wizards
     public BaseWizardForm()
     {
       InitializeComponent();
+      // this.Load += new System.EventHandler(this.BaseWizardForm_Load);
     }
 
     protected void BaseWizardForm_Load(object sender, EventArgs e)
@@ -57,6 +58,7 @@ namespace MySql.Data.VisualStudio.Wizards
       btnNext.Enabled = true;
 
       ShowFinishButton(false);
+      CurPage.OnStarting(this);
     }
 
     private void btnCancel_Click(object sender, EventArgs e)
@@ -71,7 +73,7 @@ namespace MySql.Data.VisualStudio.Wizards
         ShowFinishButton(false);
       if (Current > 0)
       {
-        CurPage = Pages[--Current];        
+        CurPage = Pages[--Current];
         Pages[prevCurrent].Visible = false;
         Pages[Current].Visible = true;
         btnNext.Enabled = true;
