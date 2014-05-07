@@ -64,7 +64,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           WizardForm.selectedTables.ForEach(t => tables.Add(t.Name));
 
           if (tables.Count > 0)
-            GenerateEntityFrameworkModel(_vsProj, "", new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);
+          {
+            if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
+              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
+            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
+              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
+            GenerateEntityFrameworkModel(_vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);
+          }
         }
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
 

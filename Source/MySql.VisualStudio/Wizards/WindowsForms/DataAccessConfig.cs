@@ -220,6 +220,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
       return _constraints;
     }
+
+    internal override void OnStarting(BaseWizardForm wizard)
+    {
+      // Enable EF6 only if we are in VS2013 or major
+      double version = double.Parse( (( WindowsFormsWizardForm )wizard).Wizard.GetVisualStudioVersion() );
+      if (version >= 12.0)
+      {
+        radEF6.Enabled = true;
+      }
+      else
+      {
+        radEF6.Enabled = false;
+      }
+    }
   }
 
   internal enum DataAccessTechnology : int

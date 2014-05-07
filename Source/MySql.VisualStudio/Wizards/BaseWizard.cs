@@ -44,6 +44,8 @@ namespace MySql.Data.VisualStudio.Wizards
   /// </summary>
   public class BaseWizard<TWizardForm> : IWizard where TWizardForm : BaseWizardForm
   {
+    protected DTE Dte;
+
     /// <summary>
     /// The wizard form used with this Wizard.
     /// </summary>
@@ -69,9 +71,12 @@ namespace MySql.Data.VisualStudio.Wizards
     /// </summary>
     internal Dictionary<string, Column> Columns;
 
-    // Some constants of Entity Framework versions as supposed to be feed to this class's methods.
-    protected const string ENTITY_FRAMEWORK_VERSION_5 = "5.0.0";
-    protected const string ENTITY_FRAMEWORK_VERSION_6 = "6.0.0";
+    // Some constants of Entity Framework versions as supposed to be feed to this class's methods for Nuget.
+    internal protected readonly static string ENTITY_FRAMEWORK_VERSION_5 = "5.0.0";
+    internal protected readonly static string ENTITY_FRAMEWORK_VERSION_6 = "6.0.0";
+    internal protected const string ENTITY_FRAMEWORK_PCK_NAME = "EntityFramework";
+
+    protected string CurrentEntityFrameworkVersion;
 
     public virtual void BeforeOpeningFile(ProjectItem projectItem)
     {
@@ -108,6 +113,9 @@ namespace MySql.Data.VisualStudio.Wizards
     public virtual void RunStarted(object automationObject,
       Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
     {
+#if NET_40_OR_GREATER
+      Dte = ((dynamic)automationObject).DTE;
+#endif
       DialogResult result = WizardForm.ShowDialog();
       if (result == DialogResult.Cancel) throw new WizardCancelledException();
       ProjectPath = replacementsDictionary["$destinationdirectory$"];
@@ -121,25 +129,27 @@ namespace MySql.Data.VisualStudio.Wizards
       return true;
     }
 
-
-    protected void GenerateEntityFrameworkModel(VSProject vsProj, string version, MySqlConnection con, string modelName, List<string> tables)
-    {      
+    protected void GenerateEntityFrameworkModel(VSProject vsProj, MySqlConnection con, string modelName, List<string> tables)
+    {
       string ns = GetCanonicalIdentifier(ProjectNamespace);
-      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tables, ProjectPath, ns);
+      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion);
       gen.Generate();
-      TryErrorsAndAddDataEntityArtifactsToProject(gen, modelName, vsProj);    
+      TryErrorsEntityFrameworkGenerator(gen);
+      SetupConfigFileEntityFramework(vsProj, con.ConnectionString);
+      AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
     }
 
-    protected void GenerateEntityFrameworkModel(VSProject vsProj, string version, MySqlConnection con, string modelName, string tableName )
+    protected void GenerateEntityFrameworkModel(VSProject vsProj, MySqlConnection con, string modelName, string tableName )
     {     
       string ns = GetCanonicalIdentifier(ProjectNamespace);
-      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tableName, ProjectPath, ns);
+      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion);
       gen.Generate();
-      TryErrorsAndAddDataEntityArtifactsToProject(gen, modelName, vsProj);      
+      TryErrorsEntityFrameworkGenerator(gen);
+      SetupConfigFileEntityFramework(vsProj, con.ConnectionString);
+      AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
     }
 
-
-    private void TryErrorsAndAddDataEntityArtifactsToProject(EntityFrameworkGenerator gen, string modelName, VSProject vsProj)
+    private void TryErrorsEntityFrameworkGenerator(EntityFrameworkGenerator gen)
     {
       List<string> errors = gen.Errors.ToList();
       if (errors.Count != 0)
@@ -150,31 +160,109 @@ namespace MySql.Data.VisualStudio.Wizards
           sb.Append(" - ").AppendLine(errors[i]);
         }
         throw new WizardException(string.Format("The Entity Framework generation failed with the following errors:\n\n",
-          sb.ToString()));        
+          sb.ToString()));
       }
+    }
+
+    private void AddDataEntityArtifactsToProject(EntityFrameworkGenerator gen, string modelName, VSProject vsProj, MySqlConnection con)
+    { 
       try
       {
         // Add the Edmx artifacts to the project.
-        string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.edmx", modelName));
-        vsProj.Project.ProjectItems.AddFromFile( artifactPath );
+        string _modelName = string.Format("{0}.edmx", modelName );
+        string artifactPath = Path.Combine(ProjectPath, _modelName);
+        string artifactPathExcluded = artifactPath + ".exclude";
+        File.Move(artifactPath, artifactPathExcluded);
+        ProjectItem pi = vsProj.Project.ProjectItems.AddFromFile(artifactPathExcluded);
+        //Dictionary<string, object> props = GetAllProperties(pi.Properties);
+        pi.DTE.SuppressUI = true;
+        pi.Name = _modelName;
+        pi.Properties.Item("ItemType").Value = "EntityDeploy";
         string dstFile = Path.Combine( ProjectPath, string.Format("{0}.Designer.cs", modelName) );
         if (File.Exists(dstFile))
           File.Delete(dstFile);
         File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.cs.bak", modelName) ), dstFile );
         //artifactPath = Path.Combine(ProjectPath, string.Format("{0}.Designer.cs", ModelName));
-        //VsProj.Project.ProjectItems.AddFromFile(artifactPath);        
+        vsProj.Project.ProjectItems.AddFromFile(dstFile);
+        // Adding references
+        AddReferencesEntityFramework(vsProj);
       }
       catch
       {        
-        new Exception("Failed operation when addin model to project");
+        throw new WizardException("Failed operation when addin model to project");
       }      
     }
 
+    protected void AddReferencesEntityFramework(VSProject vsProj)
+    {
+      if( CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5 )
+      { 
+        vsProj.References.Add(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.Entity.dll");
+        vsProj.References.Add(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll");
+      }
+      else if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_6)
+      {
+        vsProj.References.Add(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll");
+        vsProj.References.Add("MySql.Data.Entity.EF6");
+        vsProj.References.Add("System.ComponentModel.DataAnnotations");
+      }
+    }
+
+    protected void SetupConfigFileEntityFramework( VSProject vsProj, string connStr )
+    {
+      string contents = "";
+      if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5)
+      {
+        contents = 
+        @"<?xml version=""1.0"" encoding=""utf-8""?>
+<configuration>
+  <configSections>
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+    <section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false"" />
+  </configSections>
+  <startup>
+    <supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.0"" />
+  </startup>
+  <connectionStrings>
+    <add name=""Model1Entities"" connectionString=""metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{0}&quot;"" providerName=""System.Data.EntityClient"" />
+  </connectionStrings>
+</configuration>";
+      }
+      else if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_6)
+      {
+        contents =
+        @"<?xml version=""1.0"" encoding=""utf-8""?>
+<configuration>
+  <configSections>
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+    <section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false"" />
+  </configSections>
+  <startup>
+    <supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.5"" />
+  </startup>
+  <entityFramework>
+    <defaultConnectionFactory type=""System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework"">
+      <parameters>
+        <parameter value=""v11.0"" />
+      </parameters>
+    </defaultConnectionFactory>
+    <providers>
+      <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" />
+    </providers>
+  </entityFramework>
+  <connectionStrings>
+    <add name=""Model1Entities"" connectionString=""metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{0}&quot;"" providerName=""System.Data.EntityClient"" />
+  </connectionStrings>
+</configuration>";
+      }
+      File.WriteAllText(Path.Combine(ProjectPath, "app.config"), string.Format(contents, connStr));
+    }
+
     /// <summary>
-    /// Downloads from Nuget the EntityFramework version required and adds the assembly reference to the project.
+    /// Downloads from Nuget the package version required and adds the assembly reference to the project.
     /// </summary>
     /// <param name="vsProj"></param>
-    protected void AddEntityFrameworkNugetPackage(VSProject VsProj, string Version)
+    protected void AddNugetPackage(VSProject VsProj, string PackageName, string Version)
     {
       // Installs the Entity Framework given version thru Nuget using reflection, which is a bit messy, but 
       // we avoid shipping Nuget dll.
@@ -191,25 +279,24 @@ namespace MySql.Data.VisualStudio.Wizards
       object packageManager = ciPackageManger.Invoke( new object[] { repo, installPath } );
       MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage",
         new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
-      string packageID = "EntityFramework";
+      string packageID = PackageName;
       MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
       object semanticVersion = miParse.Invoke(null, new object[] { Version });
       miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
       // Adds reference to project.
-      AddEntityFrameworkReference(VsProj, solPath, Version);
+      AddPackageReference(VsProj, solPath, PackageName, Version);
     }
 
     /// <summary>
-    /// Adds the reference for Entity Framework (already installed from Nuget) to the project, taking into account 
-    /// the target .NET version and Entity Framework version.
+    /// Adds the reference for a nuget package (already installed from Nuget) to the project, taking into account 
+    /// the target .NET version and nuget package version.
     /// </summary>
     /// <param name="VsProj"></param>
     /// <param name="BasePath"></param>
     /// <param name="Version"></param>
-    protected void AddEntityFrameworkReference( VSProject VsProj, string BasePath, string Version)
+    protected void AddPackageReference( VSProject VsProj, string BasePath, string PackageName, string Version)
     {
-      
-      string efPath = "packages" + string.Format("EntityFramework.{0}\\lib", Version);
+      string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", PackageName, Version));
       string packagePath = Path.Combine(BasePath, efPath);
 
       if (NetFxVersion.StartsWith("4.5"))
@@ -225,7 +312,7 @@ namespace MySql.Data.VisualStudio.Wizards
         throw new WizardException(string.Format("Only .NET versions 4.0/4.5/4.5.1 are supported (received version {0})", 
           NetFxVersion));
       }
-      packagePath = Path.Combine(packagePath, "EntityFramework.dll");
+      packagePath = Path.Combine(packagePath, PackageName + ".dll");
       VsProj.References.Add( packagePath );
     }
 
@@ -262,23 +349,20 @@ namespace MySql.Data.VisualStudio.Wizards
       return Identifier.Replace(' ', '_').Replace('`', '_');
     }
 
-    ///// <summary>
-    ///// Gets the list of columns.
-    ///// </summary>
-    ///// <param name="TableName"></param>
-    ///// <param name="con"></param>
-    ///// <returns></returns>
-    //protected List<string> GetColumnsFromTable(string TableName, MySqlConnection con)
-    //{
-    //  List<string> columns = new List<string>();
-    //  DataTable t = con.GetSchema("COLUMNS", new string[] { "", con.Database, TableName });
-    //  int idxCol = t.Columns["column_name"].Ordinal;
-    //  foreach (DataRow row in t.Rows)
-    //  {
-    //    columns.Add((string)row[idxCol]);
-    //  }
-    //  return columns;
-    //}
+    protected Dictionary<string, object> GetAllProperties(EnvDTE.Properties props)
+    {
+      Dictionary<string, object> dic = new Dictionary<string, object>();
+      for (int i = 1; i <= props.Count; i++)
+      {
+        try
+        {
+          dic.Add(props.Item(i).Name, props.Item(i).Value);
+        } 
+        catch( System.Runtime.InteropServices.COMException ex ) { /* just ignore it */ }
+      }
+
+      return dic;
+    }
 
     internal static Dictionary<string, Column> GetColumnsFromTable(string TableName, MySqlConnection con)
     {
@@ -346,6 +430,15 @@ namespace MySql.Data.VisualStudio.Wizards
         //con.Close();
       }
       return dic;
+    }
+
+    internal protected string GetVisualStudioVersion()
+    {
+#if NET_40_OR_GREATER
+      return Dte.Version;
+#else
+      return "9.0";
+#endif
     }
   }
 }
