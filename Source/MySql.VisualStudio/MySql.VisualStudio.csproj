@@ -738,6 +738,7 @@
       <DependentUpon>BaseWizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Wizards\EntityFrameworkGenerator.cs" />
+    <Compile Include="Wizards\ICodeGeneratorStrategy.cs" />
     <Compile Include="Wizards\ModelGenerator.cs" />
     <Compile Include="Wizards\TypedDataSetGenerator.cs" />
     <Compile Include="Wizards\Web\WebWizard.cs" />
@@ -759,6 +760,16 @@
     <Compile Include="Wizards\Web\ProviderConfiguration.Designer.cs">
       <DependentUpon>ProviderConfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpDataGridStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkDataGridStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkIndividualControlsStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkMasterDetailStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpIndividualControlsStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpMasterDetailStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpTypedDatasetDataGridStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpTypedDatasetIndividualControlsStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpTypedDatasetMasterDetailStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpWindowsFormsCodeGeneratorStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\DataAccessConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -771,6 +782,17 @@
     <Compile Include="Wizards\WindowsForms\ValidationConfig.Designer.cs">
       <DependentUpon>ValidationConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBDataGridStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBEntityFrameworkDataGridStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBEntityFrameworkIndividualControlsStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBEntityFrameworkMasterDetailStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBIndividualControlsStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBMasterDetailStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBTypedDatasetDataGridStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBTypedDatasetIndividualControlsStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBTypedDatasetMasterDetailStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\VB\VBWindowsFormsCodeGeneratorStrategy.cs" />
+    <Compile Include="Wizards\WindowsForms\Strategies\WindowsFormsCodeGeneratorStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\WindowsFormsWizard.cs" />
     <Compile Include="Wizards\WindowsForms\WindowsFormsWizardForm.cs">
       <SubType>Form</SubType>

@@ -154,7 +154,7 @@ namespace MySql.Data.VisualStudio.Wizards
     /// <param name="outputPath"></param>
     private void FixUsings( string outputPath )
     {
-      if (efVersion == BaseWizard<BaseWizardForm>.ENTITY_FRAMEWORK_VERSION_6)
+      if (efVersion == BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.ENTITY_FRAMEWORK_VERSION_6)
       {
         string contents = File.ReadAllText(outputPath);
         contents = contents.Replace("using System.Data.EntityClient;",

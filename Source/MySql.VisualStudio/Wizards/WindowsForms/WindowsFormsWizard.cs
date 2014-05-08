@@ -33,6 +33,7 @@ using VSLangProj;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.MySqlClient;
 using System.Reflection;
+using MySql.Data.VisualStudio.Wizards;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
@@ -40,7 +41,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   /// <summary>
   ///  Wizard for generation of a Windows Forms based project.
   /// </summary>
-  public class WindowsFormsWizard : BaseWizard<WindowsFormsWizardForm>
+  public class WindowsFormsWizard : BaseWizard<WindowsFormsWizardForm, WindowsFormsCodeGeneratorStrategy>
   { 
     private bool ValidationsEnabled
     {
@@ -63,6 +64,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       try
       {
         Columns = GetColumnsFromTable(WizardForm.TableName, WizardForm.Connection);
+        _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
+        StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns,
+          WizardForm.DataAccessTechnology, WizardForm.GuiType, LanguageGenerator.CSharp,
+          ValidationsEnabled, WizardForm.ValidationColumns, GetConnectionStringWithPassword(WizardForm.Connection),
+          WizardForm.TableName);
+        Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5)
         {
           CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
@@ -95,381 +102,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     }
 
     private void AddBindings(VSProject vsProj)
-    {
+    {     
+
       // Get Form.cs
-      ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, "Form1.cs");
+      ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, Strategy.GetFormFileName() );
       // Get Form.Designer.cs
-      ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, "Form1.Designer.cs");
+      ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, Strategy.GetFormDesignerFileName() );
       
-      _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
-      if ((WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6) ||
-          (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5))
-      {
-        AddBindings((string)(item.Properties.Item("FullPath").Value), AddBindingToFormEntityFramework);
-        AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value), AddBindingToFormDesignerEntityFramework);
-      }
-      else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
-      {
-        AddBindings((string)(item.Properties.Item("FullPath").Value), AddBindingToFormTypedDataSet );
-        AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value), AddBindingToFormDesignerTypedDataSet);
-      }
+      AddBindings((string)(item.Properties.Item("FullPath").Value));
+      AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value));
     }
 
     private string _canonicalTableName;
     private string _bindingSourceName;
-    private StreamWriter sw;
-    private delegate void BindingAdder(string line);
+    private StreamWriter sw;    
 
-    private void AddBindingToFormEntityFramework( string line )
-    {
-      // TODO: this messy code generation may be better with CodeDom.
-      if (line.Trim() == "// <WizardGeneratedCode>Namespace_UserCode</WizardGeneratedCode>")
-      {
-        if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5)
-        {
-          sw.WriteLine("using System.Data.Objects;");
-        }
-        else if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_6)
-        {
-          sw.WriteLine("using System.Data.Entity.Core.Objects;");
-          //sw.WriteLine("using System.Data.Entity;");
-        }
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Form_Load</WizardGeneratedCode>")
-      {
-        // Write Form_Load code.
-        sw.WriteLine("ctx = new Model1Entities();");
-        sw.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", _canonicalTableName);
-        sw.WriteLine("{0}BindingSource.DataSource = _entities;", _canonicalTableName);
-
-        foreach (KeyValuePair<string, Column> kvp in Columns)
-        {
-          string colName = kvp.Key;
-          string idColumnCanonical = GetCanonicalIdentifier(colName);
-          sw.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
-            idColumnCanonical, colName, _canonicalTableName);
-        }
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Validation Events</WizardGeneratedCode>")
-      {
-        bool validationsEnabled = ValidationsEnabled;
-        List<ColumnValidation> validationColumns = WizardForm.ValidationColumns;
-        if (validationsEnabled)
-        {
-          for (int i = 0; i < validationColumns.Count; i++)
-          {
-            ColumnValidation cv = validationColumns[i];
-            string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
-            sw.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);
-            sw.WriteLine("{");
-            sw.WriteLine("  e.Cancel = false;");
-            if (cv.Required)
-            {
-              sw.WriteLine("  if( string.IsNullOrEmpty( {0}TextBox.Text ) ) {{ ", idColumnCanonical);
-              sw.WriteLine("    e.Cancel = true;");
-              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} is required\" ); ", idColumnCanonical, cv.Name);
-              sw.WriteLine("  }");
-            }
-            if (cv.IsNumericType())
-            {
-              sw.WriteLine("  int v;");
-              sw.WriteLine("  string s = {0}TextBox.Text;", idColumnCanonical);
-              sw.WriteLine("  if( !int.TryParse( s, out v ) ) {");
-              sw.WriteLine("    e.Cancel = true;");
-              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} must be numeric.\" );", idColumnCanonical, cv.Name);
-              sw.WriteLine("  }");
-              if (cv.MinValue != null)
-              {
-                sw.WriteLine(" else if( cv.MinValue > v ) { ");
-                sw.WriteLine("   e.Cancel = true;");
-                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be greater or equal than {2}.\" );", idColumnCanonical, cv.Name, cv.MinValue);
-                sw.WriteLine(" } ");
-              }
-              if (cv.MaxValue != null)
-              {
-                sw.WriteLine(" else if( cv.MaxValue < v ) { ");
-                sw.WriteLine("   e.Cancel = true;");
-                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be lesser or equal than {2}\" );", idColumnCanonical, cv.Name, cv.MaxValue);
-                sw.WriteLine(" } ");
-              }
-            }
-            sw.WriteLine("  if( !e.Cancel ) {{ errorProvider1.SetError( {0}TextBox, \"\" ); }} ", idColumnCanonical);
-            sw.WriteLine("}");
-            sw.WriteLine();
-          }
-        }
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Private Variables Frontend</WizardGeneratedCode>")
-      {
-        sw.WriteLine("private Model1Entities ctx;");
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Save Event</WizardGeneratedCode>")
-      {
-        sw.WriteLine("{0}BindingSource.EndEdit();", _canonicalTableName);
-        sw.WriteLine("ctx.SaveChanges();");
-      }
-      else
-      {
-        // just write same line
-        sw.WriteLine(line);
-      }
-    }
-
-    private void AddBindingToFormTypedDataSet(string line)
-    {
-      // TODO: this messy code generation may be better with CodeDom.
-      if (line.Trim() == "// <WizardGeneratedCode>Private Variables Frontend</WizardGeneratedCode>")
-      {
-        sw.WriteLine("private MySqlDataAdapter ad;");
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Namespace_UserCode</WizardGeneratedCode>")
-      {
-        // nothing
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Form_Load</WizardGeneratedCode>")
-      {
-        // Write Form_Load code.
-        Type t = typeof(MySqlConnection);
-        PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
-        object v = p.GetValue(WizardForm.Connection, null);
-        sw.WriteLine( "string strConn = \"{0};\";", v.ToString() );
-        sw.WriteLine( "ad = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", WizardForm.TableName );
-        sw.WriteLine("MySqlCommandBuilder builder = new MySqlCommandBuilder(ad);");
-        sw.WriteLine("ad.Fill(this.newDataSet._Table);");
-        sw.WriteLine("ad.DeleteCommand = builder.GetDeleteCommand();");
-        sw.WriteLine("ad.UpdateCommand = builder.GetUpdateCommand();");
-        sw.WriteLine("ad.InsertCommand = builder.GetInsertCommand();");
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Save Event</WizardGeneratedCode>")
-      {
-        foreach( KeyValuePair<string,Column> kvp in Columns )
-        {
-          if (kvp.Value.IsDateType())
-          {
-            string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-            sw.WriteLine("((DataRowView){2}BindingSource.Current)[\"{0}\"] = {1}TextBox.Text;", 
-              kvp.Value.ColumnName, idColumnCanonical, _canonicalTableName);
-          }
-        }
-        sw.WriteLine("{0}BindingSource.EndEdit();", _canonicalTableName );
-        sw.WriteLine("ad.Update(this.newDataSet._Table);");
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Validation Events</WizardGeneratedCode>")
-      {
-        bool validationsEnabled = ValidationsEnabled;
-        List<ColumnValidation> validationColumns = WizardForm.ValidationColumns;
-        if (validationsEnabled)
-        { 
-          for (int i = 0; i < validationColumns.Count; i++)
-          {
-            ColumnValidation cv = validationColumns[ i ];
-            string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
-            sw.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical );
-            sw.WriteLine("{");
-            sw.WriteLine("  e.Cancel = false;");
-            if (cv.Required)
-            {
-              sw.WriteLine("  if( string.IsNullOrEmpty( {0}TextBox.Text ) ) {{ ", idColumnCanonical);
-              sw.WriteLine("    e.Cancel = true;");
-              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} is required\" ); ", idColumnCanonical, cv.Name);
-              sw.WriteLine("  }");
-            }
-            if (cv.IsNumericType() )
-            {
-              sw.WriteLine("  int v;");
-              sw.WriteLine("  string s = {0}TextBox.Text;", idColumnCanonical);
-              sw.WriteLine("  if( !int.TryParse( s, out v ) ) {");
-              sw.WriteLine("    e.Cancel = true;");
-              sw.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} must be numeric.\" );", idColumnCanonical, cv.Name );
-              sw.WriteLine("  }");
-              if (cv.MinValue != null )
-              {
-                sw.WriteLine(" else if( {0} > v ) {{ ", cv.MinValue);
-                sw.WriteLine("   e.Cancel = true;");
-                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be greater or equal than {2}.\" );", idColumnCanonical, cv.Name, cv.MinValue );
-                sw.WriteLine(" } ");
-              }
-              if (cv.MaxValue != null)
-              {
-                sw.WriteLine(" else if( {0} < v ) {{ ", cv.MaxValue);
-                sw.WriteLine("   e.Cancel = true;");
-                sw.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be lesser or equal than {2}\" );", idColumnCanonical, cv.Name, cv.MaxValue);
-                sw.WriteLine(" } ");
-              }
-            }
-            sw.WriteLine("  if( !e.Cancel ) {{ errorProvider1.SetError( {0}TextBox, \"\" ); }} ", idColumnCanonical);
-            sw.WriteLine("}");
-            sw.WriteLine();
-          }
-        }
-      }
-      else
-      {
-        // just write same line
-        sw.WriteLine(line);
-      }
-    }
-
-    private void AddBindingToFormDesignerEntityFramework(string line)
-    {
-      // TODO: this messy code generation may be better with CodeDom.
-      if (line.Trim() == "// <WizardGeneratedCode>Control Declaration</WizardGeneratedCode>")
-      {
-        // Generate the declaration of all control variables.
-        sw.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", _canonicalTableName);
-        foreach( KeyValuePair<string,Column> kvp in Columns )
-        {
-          string idColumnCanonical = GetCanonicalIdentifier( kvp.Key );
-          sw.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical );
-          sw.WriteLine("private System.Windows.Forms.Label {0}Label;", idColumnCanonical);
-        }
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Control Initialization</WizardGeneratedCode>")
-      {
-        // Generate the InitializeComponent code to configure everything (including custom coordinates for the controls).
-        sw.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", _canonicalTableName);
-        WriteControlInitialization(false);
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>BeforeSuspendLayout</WizardGeneratedCode>")
-      {
-        sw.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", _canonicalTableName);
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>AfterSuspendLayout</WizardGeneratedCode>")
-      {
-        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", _canonicalTableName);
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>BeforeResumeSuspendLayout</WizardGeneratedCode>")
-      {
-        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", _canonicalTableName);
-      }
-      else
-      {
-        // just write same line
-        sw.WriteLine(line);
-      }
-    }
-
-    private void AddBindingToFormDesignerTypedDataSet(string line)
-    {
-      // TODO: this messy code generation may be better with CodeDom.
-      if (line.Trim() == "// <WizardGeneratedCode>Control Declaration</WizardGeneratedCode>")
-      {
-        // Generate the declaration of all control variables.
-        sw.WriteLine("private NewDataSet newDataSet;");
-        sw.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", _canonicalTableName);
-        foreach (KeyValuePair<string, Column> kvp in Columns)
-        {
-          string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-          sw.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
-          sw.WriteLine("private System.Windows.Forms.Label {0}Label;", idColumnCanonical);
-        }
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>Control Initialization</WizardGeneratedCode>")
-      {
-        // Generate the InitializeComponent code to configure everything (including custom coordinates for the controls).
-        sw.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", _canonicalTableName);
-        sw.WriteLine("// ");
-        sw.WriteLine("// newDataSet");
-        sw.WriteLine("// ");
-        sw.WriteLine("this.newDataSet.DataSetName = \"NewDataSet\";");
-        sw.WriteLine("this.newDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;");
-
-        sw.WriteLine("// ");
-        sw.WriteLine("// tableBindingSource");
-        sw.WriteLine("// ");
-        sw.WriteLine("this.{0}BindingSource.DataMember = \"Table\";", _canonicalTableName);
-        sw.WriteLine("this.{0}BindingSource.DataSource = this.newDataSet;", _canonicalTableName);
-
-        WriteControlInitialization(true);
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>BeforeSuspendLayout</WizardGeneratedCode>")
-      {
-        sw.WriteLine("this.newDataSet = new NewDataSet();");
-        sw.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", _canonicalTableName);
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>AfterSuspendLayout</WizardGeneratedCode>")
-      {
-        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.newDataSet)).BeginInit();");
-        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", _canonicalTableName);
-      }
-      else if (line.Trim() == "// <WizardGeneratedCode>BeforeResumeSuspendLayout</WizardGeneratedCode>")
-      {
-        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.newDataSet)).EndInit();");
-        sw.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", _canonicalTableName);
-      }
-      else
-      {
-        // just write same line
-        sw.WriteLine(line);
-      }
-    }
-
-    private void WriteControlInitialization(bool addBindings)
-    {
-      Label l = new Label();
-      Size szText = TextRenderer.MeasureText(GetMaxWidthString(Columns), l.Font);
-      Point initLoc = new Point( szText.Width + 10, 50);
-      Point xy = new Point( initLoc.X, initLoc.Y);
-      int tabIdx = 1;
-      bool validationsEnabled = ValidationsEnabled;
-
-      foreach( KeyValuePair<string,Column> kvp in Columns )
-      {
-        string colName = kvp.Key;
-        string idColumnCanonical = GetCanonicalIdentifier(colName);
-        sw.WriteLine("//");
-        sw.WriteLine("// {0}Label", idColumnCanonical);
-        sw.WriteLine("//");
-        sw.WriteLine("this.{0}Label = new System.Windows.Forms.Label();", idColumnCanonical);
-
-        sw.WriteLine("this.{0}Label.AutoSize = true;", idColumnCanonical);
-        Size szLabel = TextRenderer.MeasureText(colName, l.Font);
-        sw.WriteLine("this.{0}Label.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical,
-          xy.X - 10 - szLabel.Width, xy.Y);
-        sw.WriteLine("this.{0}Label.Name = \"{1}\";", idColumnCanonical, colName);
-        sw.WriteLine("this.{0}Label.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 
-          szLabel.Width, szLabel.Height );
-        sw.WriteLine("this.{0}Label.TabIndex = {1};", idColumnCanonical, tabIdx++);
-        sw.WriteLine("this.{0}Label.Text = \"{1}\";", idColumnCanonical, colName);
-        sw.WriteLine("this.Controls.Add( this.{0}Label );", idColumnCanonical);
-
-        sw.WriteLine("//");
-        sw.WriteLine("// {0}TextBox", idColumnCanonical);
-        sw.WriteLine("//");
-        sw.WriteLine("this.{0}TextBox = new System.Windows.Forms.TextBox();", idColumnCanonical);
-
-        if (addBindings)
-        {
-          sw.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
-            idColumnCanonical, colName, _canonicalTableName);
-        }
-
-        sw.WriteLine("this.{0}TextBox.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical, xy.X, xy.Y);
-        sw.WriteLine("this.{0}TextBox.Name = \"{1}\";", idColumnCanonical, colName);
-        sw.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20 );
-        sw.WriteLine("this.{0}TextBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
-
-        if (validationsEnabled)
-        {
-          sw.WriteLine("this.{0}TextBox.Validating += new System.ComponentModel.CancelEventHandler( this.{0}TextBox_Validating );",
-            idColumnCanonical);
-        }
-        sw.WriteLine("this.Controls.Add( this.{0}TextBox);", idColumnCanonical);
-        xy.Y += szText.Height * 2;
-      }
-    }
-
-    private string GetMaxWidthString(Dictionary<string, Column> l)
-    { 
-      KeyValuePair<string, Column> maxWidthItem = new KeyValuePair<string,Column>("", null );
-      foreach( KeyValuePair<string, Column> kvp in l )
-      {
-        if (kvp.Key.Length > maxWidthItem.Key.Length) maxWidthItem = kvp;
-      }
-      return maxWidthItem.Key;
-    }
-
-    private void AddBindings(string FormPath, BindingAdder bindingAdder )
+    private void AddBindings(string FormPath)
     {
       _bindingSourceName = string.Format("{0}BindingSource", _canonicalTableName);
       string originalContents = File.ReadAllText(FormPath);
@@ -478,10 +126,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         using( sw = new StreamWriter( fs ) )
         {
+          Strategy.Writer = sw;
           string line = null;
           while ((line = sr.ReadLine()) != null)
           {
-            bindingAdder( line );
+            Strategy.Execute(line);
           }
         } // using StreamWriter
       } // using StreamReader
