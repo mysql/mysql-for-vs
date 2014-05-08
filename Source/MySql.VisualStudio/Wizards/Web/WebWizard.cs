@@ -30,6 +30,7 @@ using Microsoft.VisualStudio.TemplateWizard;
 using MySql.Data.MySqlClient;
 using VSLangProj;
 using MySql.Data.VisualStudio.WebConfig;
+using MySql.Data.VisualStudio.Wizards;
 using MySql.Web.Security;
 using System.Collections.Specialized;
 using System.Web.Security;
@@ -38,9 +39,10 @@ using System.Web.Configuration;
 using System.IO;
 using System.Reflection;
 
+
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
-  public class WebWizard : BaseWizard<WebWizardForm>
+  public class WebWizard : BaseWizard<WebWizardForm, BaseCodeGeneratorStrategy>
   {    
     private VSProject _vsProj;    
     //private string _modelName;

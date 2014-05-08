@@ -191,7 +191,6 @@
       // radGrid
       // 
       this.radGrid.AutoSize = true;
-      this.radGrid.Enabled = false;
       this.radGrid.Location = new System.Drawing.Point(36, 42);
       this.radGrid.Name = "radGrid";
       this.radGrid.Size = new System.Drawing.Size(44, 17);

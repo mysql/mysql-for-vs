@@ -42,9 +42,19 @@ namespace MySql.Data.VisualStudio.Wizards
   /// <summary>
   ///  Base class for all the Project Wizards.
   /// </summary>
-  public class BaseWizard<TWizardForm> : IWizard where TWizardForm : BaseWizardForm
+  public class BaseWizard<TWizardForm,TCodeGeneratorStrategy> : IWizard 
+    where TWizardForm : BaseWizardForm 
+    where TCodeGeneratorStrategy : ICodeGeneratorStrategy
   {
+    /// <summary>
+    /// The DTE instance.
+    /// </summary>
     protected DTE Dte;
+
+    /// <summary>
+    /// The code generation strategy.
+    /// </summary>
+    protected TCodeGeneratorStrategy Strategy;
 
     /// <summary>
     /// The wizard form used with this Wizard.
@@ -340,13 +350,17 @@ namespace MySql.Data.VisualStudio.Wizards
       return item;
     }
 
-    /// <summary>
-    /// Transforms a user identifier like MySql table to ensure it is a valid identifier in C#/VB.NET.
-    /// </summary>
-    /// <returns></returns>
-    protected string GetCanonicalIdentifier( string Identifier )
+    internal protected string GetCanonicalIdentifier(string Identifier)
     {
       return Identifier.Replace(' ', '_').Replace('`', '_');
+    }
+
+    protected string GetConnectionStringWithPassword(MySqlConnection con)
+    {
+      Type t = typeof(MySqlConnection);
+      PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
+      object v = p.GetValue(con, null);
+      return v.ToString();
     }
 
     protected Dictionary<string, object> GetAllProperties(EnvDTE.Properties props)

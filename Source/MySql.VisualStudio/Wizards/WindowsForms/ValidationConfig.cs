@@ -73,7 +73,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       _table = Table;
       _colValidations = new List<ColumnValidation>();
-      Dictionary<string,Column> columns = BaseWizard<BaseWizardForm>.GetColumnsFromTable(Table, con);
+      Dictionary<string,Column> columns = BaseWizard<BaseWizardForm,WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(Table, con);
       BindingSource binding = new BindingSource();
       foreach (KeyValuePair<string, Column> kvp in columns)
       {
