@@ -33,6 +33,8 @@ namespace MySql.Data.VisualStudio.Wizards
 {
   public partial class WizardPage : UserControl
   {
+    public bool skipNextPage = false;
+
     public WizardPage()
     {
       InitializeComponent();

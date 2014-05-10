@@ -33,6 +33,7 @@ using EnvDTE;
 using VSLangProj;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
+using MySQL.Utility.Classes;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -75,6 +76,14 @@ namespace MySql.Data.VisualStudio.Wizards
     /// The .NET Framework version that the generated project will target (chosen by the user).
     /// </summary>
     protected string NetFxVersion;
+
+    protected BindingSource connections
+    {
+      get;
+      set;
+    }
+
+    protected DTE dte;
 
     /// <summary>
     /// The column metadata.

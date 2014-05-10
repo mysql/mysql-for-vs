@@ -33,41 +33,8 @@ using MySql.Data.MySqlClient;
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public partial class ProviderConfiguration : WizardPage
-  {
-   
-    internal string connectionStringName
-    {
-      get
-      {
-        return ConnectionStringNameTextBox.Text;
-      }
-    }
-
-    internal string connectionString
-    {
-      get
-      {        
-        return ConnectionStringTextBox.Tag.ToString();
-      }
-    }   
-
-    internal bool includeRoleProvider
-    {
-      get
-      {
-        return includeRoleProviderCheck.Checked;
-      }
-    }
-
-
-    internal bool includeProfileProvider
-    {
-      get
-      {
-        return includeProfileProviderCheck.Checked;
-      }    
-    }
-
+  {    
+      
     internal bool createAdministratorUser
     {
       get {
@@ -105,23 +72,64 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
+    internal string userQuestion
+    {
+      get {
+        return txtQuestion.Text;
+      }    
+    }
+
+    internal string userAnswer
+    {
+      get {
+        return txtAnswer.Text;
+      }
+    }
+
     public ProviderConfiguration()
     {
       InitializeComponent();
-      /* Loading defaults */      
-      ConnectionStringNameTextBox.Text = "LocalMySqlServer";
-      includeRoleProviderCheck.Checked = true;
-      includeProfileProviderCheck.Checked = true;
+      /* Loading defaults */            
       chkWriteExceptions.Checked = true;
       chkQuestionAndAnswerRequired.Checked = true;
       createAdministratorUserCheck.Checked = true;
       txtMinimumPasswordLenght.Text = "7";
 
       /* assign events */
-      ConnectionStringTextBox.TextChanged += new EventHandler(ConnectionStringTextBox_TextChanged);
+      txtUserName.TextChanged += txtUserName_TextChanged;
       txtPwd.TextChanged += new EventHandler(txtPwd_TextChanged);
       txtPwdConfirm.TextChanged += new EventHandler(txtPwdConfirm_TextChanged);
       txtMinimumPasswordLenght.TextChanged += new EventHandler(txtMinimumPasswordLenght_TextChanged);
+      createAdministratorUserCheck.CheckedChanged += createAdministratorUserCheck_CheckedChanged;
+      txtQuestion.TextChanged += txtQuestion_TextChanged;
+      txtAnswer.TextChanged += txtAnswer_TextChanged;
+    }
+
+    void txtAnswer_TextChanged(object sender, EventArgs e)
+    {      
+      if (!string.IsNullOrEmpty(txtAnswer.Text))
+        errorProvider1.SetError(txtAnswer, "");      
+    }
+
+    void txtQuestion_TextChanged(object sender, EventArgs e)
+    {
+      if (!string.IsNullOrEmpty(txtQuestion.Text))
+        errorProvider1.SetError(txtQuestion, "");      
+    }
+
+    void txtUserName_TextChanged(object sender, EventArgs e)
+    {
+      if (!string.IsNullOrEmpty(txtUserName.Text))
+        errorProvider1.SetError(txtUserName, "");      
+    }
+
+    void createAdministratorUserCheck_CheckedChanged(object sender, EventArgs e)
+    {
+      txtPwd.Enabled = createAdministratorUserCheck.Checked;
+      txtQuestion.Enabled = createAdministratorUserCheck.Checked;
+      txtUserName.Enabled = createAdministratorUserCheck.Checked;
+      txtAnswer.Enabled = createAdministratorUserCheck.Checked;
+      txtPwdConfirm.Enabled = createAdministratorUserCheck.Checked;
     }
 
     void txtMinimumPasswordLenght_TextChanged(object sender, EventArgs e)
@@ -129,41 +137,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       var pwdLenght = 7;
       if (int.TryParse(txtMinimumPasswordLenght.Text, out pwdLenght))
         errorProvider1.SetError(txtMinimumPasswordLenght, "");      
-    }    
-
-    private void editConnString_Click(object sender, EventArgs e)
-    {
-      ConnectDialog dlg;
-      try
-      {
-
-        dlg = ConnectionStringTextBox.Tag == null || String.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString()) ? new ConnectDialog() :
-               new ConnectDialog(new MySqlConnectionStringBuilder(ConnectionStringTextBox.Tag.ToString()));
-        
-        DialogResult res = dlg.ShowDialog();
-        if (res == DialogResult.OK)
-        {
-          ConnectionStringTextBox.Text = ((MySqlConnection)dlg.Connection).ConnectionString;
-          var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
-          if (csb != null)
-          {
-            ConnectionStringTextBox.Tag = csb.ConnectionString;
-          }
-          var conn = new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
-          conn.Open();
-        }
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(string.Format("The connection string is not valid: {0}", ex.Message));
-      }      
-    }
-
-    private void ConnectionStringTextBox_TextChanged(object sender, EventArgs e)
-    {
-      if (!String.IsNullOrEmpty(ConnectionStringTextBox.Text))
-        errorProvider1.SetError(ConnectionStringTextBox, "");
-    }
+    }      
 
     void txtPwd_TextChanged(object sender, EventArgs e)
     {
@@ -173,11 +147,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     void txtPwdConfirm_TextChanged(object sender, EventArgs e)
     {
-      if (txtPwd.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
-        errorProvider1.SetError(txtPwd, "");    
+      if (txtPwdConfirm.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
+        errorProvider1.SetError(txtPwdConfirm, "");    
     }
-
-
 
     internal override bool IsValid()
     {
@@ -190,18 +162,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     private void ProviderConfiguration_Validating(object sender, CancelEventArgs e)
     {
       e.Cancel = false;
-      if (!IsConnectionValid())
-      {
-        e.Cancel = true;
-        errorProvider1.SetError(ConnectionStringTextBox, "A valid connection string must be entered.");
-      }
-      else
-      {
-        errorProvider1.SetError(ConnectionStringTextBox, "");
-      }
-
+     
       if (createAdministratorUserCheck.Checked)
       {
+        if (string.IsNullOrEmpty(txtUserName.Text))
+        {
+          e.Cancel = true;
+          errorProvider1.SetError(txtUserName, "User name cannot be empty");
+        }
+
         if (string.IsNullOrEmpty(txtPwd.Text) || string.IsNullOrEmpty(txtPwdConfirm.Text))
         {
           e.Cancel = true;
@@ -212,6 +181,23 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           e.Cancel = true;
           errorProvider1.SetError(txtPwd, "Passowrd doesn't match with the password confirmation");
         }
+
+        if (chkQuestionAndAnswerRequired.Checked)
+        {
+          if (string.IsNullOrEmpty(txtQuestion.Text))
+          {
+            e.Cancel = true;
+            errorProvider1.SetError(txtQuestion, "Question is required.");
+          }
+          
+          
+          if (string.IsNullOrEmpty(txtAnswer.Text))
+          {
+            e.Cancel = true;
+            errorProvider1.SetError(txtAnswer, "Answer is required.");
+          }
+        
+        }
       }
 
       var pwdLenght = 7;
@@ -221,23 +207,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         errorProvider1.SetError(txtMinimumPasswordLenght, "Password lenght should be a integer number");
       }
     }
-
-    private bool IsConnectionValid()
-    {
-      if (String.IsNullOrEmpty(ConnectionStringTextBox.Text))
-        return false;
-
-      var cnn = new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
-      try
-      {
-        cnn.Open();
-        cnn.Close();
-      }
-      catch { return false; }
-
-      return true;
-    }
-
 
   }
 }

@@ -29,6 +29,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using EnvDTE;
+using MySql.Data.VisualStudio.DBExport;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -42,12 +44,32 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
   public partial class ModelConfiguration : WizardPage
   {
+
+    private BaseWizardForm baseWizardForm;
+    private DTE _dte; 
+
     internal string modelName
     {
       get {
         return ModelNameTextBox.Text;
       }    
     }
+
+    internal string connectionStringName
+    {
+      get
+      {
+        return ConnectionStringTextBox.Text;
+      }
+    }
+
+    internal string connectionString
+    {
+      get
+      {
+        return ConnectionStringTextBox.Tag.ToString();
+      }
+    }   
 
     internal DataEntityVersion dEVersion
     {
@@ -57,124 +79,64 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         if (this.Ef6.Checked)
           return DataEntityVersion.EntityFramework6;
         else
+        {
+          skipNextPage = true;
           return DataEntityVersion.None;
+        }
       }    
     }
-
-    internal bool includeSensitiveInformation
-    {
-      get {
-        return includeSensitiveInformationCheck.Checked;      
-      }    
-    }
-
-    internal List<DbTables> selectedTables
-    {
-      get {
-        return _tables.Where(t => t.Selected).ToList();      
-      }
-    }
-
-    private BindingList<DbTables> _tables;
-    BindingSource _sourceTables = new BindingSource();
-
+   
     public ModelConfiguration()
     {
       InitializeComponent();
-      ModelNameTextBox.Text = "Model1";
-      listTables.CellContentClick +=new DataGridViewCellEventHandler(listTables_CellContentClick);
-      rdbNoModel.CheckedChanged += new EventHandler(rdbNoModel_CheckedChanged);
+      ModelNameTextBox.Text = "Model1";            
+      rdbNoModel.CheckedChanged += rdbNoModel_CheckedChanged;
+      cmbConnections.SelectionChangeCommitted += cmbConnections_SelectionChangeCommitted;
+    }
+
+    void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
+    {
+      if ((cmbConnections.SelectedItem as MySqlServerExplorerConnection) == null) return;
+
+      if (!IsConnectionValid(((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString))
+      {
+        ShowConnectionDialog(false);
+      }
+      else
+      {
+        ConnectionStringTextBox.Text = MySqlServerExplorerConnections.MaskPassword(((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString);
+        ConnectionStringTextBox.Tag = ((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString;
+      }
     }
 
     void rdbNoModel_CheckedChanged(object sender, EventArgs e)
     {
-      RadioButton control = (RadioButton)sender;
-      var previousColor = Color.Black;
+      RadioButton control = (RadioButton)sender;      
+     
       if (control.Checked)
-      {
-        listTables.Enabled = false;        
-        listTables.ForeColor = Color.LightGray;
-        _sourceTables = new BindingSource();
-      }
-      else
-      {
-        listTables.Enabled = true;
-        listTables.ForeColor = previousColor;        
-      }
+       ModelNameTextBox.Text = String.Empty;       
+
+       cmbConnections.Enabled = !control.Checked;
+       ModelNameTextBox.Enabled = !control.Checked;      
+       chkUseSameConnection.Enabled = !control.Checked;
+       newConnString.Enabled = !control.Checked;
+       baseWizardForm.btnFinish.Enabled = control.Checked;
     }
-
-    private void FillTables(string connectionString)
-    {
-      var cnn = new MySqlConnection(connectionString);
-      cnn.Open();
-
-      var dtTables = cnn.GetSchema("Tables", new string[] { null, cnn.Database });
-      _tables = new BindingList<DbTables>();
-
-      for (int i = 0; i < dtTables.Rows.Count; i++)
-      {
-        _tables.Add(new DbTables(false, dtTables.Rows[i][2].ToString()));
-      }
-
-      _sourceTables.DataSource = _tables;
-      listTables.DataSource = _sourceTables;
-      FormatTablesList();
-    }
-
-    private void FormatTablesList()
-    {
-      if (listTables.Rows.Count <= 1 && listTables.Columns.Count == 1)
-      {
-        _sourceTables.DataSource = new BindingList<DbTables>();
-        listTables.DataSource = _sourceTables;
-        listTables.Update();
-      }
-      listTables.Columns[0].HeaderText = "Select";
-      listTables.Columns[0].Width = 45;
-
-      listTables.Columns[1].HeaderText = "Table";
-      listTables.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      listTables.Columns[1].ReadOnly = true;
-
-      listTables.Refresh();
-    }
-
-    private void listTables_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-      if (e.RowIndex == -1) return;
-      if (String.IsNullOrEmpty(listTables.Rows[e.RowIndex].Cells[1].Value as string))
-        return;
-
-      if (e.ColumnIndex == 0)
-      {
-        var selected = _tables.Single(t => t.Name.Equals((string)listTables.Rows[e.RowIndex].Cells[1].Value,
-          StringComparison.InvariantCultureIgnoreCase));
-        selected.CheckObject(!selected.Selected);
-        listTables.Refresh();
-      }
-    }
-
+ 
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
       WebWizardForm wiz = (WebWizardForm)wizard;
-      if (!string.IsNullOrEmpty(wiz.connectionStringForModel))
-      {
-        var cnn = new MySqlConnection(wiz.connectionStringForModel);
-        try 
-          {	        
-		        cnn.Open();
-          }
-        catch (Exception)
-        {		  
-           DialogResult result = MessageBox.Show(Properties.Resources.ErrorOnConnection, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-           if(result == DialogResult.Cancel)
-           {
-              listTables.Enabled = false;           
-           }
-        }
-        FillTables(wiz.connectionStringForModel);  
-      }
+
+      baseWizardForm = wizard;
+      _dte = ((WebWizardForm)wizard).dte;
+
+      MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox);
+
+      chkUseSameConnection.Checked = true;
+      cmbConnections.SelectedValue = wiz.connectionStringForAspNetTables;
+      ConnectionStringTextBox.Text = MySqlServerExplorerConnections.MaskPassword(wiz.connectionStringForAspNetTables);
+      ConnectionStringTextBox.Tag = wiz.connectionStringForAspNetTables;
     }
 
     internal override bool IsValid()
@@ -187,64 +149,57 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     void ModelConfiguration_Validating(object sender, CancelEventArgs e)
     {
-      if (!this.rdbNoModel.Checked)
-      {
-        if (_tables == null && _tables.Count == 0)
-        {
-          e.Cancel = true;
-          errorProvider1.SetError(listTables, "At least a table should be selected");
-        }
+      e.Cancel = false;
+      if (Ef5.Checked || Ef6.Checked)
+      { 
+         if (!IsConnectionValid(ConnectionStringTextBox.Tag.ToString()))
+          {
+            e.Cancel = true;
+            errorProvider1.SetError(cmbConnections, "A valid connection string must be selected.");
+          }
         else
-        {
-          errorProvider1.SetError(listTables, "");
-        }
-      }          
+         {
+           errorProvider1.SetError(cmbConnections, "");
+          }
+         if (String.IsNullOrEmpty(ModelNameTextBox.Text))
+         {
+           e.Cancel = true;
+           errorProvider1.SetError(ModelNameTextBox, "Model name cannot be empty.");
+         }
+         else
+         {
+           errorProvider1.SetError(ModelNameTextBox, "");
+         }
+      }      
     }
+
+    private bool IsConnectionValid(string connectionString)
+    {
+      if (String.IsNullOrEmpty(connectionString))
+        return false;
+
+      var cnn = new MySqlConnection(connectionString);
+      try
+      {
+        cnn.Open();
+        cnn.Close();
+      }
+      catch { return false; }
+
+      return true;
+    }
+
+    private void newConnString_Click(object sender, EventArgs e)
+    {
+      ShowConnectionDialog(true);
+    }
+
+    private void ShowConnectionDialog(bool addSEConnection)
+    {
+
+      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSEConnection);     
+      baseWizardForm.connections = cmbConnections.DataSource as BindingSource;
+       
+    }     
   }
-
-  public class DbTables : INotifyPropertyChanged
-  {
-
-    private bool _selected { get; set; }
-    private string _name { get; set; }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public bool Selected
-    {
-      get
-      {
-        return _selected;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return _name;
-      }
-    }
-
-    public DbTables(bool selected, string name)
-    {
-      _selected = selected;
-      _name = name;
-    }
-
-    private void NotifyPropertyChanged(String propertyName)
-    {
-      if (PropertyChanged != null)
-      {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-      }
-    }
-
-    public void CheckObject(bool selected)
-    {
-      _selected = selected;
-      NotifyPropertyChanged("Selected");
-    }
-  }
-
 }

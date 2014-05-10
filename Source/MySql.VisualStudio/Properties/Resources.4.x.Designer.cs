@@ -156,26 +156,6 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Background {
-            get {
-                object obj = ResourceManager.GetObject("Background", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Banner {
-            get {
-                object obj = ResourceManager.GetObject("Banner", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap bannrbmp {
             get {
                 object obj = ResourceManager.GetObject("bannrbmp", resourceCulture);
@@ -2670,16 +2650,6 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap MySQL {
-            get {
-                object obj = ResourceManager.GetObject("MySQL", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} Export of database {1} has finished..
         /// </summary>
         internal static string MySqlDumpEndingInfoLog {
@@ -3227,5 +3197,16 @@ namespace MySql.Data.VisualStudio.Properties {
                 return ResourceManager.GetString("WebConfigConnStrNoEmpty", resourceCulture);
             }
         }
+				   
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap mysql_project_wizard {
+            get {
+                object obj = ResourceManager.GetObject("mysql_project_wizard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+		
     }
 }
