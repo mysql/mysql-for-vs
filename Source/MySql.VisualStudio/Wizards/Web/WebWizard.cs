@@ -38,20 +38,23 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.IO;
 using System.Reflection;
-
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using Microsoft.VisualStudio.Data.Services;
+using MySql.Data.VisualStudio.DBExport;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public class WebWizard : BaseWizard<WebWizardForm, BaseCodeGeneratorStrategy>
   {    
-    private VSProject _vsProj;    
-    //private string _modelName;
+    private VSProject _vsProj;
+    
     //private DataEntityVersion _dataEntityVersion;
     //private List<DbTables> _selectedTables;
 
     public WebWizard() : base()
     {
       WizardForm = new WebWizardForm();
+      
     }
 
     public override void ProjectFinishedGenerating(Project project)
@@ -81,8 +84,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           // add creation of providers tables
           if (WizardForm.includeProfilesProvider)
           {
-            var profileConfig = new ProfileConfig();
-            //Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
+            var profileConfig = new ProfileConfig();            
             profileConfig.Initialize(webConfig);
             profileConfig.Enabled = true;
             profileConfig.DefaultProvider = "MySQLProfileProvider";
@@ -90,7 +92,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             var options = new Options();
             options.AppName = @"\";
             options.AutoGenSchema = true;
-            options.ConnectionStringName = WizardForm.connectionStringName;
+            options.ConnectionStringName = WizardForm.connectionStringForAspNetTables;
             options.ConnectionString = WizardForm.connectionStringForModel;
             options.EnableExpireCallback = false;
             options.ProviderName = "MySQLProfileProvider";
@@ -109,7 +111,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             var options = new Options();
             options.AppName = @"\";
             options.AutoGenSchema = true;
-            options.ConnectionStringName = WizardForm.connectionStringName;
+            options.ConnectionStringName = WizardForm.connectionStringForAspNetTables;
             options.ConnectionString = WizardForm.connectionStringForModel;
             options.EnableExpireCallback = false;
             options.ProviderName = "MySQLRoleProvider";
@@ -138,7 +140,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 NameValueCollection membershipParams = settings[section.DefaultProvider].Parameters;
                 var provider = new MySQLMembershipProvider();
                 provider.Initialize(section.DefaultProvider, membershipParams);
-              
+
                 //create the user
                 MembershipCreateStatus status;
                 if (!WizardForm.requireQuestionAndAnswer)
@@ -147,21 +149,21 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 }
                 else
                 {
-                  provider.CreateUser("administrator", WizardForm.adminPassword, "temporary@email.com", "Set question", "Set answer", true, null, out status);
+                  provider.CreateUser("administrator", WizardForm.adminPassword, "temporary@email.com", WizardForm.userQuestion, WizardForm.userAnswer, true, null, out status);
                 }
               }
-            }          
+            }
           }
           catch (Exception ex)
           {
             MessageBox.Show(ex.Message, "An error occured when creating user", MessageBoxButtons.OK, MessageBoxIcon.Error);
           }
-          
+
         }
         catch (Exception ex)
         {
           MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }      
+        }
       }
       WizardForm.Dispose();
     }
@@ -169,30 +171,43 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, Microsoft.VisualStudio.TemplateWizard.WizardRunKind runKind, object[] customParams)
     {
+      dte = automationObject as DTE;
+
+      connections = MySqlServerExplorerConnections.LoadMySqlConnectionsFromServerExplorer(dte);
+      WizardForm.connections = this.connections;
+      WizardForm.dte = this.dte;
+
       DialogResult result = WizardForm.ShowDialog();
-     
+
       if (result == DialogResult.Cancel) throw new WizardCancelledException();
 
       if (!WizardForm.includeSensitiveInformation)
       {
-        var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);
+        // connectionstringformodel
+        var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);        
         csb.Password = "";
-        replacementsDictionary.Add("$connectionstring$", csb.ConnectionString);        
+        replacementsDictionary.Add("$connectionstringformodel$", csb.ConnectionString);
+
+        // connectionstringforaspnet        
+        csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
+        csb.Password = "";
+        replacementsDictionary.Add("$connectionstringforaspnettables$", csb.ConnectionString);
       }
       else
       {
-        replacementsDictionary.Add("$connectionstring$", WizardForm.connectionStringForModel);        
+        replacementsDictionary.Add("$connectionstringformodel$", WizardForm.connectionStringForModel);
+        replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
       }
 
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
       replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
-      replacementsDictionary.Add("$connectionstringname$", WizardForm.connectionStringName);
-      ProjectPath = replacementsDictionary["$destinationdirectory$"];      
+      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.connectionStringNameForModel);
+      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringForAspNetTables);
+      ProjectPath = replacementsDictionary["$destinationdirectory$"];
       ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
     }
-   
   }
 
 
@@ -256,7 +271,4 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
   }
-
-
-
 }
