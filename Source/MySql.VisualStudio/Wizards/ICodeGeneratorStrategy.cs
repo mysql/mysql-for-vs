@@ -58,22 +58,27 @@ namespace MySql.Data.VisualStudio.Wizards
     internal StreamWriter Writer;
     internal string CanonicalTableName;
     internal Dictionary<string, Column> Columns;
+    internal Dictionary<string, Column> DetailColumns;
     internal DataAccessTechnology DataAccessTech;
     internal LanguageGenerator Language;
     internal bool ValidationsEnabled;
     internal List<ColumnValidation> ValidationColumns;
+    internal List<ColumnValidation> DetailValidationColumns;
     internal string ConnectionString;
     internal string TableName;
+    internal string DetailTableName;
+    internal string ConstraintName;
 
     internal StrategyConfig(StreamWriter Writer, string CanonicalTableName,
-      Dictionary<string, Column> Columns, DataAccessTechnology DataAccessTech, GuiType Type, 
-      LanguageGenerator Language, bool ValidationsEnabled, 
-      List<ColumnValidation> ValidationColumns, string ConnectionString,
-      string TableName )
+      Dictionary<string, Column> Columns, Dictionary<string, Column> DetailColumns, DataAccessTechnology DataAccessTech,
+      GuiType Type, LanguageGenerator Language, bool ValidationsEnabled,
+      List<ColumnValidation> ValidationColumns, List<ColumnValidation> DetailValidationColumns, string ConnectionString,
+      string TableName, string DetailTableName, string ConstraintName )
     {
       this.Writer = Writer;
       this.CanonicalTableName = CanonicalTableName;
       this.Columns = Columns;
+      this.DetailColumns = DetailColumns;
       this.DataAccessTech = DataAccessTech;
       this.Type = Type;
       this.Language = Language;
@@ -81,6 +86,9 @@ namespace MySql.Data.VisualStudio.Wizards
       this.ValidationColumns = ValidationColumns;
       this.ConnectionString = ConnectionString;
       this.TableName = TableName;
+      this.DetailTableName = DetailTableName;
+      this.DetailValidationColumns = DetailValidationColumns;
+      this.ConstraintName = ConstraintName;
     }
   }
 

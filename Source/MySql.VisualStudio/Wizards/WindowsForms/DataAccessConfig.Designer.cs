@@ -178,7 +178,6 @@
       // radMasterDetail
       // 
       this.radMasterDetail.AutoSize = true;
-      this.radMasterDetail.Enabled = false;
       this.radMasterDetail.Location = new System.Drawing.Point(36, 65);
       this.radMasterDetail.Name = "radMasterDetail";
       this.radMasterDetail.Size = new System.Drawing.Size(87, 17);

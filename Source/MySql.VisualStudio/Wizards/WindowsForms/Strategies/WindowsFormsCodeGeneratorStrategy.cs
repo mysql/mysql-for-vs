@@ -47,6 +47,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal List<ColumnValidation> ValidationColumns;
     protected string ConnectionString;
     protected string TableName;
+    protected string DetailTableName;
+    protected string CanonicalDetailTableName;
+    protected string ConstraintName;
 
     internal WindowsFormsCodeGeneratorStrategy(StrategyConfig config)
     {
@@ -58,6 +61,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       ValidationColumns = config.ValidationColumns;
       ConnectionString = config.ConnectionString;
       TableName = config.TableName;
+      DetailTableName = config.DetailTableName;
+      CanonicalDetailTableName = GetCanonicalIdentifier(DetailTableName);
+      ConstraintName = config.ConstraintName;
     }
 
     /// <summary>

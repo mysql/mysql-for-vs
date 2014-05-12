@@ -63,28 +63,41 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       VSProject vsProj = project.Object as VSProject;
       try
       {
-        Columns = GetColumnsFromTable(WizardForm.TableName, WizardForm.Connection);
+        Columns = WizardForm.Columns;
+        DetailColumns = WizardForm.DetailColumns;
         _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
-        StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns,
+        string detailTableName = WizardForm.DetailTableName;
+        
+        StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
           WizardForm.DataAccessTechnology, WizardForm.GuiType, LanguageGenerator.CSharp,
-          ValidationsEnabled, WizardForm.ValidationColumns, GetConnectionStringWithPassword(WizardForm.Connection),
-          WizardForm.TableName);
+          ValidationsEnabled, WizardForm.ValidationColumns, WizardForm.ValidationColumnsDetail,
+          GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName, 
+          detailTableName, WizardForm.ConstraintName);
         Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
-        if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5)
+        if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
+          WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
         {
-          CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
-          AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, ENTITY_FRAMEWORK_VERSION_5);
-          GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", WizardForm.TableName);
+          if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 )
+            CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
+          else
+            CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
+          AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
+          if (string.IsNullOrEmpty(detailTableName))
+            GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", WizardForm.TableName);
+          else
+          {
+            List<string> tables = new List<string>();
+            tables.Add(WizardForm.TableName);
+            tables.Add(detailTableName);
+            GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", tables);
+          }
         }
         else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
         {
-          GenerateTypedDataSetModel(vsProj, WizardForm.Connection, WizardForm.TableName);
-        }
-        else if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
-        {
-          CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
-          AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, ENTITY_FRAMEWORK_VERSION_6);
-          GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", WizardForm.TableName);
+          if( WizardForm.GuiType == GuiType.MasterDetail )
+            GenerateTypedDataSetModel(vsProj, WizardForm.Connection, new string[] { WizardForm.TableName, WizardForm.DetailTableName }.ToList() );
+          else 
+            GenerateTypedDataSetModel(vsProj, WizardForm.Connection, WizardForm.TableName);
         }
         AddBindings(vsProj);
       }

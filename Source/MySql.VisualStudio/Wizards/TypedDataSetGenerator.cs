@@ -45,15 +45,31 @@ namespace MySql.Data.VisualStudio.Wizards
     internal TypedDataSetGenerator(MySqlConnection con, string modelName, string table, string path, string ArtifactNamespace) : 
       base( con, modelName, table, path, ArtifactNamespace )
     {
+      _tables = new string[] { table }.ToList();
+    }
 
+    internal TypedDataSetGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace) :
+      base(con, modelName, tables, path, artifactNamespace)
+    {
     }
 
     internal override string Generate()
     {
       DataSet ds = new DataSet();
-      MySqlDataAdapter da = new MySqlDataAdapter( string.Format( "select * from `{0}`", _table ), _con);
+      //MySqlDataAdapter da = new MySqlDataAdapter( string.Format( "select * from `{0}`", _table ), _con);
+      MySqlDataAdapter da = new MySqlDataAdapter(string.Format("select * from `{0}`", _tables[ 0 ]), _con);
       MySqlCommandBuilder builder = new MySqlCommandBuilder(da);
       da.FillSchema(ds, SchemaType.Source);
+      ds.Tables[0].TableName = BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(_tables[0]);
+
+      if (_tables.Count > 1)
+      {
+        da = new MySqlDataAdapter(string.Format("select * from `{0}`", _tables[1]), _con);
+        DataSet ds2 = new DataSet();
+        da.FillSchema(ds2, SchemaType.Source);
+        ds2.Tables[0].TableName = BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(_tables[1]);
+        ds.Merge(ds2.Tables[0], true, MissingSchemaAction.Add);
+      }
 
       StringBuilder sb = new StringBuilder();
       StringWriter sw = new StringWriter(sb);

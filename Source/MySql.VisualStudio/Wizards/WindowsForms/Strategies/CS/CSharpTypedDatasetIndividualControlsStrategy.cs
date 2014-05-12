@@ -52,7 +52,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("string strConn = \"{0};\";", ConnectionString);
       Writer.WriteLine("ad = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", TableName);
       Writer.WriteLine("MySqlCommandBuilder builder = new MySqlCommandBuilder(ad);");
-      Writer.WriteLine("ad.Fill(this.newDataSet._Table);");
+      Writer.WriteLine("ad.Fill(this.newDataSet.{0});", CanonicalTableName);
       Writer.WriteLine("ad.DeleteCommand = builder.GetDeleteCommand();");
       Writer.WriteLine("ad.UpdateCommand = builder.GetUpdateCommand();");
       Writer.WriteLine("ad.InsertCommand = builder.GetInsertCommand();");
@@ -125,7 +125,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
       }
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName);
-      Writer.WriteLine("ad.Update(this.newDataSet._Table);");
+      Writer.WriteLine("ad.Update(this.newDataSet.{0});", CanonicalTableName);
     }
 
     protected override void WriteDesignerControlDeclCode()
@@ -152,7 +152,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("// ");
       Writer.WriteLine("// tableBindingSource");
       Writer.WriteLine("// ");
-      Writer.WriteLine("this.{0}BindingSource.DataMember = \"Table\";", CanonicalTableName);
+      Writer.WriteLine("this.{0}BindingSource.DataMember = \"{0}\";", CanonicalTableName);
       Writer.WriteLine("this.{0}BindingSource.DataSource = this.newDataSet;", CanonicalTableName);
 
       WriteControlInitialization(true);
