@@ -63,11 +63,9 @@ namespace MySql.Data.VisualStudio.Wizards
 
       ShowFinishButton(false);
 
-      if (CurPage != null)
-      {
-          CurPage.OnStarting(this);
-          SetLabels();
-      }
+      CurPage.OnStarting(this);
+      SetLabels();
+
     }
 
     private void btnCancel_Click(object sender, EventArgs e)

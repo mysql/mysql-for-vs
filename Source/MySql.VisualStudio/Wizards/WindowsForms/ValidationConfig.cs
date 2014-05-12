@@ -37,9 +37,29 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class ValidationConfig : WizardPage
   {
+    private Dictionary<string, Column> _detailColumns;
+    private Dictionary<string, Column> _columns;
     private List<ColumnValidation> _colValidations;
+    private List<ColumnValidation> _colValidationsDetail;
     private string _table;
+    private string _detailTable;
     private string _connectionString;
+
+    internal Dictionary<string, Column> Columns
+    {
+      get
+      {
+        return _columns;
+      }
+    }
+
+    internal Dictionary<string, Column> DetailColumns
+    {
+      get
+      {
+        return _detailColumns;
+      }
+    }
 
     internal List<ColumnValidation> ValidationColumns {
       get {
@@ -48,19 +68,52 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
+    internal List<ColumnValidation> ValidationColumnsDetail
+    {
+      get
+      {
+        if (chkValidation.Checked) return _colValidationsDetail;
+        else return null;
+      }
+    }
+
     public ValidationConfig()
     {
+      _colValidations = new List<ColumnValidation>();
+      _colValidationsDetail = new List<ColumnValidation>();
       InitializeComponent();
     }
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
       WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
+      // Determine if Master-Detail layout is required
+      bool isMasterDetail = true;
+      if (wiz.GuiType != GuiType.MasterDetail)
+      {
+        isMasterDetail = false;
+        grdColumnsDetail.Visible = false;
+        lblTitleDetail.Visible = false;
+        //grdColumns.Size.Height = 290;
+        grdColumns.Size = new System.Drawing.Size(376, 290);
+      }
+
+      // Populate grid
       if ( ( _table != wiz.TableName ) || ( _connectionString != wiz.Connection.ConnectionString ) )
       {
         _table = wiz.TableName;
         _connectionString = wiz.Connection.ConnectionString;
-        LoadGridColumns(wiz.Connection, _table);
+        _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
+        _colValidations.Clear();
+        LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns);
+      }
+
+      if (isMasterDetail && (_detailTable != wiz.DetailTableName) )
+      {
+        _detailTable = wiz.DetailTableName;
+        _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
+        _colValidationsDetail.Clear();
+        LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, _colValidationsDetail, _detailColumns);
       }
     }
 
@@ -69,11 +122,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       grdColumns.Enabled = chkValidation.Checked;
     }
 
-    private void LoadGridColumns(MySqlConnection con, string Table)
+    private void LoadGridColumns(DataGridView grid, MySqlConnection con, string Table, 
+      List<ColumnValidation> colsValidation, Dictionary<string, Column> columns)
     {
-      _table = Table;
-      _colValidations = new List<ColumnValidation>();
-      Dictionary<string,Column> columns = BaseWizard<BaseWizardForm,WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(Table, con);
       BindingSource binding = new BindingSource();
       foreach (KeyValuePair<string, Column> kvp in columns)
       {
@@ -83,55 +134,50 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         cv.MinValue = null;
         cv.MaxValue = null;
         cv.Required = true;
-        _colValidations.Add(cv);
-        //binding.Add(cv);
+        colsValidation.Add(cv);
       }
-      grdColumns.AutoGenerateColumns = false;
-      //grdColumns.AutoSize = true;
-
-      binding.DataSource = _colValidations;
-      grdColumns.DataSource = binding;
+      grid.AutoGenerateColumns = false;
+      
       DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn();
       colName.DataPropertyName = "Name";
       colName.HeaderText = "ColumnName";
       colName.Name = "colName";
       colName.ReadOnly = true;
-      grdColumns.Columns.Add(colName);
+      grid.Columns.Add(colName);
 
       DataGridViewCheckBoxColumn colRequired = new DataGridViewCheckBoxColumn();
       colRequired.DataPropertyName = "Required";
       colRequired.HeaderText = "Required";
       colRequired.Name = "colRequired";
       colRequired.ReadOnly = true;
-      grdColumns.Columns.Add(colRequired);
+      grid.Columns.Add(colRequired);
 
       DataGridViewTextBoxColumn colDataType = new DataGridViewTextBoxColumn();
       colDataType.DataPropertyName = "DataType";
       colDataType.HeaderText = "Data Type";
       colDataType.Name = "colDataType";
       colDataType.ReadOnly = true;
-      grdColumns.Columns.Add(colDataType);
+      grid.Columns.Add(colDataType);
 
       DataGridViewTextBoxColumn colDefaultValue = new DataGridViewTextBoxColumn();
       colDefaultValue.DataPropertyName = "DefaultValue";
       colDefaultValue.HeaderText = "Default";
       colDefaultValue.Name = "colDefaultValue";
-      grdColumns.Columns.Add(colDefaultValue);
+      grid.Columns.Add(colDefaultValue);
       
       DataGridViewTextBoxColumn colMinValue = new DataGridViewTextBoxColumn();
       colMinValue.DataPropertyName = "MinValue";
       colMinValue.HeaderText = "Min Value";
       colMinValue.Name = "colMinValue";
-      grdColumns.Columns.Add(colMinValue);
+      grid.Columns.Add(colMinValue);
 
       DataGridViewTextBoxColumn colMaxValue = new DataGridViewTextBoxColumn();
       colMaxValue.DataPropertyName = "MaxValue";
       colMaxValue.HeaderText = "Max Value";
       colMaxValue.Name = "colMaxValue";
-      grdColumns.Columns.Add(colMaxValue);
+      grid.Columns.Add(colMaxValue);
 
-      grdColumns.DataSource = _colValidations;
-      //grdColumns.Update();
+      grid.DataSource = colsValidation;
     }
 
     internal override bool IsValid()

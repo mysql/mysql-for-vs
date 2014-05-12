@@ -36,9 +36,12 @@
       this.pictureBox2 = new System.Windows.Forms.PictureBox();
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
+      this.grdColumnsDetail = new System.Windows.Forms.DataGridView();
+      this.lblTitleDetail = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.grdColumns)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdColumnsDetail)).BeginInit();
       this.SuspendLayout();
       // 
       // grdColumns
@@ -46,7 +49,7 @@
       this.grdColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grdColumns.Location = new System.Drawing.Point(455, 76);
       this.grdColumns.Name = "grdColumns";
-      this.grdColumns.Size = new System.Drawing.Size(376, 290);
+      this.grdColumns.Size = new System.Drawing.Size(376, 142);
       this.grdColumns.TabIndex = 0;
       this.grdColumns.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdColumns_CellValidating);
       // 
@@ -122,10 +125,29 @@
       this.label2.TabIndex = 53;
       this.label2.Text = "WinForms Template";
       // 
+      // grdColumnsDetail
+      // 
+      this.grdColumnsDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdColumnsDetail.Location = new System.Drawing.Point(455, 224);
+      this.grdColumnsDetail.Name = "grdColumnsDetail";
+      this.grdColumnsDetail.Size = new System.Drawing.Size(376, 142);
+      this.grdColumnsDetail.TabIndex = 55;
+      // 
+      // lblTitleDetail
+      // 
+      this.lblTitleDetail.AutoSize = true;
+      this.lblTitleDetail.Location = new System.Drawing.Point(272, 224);
+      this.lblTitleDetail.Name = "lblTitleDetail";
+      this.lblTitleDetail.Size = new System.Drawing.Size(171, 13);
+      this.lblTitleDetail.TabIndex = 56;
+      this.lblTitleDetail.Text = "Columns to Validate in Detail Table";
+      // 
       // ValidationConfig
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.lblTitleDetail);
+      this.Controls.Add(this.grdColumnsDetail);
       this.Controls.Add(this.pictureBox2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.label2);
@@ -139,6 +161,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.grdColumns)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdColumnsDetail)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -154,5 +177,7 @@
     private System.Windows.Forms.PictureBox pictureBox2;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.DataGridView grdColumnsDetail;
+    private System.Windows.Forms.Label lblTitleDetail;
   }
 }
