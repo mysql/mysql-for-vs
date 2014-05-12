@@ -33,6 +33,7 @@ using EnvDTE;
 using VSLangProj;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
+using MySQL.Utility.Classes;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -76,10 +77,23 @@ namespace MySql.Data.VisualStudio.Wizards
     /// </summary>
     protected string NetFxVersion;
 
+    protected BindingSource connections
+    {
+      get;
+      set;
+    }
+
+    protected DTE dte;
+
     /// <summary>
     /// The column metadata.
     /// </summary>
     internal Dictionary<string, Column> Columns;
+
+    /// <summary>
+    /// The column metadata for the detail table.
+    /// </summary>
+    internal Dictionary<string, Column> DetailColumns;
 
     // Some constants of Entity Framework versions as supposed to be feed to this class's methods for Nuget.
     internal protected readonly static string ENTITY_FRAMEWORK_VERSION_5 = "5.0.0";
@@ -326,6 +340,15 @@ namespace MySql.Data.VisualStudio.Wizards
       VsProj.References.Add( packagePath );
     }
 
+    protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, List<string> tables)
+    {
+      string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
+      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace);
+      string file = gen.Generate();
+      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.cs", TypedDataSetGenerator.FILENAME_ARTIFACT));
+      VsProj.Project.ProjectItems.AddFromFile(artifactPath);
+    }
+
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, string TableName)
     {
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
@@ -350,7 +373,7 @@ namespace MySql.Data.VisualStudio.Wizards
       return item;
     }
 
-    internal protected string GetCanonicalIdentifier(string Identifier)
+    internal protected static string GetCanonicalIdentifier(string Identifier)
     {
       return Identifier.Replace(' ', '_').Replace('`', '_');
     }

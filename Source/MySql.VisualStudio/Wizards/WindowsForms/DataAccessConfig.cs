@@ -39,7 +39,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   {
     private MySqlConnection _con;
     private string _constraintTable = "";
-    List<string> _constraints = new List<string>();
+    List<MyListItem> _constraints = new List<MyListItem>();
 
     internal MySqlConnection Connection
     {
@@ -70,7 +70,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       get
       {
         if (cmbFkConstraints.SelectedIndex == -1) return null;
-        else return (string)cmbFkConstraints.SelectedItem;
+        else return ((MyListItem)(cmbFkConstraints.SelectedItem)).Name;
+      }
+    }
+
+    internal string DetailTableName
+    {
+      get
+      {
+        if (cmbFkConstraints.SelectedIndex == -1) return null;
+        else return ((MyListItem)(cmbFkConstraints.SelectedItem)).Value;
       }
     }
 
@@ -148,7 +157,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
 
       if ( ( radMasterDetail.Checked ) && 
-        ( string.IsNullOrEmpty((string)cmbFkConstraints.SelectedItem) || (cmbFkConstraints.SelectedIndex == -1) ))
+        ( cmbFkConstraints.SelectedIndex == -1) )
       {
         e.Cancel = true;
         errorProvider1.SetError(cmbFkConstraints, "A constraint name must be chosen for a Master Detail layout.");
@@ -180,13 +189,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       if (radMasterDetail.Checked)
       {
-        List<string> constraints = GetForeignKeyConstraints();
+        List<MyListItem> constraints = GetForeignKeyConstraints();
         cmbFkConstraints.Items.Clear();
         for (int i = 0; i < constraints.Count; i++)
         {
           cmbFkConstraints.Items.Add(constraints[i]);
         }
         cmbFkConstraints.Enabled = true;
+        cmbFkConstraints.ValueMember = "Value";
+        cmbFkConstraints.DisplayMember = "Name";
       }
     }
 
@@ -200,14 +211,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       cmbFkConstraints.Enabled = false;
     }
 
-    private List<string> GetForeignKeyConstraints()
+    private List<MyListItem> GetForeignKeyConstraints()
     {
       if (TableName == _constraintTable) return _constraints;
       else { _constraintTable = TableName; _constraints.Clear(); }
       if (_con == null) return _constraints;
       string sql = string.Format(
-        @"select `constraint_name` from information_schema.referential_constraints 
-          where `constraint_schema` = '{0}' and `table_name` = '{1}';", _con.Database, _constraintTable);
+        @"select `constraint_name`, `referenced_table_name` from information_schema.referential_constraints 
+          where `constraint_schema` = '{0}' and `table_name` = '{1}'
+          union
+          select `constraint_name`, `table_name` from information_schema.referential_constraints 
+          where `constraint_schema` = '{0}' and `referenced_table_name` = '{1}';", _con.Database, _constraintTable);
       if ((_con.State & ConnectionState.Open) == 0)
         _con.Open();
       MySqlCommand cmd = new MySqlCommand(sql, _con);
@@ -215,7 +229,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         while (r.Read())
         {
-          _constraints.Add(r.GetString(0));
+          _constraints.Add( new MyListItem( r.GetString(0), r.GetString( 1 ) ));
         }
       }
       return _constraints;
@@ -250,5 +264,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     IndividualControls = 1,
     Grid = 2,
     MasterDetail = 3
+  }
+
+  internal class MyListItem
+  {
+    public string Value { get; set; }
+    public string Name { get; set; }
+
+    internal MyListItem(string Name, string Value)
+    {
+      this.Name = Name;
+      this.Value = Value;
+    }
   }
 }

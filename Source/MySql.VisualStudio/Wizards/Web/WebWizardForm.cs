@@ -29,63 +29,95 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.Data.Services;
+using EnvDTE;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public partial class WebWizardForm : BaseWizardForm
-  {
+  {    
 
     #region "Properties exposed"
 
-    internal string connectionStringForModel
+      internal DTE dte
+      {
+          get;
+          set;
+      }
+
+    internal string connectionStringForAspNetTables
     {
-      get {
-        return providerConfiguration1.connectionString;
-      }    
+      get
+      {
+        return dataSourceConfiguration1.connectionString;
+      }
     }
 
-    internal string connectionStringName
+    internal string connectionStringNameForAspNetTables
     {
-      get {
-
-        return providerConfiguration1.connectionStringName;
+      get
+      {
+        return dataSourceConfiguration1.connectionStringName;
       }    
+    }
+    
+    
+    internal string connectionStringForModel
+    {
+      get
+      {
+        return modelConfiguration1.connectionString;
+      }
+    }
+
+    internal string connectionStringNameForModel
+    {
+      get
+      {
+
+        return modelConfiguration1.connectionStringName;
+      }
     }
 
     internal bool includeProfilesProvider
     {
-      get {
-        return providerConfiguration1.includeProfileProvider;      
+      get
+      {
+        return dataSourceConfiguration1.includeProfileProvider;
       }
     }
 
     internal bool includeRoleProvider
     {
-      get {
-        return providerConfiguration1.includeRoleProvider;      
-      }      
+      get
+      {
+        return dataSourceConfiguration1.includeRoleProvider;
+      }
     }
 
 
     internal string modelName
     {
-      get {
+      get
+      {
         return modelConfiguration1.modelName;
       }
-    
+
     }
 
     internal DataEntityVersion dEVersion
     {
-      get {
+      get
+      {
         return modelConfiguration1.dEVersion;
-       }
+      }
     }
 
     internal List<DbTables> selectedTables
     {
-      get {
-        return modelConfiguration1.selectedTables;
+      get
+      {
+        return tablesSelection1.selectedTables;        
       }
     }
 
@@ -93,30 +125,32 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       get
       {
-        return modelConfiguration1.includeSensitiveInformation;
-      }    
+        return dataSourceConfiguration1.includeSensitiveInformation;
+      }
     }
-
 
     internal bool writeExceptionsToLog
     {
-      get {
+      get
+      {
         return providerConfiguration1.writeExceptionsToLog;
       }
     }
 
     internal int minimumPasswordLenght
     {
-      get {
-        return providerConfiguration1.minimumPasswordLenght;      
-      }    
+      get
+      {
+        return providerConfiguration1.minimumPasswordLenght;
+      }
     }
 
     internal bool requireQuestionAndAnswer
     {
-      get {
+      get
+      {
         return providerConfiguration1.requireQuestionAndAnswer;
-      }    
+      }
     }
 
     internal bool createAdministratorUser
@@ -124,7 +158,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       get
       {
         return providerConfiguration1.createAdministratorUser;
-      }   
+      }
     }
 
     internal string adminPassword
@@ -135,6 +169,21 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
+    internal string userQuestion
+    {
+      get {
+        return providerConfiguration1.userQuestion;
+      }    
+    }
+
+    internal string userAnswer
+    {
+      get {
+        return providerConfiguration1.userAnswer;
+      }
+    }
+
+
     #endregion
 
     public WebWizardForm()
@@ -144,13 +193,22 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     private void WebWizardForm_Load(object sender, EventArgs e)
     {
-      // Create linked list of wizard pages.
+      // set up descriptions and title
+      Descriptions.Add("Data Source Configuration,This wizard will create a full MVC project connected to a MySQL database existing or will create a new one with a web site that includes user authentication with the ASP.NET MySQL Membership provider.");
+      Descriptions.Add("Provider Settings Configuration,Please select the correspondant settings that will be applied for the ASP.NET MySQL Membership provider.");
+      Descriptions.Add("Model Connection String Settings,Please select the correspondant settings to use in the Connection String for your Data Entity Model.");
+      Descriptions.Add("Database objects selection,Please select the tables that you want to include in the generation of your model");
+      WizardName = "ASP.net MVC Project";
+
+
+      // Create linked list of wizard pages.      
+      Pages.Add(dataSourceConfiguration1);
       Pages.Add(providerConfiguration1);
       Pages.Add(modelConfiguration1);
-      CurPage = providerConfiguration1;
-      Current = 0;
-
-      BaseWizardForm_Load(sender, e);
+      Pages.Add(tablesSelection1);
+      CurPage = dataSourceConfiguration1;
+      Current = 0;      
+      BaseWizardForm_Load(sender, e);      
     }
   }
 }

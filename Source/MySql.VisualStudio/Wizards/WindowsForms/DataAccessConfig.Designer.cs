@@ -178,7 +178,6 @@
       // radMasterDetail
       // 
       this.radMasterDetail.AutoSize = true;
-      this.radMasterDetail.Enabled = false;
       this.radMasterDetail.Location = new System.Drawing.Point(36, 65);
       this.radMasterDetail.Name = "radMasterDetail";
       this.radMasterDetail.Size = new System.Drawing.Size(87, 17);
@@ -217,8 +216,7 @@
       this.toolTip1.ShowAlways = true;
       // 
       // pictureBox2
-      // 
-      this.pictureBox2.Image = global::MySql.Data.VisualStudio.Properties.Resources.MySQL;
+      //       
       this.pictureBox2.Location = new System.Drawing.Point(68, 182);
       this.pictureBox2.Name = "pictureBox2";
       this.pictureBox2.Size = new System.Drawing.Size(108, 111);
@@ -249,8 +247,7 @@
       // 
       // pictureBox1
       // 
-      this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-	  this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.Background;
+      this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;	  
       this.pictureBox1.Location = new System.Drawing.Point(245, 1);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(614, 442);

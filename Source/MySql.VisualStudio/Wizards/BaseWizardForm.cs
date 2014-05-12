@@ -38,13 +38,17 @@ namespace MySql.Data.VisualStudio.Wizards
   public partial class BaseWizardForm : Form
   {
     protected List<WizardPage> Pages = new List<WizardPage>();
+    protected List<string> Descriptions = new List<string>();
     protected int Current = 0;
     protected WizardPage CurPage = null;
-
+    protected string WizardName;
+    
+    internal BindingSource connections;
+   
+    
     public BaseWizardForm()
     {
       InitializeComponent();
-      // this.Load += new System.EventHandler(this.BaseWizardForm_Load);
     }
 
     protected void BaseWizardForm_Load(object sender, EventArgs e)
@@ -58,7 +62,10 @@ namespace MySql.Data.VisualStudio.Wizards
       btnNext.Enabled = true;
 
       ShowFinishButton(false);
+
       CurPage.OnStarting(this);
+      SetLabels();
+
     }
 
     private void btnCancel_Click(object sender, EventArgs e)
@@ -73,33 +80,41 @@ namespace MySql.Data.VisualStudio.Wizards
         ShowFinishButton(false);
       if (Current > 0)
       {
-        CurPage = Pages[--Current];
+        CurPage = Pages[--Current];        
         Pages[prevCurrent].Visible = false;
         Pages[Current].Visible = true;
-        btnNext.Enabled = true;
+        btnNext.Enabled = true;             
       }
       if (Current == 0)
       {
         btnBack.Enabled = false;
       }
-      CurPage.OnStarting(this);
+
+      SetLabels();      
     }
 
     private void btnNext_Click(object sender, EventArgs e)
     {
       int prevCurrent = Current;
       if (!CurPage.IsValid()) return;
-      if (Current < (Pages.Count - 1))
+      
+      if (CurPage.skipNextPage)
       {
+        Current++;
+      }
+
+      if (Current < (Pages.Count - 1))
+      {        
         CurPage = Pages[++Current];
         Pages[prevCurrent].Visible = false;
         Pages[Current].Visible = true;
-        btnBack.Enabled = true;
+        btnBack.Enabled = true;      
       }
       if (Current == (Pages.Count - 1))
       {
         ShowFinishButton(true);
       }
+      SetLabels();
       CurPage.OnStarting(this);
     }
 
@@ -117,6 +132,15 @@ namespace MySql.Data.VisualStudio.Wizards
         // this form keeps all the user selections handy so the IWizard can customize the project template.
         this.Close();
       }
+    }
+
+    private void SetLabels()
+    {
+      lblStep.Text = string.Format("{0}/{1}", (Current + 1), Pages.Count);
+      var labels = Descriptions[Current].Split(',');
+      lblStepTitle.Text = labels[0];
+      lblDescription.Text = labels[1];
+      lblWizardName.Text = WizardName;    
     }
   }
 }

@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.SchemaComparer;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
@@ -48,7 +49,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal string ConstraintName { get { return dataAccessConfig1.ConstraintName; } }
 
+    internal string DetailTableName { get { return dataAccessConfig1.DetailTableName; } }
+
     internal List<ColumnValidation> ValidationColumns { get { return validationConfig1.ValidationColumns; } }
+
+    internal List<ColumnValidation> ValidationColumnsDetail { get { return validationConfig1.ValidationColumnsDetail; } }
+
+    internal Dictionary<string, Column> Columns { get { return validationConfig1.Columns; } }
+
+    internal Dictionary<string, Column> DetailColumns { get { return validationConfig1.DetailColumns; } }
 
     #endregion
 
@@ -63,6 +72,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     private void WizardForm_Load(object sender, EventArgs e)
     {
+      // set up descriptions and title
+      Descriptions.Add("Data Source Configuration,This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail).");
+      Descriptions.Add("Columns Validation,This page allows you to customize input validations for each column in the selected table(s).");
+      WizardName = "Windows Forms Project";
+
       // Create linked list of wizard pages.
       Pages.Add(dataAccessConfig1);
       Pages.Add(validationConfig1);

@@ -135,5 +135,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       // TODO:
       throw new NotImplementedException();
     }
+
+    protected string GetMaxWidthString(Dictionary<string, Column> l)
+    {
+      KeyValuePair<string, Column> maxWidthItem = new KeyValuePair<string, Column>("", null);
+      foreach (KeyValuePair<string, Column> kvp in l)
+      {
+        if (kvp.Key.Length > maxWidthItem.Key.Length) maxWidthItem = kvp;
+      }
+      return maxWidthItem.Key;
+    }
   }
 }
