@@ -38,11 +38,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
   {    
 
     #region "Properties exposed"
-
-      internal DTE dte
-      {
-          get;
-          set;
+     
+     internal string serverExplorerConnectionSelected
+     {
+       get {
+          return dataSourceConfiguration1.selectedConnection;
+        }
       }
 
     internal string connectionStringForAspNetTables

@@ -28,6 +28,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using EnvDTE;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -43,9 +44,14 @@ namespace MySql.Data.VisualStudio.Wizards
     protected WizardPage CurPage = null;
     protected string WizardName;
     
+    internal DTE dte
+    {
+      get;
+      set;
+    }
+
     internal BindingSource connections;
-   
-    
+       
     public BaseWizardForm()
     {
       InitializeComponent();

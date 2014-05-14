@@ -14,7 +14,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
   public partial class TablesSelection : WizardPage
   {
 
-    private BindingList<DbTables> _tables;
+    private BindingList<DbTables> _tables = new BindingList<DbTables>();
     BindingSource _sourceTables = new BindingSource();
 
     public TablesSelection()

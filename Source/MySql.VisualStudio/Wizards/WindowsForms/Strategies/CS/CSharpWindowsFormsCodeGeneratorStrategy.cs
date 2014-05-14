@@ -61,7 +61,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// <returns></returns>
     internal protected override string GetCanonicalIdentifier(string Identifier)
     {
-      return Identifier.Replace(' ', '_').Replace('`', '_');
+        if (String.IsNullOrEmpty(Identifier))
+            return Identifier;
+        return Identifier.Replace(' ', '_').Replace('`', '_');
     }
 
     internal protected override string GetEdmDesignerFileName()

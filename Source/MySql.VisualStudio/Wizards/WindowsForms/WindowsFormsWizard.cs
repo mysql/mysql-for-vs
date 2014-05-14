@@ -114,6 +114,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       WizardForm.Dispose();
     }
 
+    public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, Microsoft.VisualStudio.TemplateWizard.WizardRunKind runKind, object[] customParams)
+    {
+      Dte = automationObject as DTE;
+
+      connections = MySqlServerExplorerConnections.LoadMySqlConnectionsFromServerExplorer(Dte);
+      WizardForm.connections = this.connections;
+      WizardForm.dte = Dte;
+      base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
+    }
+
+
     private void AddBindings(VSProject vsProj)
     {     
 

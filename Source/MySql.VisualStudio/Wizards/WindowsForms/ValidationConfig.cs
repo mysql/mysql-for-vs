@@ -37,12 +37,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class ValidationConfig : WizardPage
   {
-    private Dictionary<string, Column> _detailColumns;
+    
     private Dictionary<string, Column> _columns;
     private List<ColumnValidation> _colValidations;
     private List<ColumnValidation> _colValidationsDetail;
     private string _table;
-    private string _detailTable;
+    
     private string _connectionString;
 
     internal Dictionary<string, Column> Columns
@@ -50,14 +50,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       get
       {
         return _columns;
-      }
-    }
-
-    internal Dictionary<string, Column> DetailColumns
-    {
-      get
-      {
-        return _detailColumns;
       }
     }
 
@@ -79,24 +71,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     public ValidationConfig()
     {
+      InitializeComponent();
+
       _colValidations = new List<ColumnValidation>();
       _colValidationsDetail = new List<ColumnValidation>();
-      InitializeComponent();
+
+      grdColumns.CellValidating += grdColumns_CellValidating;
     }
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
       WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
-      // Determine if Master-Detail layout is required
-      bool isMasterDetail = true;
-      if (wiz.GuiType != GuiType.MasterDetail)
-      {
-        isMasterDetail = false;
-        grdColumnsDetail.Visible = false;
-        lblTitleDetail.Visible = false;
-        //grdColumns.Size.Height = 290;
-        grdColumns.Size = new System.Drawing.Size(376, 290);
-      }
+
+      lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
 
       // Populate grid
       if ( ( _table != wiz.TableName ) || ( _connectionString != wiz.Connection.ConnectionString ) )
@@ -105,79 +92,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         _connectionString = wiz.Connection.ConnectionString;
         _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
         _colValidations.Clear();
-        LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns);
-      }
-
-      if (isMasterDetail && (_detailTable != wiz.DetailTableName) )
-      {
-        _detailTable = wiz.DetailTableName;
-        _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
-        _colValidationsDetail.Clear();
-        LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, _colValidationsDetail, _detailColumns);
-      }
+        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns);
+      }     
     }
 
     private void chkValidation_CheckedChanged(object sender, EventArgs e)
     {
       grdColumns.Enabled = chkValidation.Checked;
-    }
-
-    private void LoadGridColumns(DataGridView grid, MySqlConnection con, string Table, 
-      List<ColumnValidation> colsValidation, Dictionary<string, Column> columns)
-    {
-      BindingSource binding = new BindingSource();
-      foreach (KeyValuePair<string, Column> kvp in columns)
-      {
-        ColumnValidation cv = new ColumnValidation(kvp.Value);
-        cv.ColumnType = ColumnType.Text;
-        cv.DefaultValue = "";
-        cv.MinValue = null;
-        cv.MaxValue = null;
-        cv.Required = true;
-        colsValidation.Add(cv);
-      }
-      grid.AutoGenerateColumns = false;
-      
-      DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn();
-      colName.DataPropertyName = "Name";
-      colName.HeaderText = "ColumnName";
-      colName.Name = "colName";
-      colName.ReadOnly = true;
-      grid.Columns.Add(colName);
-
-      DataGridViewCheckBoxColumn colRequired = new DataGridViewCheckBoxColumn();
-      colRequired.DataPropertyName = "Required";
-      colRequired.HeaderText = "Required";
-      colRequired.Name = "colRequired";
-      colRequired.ReadOnly = true;
-      grid.Columns.Add(colRequired);
-
-      DataGridViewTextBoxColumn colDataType = new DataGridViewTextBoxColumn();
-      colDataType.DataPropertyName = "DataType";
-      colDataType.HeaderText = "Data Type";
-      colDataType.Name = "colDataType";
-      colDataType.ReadOnly = true;
-      grid.Columns.Add(colDataType);
-
-      DataGridViewTextBoxColumn colDefaultValue = new DataGridViewTextBoxColumn();
-      colDefaultValue.DataPropertyName = "DefaultValue";
-      colDefaultValue.HeaderText = "Default";
-      colDefaultValue.Name = "colDefaultValue";
-      grid.Columns.Add(colDefaultValue);
-      
-      DataGridViewTextBoxColumn colMinValue = new DataGridViewTextBoxColumn();
-      colMinValue.DataPropertyName = "MinValue";
-      colMinValue.HeaderText = "Min Value";
-      colMinValue.Name = "colMinValue";
-      grid.Columns.Add(colMinValue);
-
-      DataGridViewTextBoxColumn colMaxValue = new DataGridViewTextBoxColumn();
-      colMaxValue.DataPropertyName = "MaxValue";
-      colMaxValue.HeaderText = "Max Value";
-      colMaxValue.Name = "colMaxValue";
-      grid.Columns.Add(colMaxValue);
-
-      grid.DataSource = colsValidation;
     }
 
     internal override bool IsValid()
@@ -281,62 +202,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
       }
     }
-  }
 
-  internal class ColumnValidation
-  {
-    private Column _column;
-    private int? _maxValue;
-    private int? _minValue;
-    private bool _required;
-    private ColumnType _columnType;
-    private object _defaultValue;
-
-    // It is important to make the properties public, otherwise DataGridView doesn't like and doesn't display the real values
-    // (this seems to be a known issue with DataGridView over stackoverflow).
-    public Column Column { get { return _column; } }
-    public int? MaxValue { get { return _maxValue; } set { _maxValue = value; } }
-    public int? MinValue { get { return _minValue; } set { _minValue = value; } }
-    public bool Required { get { return _required; } set { _required = value; } }
-    public ColumnType ColumnType { get { return _columnType; } set { _columnType = value; } }
-    public object DefaultValue { get { return _defaultValue; } set { _defaultValue = value; } }
-    public string Name { get { return _column.ColumnName; } set { _column.ColumnName = value; } }
-    public string DataType { get { return _column.DataType; } set { _column.DataType = value; } }
-
-    internal ColumnValidation(Column column)
-    {
-      _column = column;
+    private void chkNoValidations_CheckedChanged(object sender, EventArgs e)
+    {   
+      grdColumns.Enabled = chkNoValidations.Checked;   
     }
-
-    internal bool IsNumericType()
-    {
-      return IsFloatingPointType() || IsIntegerType();
-    }
-
-    internal bool IsFloatingPointType()
-    {
-      string dt = DataType;
-      if (dt == "decimal" || dt == "numeric" || dt == "float" || dt == "double")
-      {
-        return true;
-      }
-      return false;
-    }
-
-    internal bool IsIntegerType()
-    {
-      string dt = DataType;
-      if (dt == "int" || dt == "integer" || dt == "smallint" || dt == "tinyint" || dt == "mediumint" || dt == "bigint")
-      {
-        return true;
-      }
-      return false;
-    }
-  }
-
-  internal enum ColumnType : int
-  {
-    Text = 1,       // TextBox
-    DateTime = 2    // DatePicker
   }
 }

@@ -31,31 +31,37 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio;
 using MySql.Data.MySqlClient;
+using EnvDTE;
+using MySql.Data.VisualStudio.DBExport;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class DataAccessConfig : WizardPage
   {
-    private MySqlConnection _con;
-    private string _constraintTable = "";
+    private BaseWizardForm baseWizardForm;
+    private DTE _dte;    
+
+    internal MySqlConnection _con
+    {        
+        get
+        {
+           if (!string.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString()))
+                return new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
+            else
+                return null;
+       }
+    }
+        
     List<MyListItem> _constraints = new List<MyListItem>();
 
-    internal MySqlConnection Connection
-    {
-      get { return _con; }
-    }
-
-    internal GuiType GuiType
+    internal string connectionString
     {
       get
       {
-        if (radControls.Checked) return GuiType.IndividualControls;
-        else if (radGrid.Checked) return GuiType.Grid;
-        else if (radMasterDetail.Checked) return GuiType.MasterDetail;
-        else return GuiType.None;
+        return ConnectionStringTextBox.Tag.ToString();
       }
-    }
+    }   
 
     internal string TableName
     {
@@ -63,88 +69,89 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if (cmbTable.SelectedIndex == -1) return null;
         else return ( string )cmbTable.SelectedItem;
       }
-    }
-
-    internal string ConstraintName
-    {
-      get
-      {
-        if (cmbFkConstraints.SelectedIndex == -1) return null;
-        else return ((MyListItem)(cmbFkConstraints.SelectedItem)).Name;
-      }
-    }
-
-    internal string DetailTableName
-    {
-      get
-      {
-        if (cmbFkConstraints.SelectedIndex == -1) return null;
-        else return ((MyListItem)(cmbFkConstraints.SelectedItem)).Value;
-      }
-    }
-
-    internal DataAccessTechnology DataAccessTechnology
-    {
-      get {
-        if (radTechTypedDataSet.Checked) return DataAccessTechnology.TypedDataSet;
-        else if (radEF5.Checked) return DataAccessTechnology.EntityFramework5;
-        else if (radEF6.Checked) return DataAccessTechnology.EntityFramework6;
-        else return DataAccessTechnology.None;
-      }
-    }
-
+    }   
+   
     public DataAccessConfig()
     {
       InitializeComponent();
+
+      /* assign events */
+      ConnectionStringTextBox.TextChanged += new EventHandler(ConnectionStringTextBox_TextChanged);
+      cmbConnections.SelectionChangeCommitted += new EventHandler(cmbConnections_SelectionChangeCommitted);
+      cmbTable.DropDown += cmbTable_DropDown;
+      
+    }
+
+    private void cmbTable_DropDown(object sender, EventArgs e)
+    {
+      if (ConnectionStringTextBox.Tag != null)
+      {
+        FillTables();
+      }
+    }
+    
+    private void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
+    {
+      if ((cmbConnections.SelectedItem as MySqlServerExplorerConnection) == null) return;
+      ConnectionStringTextBox.Text = MySqlServerExplorerConnections.MaskPassword(((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString);
+      ConnectionStringTextBox.Tag = ((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString;
+
+      if (!IsConnectionStringValid(((MySqlServerExplorerConnection)cmbConnections.SelectedItem).ConnectionString))
+      {
+        ShowConnectionDialog(false);
+      }
+
+      cmbTable.Text = string.Empty;
+    }
+
+    private void ConnectionStringTextBox_TextChanged(object sender, EventArgs e)
+    {
+      if (!String.IsNullOrEmpty(ConnectionStringTextBox.Text))
+        errorProvider1.SetError(ConnectionStringTextBox, "");
     }
 
     private void btnConnConfig_Click(object sender, EventArgs e)
     {
-      // Code for openning connection dialog.
-      ConnectDialog dlg;
-      
-      dlg = _con == null ?  new ConnectDialog() : new ConnectDialog(new MySqlConnectionStringBuilder(_con.ConnectionString));         
-
-      DialogResult res = dlg.ShowDialog();
-      if (res == DialogResult.OK)
-      {
-        try
-        {
-          _con = (MySqlConnection)dlg.Connection;
-          FillTables();
-        }
-        catch( Exception ex )
-        {
-          MessageBox.Show(string.Format("The connection string is not valid: {0}", ex.Message));
-        }
-        txtConnStr.Text = _con.ConnectionString;
-      }
+      ShowConnectionDialog(true);
     }
 
     private void FillTables()
-    {
-      string[] restrictions = new string[ 4 ];
-      restrictions[ 1 ] = _con.Database;
-      DataTable t = _con.GetSchema( "Tables", restrictions );
-      cmbTable.Items.Clear();
-      for (int i = 0; i < t.Rows.Count; i++)
+    {      
+      if (ConnectionStringTextBox.Tag == null || String.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString())) return;
+
+      try
       {
-        cmbTable.Items.Add(t.Rows[i][2]);
+          var cnn = new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
+          cnn.Open();
+          
+          string[] restrictions = new string[4];
+          restrictions[1] = cnn.Database;
+          DataTable t = cnn.GetSchema("Tables", restrictions);
+          cmbTable.Items.Clear();
+          for (int i = 0; i < t.Rows.Count; i++)
+          {
+              cmbTable.Items.Add(t.Rows[i][2]);
+          }
+          cmbTable.Text = string.Empty;
       }
+      catch  {                    
+      }
+      
     }
 
     private void DataAccessConfig_Validating(object sender, CancelEventArgs e)
     {
       e.Cancel = false;
-      if (!IsConnectionStringValid())
+
+      if (!IsConnectionStringValid(ConnectionStringTextBox.Tag.ToString()))
       {
         e.Cancel = true;
-        errorProvider1.SetError(txtConnStr, "A valid connection string must be entered.");
+        errorProvider1.SetError(cmbConnections, "A valid connection string must be selected.");
       }
       else
       {
-        errorProvider1.SetError(txtConnStr, "");
-      }
+        errorProvider1.SetError(cmbConnections, "");
+      }     
 
       if (string.IsNullOrEmpty((string)cmbTable.SelectedItem) || (cmbTable.SelectedIndex == -1))
       {
@@ -154,27 +161,24 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else
       {
         errorProvider1.SetError(cmbTable, "");
-      }
-
-      if ( ( radMasterDetail.Checked ) && 
-        ( cmbFkConstraints.SelectedIndex == -1) )
-      {
-        e.Cancel = true;
-        errorProvider1.SetError(cmbFkConstraints, "A constraint name must be chosen for a Master Detail layout.");
-      }
-      else
-      {
-        errorProvider1.SetError(cmbFkConstraints, "");
-      }
+      } 
     }
 
-    private bool IsConnectionStringValid()
+
+    private bool IsConnectionStringValid(string connectionString)
     {
-      if (_con != null && !string.IsNullOrEmpty(txtConnStr.Text) && 
-        (_con.ConnectionString == txtConnStr.Text) && ((_con.State & ConnectionState.Open) != 0))
-        return true;
-      else
+      if (String.IsNullOrEmpty(connectionString))
         return false;
+
+      var cnn = new MySqlConnection(connectionString);
+      try
+      {
+        cnn.Open();
+        cnn.Close();
+      }
+      catch { return false; }
+
+      return true;
     }
 
     internal override bool IsValid()
@@ -185,96 +189,41 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else return true;
     }
 
-    private void radMasterDetail_CheckedChanged(object sender, EventArgs e)
+    private void ShowConnectionDialog(bool addSEConnection)
     {
-      if (radMasterDetail.Checked)
+      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSEConnection);
+      var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
+
+      if (addSEConnection)
       {
-        List<MyListItem> constraints = GetForeignKeyConstraints();
-        cmbFkConstraints.Items.Clear();
-        for (int i = 0; i < constraints.Count; i++)
-        {
-          cmbFkConstraints.Items.Add(constraints[i]);
-        }
-        cmbFkConstraints.Enabled = true;
-        cmbFkConstraints.ValueMember = "Value";
-        cmbFkConstraints.DisplayMember = "Name";
-      }
-    }
-
-    private void radGrid_CheckedChanged(object sender, EventArgs e)
-    {
-      cmbFkConstraints.Enabled = false;
-    }
-
-    private void radControls_CheckedChanged(object sender, EventArgs e)
-    {
-      cmbFkConstraints.Enabled = false;
-    }
-
-    private List<MyListItem> GetForeignKeyConstraints()
-    {
-      if (TableName == _constraintTable) return _constraints;
-      else { _constraintTable = TableName; _constraints.Clear(); }
-      if (_con == null) return _constraints;
-      string sql = string.Format(
-        @"select `constraint_name`, `referenced_table_name` from information_schema.referential_constraints 
-          where `constraint_schema` = '{0}' and `table_name` = '{1}'
-          union
-          select `constraint_name`, `table_name` from information_schema.referential_constraints 
-          where `constraint_schema` = '{0}' and `referenced_table_name` = '{1}';", _con.Database, _constraintTable);
-      if ((_con.State & ConnectionState.Open) == 0)
-        _con.Open();
-      MySqlCommand cmd = new MySqlCommand(sql, _con);
-      using (MySqlDataReader r = cmd.ExecuteReader())
-      {
-        while (r.Read())
-        {
-          _constraints.Add( new MyListItem( r.GetString(0), r.GetString( 1 ) ));
-        }
-      }
-      return _constraints;
-    }
-
-    internal override void OnStarting(BaseWizardForm wizard)
-    {
-      // Enable EF6 only if we are in VS2013 or major
-      double version = double.Parse( (( WindowsFormsWizardForm )wizard).Wizard.GetVisualStudioVersion() );
-      if (version >= 12.0)
-      {
-        radEF6.Enabled = true;
+        baseWizardForm.connections.DataSource = connections;
       }
       else
       {
-        radEF6.Enabled = false;
+        cmbConnections.DataSource = connections;
+        cmbConnections.Refresh();
       }
     }
-  }
 
-  internal enum DataAccessTechnology : int
-  {
-    None = 0,
-    TypedDataSet = 1,
-    EntityFramework5 = 2,
-    EntityFramework6 = 3
-  }
 
-  internal enum GuiType : int
-  {
-    None = 0,
-    IndividualControls = 1,
-    Grid = 2,
-    MasterDetail = 3
-  }
-
-  internal class MyListItem
-  {
-    public string Value { get; set; }
-    public string Name { get; set; }
-
-    internal MyListItem(string Name, string Value)
+    internal override void OnStarting(BaseWizardForm wizard)
     {
-      this.Name = Name;
-      this.Value = Value;
+      baseWizardForm = wizard;
+      _dte = ((WindowsFormsWizardForm)wizard).dte;
+
+      MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox, "CSharpWinForms");
+
+      if (ConnectionStringTextBox.Tag != null && !IsConnectionStringValid(ConnectionStringTextBox.Tag.ToString()))
+      {
+        ShowConnectionDialog(false);
+      }
+    }
+
+    private void newConnString_Click(object sender, EventArgs e)
+    {
+      ShowConnectionDialog(true);
     }
   }
+
+  
 }

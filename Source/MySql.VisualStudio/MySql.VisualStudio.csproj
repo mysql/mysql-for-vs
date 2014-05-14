@@ -663,6 +663,7 @@
     <Compile Include="MyInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MySqlForVisualStudioSettings.cs" />
     <Compile Include="MySqlProviderObjectFactory.cs" />
     <Compile Include="Nodes\BaseNode.cs">
     </Compile>
@@ -680,7 +681,7 @@
     </Compile>
     <Compile Include="Nodes\TableNode.cs">
     </Compile>
-    <Compile Include="PkgCmdID.cs" />    
+    <Compile Include="PkgCmdID.cs" />
     <Compile Include="Properties\VersionInfo.cs">
     </Compile>
     <Compile Include="SchemaComparer\Comparer.cs">
@@ -695,6 +696,11 @@
     </Compile>
     <Compile Include="SchemaComparer\SelectObjects.cs" />
     <Compile Include="ServerInstances\MySqlService.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
@@ -772,6 +778,18 @@
     <Compile Include="Wizards\Web\ProviderConfiguration.Designer.cs">
       <DependentUpon>ProviderConfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\WindowsForms\DetailValidationConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\DetailValidationConfig.Designer.cs">
+      <DependentUpon>DetailValidationConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\DataAccessTechnologyConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\DataAccessTechnologyConfig.Designer.cs">
+      <DependentUpon>DataAccessTechnologyConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpDataGridStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkDataGridStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkIndividualControlsStrategy.cs" />
@@ -812,6 +830,7 @@
     <Compile Include="Wizards\WindowsForms\WindowsFormsWizardForm.Designer.cs">
       <DependentUpon>WindowsFormsWizardForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\WindowsForms\WizardPageSharedClasses.cs" />
     <Compile Include="Wizards\WizardException.cs" />
     <Compile Include="Wizards\WizardPage.cs">
       <SubType>UserControl</SubType>
@@ -891,7 +910,7 @@
     <EmbeddedResource Include="Editors\UDFEditor.resx">
       <DependentUpon>UDFEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>    
+    </EmbeddedResource>
     <EmbeddedResource Include="SchemaComparer\SchemaComparerForm.resx">
       <DependentUpon>SchemaComparerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -922,6 +941,12 @@
     <EmbeddedResource Include="Wizards\Web\ProviderConfiguration.resx">
       <DependentUpon>ProviderConfiguration.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\DetailValidationConfig.resx">
+      <DependentUpon>DetailValidationConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\DataAccessTechnologyConfig.resx">
+      <DependentUpon>DataAccessTechnologyConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\DataAccessConfig.resx">
       <DependentUpon>DataAccessConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -934,6 +959,7 @@
     <EmbeddedResource Include="Wizards\WizardPage.resx">
       <DependentUpon>WizardPage.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions.datasource" />
     <None Include="Resources\ArrowKey.bmp">
     </None>
@@ -968,6 +994,10 @@
     </Content>
     <Content Include="Resources\Package.ico">
     </Content>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
