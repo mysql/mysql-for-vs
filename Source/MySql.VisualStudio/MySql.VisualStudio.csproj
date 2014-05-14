@@ -959,7 +959,6 @@
     <EmbeddedResource Include="Wizards\WizardPage.resx">
       <DependentUpon>WizardPage.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions.datasource" />
     <None Include="Resources\ArrowKey.bmp">
     </None>
