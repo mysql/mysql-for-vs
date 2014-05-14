@@ -36,20 +36,26 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class WindowsFormsWizardForm : BaseWizardForm
   {
+   
+    #region "Properties exposed"  
 
-    #region "Properties exposed"
+    internal GuiType GuiType { get { return dataAccessTechnologyConfig1.GuiType; } }    
 
-    internal GuiType GuiType { get { return dataAccessConfig1.GuiType; } }
-
-    internal MySqlConnection Connection { get { return dataAccessConfig1.Connection; } }
+    internal MySqlConnection Connection {
+      get {
+        if (string.IsNullOrEmpty(dataAccessConfig1.connectionString))
+          return null;
+        return new MySqlConnection(dataAccessConfig1.connectionString); 
+      }
+    }
 
     internal string TableName { get { return dataAccessConfig1.TableName; } }
 
-    internal DataAccessTechnology DataAccessTechnology { get { return dataAccessConfig1.DataAccessTechnology; } }
+    internal DataAccessTechnology DataAccessTechnology { get { return dataAccessTechnologyConfig1.DataAccessTechnology; } }
 
-    internal string ConstraintName { get { return dataAccessConfig1.ConstraintName; } }
+    internal string ConstraintName { get { return dataAccessTechnologyConfig1.ConstraintName; } }
 
-    internal string DetailTableName { get { return dataAccessConfig1.DetailTableName; } }
+    internal string DetailTableName { get { return dataAccessTechnologyConfig1.DetailTableName; } }
 
     internal List<ColumnValidation> ValidationColumns { get { return validationConfig1.ValidationColumns; } }
 
@@ -57,7 +63,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal Dictionary<string, Column> Columns { get { return validationConfig1.Columns; } }
 
-    internal Dictionary<string, Column> DetailColumns { get { return validationConfig1.DetailColumns; } }
+    internal Dictionary<string, Column> DetailColumns { get { return detailValidationConfig1.DetailColumns; } }
 
     #endregion
 
@@ -74,15 +80,18 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       // set up descriptions and title
       Descriptions.Add("Data Source Configuration,This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail).");
+      Descriptions.Add("Data Access Technology Configuration, This step will set up the technology that will be used in the generation of the Form");      
       Descriptions.Add("Columns Validation,This page allows you to customize input validations for each column in the selected table(s).");
+      Descriptions.Add("Detail Columns Validation, Within this step validations can be added on the columns for the child related table.");
       WizardName = "Windows Forms Project";
 
       // Create linked list of wizard pages.
       Pages.Add(dataAccessConfig1);
+      Pages.Add(dataAccessTechnologyConfig1);
       Pages.Add(validationConfig1);
+      Pages.Add(detailValidationConfig1);
       CurPage = dataAccessConfig1;
       Current = 0;
-
       BaseWizardForm_Load(sender, e);
     }
   }

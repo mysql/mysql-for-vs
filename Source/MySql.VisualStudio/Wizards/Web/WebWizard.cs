@@ -41,6 +41,7 @@ using System.Reflection;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio.Data.Services;
 using MySql.Data.VisualStudio.DBExport;
+using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -63,6 +64,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       {
         _vsProj = project.Object as VSProject;
         var tables = new List<string>();
+
+        Settings.Default.CSharpMVCWizardConnection = WizardForm.serverExplorerConnectionSelected;
+        Settings.Default.Save();
 
         if (WizardForm.selectedTables != null && WizardForm.dEVersion != DataEntityVersion.None)
         {
@@ -171,11 +175,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, Microsoft.VisualStudio.TemplateWizard.WizardRunKind runKind, object[] customParams)
     {
-      dte = automationObject as DTE;
+      Dte = automationObject as DTE;
 
-      connections = MySqlServerExplorerConnections.LoadMySqlConnectionsFromServerExplorer(dte);
+      connections = MySqlServerExplorerConnections.LoadMySqlConnectionsFromServerExplorer(Dte);
       WizardForm.connections = this.connections;
-      WizardForm.dte = this.dte;
+      WizardForm.dte = this.Dte;
 
       DialogResult result = WizardForm.ShowDialog();
 

@@ -47,7 +47,7 @@
       // btnFinish
       // 
       this.btnFinish.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.btnFinish.Location = new System.Drawing.Point(843, 488);
+      this.btnFinish.Location = new System.Drawing.Point(783, 468);
       this.btnFinish.Name = "btnFinish";
       this.btnFinish.Size = new System.Drawing.Size(75, 23);
       this.btnFinish.TabIndex = 11;
@@ -59,7 +59,7 @@
       // 
       this.btnCancel.CausesValidation = false;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(601, 488);
+      this.btnCancel.Location = new System.Drawing.Point(541, 468);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 10;
@@ -69,7 +69,7 @@
       // 
       // btnBack
       // 
-      this.btnBack.Location = new System.Drawing.Point(682, 488);
+      this.btnBack.Location = new System.Drawing.Point(622, 468);
       this.btnBack.Name = "btnBack";
       this.btnBack.Size = new System.Drawing.Size(75, 23);
       this.btnBack.TabIndex = 9;
@@ -79,7 +79,7 @@
       // 
       // btnNext
       // 
-      this.btnNext.Location = new System.Drawing.Point(763, 488);
+      this.btnNext.Location = new System.Drawing.Point(703, 468);
       this.btnNext.Name = "btnNext";
       this.btnNext.Size = new System.Drawing.Size(75, 23);
       this.btnNext.TabIndex = 8;
@@ -93,7 +93,7 @@
       this.lblDescription.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
       this.lblDescription.Location = new System.Drawing.Point(20, 154);
       this.lblDescription.Name = "lblDescription";
-      this.lblDescription.Size = new System.Drawing.Size(213, 112);
+      this.lblDescription.Size = new System.Drawing.Size(213, 228);
       this.lblDescription.TabIndex = 2;
       this.lblDescription.Text = resources.GetString("lblDescription.Text");
       // 
@@ -110,7 +110,7 @@
       // 
       // pictureBox1
       // 
-      this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_project_wizard;
+	  this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_project_wizard;
       this.pictureBox1.Location = new System.Drawing.Point(19, 23);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(214, 88);
@@ -122,7 +122,7 @@
       this.lblStep.AutoSize = true;
       this.lblStep.BackColor = System.Drawing.Color.White;
       this.lblStep.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.lblStep.Location = new System.Drawing.Point(835, 26);
+      this.lblStep.Location = new System.Drawing.Point(768, 26);
       this.lblStep.Name = "lblStep";
       this.lblStep.Size = new System.Drawing.Size(90, 25);
       this.lblStep.TabIndex = 21;
@@ -155,7 +155,7 @@
       this.panel1.Controls.Add(this.pictureBox1);
       this.panel1.Location = new System.Drawing.Point(-1, -1);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(255, 546);
+      this.panel1.Size = new System.Drawing.Size(255, 542);
       this.panel1.TabIndex = 18;
       // 
       // BaseWizardForm
@@ -164,7 +164,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(939, 538);
+      this.ClientSize = new System.Drawing.Size(873, 510);
       this.Controls.Add(this.lblStep);
       this.Controls.Add(this.lblStepTitle);
       this.Controls.Add(this.label2);
@@ -173,6 +173,8 @@
       this.Controls.Add(this.btnCancel);
       this.Controls.Add(this.btnBack);
       this.Controls.Add(this.btnNext);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+      this.MaximizeBox = false;
       this.Name = "BaseWizardForm";
       this.Text = "BaseWizardForm";
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

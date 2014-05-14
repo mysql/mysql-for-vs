@@ -72,8 +72,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// <param name="tech"></param>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static WindowsFormsCodeGeneratorStrategy GetInstance(
-      StrategyConfig config)
+    public static WindowsFormsCodeGeneratorStrategy GetInstance(StrategyConfig config)
     {
       WindowsFormsCodeGeneratorStrategy strategy = null;
       GuiType type = config.Type;
