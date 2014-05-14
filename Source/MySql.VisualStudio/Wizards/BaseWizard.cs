@@ -82,8 +82,7 @@ namespace MySql.Data.VisualStudio.Wizards
       get;
       set;
     }
-
-    protected DTE dte;
+    
 
     /// <summary>
     /// The column metadata.
@@ -375,6 +374,9 @@ namespace MySql.Data.VisualStudio.Wizards
 
     internal protected static string GetCanonicalIdentifier(string Identifier)
     {
+      if (string.IsNullOrEmpty(Identifier))
+          return Identifier;
+
       return Identifier.Replace(' ', '_').Replace('`', '_');
     }
 
@@ -395,7 +397,7 @@ namespace MySql.Data.VisualStudio.Wizards
         {
           dic.Add(props.Item(i).Name, props.Item(i).Value);
         } 
-        catch( System.Runtime.InteropServices.COMException ex ) { /* just ignore it */ }
+        catch( System.Runtime.InteropServices.COMException ex) { /* just ignore it */ }
       }
 
       return dic;
@@ -477,5 +479,6 @@ namespace MySql.Data.VisualStudio.Wizards
       return "9.0";
 #endif
     }
+
   }
 }

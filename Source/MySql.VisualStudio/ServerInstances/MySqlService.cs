@@ -35,6 +35,7 @@ using Microsoft.VisualStudio.Data.Services;
 using EnvDTE;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Text.RegularExpressions;
+using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
@@ -230,10 +231,26 @@ namespace MySql.Data.VisualStudio
     }
 
 
-    internal static void LoadConnectionsForWizard(BindingSource mySqlConnections, ComboBox cmbConnections, TextBox connectionStringTextBox)
+    internal static void LoadConnectionsForWizard(BindingSource mySqlConnections, ComboBox cmbConnections, TextBox connectionStringTextBox, string wizardName)
     {
-      
-      MySqlServerExplorerConnection connectionFromSettings = null;      
+
+      string connectionFromSettings = string.Empty;
+
+      switch (wizardName)
+      {
+        case "CSharpMVC":
+          connectionFromSettings = Settings.Default.CSharpMVCWizardConnection;   
+          break;
+        case "CSharpWinForms":
+          connectionFromSettings = Settings.Default.CSharpWinFormsWizardConnection;   
+          break;
+        case "VBMVC":
+          break;
+        case "VBWinForms":
+          break;        
+      }
+
+ 
       if (mySqlConnections == null)
           return;
 
@@ -267,19 +284,18 @@ namespace MySql.Data.VisualStudio
       cmbConnections.DisplayMember = "DisplayName";
       cmbConnections.ValueMember = "ConnectionString";
       
-      if (connectionFromSettings != null)
+      if (!String.IsNullOrEmpty(connectionFromSettings))
       {
-        cmbConnections.SelectedValue = connectionFromSettings.ConnectionString;
-        connectionStringTextBox.Text = MaskPassword(connectionFromSettings.ConnectionString);
-        connectionStringTextBox.Tag = connectionFromSettings.ConnectionString;
+        cmbConnections.Text = connectionFromSettings;
+        connectionStringTextBox.Text = MaskPassword(cmbConnections.SelectedValue.ToString());
+        connectionStringTextBox.Tag = cmbConnections.SelectedValue.ToString();
       }
-      if (connections != null && connections.Count > 0)
+      else if (connections != null && connections.Count > 0)
       {
         cmbConnections.SelectedValue = ((MySqlServerExplorerConnection)cmbConnections.Items[0]).ConnectionString;
         connectionStringTextBox.Text = MaskPassword(((MySqlServerExplorerConnection)cmbConnections.Items[0]).ConnectionString);
         connectionStringTextBox.Tag = ((MySqlServerExplorerConnection)cmbConnections.Items[0]).ConnectionString;
-      }
-      //TODO read any previously selected connection from a settings file      
+      }         
     }  
   
     internal static string MaskPassword(string connectionString)

@@ -83,9 +83,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }    
     }
 
-    internal MySqlServerExplorerConnection selectedConnection
+    internal string selectedConnection
     {
-      get; set;
+      get {
+        return cmbConnections.Text;      
+      }
     }
 
     public DataSourceConfiguration()
@@ -100,7 +102,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       ConnectionStringTextBox.TextChanged += new EventHandler(ConnectionStringTextBox_TextChanged);     
       cmbConnections.SelectionChangeCommitted += new EventHandler(cmbConnections_SelectionChangeCommitted);      
     }
-
    
 
     private void editConnString_Click(object sender, EventArgs e)
@@ -194,9 +195,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
        baseWizardForm = wizard;
        _dte = ((WebWizardForm)wizard).dte;
 
-      MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox);
+      MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox, "CSharpMVC");
 
-      if (!IsConnectionValid(ConnectionStringTextBox.Tag.ToString()))
+      if (ConnectionStringTextBox.Tag != null && !IsConnectionValid(ConnectionStringTextBox.Tag.ToString()))
       {
           ShowConnectionDialog(false);
       }

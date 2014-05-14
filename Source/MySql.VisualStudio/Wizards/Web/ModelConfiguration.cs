@@ -120,7 +120,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
        ModelNameTextBox.Enabled = !control.Checked;      
        chkUseSameConnection.Enabled = !control.Checked;
        newConnString.Enabled = !control.Checked;
+       ConnectionStringTextBox.Enabled = !control.Checked;
        baseWizardForm.btnFinish.Enabled = control.Checked;
+       skipNextPage = control.Checked;
     }
  
 
@@ -131,7 +133,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       baseWizardForm = wizard;
       _dte = ((WebWizardForm)wizard).dte;
 
-      MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox);
+      MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox,"CSharpMVC");
 
       chkUseSameConnection.Checked = true;
       cmbConnections.SelectedValue = wiz.connectionStringForAspNetTables;

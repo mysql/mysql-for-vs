@@ -3208,5 +3208,15 @@ namespace MySql.Data.VisualStudio.Properties {
             }
         }
 		
+		 /// <summary>
+        ///   Looks up a localized string similar to MySQL for Visual Studio.
+        /// </summary>
+        internal static string ApplicationName {
+            get {
+                return ResourceManager.GetString("ApplicationName", resourceCulture);
+            }
+        }
+		
+		
     }
 }
