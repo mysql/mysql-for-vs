@@ -39,6 +39,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   {
     internal VBDataGridStrategy(StrategyConfig config)
       : base(config)
-    { }
+    { 
+    }
   }
 }

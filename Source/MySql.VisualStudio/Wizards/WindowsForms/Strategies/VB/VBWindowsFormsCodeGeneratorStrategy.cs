@@ -40,8 +40,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal VBWindowsFormsCodeGeneratorStrategy(StrategyConfig config)
       : base(config)
     {
-      // TODO:
-      throw new NotImplementedException();
+      ActionMappings = new Dictionary<string, WriterDelegate>();
+
+      ActionMappings["'<WizardGeneratedCode>Namespace_UserCode</WizardGeneratedCode>"] = WriteUsingUserCode;
+      ActionMappings["'<WizardGeneratedCode>Form_Load</WizardGeneratedCode>"] = WriteFormLoadCode;
+      ActionMappings["'<WizardGeneratedCode>Validation Events</WizardGeneratedCode>"] = WriteValidationCode;
+      ActionMappings["'<WizardGeneratedCode>Private Variables Frontend</WizardGeneratedCode>"] = WriteVariablesUserCode;
+      ActionMappings["'<WizardGeneratedCode>Save Event</WizardGeneratedCode>"] = WriteSaveEventCode;
+      ActionMappings["'<WizardGeneratedCode>Designer Control Declaration</WizardGeneratedCode>"] = WriteDesignerControlDeclCode;
+      ActionMappings["'<WizardGeneratedCode>Designer Control Initialization</WizardGeneratedCode>"] = WriteDesignerControlInitCode;
+      ActionMappings["'<WizardGeneratedCode>Designer BeforeSuspendLayout</WizardGeneratedCode>"] = WriteDesignerBeforeSuspendCode;
+      ActionMappings["'<WizardGeneratedCode>Designer AfterSuspendLayout</WizardGeneratedCode>"] = WriteDesignerAfterSuspendCode;
+      ActionMappings["'<WizardGeneratedCode>Designer BeforeResumeSuspendLayout</WizardGeneratedCode>"] = WriteBeforeResumeSuspendCode;
+    }
+
+    /// <summary>
+    /// Transforms a user identifier like MySql table to ensure it is a valid identifier in C#/VB.NET.
+    /// </summary>
+    /// <returns></returns>
+    internal protected override string GetCanonicalIdentifier(string Identifier)
+    {
+      return BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(Identifier);
     }
 
     internal protected override string GetEdmDesignerFileName()
@@ -57,11 +76,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal protected override string GetFormFileName()
     {
       return "Form1.vb";
-    }
-
-    internal protected override string GetCanonicalIdentifier(string Identifier)
-    {
-      return Identifier.Replace(' ', '_').Replace('`', '_');
     }
 
     protected override void WriteUsingUserCode()
@@ -126,14 +140,57 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      // TODO:
-      throw new NotImplementedException();
-    }
+      Label l = new Label();
+      Size szText = TextRenderer.MeasureText(GetMaxWidthString(Columns), l.Font);
+      Point initLoc = new Point(szText.Width + 10, 50);
+      Point xy = new Point(initLoc.X, initLoc.Y);
+      int tabIdx = 1;
+      bool validationsEnabled = ValidationsEnabled;
 
-    protected override void WriteNormalCode(string LineInput)
-    {
-      // TODO:
-      throw new NotImplementedException();
+      foreach (KeyValuePair<string, Column> kvp in Columns)
+      {
+        string colName = kvp.Key;
+        string idColumnCanonical = GetCanonicalIdentifier(colName);
+        Writer.WriteLine("'");
+        Writer.WriteLine("' {0}Label", idColumnCanonical);
+        Writer.WriteLine("'");
+        Writer.WriteLine("Me.{0}Label = New System.Windows.Forms.Label()", idColumnCanonical);
+
+        Writer.WriteLine("Me.{0}Label.AutoSize = True", idColumnCanonical);
+        Size szLabel = TextRenderer.MeasureText(colName, l.Font);
+        Writer.WriteLine("Me.{0}Label.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical,
+          xy.X - 10 - szLabel.Width, xy.Y);
+        Writer.WriteLine("Me.{0}Label.Name = \"{1}\"", idColumnCanonical, colName);
+        Writer.WriteLine("Me.{0}Label.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical,
+          szLabel.Width, szLabel.Height);
+        Writer.WriteLine("Me.{0}Label.TabIndex = {1}", idColumnCanonical, tabIdx++);
+        Writer.WriteLine("Me.{0}Label.Text = \"{1}\"", idColumnCanonical, colName);
+        Writer.WriteLine("Me.Controls.Add( Me.{0}Label )", idColumnCanonical);
+
+        Writer.WriteLine("'");
+        Writer.WriteLine("' {0}TextBox", idColumnCanonical);
+        Writer.WriteLine("'");
+        Writer.WriteLine("Me.{0}TextBox = New System.Windows.Forms.TextBox()", idColumnCanonical);
+
+        if (addBindings)
+        {
+          Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", true ))",
+            idColumnCanonical, colName, CanonicalTableName);
+        }
+
+        Writer.WriteLine("Me.{0}TextBox.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical, xy.X, xy.Y);
+        Writer.WriteLine("Me.{0}TextBox.Name = \"{1}\"", idColumnCanonical, colName);
+        Writer.WriteLine("Me.{0}TextBox.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical, 100, 20);
+        Writer.WriteLine("Me.{0}TextBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
+
+        if (validationsEnabled)
+        {
+          Writer.WriteLine("AddHandler Me.{0}TextBox.Validating, AddressOf Me.{0}TextBox_Validating",
+            idColumnCanonical);
+        }
+        Writer.WriteLine("Me.Controls.Add( Me.{0}TextBox)", idColumnCanonical);
+        xy.Y += szText.Height * 2;
+      }
     }
 
     protected string GetMaxWidthString(Dictionary<string, Column> l)

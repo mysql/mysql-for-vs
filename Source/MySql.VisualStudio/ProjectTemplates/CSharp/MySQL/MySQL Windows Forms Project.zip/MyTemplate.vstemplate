@@ -40,6 +40,6 @@
   </TemplateContent>
   <WizardExtension>
     <Assembly>MySql.VisualStudio, Version=1.2.0.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
-    <FullClassName>MySql.Data.VisualStudio.Wizards.WindowsForms.WindowsFormsWizard</FullClassName>
+    <FullClassName>MySql.Data.VisualStudio.Wizards.WindowsForms.CSharpWindowsFormsWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>

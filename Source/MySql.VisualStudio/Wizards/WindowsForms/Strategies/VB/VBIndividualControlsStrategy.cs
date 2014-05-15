@@ -39,6 +39,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   {
     internal VBIndividualControlsStrategy(StrategyConfig config)
       : base(config)
-    { }
+    { 
+    }
   }
 }

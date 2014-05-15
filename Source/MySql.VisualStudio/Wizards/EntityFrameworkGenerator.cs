@@ -41,14 +41,15 @@ namespace MySql.Data.VisualStudio.Wizards
     private static readonly string ProviderName = "MySql.Data.MySqlClient";
     private string efVersion;
 
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace, string EfVersion ) :
-      base( con, modelName, table, path, artifactNamespace )
+
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace, string EfVersion, LanguageGenerator Language) :
+      base( con, modelName, table, path, artifactNamespace, Language )
     {
       efVersion = EfVersion;
     }
 
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, string EfVersion ) :
-      base(con, modelName, tables, path, artifactNamespace)
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, string EfVersion, LanguageGenerator Language) :
+      base(con, modelName, tables, path, artifactNamespace, Language)
     {
       efVersion = EfVersion;
     }
@@ -139,8 +140,16 @@ namespace MySql.Data.VisualStudio.Wizards
       WriteEdmx(sCsdl, sSsdl, sMsl, fi);
 
 #if CLR4 || NET_40_OR_GREATER
-      EntityCodeGenerator gen = new EntityCodeGenerator(LanguageOption.GenerateCSharpCode);
-      string outputPath = Path.Combine( _path, _modelName + ".Designer.cs.bak");
+      EntityCodeGenerator gen = null;
+      string outputPath = "";
+      if( Language == LanguageGenerator.CSharp )
+      {
+        gen = new EntityCodeGenerator(LanguageOption.GenerateCSharpCode);
+        outputPath = Path.Combine(_path, _modelName + ".Designer.cs.bak");
+      } else if( Language == LanguageGenerator.VBNET ) {
+        gen = new EntityCodeGenerator(LanguageOption.GenerateVBCode);
+        outputPath = Path.Combine(_path, _modelName + ".Designer.vb.bak");
+      }
       errors = gen.GenerateCode(file, outputPath );
       FixUsings(outputPath);
 #endif
@@ -157,12 +166,24 @@ namespace MySql.Data.VisualStudio.Wizards
       if (efVersion == BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.ENTITY_FRAMEWORK_VERSION_6)
       {
         string contents = File.ReadAllText(outputPath);
-        contents = contents.Replace("using System.Data.EntityClient;",
-          "using System.Data.Entity.Core.EntityClient;");
-        contents = contents.Replace("using System.Data.Objects;",
-          "using System.Data.Entity.Core.Objects;");
-        contents = contents.Replace("using System.Data.Objects.DataClasses;",
-          "using System.Data.Entity.Core.Objects.DataClasses;");
+        if (Language == LanguageGenerator.CSharp)
+        {
+          contents = contents.Replace("using System.Data.EntityClient;",
+            "using System.Data.Entity.Core.EntityClient;");
+          contents = contents.Replace("using System.Data.Objects;",
+            "using System.Data.Entity.Core.Objects;");
+          contents = contents.Replace("using System.Data.Objects.DataClasses;",
+            "using System.Data.Entity.Core.Objects.DataClasses;");
+        }
+        else if (Language == LanguageGenerator.VBNET)
+        {
+          contents = contents.Replace("Import System.Data.EntityClient",
+            "Import System.Data.Entity.Core.EntityClient");
+          contents = contents.Replace("Import System.Data.Objects",
+            "Import System.Data.Entity.Core.Objects");
+          contents = contents.Replace("Import System.Data.Objects.DataClasses",
+            "Import System.Data.Entity.Core.Objects.DataClasses");
+        }
         File.WriteAllText(outputPath, contents);
       }
     }
