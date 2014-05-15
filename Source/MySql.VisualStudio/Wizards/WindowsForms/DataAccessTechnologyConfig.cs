@@ -38,7 +38,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   public partial class DataAccessTechnologyConfig : WizardPage
   {    
     private string _constraintTable = "";
-    private BaseWizardForm wizardForm;
+    private WindowsFormsWizardForm wizardForm;
     List<MyListItem> _constraints = new List<MyListItem>();
     private string _tableName;
     private MySqlConnection _con;
@@ -87,6 +87,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       InitializeComponent();
       cmbFkConstraints.DropDown += cmbFkConstraints_DropDown;
+    }
+
+    private void SetDefaults()
+    {
+      radControls.Checked = true;
+      radControls_CheckedChanged(radControls, EventArgs.Empty);
     }
 
     void cmbFkConstraints_DropDown(object sender, EventArgs e)
@@ -157,15 +163,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         cmbFkConstraints.Enabled = true;
         cmbFkConstraints.ValueMember = "Value";
         cmbFkConstraints.DisplayMember = "Name";
-        skipNextPage = false;
-        wizardForm.btnFinish.Enabled = false;
+        wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, false);
       }
       else
       {
         cmbFkConstraints.Items.Clear();
         cmbFkConstraints.Enabled = false;
-        skipNextPage = true;
-        wizardForm.btnFinish.Enabled = true;
+        wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, true);
       }
     }
 
@@ -173,8 +177,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       var control = (RadioButton)sender;
       cmbFkConstraints.Enabled = !control.Checked;
-      skipNextPage = control.Checked;
-      wizardForm.btnFinish.Enabled = control.Checked;
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, true);
       if (control.Checked)
         errorProvider1.SetError(cmbFkConstraints, "");
     }
@@ -183,19 +186,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       var control = (RadioButton)sender;
       cmbFkConstraints.Enabled = !control.Checked;
-      skipNextPage = control.Checked;
-      wizardForm.btnFinish.Enabled = control.Checked;
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, true);
       if (control.Checked)
          errorProvider1.SetError(cmbFkConstraints, "");
-    }  
+    }
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      wizardForm = wizard;
+      wizardForm = (WindowsFormsWizardForm)wizard;
+      SetDefaults();
       // Enable EF6 only if we are in VS2013 or major
-      double version = double.Parse( (( WindowsFormsWizardForm )wizard).Wizard.GetVisualStudioVersion() );
-      _tableName = ((WindowsFormsWizardForm)wizard).TableName;
-      _con = ((WindowsFormsWizardForm)wizard).Connection;
+      double version = double.Parse(wizardForm.Wizard.GetVisualStudioVersion());
+      _tableName = wizardForm.TableName;
+      _con = wizardForm.Connection;
 
       if (version >= 12.0)
       {

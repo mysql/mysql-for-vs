@@ -80,7 +80,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           return DataEntityVersion.EntityFramework6;
         else
         {
-          skipNextPage = true;
+          baseWizardForm.SetSkipNextPageFromCurrent(this, true);
           return DataEntityVersion.None;
         }
       }    
@@ -122,7 +122,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
        newConnString.Enabled = !control.Checked;
        ConnectionStringTextBox.Enabled = !control.Checked;
        baseWizardForm.btnFinish.Enabled = control.Checked;
-       skipNextPage = control.Checked;
+       baseWizardForm.SetSkipNextPageFromCurrent(this, control.Checked);
     }
  
 

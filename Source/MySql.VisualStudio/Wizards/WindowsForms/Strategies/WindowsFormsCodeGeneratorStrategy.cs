@@ -51,6 +51,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected string CanonicalDetailTableName;
     protected string ConstraintName;
 
+    internal List<string> FkColumnsSource;
+    internal List<string> FkColumnsDest;
+
     internal WindowsFormsCodeGeneratorStrategy(StrategyConfig config)
     {
       Writer = config.Writer;
@@ -189,6 +192,45 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected virtual void WriteNormalCode(string LineInput)
     {
       Writer.WriteLine(LineInput);
+    }
+
+    protected void RetrieveFkColumns()
+    {
+      bool sourceFirst = false;
+      FkColumnsDest = new List<string>();
+      FkColumnsSource = new List<string>();
+      string sql = string.Format(
+@"select `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
+from information_schema.key_column_usage where `constraint_name` = '{0}'", ConstraintName);
+
+      MySqlConnection con = new MySqlConnection(ConnectionString);
+      MySqlCommand cmd = new MySqlCommand(sql, con);
+      con.Open();
+      try
+      {
+        using (MySqlDataReader r = cmd.ExecuteReader())
+        {
+          r.Read();
+          if (r.GetString(0) == this.TableName) sourceFirst = true;
+          do
+          {
+            if (sourceFirst)
+            {
+              FkColumnsSource.Add(r.GetString(1));
+              FkColumnsDest.Add(r.GetString(3));
+            }
+            else
+            {
+              FkColumnsDest.Add(r.GetString(1));
+              FkColumnsSource.Add(r.GetString(3));
+            }
+          } while (r.Read());
+        }
+      }
+      finally
+      {
+        con.Close();
+      }
     }
   }
 }

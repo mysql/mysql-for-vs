@@ -41,13 +41,14 @@ namespace MySql.Data.VisualStudio.Wizards
     protected string _path;
     protected string _artifactNamespace;
     protected List<string> _errors = new List<string>();
+    protected LanguageGenerator Language;
 
     internal IEnumerable<string> Errors
     {
       get { return _errors.AsEnumerable(); }
     }
 
-    internal ModelGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace)
+    internal ModelGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, LanguageGenerator Language)
     {
       if (tables == null)
         throw new ArgumentNullException("tables");
@@ -57,17 +58,17 @@ namespace MySql.Data.VisualStudio.Wizards
       _tables = tables;
       _path = path;
       _artifactNamespace = artifactNamespace;
+      this.Language = Language;
     }
 
-
-
-    internal ModelGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace)
+    internal ModelGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace, LanguageGenerator Language)
     {
       _con = con;
       _modelName = modelName;
       _table = table;
       _path = path;
       _artifactNamespace = artifactNamespace;
+      this.Language = Language;
     }
 
     /// <summary>

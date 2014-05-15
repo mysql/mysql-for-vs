@@ -165,6 +165,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {        
         _connectionString = wiz.Connection.ConnectionString;
         _detailTable = wiz.DetailTableName;
+        if (string.IsNullOrEmpty(_detailTable)) return;
         _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
         _colValidationsDetail.Clear();
         ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, _colValidationsDetail, _detailColumns);

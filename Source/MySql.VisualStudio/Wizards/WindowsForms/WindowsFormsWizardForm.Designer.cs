@@ -45,6 +45,10 @@
       // btnBack
       // 
       this.btnBack.Location = new System.Drawing.Point(621, 469);
+      //
+      // btnFinish
+      //
+      this.btnFinish.Location = new System.Drawing.Point(783, 469);
       // 
       // dataAccessConfig1
       // 
