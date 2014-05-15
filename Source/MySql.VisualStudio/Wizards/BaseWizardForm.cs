@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EnvDTE;
+using Microsoft.VisualStudio.TemplateWizard;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -82,44 +83,52 @@ namespace MySql.Data.VisualStudio.Wizards
     private void btnBack_Click(object sender, EventArgs e)
     {
       int prevCurrent = Current;
-      if (Current == (Pages.Count - 1))
-        ShowFinishButton(false);
+      int i = prevCurrent;
+
+      while (--i >= 0 && Pages[i].Skipped ) ;
+
+      if (i >= 0) Current = i + 1;
+      else throw new WizardCancelledException();
+
       if (Current > 0)
       {
-        CurPage = Pages[--Current];        
+        CurPage = Pages[--Current];
         Pages[prevCurrent].Visible = false;
         Pages[Current].Visible = true;
-        btnNext.Enabled = true;             
+        btnNext.Enabled = true;
       }
       if (Current == 0)
       {
         btnBack.Enabled = false;
       }
-
-      SetLabels();      
+      ShowFinishButton(false);
+      SetLabels();
     }
 
     private void btnNext_Click(object sender, EventArgs e)
     {
       int prevCurrent = Current;
       if (!CurPage.IsValid()) return;
-      
-      if (CurPage.skipNextPage)
-      {
-        Current++;
-      }
+
+      int i = prevCurrent;
+
+      while (++i < Pages.Count && Pages[i].Skipped) ;
+
+      if (i < Pages.Count) Current = i - 1;
+      else FinishWizard();
 
       if (Current < (Pages.Count - 1))
-      {        
+      {
         CurPage = Pages[++Current];
         Pages[prevCurrent].Visible = false;
         Pages[Current].Visible = true;
-        btnBack.Enabled = true;      
+        btnBack.Enabled = true;
       }
-      if (Current == (Pages.Count - 1))
-      {
-        ShowFinishButton(true);
-      }
+      SetLastPage();
+      //if (Current == (Pages.Count - 1))
+      //{
+      //  ShowFinishButton(true);
+      //}
       SetLabels();
       CurPage.OnStarting(this);
     }
@@ -128,6 +137,11 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       btnNext.Enabled = !showFinish;
       btnFinish.Enabled = showFinish;
+    }
+
+    private void FinishWizard()
+    {
+      btnFinish_Click(this, EventArgs.Empty);
     }
 
     private void btnFinish_Click(object sender, EventArgs e)
@@ -147,6 +161,33 @@ namespace MySql.Data.VisualStudio.Wizards
       lblStepTitle.Text = labels[0];
       lblDescription.Text = labels[1];
       lblWizardName.Text = WizardName;    
+    }
+
+    internal void SetSkipPage(int pageIndex, bool skip)
+    {
+      Pages[pageIndex].Skipped = skip;
+      SetLastPage();
+    }
+
+    internal void SetSkipNextPageFromCurrent(WizardPage currentPage, bool skip)
+    {
+      int i = 0;
+      while ((Pages[i] != currentPage) && (++i < Pages.Count))
+        ;
+      if (i < (Pages.Count - 1))
+        Pages[i + 1].Skipped = skip;
+      SetLastPage();
+    }
+
+    private void SetLastPage()
+    {
+      bool isLastPage = false;
+      int i = Current;
+      
+      while (++i < Pages.Count && Pages[i].Skipped) ;
+
+      if (i >= Pages.Count) isLastPage = true;
+      ShowFinishButton(isLastPage);
     }
   }
 }

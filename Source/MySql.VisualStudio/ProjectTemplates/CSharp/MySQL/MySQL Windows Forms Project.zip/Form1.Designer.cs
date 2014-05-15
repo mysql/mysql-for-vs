@@ -45,12 +45,12 @@
       this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
       this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
 
-      // <WizardGeneratedCode>BeforeSuspendLayout</WizardGeneratedCode>
+      // <WizardGeneratedCode>Designer BeforeSuspendLayout</WizardGeneratedCode>
 
       ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
       this.bindingNavigator1.SuspendLayout();
-      // <WizardGeneratedCode>AfterSuspendLayout</WizardGeneratedCode>
+      // <WizardGeneratedCode>Designer AfterSuspendLayout</WizardGeneratedCode>
 
       this.SuspendLayout();
       // 
@@ -182,7 +182,7 @@
       // 
       this.errorProvider1.ContainerControl = this;
 
-      // <WizardGeneratedCode>Control Initialization</WizardGeneratedCode>
+      // <WizardGeneratedCode>Designer Control Initialization</WizardGeneratedCode>
 
 
       // 
@@ -200,7 +200,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
       this.bindingNavigator1.ResumeLayout(false);
       this.bindingNavigator1.PerformLayout();
-      // <WizardGeneratedCode>BeforeResumeSuspendLayout</WizardGeneratedCode>
+      // <WizardGeneratedCode>Designer BeforeResumeSuspendLayout</WizardGeneratedCode>
 
       this.ResumeLayout(false);
       this.PerformLayout();
@@ -223,7 +223,7 @@
     private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
     private System.Windows.Forms.ToolStripButton toolStripButton1;
     private System.Windows.Forms.ErrorProvider errorProvider1;
-    // <WizardGeneratedCode>Control Declaration</WizardGeneratedCode>
+    // <WizardGeneratedCode>Designer Control Declaration</WizardGeneratedCode>
 
   }
 }

@@ -178,7 +178,7 @@ namespace MySql.Data.VisualStudio.Wizards
       colMaxValue.DataPropertyName = "MaxValue";
       colMaxValue.HeaderText = "Max Value";
       colMaxValue.Name = "colMaxValue";
-      grid.Columns.Add(colMaxValue);      
+      grid.Columns.Add(colMaxValue);
       grid.DataSource = colsValidation;
 
       grid.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;   //DataGridViewAutoSizeColumnMode.ColumnHeader;

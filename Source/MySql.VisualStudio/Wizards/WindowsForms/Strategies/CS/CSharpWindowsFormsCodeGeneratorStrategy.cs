@@ -61,10 +61,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// <returns></returns>
     internal protected override string GetCanonicalIdentifier(string Identifier)
     {
-        if (String.IsNullOrEmpty(Identifier))
-            return Identifier;
-        return Identifier.Replace(' ', '_').Replace('`', '_');
-    }
+      return BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(Identifier);    }
 
     internal protected override string GetEdmDesignerFileName()
     {
@@ -143,8 +140,57 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      // TODO:
-      throw new NotImplementedException();
+      Label l = new Label();
+      Size szText = TextRenderer.MeasureText(GetMaxWidthString(Columns), l.Font);
+      Point initLoc = new Point(szText.Width + 10, 50);
+      Point xy = new Point(initLoc.X, initLoc.Y);
+      int tabIdx = 1;
+      bool validationsEnabled = ValidationsEnabled;
+
+      foreach (KeyValuePair<string, Column> kvp in Columns)
+      {
+        string colName = kvp.Key;
+        string idColumnCanonical = GetCanonicalIdentifier(colName);
+        Writer.WriteLine("//");
+        Writer.WriteLine("// {0}Label", idColumnCanonical);
+        Writer.WriteLine("//");
+        Writer.WriteLine("this.{0}Label = new System.Windows.Forms.Label();", idColumnCanonical);
+
+        Writer.WriteLine("this.{0}Label.AutoSize = true;", idColumnCanonical);
+        Size szLabel = TextRenderer.MeasureText(colName, l.Font);
+        Writer.WriteLine("this.{0}Label.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical,
+          xy.X - 10 - szLabel.Width, xy.Y);
+        Writer.WriteLine("this.{0}Label.Name = \"{1}\";", idColumnCanonical, colName);
+        Writer.WriteLine("this.{0}Label.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical,
+          szLabel.Width, szLabel.Height);
+        Writer.WriteLine("this.{0}Label.TabIndex = {1};", idColumnCanonical, tabIdx++);
+        Writer.WriteLine("this.{0}Label.Text = \"{1}\";", idColumnCanonical, colName);
+        Writer.WriteLine("this.Controls.Add( this.{0}Label );", idColumnCanonical);
+
+        Writer.WriteLine("//");
+        Writer.WriteLine("// {0}TextBox", idColumnCanonical);
+        Writer.WriteLine("//");
+        Writer.WriteLine("this.{0}TextBox = new System.Windows.Forms.TextBox();", idColumnCanonical);
+
+        if (addBindings)
+        {
+          Writer.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
+            idColumnCanonical, colName, CanonicalTableName);
+        }
+
+        Writer.WriteLine("this.{0}TextBox.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical, xy.X, xy.Y);
+        Writer.WriteLine("this.{0}TextBox.Name = \"{1}\";", idColumnCanonical, colName);
+        Writer.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20);
+        Writer.WriteLine("this.{0}TextBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
+
+        if (validationsEnabled)
+        {
+          Writer.WriteLine("this.{0}TextBox.Validating += new System.ComponentModel.CancelEventHandler( this.{0}TextBox_Validating );",
+            idColumnCanonical);
+        }
+        Writer.WriteLine("this.Controls.Add( this.{0}TextBox);", idColumnCanonical);
+        xy.Y += szText.Height * 2;
+      }
     }
 
     protected string GetMaxWidthString(Dictionary<string, Column> l)

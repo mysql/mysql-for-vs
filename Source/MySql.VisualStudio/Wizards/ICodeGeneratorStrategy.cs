@@ -43,7 +43,7 @@ namespace MySql.Data.VisualStudio.Wizards
     void Execute( string LineInput );
   }
 
-  internal enum LanguageGenerator : int
+  public enum LanguageGenerator : int
   {
     CSharp = 1,
     VBNET = 2

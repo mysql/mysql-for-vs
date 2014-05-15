@@ -22,23 +22,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.SchemaComparer;
-using MySql.Data.VisualStudio.Wizards.WindowsForms;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
-  internal class CSharpMasterDetailStrategy : CSharpWindowsFormsCodeGeneratorStrategy
+  public class VBWindowsFormsWizard : WindowsFormsWizard
   {
-    internal CSharpMasterDetailStrategy(StrategyConfig config)
-      : base(config)
+    public VBWindowsFormsWizard()
+      : base( LanguageGenerator.VBNET )
     {
     }
   }

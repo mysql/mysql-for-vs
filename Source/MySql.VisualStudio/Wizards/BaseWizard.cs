@@ -34,6 +34,8 @@ using VSLangProj;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySQL.Utility.Classes;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -51,6 +53,16 @@ namespace MySql.Data.VisualStudio.Wizards
     /// The DTE instance.
     /// </summary>
     protected DTE Dte;
+
+    /// <summary>
+    /// The language used for the code generator.
+    /// </summary>
+    protected LanguageGenerator Language;
+
+    /// <summary>
+    /// The CodeDom Provider for the generated language (currently either C# or VB.NET).
+    /// </summary>
+    protected CodeDomProvider CodeProvider;
 
     /// <summary>
     /// The code generation strategy.
@@ -100,6 +112,19 @@ namespace MySql.Data.VisualStudio.Wizards
     internal protected const string ENTITY_FRAMEWORK_PCK_NAME = "EntityFramework";
 
     protected string CurrentEntityFrameworkVersion;
+
+    internal BaseWizard( LanguageGenerator Language )
+    {
+      this.Language = Language;
+      if (Language == LanguageGenerator.CSharp)
+      {
+        CodeProvider = CodeDomProvider.CreateProvider("CSharp");
+      }
+      else if (Language == LanguageGenerator.VBNET)
+      {
+        CodeProvider = CodeDomProvider.CreateProvider("VisualBasic");
+      }
+    }
 
     public virtual void BeforeOpeningFile(ProjectItem projectItem)
     {
@@ -155,7 +180,8 @@ namespace MySql.Data.VisualStudio.Wizards
     protected void GenerateEntityFrameworkModel(VSProject vsProj, MySqlConnection con, string modelName, List<string> tables)
     {
       string ns = GetCanonicalIdentifier(ProjectNamespace);
-      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion);
+      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
+        con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion, Language);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
       SetupConfigFileEntityFramework(vsProj, con.ConnectionString);
@@ -163,9 +189,10 @@ namespace MySql.Data.VisualStudio.Wizards
     }
 
     protected void GenerateEntityFrameworkModel(VSProject vsProj, MySqlConnection con, string modelName, string tableName )
-    {     
+    {
       string ns = GetCanonicalIdentifier(ProjectNamespace);
-      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion);
+      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
+        con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion, Language);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
       SetupConfigFileEntityFramework(vsProj, con.ConnectionString);
@@ -188,7 +215,7 @@ namespace MySql.Data.VisualStudio.Wizards
     }
 
     private void AddDataEntityArtifactsToProject(EntityFrameworkGenerator gen, string modelName, VSProject vsProj, MySqlConnection con)
-    { 
+    {
       try
       {
         // Add the Edmx artifacts to the project.
@@ -201,11 +228,12 @@ namespace MySql.Data.VisualStudio.Wizards
         pi.DTE.SuppressUI = true;
         pi.Name = _modelName;
         pi.Properties.Item("ItemType").Value = "EntityDeploy";
-        string dstFile = Path.Combine( ProjectPath, string.Format("{0}.Designer.cs", modelName) );
+        string dstFile = Path.Combine( ProjectPath, string.Format("{0}.Designer.{1}", modelName, 
+          CodeProvider.FileExtension) );
         if (File.Exists(dstFile))
           File.Delete(dstFile);
-        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.cs.bak", modelName) ), dstFile );
-        //artifactPath = Path.Combine(ProjectPath, string.Format("{0}.Designer.cs", ModelName));
+        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.{1}.bak", modelName, 
+          CodeProvider.FileExtension ) ), dstFile );
         vsProj.Project.ProjectItems.AddFromFile(dstFile);
         // Adding references
         AddReferencesEntityFramework(vsProj);
@@ -342,18 +370,20 @@ namespace MySql.Data.VisualStudio.Wizards
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, List<string> tables)
     {
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
-      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace);
+      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace, Language );
       string file = gen.Generate();
-      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.cs", TypedDataSetGenerator.FILENAME_ARTIFACT));
+      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.{1}", 
+        TypedDataSetGenerator.FILENAME_ARTIFACT, CodeProvider.FileExtension ));
       VsProj.Project.ProjectItems.AddFromFile(artifactPath);
     }
 
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, string TableName)
     {
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
-      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", TableName, ProjectPath, canonicalNamespace);
+      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", TableName, ProjectPath, canonicalNamespace, Language);
       string file = gen.Generate();
-      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.cs", TypedDataSetGenerator.FILENAME_ARTIFACT));
+      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.{1}", 
+        TypedDataSetGenerator.FILENAME_ARTIFACT, CodeProvider.FileExtension ));
       VsProj.Project.ProjectItems.AddFromFile(artifactPath);
     }
 
@@ -374,11 +404,13 @@ namespace MySql.Data.VisualStudio.Wizards
 
     internal protected static string GetCanonicalIdentifier(string Identifier)
     {
-      if (string.IsNullOrEmpty(Identifier))
-          return Identifier;
-
-      return Identifier.Replace(' ', '_').Replace('`', '_');
-    }
+      if (Identifier == null) return "";
+      char[] chars = Identifier.ToCharArray();
+      for (int i = 0; i < chars.Length; i++)
+      {
+        if (!char.IsLetterOrDigit(chars[i])) chars[i] = '_';
+      }
+      return new string(chars);    }
 
     protected string GetConnectionStringWithPassword(MySqlConnection con)
     {

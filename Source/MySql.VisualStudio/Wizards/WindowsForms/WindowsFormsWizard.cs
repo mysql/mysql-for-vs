@@ -51,8 +51,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    public WindowsFormsWizard()
-      : base()
+    public WindowsFormsWizard( LanguageGenerator Language )
+      : base( Language )
     {
       WizardForm = new WindowsFormsWizardForm(this);
     }
@@ -69,11 +69,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         string detailTableName = WizardForm.DetailTableName;
         
         StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
-          WizardForm.DataAccessTechnology, WizardForm.GuiType, LanguageGenerator.CSharp,
+          WizardForm.DataAccessTechnology, WizardForm.GuiType, Language,
           ValidationsEnabled, WizardForm.ValidationColumns, WizardForm.ValidationColumnsDetail,
           GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName, 
           detailTableName, WizardForm.ConstraintName);
         Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
+        vsProj.References.Add("MySql.Data");
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
           WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
         {
@@ -139,7 +140,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     private string _canonicalTableName;
     private string _bindingSourceName;
-    private StreamWriter sw;    
+    private StreamWriter sw;
 
     private void AddBindings(string FormPath)
     {

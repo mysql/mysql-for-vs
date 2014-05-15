@@ -52,7 +52,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     //private DataEntityVersion _dataEntityVersion;
     //private List<DbTables> _selectedTables;
 
-    public WebWizard() : base()
+    public WebWizard() : base( LanguageGenerator.CSharp )
     {
       WizardForm = new WebWizardForm();
       
