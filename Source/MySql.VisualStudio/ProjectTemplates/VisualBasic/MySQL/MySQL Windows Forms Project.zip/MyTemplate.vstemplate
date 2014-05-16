@@ -1,6 +1,6 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>MySql Windows Forms Project (VB)</Name>
+    <Name>MySQL Windows Forms Project</Name>
     <Description>Generates a Windows Forms Form Application connected to MySQL database through Entity Framework or Typed Datasets. Using VB.NET.</Description>
     <ProjectType>VisualBasic</ProjectType>
     <ProjectSubType>

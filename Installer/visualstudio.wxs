@@ -135,6 +135,18 @@
       </Component>    
     </DirectoryRef>
 
+    <DirectoryRef Id='VS10_VisualBasicPTMySQL'>
+      <Component Id='VS2010_VSTVisualBasicDIR' Guid='BA082C85-9D64-1079-8910-C6C25655250B'>
+        <File Id='VS2010_VSTVisualBasicDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2010_VSVisualBasicTemplate' Name='VisualBasicMvc3.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL MVC 3 Project.zip' />
+        <File Id='VS2010_VSVisualBasicWinFormsTemplate' Name='VisualBasicWinForms.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL Windows Forms Project.zip' />
+      </Component>
+    </DirectoryRef>
+    
+
     
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
@@ -179,13 +191,24 @@
     </DirectoryRef>
 
     <DirectoryRef Id='VS11_CSharpPTMySQL'>
-      <Component Id='VS2012_VSTDIR' Guid='BA082C85-9D64-1279-8910-C6C25655250A'>        
+      <Component Id='VS2012_VSTVisualBasicDIR' Guid='BA082C85-9D64-1279-8910-C6C25655250A'>        
         <File Id='VS2012_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
         <File Id='VS2012_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
-        <File Id='VS2012_VSCSharpWinFormsTemplate' Name='CSharWinForms.zip' DiskId='1'
+        <File Id='VS2012_VSCSharpWinFormsTemplate' Name='CSharpWinForms.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS11_VisualBasicPTMySQL'>
+      <Component Id='VS2012_VSTDIR' Guid='BA082C85-9D64-1079-8910-C6C25655250C'>
+        <File Id='VS2012_VSTVisualBasicDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2012_VSVisualBasicTemplate' Name='VisualBasicMvc3.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL MVC 3 Project.zip' />
+        <File Id='VS2012_VSVisualBasicWinFormsTemplate' Name='VisualBasicWinForms.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL Windows Forms Project.zip' />
       </Component>
     </DirectoryRef>
 
@@ -241,7 +264,19 @@
         <File Id='VS2013_VSCSharpWinFormsTemplate' Name='CSharWinForms.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip' />
       </Component>
-    </DirectoryRef>    
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS12_VisualBasicPTMySQL'>
+      <Component Id='VS2013_VSTVisualBasicDIR' Guid='BA082C85-9D64-1079-8910-C6C25655250D'>
+        <File Id='VS2013_VSPTVSDIR' Name='ProjectTemplates.vstdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\ProjectTemplates.vstdir' />
+        <File Id='VS2013_VSVisualBasicTemplate' Name='VisualBasicMvc3.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL MVC 3 Project.zip' />
+        <File Id='VS2013_VSVisualBasicWinFormsTemplate' Name='VisualBasicWinForms.zip' DiskId='1'
+              Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL Windows Forms Project.zip' />
+      </Component>
+    </DirectoryRef>
+    
     
     <!--Removing files from Private Assemblies Folders-->
 
@@ -316,8 +351,11 @@
       <ComponentRef Id='AutoLoadPackageVS2010'/>
       <Feature Id='VS2010_AddProjectTemplate' Title='ProjectTemplates' Level='1' AllowAdvertise='no' >
         <ComponentRef Id='VS2010_VSTDIR'/>
+        <ComponentRef Id='VS2010_VSTVisualBasicDIR'/>
         <ComponentGroupRef Id='VS10_MvcCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS10_WindowsFormsCsharpTemplateDirectoryComponents'/>
+        <ComponentGroupRef Id='VS10_MvcVisualBasicTemplateDirectoryComponents'/>
+        <ComponentGroupRef Id='VS10_WindowsFormsVisualBasicTemplateDirectoryComponents' />
       </Feature>
     </Feature>
 
@@ -332,8 +370,11 @@
       <ComponentRef Id='AutoLoadPackageVS2012'/>
       <Feature Id='VS2012_AddProjectTemplate' Title='ProjectTemplates' Level='1'>
         <ComponentRef Id='VS2012_VSTDIR'/>
+        <ComponentRef Id='VS2012_VSTVisualBasicDIR'/>
         <ComponentGroupRef Id='VS11_MvcCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS11_WindowsFormsCsharpTemplateDirectoryComponents'/>
+        <ComponentGroupRef Id='VS11_MvcVisualBasicTemplateDirectoryComponents'/>
+        <ComponentGroupRef Id='VS11_WinFormsVisualBasicTemplateDirectoryComponents' />
       </Feature>
     </Feature>
 
@@ -348,8 +389,11 @@
       <ComponentRef Id='AutoLoadPackageVS2013'/>
       <Feature Id='VS2013_AddProjectTemplate' Title='ProjectTemplates' Level='1' >
         <ComponentRef Id='VS2013_VSTDIR'/>
+        <ComponentRef Id='VS2013_VSTVisualBasicDIR'/>
         <ComponentGroupRef Id='VS12_MvcCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS12_WindowsFormsCsharpTemplateDirectoryComponents'/>
+        <ComponentGroupRef Id='VS12_MvcVisualBasicTemplateDirectoryComponents'/>
+        <ComponentGroupRef Id='VS12_WinFormsVisualBasicTemplateDirectoryComponents'/>
       </Feature>
     </Feature>
 
