@@ -108,10 +108,16 @@
   <ItemGroup>
     <Compile Include="ComponentGroups\VS10_CSharpMvc3.zip.wxs" />
     <Compile Include="ComponentGroups\VS10_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS10_VisualBasicMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS10_VisualBasicWindowsFormsProject.zip.wxs" />
     <Compile Include="ComponentGroups\VS11_CSharpMvc3.zip.wxs" />
     <Compile Include="ComponentGroups\VS11_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS11_VisualBasicMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS11_VisualBasicWindowsFormsProject.zip.wxs" />
     <Compile Include="ComponentGroups\VS12_CSharpMvc3.zip.wxs" />
     <Compile Include="ComponentGroups\VS12_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS12_VisualBasicMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS12_VisualBasicWindowsFormsProject.zip.wxs" />
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
     <Compile Include="main.wxs" />
@@ -161,14 +167,22 @@
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <RemoveDir Directories="..\ProjectTemplatesZipFolder" ContinueOnError="true" />
-    <MakeDir Directories="..\ProjectTemplatesZipFolder" />
+    <MakeDir Directories="..\ProjectTemplatesZipFolder\VisualBasic" />
     <ItemGroup>
       <Mvc3CsharpTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\**" />
     </ItemGroup>
-	<ItemGroup>
+    <ItemGroup>
       <WinFormsCsharpTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\**" />
     </ItemGroup>
+    <ItemGroup>
+      <Mvc3VisualBasicTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <WinFormsVisualBasicTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL Windows Forms Project.zip\**" />
+    </ItemGroup>
     <Zip Files="@(Mvc3CsharpTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip" />
-	<Zip Files="@(WinFormsCsharpTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip" />
+    <Zip Files="@(WinFormsCsharpTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip" />
+    <Zip Files="@(Mvc3VisualBasicTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\VisualBasic\MySQL MVC 3 Project.zip" />
+    <Zip Files="@(WinFormsVisualBasicTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL Windows Forms Project.zip" ZipFileName="..\ProjectTemplatesZipFolder\VisualBasic\MySQL Windows Forms Project.zip" />
   </Target>
 </Project>
