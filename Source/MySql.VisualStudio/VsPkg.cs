@@ -52,8 +52,10 @@ using MySQL.Utility.Classes;
 using MySQL.Utility.Classes.MySQLWorkbench;
 using System.IO;
 using System.Windows.Forms;
+using MySql.Data.VisualStudio.Wizards;
 #if NET_40_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
+using MySql.Data.VisualStudio.Wizards;
 #endif
 
 
@@ -202,6 +204,14 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
         mcs.AddCommand(cmdMenuAddConnection);
 
+        CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
+        OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
+        mcs.AddCommand(cmdMenuCreateNewMvcProject);
+
+        CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
+        OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
+        mcs.AddCommand(cmdMenuCreateWinFormsProject);
+
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
       }
 
@@ -210,8 +220,19 @@ namespace MySql.Data.VisualStudio
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
- 
+
     #endregion
+
+    private void cmdCreateWinFormsProject_Callback(object sender, EventArgs e)
+    {
+      CreateNewMySqlProject("Windows Forms Project");
+    }
+ 
+
+    private void cmdCreateNewMvcProject_Callback(object sender, EventArgs e)
+    {
+      CreateNewMySqlProject("ASP.NET MVC 3 Project");
+    }
 
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
@@ -634,6 +655,32 @@ namespace MySql.Data.VisualStudio
         }
       }
       return String.Empty;
+    }
+
+    private void CreateNewMySqlProject(string projectType)
+    {
+      DTE env = (DTE)GetService(typeof(DTE));
+
+      WizardNewProjectDialog dlg = new WizardNewProjectDialog(projectType);
+      DialogResult result = dlg.ShowDialog();
+      if (result != DialogResult.OK) return;
+
+      EnvDTE80.Solution2 sol = (EnvDTE80.Solution2)env.Solution;
+      var solutionName = dlg.SolutionName;
+      var solutionPath = dlg.ProjectPath;
+      Settings.Default.NewProjectDialogSelected = dlg.ProjectType;
+      Settings.Default.NewProjectLanguageSelected = dlg.Language;
+      Settings.Default.NewProjectSavedPath = dlg.ProjectPath;
+      Settings.Default.Save();
+ 
+      if (dlg.CreateDirectoryForSolution)
+      {
+        solutionPath = Path.Combine(solutionPath, dlg.SolutionName);
+        Directory.CreateDirectory(solutionPath);
+      }
+      string templatePath = string.Empty;
+      templatePath = sol.GetProjectTemplate(dlg.ProjectType, dlg.Language);
+      sol.AddFromTemplate(templatePath, solutionPath, dlg.ProjectName, dlg.CreateNewSolution);
     }
 
     public struct ConnectionParameters

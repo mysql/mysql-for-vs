@@ -1162,10 +1162,16 @@ Check that the server is running, the database exists and the user Error establi
   <data name="page_title_mysql_export" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\page-title-mysql-export.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-   <data name="mysql_project_wizard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="mysql_project_wizard" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mysql_project_wizard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-   <data name="ApplicationName" xml:space="preserve">
+  <data name="ApplicationName" xml:space="preserve">
     <value>MySQL for Visual Studio</value>
+  </data>
+  <data name="MvcProjectTemplateDescription" xml:space="preserve">
+    <value>This wizard will create a full MVC project connected to a MySQL database existing or will create a new one with a web site that includes user authentication with the ASP.NET MySQL Membership provider.</value>
+  </data>
+  <data name="WinFormsProjectDescription" xml:space="preserve">
+    <value>This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail).</value>
   </data>
 </root>

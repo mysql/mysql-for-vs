@@ -85,7 +85,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       // set up descriptions and title
       Descriptions.Add("Data Source Configuration,This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail).");
-      Descriptions.Add("Data Access Technology Configuration, This step will set up the data access technology that will be used in the generation of the Form");      
+      Descriptions.Add("Data Access Technology Configuration,This step will set up the data access technology that will be used in the generation of the Form");      
       Descriptions.Add("Columns Validation,This page allows you to customize input validations for each column in the selected table.");
       Descriptions.Add("Detail Columns Validation, Within this step validations can be added on the columns for the child related table.");
       WizardName = "Windows Forms Project";

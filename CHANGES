@@ -5,3 +5,6 @@
 - Added changes for web configuration tool for Site Map provider.
 - Added changes for web configuration tool for Personalization Map provider.
 
+1.2.1
+- Added implementation of Create New MySQL Project.
+

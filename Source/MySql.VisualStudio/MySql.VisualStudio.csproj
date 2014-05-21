@@ -778,7 +778,8 @@
     <Compile Include="Wizards\Web\ProviderConfiguration.Designer.cs">
       <DependentUpon>ProviderConfiguration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizards\WindowsForms\CSharpWindowsFormsWizard.cs" />    <Compile Include="Wizards\WindowsForms\DetailValidationConfig.cs">
+    <Compile Include="Wizards\WindowsForms\CSharpWindowsFormsWizard.cs" />
+    <Compile Include="Wizards\WindowsForms\DetailValidationConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Wizards\WindowsForms\DetailValidationConfig.Designer.cs">
@@ -789,7 +790,8 @@
     </Compile>
     <Compile Include="Wizards\WindowsForms\DataAccessTechnologyConfig.Designer.cs">
       <DependentUpon>DataAccessTechnologyConfig.cs</DependentUpon>
-    </Compile>    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpDataGridStrategy.cs" />
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpDataGridStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkDataGridStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkIndividualControlsStrategy.cs" />
     <Compile Include="Wizards\WindowsForms\Strategies\CS\CSharpEntityFrameworkMasterDetailStrategy.cs" />
@@ -832,6 +834,12 @@
     </Compile>
     <Compile Include="Wizards\WindowsForms\WizardPageSharedClasses.cs" />
     <Compile Include="Wizards\WizardException.cs" />
+    <Compile Include="Wizards\WizardNewProjectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\WizardNewProjectDialog.Designer.cs">
+      <DependentUpon>WizardNewProjectDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Wizards\WizardPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -955,6 +963,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\WindowsFormsWizardForm.resx">
       <DependentUpon>WindowsFormsWizardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WizardNewProjectDialog.resx">
+      <DependentUpon>WizardNewProjectDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WizardPage.resx">
       <DependentUpon>WizardPage.cs</DependentUpon>

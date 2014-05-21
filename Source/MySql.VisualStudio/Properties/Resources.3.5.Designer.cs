@@ -3212,6 +3212,24 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 return ResourceManager.GetString("ApplicationName", resourceCulture);
             }
+        }
+
+		/// <summary>
+        ///   Looks up a localized string similar to This wizard will create a full MVC project connected to a MySQL database existing or will create a new one with a web site that includes user authentication with the ASP.NET MySQL Membership provider..
+        /// </summary>
+        internal static string MvcProjectTemplateDescription {
+            get {
+                return ResourceManager.GetString("MvcProjectTemplateDescription", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail)..
+        /// </summary>
+        internal static string WinFormsProjectDescription {
+            get {
+                return ResourceManager.GetString("WinFormsProjectDescription", resourceCulture);
+            }
         }		
     }
 }
