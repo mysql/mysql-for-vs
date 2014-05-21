@@ -135,6 +135,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MySQL for Visual Studio.
+        /// </summary>
+        internal static string ApplicationName {
+            get {
+                return ResourceManager.GetString("ApplicationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap ArrowKey {
@@ -2650,6 +2659,25 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This wizard will create a full MVC project connected to a MySQL database existing or will create a new one with a web site that includes user authentication with the ASP.NET MySQL Membership provider..
+        /// </summary>
+        internal static string MvcProjectTemplateDescription {
+            get {
+                return ResourceManager.GetString("MvcProjectTemplateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap mysql_project_wizard {
+            get {
+                object obj = ResourceManager.GetObject("mysql_project_wizard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Export of database {1} has finished..
         /// </summary>
         internal static string MySqlDumpEndingInfoLog {
@@ -3197,26 +3225,14 @@ namespace MySql.Data.VisualStudio.Properties {
                 return ResourceManager.GetString("WebConfigConnStrNoEmpty", resourceCulture);
             }
         }
-				   
+        
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail)..
         /// </summary>
-        internal static System.Drawing.Bitmap mysql_project_wizard {
+        internal static string WinFormsProjectDescription {
             get {
-                object obj = ResourceManager.GetObject("mysql_project_wizard", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("WinFormsProjectDescription", resourceCulture);
             }
         }
-		
-		 /// <summary>
-        ///   Looks up a localized string similar to MySQL for Visual Studio.
-        /// </summary>
-        internal static string ApplicationName {
-            get {
-                return ResourceManager.GetString("ApplicationName", resourceCulture);
-            }
-        }
-		
-		
     }
 }

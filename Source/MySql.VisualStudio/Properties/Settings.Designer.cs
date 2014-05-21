@@ -48,5 +48,65 @@ namespace MySql.Data.VisualStudio.Properties {
                 this["CSharpWinFormsWizardConnection"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NewProjectDialogSelected {
+            get {
+                return ((string)(this["NewProjectDialogSelected"]));
+            }
+            set {
+                this["NewProjectDialogSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NewProjectSavedPath {
+            get {
+                return ((string)(this["NewProjectSavedPath"]));
+            }
+            set {
+                this["NewProjectSavedPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NewProjectLanguageSelected {
+            get {
+                return ((string)(this["NewProjectLanguageSelected"]));
+            }
+            set {
+                this["NewProjectLanguageSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CreateDirectoryForSolution {
+            get {
+                return ((bool)(this["CreateDirectoryForSolution"]));
+            }
+            set {
+                this["CreateDirectoryForSolution"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Create new solution")]
+        public string CreateNewSolution {
+            get {
+                return ((string)(this["CreateNewSolution"]));
+            }
+            set {
+                this["CreateNewSolution"] = value;
+            }
+        }
     }
 }
