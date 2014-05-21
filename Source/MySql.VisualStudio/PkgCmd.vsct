@@ -52,7 +52,7 @@
         </Strings>
       </Menu>
 
-      <!--New item representing the menu controller-->
+      <!--New item representing the menu controller for connections-->
       <Menu guid="guidIDEToolbarCmdSet" id="VSCTMenuController" priority="0x0200" type="MenuController">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup"/>
         <!--<CommandFlag>IconAndText</CommandFlag> by ommitting this line the toolbar doesn't show any text for this menu-->
@@ -63,6 +63,18 @@
           <CommandName></CommandName>
         </Strings>
       </Menu>
+
+      <!--Menu item for project type-->
+      <Menu guid="guidIDEToolbarCmdSet" id="VSProjectTypeMenuController" priority="0x0201" type="MenuController">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup"/>        
+        <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>TextIsAnchorCommand</CommandFlag>
+        <Strings>
+          <ButtonText></ButtonText>
+          <CommandName></CommandName>
+        </Strings>
+      </Menu>
+      <!--end of the menu controller-->
 
     </Menus>
 
@@ -83,6 +95,11 @@
       <!-- New group for the items in the menu controller -->
       <Group guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" priority="0x0600">
         <Parent guid="guidIDEToolbarCmdSet" id="VSCTMenuController"/>
+      </Group>
+
+      <!-- New group for the items in the project types menu controller -->
+      <Group guid="guidIDEToolbarCmdSet" id="VSProjectTypeControllerGroup" priority="0x0700">
+        <Parent guid="guidIDEToolbarCmdSet" id="VSProjectTypeMenuController"/>
       </Group>
 
       <!-- New group for the Dynamic List that will be on the menu controller-->
@@ -397,6 +414,28 @@
      
       <!-- End Menu Controller buttons-->
       
+      <!-- Project Type Menu Controller -->
+       <Button guid="guidIDEToolbarCmdSet" id="cmdProjectTypeMvcProject" priority="0x0104"
+              type="Button">
+        <Parent guid="guidIDEToolbarCmdSet" id="VSProjectTypeControllerGroup" />
+        <Icon guid="guidImages" id="bmpNewMySqlProject" />
+        <Strings>
+          <CommandName>cmdProjectTypeMvcProject</CommandName>
+          <ButtonText>New MySQL MVC Project</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidIDEToolbarCmdSet" id="cmdProjectTypeWinFormsProject" priority="0x0105"
+              type="Button">
+        <Parent guid="guidIDEToolbarCmdSet" id="VSProjectTypeControllerGroup" />
+        <Icon guid="guidImages" id="bmpNewMySqlProject" />
+        <Strings>
+          <CommandName>cmdProjectTypeWinFormsProject</CommandName>
+          <ButtonText>New MySQL WinForms Project</ButtonText>
+        </Strings>
+      </Button>
+      <!-- End menu of project types icons-->
+      
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -405,7 +444,7 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
             inside a button definition. An important aspect of this declaration is that the element id 
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,bmpAddMySqlConnection"/>
+      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,bmpAddMySqlConnection, bmpNewMySqlProject"/>
     </Bitmaps>
   </Commands>
 
@@ -468,6 +507,15 @@
       <IDSymbol name="MRUListGroup" value="0x0400" />
       <IDSymbol name="cmdidMRUList" value="0x0401" />
       <!--end of the Dynamic List-->
+      <!-- Menu Controller Commands for project type list-->
+      <IDSymbol name="VSProjectTypeMenuController" value="0x102" />
+      <IDSymbol name="VSProjectTypeControllerGroup" value="0x0202" />
+      <!--menu controller project type end-->
+
+      <!-- Commands for project type list-->            
+      <IDSymbol name="cmdProjectTypeMvcProject" value="0x103"/>
+      <IDSymbol name="cmdProjectTypeWinFormsProject" value="0x104"/>
+      <!--end of the Project Type List-->
     </GuidSymbol>
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
@@ -495,8 +543,7 @@
       <IDSymbol name="cmdidDelete" value="0x160"/>     
       <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
       <IDSymbol name="cmdidSchemaCompareTo" value="508"/>
-      <IDSymbol name="cmdidSchemaCompare" value="509"/>      
-      <!--<IDSymbol name="cmdidNewMySqlScript" value="0x119" />	 --><!-- A smaller value than debug routine button so this one appears first -->  		  
+      <IDSymbol name="cmdidSchemaCompare" value="509"/>            
       <IDSymbol name="cmdidDBExport" value="511" />
       <IDSymbol name="cmdidLaunchWorkbench" value="512"/>  
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>                	  	  
@@ -544,6 +591,7 @@
       <IDSymbol name="bmpLaunchWorkbenchToolBar" value="5" />
       <IDSymbol name="bmpOpenUtilitiesPromptToolBar" value="6" />
       <IDSymbol name="bmpAddMySqlConnection" value="7" />
+      <IDSymbol name="bmpNewMySqlProject" value="8" />
     </GuidSymbol>
   </Symbols>
 

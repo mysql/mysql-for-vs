@@ -151,7 +151,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
       else
       {
-          errorProvider1.SetError(cmbConnections, "");
+        errorProvider1.SetError(cmbConnections, "");
       }     
     }
 
