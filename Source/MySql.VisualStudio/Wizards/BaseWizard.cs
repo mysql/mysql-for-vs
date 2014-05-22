@@ -113,7 +113,7 @@ namespace MySql.Data.VisualStudio.Wizards
 
     protected string CurrentEntityFrameworkVersion;
 
-    internal BaseWizard( LanguageGenerator Language )
+    internal BaseWizard(LanguageGenerator Language)
     {
       this.Language = Language;
       if (Language == LanguageGenerator.CSharp)

@@ -143,8 +143,8 @@ namespace MySql.Data.VisualStudio.WebConfig
     private void LoadInitialPersonalizationState()
     {
       pages[PERSONALIZATION_INDEX].Title = "Web Personalization";
-      pages[PERSONALIZATION_INDEX].Description = "Set options for use with the web personalization provider";
-      pages[PERSONALIZATION_INDEX].EnabledString = "Use MySQL to manage my web personalization data provider";
+      pages[PERSONALIZATION_INDEX].Description = "Set options for use with the personalization provider";
+      pages[PERSONALIZATION_INDEX].EnabledString = "Use MySQL to manage my ASP.NET personalization provider";
       pages[PERSONALIZATION_INDEX].ProviderConfig = new PersonalizationConfig();      
     
     }

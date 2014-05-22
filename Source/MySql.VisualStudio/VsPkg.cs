@@ -672,12 +672,17 @@ namespace MySql.Data.VisualStudio
       Settings.Default.NewProjectLanguageSelected = dlg.Language;
       Settings.Default.NewProjectSavedPath = dlg.ProjectPath;
       Settings.Default.Save();
- 
+
       if (dlg.CreateDirectoryForSolution)
       {
-        solutionPath = Path.Combine(solutionPath, dlg.SolutionName);
-        Directory.CreateDirectory(solutionPath);
+        solutionPath = Path.Combine(Path.Combine(solutionPath, dlg.SolutionName), dlg.ProjectName);
       }
+      else
+      {
+        solutionPath = Path.Combine(solutionPath, dlg.ProjectName);
+      }
+      Directory.CreateDirectory(solutionPath);
+
       string templatePath = string.Empty;
       templatePath = sol.GetProjectTemplate(dlg.ProjectType, dlg.Language);
       sol.AddFromTemplate(templatePath, solutionPath, dlg.ProjectName, dlg.CreateNewSolution);
