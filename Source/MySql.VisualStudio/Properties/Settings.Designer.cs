@@ -12,7 +12,7 @@ namespace MySql.Data.VisualStudio.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -27,12 +27,12 @@ namespace MySql.Data.VisualStudio.Properties {
         [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string CSharpMVCWizardConnection {
+        public string MVCWizardConnection {
             get {
-                return ((string)(this["CSharpMVCWizardConnection"]));
+                return ((string)(this["MVCWizardConnection"]));
             }
             set {
-                this["CSharpMVCWizardConnection"] = value;
+                this["MVCWizardConnection"] = value;
             }
         }
         
@@ -40,16 +40,17 @@ namespace MySql.Data.VisualStudio.Properties {
         [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string CSharpWinFormsWizardConnection {
+        public string WinFormsWizardConnection {
             get {
-                return ((string)(this["CSharpWinFormsWizardConnection"]));
+                return ((string)(this["WinFormsWizardConnection"]));
             }
             set {
-                this["CSharpWinFormsWizardConnection"] = value;
+                this["WinFormsWizardConnection"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string NewProjectDialogSelected {
@@ -62,6 +63,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string NewProjectSavedPath {
@@ -74,8 +76,9 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Visual C#")]
         public string NewProjectLanguageSelected {
             get {
                 return ((string)(this["NewProjectLanguageSelected"]));
@@ -86,6 +89,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CreateDirectoryForSolution {
@@ -98,6 +102,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(MySql.Data.VisualStudio.MySqlForVisualStudioSettings))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Create new solution")]
         public string CreateNewSolution {
