@@ -196,7 +196,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
        _dte = ((WebWizardForm)wizard).dte;
 
       MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox, "CSharpMVC");
-
       if (ConnectionStringTextBox.Tag != null && !IsConnectionValid(ConnectionStringTextBox.Tag.ToString()))
       {
           ShowConnectionDialog(false);

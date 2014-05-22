@@ -183,10 +183,12 @@ namespace MySql.Data.VisualStudio.Wizards
       createDirectoryForSolutionChk.Checked = Settings.Default.CreateDirectoryForSolution;
       errorProvider1.SetIconAlignment(txtProjectName, ErrorIconAlignment.TopLeft);
       errorProvider1.SetIconAlignment(txtProjectPath, ErrorIconAlignment.TopLeft);
-      solutionOptions.Text = Settings.Default.CreateNewSolution;
+
+      if (solutionOptions.Enabled)
+         solutionOptions.Text = Settings.Default.CreateNewSolution;
 
       // select project type
-      var language = String.IsNullOrEmpty(Settings.Default.NewProjectLanguageSelected) ? "Visual C#" : "Visual Basic";
+      var language = String.IsNullOrEmpty(Settings.Default.NewProjectLanguageSelected) ? "Visual C#" : Settings.Default.NewProjectLanguageSelected;
 
       ListViewItem item = projectTypesList.Items.OfType<ListViewItem>()
                                      .FirstOrDefault(x => x.Text.Equals(projectType, StringComparison.CurrentCultureIgnoreCase) && x.SubItems[1].Text.Equals(language, StringComparison.CurrentCultureIgnoreCase));

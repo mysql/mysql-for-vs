@@ -239,10 +239,10 @@ namespace MySql.Data.VisualStudio
       switch (wizardName)
       {
         case "CSharpMVC":
-          connectionFromSettings = Settings.Default.CSharpMVCWizardConnection;   
+          connectionFromSettings = Settings.Default.MVCWizardConnection;   
           break;
         case "CSharpWinForms":
-          connectionFromSettings = Settings.Default.CSharpWinFormsWizardConnection;   
+          connectionFromSettings = Settings.Default.WinFormsWizardConnection;   
           break;
         case "VBMVC":
           break;

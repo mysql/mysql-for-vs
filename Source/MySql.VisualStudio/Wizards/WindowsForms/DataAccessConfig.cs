@@ -61,7 +61,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         return ConnectionStringTextBox.Tag.ToString();
       }
-    }   
+    }
+
+    internal string connectionName
+    {
+      get {
+        return cmbConnections.Text;
+      }
+    }
 
     internal string TableName
     {
