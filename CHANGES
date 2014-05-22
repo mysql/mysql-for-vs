@@ -7,4 +7,7 @@
 
 1.2.1
 - Added implementation of Create New MySQL Project dialog and new Create New MySQL project in MySQL Toolbar.
-
+- Added VB.NET support for Windows Forms Project Wizard (WI #1164).
+- Added Master Detail support for Windows Forms Project Wizard (WI #1163).
+- Added DataGrid support for Windows Forms Project Wizard (WI #1162).
+- Added Entity Framework v5 & v6 for Windows Forms Project Wizard (WI #1046).
