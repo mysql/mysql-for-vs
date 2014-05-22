@@ -39,5 +39,11 @@ namespace $safeprojectname$
 
     // <WizardGeneratedCode>Validation Events</WizardGeneratedCode>
 
+
+
+    private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
+    {
+      // <WizardGeneratedCode>Add Event</WizardGeneratedCode>
+    }
   }
 }

@@ -181,6 +181,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected abstract void WriteValidationCode();
     protected abstract void WriteVariablesUserCode();
     protected abstract void WriteSaveEventCode();
+    protected abstract void WriteAddEventCode();
     protected abstract void WriteDesignerControlDeclCode();
     protected abstract void WriteDesignerControlInitCode();
     protected abstract void WriteDesignerBeforeSuspendCode();

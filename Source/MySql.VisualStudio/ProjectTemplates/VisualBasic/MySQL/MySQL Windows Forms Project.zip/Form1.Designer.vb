@@ -52,7 +52,7 @@ Partial Class Form1
         '
         'BindingNavigator1
         '
-        Me.BindingNavigator1.AddNewItem = Me.BindingNavigatorAddNewItem
+        Me.BindingNavigator1.AddNewItem = Nothing
         Me.BindingNavigator1.CountItem = Me.BindingNavigatorCountItem
         Me.BindingNavigator1.DeleteItem = Me.BindingNavigatorDeleteItem
         Me.BindingNavigator1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BindingNavigatorMoveFirstItem, Me.BindingNavigatorMovePreviousItem, Me.BindingNavigatorSeparator, Me.BindingNavigatorPositionItem, Me.BindingNavigatorCountItem, Me.BindingNavigatorSeparator1, Me.BindingNavigatorMoveNextItem, Me.BindingNavigatorMoveLastItem, Me.BindingNavigatorSeparator2, Me.BindingNavigatorAddNewItem, Me.BindingNavigatorDeleteItem, Me.ToolStripButton1})
@@ -75,6 +75,7 @@ Partial Class Form1
         Me.BindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = True
         Me.BindingNavigatorAddNewItem.Size = New System.Drawing.Size(23, 22)
         Me.BindingNavigatorAddNewItem.Text = "Add new"
+        AddHandler Me.BindingNavigatorAddNewItem.Click, AddressOf Me.bindingNavigatorAddNewItem_Click
         '
         'BindingNavigatorCountItem
         '

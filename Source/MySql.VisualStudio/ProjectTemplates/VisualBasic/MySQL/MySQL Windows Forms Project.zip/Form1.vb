@@ -20,6 +20,11 @@ Namespace $safeprojectname$
         End Sub
 
         '<WizardGeneratedCode>Validation Events</WizardGeneratedCode>
+
+        Private Sub bindingNavigatorAddNewItem_Click(sender As System.Object, e As System.EventArgs)
+          '<WizardGeneratedCode>Add Event</WizardGeneratedCode>
+        End Sub
+
     End Class
 
 End Namespace

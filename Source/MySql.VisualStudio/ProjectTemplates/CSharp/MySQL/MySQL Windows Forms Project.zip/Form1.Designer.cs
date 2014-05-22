@@ -56,7 +56,7 @@
       // 
       // bindingNavigator1
       // 
-      this.bindingNavigator1.AddNewItem = this.bindingNavigatorAddNewItem;
+      this.bindingNavigator1.AddNewItem = null;
       this.bindingNavigator1.CountItem = this.bindingNavigatorCountItem;
       this.bindingNavigator1.DeleteItem = this.bindingNavigatorDeleteItem;
       this.bindingNavigator1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -91,6 +91,7 @@
       this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
       this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
       this.bindingNavigatorAddNewItem.Text = "Add new";
+      this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this.bindingNavigatorAddNewItem_Click);
       // 
       // bindingNavigatorCountItem
       // 
