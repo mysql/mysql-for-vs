@@ -59,7 +59,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       get
       {
-        return ConnectionStringTextBox.Text;
+        return ModelNameTextBox.Text;
       }
     }
 
@@ -139,6 +139,17 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       cmbConnections.SelectedValue = wiz.connectionStringForAspNetTables;
       ConnectionStringTextBox.Text = MySqlServerExplorerConnections.MaskPassword(wiz.connectionStringForAspNetTables);
       ConnectionStringTextBox.Tag = wiz.connectionStringForAspNetTables;
+      
+      double version = double.Parse(wiz.Wizard.GetVisualStudioVersion());
+      if (version >= 12.0)
+      {
+        Ef6.Enabled = true;
+      }
+      else
+      {
+        Ef6.Enabled = false;
+      }
+
     }
 
     internal override bool IsValid()

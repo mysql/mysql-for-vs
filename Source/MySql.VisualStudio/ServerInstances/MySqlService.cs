@@ -300,6 +300,9 @@ namespace MySql.Data.VisualStudio
   
     internal static string MaskPassword(string connectionString)
     {
+      if (!(connectionString.IndexOf("password", StringComparison.InvariantCultureIgnoreCase) != -1))
+            return connectionString;
+
       var regex = new Regex("password=[^;]*;", RegexOptions.IgnoreCase);
       return regex.Replace(connectionString, string.Format("password={0};", new string('*',8)));
     }  
