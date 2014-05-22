@@ -669,8 +669,10 @@ namespace MySql.Data.VisualStudio
       var solutionName = dlg.SolutionName;
       var solutionPath = dlg.ProjectPath;
       Settings.Default.NewProjectDialogSelected = dlg.ProjectType;
-      Settings.Default.NewProjectLanguageSelected = dlg.Language;
+      Settings.Default.NewProjectLanguageSelected = dlg.Language.IndexOf("CSharp") >= 0 ? "Visual C#" : "Visual Basic";
       Settings.Default.NewProjectSavedPath = dlg.ProjectPath;
+      Settings.Default.CreateDirectoryForSolution = dlg.CreateDirectoryForSolution;
+      Settings.Default.CreateNewSolution = dlg.CreateNewSolution ? "Create new solution" : "Add to solution";
       Settings.Default.Save();
 
       if (dlg.CreateDirectoryForSolution)

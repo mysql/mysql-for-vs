@@ -61,7 +61,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         VSProject vsProj = project.Object as VSProject;
         var tables = new List<string>();
 
-        Settings.Default.CSharpMVCWizardConnection = WizardForm.serverExplorerConnectionSelected;
+        Settings.Default.MVCWizardConnection = WizardForm.serverExplorerConnectionSelected;
         Settings.Default.Save();
 
         if (WizardForm.selectedTables != null && WizardForm.dEVersion != DataEntityVersion.None)

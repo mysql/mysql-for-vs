@@ -49,6 +49,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
+    internal string ConnectionName { 
+        get{
+          return dataAccessConfig1.connectionName;        
+        }
+    }
+
     internal string TableName { get { return dataAccessConfig1.TableName; } }
 
     internal DataAccessTechnology DataAccessTechnology { get { return dataAccessTechnologyConfig1.DataAccessTechnology; } }

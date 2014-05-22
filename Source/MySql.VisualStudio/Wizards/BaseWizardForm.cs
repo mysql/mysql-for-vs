@@ -124,11 +124,7 @@ namespace MySql.Data.VisualStudio.Wizards
         Pages[Current].Visible = true;
         btnBack.Enabled = true;
       }
-      SetLastPage();
-      //if (Current == (Pages.Count - 1))
-      //{
-      //  ShowFinishButton(true);
-      //}
+      SetLastPage();   
       SetLabels();
       CurPage.OnStarting(this);
     }
@@ -146,7 +142,11 @@ namespace MySql.Data.VisualStudio.Wizards
 
     private void btnFinish_Click(object sender, EventArgs e)
     {
-      if (!CurPage.IsValid()) return;
+      if (!CurPage.IsValid())
+      {
+        this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+        return;
+      }
       else
       {
         // this form keeps all the user selections handy so the IWizard can customize the project template.

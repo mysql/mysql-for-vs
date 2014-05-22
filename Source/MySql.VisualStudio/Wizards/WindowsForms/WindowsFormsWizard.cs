@@ -34,6 +34,7 @@ using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.MySqlClient;
 using System.Reflection;
 using MySql.Data.VisualStudio.Wizards;
+using MySql.Data.VisualStudio.Properties;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
@@ -112,6 +113,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         project.DTE.SuppressUI = true;
         project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
       }
+
+      Settings.Default.WinFormsWizardConnection = WizardForm.ConnectionName;
+      Settings.Default.Save();
+
       WizardForm.Dispose();
     }
 

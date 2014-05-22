@@ -147,10 +147,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     void TableSelection_Validating(object sender, CancelEventArgs e)
     {   
-        if (_tables == null && _tables.Count == 0)
+        if (_tables != null)
         {
-          e.Cancel = true;
-          errorProvider1.SetError(listTables, "At least a table should be selected");
+          if (_tables.Where(t => t.Selected).Count() <= 0)
+          {
+            e.Cancel = true;
+            errorProvider1.SetError(listTables, "At least a table should be selected");
+          }
         }
         else
         {
