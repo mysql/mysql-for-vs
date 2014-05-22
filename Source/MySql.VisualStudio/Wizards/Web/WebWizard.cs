@@ -46,23 +46,19 @@ using MySql.Data.VisualStudio.Properties;
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public class WebWizard : BaseWizard<WebWizardForm, BaseCodeGeneratorStrategy>
-  {    
-    private VSProject _vsProj;
-    
-    //private DataEntityVersion _dataEntityVersion;
-    //private List<DbTables> _selectedTables;
+  {
 
-    public WebWizard() : base( LanguageGenerator.CSharp )
+
+    public WebWizard(): base(LanguageGenerator.CSharp)
     {
-      WizardForm = new WebWizardForm();
-      
+        WizardForm = new WebWizardForm(this);
     }
 
     public override void ProjectFinishedGenerating(Project project)
     {
       if (project != null)
       {
-        _vsProj = project.Object as VSProject;
+        VSProject vsProj = project.Object as VSProject;
         var tables = new List<string>();
 
         Settings.Default.CSharpMVCWizardConnection = WizardForm.serverExplorerConnectionSelected;
@@ -78,7 +74,14 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
-            GenerateEntityFrameworkModel(_vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);
+            
+            AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
+            GenerateEntityFrameworkModel(vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);
+            if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
+            {
+              project.DTE.SuppressUI = true;
+              project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";            
+            }
           }
         }
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
@@ -189,12 +192,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       {
         // connectionstringformodel
         var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);        
-        csb.Password = "";
+        csb.Password = null;
         replacementsDictionary.Add("$connectionstringformodel$", csb.ConnectionString);
 
         // connectionstringforaspnet        
         csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
-        csb.Password = "";
+        csb.Password = null;
         replacementsDictionary.Add("$connectionstringforaspnettables$", csb.ConnectionString);
       }
       else
@@ -203,11 +206,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
       }
 
+      var connectionstringForModel = string.Format(@"<add name=""{0}"" connectionString=""{1}"" providerName=""MySql.Data.MySqlClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
       replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
-      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.connectionStringNameForModel);
-      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringForAspNetTables);
+      replacementsDictionary.Add("$connectionstringnameformodel$", connectionstringForModel);
+      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringNameForAspNetTables);
       ProjectPath = replacementsDictionary["$destinationdirectory$"];
       ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       NetFxVersion = replacementsDictionary["$targetframeworkversion$"];

@@ -187,10 +187,16 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     #endregion
 
-    public WebWizardForm()
+    internal protected WebWizard Wizard = null;
+
+
+    public WebWizardForm(WebWizard Wizard)
+      : base()
     {
+      this.Wizard = Wizard;
       InitializeComponent();
     }
+
 
     private void WebWizardForm_Load(object sender, EventArgs e)
     {

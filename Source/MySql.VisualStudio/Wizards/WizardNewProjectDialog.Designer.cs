@@ -85,7 +85,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // lblWizardName
       // 
-      this.lblWizardName.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.lblWizardName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblWizardName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
       this.lblWizardName.Location = new System.Drawing.Point(20, 119);
       this.lblWizardName.Name = "lblWizardName";

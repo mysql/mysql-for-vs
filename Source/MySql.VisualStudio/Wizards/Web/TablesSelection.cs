@@ -186,6 +186,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       listTables.Update();
       FormatTablesList();
     }
+
+    private void txtFilter_TextChanged(object sender, EventArgs e)
+    {
+
+    }
   }
 
   public class DbTables : INotifyPropertyChanged

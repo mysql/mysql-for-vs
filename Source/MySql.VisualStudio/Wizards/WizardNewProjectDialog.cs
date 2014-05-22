@@ -37,12 +37,12 @@ namespace MySql.Data.VisualStudio.Wizards
           switch (selectedItem.Text)
           {
             case "ASP.NET MVC 3 Project":
-              if (selectedItem.SubItems[1].Text.IndexOf("CSharp") >= 0)
+              if (selectedItem.SubItems[1].Text.IndexOf("Visual C#") >= 0)
                 return "CSharpMvc3.zip";
               else
                 return "VisualBasicMvc3.zip";
             case "Windows Forms Project":
-              if (selectedItem.SubItems[1].Text.IndexOf("CSharp") >= 0)
+              if (selectedItem.SubItems[1].Text.IndexOf("Visual C#") >= 0)
                 return "CSharpWinForms.zip";
               else
                 return "VisualBasicWinForms.zip";
@@ -72,7 +72,10 @@ namespace MySql.Data.VisualStudio.Wizards
     internal string Language
     {
       get {
-        return languageLbl.Text;
+        if (languageLbl.Text.IndexOf("Visual C#") >= 0)
+          return "CSharp";
+        else
+          return "VisualBasic";
       }          
     }
 
@@ -183,7 +186,7 @@ namespace MySql.Data.VisualStudio.Wizards
       solutionOptions.Text = Settings.Default.CreateNewSolution;
 
       // select project type
-      var language = Settings.Default.NewProjectLanguageSelected;
+      var language = String.IsNullOrEmpty(Settings.Default.NewProjectLanguageSelected) ? "Visual C#" : "Visual Basic";
 
       ListViewItem item = projectTypesList.Items.OfType<ListViewItem>()
                                      .FirstOrDefault(x => x.Text.Equals(projectType, StringComparison.CurrentCultureIgnoreCase) && x.SubItems[1].Text.Equals(language, StringComparison.CurrentCultureIgnoreCase));
@@ -328,9 +331,10 @@ namespace MySql.Data.VisualStudio.Wizards
 
     private string GetUniqueName(string path, string projectName)
     {
+      string dir = path;
       for (int i = 1; ; ++i)
       {
-        path = Path.Combine(path, projectName + i.ToString());
+        path = Path.Combine(dir, projectName + i.ToString());
         if (!Directory.Exists(path))
           return path.Substring(Path.GetDirectoryName(path).Length + 1);        
       }

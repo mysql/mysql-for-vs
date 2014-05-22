@@ -43,7 +43,7 @@
       // chkSelectAllTables
       // 
       this.chkSelectAllTables.AutoSize = true;
-      this.chkSelectAllTables.Location = new System.Drawing.Point(452, 345);
+      this.chkSelectAllTables.Location = new System.Drawing.Point(452, 339);
       this.chkSelectAllTables.Name = "chkSelectAllTables";
       this.chkSelectAllTables.Size = new System.Drawing.Size(105, 17);
       this.chkSelectAllTables.TabIndex = 66;
@@ -55,7 +55,7 @@
       this.listTables.AllowUserToAddRows = false;
       this.listTables.BackgroundColor = System.Drawing.Color.White;
       this.listTables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.listTables.Location = new System.Drawing.Point(18, 78);
+      this.listTables.Location = new System.Drawing.Point(18, 72);
       this.listTables.Name = "listTables";
       this.listTables.RowHeadersVisible = false;
       this.listTables.Size = new System.Drawing.Size(540, 259);
@@ -77,14 +77,15 @@
       // 
       // txtFilter
       // 
-      this.txtFilter.Location = new System.Drawing.Point(66, 45);
+      this.txtFilter.Location = new System.Drawing.Point(66, 39);
       this.txtFilter.Name = "txtFilter";
       this.txtFilter.Size = new System.Drawing.Size(332, 22);
       this.txtFilter.TabIndex = 67;
+      this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
       // 
       // btnFilter
       // 
-      this.btnFilter.Location = new System.Drawing.Point(410, 43);
+      this.btnFilter.Location = new System.Drawing.Point(410, 37);
       this.btnFilter.Name = "btnFilter";
       this.btnFilter.Size = new System.Drawing.Size(113, 24);
       this.btnFilter.TabIndex = 69;
@@ -95,7 +96,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(18, 48);
+      this.label1.Location = new System.Drawing.Point(18, 42);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(36, 13);
       this.label1.TabIndex = 70;
