@@ -47,6 +47,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       ActionMappings["'<WizardGeneratedCode>Validation Events</WizardGeneratedCode>"] = WriteValidationCode;
       ActionMappings["'<WizardGeneratedCode>Private Variables Frontend</WizardGeneratedCode>"] = WriteVariablesUserCode;
       ActionMappings["'<WizardGeneratedCode>Save Event</WizardGeneratedCode>"] = WriteSaveEventCode;
+      ActionMappings["'<WizardGeneratedCode>Add Event</WizardGeneratedCode>"] = WriteAddEventCode;
       ActionMappings["'<WizardGeneratedCode>Designer Control Declaration</WizardGeneratedCode>"] = WriteDesignerControlDeclCode;
       ActionMappings["'<WizardGeneratedCode>Designer Control Initialization</WizardGeneratedCode>"] = WriteDesignerControlInitCode;
       ActionMappings["'<WizardGeneratedCode>Designer BeforeSuspendLayout</WizardGeneratedCode>"] = WriteDesignerBeforeSuspendCode;
@@ -106,6 +107,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       // TODO:
       throw new NotImplementedException();
+    }
+
+    protected override void WriteAddEventCode()
+    {
+      Writer.WriteLine("{0}BindingSource.AddNew()", CanonicalTableName);
     }
 
     protected override void WriteDesignerControlDeclCode()
