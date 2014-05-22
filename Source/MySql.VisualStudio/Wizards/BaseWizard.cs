@@ -315,27 +315,36 @@ namespace MySql.Data.VisualStudio.Wizards
     /// <param name="vsProj"></param>
     protected void AddNugetPackage(VSProject VsProj, string PackageName, string Version)
     {
+      
       // Installs the Entity Framework given version thru Nuget using reflection, which is a bit messy, but 
       // we avoid shipping Nuget dll.
-      Assembly nugetAssembly = Assembly.Load("nuget.core"); // TODO: request an specific nuget version here (v 1.6 has bugs).
-      Type packageRepositoryFactoryType = nugetAssembly.GetType("NuGet.PackageRepositoryFactory");
-      PropertyInfo piDefault = packageRepositoryFactoryType.GetProperty("Default");
-      MethodInfo miCreateRepository = packageRepositoryFactoryType.GetMethod("CreateRepository");
-      object repo = miCreateRepository.Invoke(piDefault.GetValue(null, null), new object[] { "https://packages.nuget.org/api/v2" });
-      Type packageManagerType = nugetAssembly.GetType("NuGet.PackageManager");
-      ConstructorInfo ciPackageManger = packageManagerType.GetConstructor( new Type[] { System.Reflection.Assembly.Load( "nuget.core" ).GetType( "NuGet.IPackageRepository" ), typeof( string ) } );
-      DirectoryInfo di = new DirectoryInfo(ProjectPath);
-      string solPath = di.Parent.FullName;
-      string installPath = di.Parent.CreateSubdirectory("packages").FullName;
-      object packageManager = ciPackageManger.Invoke( new object[] { repo, installPath } );
-      MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage",
-        new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
-      string packageID = PackageName;
-      MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
-      object semanticVersion = miParse.Invoke(null, new object[] { Version });
-      miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
-      // Adds reference to project.
-      AddPackageReference(VsProj, solPath, PackageName, Version);
+      try
+      {
+        Assembly nugetAssembly = Assembly.Load("nuget.core");
+        Type packageRepositoryFactoryType = nugetAssembly.GetType("NuGet.PackageRepositoryFactory");
+        PropertyInfo piDefault = packageRepositoryFactoryType.GetProperty("Default");
+        MethodInfo miCreateRepository = packageRepositoryFactoryType.GetMethod("CreateRepository");
+        object repo = miCreateRepository.Invoke(piDefault.GetValue(null, null), new object[] { "https://packages.nuget.org/api/v2" });
+        Type packageManagerType = nugetAssembly.GetType("NuGet.PackageManager");
+        ConstructorInfo ciPackageManger = packageManagerType.GetConstructor(new Type[] { System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.IPackageRepository"), typeof(string) });
+        DirectoryInfo di = new DirectoryInfo(ProjectPath);
+        string solPath = di.Parent.FullName;
+        string installPath = di.Parent.CreateSubdirectory("packages").FullName;
+        object packageManager = ciPackageManger.Invoke(new object[] { repo, installPath });
+        MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage",
+          new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
+        string packageID = PackageName;
+        MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
+        object semanticVersion = miParse.Invoke(null, new object[] { Version });
+        miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
+        // Adds reference to project.
+        AddPackageReference(VsProj, solPath, PackageName, Version);
+      }
+      catch 
+      {
+        MessageBox.Show("EntityFramework installation package failure. Please check that you have the latest Nuget version.", "Error", MessageBoxButtons.OK);
+        return;
+      }      
     }
 
     /// <summary>
