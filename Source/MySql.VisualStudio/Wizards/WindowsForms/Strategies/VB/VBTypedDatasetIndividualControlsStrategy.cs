@@ -100,7 +100,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             Writer.WriteLine( "End If" );
           }
           Writer.WriteLine("  If Not e.Cancel Then" );
-		  Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"\" )", idColumnCanonical);
+		      Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"\" )", idColumnCanonical);
           Writer.WriteLine("  End If" );
           Writer.WriteLine("End Sub");
           Writer.WriteLine();
