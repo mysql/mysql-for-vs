@@ -181,9 +181,7 @@ namespace MySql.Data.VisualStudio.Wizards
       solutionNameTextBox.Text  = txtProjectName.Text = GetUniqueName(txtProjectPath.Text, projectName);      
       
       createDirectoryForSolutionChk.Checked = Settings.Default.CreateDirectoryForSolution;
-      errorProvider1.SetIconAlignment(txtProjectName, ErrorIconAlignment.TopLeft);
-      errorProvider1.SetIconAlignment(txtProjectPath, ErrorIconAlignment.TopLeft);
-
+      
       if (solutionOptions.Enabled)
          solutionOptions.Text = Settings.Default.CreateNewSolution;
 
@@ -284,16 +282,6 @@ namespace MySql.Data.VisualStudio.Wizards
       return Path.Combine(path, vsProjPath);
       
     }
-
-    //internal bool IsValid()
-    //{
-    //  CancelEventArgs args = new CancelEventArgs();
-    //  CreateNewProject_Validating(this, args);
-    //  if (args.Cancel) return false;
-    //  else return true;
-    //}
-
-    //private void solutionNameTextBox_Validating(WizardNewProjectDialog wizardNewProjectDialog, CancelEventArgs e)
 
     private void solutionNameTextBox_Validating(object sender,  CancelEventArgs e)
     {

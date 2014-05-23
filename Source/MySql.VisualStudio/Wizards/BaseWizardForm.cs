@@ -143,12 +143,12 @@ namespace MySql.Data.VisualStudio.Wizards
     private void btnFinish_Click(object sender, EventArgs e)
     {
       if (!CurPage.IsValid())
-      {
-        this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      {      
         return;
       }
       else
       {
+        this.DialogResult = System.Windows.Forms.DialogResult.OK;
         // this form keeps all the user selections handy so the IWizard can customize the project template.
         this.Close();
       }

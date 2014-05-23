@@ -91,7 +91,7 @@
       this.Controls.Add(this.providerConfiguration1);
       this.Controls.Add(this.dataSourceConfiguration1);
       this.Name = "WebWizardForm";
-      this.Text = "MySQL MVC Template Configuration";
+      this.Text = "MySQL ASP.NET MVC 3 Project Configuration";
       this.Load += new System.EventHandler(this.WebWizardForm_Load);
       this.Controls.SetChildIndex(this.dataSourceConfiguration1, 0);
       this.Controls.SetChildIndex(this.providerConfiguration1, 0);
