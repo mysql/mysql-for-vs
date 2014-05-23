@@ -166,12 +166,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Size szLabel = TextRenderer.MeasureText(colName, l.Font);
         Writer.WriteLine("Me.{0}Label.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical,
           xy.X - 10 - szLabel.Width, xy.Y);
-        Writer.WriteLine("Me.{0}Label.Name = \"{1}\"", idColumnCanonical, colName);
+        Writer.WriteLine("Me.{0}Label.Name = \"{0}Label\"", idColumnCanonical );
         Writer.WriteLine("Me.{0}Label.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical,
           szLabel.Width, szLabel.Height);
         Writer.WriteLine("Me.{0}Label.TabIndex = {1}", idColumnCanonical, tabIdx++);
         Writer.WriteLine("Me.{0}Label.Text = \"{1}\"", idColumnCanonical, colName);
-        Writer.WriteLine("Me.Controls.Add( Me.{0}Label )", idColumnCanonical);
+        Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}Label )", idColumnCanonical);
 
         Writer.WriteLine("'");
         Writer.WriteLine("' {0}TextBox", idColumnCanonical);
@@ -185,7 +185,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
 
         Writer.WriteLine("Me.{0}TextBox.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical, xy.X, xy.Y);
-        Writer.WriteLine("Me.{0}TextBox.Name = \"{1}\"", idColumnCanonical, colName);
+        Writer.WriteLine("Me.{0}TextBox.Name = \"{0}TextBox\"", idColumnCanonical );
         Writer.WriteLine("Me.{0}TextBox.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical, 100, 20);
         Writer.WriteLine("Me.{0}TextBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
 
@@ -194,7 +194,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("AddHandler Me.{0}TextBox.Validating, AddressOf Me.{0}TextBox_Validating",
             idColumnCanonical);
         }
-        Writer.WriteLine("Me.Controls.Add( Me.{0}TextBox)", idColumnCanonical);
+        Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}TextBox)", idColumnCanonical);
         xy.Y += szText.Height * 2;
       }
     }

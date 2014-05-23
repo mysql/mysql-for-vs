@@ -166,12 +166,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Size szLabel = TextRenderer.MeasureText(colName, l.Font);
         Writer.WriteLine("this.{0}Label.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical,
           xy.X - 10 - szLabel.Width, xy.Y);
-        Writer.WriteLine("this.{0}Label.Name = \"{1}\";", idColumnCanonical, colName);
+        Writer.WriteLine("this.{0}Label.Name = \"{0}Label\";", idColumnCanonical );
         Writer.WriteLine("this.{0}Label.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical,
           szLabel.Width, szLabel.Height);
         Writer.WriteLine("this.{0}Label.TabIndex = {1};", idColumnCanonical, tabIdx++);
         Writer.WriteLine("this.{0}Label.Text = \"{1}\";", idColumnCanonical, colName);
-        Writer.WriteLine("this.Controls.Add( this.{0}Label );", idColumnCanonical);
+        Writer.WriteLine("this.Panel1.Controls.Add( this.{0}Label );", idColumnCanonical);
 
         Writer.WriteLine("//");
         Writer.WriteLine("// {0}TextBox", idColumnCanonical);
@@ -185,7 +185,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
 
         Writer.WriteLine("this.{0}TextBox.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical, xy.X, xy.Y);
-        Writer.WriteLine("this.{0}TextBox.Name = \"{1}\";", idColumnCanonical, colName);
+        Writer.WriteLine("this.{0}TextBox.Name = \"{0}TextBox\";", idColumnCanonical );
         Writer.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20);
         Writer.WriteLine("this.{0}TextBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
 
@@ -194,7 +194,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("this.{0}TextBox.Validating += new System.ComponentModel.CancelEventHandler( this.{0}TextBox_Validating );",
             idColumnCanonical);
         }
-        Writer.WriteLine("this.Controls.Add( this.{0}TextBox);", idColumnCanonical);
+        Writer.WriteLine("this.Panel1.Controls.Add( this.{0}TextBox);", idColumnCanonical);
         xy.Y += szText.Height * 2;
       }
     }
