@@ -12,6 +12,9 @@ Namespace $safeprojectname$
         End Sub
 
         Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
+            If Not Me.Validate() Then
+              Return
+            End If
             '<WizardGeneratedCode>Save Event</WizardGeneratedCode>
         End Sub
 

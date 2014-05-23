@@ -28,6 +28,7 @@ namespace $safeprojectname$
 
     private void Save_Click(object sender, EventArgs e)
     {
+      if (!this.Validate()) return;
       // <WizardGeneratedCode>Save Event</WizardGeneratedCode>
 
     }
