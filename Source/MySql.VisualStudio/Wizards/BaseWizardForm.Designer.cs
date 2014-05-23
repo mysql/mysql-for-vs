@@ -46,7 +46,6 @@
       // 
       // btnFinish
       // 
-      this.btnFinish.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnFinish.Location = new System.Drawing.Point(783, 468);
       this.btnFinish.Name = "btnFinish";
       this.btnFinish.Size = new System.Drawing.Size(75, 23);
