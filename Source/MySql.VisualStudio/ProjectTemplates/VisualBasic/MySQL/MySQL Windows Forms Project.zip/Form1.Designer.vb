@@ -41,6 +41,7 @@ Partial Class Form1
         Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
+        Me.Panel1 = New System.Windows.Forms.Panel()
 
 	'<WizardGeneratedCode>Designer BeforeSuspendLayout</WizardGeneratedCode>
 
@@ -48,6 +49,7 @@ Partial Class Form1
         Me.BindingNavigator1.SuspendLayout()
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
 	'<WizardGeneratedCode>Designer AfterSuspendLayout</WizardGeneratedCode>
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'BindingNavigator1
@@ -165,6 +167,16 @@ Partial Class Form1
         'ErrorProvider1
         '
         Me.ErrorProvider1.ContainerControl = Me
+        '
+        'Panel1
+        '
+        Me.Panel1.AutoScroll = True
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel1.Location = New System.Drawing.Point(0, 25)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(400, 251)
+        Me.Panel1.TabIndex = 1
+        Me.Panel1.AutoSize = True
 
 	'<WizardGeneratedCode>Designer Control Initialization</WizardGeneratedCode>
 
@@ -175,6 +187,7 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(400, 359)
         Me.Controls.Add(Me.BindingNavigator1)
+        Me.Controls.Add(Me.Panel1)        
         Me.Name = "Form1"
         Me.Text = "Form1"
         CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -183,6 +196,8 @@ Partial Class Form1
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
 	'<WizardGeneratedCode>Designer BeforeResumeSuspendLayout</WizardGeneratedCode>
 
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -201,6 +216,7 @@ Partial Class Form1
     Friend WithEvents BindingNavigatorSeparator2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
     Friend WithEvents ErrorProvider1 As System.Windows.Forms.ErrorProvider
+    Friend WithEvents Panel1 As System.Windows.Forms.Panel
     '<WizardGeneratedCode>Designer Control Declaration</WizardGeneratedCode>
 
 End Class

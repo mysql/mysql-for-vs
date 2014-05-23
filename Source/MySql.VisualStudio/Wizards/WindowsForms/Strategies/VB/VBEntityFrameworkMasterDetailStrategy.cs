@@ -228,7 +228,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         Writer.WriteLine("AddHandler Me.dataGridView1.CellValidating, AddressOf Me.dataGridView1_CellValidating");
       }
-      Writer.WriteLine("Me.Controls.Add(Me.dataGridView1)");
+      Writer.WriteLine("Me.Panel1.Controls.Add(Me.dataGridView1)");
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
