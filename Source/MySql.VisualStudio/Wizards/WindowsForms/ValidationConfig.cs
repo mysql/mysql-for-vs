@@ -55,7 +55,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal List<ColumnValidation> ValidationColumns {
       get {
-        if (chkValidation.Checked) return _colValidations;
+        if (chkValidations.Checked) return _colValidations;
         else return null;
       }
     }
@@ -64,7 +64,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       get
       {
-        if (chkValidation.Checked) return _colValidationsDetail;
+        if (chkValidations.Checked) return _colValidationsDetail;
         else return null;
       }
     }
@@ -77,6 +77,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _colValidationsDetail = new List<ColumnValidation>();
 
       grdColumns.CellValidating += grdColumns_CellValidating;
+      SetDefaults();
+    }
+
+    private void SetDefaults()
+    {
+      chkValidations.Checked = true;
+      chkValidations_CheckedChanged(chkValidations, EventArgs.Empty);
     }
 
     internal override void OnStarting(BaseWizardForm wizard)
@@ -94,11 +101,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         _colValidations.Clear();
         ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns);
       }     
-    }
-
-    private void chkValidation_CheckedChanged(object sender, EventArgs e)
-    {
-      grdColumns.Enabled = chkValidation.Checked;
     }
 
     internal override bool IsValid()
@@ -203,9 +205,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    private void chkNoValidations_CheckedChanged(object sender, EventArgs e)
-    {   
-      grdColumns.Enabled = chkNoValidations.Checked;   
+    private void chkValidations_CheckedChanged(object sender, EventArgs e)
+    {
+      grdColumns.Enabled = chkValidations.Checked;
     }
   }
 }

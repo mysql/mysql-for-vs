@@ -44,6 +44,7 @@
       this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
       this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+      this.Panel1 = new System.Windows.Forms.Panel();
 
       // <WizardGeneratedCode>Designer BeforeSuspendLayout</WizardGeneratedCode>
 
@@ -52,6 +53,7 @@
       this.bindingNavigator1.SuspendLayout();
       // <WizardGeneratedCode>Designer AfterSuspendLayout</WizardGeneratedCode>
 
+      this.Panel1.SuspendLayout();
       this.SuspendLayout();
       // 
       // bindingNavigator1
@@ -182,6 +184,16 @@
       // errorProvider1
       // 
       this.errorProvider1.ContainerControl = this;
+      //
+      // Panel1
+      //
+      this.Panel1.AutoScroll = true;
+      this.Panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.Panel1.Location = new System.Drawing.Point(0, 25);
+      this.Panel1.Name = "Panel1";
+      this.Panel1.Size = new System.Drawing.Size(400, 251);
+      this.Panel1.TabIndex = 1;
+      this.Panel1.AutoSize = true;
 
       // <WizardGeneratedCode>Designer Control Initialization</WizardGeneratedCode>
 
@@ -189,10 +201,12 @@
       // 
       // Form1
       // 
+      this.AutoScroll = true;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(360, 299);
+      this.ClientSize = new System.Drawing.Size(400, 359);
       this.Controls.Add(this.bindingNavigator1);
+      this.Controls.Add(this.Panel1);
       this.Name = "Form1";
       this.Text = "Form1";
       this.Load += new System.EventHandler(this.Form1_Load);
@@ -203,6 +217,8 @@
       this.bindingNavigator1.PerformLayout();
       // <WizardGeneratedCode>Designer BeforeResumeSuspendLayout</WizardGeneratedCode>
 
+      this.Panel1.ResumeLayout(false);
+      this.Panel1.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -224,6 +240,7 @@
     private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
     private System.Windows.Forms.ToolStripButton toolStripButton1;
     private System.Windows.Forms.ErrorProvider errorProvider1;
+    private System.Windows.Forms.Panel Panel1;
     // <WizardGeneratedCode>Designer Control Declaration</WizardGeneratedCode>
 
   }

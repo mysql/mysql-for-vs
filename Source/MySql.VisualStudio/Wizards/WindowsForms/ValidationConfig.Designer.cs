@@ -28,25 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.chkValidation = new System.Windows.Forms.CheckBox();
       this.lblTitle = new System.Windows.Forms.Label();
       this.grdColumns = new System.Windows.Forms.DataGridView();
-      this.chkNoValidations = new System.Windows.Forms.CheckBox();
+      this.chkValidations = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.grdColumns)).BeginInit();
       this.SuspendLayout();
-      // 
-      // chkValidation
-      // 
-      this.chkValidation.AutoSize = true;
-      this.chkValidation.Checked = true;
-      this.chkValidation.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.chkValidation.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-      this.chkValidation.Location = new System.Drawing.Point(209, 381);
-      this.chkValidation.Name = "chkValidation";
-      this.chkValidation.Size = new System.Drawing.Size(120, 17);
-      this.chkValidation.TabIndex = 59;
-      this.chkValidation.Text = "Include Validation";
-      this.chkValidation.UseVisualStyleBackColor = true;
       // 
       // lblTitle
       // 
@@ -69,23 +55,22 @@
       this.grdColumns.Size = new System.Drawing.Size(570, 290);
       this.grdColumns.TabIndex = 57;
       // 
-      // chkNoValidations
+      // chkValidations
       // 
-      this.chkNoValidations.AutoSize = true;
-      this.chkNoValidations.Location = new System.Drawing.Point(263, 342);
-      this.chkNoValidations.Name = "chkNoValidations";
-      this.chkNoValidations.Size = new System.Drawing.Size(323, 17);
-      this.chkNoValidations.TabIndex = 60;
-      this.chkNoValidations.Text = "I will handle columns validations on my Application Code.";
-      this.chkNoValidations.UseVisualStyleBackColor = true;
-      this.chkNoValidations.CheckedChanged += new System.EventHandler(this.chkNoValidations_CheckedChanged);
+      this.chkValidations.AutoSize = true;
+      this.chkValidations.Location = new System.Drawing.Point(263, 342);
+      this.chkValidations.Name = "chkValidations";
+      this.chkValidations.Size = new System.Drawing.Size(323, 17);
+      this.chkValidations.TabIndex = 60;
+      this.chkValidations.Text = "I will handle columns validations on my Application Code.";
+      this.chkValidations.UseVisualStyleBackColor = true;
+      this.chkValidations.CheckedChanged += new System.EventHandler(this.chkValidations_CheckedChanged);
       // 
       // ValidationConfig
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.chkNoValidations);
-      this.Controls.Add(this.chkValidation);
+      this.Controls.Add(this.chkValidations);
       this.Controls.Add(this.lblTitle);
       this.Controls.Add(this.grdColumns);
       this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
@@ -99,10 +84,9 @@
 
     #endregion
 
-    private System.Windows.Forms.CheckBox chkValidation;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.DataGridView grdColumns;
-    private System.Windows.Forms.CheckBox chkNoValidations;
+    private System.Windows.Forms.CheckBox chkValidations;
 
   }
 }

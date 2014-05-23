@@ -53,10 +53,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     public DetailValidationConfig()
     {
-      InitializeComponent();    
+      InitializeComponent();
       _colValidationsDetail = new List<ColumnValidation>();
       grdColumnsDetail.CellValidating += grdColumnsDetail_CellValidating;
-      
+      SetDefaults();
+    }
+
+    private void SetDefaults()
+    {
+      chkValidations.Checked = true;
+      chkValidations_CheckedChanged(chkValidations, EventArgs.Empty);
     }
 
     void grdColumnsDetail_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -178,9 +184,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       return true;
     }
 
-    private void chkNoValidations_CheckedChanged(object sender, EventArgs e)
+    private void chkValidations_CheckedChanged(object sender, EventArgs e)
     {
-      grdColumnsDetail.Enabled = chkNoValidations.Checked;   
+      grdColumnsDetail.Enabled = chkValidations.Checked;   
     }
   }
 }
