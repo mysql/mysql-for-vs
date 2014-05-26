@@ -45,6 +45,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected delegate void WriterDelegate();
     protected Dictionary<string, WriterDelegate> ActionMappings;
     internal List<ColumnValidation> ValidationColumns;
+    internal List<ColumnValidation> DetailValidationColumns;
     protected string ConnectionString;
     protected string TableName;
     protected string DetailTableName;
@@ -62,6 +63,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       DataAccessTech = config.DataAccessTech;
       ValidationsEnabled = config.ValidationsEnabled;
       ValidationColumns = config.ValidationColumns;
+      DetailValidationColumns = config.DetailValidationColumns;
       ConnectionString = config.ConnectionString;
       TableName = config.TableName;
       DetailTableName = config.DetailTableName;
@@ -193,6 +195,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected virtual void WriteNormalCode(string LineInput)
     {
       Writer.WriteLine(LineInput);
+    }
+
+    internal virtual List<ColumnValidation> GetValidationColumns()
+    {
+      return ValidationColumns;
     }
 
     protected void RetrieveFkColumns()

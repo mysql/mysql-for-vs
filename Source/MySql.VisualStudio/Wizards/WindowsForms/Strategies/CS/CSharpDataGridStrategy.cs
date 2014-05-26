@@ -41,5 +41,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       : base(config)
     {
     }
+
+    protected override void WriteValidationCode()
+    {
+      WriteValidationCodeDetailsGrid();
+    }
   }
 }

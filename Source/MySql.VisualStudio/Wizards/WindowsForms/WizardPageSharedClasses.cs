@@ -33,8 +33,8 @@ namespace MySql.Data.VisualStudio.Wizards
   internal class ColumnValidation
   {
     private Column _column;
-    private int? _maxValue;
-    private int? _minValue;
+    private double? _maxValue;
+    private double? _minValue;
     private bool _required;
     private ColumnType _columnType;
     private object _defaultValue;
@@ -42,8 +42,8 @@ namespace MySql.Data.VisualStudio.Wizards
     // It is important to make the properties public, otherwise DataGridView doesn't like and doesn't display the real values
     // (this seems to be a known issue with DataGridView over stackoverflow).
     public Column Column { get { return _column; } }
-    public int? MaxValue { get { return _maxValue; } set { _maxValue = value; } }
-    public int? MinValue { get { return _minValue; } set { _minValue = value; } }
+    public double? MaxValue { get { return _maxValue; } set { _maxValue = value; } }
+    public double? MinValue { get { return _minValue; } set { _minValue = value; } }
     public bool Required { get { return _required; } set { _required = value; } }
     public ColumnType ColumnType { get { return _columnType; } set { _columnType = value; } }
     public object DefaultValue { get { return _defaultValue; } set { _defaultValue = value; } }

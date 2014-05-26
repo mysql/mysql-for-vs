@@ -39,7 +39,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   {
     internal VBMasterDetailStrategy(StrategyConfig config)
       : base(config)
-    { 
+    {
+    }
+
+    protected void WriteValidationCodeIndividiualControl()
+    {
+      base.WriteValidationCode();
+    }
+
+    internal override List<ColumnValidation> GetValidationColumns()
+    {
+      return DetailValidationColumns;
+    }
+
+    protected override void WriteValidationCode()
+    {
+      bool validationsEnabled = ValidationsEnabled;
+      if (validationsEnabled)
+      {
+        WriteValidationCodeIndividiualControl();
+        WriteValidationCodeDetailsGrid();
+      }
     }
   }
 }
