@@ -339,7 +339,7 @@ namespace MySql.Data.VisualStudio.Wizards
     /// <param name="vsProj"></param>
     protected void AddNugetPackage(VSProject VsProj, string PackageName, string Version)
     {
-      
+      SendToGeneralOutputWindow(string.Format("Getting Nuget Package for {0}-{1}...", PackageName, Version));
       // Installs the Entity Framework given version thru Nuget using reflection, which is a bit messy, but 
       // we avoid shipping Nuget dll.
       try
