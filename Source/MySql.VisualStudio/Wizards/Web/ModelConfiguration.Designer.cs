@@ -163,6 +163,7 @@
       this.chkUseSameConnection.TabIndex = 64;
       this.chkUseSameConnection.Text = "Use same connection as MySQLMembership provider";
       this.chkUseSameConnection.UseVisualStyleBackColor = true;
+      this.chkUseSameConnection.CheckedChanged += new System.EventHandler(this.chkUseSameConnection_CheckedChanged);
       // 
       // ModelConfiguration
       // 

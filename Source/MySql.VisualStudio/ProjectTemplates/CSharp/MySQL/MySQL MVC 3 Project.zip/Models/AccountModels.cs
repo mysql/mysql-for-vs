@@ -64,12 +64,12 @@ namespace $safeprojectname$.Models
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; }
 
-    [Required]
-    [Display(Name = "Pasword Question")]    
+    $requiredquestionandanswer$
+    [Display(Name = "Password Question")]    
     public string PasswordQuestion { get; set; }
 
-    [Required]
-    [Display(Name = "Pasword Answer")]
+    $requiredquestionandanswer$
+    [Display(Name = "Password Answer")]
     public string PasswordAnswer { get; set; }
 
   }

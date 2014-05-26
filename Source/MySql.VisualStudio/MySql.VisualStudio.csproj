@@ -747,6 +747,7 @@
     <Compile Include="Wizards\ICodeGeneratorStrategy.cs" />
     <Compile Include="Wizards\ModelGenerator.cs" />
     <Compile Include="Wizards\TypedDataSetGenerator.cs" />
+    <Compile Include="Wizards\Web\CSharpWebWizard.cs" />
     <Compile Include="Wizards\Web\DataSourceConfiguration.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -759,6 +760,7 @@
     <Compile Include="Wizards\Web\TablesSelection.Designer.cs">
       <DependentUpon>TablesSelection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\Web\VisualBasicWebWizard.cs" />
     <Compile Include="Wizards\Web\WebWizard.cs" />
     <Compile Include="Wizards\Web\WebWizardForm.cs">
       <SubType>Form</SubType>
