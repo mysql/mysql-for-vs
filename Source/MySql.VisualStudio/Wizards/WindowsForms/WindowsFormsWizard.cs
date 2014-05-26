@@ -114,6 +114,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
       }
 
+      SendToGeneralOutputWindow("Building Solution...");
+      project.DTE.Solution.SolutionBuild.Build(true);
+
       Settings.Default.WinFormsWizardConnection = WizardForm.ConnectionName;
       Settings.Default.Save();
 
@@ -132,8 +135,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
 
     private void AddBindings(VSProject vsProj)
-    {     
-
+    {
+      SendToGeneralOutputWindow("Customizing Form Code...");
       // Get Form.cs
       ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, Strategy.GetFormFileName() );
       // Get Form.Designer.cs
