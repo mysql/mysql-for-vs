@@ -49,7 +49,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         return _detailColumns;
       }
-    }  
+    }
+
+    internal List<ColumnValidation> DetailValidationColumns
+    {
+      get
+      {
+        if (chkValidations.Checked) return _colValidationsDetail;
+        else return new List<ColumnValidation>();
+      }
+    }
 
     public DetailValidationConfig()
     {
@@ -73,11 +82,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (row.IsNewRow) return;
       if (e.ColumnIndex == 4) // Min Value
       {
-        int v = 0;
+        double v = 0;
         if ((value is DBNull) || string.IsNullOrEmpty(value.ToString())) { row.ErrorText = ""; return; }
-        if (!(value is int))
+        if (!(value is double))
         {
-          if (!int.TryParse((string)value, out v))
+          if (!double.TryParse(value.ToString(), out v))
           {
             e.Cancel = true;
             row.ErrorText = "The minimum value must be an integer.";
@@ -86,16 +95,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         else
         {
-          v = (int)value;
+          v = (double)value;
         }
         row.ErrorText = "";
         // Compare min vs max value
         object value2 = row.Cells[5].Value;
-        int v2 = 0;
+        double v2 = 0;
         if ((value2 is DBNull) || string.IsNullOrEmpty(row.Cells[5].FormattedValue.ToString())) { row.ErrorText = ""; return; }
-        if (!(value2 is int))
+        if (!(value2 is double))
         {
-          if (!int.TryParse((string)value2, out v2))
+          if (!double.TryParse(value2.ToString(), out v2))
           {
             e.Cancel = true;
             row.ErrorText = "The maximum value must be an integer.";
@@ -104,7 +113,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         else
         {
-          v2 = (int)value2;
+          v2 = (double)value2;
         }
         if (v2 < v)
         {
@@ -118,11 +127,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
       else if (e.ColumnIndex == 5)  // Max Value
       {
-        int v = 0;
+        double v = 0;
         if ((value is DBNull) || string.IsNullOrEmpty(value.ToString())) { row.ErrorText = ""; return; }
-        if (!(value is int))
+        if (!(value is double))
         {
-          if (!int.TryParse((string)value, out v))
+          if (!double.TryParse(value.ToString(), out v))
           {
             e.Cancel = true;
             row.ErrorText = "The maximum value must be an integer.";
@@ -131,16 +140,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         else
         {
-          v = (int)value;
+          v = (double)value;
         }
         row.ErrorText = "";
         // Compare max vs min value
         object value2 = row.Cells[4].Value;
-        int v2 = 0;
+        double v2 = 0;
         if ((value2 is DBNull) || string.IsNullOrEmpty(row.Cells[4].FormattedValue.ToString())) { row.ErrorText = ""; return; }
-        if (!(value2 is int))
+        if (!(value2 is double))
         {
-          if (!int.TryParse((string)value2, out v2))
+          if (!double.TryParse(value2.ToString(), out v2))
           {
             e.Cancel = true;
             row.ErrorText = "The minimun value must be an integer.";
@@ -148,7 +157,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         else
         {
-          v2 = (int)value2;
+          v2 = (double)value2;
         }
         if (v2 > v)
         {

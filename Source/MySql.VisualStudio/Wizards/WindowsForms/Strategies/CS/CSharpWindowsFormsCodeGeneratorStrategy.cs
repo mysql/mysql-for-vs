@@ -81,31 +81,21 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteUsingUserCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteFormLoadCode()
     {
-      // TODO:
-      throw new NotImplementedException();
-    }
-
-    protected override void WriteValidationCode()
-    {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteVariablesUserCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteSaveEventCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
@@ -116,31 +106,26 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteDesignerControlDeclCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteDesignerControlInitCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
-      // TODO:
       throw new NotImplementedException();
     }
 
@@ -207,6 +192,156 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if (kvp.Key.Length > maxWidthItem.Key.Length) maxWidthItem = kvp;
       }
       return maxWidthItem.Key;
+    }
+
+    protected override void WriteValidationCode()
+    {
+      bool validationsEnabled = ValidationsEnabled;
+      List<ColumnValidation> validationColumns = ValidationColumns;
+      if (validationsEnabled)
+      {
+        for (int i = 0; i < validationColumns.Count; i++)
+        {
+          ColumnValidation cv = validationColumns[i];
+          string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+          Writer.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);
+          Writer.WriteLine("{");
+          Writer.WriteLine("  e.Cancel = false;");
+          if (cv.Required)
+          {
+            Writer.WriteLine("  if( string.IsNullOrEmpty( {0}TextBox.Text ) ) {{ ", idColumnCanonical);
+            Writer.WriteLine("    e.Cancel = true;");
+            Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} is required\" ); ", idColumnCanonical, cv.Name);
+            Writer.WriteLine("  }");
+          }
+          if (cv.IsNumericType())
+          {
+            string numericType = "";
+            if (cv.IsIntegerType())
+            {
+              numericType = "int";
+            }
+            else if (cv.IsFloatingPointType())
+            {
+              numericType = "double";
+            }
+            Writer.WriteLine("  {0} v;", numericType);
+            Writer.WriteLine("  string s = {0}TextBox.Text;", idColumnCanonical);
+            if (!string.IsNullOrEmpty(numericType))
+            {
+              Writer.WriteLine("  if( !{0}.TryParse( s, out v ) ) {{", numericType);
+            }
+            else
+            {
+              // just assume is good
+              Writer.WriteLine("  if( true ) {");
+            }
+            Writer.WriteLine("    e.Cancel = true;");
+            Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} must be {2}.\" );", idColumnCanonical, cv.Name, numericType);
+            Writer.WriteLine("  }");
+            if (cv.MinValue != null)
+            {
+              Writer.WriteLine(" else if( {0} > v ) {{ ", cv.MinValue);
+              Writer.WriteLine("   e.Cancel = true;");
+              Writer.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be greater or equal than {2}.\" );", idColumnCanonical, cv.Name, cv.MinValue);
+              Writer.WriteLine(" } ");
+            }
+            if (cv.MaxValue != null)
+            {
+              Writer.WriteLine(" else if( {0} < v ) {{ ", cv.MaxValue);
+              Writer.WriteLine("   e.Cancel = true;");
+              Writer.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be lesser or equal than {2}\" );", idColumnCanonical, cv.Name, cv.MaxValue);
+              Writer.WriteLine(" } ");
+            }
+          }
+          Writer.WriteLine("  if( !e.Cancel ) {{ errorProvider1.SetError( {0}TextBox, \"\" ); }} ", idColumnCanonical);
+          Writer.WriteLine("}");
+          Writer.WriteLine();
+        }
+      }
+    }
+
+    protected void WriteValidationCodeDetailsGrid()
+    {
+      bool validationsEnabled = ValidationsEnabled;
+      if (!validationsEnabled) return;
+      List<ColumnValidation> validationColumns = GetValidationColumns();
+      Writer.WriteLine("private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)");
+      Writer.WriteLine("{");
+      
+      Writer.WriteLine("  string s;");
+      Writer.WriteLine("  DataGridViewRow row = dataGridView1.Rows[e.RowIndex];");
+      Writer.WriteLine("  object value = e.FormattedValue;");
+      Writer.WriteLine("  e.Cancel = false;");
+      Writer.WriteLine("  row.ErrorText = \"\";");
+      Writer.WriteLine("  if (row.IsNewRow) return;");
+      for (int i = 0; i < validationColumns.Count; i++)
+      {
+        ColumnValidation cv = validationColumns[i];
+        string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+
+        Writer.WriteLine("  if (e.ColumnIndex == {0})", i);
+        Writer.WriteLine("  {");
+
+        string numericType = "";
+        if (cv.IsNumericType())
+        {
+          if (cv.IsIntegerType())
+          {
+            numericType = "int";
+          }
+          if (cv.IsFloatingPointType())
+          {
+            numericType = "double";
+          }
+          Writer.WriteLine(" {0} v;", numericType);
+        }
+
+        if (cv.Required)
+        {
+          Writer.WriteLine("  if( (value is DBNull) || string.IsNullOrEmpty( value.ToString() ) ) { ");
+          Writer.WriteLine("    e.Cancel = true;");
+          Writer.WriteLine("    row.ErrorText = \"The field {0} is required\";", cv.Name);
+          Writer.WriteLine("    return;");
+          Writer.WriteLine("  }");
+        }
+        if (cv.IsNumericType())
+        {
+          Writer.WriteLine("  s = value.ToString();");
+          if (!string.IsNullOrEmpty(numericType))
+          {
+            Writer.WriteLine("  if( !{0}.TryParse( s, out v ) ) {{", numericType);
+          }
+          else
+          {
+            // just assume is good
+            Writer.WriteLine("  if( true ) {");
+          }
+          Writer.WriteLine("    e.Cancel = true;");
+          Writer.WriteLine("    row.ErrorText = \"The field {0} must be {1}.\";", cv.Name, numericType);
+          Writer.WriteLine("    return;");
+          Writer.WriteLine("  }");
+          if (cv.MinValue != null)
+          {
+            Writer.WriteLine(" else if( {0} > v ) {{ ", cv.MinValue);
+            Writer.WriteLine("    e.Cancel = true;");
+            Writer.WriteLine("    row.ErrorText = \"The field {0} must be greater or equal than {1}.\";", cv.Name, cv.MinValue);
+            Writer.WriteLine("    return;");
+            Writer.WriteLine(" } ");
+          }
+          if (cv.MaxValue != null)
+          {
+            Writer.WriteLine(" else if( {0} < v ) {{ ", cv.MaxValue);
+            Writer.WriteLine("    e.Cancel = true;");
+            Writer.WriteLine("    row.ErrorText = \"The field {0} must be lesser or equal than {1}\";", cv.Name, cv.MaxValue);
+            Writer.WriteLine("    return;");
+            Writer.WriteLine(" } ");
+          }
+        }
+
+        Writer.WriteLine("  }");
+      }
+      Writer.WriteLine("}");
     }
   }
 }

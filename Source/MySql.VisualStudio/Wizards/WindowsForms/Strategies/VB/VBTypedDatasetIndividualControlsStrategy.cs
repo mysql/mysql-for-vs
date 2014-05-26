@@ -58,56 +58,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("ad.InsertCommand = builder.GetInsertCommand()");
     }
 
-    protected override void WriteValidationCode()
-    {
-      bool validationsEnabled = ValidationsEnabled;
-      List<ColumnValidation> validationColumns = ValidationColumns;
-      if (validationsEnabled)
-      {
-        for (int i = 0; i < validationColumns.Count; i++)
-        {
-          ColumnValidation cv = validationColumns[i];
-          string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
-          Writer.WriteLine("Private Sub {0}TextBox_Validating(sender As Object, e As CancelEventArgs)", idColumnCanonical);
-          Writer.WriteLine("");
-          Writer.WriteLine("  e.Cancel = False");
-          if (cv.Required)
-          {
-            Writer.WriteLine("  If String.IsNullOrEmpty( {0}TextBox.Text ) Then ", idColumnCanonical);
-            Writer.WriteLine("    e.Cancel = True");
-            Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} is required\" ) ", idColumnCanonical, cv.Name);
-            Writer.WriteLine("  End If");
-          }
-          if (cv.IsNumericType())
-          {
-            Writer.WriteLine("  Dim v As Integer");
-            Writer.WriteLine("  Dim s As string = {0}TextBox.Text", idColumnCanonical);
-            Writer.WriteLine("  If Not Integer.TryParse( s, v ) Then");
-            Writer.WriteLine("    e.Cancel = True");
-            Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"The field {1} must be numeric.\" )", idColumnCanonical, cv.Name);
-            if (cv.MinValue != null)
-            {
-              Writer.WriteLine(" ElseIf {0} > v Then ", cv.MinValue);
-              Writer.WriteLine("   e.Cancel = True");
-              Writer.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be greater or equal than {2}.\" )", idColumnCanonical, cv.Name, cv.MinValue);
-            }
-            if (cv.MaxValue != null)
-            {
-              Writer.WriteLine(" ElseIf {0} < v Then ", cv.MaxValue);
-              Writer.WriteLine("   e.Cancel = True");
-              Writer.WriteLine("   errorProvider1.SetError( {0}TextBox, \"The field {1} must be lesser or equal than {2}\" )", idColumnCanonical, cv.Name, cv.MaxValue);
-            }
-            Writer.WriteLine( "End If" );
-          }
-          Writer.WriteLine("  If Not e.Cancel Then" );
-		      Writer.WriteLine("    errorProvider1.SetError( {0}TextBox, \"\" )", idColumnCanonical);
-          Writer.WriteLine("  End If" );
-          Writer.WriteLine("End Sub");
-          Writer.WriteLine();
-        }
-      }
-    }
-
     protected override void WriteVariablesUserCode()
     {
       Writer.WriteLine("Private ad As MySqlDataAdapter");

@@ -65,7 +65,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal List<ColumnValidation> ValidationColumns { get { return validationConfig1.ValidationColumns; } }
 
-    internal List<ColumnValidation> ValidationColumnsDetail { get { return validationConfig1.ValidationColumnsDetail; } }
+    internal List<ColumnValidation> ValidationColumnsDetail { get { return detailValidationConfig1.DetailValidationColumns; } }
 
     internal Dictionary<string, Column> Columns { get { return validationConfig1.Columns; } }
 
