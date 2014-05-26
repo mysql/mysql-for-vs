@@ -89,6 +89,8 @@ Public Class RegisterModel
     Private passwordValue As String
     Private confirmPasswordValue As String
     Private emailValue As String
+	Private question As String
+	Private answer AS String
 
     <Required()> _
     <Display(Name:="User name")> _
@@ -137,4 +139,27 @@ Public Class RegisterModel
             confirmPasswordValue = value
         End Set
     End Property
+	
+    $requiredquestionandanswer$  
+    <Display(Name:="Password question")> _
+    Public Property Question() As String
+        Get
+            Return question
+        End Get
+        Set(ByVal value As String)
+            question = value
+        End Set
+    End Property
+	
+	$requiredquestionandanswer$   
+    <Display(Name:="Password answer")> _
+    Public Property Answer() As String
+        Get
+            Return answer
+        End Get
+        Set(ByVal value As String)
+            answer = value
+        End Set
+    End Property
+	
 End Class

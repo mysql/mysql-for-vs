@@ -114,10 +114,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       RadioButton control = (RadioButton)sender;      
      
       if (control.Checked)
-       ModelNameTextBox.Text = String.Empty;       
-
-       cmbConnections.Enabled = !control.Checked;
-       ModelNameTextBox.Enabled = !control.Checked;      
+       ModelNameTextBox.Text = String.Empty;
+       
+       ModelNameTextBox.Enabled = !control.Checked;    
+       cmbConnections.Enabled = !control.Checked;         
        chkUseSameConnection.Enabled = !control.Checked;
        newConnString.Enabled = !control.Checked;
        ConnectionStringTextBox.Enabled = !control.Checked;
@@ -213,6 +213,14 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSEConnection);     
       baseWizardForm.connections = cmbConnections.DataSource as BindingSource;
        
+    }
+
+    private void chkUseSameConnection_CheckedChanged(object sender, EventArgs e)
+    {
+      var control = (CheckBox)sender;
+      cmbConnections.Enabled = !control.Checked;      
+      newConnString.Enabled = !control.Checked;
+      ConnectionStringTextBox.Enabled = !control.Checked;
     }     
   }
 }

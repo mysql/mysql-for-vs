@@ -130,6 +130,16 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       txtUserName.Enabled = createAdministratorUserCheck.Checked;
       txtAnswer.Enabled = createAdministratorUserCheck.Checked;
       txtPwdConfirm.Enabled = createAdministratorUserCheck.Checked;
+
+      if (!createAdministratorUserCheck.Checked)
+      {
+        txtUserName.Text = string.Empty;
+        txtPwd.Text = string.Empty;
+        txtPwdConfirm.Text = string.Empty;
+        errorProvider1.SetError(txtUserName, "");
+        errorProvider1.SetError(txtPwd, "");
+        errorProvider1.SetError(txtPwdConfirm, "");
+      }
     }
 
     void txtMinimumPasswordLenght_TextChanged(object sender, EventArgs e)
@@ -208,5 +218,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
+    private void chkQuestionAndAnswerRequired_CheckedChanged(object sender, EventArgs e)
+    {
+      var control = (CheckBox)sender;       
+      if (createAdministratorUserCheck.Checked)
+      {
+        txtAnswer.Enabled = control.Checked;
+        txtQuestion.Enabled = control.Checked;
+        if (!control.Checked)
+        {
+          txtQuestion.Text = string.Empty;
+          txtAnswer.Text = string.Empty;
+        }
+      }
+    }
   }
 }
