@@ -31,7 +31,7 @@
     </Project>
   </TemplateContent>
   <WizardExtension>
-    <Assembly>MySql.VisualStudio, Version=1.2.0.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
+    <Assembly>MySql.VisualStudio, Version=1.2.1.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
     <FullClassName>MySql.Data.VisualStudio.Wizards.WindowsForms.VBWindowsFormsWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>

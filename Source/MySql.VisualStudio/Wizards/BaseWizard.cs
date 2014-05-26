@@ -36,6 +36,9 @@ using MySql.Data.VisualStudio.SchemaComparer;
 using MySQL.Utility.Classes;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -94,7 +97,9 @@ namespace MySql.Data.VisualStudio.Wizards
       get;
       set;
     }
-    
+
+    protected IVsOutputWindowPane _generalPane;
+
 
     /// <summary>
     /// The column metadata.
@@ -123,6 +128,25 @@ namespace MySql.Data.VisualStudio.Wizards
       else if (Language == LanguageGenerator.VBNET)
       {
         CodeProvider = CodeDomProvider.CreateProvider("VisualBasic");
+      }
+
+      // get the general output window      
+      IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+      Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+      if (outWindow != null)
+      {
+        outWindow.CreatePane(ref generalPaneGuid, "General", 1, 0);
+        outWindow.GetPane(ref generalPaneGuid, out _generalPane);
+        _generalPane.Activate();
+      }
+
+    }
+
+    protected void SendToGeneralOutputWindow(string message)
+    {
+      if (_generalPane != null)
+      {      
+        _generalPane.OutputString(Environment.NewLine + message);       
       }
     }
 

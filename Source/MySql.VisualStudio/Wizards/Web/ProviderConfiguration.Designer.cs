@@ -78,6 +78,7 @@
       this.chkQuestionAndAnswerRequired.TabIndex = 65;
       this.chkQuestionAndAnswerRequired.Text = "Require Question and Answer";
       this.chkQuestionAndAnswerRequired.UseVisualStyleBackColor = false;
+      this.chkQuestionAndAnswerRequired.CheckedChanged += new System.EventHandler(this.chkQuestionAndAnswerRequired_CheckedChanged);
       // 
       // label6
       // 
@@ -134,7 +135,7 @@
       this.createAdministratorUserCheck.Size = new System.Drawing.Size(156, 17);
       this.createAdministratorUserCheck.TabIndex = 66;
       this.createAdministratorUserCheck.Text = "Create administrator user";
-      this.createAdministratorUserCheck.UseVisualStyleBackColor = false;
+      this.createAdministratorUserCheck.UseVisualStyleBackColor = false;      
       // 
       // label8
       // 

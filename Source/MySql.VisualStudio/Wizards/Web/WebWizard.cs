@@ -48,8 +48,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
   public class WebWizard : BaseWizard<WebWizardForm, BaseCodeGeneratorStrategy>
   {
 
-
-    public WebWizard(): base(LanguageGenerator.CSharp)
+    public WebWizard(LanguageGenerator language): base(language)
     {
         WizardForm = new WebWizardForm(this);
     }
@@ -64,17 +63,50 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         Settings.Default.MVCWizardConnection = WizardForm.serverExplorerConnectionSelected;
         Settings.Default.Save();
 
+        if (_generalPane != null)
+            _generalPane.Activate();
+
+        SendToGeneralOutputWindow("Starting project generation...");
+
+        //Updating project references
+        vsProj.References.Add("MySql.Data");
+
+        double version = double.Parse(WizardForm.Wizard.GetVisualStudioVersion());
+        if (version >= 12.0)
+        {
+          References refs = vsProj.References;
+          var i = 0;
+          foreach (Reference item in refs)
+          {
+            if (item.Name.Equals("System.Web.Mvc") && item.Version.Equals("1.0.0.0"))
+              vsProj.References.Item(i).Remove();
+
+            if (item.Name.Equals("System.Web.Razor") && item.Version.Equals("1.0.0.0"))
+              vsProj.References.Item(i).Remove();
+
+            if (item.Name.Equals("System.Web.WebPages") && item.Version.Equals("1.0.0.0"))
+              vsProj.References.Item(i).Remove();
+            i++;
+          }
+
+          vsProj.References.Add("System.Web.Mvc");
+          vsProj.References.Add("System.Web.Razor");
+          vsProj.References.Add("System.Web.WebPage");
+        }
+
+
         if (WizardForm.selectedTables != null && WizardForm.dEVersion != DataEntityVersion.None)
         {
           WizardForm.selectedTables.ForEach(t => tables.Add(t.Name));
 
+          SendToGeneralOutputWindow("Generating Entity Framework model...");
           if (tables.Count > 0)
           {
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
-              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
-            
+             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;                        
+
             AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
             GenerateEntityFrameworkModel(vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
@@ -85,7 +117,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           }
         }
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
-
+        SendToGeneralOutputWindow("Starting provider configuration...");
         try
         {
           // add creation of providers tables
@@ -99,8 +131,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             var options = new Options();
             options.AppName = @"\";
             options.AutoGenSchema = true;
-            options.ConnectionStringName = WizardForm.connectionStringForAspNetTables;
-            options.ConnectionString = WizardForm.connectionStringForModel;
+            options.ConnectionStringName = WizardForm.connectionStringNameForAspNetTables;
+            options.ConnectionString = WizardForm.connectionStringForAspNetTables;
             options.EnableExpireCallback = false;
             options.ProviderName = "MySQLProfileProvider";
             options.WriteExceptionToLog = WizardForm.writeExceptionsToLog;
@@ -118,8 +150,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             var options = new Options();
             options.AppName = @"\";
             options.AutoGenSchema = true;
-            options.ConnectionStringName = WizardForm.connectionStringForAspNetTables;
-            options.ConnectionString = WizardForm.connectionStringForModel;
+            options.ConnectionStringName = WizardForm.connectionStringNameForAspNetTables;
+            options.ConnectionString = WizardForm.connectionStringForAspNetTables;
             options.EnableExpireCallback = false;
             options.ProviderName = "MySQLRoleProvider";
             options.WriteExceptionToLog = WizardForm.writeExceptionsToLog;
@@ -132,6 +164,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           {
             if (WizardForm.createAdministratorUser)
             {
+              SendToGeneralOutputWindow("Creating administrator user...");
               string configPath = ProjectPath + @"\web.config";
 
               using (AppConfig.Load(configPath))
@@ -172,6 +205,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
+      SendToGeneralOutputWindow("Finished project generation.");
       WizardForm.Dispose();
     }
 
@@ -188,33 +222,44 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       if (result == DialogResult.Cancel) throw new WizardCancelledException();
 
+      var connectionstringForModel = string.Empty;
+
       if (!WizardForm.includeSensitiveInformation)
       {
         // connectionstringformodel
         var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);        
         csb.Password = null;
-        replacementsDictionary.Add("$connectionstringformodel$", csb.ConnectionString);
-
+        connectionstringForModel = string.Format(@"<add name=""{0}"" connectionString=""{1}"" providerName=""MySql.Data.MySqlClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);        
         // connectionstringforaspnet        
         csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
         csb.Password = null;
-        replacementsDictionary.Add("$connectionstringforaspnettables$", csb.ConnectionString);
+        replacementsDictionary.Add("$connectionstringforaspnettables$", csb.ConnectionString);        
       }
       else
       {
-        replacementsDictionary.Add("$connectionstringformodel$", WizardForm.connectionStringForModel);
+        connectionstringForModel = string.Format(@"<add name=""{0}"" connectionString=""{1}"" providerName=""MySql.Data.MySqlClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);        
         replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
       }
 
-      var connectionstringForModel = string.Format(@"<add name=""{0}"" connectionString=""{1}"" providerName=""MySql.Data.MySqlClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);
+      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.dEVersion != DataEntityVersion.None ? connectionstringForModel : string.Empty);
+      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringNameForAspNetTables);
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
-      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
-      replacementsDictionary.Add("$connectionstringnameformodel$", connectionstringForModel);
-      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringNameForAspNetTables);
+      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");            
       ProjectPath = replacementsDictionary["$destinationdirectory$"];
       ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
+
+      double version = double.Parse(WizardForm.Wizard.GetVisualStudioVersion());
+      replacementsDictionary.Add("$webpages$", version >= 12.0 ? "2.0.0.0" : "1.0.0.0");
+      replacementsDictionary.Add("$SystemWebHelpers$", version >= 12.0 ? "2.0.0.0" : "1.0.0.0");
+      replacementsDictionary.Add("$SystemWebMvc$", version >= 12.0 ? "4.0.0.0" : "3.0.0.0");
+      replacementsDictionary.Add("$mvcbindingRedirect$", version >= 12.0 ? "4.0.0.0" : "3.0.0.0");      
+      
+      var requiredquestionandanswer = string.Empty;
+      if (WizardForm.requireQuestionAndAnswer)
+        requiredquestionandanswer = WizardForm.Wizard.Language == LanguageGenerator.CSharp ?  "[Required]" : "<Required()> _";          
+      replacementsDictionary.Add("$requiredquestionandanswer$", requiredquestionandanswer);
     }
   }
 
