@@ -34,7 +34,7 @@ Public Class ChangePasswordModel
 
     <DataType(DataType.Password)> _
     <Display(Name:="Confirm new password")> _
-    <Compare("NewPassword", ErrorMessage:="The new password and confirmation password do not match.")> _
+    <System.Web.Mvc.Compare("NewPassword", ErrorMessage:="The new password and confirmation password do not match.")> _
     Public Property ConfirmPassword() As String
         Get
             Return confirmPasswordValue
@@ -89,8 +89,8 @@ Public Class RegisterModel
     Private passwordValue As String
     Private confirmPasswordValue As String
     Private emailValue As String
-	Private question As String
-	Private answer AS String
+	Private questionValue As String
+	Private answerValue AS String
 
     <Required()> _
     <Display(Name:="User name")> _
@@ -130,7 +130,7 @@ Public Class RegisterModel
 
     <DataType(DataType.Password)> _
     <Display(Name:="Confirm password")> _
-    <Compare("Password", ErrorMessage:="The password and confirmation password do not match.")> _
+    <System.Web.Mvc.Compare("Password", ErrorMessage:="The password and confirmation password do not match.")> _
     Public Property ConfirmPassword() As String
         Get
             Return confirmPasswordValue
@@ -144,10 +144,10 @@ Public Class RegisterModel
     <Display(Name:="Password question")> _
     Public Property Question() As String
         Get
-            Return question
+            Return questionValue
         End Get
         Set(ByVal value As String)
-            question = value
+            questionValue = value
         End Set
     End Property
 	
@@ -155,10 +155,10 @@ Public Class RegisterModel
     <Display(Name:="Password answer")> _
     Public Property Answer() As String
         Get
-            Return answer
+            Return answerValue
         End Get
         Set(ByVal value As String)
-            answer = value
+            answerValue = value
         End Set
     End Property
 	
