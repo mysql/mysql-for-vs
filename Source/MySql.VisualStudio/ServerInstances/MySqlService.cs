@@ -284,7 +284,7 @@ namespace MySql.Data.VisualStudio
       cmbConnections.DisplayMember = "DisplayName";
       cmbConnections.ValueMember = "ConnectionString";
       
-      if (!String.IsNullOrEmpty(connectionFromSettings))
+      if (!String.IsNullOrEmpty(connectionFromSettings) && cmbConnections.Items.Count > 0)
       {
         cmbConnections.Text = connectionFromSettings;
         connectionStringTextBox.Text = MaskPassword(cmbConnections.SelectedValue.ToString());

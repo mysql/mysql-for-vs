@@ -78,20 +78,23 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           var i = 0;
           foreach (Reference item in refs)
           {
-            if (item.Name.Equals("System.Web.Mvc") && item.Version.Equals("1.0.0.0"))
-              vsProj.References.Item(i).Remove();
-
-            if (item.Name.Equals("System.Web.Razor") && item.Version.Equals("1.0.0.0"))
-              vsProj.References.Item(i).Remove();
-
-            if (item.Name.Equals("System.Web.WebPages") && item.Version.Equals("1.0.0.0"))
-              vsProj.References.Item(i).Remove();
+            switch (item.Name)
+            {            
+              case "System.Web.Razor":
+                if (item.Version.Equals("1.0.0.0"))
+                  vsProj.References.Item(i).Remove();
+                break;            
+              case "System.Web.WebPages":               
+                vsProj.References.Item(i).Remove();
+              break;
+            }
             i++;
           }
-
-          vsProj.References.Add("System.Web.Mvc");
+          
+          vsProj.References.Add("System.Web.Mvc");          
+          vsProj.References.Add("System.Web.Helpers");
           vsProj.References.Add("System.Web.Razor");
-          vsProj.References.Add("System.Web.WebPage");
+          vsProj.References.Add("System.Web.WebPages");  
         }
 
 
