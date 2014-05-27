@@ -79,6 +79,36 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       return false;
     }
+
+    internal bool IsDateType()
+    {
+      string dt = DataType;
+      if (dt == "date" || dt == "datetime" || dt == "time")
+      {
+        return true;
+      }
+      return false;
+    }
+
+    internal bool IsDateTimeType()
+    {
+      string dt = DataType;
+      if (dt == "datetime" || dt == "time" )
+      {
+        return true;
+      }
+      return false;
+    }
+
+    internal bool IsReadOnly()
+    {
+      string dt = DataType;
+      if (dt == "timestamp")
+      {
+        return true;
+      }
+      return false;
+    }
   }
 
   internal enum ColumnType : int

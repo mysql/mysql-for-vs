@@ -64,8 +64,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         string colName = kvp.Key;
         string idColumnCanonical = GetCanonicalIdentifier(colName);
-        Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
-          idColumnCanonical, colName, CanonicalTableName);
+        if (kvp.Value.IsDateType())
+        {
+          Writer.WriteLine("Me.{0}_dateTimePicker.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
+            idColumnCanonical, colName, CanonicalTableName);
+        }
+        else
+        {
+          Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
+            idColumnCanonical, colName, CanonicalTableName);
+        }
       }
     }
 
@@ -86,7 +94,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       foreach (KeyValuePair<string, Column> kvp in Columns)
       {
         string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-        Writer.WriteLine("Friend WithEvents {0}TextBox As System.Windows.Forms.TextBox", idColumnCanonical);
+        if (kvp.Value.IsDateType())
+        {
+          Writer.WriteLine("Friend WithEvents {0}_dateTimePicker As System.Windows.Forms.DateTimePicker", idColumnCanonical);
+        }
+        else
+        {
+          Writer.WriteLine("Friend WithEvents {0}TextBox As System.Windows.Forms.TextBox", idColumnCanonical);
+        }
         Writer.WriteLine("Friend WithEvents {0}Label As System.Windows.Forms.Label", idColumnCanonical);
       }
     }
