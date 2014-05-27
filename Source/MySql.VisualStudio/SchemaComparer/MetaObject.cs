@@ -200,10 +200,30 @@ namespace MySql.Data.VisualStudio.SchemaComparer
 
     internal bool IsDateType()
     {
-      if (DataType == "datetime" || DataType == "timestamp" || DataType == "date" || DataType == "time")
+      if (DataType == "datetime" || DataType == "date" || DataType == "time")
         return true;
       else
         return false;
+    }
+
+    internal bool IsDateTimeType()
+    {
+      string dt = DataType;
+      if (dt == "datetime" || dt == "time")
+      {
+        return true;
+      }
+      return false;
+    }
+
+    internal bool IsReadOnly()
+    {
+      string dt = DataType;
+      if (dt == "timestamp")
+      {
+        return true;
+      }
+      return false;
     }
 
     private string GetColumnDefinition()

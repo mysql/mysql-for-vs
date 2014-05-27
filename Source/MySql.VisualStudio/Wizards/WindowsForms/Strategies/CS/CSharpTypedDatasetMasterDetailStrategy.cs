@@ -77,7 +77,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
       sbSrcCols.Append("}");
       sbDstCols.Append("}");
-        
+
       Writer.WriteLine("newDataSet.Relations.Add( new DataRelation( \"{0}\", {1}, {2} ) );", 
         ConstraintName, sbSrcCols.ToString(), sbDstCols.ToString() );
 
@@ -107,7 +107,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       foreach (KeyValuePair<string, Column> kvp in Columns)
       {
         string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-        Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
+        if (kvp.Value.IsDateType())
+        {
+          Writer.WriteLine("private System.Windows.Forms.DateTimePicker {0}_dateTimePicker;", idColumnCanonical);
+        }
+        else
+        {
+          Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
+        }
         Writer.WriteLine("private System.Windows.Forms.Label {0}Label;", idColumnCanonical);
       }
       Writer.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", CanonicalDetailTableName);

@@ -64,8 +64,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         string colName = kvp.Key;
         string idColumnCanonical = GetCanonicalIdentifier(colName);
-        Writer.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
-          idColumnCanonical, colName, CanonicalTableName);
+        if (kvp.Value.IsDateType())
+        {
+          Writer.WriteLine("this.{0}_dateTimePicker.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
+              idColumnCanonical, colName, CanonicalTableName);
+        }
+        else
+        {
+          Writer.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
+            idColumnCanonical, colName, CanonicalTableName);
+        }
       }
 
       Writer.WriteLine("{0}BindingSource.DataSource = {1}BindingSource;", CanonicalDetailTableName, CanonicalTableName);
@@ -91,7 +99,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       foreach (KeyValuePair<string, Column> kvp in Columns)
       {
         string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-        Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
+        if (kvp.Value.IsDateType())
+        {
+          Writer.WriteLine("private System.Windows.Forms.DateTimePicker {0}_dateTimePicker;", idColumnCanonical);
+        }
+        else
+        {
+          Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
+        }
         Writer.WriteLine("private System.Windows.Forms.Label {0}Label;", idColumnCanonical);
       }
       Writer.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", CanonicalDetailTableName);

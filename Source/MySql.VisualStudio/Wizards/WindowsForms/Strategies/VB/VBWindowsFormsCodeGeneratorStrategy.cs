@@ -158,28 +158,63 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("Me.{0}Label.Text = \"{1}\"", idColumnCanonical, colName);
         Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}Label )", idColumnCanonical);
 
-        Writer.WriteLine("'");
-        Writer.WriteLine("' {0}TextBox", idColumnCanonical);
-        Writer.WriteLine("'");
-        Writer.WriteLine("Me.{0}TextBox = New System.Windows.Forms.TextBox()", idColumnCanonical);
 
-        if (addBindings)
+        if (kvp.Value.IsDateType())
         {
-          Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", true ))",
-            idColumnCanonical, colName, CanonicalTableName);
+          Writer.WriteLine("'");
+          Writer.WriteLine("'{0}_dateTimePicker", idColumnCanonical);
+          Writer.WriteLine("'");
+          Writer.WriteLine("Me.{0}_dateTimePicker = New System.Windows.Forms.DateTimePicker()", idColumnCanonical);
+          if (kvp.Value.IsDateTimeType())
+          {
+            Writer.WriteLine("Me.{0}_dateTimePicker.CustomFormat = \"dd/MM/yyyy, hh:mm\" ", idColumnCanonical);
+          }
+          else
+          {
+            Writer.WriteLine("Me.{0}_dateTimePicker.CustomFormat = \"dd/MM/yyyy\" ", idColumnCanonical);
+          }
+          Writer.WriteLine("Me.{0}_dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_dateTimePicker.Location = New System.Drawing.Point({1}, {2})", idColumnCanonical, xy.X, xy.Y);
+          Writer.WriteLine("Me.{0}_dateTimePicker.Name = \"{0}_dateTimePicker\"", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_dateTimePicker.Size = New System.Drawing.Size(200, 20)", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_dateTimePicker.TabIndex = {1}", idColumnCanonical, tabIdx++);
+          Writer.WriteLine("Me.{0}_dateTimePicker.Value = New System.DateTime(2014, 5, 26, 17, 35, 11, 0)", idColumnCanonical);
+          if (addBindings)
+          {
+            Writer.WriteLine("Me.{0}_dateTimePicker.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
+              idColumnCanonical, colName, CanonicalTableName);
+          }
+          Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}_dateTimePicker )", idColumnCanonical);
         }
-
-        Writer.WriteLine("Me.{0}TextBox.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical, xy.X, xy.Y);
-        Writer.WriteLine("Me.{0}TextBox.Name = \"{0}TextBox\"", idColumnCanonical );
-        Writer.WriteLine("Me.{0}TextBox.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical, 100, 20);
-        Writer.WriteLine("Me.{0}TextBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
-
-        if (validationsEnabled)
+        else
         {
-          Writer.WriteLine("AddHandler Me.{0}TextBox.Validating, AddressOf Me.{0}TextBox_Validating",
-            idColumnCanonical);
+          Writer.WriteLine("'");
+          Writer.WriteLine("' {0}TextBox", idColumnCanonical);
+          Writer.WriteLine("'");
+          Writer.WriteLine("Me.{0}TextBox = New System.Windows.Forms.TextBox()", idColumnCanonical);
+
+          if (addBindings)
+          {
+            Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", true ))",
+              idColumnCanonical, colName, CanonicalTableName);
+          }
+
+          Writer.WriteLine("Me.{0}TextBox.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical, xy.X, xy.Y);
+          Writer.WriteLine("Me.{0}TextBox.Name = \"{0}TextBox\"", idColumnCanonical);
+          Writer.WriteLine("Me.{0}TextBox.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical, 100, 20);
+          Writer.WriteLine("Me.{0}TextBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
+
+          if (kvp.Value.IsReadOnly())
+          {
+            Writer.WriteLine("Me.{0}TextBox.Enabled = False", idColumnCanonical);
+          }
+          else if (validationsEnabled)
+          {
+            Writer.WriteLine("AddHandler Me.{0}TextBox.Validating, AddressOf Me.{0}TextBox_Validating",
+              idColumnCanonical);
+          }
+          Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}TextBox)", idColumnCanonical);
         }
-        Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}TextBox)", idColumnCanonical);
         xy.Y += szText.Height * 2;
       }
     }
@@ -203,6 +238,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
+          if (cv.IsDateType() || cv.IsReadOnly()) continue;
+
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
           Writer.WriteLine("Private Sub {0}TextBox_Validating(sender As Object, e As CancelEventArgs)", idColumnCanonical);
           Writer.WriteLine("");

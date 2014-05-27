@@ -65,15 +65,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteSaveEventCode()
     {
-      foreach (KeyValuePair<string, Column> kvp in Columns)
-      {
-        if (kvp.Value.IsDateType())
-        {
-          string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-          Writer.WriteLine("((DataRowView){2}BindingSource.Current)[\"{0}\"] = {1}TextBox.Text;",
-            kvp.Value.ColumnName, idColumnCanonical, CanonicalTableName);
-        }
-      }
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName);
       Writer.WriteLine("ad.Update(this.newDataSet.{0});", CanonicalTableName);
     }
@@ -85,7 +76,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       foreach (KeyValuePair<string, Column> kvp in Columns)
       {
         string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-        Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
+        if (kvp.Value.IsDateType())
+        {
+          Writer.WriteLine("private System.Windows.Forms.DateTimePicker {0}_dateTimePicker;", idColumnCanonical);
+        }
+        else
+        {
+          Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);
+        }
         Writer.WriteLine("private System.Windows.Forms.Label {0}Label;", idColumnCanonical);
       }
     }
