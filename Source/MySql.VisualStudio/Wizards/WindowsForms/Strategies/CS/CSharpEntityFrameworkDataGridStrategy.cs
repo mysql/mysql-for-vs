@@ -70,6 +70,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("bindingNavigatorMoveLastItem.Enabled = false;");
       Writer.WriteLine("toolStripButton1.Enabled = true;");
 
+      WriteDataGridColumnInitialization();
       Writer.WriteLine("dataGridView1.DataSource = _entities;");
     }
 

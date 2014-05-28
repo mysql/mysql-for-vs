@@ -26,6 +26,8 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Data.Common;
+using MySql.Data.MySqlClient;
+using System.Reflection;
 
 
 namespace MySql.Data.VisualStudio.SchemaComparer
@@ -35,6 +37,7 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     internal MetaObject() { }
 
     internal abstract void Initialize(DbDataReader r);
+    internal MySqlConnection Connection { get; set; }
     internal abstract string ParentName { get; }
     internal abstract string FullName { get; }
     internal virtual string Name { get { return ""; } }
@@ -82,6 +85,8 @@ namespace MySql.Data.VisualStudio.SchemaComparer
 
   internal class Column : MetaObject
   {
+    private bool _treatAsBoolean;
+
     internal override string FullName { get { return string.Format("{0}.{1}", TableName, ColumnName); } }
     internal string TableName { get; set; }
     internal string ColumnName { get; set; }
@@ -128,10 +133,19 @@ namespace MySql.Data.VisualStudio.SchemaComparer
       {
           NumericScale = r.IsDBNull(8) ? null : (int?)result;
       }
-      
+      string columnType = r.GetString(9);
       //TODO add validation when using 5.6 since datetimeprecision is no used by 5.5
       //DatetimePrecision = r.IsDBNull(9) ? null : (int?)Convert.ToInt32(r.GetString(9));
       DatetimePrecision = null;
+      ConfigureBooleanType(columnType);
+    }
+
+    private void ConfigureBooleanType(string columnType)
+    {
+      Type t = typeof(MySqlConnection);
+      PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
+      MySqlConnectionStringBuilder msb = ( MySqlConnectionStringBuilder )p.GetValue(Connection, null);
+      _treatAsBoolean = msb.TreatTinyAsBoolean && (columnType == "tinyint(1)");
     }
 
     internal override string ParentName { get { return TableName; } }
@@ -220,6 +234,16 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     {
       string dt = DataType;
       if (dt == "timestamp")
+      {
+        return true;
+      }
+      return false;
+    }
+
+    internal bool IsBooleanType()
+    {
+      string dt = DataType;
+      if (_treatAsBoolean || dt == "bit" || dt == "bool" || dt == "boolean")
       {
         return true;
       }

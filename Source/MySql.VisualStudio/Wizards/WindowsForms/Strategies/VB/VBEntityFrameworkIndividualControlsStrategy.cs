@@ -69,6 +69,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("Me.{0}_dateTimePicker.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
             idColumnCanonical, colName, CanonicalTableName);
         }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("Me.{0}CheckBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Checked\", Me.{2}BindingSource, \"{1}\", True))", idColumnCanonical, colName, CanonicalTableName);
+        }
         else
         {
           Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
@@ -97,6 +101,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if (kvp.Value.IsDateType())
         {
           Writer.WriteLine("Friend WithEvents {0}_dateTimePicker As System.Windows.Forms.DateTimePicker", idColumnCanonical);
+        }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("Friend WithEvents {0}CheckBox As System.Windows.Forms.CheckBox", idColumnCanonical);
         }
         else
         {

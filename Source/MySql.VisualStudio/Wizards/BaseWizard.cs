@@ -524,6 +524,7 @@ namespace MySql.Data.VisualStudio.Wizards
           while (r.Read())
           {
             T t = new T();
+            t.Connection = con;
             t.Initialize(r);
             dic.Add(t.Name, t);
           }
