@@ -186,6 +186,24 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           }
           Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}_dateTimePicker )", idColumnCanonical);
         }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine( "'" );
+          Writer.WriteLine( "'{0}CheckBox", idColumnCanonical );
+          Writer.WriteLine("'" );
+          Writer.WriteLine("Me.{0}CheckBox = New System.Windows.Forms.CheckBox()", idColumnCanonical);
+          Writer.WriteLine("Me.{0}CheckBox.AutoSize = True", idColumnCanonical );
+          Writer.WriteLine("Me.{0}CheckBox.Location = New System.Drawing.Point({1}, {2})", idColumnCanonical, xy.X, xy.Y + 3);
+          Writer.WriteLine("Me.{0}CheckBox.Name = \"{0}CheckBox\"", idColumnCanonical);
+          Writer.WriteLine("Me.{0}CheckBox.Size = New System.Drawing.Size(15, 14)", idColumnCanonical);
+          Writer.WriteLine("Me.{0}CheckBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
+          Writer.WriteLine("Me.{0}CheckBox.UseVisualStyleBackColor = True", idColumnCanonical);
+          Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}CheckBox )", idColumnCanonical);
+          if (addBindings)
+          {
+            Writer.WriteLine("Me.{0}CheckBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Checked\", Me.{2}BindingSource, \"{1}\", True))", idColumnCanonical, colName, CanonicalTableName);
+          }
+        }
         else
         {
           Writer.WriteLine("'");
@@ -238,7 +256,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
-          if (cv.IsDateType() || cv.IsReadOnly()) continue;
+          if (cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
 
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
           Writer.WriteLine("Private Sub {0}TextBox_Validating(sender As Object, e As CancelEventArgs)", idColumnCanonical);
@@ -315,6 +333,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       for (int i = 0; i < validationColumns.Count; i++)
       {
         ColumnValidation cv = validationColumns[i];
+        if (cv.IsBooleanType()) continue;
         string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
 
         Writer.WriteLine("  If e.ColumnIndex = {0} Then", i);
@@ -377,6 +396,33 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("  End If");
       }
       Writer.WriteLine("End Sub");
+    }
+
+    protected override void WriteDataGridColumnInitialization()
+    {
+      List<ColumnValidation> validationColumns = GetValidationColumns();
+      Writer.WriteLine("dataGridView1.AutoGenerateColumns = False");
+      for (int i = 0; i < validationColumns.Count; i++)
+      {
+        ColumnValidation cv = validationColumns[i];
+        string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+        if (cv.IsBooleanType())
+        {
+          Writer.WriteLine("Dim col{0} As System.Windows.Forms.DataGridViewCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()", idColumnCanonical);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\"", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.HeaderText = \"{1}\"", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.Name = \"col{0}\"", idColumnCanonical);
+          Writer.WriteLine("dataGridView1.Columns.Add(col{0})", idColumnCanonical);
+        }
+        else
+        {
+          Writer.WriteLine("Dim col{0} As System.Windows.Forms.DataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()", idColumnCanonical);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\"", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.HeaderText = \"{1}\"", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.Name = \"col{0}\"", idColumnCanonical);
+          Writer.WriteLine("dataGridView1.Columns.Add(col{0})", idColumnCanonical);
+        }
+      }
     }
   }
 }

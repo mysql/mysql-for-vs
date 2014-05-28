@@ -80,6 +80,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           Writer.WriteLine("private System.Windows.Forms.DateTimePicker {0}_dateTimePicker;", idColumnCanonical);
         }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("private System.Windows.Forms.CheckBox {0}CheckBox;", idColumnCanonical);
+        }
         else
         {
           Writer.WriteLine("private System.Windows.Forms.TextBox {0}TextBox;", idColumnCanonical);

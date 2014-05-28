@@ -104,6 +104,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;");
       Writer.WriteLine("this.dataGridView1.Location = new System.Drawing.Point(9, 37);");
       Writer.WriteLine("this.dataGridView1.Name = \"dataGridView1\"; ");
+      WriteDataGridColumnInitialization();
       Writer.WriteLine("this.dataGridView1.DataSource = this.{0}BindingSource;", CanonicalTableName);
       Writer.WriteLine("this.dataGridView1.Size = new System.Drawing.Size(339, 261);");
       Writer.WriteLine("this.dataGridView1.TabIndex = 0;");

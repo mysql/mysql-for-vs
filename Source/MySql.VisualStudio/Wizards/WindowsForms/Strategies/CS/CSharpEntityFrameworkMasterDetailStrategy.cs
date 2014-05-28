@@ -69,6 +69,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("this.{0}_dateTimePicker.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
               idColumnCanonical, colName, CanonicalTableName);
         }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("this.{0}CheckBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Checked\", this.{2}BindingSource, \"{1}\", true));", idColumnCanonical, colName, CanonicalTableName);
+        }
         else
         {
           Writer.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
@@ -78,6 +82,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
       Writer.WriteLine("{0}BindingSource.DataSource = {1}BindingSource;", CanonicalDetailTableName, CanonicalTableName);
       Writer.WriteLine("{0}BindingSource.DataMember = \"{0}\";", CanonicalDetailTableName );
+      WriteDataGridColumnInitialization();
       Writer.WriteLine("dataGridView1.DataSource = {0}BindingSource;", CanonicalDetailTableName);
     }
 
@@ -102,6 +107,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if (kvp.Value.IsDateType())
         {
           Writer.WriteLine("private System.Windows.Forms.DateTimePicker {0}_dateTimePicker;", idColumnCanonical);
+        }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("private System.Windows.Forms.CheckBox {0}CheckBox;", idColumnCanonical);
         }
         else
         {
