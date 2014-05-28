@@ -82,32 +82,22 @@ namespace MySql.Data.VisualStudio.Wizards
 
     internal bool IsDateType()
     {
-      string dt = DataType;
-      if (dt == "date" || dt == "datetime" || dt == "time")
-      {
-        return true;
-      }
-      return false;
+      return Column.IsDateType();
     }
 
     internal bool IsDateTimeType()
     {
-      string dt = DataType;
-      if (dt == "datetime" || dt == "time" )
-      {
-        return true;
-      }
-      return false;
+      return Column.IsDateTimeType();
     }
 
     internal bool IsReadOnly()
     {
-      string dt = DataType;
-      if (dt == "timestamp")
-      {
-        return true;
-      }
-      return false;
+      return Column.IsReadOnly();
+    }
+
+    internal bool IsBooleanType()
+    {
+      return Column.IsBooleanType();
     }
   }
 
@@ -216,7 +206,7 @@ namespace MySql.Data.VisualStudio.Wizards
       grid.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;  //DataGridViewAutoSizeColumnMode.DisplayedCells;
       grid.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
       grid.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      grid.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;      
+      grid.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
       grid.Refresh();
     }

@@ -185,6 +185,24 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           }
           Writer.WriteLine("this.Panel1.Controls.Add( this.{0}_dateTimePicker );", idColumnCanonical);
         }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("//");
+          Writer.WriteLine("//{0}CheckBox", idColumnCanonical);
+          Writer.WriteLine("//");
+          Writer.WriteLine("this.{0}CheckBox = new System.Windows.Forms.CheckBox();", idColumnCanonical);
+          Writer.WriteLine("this.{0}CheckBox.AutoSize = true;", idColumnCanonical);
+          Writer.WriteLine("this.{0}CheckBox.Location = new System.Drawing.Point({1}, {2});", idColumnCanonical, xy.X, xy.Y + 3);
+          Writer.WriteLine("this.{0}CheckBox.Name = \"{0}CheckBox\";", idColumnCanonical);
+          Writer.WriteLine("this.{0}CheckBox.Size = new System.Drawing.Size(15, 14);", idColumnCanonical);
+          Writer.WriteLine("this.{0}CheckBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
+          Writer.WriteLine("this.{0}CheckBox.UseVisualStyleBackColor = true;", idColumnCanonical);
+          Writer.WriteLine("this.Panel1.Controls.Add( this.{0}CheckBox );", idColumnCanonical);
+          if (addBindings)
+          {
+            Writer.WriteLine("this.{0}CheckBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Checked\", this.{2}BindingSource, \"{1}\", true));", idColumnCanonical, colName, CanonicalTableName);
+          }
+        }
         else
         {
           Writer.WriteLine("//");
@@ -205,9 +223,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
           if (kvp.Value.IsReadOnly())
           {
-            Writer.WriteLine("this.{0}TextBox.Enabled = false;", idColumnCanonical );
-          } 
-          else if(validationsEnabled)
+            Writer.WriteLine("this.{0}TextBox.Enabled = false;", idColumnCanonical);
+          }
+          else if (validationsEnabled)
           {
             Writer.WriteLine("this.{0}TextBox.Validating += new System.ComponentModel.CancelEventHandler( this.{0}TextBox_Validating );",
               idColumnCanonical);
@@ -237,7 +255,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
-          if (cv.IsDateType() || cv.IsReadOnly()) continue;
+          if (cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
 
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
           Writer.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);
@@ -314,6 +332,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       for (int i = 0; i < validationColumns.Count; i++)
       {
         ColumnValidation cv = validationColumns[i];
+        if (cv.IsBooleanType()) continue;
         string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
 
         Writer.WriteLine("  if (e.ColumnIndex == {0})", i);
@@ -378,6 +397,33 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("  }");
       }
       Writer.WriteLine("}");
+    }
+
+    protected override void WriteDataGridColumnInitialization()
+    {
+      List<ColumnValidation> validationColumns = GetValidationColumns();
+      Writer.WriteLine("dataGridView1.AutoGenerateColumns = false;");
+      for (int i = 0; i < validationColumns.Count; i++)
+      {
+        ColumnValidation cv = validationColumns[i];
+        string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+        if (cv.IsBooleanType())
+        {
+          Writer.WriteLine("System.Windows.Forms.DataGridViewCheckBoxColumn col{0} = new System.Windows.Forms.DataGridViewCheckBoxColumn();", idColumnCanonical);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.HeaderText = \"{1}\";", idColumnCanonical, cv.Name );
+          Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical);
+          Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
+        }
+        else
+        {
+          Writer.WriteLine("System.Windows.Forms.DataGridViewTextBoxColumn col{0} = new System.Windows.Forms.DataGridViewTextBoxColumn();", idColumnCanonical);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.HeaderText = \"{1}\";", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical);
+          Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
+        }
+      }
     }
   }
 }

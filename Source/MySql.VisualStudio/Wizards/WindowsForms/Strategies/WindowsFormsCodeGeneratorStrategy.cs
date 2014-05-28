@@ -189,6 +189,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected abstract void WriteDesignerBeforeSuspendCode();
     protected abstract void WriteDesignerAfterSuspendCode();
     protected abstract void WriteBeforeResumeSuspendCode();
+    protected abstract void WriteDataGridColumnInitialization();
 
     protected abstract void WriteControlInitialization(bool addBindings);
 

@@ -83,6 +83,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
       Writer.WriteLine("{0}BindingSource.DataSource = {1}BindingSource;", CanonicalDetailTableName, CanonicalTableName);
       Writer.WriteLine("{0}BindingSource.DataMember = \"{1}\";", CanonicalDetailTableName, ConstraintName);
+      WriteDataGridColumnInitialization();
       Writer.WriteLine("dataGridView1.DataSource = {0}BindingSource;", CanonicalDetailTableName);
     }
 
@@ -110,6 +111,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if (kvp.Value.IsDateType())
         {
           Writer.WriteLine("private System.Windows.Forms.DateTimePicker {0}_dateTimePicker;", idColumnCanonical);
+        }
+        else if (kvp.Value.IsBooleanType())
+        {
+          Writer.WriteLine("private System.Windows.Forms.CheckBox {0}CheckBox;", idColumnCanonical);
         }
         else
         {
