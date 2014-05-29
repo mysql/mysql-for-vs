@@ -120,23 +120,50 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
       Writer.WriteLine("Friend WithEvents {0}BindingSource As System.Windows.Forms.BindingSource", CanonicalDetailTableName);
       Writer.WriteLine("Friend WithEvents dataGridView1 As System.Windows.Forms.DataGridView");
+      Writer.WriteLine("Friend WithEvents panel2 As System.Windows.Forms.Panel");
+      Writer.WriteLine("Friend WithEvents lblDetails As System.Windows.Forms.Label");
     }
 
     protected override void WriteDesignerControlInitCode()
     {
       Writer.WriteLine("Me.bindingNavigator1.BindingSource = Me.{0}BindingSource", CanonicalTableName);
       WriteControlInitialization(false);
+      // Panel2
+      Writer.WriteLine("' ");
+      Writer.WriteLine("' panel2");
+      Writer.WriteLine("' ");
+      Writer.WriteLine("Me.panel2.Controls.Add(Me.dataGridView1)");
+      Writer.WriteLine("Me.panel2.Controls.Add(Me.lblDetails)");
+      Writer.WriteLine("Me.panel2.Dock = System.Windows.Forms.DockStyle.Bottom");
+      Writer.WriteLine("Me.panel2.Location = New System.Drawing.Point(0, 283)");
+      Writer.WriteLine("Me.panel2.Name = \"panel2\"");
+      Writer.WriteLine("Me.panel2.Size = New System.Drawing.Size(666, 268)");
+      Writer.WriteLine("Me.panel2.TabIndex = 4");
+      // Label2
+      Writer.WriteLine("' ");
+      Writer.WriteLine("' lblDetails");
+      Writer.WriteLine("' ");
+      Writer.WriteLine("Me.lblDetails.AutoSize = True");
+      Writer.WriteLine("Me.lblDetails.Location = New System.Drawing.Point(9, 10)");
+      Writer.WriteLine("Me.lblDetails.Dock = System.Windows.Forms.DockStyle.Top");
+      Writer.WriteLine("Me.lblDetails.Name = \"label2\"");
+      Writer.WriteLine("Me.lblDetails.Size = New System.Drawing.Size(129, 13)");
+      Writer.WriteLine("Me.lblDetails.TabIndex = 4");
+      Writer.WriteLine("Me.lblDetails.Text = \"Details Records: {0}\"", DetailTableName);
       // DataGrid
+      Writer.WriteLine("' ");
+      Writer.WriteLine("'dataGridView1");
+      Writer.WriteLine("' ");
       Writer.WriteLine("Me.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize");
-      Writer.WriteLine("Me.dataGridView1.Location = New System.Drawing.Point(280, 95)");
+      Writer.WriteLine("Me.dataGridView1.Location = New System.Drawing.Point(0, 35)");
+      Writer.WriteLine("Me.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill");
       Writer.WriteLine("Me.dataGridView1.Name = \"dataGridView1\" ");
-      Writer.WriteLine("Me.dataGridView1.Size = New System.Drawing.Size(339, 261)");
+      Writer.WriteLine("Me.dataGridView1.Size = New System.Drawing.Size(666, 261)");
       Writer.WriteLine("Me.dataGridView1.TabIndex = 0");
       if (ValidationsEnabled)
       {
         Writer.WriteLine("AddHandler Me.dataGridView1.CellValidating, AddressOf Me.dataGridView1_CellValidating");
       }
-      Writer.WriteLine("Me.Panel1.Controls.Add(Me.dataGridView1)");
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
@@ -144,6 +171,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Me.dataGridView1 = New System.Windows.Forms.DataGridView()");
       Writer.WriteLine("Me.{0}BindingSource = New System.Windows.Forms.BindingSource(Me.components)", CanonicalTableName);
       Writer.WriteLine("Me.{0}BindingSource = New System.Windows.Forms.BindingSource(Me.components)", CanonicalDetailTableName);
+      Writer.WriteLine("Me.panel2 = New System.Windows.Forms.Panel()");
+      Writer.WriteLine("Me.lblDetails = New System.Windows.Forms.Label()");
     }
 
     protected override void WriteDesignerAfterSuspendCode()
@@ -159,6 +188,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("CType(Me.dataGridView1, System.ComponentModel.ISupportInitialize).EndInit()");
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).EndInit()", CanonicalDetailTableName);
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).EndInit()", CanonicalTableName);
+      Writer.WriteLine("Me.Controls.Add(Me.panel2)");
+      Writer.WriteLine("Me.panel2.ResumeLayout(False)");
+      Writer.WriteLine("Me.panel2.PerformLayout()");
     }
   }
 }

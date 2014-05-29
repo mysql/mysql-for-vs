@@ -135,8 +135,7 @@
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(384, 13);
       this.label3.TabIndex = 6;
-      this.label3.Text = "A Parent-child relationship form. This layout is very useful for two related tabl" +
-    "es.";
+      this.label3.Text = "A Parent-child relationship form. This layout is very useful for two related tables";    
       // 
       // label2
       // 
@@ -156,7 +155,7 @@
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(234, 13);
       this.label1.TabIndex = 4;
-      this.label1.Text = "A form based interfaz with individual text boxes.";
+      this.label1.Text = "A form based interface with individual text boxes.";
       // 
       // cmbFkConstraints
       // 
