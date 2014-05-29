@@ -41,7 +41,7 @@
       this.lblTitle.Name = "lblTitle";
       this.lblTitle.Size = new System.Drawing.Size(172, 13);
       this.lblTitle.TabIndex = 58;
-      this.lblTitle.Text = "Columns to Validate in Table {0}:";
+      this.lblTitle.Text = "";
       // 
       // grdColumns
       // 

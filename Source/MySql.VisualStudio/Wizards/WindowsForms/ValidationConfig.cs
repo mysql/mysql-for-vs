@@ -80,8 +80,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
 
-      lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
-
       // Populate grid
       if ( ( _table != wiz.TableName ) || ( _connectionString != wiz.Connection.ConnectionString ) )
       {
@@ -90,6 +88,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
         _colValidations.Clear();
         ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns);
+        lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
       }     
     }
 
