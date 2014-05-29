@@ -173,7 +173,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;    
+      WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
 
       // Populate grid
       if (( _detailTable != wiz.TableName) || (_connectionString != wiz.Connection.ConnectionString))

@@ -135,13 +135,24 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Size szText = TextRenderer.MeasureText(GetMaxWidthString(Columns), l.Font);
       Point initLoc = new Point(szText.Width + 10, 50);
       Point xy = new Point(initLoc.X, initLoc.Y);
+      bool passedHalve = false;
       int tabIdx = 1;
       bool validationsEnabled = ValidationsEnabled;
-
+      int i = 0;
+      
       foreach (KeyValuePair<string, Column> kvp in Columns)
       {
         string colName = kvp.Key;
         string idColumnCanonical = GetCanonicalIdentifier(colName);
+
+        // Place half the column input in one column and the other in the second column.
+        if (!passedHalve && ++i > (Columns.Count / 2))
+        {
+          passedHalve = true;
+          xy.X += 200 + 20 + szText.Width;
+          xy.Y = initLoc.Y;
+        }
+
         Writer.WriteLine("//");
         Writer.WriteLine("// {0}Label", idColumnCanonical);
         Writer.WriteLine("//");
