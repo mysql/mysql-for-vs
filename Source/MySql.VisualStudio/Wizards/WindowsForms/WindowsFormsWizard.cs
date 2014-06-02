@@ -56,6 +56,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       : base( Language )
     {
       WizardForm = new WindowsFormsWizardForm(this);
+      projectType = ProjectWizardType.WindowsForms;
     }
 
     public override void ProjectFinishedGenerating(Project project)

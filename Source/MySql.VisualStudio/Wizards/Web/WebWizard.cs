@@ -42,6 +42,11 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio.Data.Services;
 using MySql.Data.VisualStudio.DBExport;
 using MySql.Data.VisualStudio.Properties;
+#if CLR4 || NET_40_OR_GREATER
+using Microsoft.VisualStudio.TextTemplating;
+using Microsoft.VisualStudio.TextTemplating.VSHost;
+#endif
+using Microsoft.VisualStudio.Shell;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -50,7 +55,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     public WebWizard(LanguageGenerator language): base(language)
     {
-        WizardForm = new WebWizardForm(this);
+      WizardForm = new WebWizardForm(this);
+      projectType = ProjectWizardType.AspNetMVC;
     }
 
     public override void ProjectFinishedGenerating(Project project)
@@ -105,6 +111,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           SendToGeneralOutputWindow("Generating Entity Framework model...");
           if (tables.Count > 0)
           {
+                         
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
@@ -117,6 +124,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               project.DTE.SuppressUI = true;
               project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";            
             }
+
+            GenerateMVCItems(vsProj);
           }
         }
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
@@ -231,8 +240,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       {
         // connectionstringformodel
         var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);        
-        csb.Password = null;
-        connectionstringForModel = string.Format(@"<add name=""{0}"" connectionString=""{1}"" providerName=""MySql.Data.MySqlClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);        
+        csb.Password = null;        
+        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);        
         // connectionstringforaspnet        
         csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
         csb.Password = null;
@@ -246,9 +255,24 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.dEVersion != DataEntityVersion.None ? connectionstringForModel : string.Empty);
       replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringNameForAspNetTables);
+      replacementsDictionary.Add("$EntityFrameworkReference$", WizardForm.dEVersion != DataEntityVersion.None ? @"<add assembly=""System.Data.Entity, Version=4.0.0.0, Culture=neutral,PublicKeyToken=b77a5c561934e089""/>" : string.Empty);
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
-      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");            
+      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
+
+      StringBuilder catalogs = new StringBuilder();
+
+      if (WizardForm.dEVersion != DataEntityVersion.None)
+      {
+        catalogs = new StringBuilder("<h3> Catalog list</h3>");        
+
+        foreach (var table in WizardForm.selectedTables)
+        {           
+          catalogs.AppendLine(string.Format(@"<p> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</p>", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));
+        }                
+      }
+
+      replacementsDictionary.Add("$catalogList$", catalogs.ToString());      
       ProjectPath = replacementsDictionary["$destinationdirectory$"];
       ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
@@ -263,6 +287,73 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       if (WizardForm.requireQuestionAndAnswer)
         requiredquestionandanswer = WizardForm.Wizard.Language == LanguageGenerator.CSharp ?  "[Required]" : "<Required()> _";          
       replacementsDictionary.Add("$requiredquestionandanswer$", requiredquestionandanswer);
+    }
+
+    private void GenerateMVCItems(VSProject vsProj)
+    { 
+      if (string.IsNullOrEmpty(WizardForm.connectionStringForModel))
+       return;
+
+      if (WizardForm.selectedTables == null || WizardForm.selectedTables.Count == 0)
+        return;
+
+#if CLR4 || NET_40_OR_GREATER
+      IServiceProvider serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)Dte);
+      ITextTemplating t4 = serviceProvider.GetService(typeof(STextTemplating)) as ITextTemplating;
+      ITextTemplatingSessionHost sessionHost = t4 as ITextTemplatingSessionHost;
+      
+      var controllerClassPath = string.Empty;        
+      var IndexFilePath = string.Empty;
+      var fileExtension = string.Empty;
+
+
+      if (Language == LanguageGenerator.CSharp)
+      {
+        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\T4Templates\CSharp\CSharpControllerClass.tt");
+        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\T4Templates\CSharp\CSharpIndexFile.tt");
+        fileExtension = "cs";
+      }
+      else
+      {
+        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\T4Templates\VisualBasic\VisualBasicControllerClass.tt");
+        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\T4Templates\VisualBasic\VisualBasicIndexFile.tt");
+        fileExtension = "vb";
+      }
+
+      foreach (var table in WizardForm.selectedTables)
+      {
+         // creating controller file
+          sessionHost.Session = sessionHost.CreateSession();
+          sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
+          sessionHost.Session["applicationNamespaceParameter"] = ProjectNamespace;
+          sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1));
+          sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+          sessionHost.Session["classNameParameter"] = table.Name;
+          sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);
+          sessionHost.Session["entityClassNameParameter"] = string.Format("{0}.{1}", ProjectNamespace, table.Name);
+
+          T4Callback cb = new T4Callback();          
+          string resultControllerFile = t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb);
+          string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1), fileExtension);
+          File.WriteAllText(controllerFilePath, resultControllerFile);
+          if (cb.errorMessages.Count > 0)
+          {
+            File.AppendAllLines(controllerFilePath, cb.errorMessages);
+          }
+
+          vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);         
+
+          var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));  
+          Directory.CreateDirectory(viewPath);          
+          string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
+          File.WriteAllText(string.Format(viewPath + @"\Index.{0}html",fileExtension), resultViewFile);
+          if (cb.errorMessages.Count > 0)
+          {
+            File.AppendAllLines(controllerFilePath, cb.errorMessages);
+          }
+          vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));                
+      }
+#endif
     }
   }
 
@@ -327,4 +418,22 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
   }
+
+#if CLR4 || NET_40_OR_GREATER
+  public class T4Callback : ITextTemplatingCallback
+  {
+    public List<string> errorMessages = new List<string>();
+    public string fileExtension = ".txt";
+    public Encoding outputEncoding = Encoding.UTF8;
+
+    public void ErrorCallback(bool warning, string message, int line, int column)
+    { errorMessages.Add(message); }
+
+    public void SetFileExtension(string extension)
+    { fileExtension = extension; }
+
+    public void SetOutputEncoding(Encoding encoding, bool fromOutputDirective)
+    { outputEncoding = encoding; }
+  }
+#endif
 }
