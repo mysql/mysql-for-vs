@@ -1,0 +1,13 @@
+<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@parameter type="System.String" name="entityClassNameParameter"#>
+<#@parameter type="System.String" name="entityNameParameter"#>
+
+@model IEnumerable<<#=entityClassNameParameter#>>
+@{    
+    WebGrid grid = new WebGrid(Model);
+}
+<h2><#=entityNameParameter#> List</h2>
+<div id="grid"> 
+  @grid.GetHtml()
+</div>

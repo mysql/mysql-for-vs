@@ -97,9 +97,14 @@ namespace MySql.Data.VisualStudio.Wizards
       get;
       set;
     }
-
+    
     protected IVsOutputWindowPane _generalPane;
 
+    protected ProjectWizardType projectType
+    {
+      get;
+      set;
+    }
 
     /// <summary>
     /// The column metadata.
@@ -208,7 +213,7 @@ namespace MySql.Data.VisualStudio.Wizards
         con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion, Language);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
-      SetupConfigFileEntityFramework(vsProj, con.ConnectionString);
+      SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
       AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
     }
 
@@ -219,7 +224,7 @@ namespace MySql.Data.VisualStudio.Wizards
         con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion, Language);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
-      SetupConfigFileEntityFramework(vsProj, con.ConnectionString);
+      SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
       AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
     }
 
@@ -242,29 +247,36 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       try
       {
+        string modelPath = ProjectPath;
+
+        if (projectType == ProjectWizardType.AspNetMVC)
+            modelPath = Path.Combine(ProjectPath, "Models");
+          
         // Add the Edmx artifacts to the project.
         string _modelName = string.Format("{0}.edmx", modelName );
         string artifactPath = Path.Combine(ProjectPath, _modelName);
-        string artifactPathExcluded = artifactPath + ".exclude";
+        string artifactPathExcluded = Path.Combine(modelPath, modelName) + ".exclude";
         File.Move(artifactPath, artifactPathExcluded);
         ProjectItem pi = vsProj.Project.ProjectItems.AddFromFile(artifactPathExcluded);
         //Dictionary<string, object> props = GetAllProperties(pi.Properties);
         pi.DTE.SuppressUI = true;
         pi.Name = _modelName;
         pi.Properties.Item("ItemType").Value = "EntityDeploy";
-        string dstFile = Path.Combine( ProjectPath, string.Format("{0}.Designer.{1}", modelName, 
-          CodeProvider.FileExtension) );
+
+        string dstFile = Path.Combine(modelPath, string.Format("{0}.Designer.{1}", modelName, 
+          CodeProvider.FileExtension));
+
         if (File.Exists(dstFile))
           File.Delete(dstFile);
-        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.{1}.bak", modelName, 
-          CodeProvider.FileExtension ) ), dstFile );
+        File.Move(Path.Combine(ProjectPath, string.Format("{0}.Designer.{1}.bak", modelName, 
+          CodeProvider.FileExtension)), dstFile);
         vsProj.Project.ProjectItems.AddFromFile(dstFile);
         // Adding references
         AddReferencesEntityFramework(vsProj);
       }
       catch
       {        
-        throw new WizardException("Failed operation when addin model to project");
+        throw new WizardException("Failed operation when adding model to project");
       }      
     }
 
@@ -283,9 +295,15 @@ namespace MySql.Data.VisualStudio.Wizards
       }
     }
 
-    protected void SetupConfigFileEntityFramework( VSProject vsProj, string connStr )
+    protected void SetupConfigFileEntityFramework( VSProject vsProj, string connStr, string modelName)
     {
       string contents = "";
+      
+      if (String.IsNullOrEmpty(modelName))
+      {
+        modelName = "Model1";
+      }
+
       if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5)
       {
         contents = 
@@ -299,7 +317,7 @@ namespace MySql.Data.VisualStudio.Wizards
     <supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.0"" />
   </startup>
   <connectionStrings>
-    <add name=""Model1Entities"" connectionString=""metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{0}&quot;"" providerName=""System.Data.EntityClient"" />
+    <add name=""{0}Entities"" connectionString=""metadata=res://*/{0}.csdl|res://*/{0}.ssdl|res://*/{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />
   </connectionStrings>
 </configuration>";
       }
@@ -326,11 +344,11 @@ namespace MySql.Data.VisualStudio.Wizards
     </providers>
   </entityFramework>
   <connectionStrings>
-    <add name=""Model1Entities"" connectionString=""metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{0}&quot;"" providerName=""System.Data.EntityClient"" />
+    <add name=""{0}Entities"" connectionString=""metadata=res://*/{0}.csdl|res://*/{0}.ssdl|res://*/{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />
   </connectionStrings>
 </configuration>";
       }
-      File.WriteAllText(Path.Combine(ProjectPath, "app.config"), string.Format(contents, connStr));
+      File.WriteAllText(Path.Combine(ProjectPath, "app.config"), string.Format(contents,modelName, connStr));
     }
 
     /// <summary>
@@ -547,4 +565,11 @@ namespace MySql.Data.VisualStudio.Wizards
     }
 
   }
+
+  public enum ProjectWizardType : int
+  {
+    AspNetMVC = 1,
+    WindowsForms = 2
+  };
+
 }

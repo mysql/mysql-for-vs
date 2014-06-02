@@ -1,0 +1,24 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@parameter type="System.String" name="applicationNamespaceParameter"#>
+<#@parameter type="System.String" name="controllerClassParameter"#>
+<#@parameter type="System.String" name="modelNameParameter"#>
+<#@parameter type="System.String" name="classNameParameter"#>
+
+Public Class <#=controllerClassParameter#>
+    Inherits System.Web.Mvc.Controller
+    Private db as New <#=applicationNamespaceParameter#>.<#=modelNameParameter#>()	
+	
+	 '
+     ' GET: /<#=classNameParameter#>/
+	 
+     Public Function Index() As ActionResult
+			Return View(db.<#=classNameParameter#>.ToList())
+     End Function
+    
+	Protected Overrides Sub Dispose(disposing As Boolean)
+			db.Dispose()
+			MyBase.Dispose(disposing)
+	End Sub
+	
+End Class
