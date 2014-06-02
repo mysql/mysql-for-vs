@@ -1,0 +1,33 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@parameter type="System.String" name="namespaceParameter"#>
+<#@parameter type="System.String" name="controllerClassParameter"#>
+<#@parameter type="System.String" name="modelNameParameter"#>
+<#@parameter type="System.String" name="classNameParameter"#>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+namespace <#=namespaceParameter#>
+{
+	public class <#=controllerClassParameter#>:Controller
+	{
+	   private <#=modelNameParameter#> db = new <#=modelNameParameter#>();
+	   
+	     //
+        // GET: /<#=classNameParameter#>/
+
+        public ActionResult Index()
+        {
+            return View(db.<#=classNameParameter#>.ToList());
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
+        }
+	}
+}
