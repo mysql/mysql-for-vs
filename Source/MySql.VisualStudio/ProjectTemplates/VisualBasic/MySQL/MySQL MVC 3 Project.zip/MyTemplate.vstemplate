@@ -103,7 +103,7 @@
         </Folder>
         <Folder Name="Home" TargetFolderName="Home">
           <ProjectItem ReplaceParameters="false" TargetFileName="About.vbhtml">About.vbhtml</ProjectItem>
-          <ProjectItem ReplaceParameters="false" TargetFileName="Index.vbhtml">Index.vbhtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Index.vbhtml">Index.vbhtml</ProjectItem>
         </Folder>
         <Folder Name="Shared" TargetFolderName="Shared">
           <ProjectItem ReplaceParameters="false" TargetFileName="_Layout.vbhtml">_Layout.vbhtml</ProjectItem>

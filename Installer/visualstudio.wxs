@@ -145,8 +145,26 @@
               Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL Windows Forms Project.zip' />
       </Component>
     </DirectoryRef>
-    
 
+
+    <DirectoryRef Id='VS10_T4TemplatesCSharpDir'>
+      <Component Id='VS10_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C25655250D'>
+           <File Id='VS2010_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
+               Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
+           <File Id='VS2010_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+
+    <DirectoryRef Id='VS10_T4TemplatesVBDir' >
+      <Component Id='VS10_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525DD'>
+        <File Id='VS2010_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+        <File Id='VS2010_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
     
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
@@ -212,6 +230,25 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS11_T4TemplatesCSharpDir'>
+      <Component Id='VS2012_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C2565525FF'>
+        <File Id='VS2012_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
+        <File Id='VS2012_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+
+    <DirectoryRef Id='VS11_T4TemplatesVBDir' >
+      <Component Id='VS2012_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525AA'>
+        <File Id='VS2012_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+        <File Id='VS2012_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
 
     <!-- Visual Studio 2013 -->
     <DirectoryRef Id='VS12_ExtVersionDir'>
@@ -267,7 +304,7 @@
     </DirectoryRef>
 
     <DirectoryRef Id='VS12_VisualBasicPTMySQL'>
-      <Component Id='VS2013_VSTVisualBasicDIR' Guid='BA082C85-9D64-1079-8910-C6C25655250D'>
+      <Component Id='VS2013_VSTVisualBasicDIR' Guid='BA082C85-9D64-1079-8910-C6C2565525FD'>
         <File Id='VS2013_VSPTVSDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\ProjectTemplates.vstdir' />
         <File Id='VS2013_VSVisualBasicTemplate' Name='VisualBasicMvc3.zip' DiskId='1'
@@ -276,6 +313,26 @@
               Source='..\ProjectTemplatesZipFolder\VisualBasic\MySQL Windows Forms Project.zip' />
       </Component>
     </DirectoryRef>
+
+    <DirectoryRef Id='VS12_T4TemplatesCSharpDir'>
+      <Component Id='VS2013_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C2565525CC'>
+        <File Id='VS2013_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
+        <File Id='VS2013_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+
+    <DirectoryRef Id='VS12_T4TemplatesVBDir' >
+      <Component Id='VS2013_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525BB'>
+        <File Id='VS2013_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+        <File Id='VS2013_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+    
     
     
     <!--Removing files from Private Assemblies Folders-->
@@ -352,6 +409,8 @@
       <Feature Id='VS2010_AddProjectTemplate' Title='ProjectTemplates' Level='1' AllowAdvertise='no' >
         <ComponentRef Id='VS2010_VSTDIR'/>
         <ComponentRef Id='VS2010_VSTVisualBasicDIR'/>
+        <ComponentRef Id='VS10_T4TemplatesCSharpDir' />
+        <ComponentRef Id='VS10_T4TemplatesVBDir' />
         <ComponentGroupRef Id='VS10_MvcCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS10_WindowsFormsCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS10_MvcVisualBasicTemplateDirectoryComponents'/>
@@ -371,6 +430,8 @@
       <Feature Id='VS2012_AddProjectTemplate' Title='ProjectTemplates' Level='1'>
         <ComponentRef Id='VS2012_VSTDIR'/>
         <ComponentRef Id='VS2012_VSTVisualBasicDIR'/>
+        <ComponentRef Id='VS2012_T4TemplatesCSharpDir' />
+        <ComponentRef Id='VS2012_T4TemplatesVBDir' />
         <ComponentGroupRef Id='VS11_MvcCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS11_WindowsFormsCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS11_MvcVisualBasicTemplateDirectoryComponents'/>
@@ -390,6 +451,8 @@
       <Feature Id='VS2013_AddProjectTemplate' Title='ProjectTemplates' Level='1' >
         <ComponentRef Id='VS2013_VSTDIR'/>
         <ComponentRef Id='VS2013_VSTVisualBasicDIR'/>
+        <ComponentRef Id='VS2013_T4TemplatesCSharpDir' />
+        <ComponentRef Id='VS2013_T4TemplatesVBDir' />
         <ComponentGroupRef Id='VS12_MvcCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS12_WindowsFormsCsharpTemplateDirectoryComponents'/>
         <ComponentGroupRef Id='VS12_MvcVisualBasicTemplateDirectoryComponents'/>
