@@ -109,9 +109,13 @@
             </Directory>
           </Directory>
           <Directory Id="VS10_OracleDir" Name="Oracle">
-            <Directory Id="VS10_ExtensionDir" Name="MySQL for Visual Studio ">
+            <Directory Id="VS10_ExtensionDir" Name="MySQL for Visual Studio">
               <Directory Id="VS10_ExtVersionDir" Name="$(var.Version)">
                 <Directory Id='VS10_TemplatesDir' Name='Templates'/>
+                <Directory Id='VS10_T4TemplatesDir' Name='T4Templates' >
+                  <Directory Id='VS10_T4TemplatesCSharpDir' Name='CSharp' />
+                  <Directory Id='VS10_T4TemplatesVBDir' Name='VisualBasic' />
+                </Directory>
               </Directory>
             </Directory>
           </Directory>
@@ -156,6 +160,10 @@
                 <Directory Id="VS11_ExtensionDir" Name="MySQL for Visual Studio ">
                   <Directory Id="VS11_ExtVersionDir" Name="$(var.Version)">
                     <Directory Id='VS11_TemplatesDir' Name='Templates'/>
+                    <Directory Id='VS11_T4TemplatesDir' Name='T4Templates' >
+                      <Directory Id='VS11_T4TemplatesCSharpDir' Name='CSharp' />
+                      <Directory Id='VS11_T4TemplatesVBDir' Name='VisualBasic' />
+                    </Directory>
                   </Directory>
                 </Directory>
               </Directory>
@@ -202,6 +210,10 @@
                 <Directory Id="VS12_ExtensionDir" Name="MySQL for Visual Studio ">
                   <Directory Id="VS12_ExtVersionDir" Name="$(var.Version)">
                     <Directory Id='VS12_TemplatesDir' Name='Templates'/>
+                    <Directory Id='VS12_T4TemplatesDir' Name='T4Templates' >
+                      <Directory Id='VS12_T4TemplatesCSharpDir' Name='CSharp' />
+                      <Directory Id='VS12_T4TemplatesVBDir' Name='VisualBasic' />
+                    </Directory>
                   </Directory>
                 </Directory>
               </Directory>
