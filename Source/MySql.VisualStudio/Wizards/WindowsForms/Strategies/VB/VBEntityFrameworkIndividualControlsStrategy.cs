@@ -60,16 +60,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Dim _entities As ObjectResult(Of {0}) = ctx.{0}.Execute(MergeOption.AppendOnly)", CanonicalTableName);
       Writer.WriteLine("{0}BindingSource.DataSource = _entities", CanonicalTableName);
 
-      foreach (KeyValuePair<string, Column> kvp in Columns)
+      for (int i = 0; i < ValidationColumns.Count; i++)
       {
-        string colName = kvp.Key;
+        ColumnValidation cv = ValidationColumns[i];
+        string colName = cv.Name;
         string idColumnCanonical = GetCanonicalIdentifier(colName);
-        if (kvp.Value.IsDateType())
+
+        if (cv.HasLookup)
+        {
+          string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+          Writer.WriteLine("Me.{0}_comboBox.DataSource = ctx.{1}.ToList()", idColumnCanonical, canonicalReferencedTableName);
+          Writer.WriteLine("Me.{0}_comboBox.DisplayMember = \"{1}\"", idColumnCanonical, cv.LookupColumn);
+          Writer.WriteLine("Me.{0}_comboBox.ValueMember = \"{1}\"", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
+          Writer.WriteLine("Me.{0}_comboBox.DataBindings.Add(New System.Windows.Forms.Binding(\"SelectedValue\", Me.{1}BindingSource, \"{2}\", True))",
+            idColumnCanonical, CanonicalTableName, idColumnCanonical);
+        }
+        else if (cv.IsDateType())
         {
           Writer.WriteLine("Me.{0}_dateTimePicker.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
             idColumnCanonical, colName, CanonicalTableName);
         }
-        else if (kvp.Value.IsBooleanType())
+        else if (cv.IsBooleanType())
         {
           Writer.WriteLine("Me.{0}CheckBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Checked\", Me.{2}BindingSource, \"{1}\", True))", idColumnCanonical, colName, CanonicalTableName);
         }
@@ -95,14 +106,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected override void WriteDesignerControlDeclCode()
     {
       Writer.WriteLine("Friend WithEvents {0}BindingSource As System.Windows.Forms.BindingSource", CanonicalTableName);
-      foreach (KeyValuePair<string, Column> kvp in Columns)
+      for (int i = 0; i < ValidationColumns.Count; i++)
       {
-        string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-        if (kvp.Value.IsDateType())
+        ColumnValidation cv = ValidationColumns[i];
+        string idColumnCanonical = GetCanonicalIdentifier(cv.Name);
+
+        if (cv.HasLookup)
+        {
+          Writer.WriteLine("Friend WithEvents {0}_comboBox As System.Windows.Forms.ComboBox", idColumnCanonical);
+        }
+        else if (cv.IsDateType())
         {
           Writer.WriteLine("Friend WithEvents {0}_dateTimePicker As System.Windows.Forms.DateTimePicker", idColumnCanonical);
         }
-        else if (kvp.Value.IsBooleanType())
+        else if (cv.IsBooleanType())
         {
           Writer.WriteLine("Friend WithEvents {0}CheckBox As System.Windows.Forms.CheckBox", idColumnCanonical);
         }

@@ -70,7 +70,6 @@ namespace MySql.Data.VisualStudio.Wizards
         {
           filters.Add(new EntityStoreSchemaFilterEntry(null, null, tablename, EntityStoreSchemaFilterObjectTypes.Table, EntityStoreSchemaFilterEffect.Allow));
         }
-
       }
       else {
         filters.Add(new EntityStoreSchemaFilterEntry(null, null, _table, EntityStoreSchemaFilterObjectTypes.Table, EntityStoreSchemaFilterEffect.Allow));
@@ -99,9 +98,10 @@ namespace MySql.Data.VisualStudio.Wizards
       ssdlxw.Flush();
 
       // generate the CSDL
-      string csdlNamespace = _artifactNamespace; // _modelName + "Model";
+      string csdlNamespace = _artifactNamespace;
       string csdlEntityContainerName = _modelName + "Entities";
       EntityModelSchemaGenerator emsg = new EntityModelSchemaGenerator( essg.EntityContainer, csdlNamespace, csdlEntityContainerName);
+      emsg.GenerateForeignKeyProperties = true;
 #if NET_40_OR_GREATER
       errors = emsg.GenerateMetadata(entityVersion);
 #else

@@ -86,7 +86,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     public DataAccessTechnologyConfig()
     {
       InitializeComponent();
-      cmbFkConstraints.DropDown += cmbFkConstraints_DropDown;
+      //cmbFkConstraints.DropDown += cmbFkConstraints_DropDown;
     }
 
     private void SetDefaults()
@@ -95,10 +95,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       radControls_CheckedChanged(radControls, EventArgs.Empty);
     }
 
-    void cmbFkConstraints_DropDown(object sender, EventArgs e)
-    {
-      GetForeignKeyConstraints();
-    }
+    //void cmbFkConstraints_DropDown(object sender, EventArgs e)
+    //{
+    //  GetForeignKeyConstraints();
+    //}
 
     private List<MyListItem> GetForeignKeyConstraints()
     {
