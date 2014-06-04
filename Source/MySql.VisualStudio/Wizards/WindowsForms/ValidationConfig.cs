@@ -40,7 +40,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     
     private Dictionary<string, Column> _columns;
     private List<ColumnValidation> _colValidations;
-    //private List<ColumnValidation> _colValidationsDetail;
+    private Dictionary<string, ColumnValidation> _colValsByName;
     private string _table;
     
     private string _connectionString;
@@ -87,9 +87,35 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         _connectionString = wiz.Connection.ConnectionString;
         _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
         _colValidations.Clear();
-        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns);
+        grdColumns.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(grdColumns_EditingControlShowing);
+        if (wiz.GuiType == GuiType.Grid)
+        {
+          // Lookup columns not supported for Grids in this version.
+          ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, null);
+        }
+        else
+        {
+          wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _table, out wiz.Wizard.ForeignKeys);
+          ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, wiz.Wizard.ForeignKeys);
+        }
         lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
-      }     
+
+        _colValsByName = new Dictionary<string, ColumnValidation>();
+        for (int i = 0; i < _colValidations.Count; i++)
+        {
+          _colValsByName.Add(_colValidations[i].Name, _colValidations[i]);
+        }
+      }
+    }
+
+    void grdColumns_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+    {
+      if (e.Control is DataGridViewComboBoxEditingControl)
+      {
+        DataGridViewComboBoxEditingControl cb = e.Control as DataGridViewComboBoxEditingControl;
+        ColumnValidation cv = _colValsByName[(string)grdColumns.CurrentRow.Cells[0].Value];
+        cb.DataSource = cv.ReferenceableColumns;
+      }
     }
 
     internal override bool IsValid()

@@ -55,24 +55,29 @@ namespace MySql.Data.VisualStudio.Wizards
 
     internal override string Generate()
     {
-      DataSet ds = new DataSet();
-      MySqlDataAdapter da = new MySqlDataAdapter(string.Format("select * from `{0}`", _tables[ 0 ]), _con);
-      MySqlCommandBuilder builder = new MySqlCommandBuilder(da);
-      da.FillSchema(ds, SchemaType.Source);
-      ds.Tables[0].TableName = BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(_tables[0]);
-
-      if (_tables.Count > 1)
+      DataSet dsPrev = null;
+      int i = 0;
+      do
       {
-        da = new MySqlDataAdapter(string.Format("select * from `{0}`", _tables[1]), _con);
-        DataSet ds2 = new DataSet();
-        da.FillSchema(ds2, SchemaType.Source);
-        ds2.Tables[0].TableName = BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(_tables[1]);
-        ds.Merge(ds2.Tables[0], true, MissingSchemaAction.Add);
+        // ...
+        MySqlDataAdapter da = new MySqlDataAdapter(string.Format("select * from `{0}`", _tables[i]), _con);
+        DataSet ds = new DataSet();
+        da.FillSchema(ds, SchemaType.Source);
+        ds.Tables[0].TableName = BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(_tables[i]);
+        if (dsPrev != null)
+        {
+          dsPrev.Merge(ds.Tables[0], true, MissingSchemaAction.Add);
+        } else {
+          dsPrev = ds;
+        }
+        da.Dispose();
+        ds.Dispose();
       }
+      while (++i < _tables.Count);
 
       StringBuilder sb = new StringBuilder();
       StringWriter sw = new StringWriter(sb);
-      ds.WriteXmlSchema(sw);
+      dsPrev.WriteXmlSchema(sw);
       sw.Flush();
       string xsd = sb.ToString();
       
