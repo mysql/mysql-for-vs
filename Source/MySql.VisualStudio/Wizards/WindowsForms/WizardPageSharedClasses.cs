@@ -271,7 +271,7 @@ namespace MySql.Data.VisualStudio.Wizards
           }
           else
           {
-            row.DefaultCellStyle.BackColor = Color.Yellow;
+            row.DefaultCellStyle.BackColor = Color.FromArgb(255, 197, 206, 216);
           }
         }
       }
