@@ -100,9 +100,11 @@ namespace MySql.Data.VisualStudio.Wizards
       // generate the CSDL
       string csdlNamespace = _artifactNamespace;
       string csdlEntityContainerName = _modelName + "Entities";
+
       EntityModelSchemaGenerator emsg = new EntityModelSchemaGenerator( essg.EntityContainer, csdlNamespace, csdlEntityContainerName);
-      emsg.GenerateForeignKeyProperties = true;
 #if NET_40_OR_GREATER
+      emsg.GenerateForeignKeyProperties = true;
+
       errors = emsg.GenerateMetadata(entityVersion);
 #else
       errors = emsg.GenerateMetadata();
