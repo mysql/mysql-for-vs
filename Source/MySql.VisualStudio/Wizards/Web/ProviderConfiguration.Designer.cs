@@ -103,7 +103,7 @@
       this.groupBox1.Controls.Add(this.label6);
       this.groupBox1.Controls.Add(this.chkQuestionAndAnswerRequired);
       this.groupBox1.Controls.Add(this.chkWriteExceptions);
-      this.groupBox1.Location = new System.Drawing.Point(25, 37);
+      this.groupBox1.Location = new System.Drawing.Point(25, 20);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(541, 84);
       this.groupBox1.TabIndex = 50;
@@ -135,7 +135,7 @@
       this.createAdministratorUserCheck.Size = new System.Drawing.Size(156, 17);
       this.createAdministratorUserCheck.TabIndex = 66;
       this.createAdministratorUserCheck.Text = "Create administrator user";
-      this.createAdministratorUserCheck.UseVisualStyleBackColor = false;      
+      this.createAdministratorUserCheck.UseVisualStyleBackColor = false;
       // 
       // label8
       // 

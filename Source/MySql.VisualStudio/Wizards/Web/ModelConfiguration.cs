@@ -218,9 +218,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     private void chkUseSameConnection_CheckedChanged(object sender, EventArgs e)
     {
       var control = (CheckBox)sender;
-      cmbConnections.Enabled = !control.Checked;      
-      newConnString.Enabled = !control.Checked;
-      ConnectionStringTextBox.Enabled = !control.Checked;
+      cmbConnections.Enabled = control.Checked;      
+      newConnString.Enabled = control.Checked;
+      ConnectionStringTextBox.Enabled = control.Checked;
     }     
   }
 }
