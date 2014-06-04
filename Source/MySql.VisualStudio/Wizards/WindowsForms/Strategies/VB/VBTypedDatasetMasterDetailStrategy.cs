@@ -81,6 +81,28 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("newDataSet.Relations.Add( New DataRelation( \"{0}\", {1}, {2} ) )", 
         ConstraintName, sbSrcCols.ToString(), sbDstCols.ToString() );
 
+      Writer.WriteLine("Dim ad2 As MySqlDataAdapter");
+
+      for (int i = 0; i < ValidationColumns.Count; i++)
+      {
+        ColumnValidation cv = ValidationColumns[i];
+        if (cv.HasLookup)
+        {
+          string colName = cv.Name;
+          string idColumnCanonical = GetCanonicalIdentifier(colName);
+          string canonicalReferencedTable = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+
+          Writer.WriteLine("ad2 = New MySqlDataAdapter(\"select * from `{0}`\", strConn)", cv.FkInfo.ReferencedTableName);
+          Writer.WriteLine("ad2.Fill(Me.newDataSet.{0})", canonicalReferencedTable);
+          Writer.WriteLine("Me.{0}_comboBox.DataSource = Me.newDataSet.{1}", idColumnCanonical, canonicalReferencedTable);
+          Writer.WriteLine("Me.{0}_comboBox.DisplayMember = \"{1}\"", idColumnCanonical, cv.LookupColumn);
+          Writer.WriteLine("Me.{0}_comboBox.ValueMember = \"{1}\"", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
+          Writer.WriteLine("Me.{0}_comboBox.DataBindings.Add(New System.Windows.Forms.Binding(\"SelectedValue\", Me.{1}BindingSource, \"{2}\", True))",
+            idColumnCanonical, CanonicalTableName, idColumnCanonical);
+          Writer.WriteLine("ad2.Dispose()");
+        }
+      }
+
       Writer.WriteLine("{0}BindingSource.DataSource = {1}BindingSource", CanonicalDetailTableName, CanonicalTableName);
       Writer.WriteLine("{0}BindingSource.DataMember = \"{1}\"", CanonicalDetailTableName, ConstraintName);
       WriteDataGridColumnInitialization();
@@ -105,14 +127,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       Writer.WriteLine("Friend WithEvents newDataSet As NewDataSet ");
       Writer.WriteLine("Friend WithEvents {0}BindingSource As System.Windows.Forms.BindingSource", CanonicalTableName);
-      foreach (KeyValuePair<string, Column> kvp in Columns)
+      for (int i = 0; i < ValidationColumns.Count; i++)
       {
-        string idColumnCanonical = GetCanonicalIdentifier(kvp.Key);
-        if (kvp.Value.IsDateType())
+        ColumnValidation cv = ValidationColumns[i];
+        string idColumnCanonical = GetCanonicalIdentifier(cv.Name);
+        if (cv.HasLookup)
+        {
+          Writer.WriteLine("Friend WithEvents {0}_comboBox As System.Windows.Forms.ComboBox", idColumnCanonical);
+        }
+        else if (cv.IsDateType())
         {
           Writer.WriteLine("Friend WithEvents {0}_dateTimePicker As System.Windows.Forms.DateTimePicker", idColumnCanonical);
         }
-        else if (kvp.Value.IsBooleanType())
+        else if (cv.IsBooleanType())
         {
           Writer.WriteLine("Friend WithEvents {0}CheckBox As System.Windows.Forms.CheckBox", idColumnCanonical);
         }

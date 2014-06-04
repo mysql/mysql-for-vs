@@ -140,9 +140,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       bool validationsEnabled = ValidationsEnabled;
       int i = 0;
 
-      foreach (KeyValuePair<string, Column> kvp in Columns)
+      for (int j = 0; j < ValidationColumns.Count; j++)
       {
-        string colName = kvp.Key;
+        ColumnValidation cv = ValidationColumns[j];
+        string colName = cv.Name;
         string idColumnCanonical = GetCanonicalIdentifier(colName);
 
         // Place half the column input in one column and the other in the second column.
@@ -170,13 +171,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}Label )", idColumnCanonical);
 
 
-        if (kvp.Value.IsDateType())
+        if (cv.HasLookup)
+        {
+          Writer.WriteLine("Me.{0}_comboBox = New System.Windows.Forms.ComboBox()", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical, xy.X, xy.Y);
+          //Writer.WriteLine("Me.{0}_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.FormattingEnabled = True", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.Name = \"{0}_comboBox\"", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.Size = New System.Drawing.Size(206, 21)", idColumnCanonical);
+          Writer.WriteLine("Me.{0}_comboBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
+          if (addBindings)
+          {
+            // nothing
+          }
+          Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}_comboBox )", idColumnCanonical);
+        }
+        else if (cv.IsDateType())
         {
           Writer.WriteLine("'");
           Writer.WriteLine("'{0}_dateTimePicker", idColumnCanonical);
           Writer.WriteLine("'");
           Writer.WriteLine("Me.{0}_dateTimePicker = New System.Windows.Forms.DateTimePicker()", idColumnCanonical);
-          if (kvp.Value.IsDateTimeType())
+          if (cv.IsDateTimeType())
           {
             Writer.WriteLine("Me.{0}_dateTimePicker.CustomFormat = \"dd/MM/yyyy, hh:mm\" ", idColumnCanonical);
           }
@@ -197,7 +215,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           }
           Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}_dateTimePicker )", idColumnCanonical);
         }
-        else if (kvp.Value.IsBooleanType())
+        else if (cv.IsBooleanType())
         {
           Writer.WriteLine( "'" );
           Writer.WriteLine( "'{0}CheckBox", idColumnCanonical );
@@ -233,7 +251,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("Me.{0}TextBox.Size = New System.Drawing.Size( {1}, {2} )", idColumnCanonical, 100, 20);
           Writer.WriteLine("Me.{0}TextBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
 
-          if (kvp.Value.IsReadOnly())
+          if (cv.IsReadOnly())
           {
             Writer.WriteLine("Me.{0}TextBox.Enabled = False", idColumnCanonical);
           }
@@ -267,7 +285,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
-          if (cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
+          if (cv.HasLookup || cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
 
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
           Writer.WriteLine("Private Sub {0}TextBox_Validating(sender As Object, e As CancelEventArgs)", idColumnCanonical);

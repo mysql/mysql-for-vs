@@ -62,7 +62,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// <returns></returns>
     internal protected override string GetCanonicalIdentifier(string Identifier)
     {
-      return BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(Identifier);    }
+      return BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.GetCanonicalIdentifier(Identifier);    
+    }
 
     internal protected override string GetEdmDesignerFileName()
     {
@@ -140,9 +141,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       bool validationsEnabled = ValidationsEnabled;
       int i = 0;
       
-      foreach (KeyValuePair<string, Column> kvp in Columns)
+      for( int j = 0; j < ValidationColumns.Count; j++ )
       {
-        string colName = kvp.Key;
+        ColumnValidation cv = ValidationColumns[j];
+        string colName = cv.Name;
         string idColumnCanonical = GetCanonicalIdentifier(colName);
 
         // Place half the column input in one column and the other in the second column.
@@ -169,13 +171,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("this.{0}Label.Text = \"{1}\";", idColumnCanonical, colName);
         Writer.WriteLine("this.Panel1.Controls.Add( this.{0}Label );", idColumnCanonical);
 
-        if (kvp.Value.IsDateType())
+        if (cv.HasLookup)
+        {
+          Writer.WriteLine("this.{0}_comboBox = new System.Windows.Forms.ComboBox();", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.Location = new System.Drawing.Point( {1}, {2} );", idColumnCanonical, xy.X, xy.Y);
+          //Writer.WriteLine("this.{0}_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.FormattingEnabled = true;", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.Name = \"{0}_comboBox\";", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.Size = new System.Drawing.Size(206, 21);", idColumnCanonical);
+          Writer.WriteLine("this.{0}_comboBox.TabIndex = {1};", idColumnCanonical, tabIdx++ );
+          if (addBindings)
+          {
+            // nothing
+          }
+          Writer.WriteLine("this.Panel1.Controls.Add( this.{0}_comboBox );", idColumnCanonical);
+        }
+        else if (cv.IsDateType())
         {
           Writer.WriteLine("//");
           Writer.WriteLine("// {0}_dateTimePicker", idColumnCanonical);
           Writer.WriteLine("//");
           Writer.WriteLine("this.{0}_dateTimePicker = new System.Windows.Forms.DateTimePicker();", idColumnCanonical);
-          if (kvp.Value.IsDateTimeType())
+          if (cv.IsDateTimeType())
           {
             Writer.WriteLine("this.{0}_dateTimePicker.CustomFormat = \"dd/MM/yyyy, hh:mm\"; ", idColumnCanonical);
           }
@@ -196,7 +215,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           }
           Writer.WriteLine("this.Panel1.Controls.Add( this.{0}_dateTimePicker );", idColumnCanonical);
         }
-        else if (kvp.Value.IsBooleanType())
+        else if (cv.IsBooleanType())
         {
           Writer.WriteLine("//");
           Writer.WriteLine("//{0}CheckBox", idColumnCanonical);
@@ -232,7 +251,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20);
           Writer.WriteLine("this.{0}TextBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
 
-          if (kvp.Value.IsReadOnly())
+          if (cv.IsReadOnly())
           {
             Writer.WriteLine("this.{0}TextBox.Enabled = false;", idColumnCanonical);
           }
@@ -266,7 +285,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
-          if (cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
+          if ( cv.HasLookup || cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
 
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
           Writer.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);

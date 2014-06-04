@@ -97,14 +97,25 @@ namespace MySql.Data.VisualStudio.Wizards
       get;
       set;
     }
-    
+
     protected IVsOutputWindowPane _generalPane;
+
+    internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
+
+    public enum ProjectWizardType : int
+    {
+      AspNetMVC = 1,
+      WindowsForms = 2
+    };
 
     protected ProjectWizardType projectType
     {
       get;
       set;
     }
+
+    //internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys;
+
 
     /// <summary>
     /// The column metadata.
@@ -264,12 +275,12 @@ namespace MySql.Data.VisualStudio.Wizards
         pi.Properties.Item("ItemType").Value = "EntityDeploy";
 
         string dstFile = Path.Combine(modelPath, string.Format("{0}.Designer.{1}", modelName, 
-          CodeProvider.FileExtension));
+          CodeProvider.FileExtension) );
 
         if (File.Exists(dstFile))
           File.Delete(dstFile);
-        File.Move(Path.Combine(ProjectPath, string.Format("{0}.Designer.{1}.bak", modelName, 
-          CodeProvider.FileExtension)), dstFile);
+        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.{1}.bak", modelName, 
+          CodeProvider.FileExtension ) ), dstFile );
         vsProj.Project.ProjectItems.AddFromFile(dstFile);
         // Adding references
         AddReferencesEntityFramework(vsProj);
@@ -465,10 +476,15 @@ namespace MySql.Data.VisualStudio.Wizards
 
     protected string GetConnectionStringWithPassword(MySqlConnection con)
     {
+      MySqlConnectionStringBuilder msb = GetConnectionSettings(con);
+      return msb.ToString();
+    }
+
+    protected MySqlConnectionStringBuilder GetConnectionSettings(MySqlConnection con)
+    {
       Type t = typeof(MySqlConnection);
       PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
-      object v = p.GetValue(con, null);
-      return v.ToString();
+      return ( MySqlConnectionStringBuilder )p.GetValue(con, null);
     }
 
     protected Dictionary<string, object> GetAllProperties(EnvDTE.Properties props)
@@ -486,13 +502,28 @@ namespace MySql.Data.VisualStudio.Wizards
       return dic;
     }
 
+    protected List<string> GetColumnsFromTableVanilla(string TableName, MySqlConnection con)
+    {
+      string sql = string.Format(@"select c.column_name from information_schema.columns c 
+where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, TableName );
+      List<string> columns = new List<string>();
+      MySqlCommand cmd = new MySqlCommand(sql, con);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          columns.Add(r.GetString(0));
+        }
+      }
+      return columns;
+    }
+
     internal static Dictionary<string, Column> GetColumnsFromTable(string TableName, MySqlConnection con)
     {
       string sqlFilter = string.Format(
         @"select t.table_name from information_schema.tables t 
           where ( t.table_schema = '{0}' ) and ( t.table_name = '{1}' )",
         con.Database, TableName );
-      // TODO: add validation to include datetime_precision when using 5.6
       string sqlData = string.Format(
         @"select c.table_schema, c.table_name, c.column_name, c.column_default, c.is_nullable, c.data_type, 
           c.character_maximum_length, c.numeric_precision, c.numeric_scale,  c.column_type 
@@ -564,12 +595,56 @@ namespace MySql.Data.VisualStudio.Wizards
 #endif
     }
 
+    internal void RetrieveAllFkInfo(MySqlConnection con, string tableName, out Dictionary<string,ForeignKeyColumnInfo> MyFKs)
+    {
+      /*
+       * union
+select `constraint_name`, `referenced_table_name`, `referenced_column_name`, `table_name`, `column_name`
+from information_schema.key_column_usage where `constraint_name` in ( 
+select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = 'sakila' and `referenced_table_name` = 'customer' );
+       */
+      string sql = string.Format(
+@"select `constraint_name`, `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
+from information_schema.key_column_usage where `constraint_name` in ( 
+select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = 'sakila' and `table_name` = 'customer' )
+",
+con.Database, tableName );
+      if ((con.State & ConnectionState.Open) == 0)
+        con.Open();
+      Dictionary<string,ForeignKeyColumnInfo> FKs = new Dictionary<string,ForeignKeyColumnInfo>();
+      // Gather FK info per column pair
+      MySqlCommand cmd = new MySqlCommand(sql, con);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          ForeignKeyColumnInfo fk = new ForeignKeyColumnInfo()
+          {
+            ConstraintName = r.GetString(0),
+            TableName = r.GetString(1),
+            ColumnName = r.GetString(2),
+            ReferencedTableName = r.GetString(3),
+            ReferencedColumnName = r.GetString(4)
+          };
+          FKs.Add(fk.ColumnName, fk);
+        }
+      }
+      // Gather referenceable columns
+      foreach (ForeignKeyColumnInfo fk in FKs.Values)
+      {
+        fk.ReferenceableColumns = GetColumnsFromTableVanilla(fk.ReferencedTableName, con);
+      }
+      MyFKs = FKs;
+    }
   }
 
-  public enum ProjectWizardType : int
+  internal class ForeignKeyColumnInfo
   {
-    AspNetMVC = 1,
-    WindowsForms = 2
-  };
-
+    internal string ConstraintName { get; set; }
+    internal string TableName { get; set; }
+    internal string ReferencedTableName { get; set; }
+    internal string ColumnName { get; set; }
+    internal string ReferencedColumnName { get; set; }
+    internal List<string> ReferenceableColumns { get; set; }
+  }
 }
