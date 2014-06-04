@@ -51,7 +51,7 @@
       this.groupBox1.Controls.Add(this.rdbNoModel);
       this.groupBox1.Controls.Add(this.Ef6);
       this.groupBox1.Controls.Add(this.Ef5);
-      this.groupBox1.Location = new System.Drawing.Point(25, 16);
+      this.groupBox1.Location = new System.Drawing.Point(22, 61);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(540, 51);
       this.groupBox1.TabIndex = 55;
@@ -64,10 +64,10 @@
       this.rdbNoModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.rdbNoModel.Location = new System.Drawing.Point(132, 23);
       this.rdbNoModel.Name = "rdbNoModel";
-      this.rdbNoModel.Size = new System.Drawing.Size(125, 17);
+      this.rdbNoModel.Size = new System.Drawing.Size(146, 17);
       this.rdbNoModel.TabIndex = 21;
       this.rdbNoModel.TabStop = true;
-      this.rdbNoModel.Text = "No include a model";
+      this.rdbNoModel.Text = "Do not include a model";
       this.rdbNoModel.UseVisualStyleBackColor = false;
       // 
       // Ef6
@@ -99,7 +99,7 @@
       // 
       this.label7.AutoSize = true;
       this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
-      this.label7.Location = new System.Drawing.Point(22, 239);
+      this.label7.Location = new System.Drawing.Point(22, 281);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(75, 13);
       this.label7.TabIndex = 57;
@@ -107,7 +107,7 @@
       // 
       // ModelNameTextBox
       // 
-      this.ModelNameTextBox.Location = new System.Drawing.Point(22, 260);
+      this.ModelNameTextBox.Location = new System.Drawing.Point(22, 302);
       this.ModelNameTextBox.Name = "ModelNameTextBox";
       this.ModelNameTextBox.Size = new System.Drawing.Size(540, 22);
       this.ModelNameTextBox.TabIndex = 56;
@@ -120,14 +120,14 @@
       // 
       this.cmbConnections.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cmbConnections.FormattingEnabled = true;
-      this.cmbConnections.Location = new System.Drawing.Point(25, 103);
+      this.cmbConnections.Location = new System.Drawing.Point(22, 150);
       this.cmbConnections.Name = "cmbConnections";
       this.cmbConnections.Size = new System.Drawing.Size(414, 21);
       this.cmbConnections.TabIndex = 59;
       // 
       // newConnString
       // 
-      this.newConnString.Location = new System.Drawing.Point(445, 101);
+      this.newConnString.Location = new System.Drawing.Point(443, 149);
       this.newConnString.Name = "newConnString";
       this.newConnString.Size = new System.Drawing.Size(120, 25);
       this.newConnString.TabIndex = 58;
@@ -139,7 +139,7 @@
       // 
       this.label1.AutoSize = true;
       this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
-      this.label1.Location = new System.Drawing.Point(25, 82);
+      this.label1.Location = new System.Drawing.Point(22, 128);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(340, 13);
       this.label1.TabIndex = 60;
@@ -147,7 +147,7 @@
       // 
       // ConnectionStringTextBox
       // 
-      this.ConnectionStringTextBox.Location = new System.Drawing.Point(25, 139);
+      this.ConnectionStringTextBox.Location = new System.Drawing.Point(22, 201);
       this.ConnectionStringTextBox.Multiline = true;
       this.ConnectionStringTextBox.Name = "ConnectionStringTextBox";
       this.ConnectionStringTextBox.ReadOnly = true;
@@ -157,11 +157,12 @@
       // chkUseSameConnection
       // 
       this.chkUseSameConnection.AutoSize = true;
-      this.chkUseSameConnection.Location = new System.Drawing.Point(270, 213);
+      this.chkUseSameConnection.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.chkUseSameConnection.Location = new System.Drawing.Point(25, 26);
       this.chkUseSameConnection.Name = "chkUseSameConnection";
-      this.chkUseSameConnection.Size = new System.Drawing.Size(296, 17);
+      this.chkUseSameConnection.Size = new System.Drawing.Size(284, 17);
       this.chkUseSameConnection.TabIndex = 64;
-      this.chkUseSameConnection.Text = "Use same connection as MySQLMembership provider";
+      this.chkUseSameConnection.Text = "Use a different connection for the Data Entity Model";
       this.chkUseSameConnection.UseVisualStyleBackColor = true;
       this.chkUseSameConnection.CheckedChanged += new System.EventHandler(this.chkUseSameConnection_CheckedChanged);
       // 

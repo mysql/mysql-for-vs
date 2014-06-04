@@ -46,7 +46,7 @@
       // 
       // btnFinish
       // 
-      this.btnFinish.Location = new System.Drawing.Point(783, 468);
+      this.btnFinish.Location = new System.Drawing.Point(757, 466);
       this.btnFinish.Name = "btnFinish";
       this.btnFinish.Size = new System.Drawing.Size(75, 23);
       this.btnFinish.TabIndex = 11;
@@ -58,7 +58,7 @@
       // 
       this.btnCancel.CausesValidation = false;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(541, 468);
+      this.btnCancel.Location = new System.Drawing.Point(515, 466);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 10;
@@ -68,7 +68,7 @@
       // 
       // btnBack
       // 
-      this.btnBack.Location = new System.Drawing.Point(622, 468);
+      this.btnBack.Location = new System.Drawing.Point(596, 466);
       this.btnBack.Name = "btnBack";
       this.btnBack.Size = new System.Drawing.Size(75, 23);
       this.btnBack.TabIndex = 9;
@@ -78,7 +78,7 @@
       // 
       // btnNext
       // 
-      this.btnNext.Location = new System.Drawing.Point(703, 468);
+      this.btnNext.Location = new System.Drawing.Point(677, 466);
       this.btnNext.Name = "btnNext";
       this.btnNext.Size = new System.Drawing.Size(75, 23);
       this.btnNext.TabIndex = 8;
@@ -185,7 +185,6 @@
 
     #endregion
 
-    internal System.Windows.Forms.Button btnFinish;
     protected System.Windows.Forms.Button btnNext;
     protected System.Windows.Forms.Button btnCancel;
     protected System.Windows.Forms.Button btnBack;
@@ -196,5 +195,6 @@
     internal System.Windows.Forms.Label lblStepTitle;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Panel panel1;
+    public System.Windows.Forms.Button btnFinish;
   }
 }

@@ -146,7 +146,10 @@ namespace MySql.Data.VisualStudio
         DialogResult res = dlg.ShowDialog();
         if (res == DialogResult.OK)
         {
-            var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
+
+          if ((MySqlConnection)dlg.Connection == null) return;
+          
+          var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
 
             //make sure we don't have already the same connection
            if (cmbConnections.FindString(csb.ConnectionString) < 0)

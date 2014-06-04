@@ -36,19 +36,15 @@
       // 
       // btnNext
       // 
-      this.btnNext.Location = new System.Drawing.Point(702, 469);
+      this.btnNext.Location = new System.Drawing.Point(676, 466);
       // 
       // btnCancel
       // 
-      this.btnCancel.Location = new System.Drawing.Point(540, 469);
+      this.btnCancel.Location = new System.Drawing.Point(514, 466);
       // 
       // btnBack
       // 
-      this.btnBack.Location = new System.Drawing.Point(621, 469);
-      //
-      // btnFinish
-      //
-      this.btnFinish.Location = new System.Drawing.Point(783, 469);
+      this.btnBack.Location = new System.Drawing.Point(595, 466);
       // 
       // dataAccessConfig1
       // 

@@ -36,15 +36,19 @@
       // 
       // btnNext
       // 
-      this.btnNext.Location = new System.Drawing.Point(702, 469);
+      this.btnNext.Location = new System.Drawing.Point(657, 466);
       // 
       // btnCancel
       // 
-      this.btnCancel.Location = new System.Drawing.Point(540, 469);
+      this.btnCancel.Location = new System.Drawing.Point(495, 466);
       // 
       // btnBack
       // 
-      this.btnBack.Location = new System.Drawing.Point(621, 469);
+      this.btnBack.Location = new System.Drawing.Point(576, 466);
+      // 
+      // btnFinish
+      // 
+      this.btnFinish.Location = new System.Drawing.Point(738, 466);
       // 
       // dataSourceConfiguration1
       // 
@@ -76,7 +80,7 @@
       // tablesSelection1
       // 
       this.tablesSelection1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-      this.tablesSelection1.Location = new System.Drawing.Point(260, 83);
+      this.tablesSelection1.Location = new System.Drawing.Point(258, 83);
       this.tablesSelection1.Name = "tablesSelection1";
       this.tablesSelection1.Size = new System.Drawing.Size(581, 357);
       this.tablesSelection1.TabIndex = 21;
@@ -93,6 +97,7 @@
       this.Name = "WebWizardForm";
       this.Text = "MySQL ASP.NET MVC 3 Project Configuration";
       this.Load += new System.EventHandler(this.WebWizardForm_Load);
+      this.Controls.SetChildIndex(this.btnFinish, 0);
       this.Controls.SetChildIndex(this.dataSourceConfiguration1, 0);
       this.Controls.SetChildIndex(this.providerConfiguration1, 0);
       this.Controls.SetChildIndex(this.modelConfiguration1, 0);

@@ -306,18 +306,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       var controllerClassPath = string.Empty;        
       var IndexFilePath = string.Empty;
       var fileExtension = string.Empty;
-      var version = Assembly.GetExecutingAssembly().GetName().Version;
+      Version productVersion = Assembly.GetExecutingAssembly().GetName().Version;
+      var version = String.Format("{0}.{1}.{2}", productVersion.Major, productVersion.Minor, productVersion.Build);
 
       if (Language == LanguageGenerator.CSharp)
       {
-        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version.ToString() + @"\T4Templates\CSharp\CSharpControllerClass.tt");
-        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version.ToString() + @"\T4Templates\CSharp\CSharpIndexFile.tt");
+        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpControllerClass.tt");
+        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpIndexFile.tt");
         fileExtension = "cs";
       }
       else
       {
-        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version.ToString() + @"\T4Templates\VisualBasic\VisualBasicControllerClass.tt");
-        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version.ToString() + @"\T4Templates\VisualBasic\VisualBasicIndexFile.tt");
+        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\VisualBasic\VisualBasicControllerClass.tt");
+        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\VisualBasic\VisualBasicIndexFile.tt");
         fileExtension = "vb";
       }
 
