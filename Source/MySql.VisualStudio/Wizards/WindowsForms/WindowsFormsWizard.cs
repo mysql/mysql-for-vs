@@ -81,6 +81,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         vsProj.References.Add("MySql.Data");
 
         // Gather all the tables
+#if NET_40_OR_GREATER
         SortedSet<string> tables = new SortedSet<string>();
         tables.Add(WizardForm.TableName);
         if (!string.IsNullOrEmpty(detailTableName))
@@ -89,6 +90,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           tables.Add(kvp.Value.ReferencedTableName);
         }
+
 
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
@@ -107,6 +109,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
         }
         AddBindings(vsProj);
+#endif
       }
       catch (WizardException e)
       {
