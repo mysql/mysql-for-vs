@@ -74,9 +74,9 @@
       // 
       // newConnString
       // 
-      this.newConnString.Location = new System.Drawing.Point(441, 39);
+      this.newConnString.Location = new System.Drawing.Point(427, 38);
       this.newConnString.Name = "newConnString";
-      this.newConnString.Size = new System.Drawing.Size(125, 25);
+      this.newConnString.Size = new System.Drawing.Size(137, 25);
       this.newConnString.TabIndex = 32;
       this.newConnString.Text = "New Connection...";
       this.newConnString.UseVisualStyleBackColor = true;

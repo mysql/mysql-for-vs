@@ -36,7 +36,7 @@ namespace MySql.Data.VisualStudio
   public partial class ConnectDialog : Form
   {
     private int bigSize = 522;
-    private int smallSize = 312;
+    private int smallSize = 340;
     private DbProviderFactory factory;
     private DbConnectionStringBuilder connectionStringBuilder;
     private bool populated = false;
@@ -49,6 +49,13 @@ namespace MySql.Data.VisualStudio
         throw new Exception("MySql Data Provider is not correctly registered");
       connectionStringBuilder = factory.CreateConnectionStringBuilder();
       connectionProperties.SelectedObject = connectionStringBuilder;
+      btnRefresh.Click += btnRefresh_Click;
+    }
+
+    void database_GotFocus(object sender, EventArgs e)
+    {
+      //if (populated && !NeedsUpdate) return;
+      //GetDatabases();
     }
 
     public ConnectDialog(MySqlConnectionStringBuilder settings)
@@ -64,43 +71,12 @@ namespace MySql.Data.VisualStudio
         connectionStringBuilder["Port"] = settings.Port;
       }    
     }
-
-
+    
     public DbConnection Connection
     {
       get
       {
-        DbConnection c = factory.CreateConnection();
-        c.ConnectionString = connectionStringBuilder.ConnectionString;
-        try
-        {
-          c.Open();
-        }
-        catch (MySqlException mysqlException)
-        {
-          if (((System.Exception)(mysqlException).InnerException) != null)
-          {
-            var messageInnerException = ((System.Exception)(mysqlException).InnerException).Message;
-            if (String.Compare(messageInnerException, String.Format("Unknown database '{0}'", database.Text), StringComparison.InvariantCultureIgnoreCase) == 0)
-            {
-              if (MessageBox.Show(String.Format("The database '{0}' doesn't exist or you don't have permission to see it." + "\n\r" + "Would you like to create it?", database.Text), "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-              {
-                try
-                {
-                  if (AttemptToCreateDatabase(c.ConnectionString))
-                    c.Open();
-                }
-                catch { throw; }
-              }
-            }
-            else { throw; }
-          }
-          else
-          {
-            throw;
-          }
-        }
-        return c;
+        return GetConnection(false);       
       }
       set
       {
@@ -144,26 +120,8 @@ namespace MySql.Data.VisualStudio
     private void database_DropDown(object sender, EventArgs e)
     {
       if (populated) return;
-      try
-      {
-        ReadFields();
-        using (DbConnection c = factory.CreateConnection())
-        {          
-          c.ConnectionString = connectionStringBuilder.ConnectionString;
-          c.Open();
-          DbCommand cmd = c.CreateCommand();
-          cmd.CommandText = "SHOW DATABASES";
-          using (DbDataReader reader = cmd.ExecuteReader())
-          {
-            while (reader.Read())
-              database.Items.Add(reader.GetString(0));
-          }
-        }
-        populated = true;
-      }
-      catch (Exception)
-      {
-      }
+      database.Items.Add("Loading databases...");
+      GetDatabases();
     }
 
     private void serverName_Leave(object sender, EventArgs e)
@@ -173,12 +131,12 @@ namespace MySql.Data.VisualStudio
 
     private void userId_Leave(object sender, EventArgs e)
     {
-      connectionStringBuilder["userid"] = userId.Text.Trim();
+      connectionStringBuilder["userid"] = userId.Text.Trim();         
     }
 
     private void password_Leave(object sender, EventArgs e)
     {
-      connectionStringBuilder["password"] = password.Text.Trim();
+      connectionStringBuilder["password"] = password.Text.Trim();      
     }
 
     private void database_Leave(object sender, EventArgs e)
@@ -186,13 +144,45 @@ namespace MySql.Data.VisualStudio
       connectionStringBuilder["database"] = database.Text.Trim();
     }
 
+    private void GetDatabases()
+    {
+      try
+      {
+        ReadFields();
+        
+        using (DbConnection c = factory.CreateConnection())
+        {
+          c.ConnectionString = connectionStringBuilder.ConnectionString;
+          c.Open();
+          DbCommand cmd = c.CreateCommand();
+          cmd.CommandText = "SHOW DATABASES";
+          database.Items.Clear();
+          using (DbDataReader reader = cmd.ExecuteReader())
+          {
+            while (reader.Read())
+            {
+              var name = reader.GetString(0);
+              if (name.IndexOf("information_schema", StringComparison.InvariantCultureIgnoreCase) != 0
+                  && name.IndexOf("performance_schema", StringComparison.InvariantCultureIgnoreCase) != 0)
+                database.Items.Add(reader.GetString(0));
+            }
+          }
+        }
+        populated = true;
+      }
+      catch (MySqlException ex)
+      {
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+      }      
+    }
+
     private void connectButton_Click(object sender, EventArgs e)
     {
       // Ensure all data is populated into the connection string builder
-      serverName_Leave(serverName, EventArgs.Empty);
-      userId_Leave(serverName, EventArgs.Empty);
-      password_Leave(serverName, EventArgs.Empty);
-      database_Leave(serverName, EventArgs.Empty);
+      connectionStringBuilder["server"] = serverName.Text.Trim() == String.Empty ? "localhost" : serverName.Text.Trim();
+      connectionStringBuilder["userid"] = userId.Text.Trim() == String.Empty ? "root" : userId.Text.Trim();
+      connectionStringBuilder["database"] = database.Text.Trim() == string.Empty ? "test" : database.Text.Trim();
+      password_Leave(serverName, EventArgs.Empty);      
     }
 
     private void ReadFields()
@@ -224,5 +214,76 @@ namespace MySql.Data.VisualStudio
         return false;
       }      
     }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+      if ((this.ActiveControl == database) && (keyData == Keys.Return))
+      {
+        connectionStringBuilder["database"] = database.Text.Trim();
+        var c = GetConnection(true);
+        if (c == null || c.State != ConnectionState.Open)
+          return false;
+      }           
+      return base.ProcessCmdKey(ref msg, keyData);
+      //    return base.ProcessCmdKey(ref msg, keyData);
+      //  else
+      //    return true;
+      //}
+      //else
+      //{
+        
+      //}
+    }
+
+     private DbConnection GetConnection(bool askToCreate)
+     {
+       DbConnection c = factory.CreateConnection();
+       c.ConnectionString = connectionStringBuilder.ConnectionString;
+       try
+        {
+           c.Open();         
+        }
+        catch (MySqlException mysqlException)
+        {
+          if (((System.Exception)(mysqlException).InnerException) != null)
+          {
+            var messageInnerException = ((System.Exception)(mysqlException).InnerException).Message;
+            if (String.Compare(messageInnerException, String.Format("Unknown database '{0}'", database.Text), StringComparison.InvariantCultureIgnoreCase) == 0)
+            {
+              if (askToCreate && MessageBox.Show(String.Format("The database '{0}' doesn't exist or you don't have permission to see it." + "\n\r" + "Would you like to create it?", database.Text), "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+              {
+                try
+                {
+                  if (AttemptToCreateDatabase(c.ConnectionString))
+                    c.Open();
+                }
+                catch
+                {
+                  throw;
+                }
+              }
+              else
+              {
+                DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                return null;
+              }
+            }
+           else
+            {
+              throw;
+            }
+          }
+          else
+          {
+            throw;
+          }
+        }
+       return c;
+     }
+
+     private void btnRefresh_Click(object sender, EventArgs e)
+     {
+       GetDatabases();
+     }    
   }
 }

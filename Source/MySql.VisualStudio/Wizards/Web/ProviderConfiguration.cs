@@ -229,6 +229,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         {
           txtQuestion.Text = string.Empty;
           txtAnswer.Text = string.Empty;
+          errorProvider1.SetError(txtAnswer, "");
+          errorProvider1.SetError(txtQuestion, "");
         }
       }
     }

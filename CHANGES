@@ -13,3 +13,4 @@
 - Added Entity Framework v5 & v6 for Windows Forms Project Wizard.
 - Added implementation of MVC pattern of selected model tables for MVC Project.
 - Added action links of generated views in home page for MVC project.
+- Fix for Connect to database dialog not updated properly.
