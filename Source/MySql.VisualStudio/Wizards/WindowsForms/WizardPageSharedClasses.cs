@@ -152,6 +152,8 @@ namespace MySql.Data.VisualStudio.Wizards
       List<ColumnValidation> colsValidation, Dictionary<string, Column> columns, 
       Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
+
+#if NET_40_OR_GREATER
       SortedSet<string> allColumns = new SortedSet<string>();
       BindingSource binding = new BindingSource();
       //reset grid
@@ -253,7 +255,7 @@ namespace MySql.Data.VisualStudio.Wizards
         grid.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         grid.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
       }
-      
+#endif      
       grid.AllowUserToAddRows = false;
       grid.Refresh();
 
