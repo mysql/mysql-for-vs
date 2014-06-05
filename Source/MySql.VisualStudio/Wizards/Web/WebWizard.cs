@@ -99,8 +99,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           
           vsProj.References.Add("System.Web.Mvc");          
           vsProj.References.Add("System.Web.Helpers");
-          vsProj.References.Add("System.Web.Razor");
-          vsProj.References.Add("System.Web.WebPages");  
+          vsProj.References.Add("System.Web.Razor");          
         }
 
 
@@ -118,14 +117,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;                        
 
             AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
-            GenerateEntityFrameworkModel(vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);
+            GenerateEntityFrameworkModel(vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);         
+            GenerateMVCItems(vsProj);
+
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
             {
               project.DTE.SuppressUI = true;
-              project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";            
+              project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
             }
 
-            GenerateMVCItems(vsProj);
           }
         }
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
@@ -258,8 +258,24 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$EntityFrameworkReference$", WizardForm.dEVersion != DataEntityVersion.None ? @"<add assembly=""System.Data.Entity, Version=4.0.0.0, Culture=neutral,PublicKeyToken=b77a5c561934e089""/>" : string.Empty);
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
-      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
+      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");      
+      replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers>" : string.Empty);
 
+      switch (WizardForm.dEVersion)
+      {
+        case DataEntityVersion.None:
+          replacementsDictionary.Add("$EntityFrameworkVersion$", string.Empty);
+          break;
+        case DataEntityVersion.EntityFramework5:
+          replacementsDictionary.Add("$EntityFrameworkVersion$", @"<section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false""/>");
+          break;
+        case DataEntityVersion.EntityFramework6:
+          replacementsDictionary.Add("$EntityFrameworkVersion$", @"<section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false""/>");
+          break;
+        default:
+          break;
+      }
+      
       StringBuilder catalogs = new StringBuilder();
 
       if (WizardForm.dEVersion != DataEntityVersion.None)
