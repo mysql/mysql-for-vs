@@ -79,26 +79,40 @@ namespace MySql.Data.VisualStudio
       {
         bool isRootItem = (invokedCommand.MatchedCommandId == 0);
         int indexForDisplay = (isRootItem ? 0 : (invokedCommand.MatchedCommandId - _baselistID));
-        if (MySqlDataProviderPackage.Instance != null && indexForDisplay < _connectionsList.Count)
+        
+        if (MySqlDataProviderPackage.Instance == null)
+          return;
+        try
         {
-          MySqlConnection connection = (MySqlConnection)_connectionsList[indexForDisplay].Connection
-                                      .GetLockedProviderObject();
-          try
+          if (indexForDisplay < _connectionsList.Count)
           {
-            if (connection != null)
+            MySqlConnection connection = (MySqlConnection)_connectionsList[indexForDisplay].Connection
+                                        .GetLockedProviderObject();
+            try
             {
-              MySqlDataProviderPackage.Instance.MysqlConnectionSelected = connection;
+              if (connection != null)
+              {
+                MySqlDataProviderPackage.Instance.MysqlConnectionSelected = connection;
+              }
+              var ItemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
+              ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
             }
-            var ItemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
-            ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
+            finally
+            {
+              _connectionsList[indexForDisplay].Connection.UnlockProviderObject();
+            }
+            return;
           }
-          finally
+          else
           {
-            _connectionsList[indexForDisplay].Connection.UnlockProviderObject();
+            var ItemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
+            ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");           
           }
         }
-        else
-          System.Windows.Forms.MessageBox.Show("An error ocurred when trying to launch a MySql Script window");
+        catch (Exception ex)
+        {
+          System.Windows.Forms.MessageBox.Show("An error ocurred when trying to launch a MySql Script window: " + ex.Message);
+        }
       }
     }
 

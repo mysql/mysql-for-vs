@@ -144,7 +144,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     private void ProviderConfiguration_Validating(object sender, CancelEventArgs e)
     {
       e.Cancel = false;
-      if (!IsConnectionValid(ConnectionStringTextBox.Tag.ToString()))
+      if (ConnectionStringTextBox.Tag == null || !IsConnectionValid(ConnectionStringTextBox.Tag.ToString()))
       {
         e.Cancel = true;
         errorProvider1.SetError(cmbConnections, "A valid connection string must be selected.");
@@ -158,6 +158,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     private bool IsConnectionValid(string connectionString)
     {
       if (String.IsNullOrEmpty(connectionString))
+        return false;
+
+      if (String.IsNullOrEmpty(cmbConnections.Text))
+        return false;
+
+      if (String.IsNullOrEmpty(ConnectionStringTextBox.Text))
         return false;
 
       var cnn = new MySqlConnection(connectionString);
