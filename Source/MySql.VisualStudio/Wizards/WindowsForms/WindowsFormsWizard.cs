@@ -122,6 +122,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
       }
 
+      FixNamespaces();
       SendToGeneralOutputWindow("Building Solution...");
       project.DTE.Solution.SolutionBuild.Build(true);
 
@@ -129,6 +130,21 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Settings.Default.Save();
 
       WizardForm.Dispose();
+    }
+
+    /// <summary>
+    /// Fixes namespaces for issue in VB.NET with some VS versions like 2013.
+    /// </summary>
+    /// <param name="outputPath"></param>
+    private void FixNamespaces()
+    {
+      if (Language != LanguageGenerator.VBNET) return;
+      string outputPath = Path.Combine(Path.Combine(ProjectPath, "My Project"), Strategy.GetApplicationFileName());
+      string contents = File.ReadAllText(outputPath);
+
+      contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.Form1", ProjectNamespace),
+          string.Format("Me.MainForm = {0}.Form1", ProjectNamespace));
+      File.WriteAllText(outputPath, contents);
     }
 
     public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, Microsoft.VisualStudio.TemplateWizard.WizardRunKind runKind, object[] customParams)

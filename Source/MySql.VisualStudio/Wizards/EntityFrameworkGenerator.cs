@@ -153,39 +153,33 @@ namespace MySql.Data.VisualStudio.Wizards
         outputPath = Path.Combine(_path, _modelName + ".Designer.vb.bak");
       }
       errors = gen.GenerateCode(file, outputPath );
-      FixUsings(outputPath);
+      FixNamespaces(outputPath);
 #endif
 
       return fi.FullName;
     }
 
     /// <summary>
-    /// Fixes several using's clauses generated wrong for EF6.
+    /// Fixes several namespaces generated wrong for EF6.
     /// </summary>
     /// <param name="outputPath"></param>
-    private void FixUsings( string outputPath )
+    private void FixNamespaces( string outputPath )
     {
       if (efVersion == BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.ENTITY_FRAMEWORK_VERSION_6)
       {
         string contents = File.ReadAllText(outputPath);
-        if (Language == LanguageGenerator.CSharp)
-        {
-          contents = contents.Replace("using System.Data.EntityClient;",
-            "using System.Data.Entity.Core.EntityClient;");
-          contents = contents.Replace("using System.Data.Objects;",
-            "using System.Data.Entity.Core.Objects;");
-          contents = contents.Replace("using System.Data.Objects.DataClasses;",
-            "using System.Data.Entity.Core.Objects.DataClasses;");
-        }
-        else if (Language == LanguageGenerator.VBNET)
-        {
-          contents = contents.Replace("Import System.Data.EntityClient",
-            "Import System.Data.Entity.Core.EntityClient");
-          contents = contents.Replace("Import System.Data.Objects",
-            "Import System.Data.Entity.Core.Objects");
-          contents = contents.Replace("Import System.Data.Objects.DataClasses",
-            "Import System.Data.Entity.Core.Objects.DataClasses");
-        }
+
+        contents = contents.Replace("System.Data.EntityClient",
+            "System.Data.Entity.Core.EntityClient");
+        contents = contents.Replace("System.Data.Objects",
+          "System.Data.Entity.Core.Objects");
+        contents = contents.Replace("System.Data.Objects.DataClasses",
+          "System.Data.Entity.Core.Objects.DataClasses");
+        contents = contents.Replace("System.Data.Metadata.Edm.RelationshipMultiplicity.One",
+          "System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity.One");
+        contents = contents.Replace("System.Data.Metadata.Edm.RelationshipMultiplicity.Many",
+          "System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity.Many");
+
         File.WriteAllText(outputPath, contents);
       }
     }
