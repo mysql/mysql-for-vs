@@ -249,7 +249,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
       else
       {
-        connectionstringForModel = string.Format(@"<add name=""{0}"" connectionString=""{1}"" providerName=""MySql.Data.MySqlClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);        
+        connectionstringForModel = string.Format((@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);        
         replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
       }
 
@@ -259,7 +259,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
       replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");      
-      replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers>" : string.Empty);
+      replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
 
       switch (WizardForm.dEVersion)
       {
@@ -270,7 +270,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           replacementsDictionary.Add("$EntityFrameworkVersion$", @"<section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false""/>");
           break;
         case DataEntityVersion.EntityFramework6:
-          replacementsDictionary.Add("$EntityFrameworkVersion$", @"<section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false""/>");
+          replacementsDictionary.Add("$EntityFrameworkVersion$", @"<section name=""entityFramework"" type=""System.Data.Entinotepadty.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false""/>");
           break;
         default:
           break;
