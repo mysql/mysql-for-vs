@@ -298,7 +298,7 @@
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
         <File Id='VS2013_VSCSharpTemplate' Name='CSharpMvc3.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
-        <File Id='VS2013_VSCSharpWinFormsTemplate' Name='CSharWinForms.zip' DiskId='1'
+        <File Id='VS2013_VSCSharpWinFormsTemplate' Name='CSharpWinForms.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip' />
       </Component>
     </DirectoryRef>
