@@ -177,6 +177,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal protected abstract string GetEdmDesignerFileName();
     internal protected abstract string GetFormDesignerFileName();
     internal protected abstract string GetFormFileName();
+    internal protected abstract string GetApplicationFileName();
 
     protected abstract void WriteUsingUserCode();
     protected abstract void WriteFormLoadCode();
