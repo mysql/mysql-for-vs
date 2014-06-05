@@ -182,7 +182,10 @@ namespace MySql.Data.VisualStudio
       connectionStringBuilder["server"] = serverName.Text.Trim() == String.Empty ? "localhost" : serverName.Text.Trim();
       connectionStringBuilder["userid"] = userId.Text.Trim() == String.Empty ? "root" : userId.Text.Trim();
       connectionStringBuilder["database"] = database.Text.Trim() == string.Empty ? "test" : database.Text.Trim();
-      password_Leave(serverName, EventArgs.Empty);      
+      password_Leave(serverName, EventArgs.Empty);
+      
+      if (!populated)
+        GetConnection(true);
     }
 
     private void ReadFields()
