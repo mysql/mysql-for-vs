@@ -67,6 +67,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _colValidations = new List<ColumnValidation>();
 
       grdColumns.CellValidating += grdColumns_CellValidating;
+      grdColumns.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(grdColumns_EditingControlShowing);
       SetDefaults();
     }
 
@@ -80,31 +81,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
 
-      // Populate grid
-      if ( ( _table != wiz.TableName ) || ( _connectionString != wiz.Connection.ConnectionString ) )
+      // Populate grid      
+      grdColumns.DataSource = null;
+      if (wiz.Wizard.ForeignKeys != null)
+        wiz.Wizard.ForeignKeys.Clear();
+      _table = wiz.TableName;
+      _connectionString = wiz.Connection.ConnectionString;
+      _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
+      _colValidations.Clear();
+      if (wiz.GuiType == GuiType.Grid)
       {
-        _table = wiz.TableName;
-        _connectionString = wiz.Connection.ConnectionString;
-        _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
-        _colValidations.Clear();
-        grdColumns.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(grdColumns_EditingControlShowing);
-        if (wiz.GuiType == GuiType.Grid)
-        {
-          // Lookup columns not supported for Grids in this version.
-          ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, null);
-        }
-        else
-        {
-          wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _table, out wiz.Wizard.ForeignKeys);
-          ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, wiz.Wizard.ForeignKeys);
-        }
-        lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
+        // Lookup columns not supported for Grids in this version.
+        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, null);
+      }
+      else
+      {
+        wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _table, out wiz.Wizard.ForeignKeys);
+        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, wiz.Wizard.ForeignKeys);
+      }
+      lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
 
-        _colValsByName = new Dictionary<string, ColumnValidation>();
-        for (int i = 0; i < _colValidations.Count; i++)
-        {
-          _colValsByName.Add(_colValidations[i].Name, _colValidations[i]);
-        }
+      _colValsByName = new Dictionary<string, ColumnValidation>();
+      for (int i = 0; i < _colValidations.Count; i++)
+      {
+        _colValsByName.Add(_colValidations[i].Name, _colValidations[i]);
       }
     }
 
