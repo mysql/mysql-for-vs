@@ -175,10 +175,8 @@ namespace MySql.Data.VisualStudio.Wizards
           "System.Data.Entity.Core.Objects");
         contents = contents.Replace("System.Data.Objects.DataClasses",
           "System.Data.Entity.Core.Objects.DataClasses");
-        contents = contents.Replace("System.Data.Metadata.Edm.RelationshipMultiplicity.One",
-          "System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity.One");
-        contents = contents.Replace("System.Data.Metadata.Edm.RelationshipMultiplicity.Many",
-          "System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity.Many");
+        contents = contents.Replace("System.Data.Metadata.Edm.RelationshipMultiplicity",
+          "System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity");
 
         File.WriteAllText(outputPath, contents);
       }

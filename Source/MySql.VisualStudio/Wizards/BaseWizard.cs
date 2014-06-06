@@ -606,7 +606,7 @@ select `constraint_name` from information_schema.referential_constraints where `
       string sql = string.Format(
 @"select `constraint_name`, `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
 from information_schema.key_column_usage where `constraint_name` in ( 
-select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = 'sakila' and `table_name` = 'customer' )
+select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = '{0}' and `table_name` = '{1}' )
 ",
 con.Database, tableName );
       if ((con.State & ConnectionState.Open) == 0)
