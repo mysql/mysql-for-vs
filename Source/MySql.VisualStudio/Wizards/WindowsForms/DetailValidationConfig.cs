@@ -176,16 +176,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
 
       // Populate grid
-      if (( _detailTable != wiz.TableName) || (_connectionString != wiz.Connection.ConnectionString))
-      {
-        _connectionString = wiz.Connection.ConnectionString;
-        _detailTable = wiz.DetailTableName;
-        if (string.IsNullOrEmpty(_detailTable)) return;
-        _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
-        _colValidationsDetail.Clear();
-        ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, _colValidationsDetail, _detailColumns, null);
-        lblTitleDetail.Text = string.Format("Columns to add validations from table: {0}", _detailTable);
-      }
+      grdColumnsDetail.DataSource = null;
+      _connectionString = wiz.Connection.ConnectionString;
+      _detailTable = wiz.DetailTableName;
+      if (string.IsNullOrEmpty(_detailTable)) return;
+      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
+      _colValidationsDetail.Clear();
+      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, _colValidationsDetail, _detailColumns, null);
+      lblTitleDetail.Text = string.Format("Columns to add validations from table: {0}", _detailTable);
     }
   
     internal override bool IsValid()
