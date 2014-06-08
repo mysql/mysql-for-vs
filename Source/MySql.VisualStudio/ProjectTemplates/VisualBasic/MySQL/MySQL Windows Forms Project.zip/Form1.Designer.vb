@@ -64,6 +64,7 @@ Partial Class Form1
         Me.BindingNavigator1.MoveNextItem = Me.BindingNavigatorMoveNextItem
         Me.BindingNavigator1.MovePreviousItem = Me.BindingNavigatorMovePreviousItem
         Me.BindingNavigator1.Name = "BindingNavigator1"
+        Me.bindingNavigator1.Padding = New System.Windows.Forms.Padding(10, 0, 10, 0)
         Me.BindingNavigator1.PositionItem = Me.BindingNavigatorPositionItem
         Me.BindingNavigator1.Size = New System.Drawing.Size(400, 25)
         Me.BindingNavigator1.TabIndex = 0
@@ -173,8 +174,9 @@ Partial Class Form1
         Me.Panel1.AutoScroll = True
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 25)
+        Me.Panel1.Margin = new System.Windows.Forms.Padding(10, 3, 10, 3)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(400, 251)
+        Me.Panel1.Size = New System.Drawing.Size(656, 183)
         Me.Panel1.TabIndex = 1
         Me.Panel1.AutoSize = True
 
@@ -186,8 +188,6 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(400, 359)
-        Me.Controls.Add(Me.BindingNavigator1)
-        Me.Controls.Add(Me.Panel1)        
         Me.Name = "Form1"
         Me.Text = "Form1"
         CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -196,6 +196,7 @@ Partial Class Form1
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
 	'<WizardGeneratedCode>Designer BeforeResumeSuspendLayout</WizardGeneratedCode>
 
+        Me.Controls.Add(Me.BindingNavigator1)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)

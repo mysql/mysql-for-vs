@@ -288,7 +288,7 @@ namespace MySql.Data.VisualStudio.Wizards
       catch
       {        
         throw new WizardException("Failed operation when adding model to project");
-      }      
+      }
     }
 
     protected void AddReferencesEntityFramework(VSProject vsProj)
@@ -635,6 +635,11 @@ con.Database, tableName );
         fk.ReferenceableColumns = GetColumnsFromTableVanilla(fk.ReferencedTableName, con);
       }
       MyFKs = FKs;
+    }
+
+    internal static string CapitalizeString(string s)
+    {
+      return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s);
     }
   }
 

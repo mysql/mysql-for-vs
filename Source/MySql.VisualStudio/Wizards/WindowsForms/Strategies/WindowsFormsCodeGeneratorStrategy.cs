@@ -204,6 +204,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       return ValidationColumns;
     }
 
+    internal string CapitalizeString(string s)
+    {
+      return BaseWizard<BaseWizardForm, ICodeGeneratorStrategy>.CapitalizeString(s);
+    }
+
     protected void RetrieveFkColumns()
     {
       bool sourceFirst = false;

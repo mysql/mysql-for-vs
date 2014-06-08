@@ -129,27 +129,81 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         Writer.WriteLine("private System.Windows.Forms.Label {0}Label;", idColumnCanonical);
       }
+      Writer.WriteLine("private System.Windows.Forms.Panel panel3;");
+      Writer.WriteLine("private System.Windows.Forms.Panel panel4;");
+      Writer.WriteLine("private System.Windows.Forms.Panel panel5;");
+      Writer.WriteLine("private System.Windows.Forms.Panel panel6;");
     }
 
     protected override void WriteDesignerControlInitCode()
     {
       Writer.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", CanonicalTableName);
       WriteControlInitialization(false);
+      // Panel4
+      Writer.WriteLine("// ");
+      Writer.WriteLine("// panel4");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel4.Dock = System.Windows.Forms.DockStyle.Right;");
+      Writer.WriteLine("this.panel4.Location = new System.Drawing.Point(656, 0);");
+      Writer.WriteLine("this.panel4.Name = \"panel4\";");
+      Writer.WriteLine("this.panel4.Size = new System.Drawing.Size(10, 183);");
+      Writer.WriteLine("this.panel4.TabIndex = 3;");
+      // Panel3
+      Writer.WriteLine("// ");
+      Writer.WriteLine("// panel3");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel3.Controls.Add(this.Panel1);");
+      Writer.WriteLine("this.panel3.Controls.Add(this.panel4);");
+      Writer.WriteLine("this.panel3.Controls.Add(this.panel5);");
+      Writer.WriteLine("this.panel3.Controls.Add(this.panel6);");
+      Writer.WriteLine("this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;");
+      Writer.WriteLine("this.panel3.Location = new System.Drawing.Point(0, 25);");
+      Writer.WriteLine("this.panel3.Name = \"panel3\";");
+      Writer.WriteLine("this.panel3.Size = new System.Drawing.Size(666, 183);");
+      Writer.WriteLine("this.panel3.TabIndex = 19;");
+      // Panel5
+      Writer.WriteLine("// ");
+      Writer.WriteLine("// panel5");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel5.Dock = System.Windows.Forms.DockStyle.Left;");
+      Writer.WriteLine("this.panel5.Location = new System.Drawing.Point(0, 0);");
+      Writer.WriteLine("this.panel5.Name = \"panel5\";");
+      Writer.WriteLine("this.panel5.Size = new System.Drawing.Size(10, 183);");
+      Writer.WriteLine("this.panel5.TabIndex = 5;");
+      // Panel6
+      Writer.WriteLine("// ");
+      Writer.WriteLine("// panel6");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;");
+      Writer.WriteLine("this.panel6.Location = new System.Drawing.Point(0, 324);");
+      Writer.WriteLine("this.panel6.Name = \"panel6\";");
+      Writer.WriteLine("this.panel6.Size = new System.Drawing.Size(400, 10);");
+      Writer.WriteLine("this.panel6.TabIndex = 6;");
+
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
       Writer.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", CanonicalTableName);
+      Writer.WriteLine("this.panel3 = new System.Windows.Forms.Panel();");
+      Writer.WriteLine("this.panel4 = new System.Windows.Forms.Panel();");
+      Writer.WriteLine("this.panel5 = new System.Windows.Forms.Panel();");
+      Writer.WriteLine("this.panel6 = new System.Windows.Forms.Panel();");
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.WriteLine("this.panel3.SuspendLayout();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", CanonicalTableName);
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
+      Writer.WriteLine("this.Controls.Add(this.panel3);");
+      Writer.WriteLine("this.panel3.ResumeLayout(false);");
+      Writer.WriteLine("this.panel3.PerformLayout();");
     }
   }
 }

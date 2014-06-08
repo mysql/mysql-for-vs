@@ -95,6 +95,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       Writer.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", CanonicalTableName);
       Writer.WriteLine("this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;");
+      Writer.WriteLine("this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;");
       Writer.WriteLine("this.dataGridView1.Location = new System.Drawing.Point(9, 37);");
       Writer.WriteLine("this.dataGridView1.Name = \"dataGridView1\"; ");
       Writer.WriteLine("this.dataGridView1.Size = new System.Drawing.Size(339, 261);");
@@ -103,7 +104,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         Writer.WriteLine("this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);");
       }
-      Writer.WriteLine("this.Controls.Add(this.dataGridView1);");
+      Writer.WriteLine("this.Panel1.Controls.Add(this.dataGridView1);");
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
@@ -120,13 +121,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("this.Panel1.Padding = new System.Windows.Forms.Padding(10);");
+      Writer.WriteLine("this.Controls.Add(this.Panel1);");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();");
     }
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      // Nothing
+      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
     }
   }
 }
