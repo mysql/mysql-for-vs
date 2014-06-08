@@ -129,27 +129,82 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         Writer.WriteLine("Friend WithEvents {0}Label As System.Windows.Forms.Label", idColumnCanonical);
       }
+      Writer.WriteLine("Friend WithEvents panel3 As System.Windows.Forms.Panel");
+      Writer.WriteLine("Friend WithEvents panel4 As System.Windows.Forms.Panel");
+      Writer.WriteLine("Friend WithEvents panel5 As System.Windows.Forms.Panel");
+      Writer.WriteLine("Friend WithEvents panel6 As System.Windows.Forms.Panel");
     }
 
     protected override void WriteDesignerControlInitCode()
     {
       Writer.WriteLine("Me.bindingNavigator1.BindingSource = Me.{0}BindingSource", CanonicalTableName);
       WriteControlInitialization(false);
+
+      // Panel4
+      Writer.WriteLine("' ");
+      Writer.WriteLine("' panel4");
+      Writer.WriteLine("' ");
+      Writer.WriteLine("Me.panel4.Dock = System.Windows.Forms.DockStyle.Right");
+      Writer.WriteLine("Me.panel4.Location = New System.Drawing.Point(656, 0)");
+      Writer.WriteLine("Me.panel4.Name = \"panel4\"");
+      Writer.WriteLine("Me.panel4.Size = New System.Drawing.Size(10, 183)");
+      Writer.WriteLine("Me.panel4.TabIndex = 3");
+      // Panel3
+      Writer.WriteLine("' ");
+      Writer.WriteLine("' panel3");
+      Writer.WriteLine("' ");
+      Writer.WriteLine("Me.panel3.Controls.Add(Me.Panel1)");
+      Writer.WriteLine("Me.panel3.Controls.Add(Me.panel4)");
+      Writer.WriteLine("Me.panel3.Controls.Add(Me.panel5)");
+      Writer.WriteLine("Me.panel3.Controls.Add(Me.panel6)");
+      Writer.WriteLine("Me.panel3.Dock = System.Windows.Forms.DockStyle.Fill");
+      Writer.WriteLine("Me.panel3.Location = new System.Drawing.Point(0, 25)");
+      Writer.WriteLine("Me.panel3.Name = \"panel3\"");
+      Writer.WriteLine("Me.panel3.Size = New System.Drawing.Size(666, 183)");
+      Writer.WriteLine("Me.panel3.TabIndex = 19");
+      // Panel5
+      Writer.WriteLine("' ");
+      Writer.WriteLine("' panel5");
+      Writer.WriteLine("' ");
+      Writer.WriteLine("Me.panel5.Dock = System.Windows.Forms.DockStyle.Left");
+      Writer.WriteLine("Me.panel5.Location = New System.Drawing.Point(0, 0)");
+      Writer.WriteLine("Me.panel5.Name = \"panel5\"");
+      Writer.WriteLine("Me.panel5.Size = New System.Drawing.Size(10, 183)");
+      Writer.WriteLine("Me.panel5.TabIndex = 5");
+      // Panel6
+      Writer.WriteLine("' ");
+      Writer.WriteLine("' panel6");
+      Writer.WriteLine("' ");
+      Writer.WriteLine("Me.panel6.Dock = System.Windows.Forms.DockStyle.Bottom");
+      Writer.WriteLine("Me.panel6.Location = New System.Drawing.Point(0, 324)");
+      Writer.WriteLine("Me.panel6.Name = \"panel6\"");
+      Writer.WriteLine("Me.panel6.Size = New System.Drawing.Size(400, 10)");
+      Writer.WriteLine("Me.panel6.TabIndex = 6");
+
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
       Writer.WriteLine("Me.{0}BindingSource = New System.Windows.Forms.BindingSource(Me.components)", CanonicalTableName);
+      Writer.WriteLine("Me.panel3 = New System.Windows.Forms.Panel()");
+      Writer.WriteLine("Me.panel4 = New System.Windows.Forms.Panel()");
+      Writer.WriteLine("Me.panel5 = New System.Windows.Forms.Panel()");
+      Writer.WriteLine("Me.panel6 = New System.Windows.Forms.Panel()");
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.WriteLine("Me.panel3.SuspendLayout()");
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).BeginInit()", CanonicalTableName);
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("Me.Text = \"{0}\"", CapitalizeString(TableName));
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).EndInit()", CanonicalTableName);
+      Writer.WriteLine("Me.Controls.Add(Me.panel3)");
+      Writer.WriteLine("Me.panel3.ResumeLayout(False)");
+      Writer.WriteLine("Me.panel3.PerformLayout()");
     }
   }
 }
