@@ -102,6 +102,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.{0}BindingSource.DataSource = this.newDataSet;", CanonicalTableName);
 
       Writer.WriteLine("this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;");
+      Writer.WriteLine("this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;");
       Writer.WriteLine("this.dataGridView1.Location = new System.Drawing.Point(9, 37);");
       Writer.WriteLine("this.dataGridView1.Name = \"dataGridView1\"; ");
       WriteDataGridColumnInitialization();
@@ -131,6 +132,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("this.Panel1.Padding = new System.Windows.Forms.Padding(10);");
+      Writer.WriteLine("this.Controls.Add(this.Panel1);");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.newDataSet)).EndInit();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();");
@@ -138,7 +141,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      // Nothing
+      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
     }
   }
 }

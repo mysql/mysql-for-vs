@@ -136,6 +136,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", CanonicalDetailTableName);
       Writer.WriteLine("private System.Windows.Forms.DataGridView dataGridView1;");
       Writer.WriteLine("private System.Windows.Forms.Panel panel2;");
+      Writer.WriteLine("private System.Windows.Forms.Panel panel3;");
+      Writer.WriteLine("private System.Windows.Forms.Panel panel4;");
+      Writer.WriteLine("private System.Windows.Forms.Panel panel5;");
       Writer.WriteLine("private System.Windows.Forms.Label lblDetails;");
     }
 
@@ -150,9 +153,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.panel2.Controls.Add(this.dataGridView1);");
       Writer.WriteLine("this.panel2.Controls.Add(this.lblDetails);");
       Writer.WriteLine("this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;");
-      Writer.WriteLine("this.panel2.Location = new System.Drawing.Point(0, 283);");
+      Writer.WriteLine("this.panel2.Location = new System.Drawing.Point(0, 208);");
       Writer.WriteLine("this.panel2.Name = \"panel2\";");
-      Writer.WriteLine("this.panel2.Size = new System.Drawing.Size(666, 268);");
+      Writer.WriteLine("this.panel2.Padding = new System.Windows.Forms.Padding(10);");
+      Writer.WriteLine("this.panel2.Size = new System.Drawing.Size(666, 184);");
       Writer.WriteLine("this.panel2.TabIndex = 4;");
       // Label2
       Writer.WriteLine("// ");
@@ -175,6 +179,37 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.dataGridView1.Name = \"dataGridView1\"; ");
       Writer.WriteLine("this.dataGridView1.Size = new System.Drawing.Size(666, 261);");
       Writer.WriteLine("this.dataGridView1.TabIndex = 0;");
+      // Panel4
+      Writer.WriteLine("// ");
+      Writer.WriteLine("// panel4");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel4.Dock = System.Windows.Forms.DockStyle.Right;");
+      Writer.WriteLine("this.panel4.Location = new System.Drawing.Point(656, 0);");
+      Writer.WriteLine("this.panel4.Name = \"panel4\";");
+      Writer.WriteLine("this.panel4.Size = new System.Drawing.Size(10, 183);");
+      Writer.WriteLine("this.panel4.TabIndex = 3;");
+      // Panel3
+      Writer.WriteLine("// ");
+      Writer.WriteLine("// panel3");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel3.Controls.Add(this.Panel1);");
+      Writer.WriteLine("this.panel3.Controls.Add(this.panel4);");
+      Writer.WriteLine("this.panel3.Controls.Add(this.panel5);");
+      Writer.WriteLine("this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;");
+      Writer.WriteLine("this.panel3.Location = new System.Drawing.Point(0, 25);");
+      Writer.WriteLine("this.panel3.Name = \"panel3\";");
+      Writer.WriteLine("this.panel3.Size = new System.Drawing.Size(666, 183);");
+      Writer.WriteLine("this.panel3.TabIndex = 19;");
+      // Panel5
+      Writer.WriteLine("// " );
+      Writer.WriteLine("// panel5");
+      Writer.WriteLine("// ");
+      Writer.WriteLine("this.panel5.Dock = System.Windows.Forms.DockStyle.Left;");
+      Writer.WriteLine("this.panel5.Location = new System.Drawing.Point(0, 0);");
+      Writer.WriteLine("this.panel5.Name = \"panel5\";");
+      Writer.WriteLine("this.panel5.Size = new System.Drawing.Size(10, 183);");
+      Writer.WriteLine("this.panel5.TabIndex = 5;");
+
       if (ValidationsEnabled)
       {
         Writer.WriteLine("this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);");
@@ -188,10 +223,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", CanonicalDetailTableName);
       Writer.WriteLine("this.panel2 = new System.Windows.Forms.Panel();");
       Writer.WriteLine("this.lblDetails = new System.Windows.Forms.Label();");
+      Writer.WriteLine("this.panel3 = new System.Windows.Forms.Panel();");
+      Writer.WriteLine("this.panel4 = new System.Windows.Forms.Panel();");
+      Writer.WriteLine("this.panel5 = new System.Windows.Forms.Panel();");
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.WriteLine("this.panel3.SuspendLayout();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", CanonicalDetailTableName);
@@ -200,12 +239,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected override void WriteBeforeResumeSuspendCode()
     {
       Writer.WriteLine("this.Size = new System.Drawing.Size(682, 590);");
+      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString( TableName ) );
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalDetailTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
+      Writer.WriteLine("this.Controls.Add(this.panel3);");
       Writer.WriteLine("this.Controls.Add(this.panel2);");
       Writer.WriteLine("this.panel2.ResumeLayout(false);");
       Writer.WriteLine("this.panel2.PerformLayout();");
+      Writer.WriteLine("this.panel3.ResumeLayout(false);");
+      Writer.WriteLine("this.panel3.PerformLayout();");
     }
   }
 }

@@ -139,7 +139,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       Label l = new Label();
       Size szText = TextRenderer.MeasureText(GetMaxWidthString(Columns), l.Font);
-      Point initLoc = new Point(szText.Width + 10, 50);
+      Point initLoc = new Point(szText.Width + 10 + 50, 50);
       Point xy = new Point(initLoc.X, initLoc.Y);
       bool passedHalve = false;
       int tabIdx = 1;
