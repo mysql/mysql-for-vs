@@ -117,6 +117,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteSaveEventCode()
     {
+      for (int i = 0; i < ValidationColumns.Count; i++)
+      {
+        ColumnValidation cv = ValidationColumns[i];
+        string colName = GetCanonicalIdentifier(cv.Name);
+        if (cv.DataType == "timestamp")
+        {
+          Writer.WriteLine("if( (( DataRowView ){0}BindingSource.Current )[ \"{1}\" ] is DBNull )", CanonicalTableName, colName);
+          Writer.WriteLine("{");
+          Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = DateTime.Now;", CanonicalTableName, colName);
+          Writer.WriteLine("}");
+        }
+      }
+      for (int i = 0; i < DetailValidationColumns.Count; i++)
+      {
+        ColumnValidation cv = DetailValidationColumns[i];
+        string colName = GetCanonicalIdentifier(cv.Name);
+        if (cv.DataType == "timestamp")
+        {
+          Writer.WriteLine("if( (( DataRowView ){0}BindingSource.Current )[ \"{1}\" ] is DBNull )", CanonicalDetailTableName, colName);
+          Writer.WriteLine("{");
+          Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = DateTime.Now;", CanonicalDetailTableName, colName);
+          Writer.WriteLine("}");
+        }
+      }
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName );
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalDetailTableName );
       Writer.WriteLine("ad.Update(this.newDataSet.{0});", CanonicalTableName );
