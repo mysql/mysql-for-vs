@@ -187,6 +187,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("this.{0}_comboBox.Name = \"{0}_comboBox\";", idColumnCanonical);
           Writer.WriteLine("this.{0}_comboBox.Size = new System.Drawing.Size(206, 21);", idColumnCanonical);
           Writer.WriteLine("this.{0}_comboBox.TabIndex = {1};", idColumnCanonical, tabIdx++ );
+          if (validationsEnabled)
+          {
+            Writer.WriteLine("this.{0}_comboBox.Validating += new System.ComponentModel.CancelEventHandler( this.{0}_comboBox_Validating );",
+              idColumnCanonical);
+          }
           if (addBindings)
           {
             // nothing
@@ -292,9 +297,29 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
-          if ( cv.HasLookup || cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
+          if ( cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
 
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+
+          if (cv.HasLookup && cv.Required)
+          {
+            Writer.WriteLine("private void {0}_comboBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);
+            Writer.WriteLine("{");
+            Writer.WriteLine( "int i = {0}_comboBox.SelectedIndex;", idColumnCanonical );
+            Writer.WriteLine( "e.Cancel = false;" );
+            Writer.WriteLine( "if( i == -1 )" );
+            Writer.WriteLine( "{" );
+            Writer.WriteLine( "e.Cancel = true; ");
+            Writer.WriteLine( "errorProvider1.SetError({0}_comboBox, \"Must select a {0}\");", idColumnCanonical);
+            Writer.WriteLine( "}" );
+            Writer.WriteLine( "if( !e.Cancel )" );
+            Writer.WriteLine("{");
+            Writer.WriteLine( "errorProvider1.SetError({0}_comboBox, \"\");", idColumnCanonical );
+            Writer.WriteLine( "}" );
+            Writer.WriteLine( "}");
+            continue;
+          }
+          
           Writer.WriteLine("private void {0}TextBox_Validating(object sender, CancelEventArgs e)", idColumnCanonical);
           Writer.WriteLine("{");
           Writer.WriteLine("  e.Cancel = false;");
