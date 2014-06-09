@@ -61,10 +61,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     public override void ProjectFinishedGenerating(Project project)
     {
-      //Dictionary<string,object> dic = GetAllProperties(project.Properties);
-      VSProject vsProj = project.Object as VSProject;
+      //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
       try
       {
+        VSProject vsProj = project.Object as VSProject;
         Columns = WizardForm.Columns;
         DetailColumns = WizardForm.DetailColumns;
         _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
@@ -116,26 +116,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         AddBindings(vsProj);
 #endif
+      
+        if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
+        {
+          // Change target version to 4.5 (only version currently supported for EF6).
+          project.DTE.SuppressUI = true;
+          project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
+        }
+
+        FixNamespaces();
+        SendToGeneralOutputWindow("Building Solution...");
+        project.DTE.Solution.SolutionBuild.Build(true);
+
+        Settings.Default.WinFormsWizardConnection = WizardForm.ConnectionName;
+        Settings.Default.Save();
+
+        WizardForm.Dispose();
       }
       catch (WizardException e)
       {
-        MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        SendToGeneralOutputWindow( string.Format( "An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace ));
       }
-      if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
-      {
-        // Change target version to 4.5 (only version currently supported for EF6).
-        project.DTE.SuppressUI = true;
-        project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
-      }
-
-      FixNamespaces();
-      SendToGeneralOutputWindow("Building Solution...");
-      project.DTE.Solution.SolutionBuild.Build(true);
-
-      Settings.Default.WinFormsWizardConnection = WizardForm.ConnectionName;
-      Settings.Default.Save();
-
-      WizardForm.Dispose();
     }
 
     internal void InitializeColumnMappings( Dictionary<string,ForeignKeyColumnInfo> fks )
