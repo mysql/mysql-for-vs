@@ -97,6 +97,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = DateTime.Now;", CanonicalTableName, colName);
           Writer.WriteLine("}");
         }
+        else if (cv.IsBooleanType())
+        {
+          Writer.WriteLine("if( (( DataRowView ){0}BindingSource.Current )[ \"{1}\" ] is DBNull )", CanonicalTableName, colName);
+          Writer.WriteLine("{");
+          Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = {1}CheckBox.Checked;", CanonicalTableName, colName);
+          Writer.WriteLine("}");
+        }
       }
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName);
       Writer.WriteLine("ad.Update(this.newDataSet.{0});", CanonicalTableName);
