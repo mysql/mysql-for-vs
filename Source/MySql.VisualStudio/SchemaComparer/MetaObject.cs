@@ -214,7 +214,7 @@ namespace MySql.Data.VisualStudio.SchemaComparer
 
     internal bool IsDateType()
     {
-      if (DataType == "datetime" || DataType == "date" || DataType == "time")
+      if (DataType == "datetime" || DataType == "date" || DataType == "time" )
         return true;
       else
         return false;

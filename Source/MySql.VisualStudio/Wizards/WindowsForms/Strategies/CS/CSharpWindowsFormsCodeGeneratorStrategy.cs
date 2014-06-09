@@ -213,6 +213,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("this.{0}_dateTimePicker.Size = new System.Drawing.Size(200, 20);", idColumnCanonical);
           Writer.WriteLine("this.{0}_dateTimePicker.TabIndex = {1};", idColumnCanonical, tabIdx++);
           Writer.WriteLine("this.{0}_dateTimePicker.Value = new System.DateTime(2014, 5, 26, 17, 35, 11, 0);", idColumnCanonical);
+
           if (addBindings)
           {
             Writer.WriteLine("this.{0}_dateTimePicker.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
