@@ -193,17 +193,16 @@ namespace MySql.Data.VisualStudio.Wizards
       out List<ColumnValidation> colsValidation, Dictionary<string, Column> columns, 
       Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
-
+      colsValidation = GetColumnValidactionList(columns, FKs);
 #if NET_40_OR_GREATER
       SortedSet<string> allColumns = new SortedSet<string>();
       BindingSource binding = new BindingSource();
+      
       //reset grid
       grid.DataSource = null;
       grid.Columns.Clear();
       grid.Rows.Clear();
-      grid.Update();
-
-      colsValidation = GetColumnValidactionList(columns, FKs);
+      grid.Update();      
 
       for (int i = 0; i < colsValidation.Count; i++)
       {
