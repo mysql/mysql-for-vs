@@ -201,15 +201,22 @@ namespace MySql.Data.VisualStudio.Wizards
     public virtual void RunStarted(object automationObject,
       Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
     {
+      try
+      {
 #if NET_40_OR_GREATER
-      Dte = ((dynamic)automationObject).DTE;
+        Dte = ((dynamic)automationObject).DTE;
 #endif
-      DialogResult result = WizardForm.ShowDialog();
-      if (result == DialogResult.Cancel) throw new WizardCancelledException();
-      ProjectPath = replacementsDictionary["$destinationdirectory$"];
-      //NetFxVersion = replacementsDictionary["$clrversion$"];
-      NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
-      ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
+        DialogResult result = WizardForm.ShowDialog();
+        if (result == DialogResult.Cancel) throw new WizardCancelledException();
+        ProjectPath = replacementsDictionary["$destinationdirectory$"];
+        //NetFxVersion = replacementsDictionary["$clrversion$"];
+        NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
+        ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
+      }
+      catch (Exception e)
+      {
+        SendToGeneralOutputWindow( string.Format( "An error occurred: {0}\n\n {1}", e.Message, e.StackTrace));
+      }
     }
 
     public virtual bool ShouldAddProjectItem(string filePath)
@@ -394,8 +401,8 @@ namespace MySql.Data.VisualStudio.Wizards
         AddPackageReference(VsProj, solPath, PackageName, Version);
       }
       catch 
-      {
-        MessageBox.Show("EntityFramework installation package failure. Please check that you have the latest Nuget version.", "Error", MessageBoxButtons.OK);
+      { 
+        SendToGeneralOutputWindow("EntityFramework installation package failure. Please check that you have the latest Nuget version.");
         return;
       }      
     }
