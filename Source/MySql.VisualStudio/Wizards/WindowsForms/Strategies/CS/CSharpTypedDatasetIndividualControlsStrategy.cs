@@ -70,10 +70,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("ad2 = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", cv.FkInfo.ReferencedTableName);
           Writer.WriteLine("ad2.Fill(this.newDataSet.{0});", canonicalReferencedTable);
           Writer.WriteLine("this.{0}_comboBox.DataSource = this.newDataSet.{1};", idColumnCanonical, canonicalReferencedTable );
-          Writer.WriteLine("this.{0}_comboBox.DisplayMember = \"{1}\";", idColumnCanonical, cv.LookupColumn);
+          Writer.WriteLine("this.{0}_comboBox.DisplayMember = \"{1}\";", idColumnCanonical, cv.EfLookupColumnMapping);
           Writer.WriteLine("this.{0}_comboBox.ValueMember = \"{1}\";", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
           Writer.WriteLine("this.{0}_comboBox.DataBindings.Add(new System.Windows.Forms.Binding(\"SelectedValue\", this.{1}BindingSource, \"{2}\", true));",
-            idColumnCanonical, CanonicalTableName, idColumnCanonical);
+            idColumnCanonical, CanonicalTableName, cv.EfColumnMapping);
           Writer.WriteLine("ad2.Dispose();");
         }
       }

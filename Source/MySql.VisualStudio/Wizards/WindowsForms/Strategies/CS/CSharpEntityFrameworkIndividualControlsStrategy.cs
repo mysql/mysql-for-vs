@@ -70,24 +70,25 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
           Writer.WriteLine("this.{0}_comboBox.DataSource = ctx.{1}.ToList();", idColumnCanonical, canonicalReferencedTableName);
-          Writer.WriteLine("this.{0}_comboBox.DisplayMember = \"{1}\";", idColumnCanonical, cv.LookupColumn);
+          Writer.WriteLine("this.{0}_comboBox.DisplayMember = \"{1}\";", idColumnCanonical, cv.EfLookupColumnMapping);
           Writer.WriteLine("this.{0}_comboBox.ValueMember = \"{1}\";", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
           Writer.WriteLine("this.{0}_comboBox.DataBindings.Add(new System.Windows.Forms.Binding(\"SelectedValue\", this.{1}BindingSource, \"{2}\", true));",
-            idColumnCanonical, CanonicalTableName, idColumnCanonical);
+            idColumnCanonical, CanonicalTableName, cv.EfColumnMapping);
         }
         else if (cv.IsDateType())
         {
           Writer.WriteLine("this.{0}_dateTimePicker.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
-            idColumnCanonical, colName, CanonicalTableName);
+            idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
         }
         else if (cv.IsBooleanType())
         {
-          Writer.WriteLine("this.{0}CheckBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Checked\", this.{2}BindingSource, \"{1}\", true));", idColumnCanonical, colName, CanonicalTableName);
+          Writer.WriteLine("this.{0}CheckBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Checked\", this.{2}BindingSource, \"{1}\", true));",
+            idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
         }
         else
         {
           Writer.WriteLine("this.{0}TextBox.DataBindings.Add(new System.Windows.Forms.Binding(\"Text\", this.{2}BindingSource, \"{1}\", true ));",
-            idColumnCanonical, colName, CanonicalTableName);
+            idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
         }
       }
     }

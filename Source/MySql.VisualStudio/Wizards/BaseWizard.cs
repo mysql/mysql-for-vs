@@ -43,8 +43,6 @@ using Microsoft.VisualStudio;
 
 namespace MySql.Data.VisualStudio.Wizards
 {
-  // TODO: Make this class capable of generating both C# & VB.NET projects.
-
   /// <summary>
   ///  Base class for all the Project Wizards.
   /// </summary>
@@ -101,6 +99,8 @@ namespace MySql.Data.VisualStudio.Wizards
     protected IVsOutputWindowPane _generalPane;
 
     internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
+
+    internal Dictionary<string, Dictionary<string, ColumnValidation>> ColumnMappings = new Dictionary<string, Dictionary<string, ColumnValidation>>();
 
     public enum ProjectWizardType : int
     {
@@ -221,7 +221,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       string ns = GetCanonicalIdentifier(ProjectNamespace);
       EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
-        con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion, Language);
+        con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion, Language, ColumnMappings);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
       SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
@@ -232,7 +232,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       string ns = GetCanonicalIdentifier(ProjectNamespace);
       EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
-        con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion, Language);
+        con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion, Language, ColumnMappings);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
       SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
@@ -640,6 +640,36 @@ con.Database, tableName );
     internal static string CapitalizeString(string s)
     {
       return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s);
+    }    
+
+    internal void AddColumnMappings(string table, List<ColumnValidation> columns)
+    {
+      Dictionary<string, ColumnValidation> dic = new Dictionary<string, ColumnValidation>();
+      for (int i = 0; i < columns.Count; i++)
+      {
+        dic.Add(columns[i].Name, columns[i]);
+      }
+      ColumnMappings.Add(table, dic);
+    }
+
+    internal void PopulateColumnMappingsForTypedDataSet()
+    {
+      foreach (KeyValuePair<string, Dictionary<string, ColumnValidation>> kvp in ColumnMappings)
+      {
+        foreach (KeyValuePair<string, ColumnValidation> kvp2 in kvp.Value)
+        {
+          kvp2.Value.EfColumnMapping = GetCanonicalIdentifier(kvp2.Value.Name);
+        }
+      }
+      // Solve Lookup column mappings
+      foreach (KeyValuePair<string, Dictionary<string, ColumnValidation>> kvp in ColumnMappings)
+      {
+        foreach (KeyValuePair<string, ColumnValidation> kvp2 in kvp.Value)
+        {
+          if (!kvp2.Value.HasLookup) continue;
+          kvp2.Value.EfLookupColumnMapping = GetCanonicalIdentifier(kvp2.Value.LookupColumn);
+        }
+      }
     }
   }
 
