@@ -92,12 +92,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (wiz.GuiType == GuiType.Grid)
       {
         // Lookup columns not supported for Grids in this version.
-        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, null);
+        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, out _colValidations, _columns, null);
       }
       else
       {
         wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _table, out wiz.Wizard.ForeignKeys);
-        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, _colValidations, _columns, wiz.Wizard.ForeignKeys);
+        ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, out _colValidations, _columns, wiz.Wizard.ForeignKeys);
       }
       lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
 

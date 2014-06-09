@@ -216,7 +216,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           if (addBindings)
           {
             Writer.WriteLine("Me.{0}_dateTimePicker.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", True ))",
-              idColumnCanonical, colName, CanonicalTableName);
+              idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
           }
           Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}_dateTimePicker )", idColumnCanonical);
         }
@@ -235,7 +235,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("Me.Panel1.Controls.Add( Me.{0}CheckBox )", idColumnCanonical);
           if (addBindings)
           {
-            Writer.WriteLine("Me.{0}CheckBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Checked\", Me.{2}BindingSource, \"{1}\", True))", idColumnCanonical, colName, CanonicalTableName);
+            Writer.WriteLine("Me.{0}CheckBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Checked\", Me.{2}BindingSource, \"{1}\", True))",
+              idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
           }
         }
         else
@@ -248,7 +249,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           if (addBindings)
           {
             Writer.WriteLine("Me.{0}TextBox.DataBindings.Add(New System.Windows.Forms.Binding(\"Text\", Me.{2}BindingSource, \"{1}\", true ))",
-              idColumnCanonical, colName, CanonicalTableName);
+              idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
           }
 
           Writer.WriteLine("Me.{0}TextBox.Location = New System.Drawing.Point( {1}, {2} )", idColumnCanonical, xy.X, xy.Y);
@@ -443,7 +444,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if (cv.IsBooleanType())
         {
           Writer.WriteLine("Dim col{0} As System.Windows.Forms.DataGridViewCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()", idColumnCanonical);
-          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\"", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\"", idColumnCanonical, cv.EfColumnMapping);
           Writer.WriteLine("col{0}.HeaderText = \"{1}\"", idColumnCanonical, cv.Name);
           Writer.WriteLine("col{0}.Name = \"col{0}\"", idColumnCanonical);
           Writer.WriteLine("dataGridView1.Columns.Add(col{0})", idColumnCanonical);
@@ -451,7 +452,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         else
         {
           Writer.WriteLine("Dim col{0} As System.Windows.Forms.DataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()", idColumnCanonical);
-          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\"", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\"", idColumnCanonical, cv.EfColumnMapping);
           Writer.WriteLine("col{0}.HeaderText = \"{1}\"", idColumnCanonical, cv.Name);
           Writer.WriteLine("col{0}.Name = \"col{0}\"", idColumnCanonical);
           Writer.WriteLine("dataGridView1.Columns.Add(col{0})", idColumnCanonical);

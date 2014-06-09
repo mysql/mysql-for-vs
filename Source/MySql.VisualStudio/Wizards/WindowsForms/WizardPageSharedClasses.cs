@@ -43,6 +43,8 @@ namespace MySql.Data.VisualStudio.Wizards
     private bool _hasLookup;
     private string _lookupColumn;
     private ForeignKeyColumnInfo _fkInfo;
+    private string _efColumnMapping;
+    private string _efLookupColumnMapping;
 
     // It is important to make the properties public, otherwise DataGridView doesn't like and doesn't display the real values
     // (this seems to be a known issue with DataGridView over stackoverflow).
@@ -58,6 +60,20 @@ namespace MySql.Data.VisualStudio.Wizards
     public string LookupColumn { get { return _lookupColumn; } set { _lookupColumn = value; } }
     public ForeignKeyColumnInfo FkInfo { get { return _fkInfo; } set { _fkInfo = value; } }
     public List<string> ReferenceableColumns { get { return _fkInfo.ReferenceableColumns; } }
+    public string EfColumnMapping { 
+      get {
+        return _efColumnMapping; 
+      } 
+      set 
+      { 
+        _efColumnMapping = value; 
+      } 
+    }
+    public string EfLookupColumnMapping
+    {
+      get { return _efLookupColumnMapping; }
+      set { _efLookupColumnMapping = value; }
+    }
 
     internal ColumnValidation(Column column)
     {
@@ -142,26 +158,14 @@ namespace MySql.Data.VisualStudio.Wizards
       this.Name = Name;
       this.Value = Value;
     }
-  } 
-
+  }
 
   internal static class ValidationsGrid
   {
-   
-    internal static void LoadGridColumns(DataGridView grid, MySqlConnection con, string Table, 
-      List<ColumnValidation> colsValidation, Dictionary<string, Column> columns, 
-      Dictionary<string, ForeignKeyColumnInfo> FKs)
+    internal static List<ColumnValidation> GetColumnValidactionList(
+      Dictionary<string, Column> columns, Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
-
-#if NET_40_OR_GREATER
-      SortedSet<string> allColumns = new SortedSet<string>();
-      BindingSource binding = new BindingSource();
-      //reset grid
-      grid.DataSource = null;
-      grid.Columns.Clear();
-      grid.Rows.Clear();
-      grid.Update();
-
+      List<ColumnValidation> colsValidation = new List<ColumnValidation>();
       foreach (KeyValuePair<string, Column> kvp in columns)
       {
         ColumnValidation cv = new ColumnValidation(kvp.Value);
@@ -178,11 +182,42 @@ namespace MySql.Data.VisualStudio.Wizards
             cv.HasLookup = true;
             cv.LookupColumn = fk.ReferencedColumnName;
             cv.FkInfo = fk;
-            allColumns.UnionWith(fk.ReferenceableColumns);
           }
         }
         colsValidation.Add(cv);
       }
+      return colsValidation;
+    }
+   
+    internal static void LoadGridColumns(DataGridView grid, MySqlConnection con, string Table,
+      out List<ColumnValidation> colsValidation, Dictionary<string, Column> columns, 
+      Dictionary<string, ForeignKeyColumnInfo> FKs)
+    {
+
+#if NET_40_OR_GREATER
+      SortedSet<string> allColumns = new SortedSet<string>();
+      BindingSource binding = new BindingSource();
+      //reset grid
+      grid.DataSource = null;
+      grid.Columns.Clear();
+      grid.Rows.Clear();
+      grid.Update();
+
+      colsValidation = GetColumnValidactionList(columns, FKs);
+
+      for (int i = 0; i < colsValidation.Count; i++)
+      {
+        ColumnValidation cv = colsValidation[i];
+        if (FKs != null)
+        {
+          ForeignKeyColumnInfo fk = null;
+          if (FKs.TryGetValue(cv.Column.ColumnName, out fk))
+          {
+            allColumns.UnionWith(fk.ReferenceableColumns);
+          }
+        }
+      }
+
       grid.AutoGenerateColumns = false;
       
       DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn();
