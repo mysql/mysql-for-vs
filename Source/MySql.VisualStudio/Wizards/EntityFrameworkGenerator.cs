@@ -40,18 +40,24 @@ namespace MySql.Data.VisualStudio.Wizards
   {
     private static readonly string ProviderName = "MySql.Data.MySqlClient";
     private string efVersion;
+    private Dictionary<string, Dictionary<string, ColumnValidation>> _mappings;
 
-
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace, string EfVersion, LanguageGenerator Language) :
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, 
+      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, 
+      Dictionary<string, Dictionary<string, ColumnValidation>> Mappings) :
       base( con, modelName, table, path, artifactNamespace, Language )
     {
       efVersion = EfVersion;
+      _mappings = Mappings;
     }
 
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, string EfVersion, LanguageGenerator Language) :
+    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, 
+      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language,
+      Dictionary<string, Dictionary<string, ColumnValidation>> Mappings) :
       base(con, modelName, tables, path, artifactNamespace, Language)
     {
       efVersion = EfVersion;
+      _mappings = Mappings;
     }
 
     internal override string Generate()
@@ -140,6 +146,8 @@ namespace MySql.Data.VisualStudio.Wizards
 
       FileInfo fi = new FileInfo(file);
       WriteEdmx(sCsdl, sSsdl, sMsl, fi);
+      if (_mappings != null && _mappings.Count != 0)
+        GetColumnMappings(fi);
 
 #if CLR4 || NET_40_OR_GREATER
       EntityCodeGenerator gen = null;
@@ -159,11 +167,53 @@ namespace MySql.Data.VisualStudio.Wizards
       return fi.FullName;
     }
 
+    private void GetColumnMappings(FileInfo f)
+    {
+      XmlDocument doc = new XmlDocument();
+      doc.Load(f.FullName);
+      XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+      nsmgr.AddNamespace("edmx", "http://schemas.microsoft.com/ado/2008/10/edmx");
+      nsmgr.AddNamespace("ssdl", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+      nsmgr.AddNamespace("cs", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+      string xpath = "/edmx:Edmx/edmx:Runtime/edmx:Mappings/cs:Mapping/cs:EntityContainerMapping/cs:EntitySetMapping/cs:EntityTypeMapping/cs:MappingFragment/cs:ScalarProperty";
+      XmlNodeList l = doc.SelectNodes(xpath, nsmgr);
+      for (int i = 0; i < l.Count; i++)
+      {
+        XmlNode node = l[ i ];
+        string tableName = node.ParentNode.Attributes["StoreEntitySet"].Value;
+        string propName = node.Attributes["Name"].Value;
+        string colName = node.Attributes["ColumnName"].Value;
+        ColumnValidation cv = null;
+        Dictionary<string, ColumnValidation> cols = null;
+        if (!_mappings.TryGetValue(tableName, out cols)) continue;
+        if (cols.TryGetValue(colName, out cv))
+        {
+          cv.EfColumnMapping = propName;
+        }
+      }
+      // Solve Lookup column mappings
+      foreach (KeyValuePair<string, Dictionary<string, ColumnValidation>> kvp in _mappings)
+      {
+        foreach (KeyValuePair<string, ColumnValidation> kvp2 in kvp.Value)
+        {
+          if (kvp2.Value.FkInfo == null) continue;
+          string referencedTable = kvp2.Value.FkInfo.ReferencedTableName;
+          string referencedColumn = kvp2.Value.LookupColumn;
+          if (string.IsNullOrEmpty(referencedTable) || string.IsNullOrEmpty(referencedColumn)) continue;
+          Dictionary<string, ColumnValidation> dicLookup;
+          if (_mappings.TryGetValue(referencedTable, out dicLookup))
+          {
+            kvp2.Value.EfLookupColumnMapping = dicLookup[kvp2.Value.LookupColumn].EfColumnMapping;
+          }
+        }
+      }
+    }
+
     /// <summary>
     /// Fixes several namespaces generated wrong for EF6.
     /// </summary>
     /// <param name="outputPath"></param>
-    private void FixNamespaces( string outputPath )
+    private void FixNamespaces(string outputPath)
     {
       if (efVersion == BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.ENTITY_FRAMEWORK_VERSION_6)
       {

@@ -69,7 +69,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         DetailColumns = WizardForm.DetailColumns;
         _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
         string detailTableName = WizardForm.DetailTableName;
-        
+        string canonicalDetailTableName = GetCanonicalIdentifier( detailTableName );
+
+        AddColumnMappings(_canonicalTableName, WizardForm.ValidationColumns);
+        AddColumnMappings(canonicalDetailTableName, WizardForm.ValidationColumnsDetail);
+
         // Create the strategy
         StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
           WizardForm.DataAccessTechnology, WizardForm.GuiType, Language,
@@ -91,6 +95,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           tables.Add(kvp.Value.ReferencedTableName);
         }
 
+        InitializeColumnMappings(ForeignKeys);
 
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
@@ -106,6 +111,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
         else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
         {
+          PopulateColumnMappingsForTypedDataSet();
           GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
         }
         AddBindings(vsProj);
@@ -130,6 +136,18 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Settings.Default.Save();
 
       WizardForm.Dispose();
+    }
+
+    internal void InitializeColumnMappings( Dictionary<string,ForeignKeyColumnInfo> fks )
+    {
+      foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp in fks)
+      { 
+        string fkTableName = kvp.Value.ReferencedTableName;
+        if( string.IsNullOrEmpty( fkTableName )) continue;
+        Dictionary<string,Column> dicCols = GetColumnsFromTable(fkTableName, WizardForm.Connection);
+        List<ColumnValidation> myColValidations = ValidationsGrid.GetColumnValidactionList(dicCols, null);
+        ColumnMappings.Add(fkTableName, myColValidations.ToDictionary(p => { return p.Name; }));
+      }
     }
 
     /// <summary>
