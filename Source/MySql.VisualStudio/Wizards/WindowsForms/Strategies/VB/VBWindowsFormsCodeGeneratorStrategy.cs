@@ -187,6 +187,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("Me.{0}_comboBox.Name = \"{0}_comboBox\"", idColumnCanonical);
           Writer.WriteLine("Me.{0}_comboBox.Size = New System.Drawing.Size(206, 21)", idColumnCanonical);
           Writer.WriteLine("Me.{0}_comboBox.TabIndex = {1}", idColumnCanonical, tabIdx++);
+          if (validationsEnabled)
+          {
+            Writer.WriteLine("AddHandler Me.{0}_comboBox.Validating, AddressOf Me.{0}_comboBox_Validating",
+              idColumnCanonical);
+          }
           if (addBindings)
           {
             // nothing
@@ -291,9 +296,26 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < validationColumns.Count; i++)
         {
           ColumnValidation cv = validationColumns[i];
-          if (cv.HasLookup || cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
+          if ( cv.IsDateType() || cv.IsReadOnly() || cv.IsBooleanType()) continue;
 
           string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
+
+          if (cv.HasLookup && cv.Required)
+          {
+            Writer.WriteLine("Private Sub {0}_comboBox_Validating(sender As System.Object, e As System.ComponentModel.CancelEventArgs)", idColumnCanonical);
+            Writer.WriteLine("Dim i As Integer = {0}_comboBox.SelectedIndex", idColumnCanonical);
+            Writer.WriteLine("e.Cancel = False");
+            Writer.WriteLine("If i = -1 Then");
+            Writer.WriteLine("e.Cancel = True" );
+            Writer.WriteLine("errorProvider1.SetError({0}_comboBox, \"Must select a {0}\")", idColumnCanonical);
+            Writer.WriteLine("End If");
+            Writer.WriteLine("If Not e.Cancel Then" );
+            Writer.WriteLine("errorProvider1.SetError({0}_comboBox, \"\")", idColumnCanonical);
+            Writer.WriteLine("End If");
+            Writer.WriteLine("End Sub");
+            continue;
+          }
+
           Writer.WriteLine("Private Sub {0}TextBox_Validating(sender As Object, e As CancelEventArgs)", idColumnCanonical);
           Writer.WriteLine("");
           Writer.WriteLine("  e.Cancel = False");
