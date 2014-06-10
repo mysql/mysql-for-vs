@@ -88,18 +88,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             {            
               case "System.Web.Razor":
                 if (item.Version.Equals("1.0.0.0"))
-                  vsProj.References.Item(i).Remove();
+                    vsProj.References.Item("System.Web.Razor").Remove();
                 break;            
-              case "System.Web.WebPages":               
-                vsProj.References.Item(i).Remove();
+              case "System.Web.WebPages":
+                vsProj.References.Item("System.Web.WebPages").Remove();
               break;
             }
             i++;
           }
-          
-          vsProj.References.Add("System.Web.Mvc");          
+
+          vsProj.References.Add("System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
+          vsProj.References.Add("System.Web.Mvc");
           vsProj.References.Add("System.Web.Helpers");
-          vsProj.References.Add("System.Web.Razor");          
+          vsProj.References.Add("System.Web.Razor");
         }
 
 
