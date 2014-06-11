@@ -145,6 +145,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       { 
         string fkTableName = kvp.Value.ReferencedTableName;
         if( string.IsNullOrEmpty( fkTableName )) continue;
+        if (ColumnMappings.ContainsKey(fkTableName)) continue;
         Dictionary<string,Column> dicCols = GetColumnsFromTable(fkTableName, WizardForm.Connection);
         List<ColumnValidation> myColValidations = ValidationsGrid.GetColumnValidactionList(dicCols, null);
         ColumnMappings.Add(fkTableName, myColValidations.ToDictionary(p => { return p.Name; }));
