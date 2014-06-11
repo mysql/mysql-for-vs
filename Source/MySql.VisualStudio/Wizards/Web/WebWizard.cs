@@ -81,7 +81,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         if (version >= 12.0)
         {
           References refs = vsProj.References;
-          var i = 0;
           foreach (Reference item in refs)
           {
             switch (item.Name)
@@ -92,14 +91,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 break;            
               case "System.Web.WebPages":
                 vsProj.References.Item("System.Web.WebPages").Remove();
-              break;
+                break;
+              case "System.Web.Mvc":
+                vsProj.References.Item("System.Web.Mvc").Remove();
+                break;
+              case "System.Web.Helpers":
+                vsProj.References.Item("System.Web.Helpers").Remove();
+                break;
             }
-            i++;
           }
 
           vsProj.References.Add("System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
-          vsProj.References.Add("System.Web.Mvc");
-          vsProj.References.Add("System.Web.Helpers");
+          vsProj.References.Add("System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
+          vsProj.References.Add("System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
           vsProj.References.Add("System.Web.Razor");
         }
 
