@@ -300,14 +300,20 @@ namespace MySql.Data.VisualStudio.Wizards
 
     protected void AddReferencesEntityFramework(VSProject vsProj)
     {
-      if( CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5 )
+#if NET_40_OR_GREATER
+      string path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+#else
+      string path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+#endif
+
+      if ( CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5 )
       { 
-        vsProj.References.Add(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.Entity.dll");
-        vsProj.References.Add(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll");
+        vsProj.References.Add( Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.Entity.dll"));
+        vsProj.References.Add( Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll"));
       }
       else if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_6)
       {
-        vsProj.References.Add(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll");
+        vsProj.References.Add( Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll"));
         vsProj.References.Add("MySql.Data.Entity.EF6");
         vsProj.References.Add("System.ComponentModel.DataAnnotations");
       }
