@@ -152,23 +152,6 @@ namespace MySql.Data.VisualStudio
       // load our connections
       _mysqlConnectionsList = GetMySqlConnections();
 
-#if NET_40_OR_GREATER
-      
-      IVsServerExplorer explorer = (IVsServerExplorer)Package.GetGlobalService(typeof(IVsServerExplorer));
-      IVsUIHierarchy hierarchy;
-      if ((hierarchy = explorer as IVsUIHierarchy) != null)
-      {
-        // subscribe to SE notifications        
-        var seEventsListener = new ServerExplorerHierarchyEventsListener(hierarchy);
-        uint cookie = 0;
-        int result = hierarchy.AdviseHierarchyEvents(seEventsListener, out cookie);
-        if (result != VSConstants.S_OK)
-        {
-          ErrorHandler.ThrowOnFailure(result);
-        }
-      }
-#endif
-
       // Add our command handlers for menu (commands must exist in the .vsct file)
       OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
