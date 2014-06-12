@@ -47,6 +47,7 @@ using Microsoft.VisualStudio.TextTemplating;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
 #endif
 using Microsoft.VisualStudio.Shell;
+using MySQL.Utility.Classes;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -81,30 +82,25 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         if (version >= 12.0)
         {
           References refs = vsProj.References;
+          var i = 0;
           foreach (Reference item in refs)
           {
             switch (item.Name)
             {            
               case "System.Web.Razor":
                 if (item.Version.Equals("1.0.0.0"))
-                    vsProj.References.Item("System.Web.Razor").Remove();
+                  vsProj.References.Item(i).Remove();
                 break;            
-              case "System.Web.WebPages":
-                vsProj.References.Item("System.Web.WebPages").Remove();
-                break;
-              case "System.Web.Mvc":
-                vsProj.References.Item("System.Web.Mvc").Remove();
-                break;
-              case "System.Web.Helpers":
-                vsProj.References.Item("System.Web.Helpers").Remove();
-                break;
+              case "System.Web.WebPages":               
+                vsProj.References.Item(i).Remove();
+              break;
             }
+            i++;
           }
-
-          vsProj.References.Add("System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
-          vsProj.References.Add("System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
-          vsProj.References.Add("System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
-          vsProj.References.Add("System.Web.Razor");
+          
+          vsProj.References.Add("System.Web.Mvc");          
+          vsProj.References.Add("System.Web.Helpers");
+          vsProj.References.Add("System.Web.Razor");          
         }
 
 
@@ -241,6 +237,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       var connectionstringForModel = string.Empty;
 
+      var path = Utility.GetInstallLocation("MySQL Connector/Net");
+      Version mysqlDataVersion = null;
+      
+
+      if (!String.IsNullOrEmpty(path))
+      {
+        mysqlDataVersion = new Version(Utility.GetProductVersion(Assembly.LoadFrom(path + @"\Assemblies\v2.0\MySql.Data.dll")));        
+      }
+
       if (!WizardForm.includeSensitiveInformation)
       {
         // connectionstringformodel
@@ -265,6 +270,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
       replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");      
       replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
+      replacementsDictionary.Add("$mySqlProviderVersion$", mysqlDataVersion != null ? string.Format("{0}.{1}.{2}.{3}", mysqlDataVersion.Major, mysqlDataVersion.Minor, mysqlDataVersion.Build, "0") : "6.8.3.0");
 
       switch (WizardForm.dEVersion)
       {
