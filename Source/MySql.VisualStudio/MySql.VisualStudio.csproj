@@ -68,7 +68,7 @@
     <Otherwise>
       <!-- When Condition=" '$(VisualStudioVersion)' == ''" > -->
       <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
+        <ProductVersion>9.0.21022</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
         <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -1056,10 +1056,6 @@
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">

@@ -212,7 +212,7 @@
       <Component Id='VS2012_VSTVisualBasicDIR' Guid='BA082C85-9D64-1279-8910-C6C25655250A'>        
         <File Id='VS2012_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
-        <File Id='VS2012_VSCSharpTemplate' Name='MySQLTestingMvcTemplate.zip' DiskId='1'
+        <File Id='VS2012_VSCSharpTemplate' Name='CSharpMvc3.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
         <File Id='VS2012_VSCSharpWinFormsTemplate' Name='CSharpWinForms.zip' DiskId='1'
               Source='..\ProjectTemplatesZipFolder\MySQL Windows Forms Project.zip' />
@@ -419,7 +419,7 @@
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
-      <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
+      <Condition Level='0'>Not VS2012_ROOT_FOLDER AND Not Installed</Condition>
       <ComponentRef Id='VS2012_Extension'/>
       <ComponentRef Id='VS2012_Templates'/>
       <ComponentRef Id='VS2012_MD.Library' />    
