@@ -102,7 +102,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           vsProj.References.Add("System.Web.Helpers");
           vsProj.References.Add("System.Web.Razor");          
         }
-
+        AddNugetPackage(vsProj, JQUERY_PKG_NAME, JQUERY_VERSION);
+        var packagesPath = Path.Combine(Path.GetDirectoryName(ProjectPath), @"Packages\jQuery." + JQUERY_VERSION + @"\Content\Scripts");
+        CopyPackageToProject(vsProj, ProjectPath, packagesPath, "Scripts");
 
         if (WizardForm.selectedTables != null && WizardForm.dEVersion != DataEntityVersion.None)
         {
@@ -271,6 +273,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");      
       replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
       replacementsDictionary.Add("$mySqlProviderVersion$", mysqlDataVersion != null ? string.Format("{0}.{1}.{2}.{3}", mysqlDataVersion.Major, mysqlDataVersion.Minor, mysqlDataVersion.Build, "0") : "6.8.3.0");
+      replacementsDictionary.Add("$jqueryversion$", JQUERY_VERSION);
 
       switch (WizardForm.dEVersion)
       {
