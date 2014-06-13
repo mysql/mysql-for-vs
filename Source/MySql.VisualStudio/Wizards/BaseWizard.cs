@@ -131,6 +131,8 @@ namespace MySql.Data.VisualStudio.Wizards
     internal protected readonly static string ENTITY_FRAMEWORK_VERSION_5 = "5.0.0";
     internal protected readonly static string ENTITY_FRAMEWORK_VERSION_6 = "6.0.0";
     internal protected const string ENTITY_FRAMEWORK_PCK_NAME = "EntityFramework";
+    internal protected readonly static string JQUERY_VERSION = "2.1.1";
+    internal protected const string JQUERY_PKG_NAME = "Jquery";
 
     protected string CurrentEntityFrameworkVersion;
 
@@ -260,6 +262,18 @@ namespace MySql.Data.VisualStudio.Wizards
           sb.ToString()));
       }
     }
+
+    protected void CopyPackageToProject(VSProject vsProj, string projPath, string packagesPath, string FolderName)
+    {
+      var destination = Path.Combine(projPath, FolderName);
+      
+      if (Directory.Exists(destination))
+          Directory.Delete(destination);
+
+      Directory.Move(packagesPath, destination);
+      vsProj.Project.ProjectItems.AddFromDirectory(destination);
+    }
+
 
     private void AddDataEntityArtifactsToProject(EntityFrameworkGenerator gen, string modelName, VSProject vsProj, MySqlConnection con)
     {
@@ -439,7 +453,7 @@ namespace MySql.Data.VisualStudio.Wizards
           NetFxVersion));
       }
       packagePath = Path.Combine(packagePath, PackageName + ".dll");
-      VsProj.References.Add( packagePath );
+      VsProj.References.Add(packagePath);
     }
 
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, List<string> tables)

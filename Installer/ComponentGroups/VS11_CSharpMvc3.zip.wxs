@@ -39,87 +39,7 @@
             <Component Id="vs11cmpB33BD86C08968F24751BD78F7C792324" Directory="vs11dirB4997EC24718410F860B4493399C9797" Guid="C39E15DB-28DD-48D2-9C75-BC6CCB483041">
                 <File Id="vs11filA2950B279958B35C554DADFF0F57F0E3" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\Site.css" />
             </Component>
-            <Component Id="vs11cmpA7C1A90185AF6BF886EF49E08337765D" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="9A830992-DB15-49DC-9D85-BE16F2D5955A">
-                <File Id="vs11fil4B40D4184B55B2CBAEE4BD5DE1792E3B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.accordion.css" />
-            </Component>
-            <Component Id="vs11cmpD820BA6F2AAB91361879F0CDF6C464CF" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="BCC1BF74-66DF-4DDF-906F-F785823A5732">
-                <File Id="vs11fil1F7732475DEECA4FF907684085D61405" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.all.css" />
-            </Component>
-            <Component Id="vs11cmpF76F5EBF909549CA22055ED14A132E46" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="906EBF69-C95B-474B-A5E8-AE9F72D5D5F3">
-                <File Id="vs11fil2149CFB5A496C316A45E88B3B5DA6137" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.autocomplete.css" />
-            </Component>
-            <Component Id="vs11cmp9680E6075A3001737060D3EE446F04BC" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="8906D680-3E73-4653-96EA-094327C2B272">
-                <File Id="vs11fil3241855917DC58544899BA8AF68CBDF5" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.base.css" />
-            </Component>
-            <Component Id="vs11cmpFE88E77CD6557B587FD6F27B3A0BF71A" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="3B697C80-CEAD-4CC3-8CB3-1E61AEDAC22D">
-                <File Id="vs11fil7D3B93B9BAB2D9CD8BE8CE533C3E71C1" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.button.css" />
-            </Component>
-            <Component Id="vs11cmp17CD80CDFAF361DF5CE04B7D1B8FB8D2" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="ED1C3224-F42D-4E94-9487-B6EF1A2B318D">
-                <File Id="vs11filAC4D147775EE279746FE4E9068FBE01B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.core.css" />
-            </Component>
-            <Component Id="vs11cmp5B3FCB65BC43CD40B933A426E7550481" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="3326C88B-4F27-41C8-B628-6227AD3A9D18">
-                <File Id="vs11fil7B9B9D2262352356552E0D4FDAF1EA24" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.datepicker.css" />
-            </Component>
-            <Component Id="vs11cmpD71C672F7258BEFD453DCF12432FBBAC" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="EA8DCBF1-3ED8-4803-9C26-5486271B719A">
-                <File Id="vs11filAC817535C9C0940AADCBCA5CE36E2B9E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.dialog.css" />
-            </Component>
-            <Component Id="vs11cmpEC4678869D8403323A3963976192AE9F" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="17E7FE42-2766-45D1-8F0B-C90B39DE36DD">
-                <File Id="vs11fil327DE87C44074E7CE55828B93FF4BB9F" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.progressbar.css" />
-            </Component>
-            <Component Id="vs11cmpEBD2BEE8E56665337CC5FE3A7B1DCB70" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="ADC55A64-544F-4229-90D1-4D38A96BECC8">
-                <File Id="vs11fil69A6AAB8737163B6859C72059F1ABE4E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.resizable.css" />
-            </Component>
-            <Component Id="vs11cmp81E56279D1276031BD37045C66F1B49A" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="9E30A56E-A94D-44EC-B4B9-3ECAD9E2C0C5">
-                <File Id="vs11fil823C67CC6946359D6A154B1DB5D7960E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.selectable.css" />
-            </Component>
-            <Component Id="vs11cmp2233A4461DB201CDF7CD68611D7D9E9C" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="2E57C1D7-6DA5-4863-9074-2A5AF969399D">
-                <File Id="vs11fil219342B7F9AE7C52F2BC6AD66ED3B169" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.slider.css" />
-            </Component>
-            <Component Id="vs11cmpD7EF7313723D5091BA4E8ACD8D40C270" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="C1A88A9B-9FEE-4D40-BA13-769B45861D6F">
-                <File Id="vs11filBAFADB3AAC5742D772B889281F6A5108" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.tabs.css" />
-            </Component>
-            <Component Id="vs11cmp489A0F04AE346935AB70E8C2F24905F6" Directory="vs11dirAD334F5036A2A70123065AEDA8E8BBD2" Guid="3FD9BCC5-F2F8-4A2C-ADB2-80078F73B34B">
-                <File Id="vs11fil69CA7BB87CA7A68E319FF13DC1DF230D" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\jquery.ui.theme.css" />
-            </Component>
-            <Component Id="vs11cmp0E7076968A5161521EE2F0D840CF600D" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="4BABA2A5-DE05-4A3C-A3C8-4E59E35F05BF">
-                <File Id="vs11fil20B1C4E227A66E57D5459DF17F3C7D92" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-            </Component>
-            <Component Id="vs11cmp99124D06CF0DCC62ADD7113FBD81A0EF" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="7C3D1A70-C002-4618-AB4D-2A90597FB3DD">
-                <File Id="vs11fil5518450D5DE234C3B89DF350AD749C7A" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-            </Component>
-            <Component Id="vs11cmpC6A7BE2926495F2D67C6FD512E6992C8" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="35DFF26D-E993-4820-81C6-1D69F70C0187">
-                <File Id="vs11filBF0073C2E165C1C7D9869AE0435E5B98" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-            </Component>
-            <Component Id="vs11cmp3FD3C62E92D3A65C13193427CA53A742" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="4E51B010-1981-4901-AB6A-4853F6C7A077">
-                <File Id="vs11fil3F475F70E2F67A892EB1C4941A6BA1B2" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-            </Component>
-            <Component Id="vs11cmpC7A9FA10F897CFB911E57558FC64CD77" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="5EC6DC15-926D-4B53-A1BC-5EF295A89862">
-                <File Id="vs11fil8CAD5B932252352B9302BE63819620E4" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-            </Component>
-            <Component Id="vs11cmpF34C3C35EE05A0F83A854D428EBD36D2" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="600E7B81-5BED-4E7E-AA41-5086DEDC0692">
-                <File Id="vs11filAC5BFCD3B1136CE5294AFE59B83E3E33" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-            </Component>
-            <Component Id="vs11cmp660D7E65BF7C87B6F9C41E533474C977" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="81467AA6-9DD3-4E15-9060-EFEE26FE5267">
-                <File Id="vs11fil26E1CC539AAFB4D953413D457A6B07B4" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-            </Component>
-            <Component Id="vs11cmp0B6C3F8FB63CF8AFF7A680C29EEFEBDD" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="18387538-4857-4AAD-BBCC-C3221433E95D">
-                <File Id="vs11filC69C94882DDA19FA8FF8C69A907CA63D" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-            </Component>
-            <Component Id="vs11cmp1BDA27C64EC9B68407AEDACE8C114EF8" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="7622689F-0E2A-4143-ABB6-275C35EFCA40">
-                <File Id="vs11fil4D7DEAAD7876236D9DF28037D284FC74" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-icons_222222_256x240.png" />
-            </Component>
-            <Component Id="vs11cmp2D07CDD30AA5AA9C0E83624719CA329E" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="54152931-63D0-4C23-9843-61D9A301314A">
-                <File Id="vs11fil439768C6E84A55C1E16A56F39177307C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-            </Component>
-            <Component Id="vs11cmpEDFCEA01F5225168F7A0A9F0BE2ABF76" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="20E28F6B-FCB5-4040-BC46-9495B8DD249A">
-                <File Id="vs11fil6C3A26B980E2EAB902D48A7BA0DA69EE" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-icons_454545_256x240.png" />
-            </Component>
-            <Component Id="vs11cmpB0B7AE620AE27AA6610D82FF2D8A9D49" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="4E3B3B99-03CB-406C-A4AF-2E4E25102FFC">
-                <File Id="vs11fil4054162F0F8FF63753E46F378BBC4B40" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-icons_888888_256x240.png" />
-            </Component>
-            <Component Id="vs11cmp749FF061227D18BA8E84C504938AB7B6" Directory="vs11dir62B27898CB6091A09A677E25EB0446A2" Guid="DD118517-C2F3-4660-B443-7B3526EA4018">
-                <File Id="vs11filBC93EEDC449C5D91A6A24FAEA53B2CD1" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-            </Component>
+            
             <Component Id="vs11cmp0DBD60076A67C5D67FA7656427B8F91D" Directory="vs11dir40848669870A256441B493F48F2479D8" Guid="A034946D-BBA7-45FC-AF10-0D2D3A77397B">
                 <File Id="vs11fil62A2E3FF6AF90A6E1003DF6EAB621AC8" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Controllers\AccountController.cs" />
             </Component>
@@ -132,66 +52,7 @@
             <Component Id="vs11cmpA8E1E9FDA28AD58159C4C3E7D7E4D65E" Directory="vs11dir428276E25DA7BE4213AC3D0DD8245054" Guid="21764FCC-DA16-41A6-ACB2-6EF7D92B958C">
                 <File Id="vs11filE1A9FE22350CD7AE1FA79C48473533ED" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Properties\AssemblyInfo.cs" />
             </Component>
-            <Component Id="vs11cmp106454F711B7C97D697231A8703D3959" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="AAF2D056-81C0-4B11-9493-7A2F77D5E6FB">
-                <File Id="vs11fil859775EA3E301A5CB0ACAB3A8111BE59" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery-1.5.1-vsdoc.js" />
-            </Component>
-            <Component Id="vs11cmp9078C9079626742108C024ABFCE9CF9A" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="6AD8F1CE-5682-4C2B-BF5E-E851AA115475">
-                <File Id="vs11fil336437BCB8A2F8CF615C0333657D5E2B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery-1.5.1.js" />
-            </Component>
-            <Component Id="vs11cmpA5941F042A671293F6102CF850965901" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="C2D33B96-EDEC-4733-8C93-4DA9EA40DE3B">
-                <File Id="vs11fil126B7CE26C899B333B0294DED220DA38" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery-1.5.1.min.js" />
-            </Component>
-            <Component Id="vs11cmpF9A3CEEA4846BA84B4ADA32D5FF1260E" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="A753E80E-85FA-44C3-A530-4BACADFD0646">
-                <File Id="vs11filA755F2D767F5AF5C9B5A3AADF7A8411E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery-ui-1.8.11.js" />
-            </Component>
-            <Component Id="vs11cmpF3ED66B981BC2302B6C280AFB757408D" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="69AF1EFE-D16A-4E4F-B76D-0E89351A1E05">
-                <File Id="vs11fil3226F94CD3EFA6F6278B2014BF21D950" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery-ui-1.8.11.min.js" />
-            </Component>
-            <Component Id="vs11cmp221920BCDFFF5F703537B352372863EB" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="243963A9-14D3-41E1-93B7-0B452A9F7D59">
-                <File Id="vs11fil86D2292AE65B33344C129A0740F87ABB" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.unobtrusive-ajax.js" />
-            </Component>
-            <Component Id="vs11cmp752ADB44CDEC3D61B1B00759954B5515" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="AF786FE5-A7E9-44B1-9DDB-FB39E6FF58F8">
-                <File Id="vs11fil8C2CBB97299C9ED0789D23F6AC3FCB7A" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.unobtrusive-ajax.min.js" />
-            </Component>
-            <Component Id="vs11cmp05D054F2DB7C941D52BB33241ED2B5D8" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="6253A2FE-F231-42E1-AEAB-36A90A82B325">
-                <File Id="vs11fil0C4E46063559DF206567FC0BB40A8B73" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.validate-vsdoc.js" />
-            </Component>
-            <Component Id="vs11cmp9E072CCD0302F6DC1B3C1CDEDED41840" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="5D96B775-C4B4-464A-B11E-48DE81FF1852">
-                <File Id="vs11fil59203321B185FC60D95D01E0051879F3" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.validate.js" />
-            </Component>
-            <Component Id="vs11cmpBAF761792AA8712A31E9CA18E22F8F54" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="7CB715EE-6DED-414C-A5DA-B36D782B6E0D">
-                <File Id="vs11fil5313CCAA1A56137E83121FDDD37D15BF" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.validate.min.js" />
-            </Component>
-            <Component Id="vs11cmpAD8B51D582816BA3D137C2A248A22FD2" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="4FC0897E-ED23-4110-8C4B-E258C5563AFD">
-                <File Id="vs11fil8F1AA44B49BAAFEFA39778C4725F2CE3" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.validate.unobtrusive.js" />
-            </Component>
-            <Component Id="vs11cmp54139994DF3CD8629C0E36C197D39EE7" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="76A19DC3-7736-4D5A-90C9-2E4603B9B90C">
-                <File Id="vs11fil05AC01C48F04544E70A964566E6B2723" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\jquery.validate.unobtrusive.min.js" />
-            </Component>
-            <Component Id="vs11cmpC0C76D99CD4C226E78A0148F23B9EA28" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="ACC50839-AABF-457B-9038-BB7D629E5CE4">
-                <File Id="vs11fil7609F5CA7E7BDE1B7094481BFA10402B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\MicrosoftAjax.debug.js" />
-            </Component>
-            <Component Id="vs11cmpBE2EDE9C5A07042AF025C7923F23AE59" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="DFA7FD08-5575-498E-99C1-525A23235639">
-                <File Id="vs11fil4612C5BBBE8C52EFEC352AE278D500D3" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\MicrosoftAjax.js" />
-            </Component>
-            <Component Id="vs11cmp4A6D0E6C27C7F9F8F18BF11A550FE6F7" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="E6443366-F256-422E-AC01-336847BAABEB">
-                <File Id="vs11filDDDFE51BBDB1816B58076B1C3F5817F0" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\MicrosoftMvcAjax.debug.js" />
-            </Component>
-            <Component Id="vs11cmpFAC57065C654BCE295B37BD9225B0A60" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="A1619BBA-2D7D-4C48-AC4C-C386918625A6">
-                <File Id="vs11fil7686DF39D2CF04383C177A1735AE21D0" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\MicrosoftMvcAjax.js" />
-            </Component>
-            <Component Id="vs11cmp0806D71BB4B9E8FEF49ACFAFC98F3597" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="105B0B04-3FC1-4B89-A37D-F32865CC1ADC">
-                <File Id="vs11fil5B80C6701354C81101CB65E1D4EEB2FE" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\MicrosoftMvcValidation.debug.js" />
-            </Component>
-            <Component Id="vs11cmp49CBBF8E0A860DD6FDE07B832104DD50" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="1B098A53-BA13-4C54-97AB-1EF8CA516E87">
-                <File Id="vs11fil9DA9F97C43049ED66591187E83854D4B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\MicrosoftMvcValidation.js" />
-            </Component>
-            <Component Id="vs11cmp547EDD3B0D79FEA359372824A13B8738" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="EFB4EA26-B561-4917-A811-14136709EE1B">
-                <File Id="vs11filAE9E7D0CF51F285178874AC4C42A82E0" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\modernizr-1.7.js" />
-            </Component>
-            <Component Id="vs11cmp827B978A1612B57D87FCDC2B0C0D267B" Directory="vs11dir094FBDB593E9BAD232CDF36563B7E74F" Guid="D57E9300-5463-4B83-B4C2-8BADBDC86896">
-                <File Id="vs11filB5DCEA7584E38755554CDD54AF080ADB" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Scripts\modernizr-1.7.min.js" />
-            </Component>
+            
             <Component Id="vs11cmp5BCB4102571FB7B572F31B2B2E38FADD" Directory="vs11dir13F4FB870B9C325B5E341A0C06F33B6A" Guid="1CE13E20-A661-478B-B61B-D11C4A79A8DD">
                 <File Id="vs11filA2F181A0960C42FC87F745308E77F290" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Web.config" />
             </Component>
