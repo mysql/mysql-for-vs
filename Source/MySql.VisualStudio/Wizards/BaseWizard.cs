@@ -100,6 +100,8 @@ namespace MySql.Data.VisualStudio.Wizards
 
     internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
 
+    internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
+
     internal Dictionary<string, Dictionary<string, ColumnValidation>> ColumnMappings = new Dictionary<string, Dictionary<string, ColumnValidation>>();
 
     public enum ProjectWizardType : int
@@ -113,9 +115,6 @@ namespace MySql.Data.VisualStudio.Wizards
       get;
       set;
     }
-
-    //internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys;
-
 
     /// <summary>
     /// The column metadata.

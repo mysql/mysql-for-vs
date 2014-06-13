@@ -66,6 +66,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("bindingNavigatorMoveNextItem.Enabled = false;");
       Writer.WriteLine("bindingNavigatorMoveLastItem.Enabled = false;");
       Writer.WriteLine("toolStripButton1.Enabled = true;");
+
+      WriteDataGridColumnInitialization();
+      Writer.WriteLine("this.dataGridView1.DataSource = this.{0}BindingSource;", CanonicalTableName);
     }    
 
     protected override void WriteVariablesUserCode()
@@ -117,13 +120,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;");
       Writer.WriteLine("this.dataGridView1.Location = new System.Drawing.Point(9, 37);");
       Writer.WriteLine("this.dataGridView1.Name = \"dataGridView1\"; ");
-      WriteDataGridColumnInitialization();
-      Writer.WriteLine("this.dataGridView1.DataSource = this.{0}BindingSource;", CanonicalTableName);
       Writer.WriteLine("this.dataGridView1.Size = new System.Drawing.Size(339, 261);");
       Writer.WriteLine("this.dataGridView1.TabIndex = 0;");
       if (ValidationsEnabled)
       {
         Writer.WriteLine("this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);");
+        Writer.WriteLine("this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);");
       }
       Writer.WriteLine("this.Panel1.Controls.Add(this.dataGridView1);");
     }
@@ -144,6 +146,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
       Writer.WriteLine("this.Panel1.Padding = new System.Windows.Forms.Padding(10);");
       Writer.WriteLine("this.Controls.Add(this.Panel1);");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.newDataSet)).EndInit();");
@@ -153,7 +156,18 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
+      // Nothing
+    }
+
+    internal override string GetDataSourceForCombo( ColumnValidation cv )
+    {
+      string colName = cv.Name;
+      string idColumnCanonical = GetCanonicalIdentifier(colName);
+      string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+      Writer.WriteLine("if( ad2 != null ) ad2.Dispose();" );
+      Writer.WriteLine("ad2 = new MySql.Data.MySqlClient.MySqlDataAdapter(\"select * from `{0}`\", strConn2);", cv.FkInfo.ReferencedTableName);
+      Writer.WriteLine("ad2.Fill(this.newDataSet.{0});", canonicalReferencedTableName);
+      return string.Format( "this.newDataSet.{0}", canonicalReferencedTableName );
     }
   }
 }

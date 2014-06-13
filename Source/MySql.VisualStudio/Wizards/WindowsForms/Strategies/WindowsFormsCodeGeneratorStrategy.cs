@@ -192,6 +192,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected abstract void WriteBeforeResumeSuspendCode();
     protected abstract void WriteDataGridColumnInitialization();
 
+    internal abstract string GetDataSourceForCombo( ColumnValidation cv );
+
     protected abstract void WriteControlInitialization(bool addBindings);
 
     protected virtual void WriteNormalCode(string LineInput)

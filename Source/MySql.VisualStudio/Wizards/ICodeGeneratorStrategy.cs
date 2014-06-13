@@ -69,12 +69,14 @@ namespace MySql.Data.VisualStudio.Wizards
     internal string DetailTableName;
     internal string ConstraintName;
     internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys;
+    internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys;
 
     internal StrategyConfig(StreamWriter Writer, string CanonicalTableName,
       Dictionary<string, Column> Columns, Dictionary<string, Column> DetailColumns, DataAccessTechnology DataAccessTech,
       GuiType Type, LanguageGenerator Language, bool ValidationsEnabled,
       List<ColumnValidation> ValidationColumns, List<ColumnValidation> DetailValidationColumns, string ConnectionString,
-      string TableName, string DetailTableName, string ConstraintName, Dictionary<string, ForeignKeyColumnInfo> ForeignKeys )
+      string TableName, string DetailTableName, string ConstraintName, Dictionary<string, ForeignKeyColumnInfo> ForeignKeys,
+      Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys)
     {
       this.Writer = Writer;
       this.CanonicalTableName = CanonicalTableName;
@@ -91,6 +93,7 @@ namespace MySql.Data.VisualStudio.Wizards
       this.DetailValidationColumns = DetailValidationColumns;
       this.ConstraintName = ConstraintName;
       this.ForeignKeys = ForeignKeys;
+      this.DetailForeignKeys = DetailForeignKeys;
     }
   }
 

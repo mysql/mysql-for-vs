@@ -103,6 +103,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (ValidationsEnabled)
       {
         Writer.WriteLine("this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);");
+        Writer.WriteLine("this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);");
       }
       Writer.WriteLine("this.Panel1.Controls.Add(this.dataGridView1);");
     }
@@ -121,6 +122,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
       Writer.WriteLine("this.Panel1.Padding = new System.Windows.Forms.Padding(10);");
       Writer.WriteLine("this.Controls.Add(this.Panel1);");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
@@ -130,6 +132,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected override void WriteControlInitialization(bool addBindings)
     {
       Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
+    }
+
+    internal override string GetDataSourceForCombo( ColumnValidation cv )
+    {
+      string colName = cv.Name;
+      string idColumnCanonical = GetCanonicalIdentifier(colName);
+      string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+      return string.Format("ctx.{1}.ToList()", idColumnCanonical, canonicalReferencedTableName);
     }
   }
 }
