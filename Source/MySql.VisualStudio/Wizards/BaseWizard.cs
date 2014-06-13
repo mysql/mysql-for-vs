@@ -265,13 +265,21 @@ namespace MySql.Data.VisualStudio.Wizards
 
     protected void CopyPackageToProject(VSProject vsProj, string projPath, string packagesPath, string FolderName)
     {
-      var destination = Path.Combine(projPath, FolderName);
-      
-      if (Directory.Exists(destination))
+      try
+      {
+        var destination = Path.Combine(projPath, FolderName);
+
+        if (Directory.Exists(destination))
           Directory.Delete(destination);
 
-      Directory.Move(packagesPath, destination);
-      vsProj.Project.ProjectItems.AddFromDirectory(destination);
+        Directory.Move(packagesPath, destination);
+        vsProj.Project.ProjectItems.AddFromDirectory(destination);
+      }
+      catch
+      {
+        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet conexion.");
+      }
+      
     }
 
 
