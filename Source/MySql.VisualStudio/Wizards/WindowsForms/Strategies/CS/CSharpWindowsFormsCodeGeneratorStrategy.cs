@@ -135,6 +135,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       throw new NotImplementedException();
     }
 
+    internal override string GetDataSourceForCombo( ColumnValidation cv )
+    {
+      throw new NotImplementedException();
+    }
+
     protected override void WriteControlInitialization(bool addBindings)
     {
       Label l = new Label();
@@ -394,7 +399,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       for (int i = 0; i < validationColumns.Count; i++)
       {
         ColumnValidation cv = validationColumns[i];
-        if (cv.IsBooleanType()) continue;
+        if (cv.IsBooleanType() || cv.HasLookup ) continue;
         string idColumnCanonical = GetCanonicalIdentifier(cv.Column.ColumnName);
 
         Writer.WriteLine("  if (e.ColumnIndex == {0})", i);
@@ -459,12 +464,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("  }");
       }
       Writer.WriteLine("}");
+
+      // DataError event
+      Writer.WriteLine("");
+      Writer.WriteLine("private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)");
+      Writer.WriteLine("{");
+      Writer.WriteLine("dataGridView1.Rows[e.RowIndex].ErrorText = e.Exception.Message;");
+      Writer.WriteLine("e.Cancel = true;");
+      Writer.WriteLine("}");
     }
 
     protected override void WriteDataGridColumnInitialization()
     {
       List<ColumnValidation> validationColumns = GetValidationColumns();
       Writer.WriteLine("dataGridView1.AutoGenerateColumns = false;");
+      Writer.WriteLine("string strConn2 = \"{0};\";", ConnectionString);
+      Writer.WriteLine("MySql.Data.MySqlClient.MySqlDataAdapter ad2 = null;");
       for (int i = 0; i < validationColumns.Count; i++)
       {
         ColumnValidation cv = validationColumns[i];
@@ -477,10 +492,23 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical);
           Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
         }
+        else if (cv.HasLookup)
+        {
+          Writer.WriteLine("System.Windows.Forms.DataGridViewComboBoxColumn col{0} = new System.Windows.Forms.DataGridViewComboBoxColumn();", idColumnCanonical);
+          Writer.WriteLine("col{0}.DataSource = {1};", idColumnCanonical, GetDataSourceForCombo( cv ));
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";",
+            idColumnCanonical, cv.EfColumnMapping);
+          Writer.WriteLine("col{0}.DisplayMember = \"{1}\";", idColumnCanonical, cv.EfLookupColumnMapping);
+          Writer.WriteLine("col{0}.ValueMember = \"{1}\";", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
+          Writer.WriteLine("col{0}.HeaderText = \"{0}\";", idColumnCanonical);
+          Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical );
+          Writer.WriteLine("col{0}.ToolTipText = \"Pick the column from the foreign table to use as friendly value for this lookup.\";", idColumnCanonical);
+          Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
+        }
         else
         {
           Writer.WriteLine("System.Windows.Forms.DataGridViewTextBoxColumn col{0} = new System.Windows.Forms.DataGridViewTextBoxColumn();", idColumnCanonical);
-          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";", idColumnCanonical, cv.EfColumnMapping );
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";", idColumnCanonical, cv.EfColumnMapping);
           Writer.WriteLine("col{0}.HeaderText = \"{1}\";", idColumnCanonical, cv.Name);
           Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical);
           Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);

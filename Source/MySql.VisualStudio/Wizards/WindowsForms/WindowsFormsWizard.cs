@@ -79,7 +79,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           WizardForm.DataAccessTechnology, WizardForm.GuiType, Language,
           ValidationsEnabled, WizardForm.ValidationColumns, WizardForm.ValidationColumnsDetail,
           GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName,
-          detailTableName, WizardForm.ConstraintName, ForeignKeys );
+          detailTableName, WizardForm.ConstraintName, ForeignKeys, DetailForeignKeys );
         Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
 
         vsProj.References.Add("MySql.Data");
@@ -94,8 +94,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           tables.Add(kvp.Value.ReferencedTableName);
         }
+        foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp in DetailForeignKeys)
+        {
+          tables.Add(kvp.Value.ReferencedTableName);
+        }
 
         InitializeColumnMappings(ForeignKeys);
+        InitializeColumnMappings(DetailForeignKeys);
 
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||

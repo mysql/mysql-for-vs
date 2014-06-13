@@ -66,6 +66,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("bindingNavigatorMoveNextItem.Enabled = False");
       Writer.WriteLine("bindingNavigatorMoveLastItem.Enabled = False");
       Writer.WriteLine("toolStripButton1.Enabled = True");
+
+      WriteDataGridColumnInitialization();
+      Writer.WriteLine("Me.dataGridView1.DataSource = Me.{0}BindingSource", CanonicalTableName);
     }
 
     protected override void WriteVariablesUserCode()
@@ -116,13 +119,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Me.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill");
       Writer.WriteLine("Me.dataGridView1.Location = New System.Drawing.Point(9, 37)");
       Writer.WriteLine("Me.dataGridView1.Name = \"dataGridView1\" ");
-      WriteDataGridColumnInitialization();
-      Writer.WriteLine("Me.dataGridView1.DataSource = Me.{0}BindingSource", CanonicalTableName);
       Writer.WriteLine("Me.dataGridView1.Size = New System.Drawing.Size(339, 261)");
       Writer.WriteLine("Me.dataGridView1.TabIndex = 0");
       if (ValidationsEnabled)
       {
         Writer.WriteLine("AddHandler Me.dataGridView1.CellValidating, AddressOf Me.dataGridView1_CellValidating");
+        Writer.WriteLine("AddHandler Me.dataGridView1.DataError, AddressOf Me.dataGridView1_DataError");
       }
       Writer.WriteLine("Me.Panel1.Controls.Add(Me.dataGridView1)");
     }
@@ -143,6 +145,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.WriteLine("Me.Text = \"{0}\"", CapitalizeString(TableName));
       Writer.WriteLine("Me.Panel1.Padding = New System.Windows.Forms.Padding(10)");
       Writer.WriteLine("Me.Controls.Add(Me.Panel1)");
       Writer.WriteLine("CType(Me.newDataSet, System.ComponentModel.ISupportInitialize).EndInit()");
@@ -152,7 +155,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      Writer.WriteLine("Me.Text = \"{0}\"", CapitalizeString(TableName));
+      // Nothing
+    }
+
+    internal override string GetDataSourceForCombo(ColumnValidation cv)
+    {
+      string colName = cv.Name;
+      string idColumnCanonical = GetCanonicalIdentifier(colName);
+      string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+      Writer.WriteLine("If Not ( ad2 Is Nothing ) Then");
+      Writer.WriteLine("ad2.Dispose()");
+      Writer.WriteLine("End If");
+      Writer.WriteLine("ad2 = New MySql.Data.MySqlClient.MySqlDataAdapter(\"select * from `{0}`\", strConn2)", cv.FkInfo.ReferencedTableName);
+      Writer.WriteLine("ad2.Fill(Me.newDataSet.{0})", canonicalReferencedTableName);
+      return string.Format("Me.newDataSet.{0}", canonicalReferencedTableName);
     }
   }
 }

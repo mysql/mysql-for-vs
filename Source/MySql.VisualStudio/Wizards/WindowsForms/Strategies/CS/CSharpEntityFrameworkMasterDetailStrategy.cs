@@ -214,6 +214,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (ValidationsEnabled)
       {
         Writer.WriteLine("this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);");
+        Writer.WriteLine("this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);");
       }
     }
 
@@ -250,6 +251,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.panel2.PerformLayout();");
       Writer.WriteLine("this.panel3.ResumeLayout(false);");
       Writer.WriteLine("this.panel3.PerformLayout();");
+    }
+
+    internal override string GetDataSourceForCombo(ColumnValidation cv)
+    {
+      string colName = cv.Name;
+      string idColumnCanonical = GetCanonicalIdentifier(colName);
+      string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+      return string.Format("ctx.{1}.ToList()", idColumnCanonical, canonicalReferencedTableName);
     }
   }
 }

@@ -182,7 +182,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (string.IsNullOrEmpty(_detailTable)) return;
       _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
       _colValidationsDetail.Clear();
-      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, null);
+      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
+      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
       lblTitleDetail.Text = string.Format("Columns to add validations from table: {0}", _detailTable);
     }
   
