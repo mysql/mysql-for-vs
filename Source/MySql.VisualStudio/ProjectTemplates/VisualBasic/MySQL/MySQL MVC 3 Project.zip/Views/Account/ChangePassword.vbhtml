@@ -1,4 +1,4 @@
-﻿@ModelType MvcApplication.ChangePasswordModel
+﻿@ModelType $safeprojectname$.ChangePasswordModel
 
 @Code
     ViewData("Title") = "Change Password"

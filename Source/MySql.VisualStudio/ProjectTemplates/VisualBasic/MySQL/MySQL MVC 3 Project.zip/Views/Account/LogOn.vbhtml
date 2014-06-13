@@ -1,4 +1,4 @@
-﻿@ModelType MvcApplication.LogOnModel
+﻿@ModelType $safeprojectname$.LogOnModel
 
 @Code
     ViewData("Title") = "Log On"

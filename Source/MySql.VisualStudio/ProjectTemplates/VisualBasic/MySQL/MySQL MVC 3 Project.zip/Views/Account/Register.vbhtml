@@ -1,4 +1,4 @@
-﻿@ModelType MvcApplication.RegisterModel
+﻿@ModelType $safeprojectname$.RegisterModel
 
 @Code
     ViewData("Title") = "Register"
