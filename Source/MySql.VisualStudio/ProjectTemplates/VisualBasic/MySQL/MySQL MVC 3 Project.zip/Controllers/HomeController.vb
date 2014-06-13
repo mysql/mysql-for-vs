@@ -2,7 +2,7 @@
     Inherits System.Web.Mvc.Controller
 
     Function Index() As ActionResult
-        ViewData("Message") = "Welcome to ASP.NET MVC!"
+        ViewData("Message") = "Welcome, to your new MVC application!"
 
         Return View()
     End Function

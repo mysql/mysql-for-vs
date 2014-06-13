@@ -4,7 +4,7 @@ End Code
 
 <h2>@ViewData("Message")</h2>
 <p>
-    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+    To learn more about MySQL for Visual Studio visit <a href="http://www.mysql.com/why-mysql/windows/visualstudio/" title="MySQL for Visual Studio page">http://www.mysql.com/why-mysql/windows/visualstudio/</a>.
 </p>
 $catalogList$
 
