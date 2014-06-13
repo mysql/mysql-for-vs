@@ -185,7 +185,7 @@ namespace MySql.Data.VisualStudio
       password_Leave(serverName, EventArgs.Empty);
       
       if (!populated)
-        GetConnection(true);
+       GetConnection(true);
     }
 
     private void ReadFields()

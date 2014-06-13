@@ -150,15 +150,13 @@ namespace MySql.Data.VisualStudio
           if ((MySqlConnection)dlg.Connection == null) return;
           
           var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
-
+          if (csb == null) return;
+          
             //make sure we don't have already the same connection
            if (cmbConnections.FindString(csb.ConnectionString) < 0)
            {
-              if (csb != null)
-              {
-                connectionStringTextBox.Tag = csb.ConnectionString;
-              }
-
+              
+              connectionStringTextBox.Tag = csb.ConnectionString;
               if (!String.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) && addSEConnection)
               {
                 // adding connection to server explorer connections          
@@ -174,7 +172,7 @@ namespace MySql.Data.VisualStudio
                 cmbConnections.DisplayMember = "DisplayName";                
               }
             }
-           cmbConnections.SelectedValue = csb.ConnectionString;
+           cmbConnections.Text = String.Format("{0}({1})", csb.Server, csb.Database);
            connectionStringTextBox.Text = MaskPassword(csb.ConnectionString);
            connectionStringTextBox.Tag = csb.ConnectionString;
         }    

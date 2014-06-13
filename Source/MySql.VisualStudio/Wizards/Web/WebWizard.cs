@@ -273,7 +273,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");      
       replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
       replacementsDictionary.Add("$mySqlProviderVersion$", mysqlDataVersion != null ? string.Format("{0}.{1}.{2}.{3}", mysqlDataVersion.Major, mysqlDataVersion.Minor, mysqlDataVersion.Build, "0") : "6.8.3.0");
-      replacementsDictionary.Add("$jqueryversion$", JQUERY_VERSION);
+      replacementsDictionary.Add("$jqueryversion$", JQUERY_VERSION);      
 
       switch (WizardForm.dEVersion)
       {

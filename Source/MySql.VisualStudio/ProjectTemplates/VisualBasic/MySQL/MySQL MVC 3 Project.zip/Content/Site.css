@@ -1,12 +1,7 @@
-﻿/*----------------------------------------------------------
-The base color for this template is #5c87b2. If you'd like
-to use a different color start by replacing all instances of
-#5c87b2 with your new color.
-----------------------------------------------------------*/
-body {
-    background-color: #5c87b2;
+﻿body {
+    background-color: #015A84;
     font-size: .85em;
-    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    font-family: "Segoe UI";
     margin: 0;
     padding: 0;
     color: #696969;
@@ -102,7 +97,7 @@ header h1, #header h1 {
 
 #main {
     padding: 30px 30px 15px 30px;
-    background-color: #fff;
+    background-color: #f8f8ff;
     border-radius: 4px 0 0 0;
     -webkit-border-radius: 4px 0 0 0;
     -moz-border-radius: 4px 0 0 0;
@@ -125,7 +120,7 @@ footer,
 /* TAB MENU   
 ----------------------------------------------------------*/
 ul#menu {
-    border-bottom: 1px #5C87B2 solid;
+    border-bottom: 1px #015A84 solid;
     padding: 0 0 2px;
     position: relative;
     margin: 0;
