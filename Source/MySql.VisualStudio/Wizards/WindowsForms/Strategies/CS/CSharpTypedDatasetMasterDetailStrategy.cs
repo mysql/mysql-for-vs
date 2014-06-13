@@ -81,7 +81,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("newDataSet.Relations.Add( new DataRelation( \"{0}\", {1}, {2} ) );", 
         ConstraintName, sbSrcCols.ToString(), sbDstCols.ToString() );
 
-      Writer.WriteLine("MySqlDataAdapter ad2;");
+      Writer.WriteLine("MySqlDataAdapter ad3;");
 
       for (int i = 0; i < ValidationColumns.Count; i++)
       {
@@ -92,14 +92,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           string idColumnCanonical = GetCanonicalIdentifier(colName);
           string canonicalReferencedTable = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
 
-          Writer.WriteLine("ad2 = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", cv.FkInfo.ReferencedTableName);
-          Writer.WriteLine("ad2.Fill(this.newDataSet.{0});", canonicalReferencedTable);
+          Writer.WriteLine("ad3 = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", cv.FkInfo.ReferencedTableName);
+          Writer.WriteLine("ad3.Fill(this.newDataSet.{0});", canonicalReferencedTable);
           Writer.WriteLine("this.{0}_comboBox.DataSource = this.newDataSet.{1};", idColumnCanonical, canonicalReferencedTable);
           Writer.WriteLine("this.{0}_comboBox.DisplayMember = \"{1}\";", idColumnCanonical, cv.EfLookupColumnMapping);
           Writer.WriteLine("this.{0}_comboBox.ValueMember = \"{1}\";", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
           Writer.WriteLine("this.{0}_comboBox.DataBindings.Add(new System.Windows.Forms.Binding(\"SelectedValue\", this.{1}BindingSource, \"{2}\", true));",
             idColumnCanonical, CanonicalTableName, cv.EfColumnMapping);
-          Writer.WriteLine("ad2.Dispose();");
+          Writer.WriteLine("ad3.Dispose();");
         }
       }
 
@@ -129,32 +129,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("}");
         }
       }
-      for (int i = 0; i < DetailValidationColumns.Count; i++)
-      {
-        ColumnValidation cv = DetailValidationColumns[i];
-        string colName = GetCanonicalIdentifier(cv.Name);
-        if (cv.DataType == "timestamp")
-        {
-          Writer.WriteLine("if( (( DataRowView ){0}BindingSource.Current )[ \"{1}\" ] is DBNull )", CanonicalDetailTableName, colName);
-          Writer.WriteLine("{");
-          Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = DateTime.Now;", CanonicalDetailTableName, colName);
-          Writer.WriteLine("}");
-        }
-        else if (cv.IsBooleanType())
-        {
-          Writer.WriteLine("if( (( DataRowView ){0}BindingSource.Current )[ \"{1}\" ] is DBNull )", CanonicalTableName, colName);
-          Writer.WriteLine("{");
-          Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = {1}CheckBox.Checked;", CanonicalTableName, colName);
-          Writer.WriteLine("}");
-        }
-        else if (cv.IsDateType())
-        {
-          Writer.WriteLine("if( (( DataRowView ){0}BindingSource.Current )[ \"{1}\" ] is DBNull )", CanonicalTableName, colName);
-          Writer.WriteLine("{");
-          Writer.WriteLine("((DataRowView){0}BindingSource.Current)[\"{1}\"] = {1}_dateTimePicker.Value;", CanonicalTableName, colName);
-          Writer.WriteLine("}");
-        }
-      }
+
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName );
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalDetailTableName );
       Writer.WriteLine("ad.Update(this.newDataSet.{0});", CanonicalTableName );
@@ -279,6 +254,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (ValidationsEnabled)
       {
         Writer.WriteLine("this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);");
+        Writer.WriteLine("this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);");
       }
     }
 
@@ -316,6 +292,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.panel2.PerformLayout();");
       Writer.WriteLine("this.panel3.ResumeLayout(false);");
       Writer.WriteLine("this.panel3.PerformLayout();");
+    }
+
+    internal override string GetDataSourceForCombo(ColumnValidation cv)
+    {
+      string colName = cv.Name;
+      string idColumnCanonical = GetCanonicalIdentifier(colName);
+      string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
+      Writer.WriteLine("if( ad2 != null ) ad2.Dispose();");
+      Writer.WriteLine("ad2 = new MySql.Data.MySqlClient.MySqlDataAdapter(\"select * from `{0}`\", strConn2);", cv.FkInfo.ReferencedTableName);
+      Writer.WriteLine("ad2.Fill(this.newDataSet.{0});", canonicalReferencedTableName);
+      return string.Format("this.newDataSet.{0}", canonicalReferencedTableName);
     }
   }
 }

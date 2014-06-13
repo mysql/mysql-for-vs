@@ -57,7 +57,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("ad.UpdateCommand = builder.GetUpdateCommand()");
       Writer.WriteLine("ad.InsertCommand = builder.GetInsertCommand()");
 
-      Writer.WriteLine("Dim ad2 As MySqlDataAdapter");
+      Writer.WriteLine("Dim ad3 As MySqlDataAdapter");
 
       for (int i = 0; i < ValidationColumns.Count; i++)
       {
@@ -68,14 +68,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           string idColumnCanonical = GetCanonicalIdentifier(colName);
           string canonicalReferencedTable = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
 
-          Writer.WriteLine("ad2 = New MySqlDataAdapter(\"select * from `{0}`\", strConn)", cv.FkInfo.ReferencedTableName);
-          Writer.WriteLine("ad2.Fill(Me.newDataSet.{0})", canonicalReferencedTable);
+          Writer.WriteLine("ad3 = New MySqlDataAdapter(\"select * from `{0}`\", strConn)", cv.FkInfo.ReferencedTableName);
+          Writer.WriteLine("ad3.Fill(Me.newDataSet.{0})", canonicalReferencedTable);
           Writer.WriteLine("Me.{0}_comboBox.DataSource = Me.newDataSet.{1}", idColumnCanonical, canonicalReferencedTable);
           Writer.WriteLine("Me.{0}_comboBox.DisplayMember = \"{1}\"", idColumnCanonical, cv.EfLookupColumnMapping);
           Writer.WriteLine("Me.{0}_comboBox.ValueMember = \"{1}\"", idColumnCanonical, cv.FkInfo.ReferencedColumnName);
           Writer.WriteLine("Me.{0}_comboBox.DataBindings.Add(New System.Windows.Forms.Binding(\"SelectedValue\", Me.{1}BindingSource, \"{2}\", True))",
             idColumnCanonical, CanonicalTableName, cv.EfColumnMapping);
-          Writer.WriteLine("ad2.Dispose()");
+          Writer.WriteLine("ad3.Dispose()");
         }
       }
     }
