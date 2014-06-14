@@ -121,7 +121,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       object value = e.FormattedValue;
       e.Cancel = false;
       if (row.IsNewRow) return;
-      if (e.ColumnIndex == 4) // Min Value
+      if (e.ColumnIndex == ValidationsGrid.IdxColMinValue) // Min Value
       {
         double v = 0;
         if ( (value is DBNull) || string.IsNullOrEmpty( value.ToString() )) { row.ErrorText = ""; return; }
@@ -166,7 +166,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           row.ErrorText = "";
         }
       }
-      else if (e.ColumnIndex == 5)  // Max Value
+      else if (e.ColumnIndex == ValidationsGrid.IdxColMaxValue)  // Max Value
       {
         double v = 0;
         if ( (value is DBNull) || string.IsNullOrEmpty( value.ToString() )) { row.ErrorText = ""; return; }
@@ -208,6 +208,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         else
         {
           row.ErrorText = "";
+        }
+      }
+      else if (e.ColumnIndex == ValidationsGrid.IdxColMaxLength)  // MaxLength
+      {
+        int v = 0;
+        if ((value is DBNull) || string.IsNullOrEmpty(value.ToString())) { row.ErrorText = ""; return; }
+        if (!(value is int))
+        {
+          if (!int.TryParse(value.ToString(), out v))
+          {
+            e.Cancel = true;
+            row.ErrorText = "The MaxLength value must be an integer.";
+            return;
+          }
         }
       }
     }
