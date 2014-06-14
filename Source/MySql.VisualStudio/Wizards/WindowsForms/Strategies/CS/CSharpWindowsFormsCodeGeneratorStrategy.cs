@@ -268,6 +268,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("this.{0}TextBox.Size = new System.Drawing.Size( {1}, {2} );", idColumnCanonical, 100, 20);
           Writer.WriteLine("this.{0}TextBox.TabIndex = {1};", idColumnCanonical, tabIdx++);
 
+          if (cv.MaxLength.HasValue)
+          {
+            Writer.WriteLine("this.{0}TextBox.MaxLength = {1};", idColumnCanonical, cv.MaxLength.Value );
+          }
+
           if (cv.IsReadOnly())
           {
             Writer.WriteLine("this.{0}TextBox.Enabled = false;", idColumnCanonical);
@@ -511,6 +516,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";", idColumnCanonical, cv.EfColumnMapping);
           Writer.WriteLine("col{0}.HeaderText = \"{1}\";", idColumnCanonical, cv.Name);
           Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical);
+          if (cv.MaxLength.HasValue)
+          {
+            Writer.WriteLine("col{0}.MaxInputLength = {1};", idColumnCanonical, cv.MaxLength.Value);
+          }
           Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
         }
       }

@@ -169,6 +169,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           row.ErrorText = "";
         }
       }
+      else if (e.ColumnIndex == ValidationsGrid.IdxColMaxLength)  // MaxLength
+      {
+        int v = 0;
+        if ((value is DBNull) || string.IsNullOrEmpty(value.ToString())) { row.ErrorText = ""; return; }
+        if (!(value is int))
+        {
+          if (!int.TryParse(value.ToString(), out v))
+          {
+            e.Cancel = true;
+            row.ErrorText = "The MaxLength value must be an integer.";
+            return;
+          }
+        }
+      }
     }
 
     internal override void OnStarting(BaseWizardForm wizard)

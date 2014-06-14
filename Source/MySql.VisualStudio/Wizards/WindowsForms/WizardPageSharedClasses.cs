@@ -45,6 +45,7 @@ namespace MySql.Data.VisualStudio.Wizards
     private ForeignKeyColumnInfo _fkInfo;
     private string _efColumnMapping;
     private string _efLookupColumnMapping;
+    private int? _maxLength;
 
     // It is important to make the properties public, otherwise DataGridView doesn't like and doesn't display the real values
     // (this seems to be a known issue with DataGridView over stackoverflow).
@@ -74,6 +75,7 @@ namespace MySql.Data.VisualStudio.Wizards
       get { return _efLookupColumnMapping; }
       set { _efLookupColumnMapping = value; }
     }
+    public int? MaxLength { get { return _maxLength; } set { _maxLength = value; } }
 
     internal ColumnValidation(Column column)
     {
@@ -162,6 +164,16 @@ namespace MySql.Data.VisualStudio.Wizards
 
   internal static class ValidationsGrid
   {
+    internal static int IdxColName { get; private set; }
+    internal static int IdxColRequired { get; private set; }
+    internal static int IdxColDataType { get; private set; }
+    internal static int IdxColDefaultValue { get; private set; }
+    internal static int IdxColMaxLength { get; private set; }
+    internal static int IdxColMinValue { get; private set; }
+    internal static int IdxColMaxValue { get; private set; }
+    internal static int IdxColHaslookup { get; private set; }
+    internal static int IdxColLookupColumn { get; private set; }
+
     internal static List<ColumnValidation> GetColumnValidactionList(
       Dictionary<string, Column> columns, Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
@@ -225,6 +237,7 @@ namespace MySql.Data.VisualStudio.Wizards
       colName.Name = "colName";
       colName.ReadOnly = true;
       grid.Columns.Add(colName);
+      IdxColName = colName.Index;
 
       DataGridViewCheckBoxColumn colRequired = new DataGridViewCheckBoxColumn();
       colRequired.DataPropertyName = "Required";
@@ -232,6 +245,7 @@ namespace MySql.Data.VisualStudio.Wizards
       colRequired.Name = "colRequired";
       colRequired.ReadOnly = true;
       grid.Columns.Add(colRequired);
+      IdxColRequired = colRequired.Index;
 
       DataGridViewTextBoxColumn colDataType = new DataGridViewTextBoxColumn();
       colDataType.DataPropertyName = "DataType";
@@ -239,25 +253,36 @@ namespace MySql.Data.VisualStudio.Wizards
       colDataType.Name = "colDataType";
       colDataType.ReadOnly = true;
       grid.Columns.Add(colDataType);
+      IdxColDataType = colDataType.Index;
 
       DataGridViewTextBoxColumn colDefaultValue = new DataGridViewTextBoxColumn();
       colDefaultValue.DataPropertyName = "DefaultValue";
       colDefaultValue.HeaderText = "Default";
       colDefaultValue.Name = "colDefaultValue";
       grid.Columns.Add(colDefaultValue);
-      
+      IdxColDefaultValue = colDefaultValue.Index;
+
+      DataGridViewTextBoxColumn colMaxLength = new DataGridViewTextBoxColumn();
+      colMaxLength.DataPropertyName = "MaxLength";
+      colMaxLength.HeaderText = "MaxLength";
+      colMaxLength.Name = "colMaxLength";
+      grid.Columns.Add(colMaxLength);
+      IdxColMaxLength = colMaxLength.Index;
+
       DataGridViewTextBoxColumn colMinValue = new DataGridViewTextBoxColumn();
       colMinValue.DataPropertyName = "MinValue";
       colMinValue.HeaderText = "Min Value";
       colMinValue.Name = "colMinValue";
       grid.Columns.Add(colMinValue);
+      IdxColMinValue = colMinValue.Index;
 
       DataGridViewTextBoxColumn colMaxValue = new DataGridViewTextBoxColumn();
       colMaxValue.DataPropertyName = "MaxValue";
       colMaxValue.HeaderText = "Max Value";
       colMaxValue.Name = "colMaxValue";
       grid.Columns.Add(colMaxValue);
-
+      IdxColMaxValue = colMaxValue.Index;
+      
       if (FKs != null)
       {
         DataGridViewCheckBoxColumn colHasLookup = new DataGridViewCheckBoxColumn();
@@ -266,6 +291,7 @@ namespace MySql.Data.VisualStudio.Wizards
         colHasLookup.Name = "colHasLookup";
         colHasLookup.ToolTipText = "Checked to enable Lookup ComboBox, uncheck to use simple textbox, only available for Foreign key columns";
         grid.Columns.Add(colHasLookup);
+        IdxColHaslookup = colHasLookup.Index;
 
         DataGridViewComboBoxColumn colLookupColumn = new DataGridViewComboBoxColumn();
         colLookupColumn.DataSource = allColumns.ToList();
@@ -274,20 +300,22 @@ namespace MySql.Data.VisualStudio.Wizards
         colLookupColumn.Name = "colLookupColumn";
         colLookupColumn.ToolTipText = "Pick the column from the foreign table to use as friendly value for this lookup.";
         grid.Columns.Add(colLookupColumn);
+        IdxColLookupColumn = colLookupColumn.Index;
       }
 
       grid.DataSource = colsValidation;
 
-      grid.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;   //DataGridViewAutoSizeColumnMode.ColumnHeader;
-      grid.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;  //DataGridViewAutoSizeColumnMode.DisplayedCells;      
-      grid.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;  //DataGridViewAutoSizeColumnMode.DisplayedCells;
-      grid.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-      grid.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      grid.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      grid.Columns[IdxColName].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;   //DataGridViewAutoSizeColumnMode.ColumnHeader;
+      grid.Columns[IdxColRequired].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;  //DataGridViewAutoSizeColumnMode.DisplayedCells;      
+      grid.Columns[IdxColDataType].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;  //DataGridViewAutoSizeColumnMode.DisplayedCells;
+      grid.Columns[IdxColDefaultValue].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+      grid.Columns[IdxColMaxLength].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      grid.Columns[IdxColMinValue].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      grid.Columns[IdxColMaxValue].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       if (FKs != null)
       {
-        grid.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        grid.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        grid.Columns[IdxColHaslookup].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        grid.Columns[IdxColLookupColumn].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
       }
 #endif      
       grid.AllowUserToAddRows = false;
@@ -298,10 +326,10 @@ namespace MySql.Data.VisualStudio.Wizards
         // highlight in yellow the rows that are FK columns, disable the FK cells for columns (datagrid rows) which are not FKs.
         foreach (DataGridViewRow row in grid.Rows)
         {
-          if (!(bool)(row.Cells[6].Value))
+          if (!(bool)(row.Cells[IdxColHaslookup].Value))
           {
-            row.Cells[6].ReadOnly = true;
-            row.Cells[7].ReadOnly = true;
+            row.Cells[IdxColHaslookup].ReadOnly = true;
+            row.Cells[IdxColLookupColumn].ReadOnly = true;
           }
           else
           {
