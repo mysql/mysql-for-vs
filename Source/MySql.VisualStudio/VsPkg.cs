@@ -643,8 +643,13 @@ namespace MySql.Data.VisualStudio
     private void CreateNewMySqlProject(string projectType)
     {
       DTE env = (DTE)GetService(typeof(DTE));
+      WizardNewProjectDialog dlg ;
 
-      WizardNewProjectDialog dlg = new WizardNewProjectDialog(projectType);
+      if (String.IsNullOrEmpty(Settings.Default.NewProjectDialogSelected))
+         dlg = new WizardNewProjectDialog(projectType);
+      else
+         dlg = new WizardNewProjectDialog(Settings.Default.NewProjectDialogSelected);
+
       DialogResult result = dlg.ShowDialog();
       if (result != DialogResult.OK) return;
 

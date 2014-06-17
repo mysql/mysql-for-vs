@@ -276,7 +276,7 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       catch
       {
-        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet conexion.");
+        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet conexion.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
       
     }
@@ -429,7 +429,7 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       catch 
       { 
-        SendToGeneralOutputWindow("EntityFramework installation package failure. Please check that you have the latest Nuget version.");
+        SendToGeneralOutputWindow(string.Format("{0} installation package failure." + Environment.NewLine + " Please check that you have the latest Nuget version and that you have an internet connection.", PackageName));
         return;
       }      
     }
