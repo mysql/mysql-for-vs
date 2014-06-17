@@ -466,21 +466,15 @@ namespace MySql.Data.VisualStudio.Wizards
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, List<string> tables)
     {
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
-      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace, Language );
+      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace, Language, VsProj );
       string file = gen.Generate();
-      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.{1}", 
-        TypedDataSetGenerator.FILENAME_ARTIFACT, CodeProvider.FileExtension ));
-      VsProj.Project.ProjectItems.AddFromFile(artifactPath);
     }
 
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, string TableName)
     {
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
-      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", TableName, ProjectPath, canonicalNamespace, Language);
+      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", TableName, ProjectPath, canonicalNamespace, Language, VsProj);
       string file = gen.Generate();
-      string artifactPath = Path.Combine(ProjectPath, string.Format("{0}.{1}", 
-        TypedDataSetGenerator.FILENAME_ARTIFACT, CodeProvider.FileExtension ));
-      VsProj.Project.ProjectItems.AddFromFile(artifactPath);
     }
 
     protected ProjectItem FindProjectItem(ProjectItems Items, string Name)
