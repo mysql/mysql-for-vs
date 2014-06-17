@@ -30,6 +30,8 @@ using System.Data;
 using System.Data.Design;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using VSLangProj;
+using EnvDTE;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -40,17 +42,23 @@ namespace MySql.Data.VisualStudio.Wizards
   internal class TypedDataSetGenerator : ModelGenerator
   {
     internal const string FILENAME_ARTIFACT = "NewDataSet";
-    private CodeDomProvider _provider;
+    private VSProject _vsProj;
 
-    internal TypedDataSetGenerator(MySqlConnection con, string modelName, string table, string path, string ArtifactNamespace, LanguageGenerator Language) : 
+    internal TypedDataSetGenerator(
+      MySqlConnection con, string modelName, string table, string path, string ArtifactNamespace, 
+      LanguageGenerator Language, VSProject vsProj ) : 
       base( con, modelName, table, path, ArtifactNamespace, Language  )
     {
       _tables = new string[] { table }.ToList();
+      _vsProj = vsProj;
     }
 
-    internal TypedDataSetGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, LanguageGenerator Language) :
+    internal TypedDataSetGenerator(
+      MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace,
+      LanguageGenerator Language, VSProject vsProj) :
       base(con, modelName, tables, path, artifactNamespace, Language)
     {
+      _vsProj = vsProj;
     }
 
     internal override string Generate()
@@ -59,7 +67,6 @@ namespace MySql.Data.VisualStudio.Wizards
       int i = 0;
       do
       {
-        // ...
         MySqlDataAdapter da = new MySqlDataAdapter(string.Format("select * from `{0}`", _tables[i]), _con);
         DataSet ds = new DataSet();
         da.FillSchema(ds, SchemaType.Source);
@@ -80,84 +87,18 @@ namespace MySql.Data.VisualStudio.Wizards
       dsPrev.WriteXmlSchema(sw);
       sw.Flush();
       string xsd = sb.ToString();
-      
-      CodeCompileUnit unit = new CodeCompileUnit();
-      CodeNamespace ns = new CodeNamespace( _artifactNamespace );
-      if (Language == LanguageGenerator.CSharp)
-      {
-        _provider = CodeDomProvider.CreateProvider("CSharp");
-      }
-      else if (Language == LanguageGenerator.VBNET)
-      {
-        _provider = CodeDomProvider.CreateProvider("VisualBasic" );
-      }
-      System.Data.Design.TypedDataSetGenerator.Generate(xsd, unit, ns, _provider, null,
-        System.Data.Design.TypedDataSetGenerator.GenerateOption.HierarchicalUpdate | 
-        System.Data.Design.TypedDataSetGenerator.GenerateOption.LinqOverTypedDatasets,
-        ns.Name);
-      string file = GenerateCode(unit, ns);
-      if( Language == LanguageGenerator.VBNET )
-        FixVbSourceFile(file);
-      return file;
+      string xsdPath = Path.Combine(_path, FILENAME_ARTIFACT + ".xsd");
+      File.WriteAllText(xsdPath, xsd, Encoding.Unicode);
+      AddToProject( xsdPath );
+      return xsdPath;
     }
 
-    /// <summary>
-    /// Implementation of Workaround for:
-    /// ADO.NET's TypedDataSetGenerator for VB.NET puts Option clauses at the end of file, 
-    /// but syntactically they must be at the beginning.
-    /// </summary>
-    /// <param name="filePath"></param>
-    private void FixVbSourceFile(string filePath)
+    private void AddToProject( string xsdPath )
     {
-      string outFile = Path.GetTempFileName();
-      FileStream fsIn = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 0xffff);
-      FileStream fsOut = new FileStream(outFile, FileMode.Open, FileAccess.Write, FileShare.Read, 0xffff);
-      using (StreamReader sr = new StreamReader(fsIn))
-      {
-        using (StreamWriter sw = new StreamWriter(fsOut))
-        {
-          sw.WriteLine("Option Strict Off");
-          sw.WriteLine("Option Explicit On");
-
-          string line;
-          while ((line = sr.ReadLine()) != null)
-          {
-            if (line == "Option Strict Off") continue;
-            if (line == "Option Explicit On") continue;
-            sw.WriteLine(line);
-          }
-        }
-      }
-      File.Delete(filePath);
-      File.Move(outFile, filePath);
+      ProjectItem pi = _vsProj.Project.ProjectItems.AddFromFile(xsdPath);
+      // this little magic replaces having to use System.Data.Design.TypedDataSetGenerator
+      pi.Properties.Item("SubType").Value = "Designer";
+      pi.Properties.Item("CustomTool").Value = "MSDataSetGenerator";
     }
-
-    private string GenerateCode(CodeCompileUnit compileunit, CodeNamespace ns)
-    {
-      string sourceFile;
-      if (_provider.FileExtension[0] == '.')
-      {
-        sourceFile = FILENAME_ARTIFACT + _provider.FileExtension;
-      }
-      else
-      {
-        sourceFile = FILENAME_ARTIFACT + "." + _provider.FileExtension;
-      }
-
-      sourceFile = Path.Combine(_path, sourceFile);
-
-      using (StreamWriter sw = new StreamWriter(sourceFile, false))
-      {
-        IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
-        
-        _provider.GenerateCodeFromNamespace(ns, tw, null);
-        _provider.GenerateCodeFromCompileUnit(compileunit, tw,
-            new CodeGeneratorOptions());
-        tw.Close();
-      }
-
-      return sourceFile;
-    }
-
   }
 }
