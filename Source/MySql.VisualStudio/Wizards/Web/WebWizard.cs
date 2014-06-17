@@ -48,6 +48,7 @@ using Microsoft.VisualStudio.TextTemplating.VSHost;
 #endif
 using Microsoft.VisualStudio.Shell;
 using MySQL.Utility.Classes;
+using System.Diagnostics;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -76,7 +77,20 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         SendToGeneralOutputWindow("Starting project generation...");
 
         //Updating project references
-        vsProj.References.Add("MySql.Data");
+        try
+        {
+          vsProj.References.Add("MySql.Data");
+        }
+        catch
+        {         
+          if (MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
+                        + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
+                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+          {
+            ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
+            System.Diagnostics.Process.Start(browserInfo);
+          }
+        }
 
         double version = double.Parse(WizardForm.Wizard.GetVisualStudioVersion());
         if (version >= 12.0)
@@ -89,18 +103,29 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             {            
               case "System.Web.Razor":
                 if (item.Version.Equals("1.0.0.0"))
-                  vsProj.References.Item(i).Remove();
+                  vsProj.References.Find("System.Web.Razor").Remove();
                 break;            
-              case "System.Web.WebPages":               
-                vsProj.References.Item(i).Remove();
-              break;
+              case "System.Web.WebPages":
+                vsProj.References.Find("System.Web.WebPages").Remove();
+                break;
+              case "System.Web.Mvc":
+                vsProj.References.Find("System.Web.Mvc").Remove();
+                break;
+              case "System.Web.Helpers":
+                vsProj.References.Find("System.Web.Helpers").Remove();
+                break;
             }
             i++;
           }
           
           vsProj.References.Add("System.Web.Mvc");          
           vsProj.References.Add("System.Web.Helpers");
-          vsProj.References.Add("System.Web.Razor");          
+          vsProj.References.Add("System.Web.Razor");
+
+#if NET_40_OR_GREATER
+          vsProj.Project.Save();
+#endif
+
         }
         AddNugetPackage(vsProj, JQUERY_PKG_NAME, JQUERY_VERSION);
         var packagesPath = Path.Combine(Path.GetDirectoryName(ProjectPath), @"Packages\jQuery." + JQUERY_VERSION + @"\Content\Scripts");

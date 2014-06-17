@@ -35,6 +35,8 @@ using MySql.Data.MySqlClient;
 using System.Reflection;
 using MySql.Data.VisualStudio.Wizards;
 using MySql.Data.VisualStudio.Properties;
+using System.Diagnostics;
+using System.Collections;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
@@ -62,13 +64,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     public override void ProjectFinishedGenerating(Project project)
     {
       //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
+      VSProject vsProj = project.Object as VSProject;
+      string detailTableName = WizardForm.DetailTableName;
+      
       try
       {
-        VSProject vsProj = project.Object as VSProject;
+        
         Columns = WizardForm.Columns;
         DetailColumns = WizardForm.DetailColumns;
         _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
-        string detailTableName = WizardForm.DetailTableName;
+     
         string canonicalDetailTableName = GetCanonicalIdentifier( detailTableName );
 
         AddColumnMappings(_canonicalTableName, WizardForm.ValidationColumns);
@@ -82,10 +87,39 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           detailTableName, WizardForm.ConstraintName, ForeignKeys, DetailForeignKeys );
         Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
 
-        vsProj.References.Add("MySql.Data");
+      }
+      catch (WizardException e)
+      {
+        SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
+      }
 
-        // Gather all the tables
 #if NET_40_OR_GREATER
+
+      vsProj.References.Add("MySql.Data");
+      vsProj.Project.Save();
+
+      bool found = false;
+      foreach (Reference reference in vsProj.References)
+      {
+        if (((Reference)reference).Name.IndexOf("MySql.Data",StringComparison.CurrentCultureIgnoreCase) >=0 && !String.IsNullOrEmpty(reference.Path))
+        {                   
+          found = true;
+          break;
+        }           
+      }
+
+      if (!found && MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
+                       + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
+                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+       {
+           ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
+           System.Diagnostics.Process.Start(browserInfo);
+       }
+       
+      try
+      {
+        // Gather all the tables
+
         SortedSet<string> tables = new SortedSet<string>();
         tables.Add(WizardForm.TableName);
         if (!string.IsNullOrEmpty(detailTableName))
@@ -104,9 +138,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
-          WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
+          WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
         {
-          if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 )
+          if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5)
             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
           else
             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
@@ -119,10 +153,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           PopulateColumnMappingsForTypedDataSet();
           GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
         }
-        AddBindings(vsProj);
-#endif
-      
-        if( WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6 )
+        AddBindings(vsProj);        
+
+
+        if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
         {
           // Change target version to 4.5 (only version currently supported for EF6).
           project.DTE.SuppressUI = true;
@@ -135,13 +169,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
         Settings.Default.WinFormsWizardConnection = WizardForm.ConnectionName;
         Settings.Default.Save();
+        
+        SendToGeneralOutputWindow("Finished project generation.");
+
+        if (project.DTE.Solution.SolutionBuild.LastBuildInfo > 0)
+        {
+          MessageBox.Show("Solution build failed. Please check that all project references have been resolved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
         WizardForm.Dispose();
       }
       catch (WizardException e)
       {
-        SendToGeneralOutputWindow( string.Format( "An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace ));
+        SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
       }
+#endif
+
     }
 
     internal void InitializeColumnMappings( Dictionary<string,ForeignKeyColumnInfo> fks )

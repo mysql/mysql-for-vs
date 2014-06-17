@@ -176,6 +176,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
 
       var projectName = projectType.Equals("Windows Forms Project") ? "MySqlWindowsFormsApplication" : "MySqlMvcApplication";
+      projectType = projectType.IndexOf("CSharp", StringComparison.CurrentCultureIgnoreCase) < 0 ? "Windows Forms Project" : "ASP.NET MVC 3 Project";
       txtProjectPath.Text = GetDefaultProjectPath();     
 
       solutionNameTextBox.Text  = txtProjectName.Text = GetUniqueName(txtProjectPath.Text, projectName);      
