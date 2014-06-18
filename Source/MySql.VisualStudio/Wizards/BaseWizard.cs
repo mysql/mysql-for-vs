@@ -232,7 +232,7 @@ namespace MySql.Data.VisualStudio.Wizards
         con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion, Language, ColumnMappings);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
-      SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
+
       AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
     }
 
