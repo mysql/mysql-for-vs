@@ -147,6 +147,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
           AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
           GenerateEntityFrameworkModel(vsProj, WizardForm.Connection, "Model1", tables.ToList());
+          SetupConfigFileEntityFramework(vsProj, WizardForm.Connection.ConnectionString, "Model1");
         }
         else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
         {

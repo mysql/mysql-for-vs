@@ -44,6 +44,8 @@
       this.simplePanel = new System.Windows.Forms.Panel();
       this.btnRefresh = new System.Windows.Forms.Button();
       this.connectionProperties = new System.Windows.Forms.PropertyGrid();
+      this.label6 = new System.Windows.Forms.Label();
+      this.txtPort = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.simplePanel.SuspendLayout();
       this.SuspendLayout();
@@ -92,7 +94,7 @@
       this.password.Location = new System.Drawing.Point(95, 73);
       this.password.Name = "password";
       this.password.PasswordChar = '*';
-      this.password.Size = new System.Drawing.Size(234, 20);
+      this.password.Size = new System.Drawing.Size(184, 20);
       this.password.TabIndex = 3;
       this.password.Leave += new System.EventHandler(this.password_Leave);
       // 
@@ -108,7 +110,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(3, 74);
+      this.label3.Location = new System.Drawing.Point(3, 78);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(56, 13);
       this.label3.TabIndex = 4;
@@ -178,6 +180,8 @@
       // 
       // simplePanel
       // 
+      this.simplePanel.Controls.Add(this.txtPort);
+      this.simplePanel.Controls.Add(this.label6);
       this.simplePanel.Controls.Add(this.btnRefresh);
       this.simplePanel.Controls.Add(this.database);
       this.simplePanel.Controls.Add(this.userId);
@@ -209,6 +213,23 @@
       this.connectionProperties.Size = new System.Drawing.Size(426, 330);
       this.connectionProperties.TabIndex = 14;
       this.connectionProperties.Visible = false;
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(285, 78);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(29, 13);
+      this.label6.TabIndex = 17;
+      this.label6.Text = "Port:";
+      // 
+      // txtPort
+      // 
+      this.txtPort.Location = new System.Drawing.Point(320, 73);
+      this.txtPort.Name = "txtPort";
+      this.txtPort.Size = new System.Drawing.Size(103, 20);
+      this.txtPort.TabIndex = 18;
+      this.txtPort.Text = "3306";
       // 
       // ConnectDialog
       // 
@@ -255,5 +276,7 @@
     private System.Windows.Forms.Panel simplePanel;
     private System.Windows.Forms.PropertyGrid connectionProperties;
     private System.Windows.Forms.Button btnRefresh;
+    private System.Windows.Forms.TextBox txtPort;
+    private System.Windows.Forms.Label label6;
   }
 }
