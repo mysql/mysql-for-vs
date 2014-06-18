@@ -140,8 +140,10 @@ namespace MySql.Data.VisualStudio
 
       try
       {
-        dlg = addSEConnection || connectionStringTextBox.Tag == null || String.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) ? new ConnectDialog() :
-               new ConnectDialog(new MySqlConnectionStringBuilder(connectionStringTextBox.Tag.ToString()));
+
+        MySqlConnectionStringBuilder settings = connectionStringTextBox.Tag != null ? new MySqlConnectionStringBuilder(connectionStringTextBox.Tag.ToString()) : new MySqlConnectionStringBuilder();
+
+        dlg = connectionStringTextBox.Tag == null ? new ConnectDialog() : new ConnectDialog(settings);
 
         DialogResult res = dlg.ShowDialog();
         if (res == DialogResult.OK)
@@ -152,10 +154,9 @@ namespace MySql.Data.VisualStudio
           var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
           if (csb == null) return;
           
-            //make sure we don't have already the same connection
-           if (cmbConnections.FindString(csb.ConnectionString) < 0)
-           {
-              
+           //make sure we don't have already the same connection
+           if (cmbConnections.FindString(String.Format("{0}({1})", csb.Server, csb.Database)) < 0)
+           {              
               connectionStringTextBox.Tag = csb.ConnectionString;
               if (!String.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) && addSEConnection)
               {

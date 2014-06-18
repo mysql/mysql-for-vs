@@ -104,7 +104,7 @@
       this.cmbConnections.FormattingEnabled = true;
       this.cmbConnections.Location = new System.Drawing.Point(25, 40);
       this.cmbConnections.Name = "cmbConnections";
-      this.cmbConnections.Size = new System.Drawing.Size(395, 21);
+      this.cmbConnections.Size = new System.Drawing.Size(385, 21);
       this.cmbConnections.TabIndex = 49;
       // 
       // includeRoleProviderCheck
