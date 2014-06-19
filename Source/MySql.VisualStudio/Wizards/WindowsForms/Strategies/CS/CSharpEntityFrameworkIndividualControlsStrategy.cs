@@ -51,13 +51,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
       {
         Writer.WriteLine("using System.Data.Entity.Core.Objects;");
+		Writer.WriteLine("using System.Data.Entity;");
       }
     }
 
     protected override void WriteFormLoadCode()
     {
       Writer.WriteLine("ctx = new Model1Entities();");
-      Writer.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", CanonicalTableName);
+	  if (DataAccessTech == DataAccessTechnology.EntityFramework5)
+      {
+        Writer.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", CanonicalTableName);
+      }
+      else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
+      {
+        Writer.WriteLine("ctx.{0}.Load();", CanonicalTableName);
+        Writer.WriteLine("BindingList<{0}> _entities = ctx.{0}.Local.ToBindingList();", CanonicalTableName);
+      }
       Writer.WriteLine("{0}BindingSource.DataSource = _entities;", CanonicalTableName);
 
       for( int i = 0; i < ValidationColumns.Count; i++ )

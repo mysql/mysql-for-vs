@@ -7,7 +7,7 @@
 
 Public Class <#=controllerClassParameter#>
     Inherits System.Web.Mvc.Controller
-    Private db as New <#=applicationNamespaceParameter#>.<#=modelNameParameter#>()	
+    Private db as New <#=modelNameParameter#>()
 	
 	 '
      ' GET: /<#=classNameParameter#>/

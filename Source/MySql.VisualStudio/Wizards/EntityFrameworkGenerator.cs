@@ -29,6 +29,8 @@ using MySql.Data.MySqlClient;
 using System.Data.Entity.Design;
 using System.Data.Metadata.Edm;
 using System.Xml;
+using VSLangProj;
+using EnvDTE;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -41,23 +43,26 @@ namespace MySql.Data.VisualStudio.Wizards
     private static readonly string ProviderName = "MySql.Data.MySqlClient";
     private string efVersion;
     private Dictionary<string, Dictionary<string, ColumnValidation>> _mappings;
+private VSProject _vsProj;
 
     internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, 
-      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, 
+      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, VSProject vsProj, 
       Dictionary<string, Dictionary<string, ColumnValidation>> Mappings) :
       base( con, modelName, table, path, artifactNamespace, Language )
     {
       efVersion = EfVersion;
       _mappings = Mappings;
+      _vsProj = vsProj;
     }
 
     internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, 
-      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language,
+      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, VSProject vsProj, 
       Dictionary<string, Dictionary<string, ColumnValidation>> Mappings) :
       base(con, modelName, tables, path, artifactNamespace, Language)
     {
       efVersion = EfVersion;
       _mappings = Mappings;
+      _vsProj = vsProj;
     }
 
     internal override string Generate()
@@ -149,22 +154,40 @@ namespace MySql.Data.VisualStudio.Wizards
       if (_mappings != null && _mappings.Count != 0)
         GetColumnMappings(fi);
 
-#if CLR4 || NET_40_OR_GREATER
-      EntityCodeGenerator gen = null;
-      string outputPath = "";
-      if( Language == LanguageGenerator.CSharp )
-      {
-        gen = new EntityCodeGenerator(LanguageOption.GenerateCSharpCode);
-        outputPath = Path.Combine(_path, _modelName + ".Designer.cs.bak");
-      } else if( Language == LanguageGenerator.VBNET ) {
-        gen = new EntityCodeGenerator(LanguageOption.GenerateVBCode);
-        outputPath = Path.Combine(_path, _modelName + ".Designer.vb.bak");
-      }
-      errors = gen.GenerateCode(file, outputPath );
-      FixNamespaces(outputPath);
-#endif
+      AddToProject( fi.FullName);
 
       return fi.FullName;
+    }
+
+    private void AddToProject( string edmxPath)
+    {
+      string edmxCodePath;
+      ProjectItem pi = _vsProj.Project.ProjectItems.AddFromFile(edmxPath);
+      // this little magic replaces having to use System.Data.Entity.Design.EntityCodeGenerator
+      pi.Properties.Item("ItemType").Value = "EntityDeploy";
+      pi.Properties.Item("CustomTool").Value = "EntityModelCodeGenerator";
+      if( efVersion == BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.ENTITY_FRAMEWORK_VERSION_6)
+      {
+        // For EF6 we use DbContext instead of ObjectContext based context.
+        _vsProj.DTE.SuppressUI = true;
+        EnvDTE80.Solution2 sol = (EnvDTE80.Solution2)_vsProj.DTE.Solution;
+        string itemPath = "";
+        if( this.Language == LanguageGenerator.CSharp )
+        {
+          itemPath = sol.GetProjectItemTemplate("DbCtxCSEF6", "CSharp" );
+        } else {
+          itemPath = sol.GetProjectItemTemplate("DbCtxVBEF6", "VisualBasic");
+        }
+        pi.ProjectItems.AddFromTemplate(itemPath, this._modelName);
+        // update $edmxInputFile$
+        string path = Path.GetDirectoryName(edmxPath);
+        string templateName = Path.Combine(path, _modelName + ".tt");
+        string contents = File.ReadAllText(templateName);
+        File.WriteAllText(templateName, contents.Replace("$edmxInputFile$", _modelName + ".edmx"));
+        templateName = Path.Combine(path, _modelName + ".Context.tt");
+        contents = File.ReadAllText(templateName);
+        File.WriteAllText(templateName, contents.Replace("$edmxInputFile$", _modelName + ".edmx"));
+      }
     }
 
     private void GetColumnMappings(FileInfo f)
@@ -235,12 +258,12 @@ namespace MySql.Data.VisualStudio.Wizards
     private void WriteEdmx(string csdl, string ssdl, string msl, FileInfo f)
     {
       FileStream fs = new FileStream(f.FullName, FileMode.Create, FileAccess.Write, FileShare.Read);
-      StreamWriter sw = new StreamWriter(fs);
+      StreamWriter sw = new StreamWriter( fs, Encoding.Unicode );
       try
       {
         // http://schemas.microsoft.com/ado/2009/11/edmx
         sw.WriteLine(
-          @"<?xml version=""1.0"" encoding=""utf-8""?>
+          @"<?xml version=""1.0"" encoding=""utf-16""?>
           <edmx:Edmx Version=""1.0"" xmlns:edmx=""http://schemas.microsoft.com/ado/2008/10/edmx"" >
   <edmx:Runtime>
     <edmx:StorageModels>");
@@ -250,6 +273,29 @@ namespace MySql.Data.VisualStudio.Wizards
         sw.WriteLine("</edmx:ConceptualModels><edmx:Mappings>");
         sw.WriteLine(msl);
         sw.WriteLine("</edmx:Mappings></edmx:Runtime>");
+
+        if (efVersion == BaseWizard<BaseWizardForm, BaseCodeGeneratorStrategy>.ENTITY_FRAMEWORK_VERSION_6)
+        {
+            sw.WriteLine(
+@"<Designer xmlns=""http://schemas.microsoft.com/ado/2008/10/edmx"">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name=""MetadataArtifactProcessing"" Value=""EmbedInOutputAssembly"" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name=""ValidateOnBuild"" Value=""true"" />
+        <DesignerProperty Name=""EnablePluralization"" Value=""False"" />
+        <DesignerProperty Name=""IncludeForeignKeysInModel"" Value=""True"" />
+        <DesignerProperty Name=""UseLegacyProvider"" Value=""false"" />
+        <DesignerProperty Name=""CodeGenerationStrategy"" Value=""None"" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>");
+        } else {
         sw.WriteLine(
 @"<Designer xmlns=""http://schemas.microsoft.com/ado/2008/10/edmx"">
     <Connection>
@@ -268,6 +314,7 @@ namespace MySql.Data.VisualStudio.Wizards
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams></Diagrams>
   </Designer>");
+        }
         sw.WriteLine("</edmx:Edmx>");
       }
       finally
