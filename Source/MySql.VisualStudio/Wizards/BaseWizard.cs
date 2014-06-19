@@ -26,6 +26,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.TemplateWizard;
@@ -225,26 +226,19 @@ namespace MySql.Data.VisualStudio.Wizards
       return true;
     }
 
-    protected void GenerateEntityFrameworkModel(VSProject vsProj, MySqlConnection con, string modelName, List<string> tables)
+    protected void GenerateEntityFrameworkModel(
+      Project project, VSProject vsProj, MySqlConnection con, string modelName, List<string> tables, string modelPath )
     {
       string ns = GetCanonicalIdentifier(ProjectNamespace);
       EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
-        con, modelName, tables, ProjectPath, ns, CurrentEntityFrameworkVersion, Language, ColumnMappings);
+        con, modelName, tables, modelPath, ns, CurrentEntityFrameworkVersion, Language, vsProj, ColumnMappings);
+      vsProj = project.Object as VSProject;
+      AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
+      if( projectType == ProjectWizardType.WindowsForms )
+        SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
+      project.DTE.Solution.SolutionBuild.Build(true);
       gen.Generate();
       TryErrorsEntityFrameworkGenerator(gen);
-
-      AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
-    }
-
-    protected void GenerateEntityFrameworkModel(VSProject vsProj, MySqlConnection con, string modelName, string tableName )
-    {
-      string ns = GetCanonicalIdentifier(ProjectNamespace);
-      EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
-        con, modelName, tableName, ProjectPath, ns, CurrentEntityFrameworkVersion, Language, ColumnMappings);
-      gen.Generate();
-      TryErrorsEntityFrameworkGenerator(gen);
-      SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
-      AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
     }
 
     private void TryErrorsEntityFrameworkGenerator(EntityFrameworkGenerator gen)
@@ -276,7 +270,7 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       catch
       {
-        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet conexion.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet connection.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
       
     }
@@ -289,33 +283,14 @@ namespace MySql.Data.VisualStudio.Wizards
         string modelPath = ProjectPath;
 
         if (projectType == ProjectWizardType.AspNetMVC)
-            modelPath = Path.Combine(ProjectPath, "Models");
-          
-        // Add the Edmx artifacts to the project.
-        string _modelName = string.Format("{0}.edmx", modelName );
-        string artifactPath = Path.Combine(ProjectPath, _modelName);
-        string artifactPathExcluded = Path.Combine(modelPath, modelName) + ".exclude";
-        File.Move(artifactPath, artifactPathExcluded);
-        ProjectItem pi = vsProj.Project.ProjectItems.AddFromFile(artifactPathExcluded);
-        //Dictionary<string, object> props = GetAllProperties(pi.Properties);
-        pi.DTE.SuppressUI = true;
-        pi.Name = _modelName;
-        pi.Properties.Item("ItemType").Value = "EntityDeploy";
-
-        string dstFile = Path.Combine(modelPath, string.Format("{0}.Designer.{1}", modelName, 
-          CodeProvider.FileExtension) );
-
-        if (File.Exists(dstFile))
-          File.Delete(dstFile);
-        File.Move( Path.Combine( ProjectPath, string.Format("{0}.Designer.{1}.bak", modelName, 
-          CodeProvider.FileExtension ) ), dstFile );
-        vsProj.Project.ProjectItems.AddFromFile(dstFile);
+            modelPath = Path.Combine(ProjectPath, "Models");          
+        
         // Adding references
         AddReferencesEntityFramework(vsProj);
       }
-      catch
+      catch( Exception e )
       {        
-        throw new WizardException("Failed operation when adding model to project");
+        throw new WizardException("Failed operation when adding model to project", e);
       }
     }
 
@@ -329,14 +304,29 @@ namespace MySql.Data.VisualStudio.Wizards
 
       if ( CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_5 )
       { 
-        vsProj.References.Add( Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.Entity.dll"));
-        vsProj.References.Add( Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll"));
+        AddProjectReference( vsProj, Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.Entity.dll" ));
+        AddProjectReference( vsProj, Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll"));
       }
       else if (CurrentEntityFrameworkVersion == ENTITY_FRAMEWORK_VERSION_6)
       {
-        vsProj.References.Add( Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll"));
-        vsProj.References.Add("MySql.Data.Entity.EF6");
-        vsProj.References.Add("System.ComponentModel.DataAnnotations");
+        AddProjectReference( vsProj, Path.Combine( path, @"Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Runtime.Serialization.dll"));
+        AddProjectReference( vsProj, "MySql.Data.Entity.EF6");
+        AddProjectReference( vsProj, "System.ComponentModel.DataAnnotations");
+      }
+    }
+
+    protected void AddProjectReference(VSProject vsProj, string assembly)
+    {
+      try
+      {
+        vsProj.References.Add(assembly);
+      }
+      catch (COMException e)
+      {
+        // Gobble the exception if it is of the kind "A reference to the component '...' already exists in the project.
+        // (This may happen in VB.NET projects).
+        if (e.Message.IndexOf("A reference to the component") == -1 || 
+            e.Message.IndexOf("already exists in the project") == -1) throw;
       }
     }
 
@@ -468,14 +458,7 @@ namespace MySql.Data.VisualStudio.Wizards
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
       TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace, Language, VsProj );
       string file = gen.Generate();
-    }
-
-    protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, string TableName)
-    {
-      string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
-      TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", TableName, ProjectPath, canonicalNamespace, Language, VsProj);
-      string file = gen.Generate();
-    }
+    }    
 
     protected ProjectItem FindProjectItem(ProjectItems Items, string Name)
     {
@@ -625,12 +608,6 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
 
     internal void RetrieveAllFkInfo(MySqlConnection con, string tableName, out Dictionary<string,ForeignKeyColumnInfo> MyFKs)
     {
-      /*
-       * union
-select `constraint_name`, `referenced_table_name`, `referenced_column_name`, `table_name`, `column_name`
-from information_schema.key_column_usage where `constraint_name` in ( 
-select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = 'sakila' and `referenced_table_name` = 'customer' );
-       */
       string sql = string.Format(
 @"select `constraint_name`, `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
 from information_schema.key_column_usage where `constraint_name` in ( 

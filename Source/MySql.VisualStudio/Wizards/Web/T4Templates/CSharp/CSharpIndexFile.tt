@@ -1,9 +1,10 @@
 <#@ template debug="true" hostspecific="false" language="C#" #>
 <#@ output extension=".txt" #>
+<#@parameter type="System.String" name="applicationNamespaceParameter"#>
 <#@parameter type="System.String" name="entityClassNameParameter"#>
 <#@parameter type="System.String" name="entityNameParameter"#>
 
-@model IEnumerable<<#=entityClassNameParameter#>>
+@model IEnumerable<<#=applicationNamespaceParameter#>.<#=entityClassNameParameter#>>
 @{    
     WebGrid grid = new WebGrid(Model);
 }
