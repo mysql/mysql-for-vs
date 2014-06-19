@@ -1,10 +1,10 @@
 <#@ template debug="true" hostspecific="false" language="C#" #>
 <#@ output extension=".txt" #>
 <#@parameter type="System.String" name="applicationNamespaceParameter"#>
-<#@parameter type="System.String" name="entityClassNameParameter"#>
+<#@parameter type="System.String" name="entityClassNameParameterWithNamespace"#>
 <#@parameter type="System.String" name="entityNameParameter"#>
 
-@ModelType IEnumerable(Of <#=applicationNamespaceParameter#>.<#=entityClassNameParameter#>)
+@ModelType IEnumerable(Of <#=entityClassNameParameterWithNamespace#>)
 
 @Code  
     Dim grid As New WebGrid(Model)

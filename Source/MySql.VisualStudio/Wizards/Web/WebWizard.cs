@@ -96,7 +96,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         if (version >= 12.0)
         {
           References refs = vsProj.References;
-          var i = 0;
           foreach (Reference item in refs)
           {
             switch (item.Name)
@@ -115,11 +114,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 vsProj.References.Find("System.Web.Helpers").Remove();
                 break;
             }
-            i++;
           }
           
-          vsProj.References.Add("System.Web.Mvc");          
-          vsProj.References.Add("System.Web.Helpers");
+          vsProj.References.Add("System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
+          vsProj.References.Add("System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
+          vsProj.References.Add("System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
           vsProj.References.Add("System.Web.Razor");
 
 #if NET_40_OR_GREATER
@@ -145,7 +144,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;                        
 
             AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
-            GenerateEntityFrameworkModel(vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables);         
+            string modelPath = Path.Combine(ProjectPath, "Models");
+            GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables, modelPath);
             GenerateMVCItems(vsProj);
 
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
@@ -379,16 +379,34 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       foreach (var table in WizardForm.selectedTables)
       {
-         // creating controller file
+          // creating controller file
           sessionHost.Session = sessionHost.CreateSession();
           sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
-          sessionHost.Session["applicationNamespaceParameter"] = ProjectNamespace;
+          sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
           sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1));
-          sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+          if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+            Language == LanguageGenerator.CSharp )
+          {
+            sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+          }
+          else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+          {
+            sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
+          }
           sessionHost.Session["classNameParameter"] = table.Name;
           sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);
-          sessionHost.Session["entityClassNameParameter"] = string.Format("{0}.{1}", ProjectNamespace, table.Name);
-
+          sessionHost.Session["entityClassNameParameter"] = table.Name;
+          if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+              Language == LanguageGenerator.CSharp)
+          {
+            sessionHost.Session["entityClassNameParameterWithNamespace"] = 
+              string.Format( "{0}.{1}", ProjectNamespace, table.Name );
+          } 
+          else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+          {
+            sessionHost.Session["entityClassNameParameterWithNamespace"] =
+              string.Format("{0}.{0}.{1}", ProjectNamespace, table.Name);
+          }
           T4Callback cb = new T4Callback();          
           string resultControllerFile = t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb);
           string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1), fileExtension);

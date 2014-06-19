@@ -51,13 +51,23 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
       {
         Writer.WriteLine("using System.Data.Entity.Core.Objects;");
+        Writer.WriteLine("using System.Data.Entity;");
       }
     }
 
     protected override void WriteFormLoadCode()
     {
       Writer.WriteLine("ctx = new Model1Entities();");
-      Writer.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", CanonicalTableName);
+      if (DataAccessTech == DataAccessTechnology.EntityFramework5)
+      {
+        Writer.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", CanonicalTableName);
+      }
+      else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
+      {
+        Writer.WriteLine("ctx.{0}.Load();", CanonicalTableName);
+        Writer.WriteLine("BindingList<{0}> _entities = ctx.{0}.Local.ToBindingList();", CanonicalTableName);
+        Writer.WriteLine("{0}BindingSource.CurrentChanged += {0}BindingSource_CurrentChanged;", CanonicalTableName);
+      }
       Writer.WriteLine("{0}BindingSource.DataSource = _entities;", CanonicalTableName);
 
       for (int i = 0; i < ValidationColumns.Count; i++)
@@ -259,6 +269,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       string idColumnCanonical = GetCanonicalIdentifier(colName);
       string canonicalReferencedTableName = GetCanonicalIdentifier(cv.FkInfo.ReferencedTableName);
       return string.Format("ctx.{1}.ToList()", idColumnCanonical, canonicalReferencedTableName);
+    }
+    protected override void WriteValidationCode()
+    {
+      base.WriteValidationCode();
+      if (DataAccessTech == DataAccessTechnology.EntityFramework6)
+      {
+        // Add patch for Master-Detail in DbContext
+        Writer.WriteLine("private void {0}BindingSource_CurrentChanged(object sender, EventArgs e)", CanonicalTableName);
+        Writer.WriteLine( "{" );
+        Writer.WriteLine( "{0}BindingSource.DataSource = (({1}){1}BindingSource.Current);", CanonicalDetailTableName, CanonicalTableName );
+        Writer.WriteLine( "{0}BindingSource.DataMember = \"{0}\";", CanonicalDetailTableName);
+        Writer.WriteLine( "dataGridView1.Refresh();" );
+        Writer.WriteLine("}");
+      }
     }
   }
 }

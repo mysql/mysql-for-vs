@@ -51,13 +51,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
       {
         Writer.WriteLine("Imports System.Data.Entity.Core.Objects");
+        Writer.WriteLine("Imports System.Data.Entity");
       }
     }
 
     protected override void WriteFormLoadCode()
     {
       Writer.WriteLine("ctx = New Model1Entities()");
-      Writer.WriteLine("Dim _entities As ObjectResult(Of {0}) = ctx.{0}.Execute(MergeOption.AppendOnly)", CanonicalTableName);
+      if (DataAccessTech == DataAccessTechnology.EntityFramework5)
+      {
+        Writer.WriteLine("Dim _entities As ObjectResult(Of {0}) = ctx.{0}.Execute(MergeOption.AppendOnly)", CanonicalTableName);
+      }
+      else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
+      {
+        Writer.WriteLine("ctx.{0}.Load()", CanonicalTableName);
+        Writer.WriteLine("Dim _entities As BindingList(Of {0}) = ctx.{0}.Local.ToBindingList()", CanonicalTableName);
+      }
       Writer.WriteLine("{0}BindingSource.DataSource = _entities", CanonicalTableName);
 
       Writer.WriteLine("bindingNavigatorAddNewItem.Enabled = False");
