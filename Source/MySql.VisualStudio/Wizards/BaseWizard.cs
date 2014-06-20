@@ -390,11 +390,9 @@ namespace MySql.Data.VisualStudio.Wizards
     /// Downloads from Nuget the package version required and adds the assembly reference to the project.
     /// </summary>
     /// <param name="vsProj"></param>
-    protected void AddNugetPackage(VSProject VsProj, string PackageName, string Version)
+    protected void AddNugetPackage(VSProject VsProj, string PackageName, string Version, bool addReference)
     {
-      SendToGeneralOutputWindow(string.Format("Getting Nuget Package for {0}-{1}...", PackageName, Version));
-      // Installs the Entity Framework given version thru Nuget using reflection, which is a bit messy, but 
-      // we avoid shipping Nuget dll.
+      SendToGeneralOutputWindow(string.Format("Getting Nuget Package for {0}-{1}...", PackageName, Version));     
       try
       {
         Assembly nugetAssembly = Assembly.Load("nuget.core");
@@ -414,12 +412,13 @@ namespace MySql.Data.VisualStudio.Wizards
         MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
         object semanticVersion = miParse.Invoke(null, new object[] { Version });
         miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
-        // Adds reference to project.
-        AddPackageReference(VsProj, solPath, PackageName, Version);
+        
+        if (addReference)
+          AddPackageReference(VsProj, solPath, PackageName, Version);
       }
-      catch 
+      catch(Exception ex)
       { 
-        SendToGeneralOutputWindow(string.Format("{0} installation package failure." + Environment.NewLine + " Please check that you have the latest Nuget version and that you have an internet connection.", PackageName));
+        SendToGeneralOutputWindow(string.Format("{0} installation package failure." + Environment.NewLine + "Please check that you have the latest Nuget version and that you have an internet connection." + Environment.NewLine + "{1}", PackageName, ex.Message));
         return;
       }      
     }
@@ -431,7 +430,7 @@ namespace MySql.Data.VisualStudio.Wizards
     /// <param name="VsProj"></param>
     /// <param name="BasePath"></param>
     /// <param name="Version"></param>
-    protected void AddPackageReference( VSProject VsProj, string BasePath, string PackageName, string Version)
+    protected void AddPackageReference(VSProject VsProj, string BasePath, string PackageName, string Version)
     {
       string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", PackageName, Version));
       string packagePath = Path.Combine(BasePath, efPath);
