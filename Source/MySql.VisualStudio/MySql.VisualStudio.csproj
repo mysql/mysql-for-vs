@@ -814,6 +814,10 @@
     <Compile Include="Wizards\WindowsForms\DataAccessConfig.Designer.cs">
       <DependentUpon>DataAccessConfig.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Wizards\WindowsForms\Templates\CS\MyDateTimePickerColumn.cs">
+      <SubType>Component</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\Templates\VB\MyDateTimePickerColumn.vb" />
     <Compile Include="Wizards\WindowsForms\ValidationConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>

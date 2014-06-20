@@ -510,6 +510,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           Writer.WriteLine("col{0}.ToolTipText = \"Pick the column from the foreign table to use as friendly value for this lookup.\";", idColumnCanonical);
           Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
         }
+        else if( cv.IsDateType() )
+        {
+          Writer.WriteLine("MyDateTimePickerColumn col{0} = new MyDateTimePickerColumn();", idColumnCanonical);
+          Writer.WriteLine("col{0}.DataPropertyName = \"{1}\";", idColumnCanonical, cv.EfColumnMapping);
+          Writer.WriteLine("col{0}.HeaderText = \"{1}\";", idColumnCanonical, cv.Name);
+          Writer.WriteLine("col{0}.Name = \"col{0}\";", idColumnCanonical);
+          Writer.WriteLine("dataGridView1.Columns.Add(col{0});", idColumnCanonical);
+        }
         else
         {
           Writer.WriteLine("System.Windows.Forms.DataGridViewTextBoxColumn col{0} = new System.Windows.Forms.DataGridViewTextBoxColumn();", idColumnCanonical);

@@ -61,6 +61,55 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       projectType = ProjectWizardType.WindowsForms;
     }
 
+    /// <summary>
+    /// If there is a DateTimePicker column and a grid layout, add the support code for custom DateTimePicker for Grids.
+    /// </summary>
+    /// <param name="vsProj"></param>
+    private void EnsureCodeForDateTimeGridColumn( VSProject vsProj )
+    {
+      bool hasDateColumn = false;
+
+      foreach( KeyValuePair<string, Column> kvp in Columns )
+      {
+        if( kvp.Value.IsDateType() ) {
+          hasDateColumn = true;
+          break;
+        }
+      }
+      if( !hasDateColumn )
+      {
+        foreach (KeyValuePair<string, Column> kvp in DetailColumns)
+        {
+          if (kvp.Value.IsDateType())
+          {
+            hasDateColumn = true;
+            break;
+          }
+        }
+      }
+
+      // If is the case, then add support code.
+      if (hasDateColumn)
+      {
+        string outFilePath = "";
+        Stream stream = null;
+        if( Language == LanguageGenerator.CSharp )
+        {
+          stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.CS.MyDateTimePickerColumn.cs");
+          outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.cs");
+        }
+        else if (Language == LanguageGenerator.VBNET)
+        {
+          stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.VB.MyDateTimePickerColumn.vb");
+          outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.vb");
+        }
+        StreamReader sr = new StreamReader(stream);
+        string contents = sr.ReadToEnd();
+        File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", ProjectNamespace));
+        vsProj.Project.ProjectItems.AddFromFile( outFilePath );
+      }
+    }
+
     public override void ProjectFinishedGenerating(Project project)
     {
       //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
@@ -86,7 +135,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName,
           detailTableName, WizardForm.ConstraintName, ForeignKeys, DetailForeignKeys );
         Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
-
+        EnsureCodeForDateTimeGridColumn(vsProj);
       }
       catch (WizardException e)
       {
@@ -102,10 +151,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       foreach (Reference reference in vsProj.References)
       {
         if (((Reference)reference).Name.IndexOf("MySql.Data",StringComparison.CurrentCultureIgnoreCase) >=0 && !String.IsNullOrEmpty(reference.Path))
-        {                   
+        {
           found = true;
           break;
-        }           
+        }
       }
 
       if (!found && MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
