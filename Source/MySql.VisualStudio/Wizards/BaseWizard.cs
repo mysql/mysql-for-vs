@@ -215,9 +215,13 @@ namespace MySql.Data.VisualStudio.Wizards
         NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
         ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       }
+      catch (WizardCancelledException wce)
+      {
+        throw wce;
+      }
       catch (Exception e)
       {
-        SendToGeneralOutputWindow( string.Format( "An error occurred: {0}\n\n {1}", e.Message, e.StackTrace));
+        SendToGeneralOutputWindow(string.Format("An error occurred: {0}\n\n {1}", e.Message, e.StackTrace));
       }
     }
 
