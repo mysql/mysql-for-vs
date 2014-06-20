@@ -519,6 +519,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           {
             Writer.WriteLine("col{0}.MaxInputLength = {1}", idColumnCanonical, cv.MaxLength.Value);
           }
+          if (cv.IsReadOnly())
+          {
+            Writer.WriteLine("col{0}.ReadOnly = True", idColumnCanonical);
+            Writer.WriteLine("col{0}.DefaultCellStyle.BackColor = Color.LightGray", idColumnCanonical);
+          }
           Writer.WriteLine("dataGridView1.Columns.Add(col{0})", idColumnCanonical);
         }
       }
