@@ -1,7 +1,7 @@
 ﻿@ModelType $safeprojectname$.CreateUserModel
 
 @Code
-    @ViewData("Title") = "Create User"
+    ViewData("Title") = "Create User"
 End Code
 
 <h2>Register your new user account</h2>
