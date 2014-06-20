@@ -45,8 +45,7 @@ Public Class AccountController
     
     <HttpPost()> _
     Public Function CreateUser(ByVal model As CreateUserModel) As ActionResult
-        If ModelState.IsValid Then
-            ' Attempt to register the user
+        If ModelState.IsValid Then            
             Dim createStatus As MembershipCreateStatus
             Membership.CreateUser(model.UserName, model.Password, model.Email, Nothing, Nothing, True, Nothing, createStatus)
 
@@ -58,12 +57,9 @@ Public Class AccountController
             End If
         End If
 
-        ' If we got this far, something failed, redisplay form
         Return View(model)
     End Function
 
-    '
-    ' GET: /Account/ChangePassword
 
     <Authorize()> _
     Public Function ChangePassword() As ActionResult
@@ -101,8 +97,7 @@ Public Class AccountController
 
 #Region "Status Code"
     Public Function ErrorCodeToString(ByVal createStatus As MembershipCreateStatus) As String
-        ' See http://go.microsoft.com/fwlink/?LinkID=177550 for
-        ' a full list of status codes.
+      
         Select Case createStatus
             Case MembershipCreateStatus.DuplicateUserName
                 Return "User name already exists. Please enter a different user name."
