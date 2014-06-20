@@ -126,7 +126,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 #endif
 
         }
-        AddNugetPackage(vsProj, JQUERY_PKG_NAME, JQUERY_VERSION);
+        AddNugetPackage(vsProj, JQUERY_PKG_NAME, JQUERY_VERSION, false);
         var packagesPath = Path.Combine(Path.GetDirectoryName(ProjectPath), @"Packages\jQuery." + JQUERY_VERSION + @"\Content\Scripts");
         CopyPackageToProject(vsProj, ProjectPath, packagesPath, "Scripts");
 
@@ -143,7 +143,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;                        
 
-            AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion);
+            AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion, true);
             string modelPath = Path.Combine(ProjectPath, "Models");
             GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables, modelPath);
             GenerateMVCItems(vsProj);
@@ -379,7 +379,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       foreach (var table in WizardForm.selectedTables)
       {
-          // creating controller file
+         // creating controller file
           sessionHost.Session = sessionHost.CreateSession();
           sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
           sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
@@ -394,7 +394,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
           }
           sessionHost.Session["classNameParameter"] = table.Name;
-          sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);
+          sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);          
           sessionHost.Session["entityClassNameParameter"] = table.Name;
           if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
               Language == LanguageGenerator.CSharp)

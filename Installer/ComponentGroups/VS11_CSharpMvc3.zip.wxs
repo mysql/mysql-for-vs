@@ -47,7 +47,7 @@
                 <File Id="vs11fil58AA45C19E801A016FE7F891B8839D2C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Controllers\HomeController.cs" />
             </Component>
             <Component Id="vs11cmpCC31CA21D7B410DFA58E96AE15BBC2C8" Directory="vs11dir7589C405C602CB6F333BFC2B9D7226CC" Guid="47D5A710-5778-4DAF-8EE6-E5CA9C638B5A">
-                <File Id="vs11fil214927A15F43826F9358B9B0E69F5C2A" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Models\AccountModels.cs" />
+                <File Id="vs11fil214927A15F43826F9358B9B0E69F5C2A" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Models\UserModels.cs" />
             </Component>
             <Component Id="vs11cmpA8E1E9FDA28AD58159C4C3E7D7E4D65E" Directory="vs11dir428276E25DA7BE4213AC3D0DD8245054" Guid="21764FCC-DA16-41A6-ACB2-6EF7D92B958C">
                 <File Id="vs11filE1A9FE22350CD7AE1FA79C48473533ED" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Properties\AssemblyInfo.cs" />
@@ -66,10 +66,10 @@
                 <File Id="vs11filCF99CF542DF094C346856A4CB9E171B8" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Account\ChangePasswordSuccess.cshtml" />
             </Component>
             <Component Id="vs11cmpA05DB962AE0B0CC87E3D52D9C58BBD7E" Directory="vs11dir3AEDF8E08509EADBF6C66E5695E59890" Guid="2161CB3C-ACB3-4BEA-976A-7813B967FB48">
-                <File Id="vs11fil9C0E62E4725C75B61E409AD543D7109B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Account\LogOn.cshtml" />
+                <File Id="vs11fil9C0E62E4725C75B61E409AD543D7109B" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Account\Login.cshtml" />
             </Component>
             <Component Id="vs11cmpB7D2771EEB1020920A02E165BAB3BB94" Directory="vs11dir3AEDF8E08509EADBF6C66E5695E59890" Guid="7148F88B-7C57-4EE7-B865-4157BF3AD43A">
-                <File Id="vs11fil0CAA545439ED07D8C45D25CE67BAB3E8" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Account\Register.cshtml" />
+                <File Id="vs11fil0CAA545439ED07D8C45D25CE67BAB3E8" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Account\CreateUser.cshtml" />
             </Component>
             <Component Id="vs11cmpF0ABC304379CA46533396272B9517300" Directory="vs11dir2F28E7C889BD9FEB7116185F220771D1" Guid="D9CD6520-991E-4B32-B78B-ECE967BA41A3">
                 <File Id="vs11filEBB77B3A8F4F891CF4E9729974653BBB" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Home\About.cshtml" />
@@ -84,7 +84,7 @@
                 <File Id="vs11fil08EC4795113BC5E39CA5183285C12B73" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Shared\_Layout.cshtml" />
             </Component>
             <Component Id="vs11cmpE703513B11EB6683B0EF5A61D8CDED58" Directory="vs11dirADAE7A409890E3A181952E9CA5FA552E" Guid="6E1E49C8-FA79-4820-8875-596220A0C748">
-                <File Id="vs11filC180C63BBB6F7005542296F3BD33873C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Shared\_LogOnPartial.cshtml" />
+                <File Id="vs11filC180C63BBB6F7005542296F3BD33873C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\Views\Shared\_LoginPartial.cshtml" />
             </Component>
         </ComponentGroup>
     </Fragment>

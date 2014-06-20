@@ -12,19 +12,13 @@ namespace $safeprojectname$.Controllers
   public class AccountController : Controller
   {
 
-    //
-    // GET: /Account/LogOn
-
-    public ActionResult LogOn()
+    public ActionResult Login()
     {
       return View();
     }
 
-    //
-    // POST: /Account/LogOn
-
     [HttpPost]
-    public ActionResult LogOn(LogOnModel model, string returnUrl)
+    public ActionResult Login(LoginModel model, string returnUrl)
     {
       if (ModelState.IsValid)
       {        
@@ -43,41 +37,30 @@ namespace $safeprojectname$.Controllers
         }
         else
         {
-          ModelState.AddModelError("", "The user name or password provided is incorrect.");
+          ModelState.AddModelError("", "The user name or password is not correct.");
         }
       }
-
-      // If we got this far, something failed, redisplay form
+      
       return View(model);
     }
 
-    //
-    // GET: /Account/LogOff
-
-    public ActionResult LogOff()
+    public ActionResult SingOut()
     {
       FormsAuthentication.SignOut();
 
       return RedirectToAction("Index", "Home");
     }
 
-    //
-    // GET: /Account/Register
-
-    public ActionResult Register()
+    public ActionResult CreateUser()
     {
       return View();
     }
 
-    //
-    // POST: /Account/Register
-
     [HttpPost]
-    public ActionResult Register(RegisterModel model)
+    public ActionResult CreateUser(CreateUserModel model)
     {
       if (ModelState.IsValid)
-      {
-        // Attempt to register the user
+      {        
         MembershipCreateStatus createStatus;
         Membership.CreateUser(model.UserName, model.Password, model.Email, model.PasswordQuestion, model.PasswordAnswer, true, null, out createStatus);
 
@@ -95,8 +78,6 @@ namespace $safeprojectname$.Controllers
       return View(model);
     }
 
-    //
-    // GET: /Account/ChangePassword
 
     [Authorize]
     public ActionResult ChangePassword()
@@ -104,8 +85,6 @@ namespace $safeprojectname$.Controllers
       return View();
     }
 
-    //
-    // POST: /Account/ChangePassword
 
     [Authorize]
     [HttpPost]
@@ -114,33 +93,30 @@ namespace $safeprojectname$.Controllers
       if (ModelState.IsValid)
       {
       
-        bool changePasswordSucceeded;
+        bool succeeded;
         try
         {
           MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true);
-          changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
+          succeeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
         }
         catch (Exception)
         {
-          changePasswordSucceeded = false;
+          succeeded = false;
         }
 
-        if (changePasswordSucceeded)
+        if (succeeded)
         {
           return RedirectToAction("ChangePasswordSuccess");
         }
         else
         {
-          ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+          ModelState.AddModelError("", "The password is incorrect or new password is invalid.");
         }
       }
       
       return View(model);
     }
-
-    //
-    // GET: /Account/ChangePasswordSuccess
-
+ 
     public ActionResult ChangePasswordSuccess()
     {
       return View();

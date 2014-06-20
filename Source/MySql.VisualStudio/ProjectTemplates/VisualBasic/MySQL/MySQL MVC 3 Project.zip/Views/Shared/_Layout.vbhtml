@@ -2,17 +2,17 @@
 <html>
 <head>
     <title>@ViewData("Title")</title>
-    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
-    <script src="@Url.Content("~/Scripts/jquery-1.5.1.min.js")" type="text/javascript"></script>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />    
+	<script src="@Url.Content("~/Scripts/jquery-$jqueryversion$.min.js")" type="text/javascript"></script>
 </head>
 <body>
     <div class="page">
         <div id="header">
-            <div id="title">
+           
                 <h1>My MVC Application</h1>
-            </div>
+           
             <div id="logindisplay">
-                @Html.Partial("_LogOnPartial")
+                @Html.Partial("_LoginPartial")
             </div>
             <div id="menucontainer">
                 <ul id="menu">
@@ -21,11 +21,14 @@
                 </ul>
             </div>
         </div>
-        <div id="main">
+        <div id="main">                       
+            @If Request.IsAuthenticated Then    
+                 @<div id="logindisplay">Welcome <strong>@User.Identity.Name</strong>!</div> 
+			End If				 
             @RenderBody()
         </div>
         <div id="footer">
         </div>
-    </div>
+    </div> 
 </body>
 </html>

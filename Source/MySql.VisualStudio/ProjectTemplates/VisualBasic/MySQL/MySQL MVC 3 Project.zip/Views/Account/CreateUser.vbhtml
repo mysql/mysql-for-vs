@@ -1,22 +1,15 @@
-﻿@ModelType $safeprojectname$.RegisterModel
+﻿@ModelType $safeprojectname$.CreateUserModel
 
 @Code
-    ViewData("Title") = "Register"
+    @ViewData("Title") = "Create User"
 End Code
 
-<h2>Create a New Account</h2>
-<p>
-    Use the form below to create a new account. 
-</p>
-<p>
-    Passwords are required to be a minimum of @Membership.MinRequiredPasswordLength characters in length.
-</p>
+<h2>Register your new user account</h2>
 
 @Using Html.BeginForm()
-    @Html.ValidationSummary(True, "Account creation was unsuccessful. Please correct the errors and try again.")
+    @Html.ValidationSummary(true, "User creation was not successful. Please correct the errors and try again.")
     @<div>
         <fieldset>
-            <legend>Account Information</legend>
 
             <div class="editor-label">
                 @Html.LabelFor(Function(m) m.UserName)
@@ -51,8 +44,11 @@ End Code
             </div>
 
             <p>
-                <input type="submit" value="Register" />
-            </p>
+                <input type="submit" value="Create User" />
+            </p>			
+			<p>
+				Passwords are required to be a minimum of @Membership.MinRequiredPasswordLength characters in length.
+			</p>
         </fieldset>
     </div>
 End Using

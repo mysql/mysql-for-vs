@@ -30,7 +30,7 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="Global.asax">Global.asax</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Global.asax.vb">Global.asax.vb</ProjectItem>
       <Folder Name="Models" TargetFolderName="Models">
-        <ProjectItem ReplaceParameters="true" TargetFileName="AccountModels.vb">AccountModels.vb</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="UserModels.vb">UserModels.vb</ProjectItem>
       </Folder>
       <Folder Name="My Project" TargetFolderName="My Project">
         <ProjectItem ReplaceParameters="true" TargetFileName="Application.myapp">Application.myapp</ProjectItem>
@@ -49,16 +49,16 @@
         <Folder Name="Account" TargetFolderName="Account">
           <ProjectItem ReplaceParameters="false" TargetFileName="ChangePassword.vbhtml">ChangePassword.vbhtml</ProjectItem>
           <ProjectItem ReplaceParameters="false" TargetFileName="ChangePasswordSuccess.vbhtml">ChangePasswordSuccess.vbhtml</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="LogOn.vbhtml">LogOn.vbhtml</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="Register.vbhtml">Register.vbhtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Login.vbhtml">Login.vbhtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="CreateUser.vbhtml">CreateUser.vbhtml</ProjectItem>
         </Folder>
         <Folder Name="Home" TargetFolderName="Home">
           <ProjectItem ReplaceParameters="false" TargetFileName="About.vbhtml">About.vbhtml</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="Index.vbhtml">Index.vbhtml</ProjectItem>
         </Folder>
         <Folder Name="Shared" TargetFolderName="Shared">
-          <ProjectItem ReplaceParameters="false" TargetFileName="_Layout.vbhtml">_Layout.vbhtml</ProjectItem>
-          <ProjectItem ReplaceParameters="false" TargetFileName="_LogOnPartial.vbhtml">_LogOnPartial.vbhtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="_Layout.vbhtml">_Layout.vbhtml</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="_LoginPartial.vbhtml">_LoginPartial.vbhtml</ProjectItem>
           <ProjectItem ReplaceParameters="false" TargetFileName="Error.vbhtml">Error.vbhtml</ProjectItem>
         </Folder>
         <ProjectItem ReplaceParameters="true" TargetFileName="Web.config">Web.config</ProjectItem>

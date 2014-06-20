@@ -50,7 +50,7 @@
                 <File Id="fil05950AE1CA0B5D6F47DE3D1A47441DC1" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Controllers\HomeController.vb" />
             </Component>
             <Component Id="cmp08F896C0F0586EA1A16F3BDA78DCA032" Directory="dir1218BC658309C38B6E3C64C283880974" Guid="2F47A316-0DF1-4CC2-AD63-E77B41BF1205">
-                <File Id="fil2A658021D354A367203B8FC6B26B58DA" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Models\AccountModels.vb" />
+                <File Id="fil2A658021D354A367203B8FC6B26B58DA" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Models\UserModels.vb" />
             </Component>
             <Component Id="cmp3EC33C4DE86C2DDB8D8BE47DF03CE804" Directory="dir289DF99ED79FC2D4E3EAA2C9DEE38BE2" Guid="69D14A3C-1951-4735-941D-FCD788D07184">
                 <File Id="filC0951B2FC77E9F457EC876F29AD5E340" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\My Project\Application.Designer.vb" />
@@ -86,10 +86,10 @@
                 <File Id="filA2B362FE85F95B52EEFF7C980B98D71A" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Account\ChangePasswordSuccess.vbhtml" />
             </Component>
             <Component Id="cmp4B5D7CC9B75C50B4A94A5AA2F5133AB1" Directory="dir12D50A869CA7D52F7AA656BA3A264F31" Guid="37030DF5-C100-4D90-BBEB-788C41C59E40">
-                <File Id="fil7F2B3CC988EA4A54F7C7B80D68CED4CA" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Account\LogOn.vbhtml" />
+                <File Id="fil7F2B3CC988EA4A54F7C7B80D68CED4CA" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Account\Login.vbhtml" />
             </Component>
             <Component Id="cmp5FADF5B30531DB943669CE2FA06AF28A" Directory="dir12D50A869CA7D52F7AA656BA3A264F31" Guid="4731D975-21A3-45C3-B10A-EF20416B73E2">
-                <File Id="fil6DA2D9ED6723B3603F18E8EFD5256324" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Account\Register.vbhtml" />
+                <File Id="fil6DA2D9ED6723B3603F18E8EFD5256324" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Account\CreateUser.vbhtml" />
             </Component>
             <Component Id="cmpD68019BD878FC8E6A59489574AC9EE2F" Directory="dir12CCDDD31D59EE6C46CFB7D30061940D" Guid="9E6C365E-D18F-43E4-9825-109FA83061F7">
                 <File Id="filE7AA3F6B4EDA5047EBEA06ADB5175907" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Home\About.vbhtml" />
@@ -104,7 +104,7 @@
                 <File Id="fil2E9176C03148EC4B982D6127E8E4B3A1" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Shared\_Layout.vbhtml" />
             </Component>
             <Component Id="cmp5B696C12100A9BC39D9AC0B0CED71192" Directory="dir123F2651D863C0ED5A8B7087AC343AEA" Guid="FE071537-D987-4B88-9180-C930EF422E6B">
-                <File Id="filCF8AF1B807788F1CDAA49C0DAA968307" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Shared\_LogOnPartial.vbhtml" />
+                <File Id="filCF8AF1B807788F1CDAA49C0DAA968307" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\VisualBasic\MySQL\MySQL MVC 3 Project.zip\Views\Shared\_LoginPartial.vbhtml" />
             </Component>
         </ComponentGroup>
     </Fragment>

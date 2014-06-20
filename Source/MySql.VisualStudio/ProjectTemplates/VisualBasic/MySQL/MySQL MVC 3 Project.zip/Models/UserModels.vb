@@ -45,7 +45,7 @@ Public Class ChangePasswordModel
     End Property
 End Class
 
-Public Class LogOnModel
+Public Class LoginModel
     Private userNameValue As String
     Private passwordValue As String
     Private rememberMeValue As Boolean
@@ -84,7 +84,7 @@ Public Class LogOnModel
     End Property
 End Class
 
-Public Class RegisterModel
+Public Class CreateUserModel
     Private userNameValue As String
     Private passwordValue As String
     Private confirmPasswordValue As String
