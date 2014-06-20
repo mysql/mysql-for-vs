@@ -153,7 +153,7 @@ namespace $safeprojectname$.Controllers
           return "The authentication provider returned an error. Please verify and try again.";
 
         case MembershipCreateStatus.UserRejected:
-          return "The user creation request has been canceled. Please verify and try again.";
+          return "The user creation request has been cancelled. Please verify and try again.";
 
         default:
           return "An unknown error occurred.";

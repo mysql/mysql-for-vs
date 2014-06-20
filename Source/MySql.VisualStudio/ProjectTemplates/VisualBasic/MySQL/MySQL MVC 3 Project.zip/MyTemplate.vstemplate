@@ -47,7 +47,7 @@
       <Folder Name="Views" TargetFolderName="Views">
         <ProjectItem ReplaceParameters="false" TargetFileName="_ViewStart.vbhtml">_ViewStart.vbhtml</ProjectItem>
         <Folder Name="Account" TargetFolderName="Account">
-          <ProjectItem ReplaceParameters="false" TargetFileName="ChangePassword.vbhtml">ChangePassword.vbhtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ChangePassword.vbhtml">ChangePassword.vbhtml</ProjectItem>
           <ProjectItem ReplaceParameters="false" TargetFileName="ChangePasswordSuccess.vbhtml">ChangePasswordSuccess.vbhtml</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="Login.vbhtml">Login.vbhtml</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="CreateUser.vbhtml">CreateUser.vbhtml</ProjectItem>

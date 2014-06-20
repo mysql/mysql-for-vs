@@ -376,57 +376,63 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\VisualBasic\VisualBasicIndexFile.tt");
         fileExtension = "vb";
       }
+      try
+      {     
+        foreach (var table in WizardForm.selectedTables)
+        {
+           // creating controller file
+            sessionHost.Session = sessionHost.CreateSession();
+            sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
+            sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
+            sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1));
+            if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+              Language == LanguageGenerator.CSharp )
+            {
+              sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+            }
+            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+            {
+              sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
+            }
+            sessionHost.Session["classNameParameter"] = table.Name;
+            sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);          
+            sessionHost.Session["entityClassNameParameter"] = table.Name;
+            if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+                Language == LanguageGenerator.CSharp)
+            {
+              sessionHost.Session["entityClassNameParameterWithNamespace"] = 
+                string.Format( "{0}.{1}", ProjectNamespace, table.Name );
+            } 
+            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+            {
+              sessionHost.Session["entityClassNameParameterWithNamespace"] =
+                string.Format("{0}.{1}", ProjectNamespace, table.Name);
+            }
+            T4Callback cb = new T4Callback();          
+            string resultControllerFile = t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb);
+            string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1), fileExtension);
+            File.WriteAllText(controllerFilePath, resultControllerFile);
+            if (cb.errorMessages.Count > 0)
+            {
+              File.AppendAllLines(controllerFilePath, cb.errorMessages);
+            }
 
-      foreach (var table in WizardForm.selectedTables)
+            vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);         
+
+            var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));  
+            Directory.CreateDirectory(viewPath);          
+            string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
+            File.WriteAllText(string.Format(viewPath + @"\Index.{0}html",fileExtension), resultViewFile);
+            if (cb.errorMessages.Count > 0)
+            {
+              File.AppendAllLines(controllerFilePath, cb.errorMessages);
+            }
+            vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));                
+        }
+      }
+      catch 
       {
-         // creating controller file
-          sessionHost.Session = sessionHost.CreateSession();
-          sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
-          sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
-          sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1));
-          if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
-            Language == LanguageGenerator.CSharp )
-          {
-            sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
-          }
-          else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
-          {
-            sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
-          }
-          sessionHost.Session["classNameParameter"] = table.Name;
-          sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);          
-          sessionHost.Session["entityClassNameParameter"] = table.Name;
-          if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
-              Language == LanguageGenerator.CSharp)
-          {
-            sessionHost.Session["entityClassNameParameterWithNamespace"] = 
-              string.Format( "{0}.{1}", ProjectNamespace, table.Name );
-          } 
-          else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
-          {
-            sessionHost.Session["entityClassNameParameterWithNamespace"] =
-              string.Format("{0}.{0}.{1}", ProjectNamespace, table.Name);
-          }
-          T4Callback cb = new T4Callback();          
-          string resultControllerFile = t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb);
-          string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1), fileExtension);
-          File.WriteAllText(controllerFilePath, resultControllerFile);
-          if (cb.errorMessages.Count > 0)
-          {
-            File.AppendAllLines(controllerFilePath, cb.errorMessages);
-          }
-
-          vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);         
-
-          var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));  
-          Directory.CreateDirectory(viewPath);          
-          string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
-          File.WriteAllText(string.Format(viewPath + @"\Index.{0}html",fileExtension), resultViewFile);
-          if (cb.errorMessages.Count > 0)
-          {
-            File.AppendAllLines(controllerFilePath, cb.errorMessages);
-          }
-          vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));                
+        MessageBox.Show("An error occured when generating MVC items. The application is not completed.");
       }
 #endif
     }
