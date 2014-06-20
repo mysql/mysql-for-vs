@@ -27,7 +27,7 @@ namespace $safeprojectname$.Models
     public string ConfirmPassword { get; set; }
   }
 
-  public class LogOnModel
+  public class LoginModel
   {
     [Required]
     [Display(Name = "User name")]
@@ -38,11 +38,11 @@ namespace $safeprojectname$.Models
     [Display(Name = "Password")]
     public string Password { get; set; }
 
-    [Display(Name = "Remember me?")]
+    [Display(Name = "Remember me")]
     public bool RememberMe { get; set; }
   }
 
-  public class RegisterModel
+  public class CreateUserModel
   {
     [Required]
     [Display(Name = "User name")]

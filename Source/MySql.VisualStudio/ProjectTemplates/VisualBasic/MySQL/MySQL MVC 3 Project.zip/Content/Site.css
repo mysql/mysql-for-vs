@@ -8,16 +8,16 @@
 }
 
 a:link {
-    color: #034af3;
-    text-decoration: underline;
+    color: #015A84;
+    padding:0; 
 }
 
 a:visited {
-    color: #505abc;
+    color: #e97b00;
 }
 
 a:hover {
-    color: #1d60ff;
+    color: #696969;
     text-decoration: none;
 }
 
@@ -35,13 +35,14 @@ footer,
 nav,
 section {
     display: block;
+    padding: 30px 30px 15px 30px;
 }
 
-/* HEADINGS   
-----------------------------------------------------------*/
-h1, h2, h3, h4, h5, h6 {
+h1 {
     font-size: 1.5em;
-    color: #000;
+    padding: 1em 8px;
+    color: #333;    
+    margin: 0;
 }
 
 h1 {
@@ -64,13 +65,9 @@ h4 {
 
 h5, h6 {
     font-size: 1em;
+    color: White;  
 }
 
-/* PRIMARY LAYOUT ELEMENTS   
-----------------------------------------------------------*/
-
-/* you can specify a greater or lesser percentage for the 
-page width. Or, you can specify an exact pixel width. */
 .page {
     width: 90%;
     margin-left: auto;
@@ -79,8 +76,7 @@ page width. Or, you can specify an exact pixel width. */
 
 header, #header {
     position: relative;
-    margin-bottom: 0px;
-    color: #000;
+    margin-bottom: 0px;    
     padding: 0;
 }
 
@@ -91,14 +87,12 @@ header h1, #header h1 {
     color: #fff;
     border: none;
     line-height: 2em;
-    font-size: 32px !important;
-    text-shadow: 1px 1px 2px #111;
+    font-size: 32px !important;    
 }
 
 #main {
     padding: 30px 30px 15px 30px;
-    background-color: #f8f8ff;
-    border-radius: 4px 0 0 0;
+    background-color: White;    
     -webkit-border-radius: 4px 0 0 0;
     -moz-border-radius: 4px 0 0 0;
 }
@@ -117,58 +111,28 @@ footer,
     -moz-border-radius: 0 0 4px 4px;
 }
 
-/* TAB MENU   
-----------------------------------------------------------*/
-ul#menu {
-    border-bottom: 1px #015A84 solid;
-    padding: 0 0 2px;
-    position: relative;
-    margin: 0;
-    text-align: right;
-}
+ #menu {
+      width: 100%;
+      float: left;
+      margin: 0 0 3em 0;
+      padding: 0;
+      list-style: none;
+      background-color: #f2f2f2;
+      border-bottom: 1px solid #ccc; 
+      border-top: 1px solid #ccc; }
+ #menu li {
+      float: left; }
+ #menu li a {
+      display: block;
+      padding: 8px 15px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #069;
+      border-right: 1px solid #ccc; }
+ #menu li a:hover {
+      color: #e97b00;
+      background-color: #fff; }
 
-ul#menu li {
-    display: inline;
-    list-style: none;
-}
-
-ul#menu li#greeting {
-    padding: 10px 20px;
-    font-weight: bold;
-    text-decoration: none;
-    line-height: 2.8em;
-    color: #fff;
-}
-
-ul#menu li a {
-    padding: 10px 20px;
-    font-weight: bold;
-    text-decoration: none;
-    line-height: 2.8em;
-    background-color: #e8eef4;
-    color: #034af3;
-    border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
-}
-
-ul#menu li a:hover {
-    background-color: #fff;
-    text-decoration: none;
-}
-
-ul#menu li a:active {
-    background-color: #a6e2a6;
-    text-decoration: none;
-}
-
-ul#menu li.selected a {
-    background-color: #fff;
-    color: #000;
-}
-
-/* FORM LAYOUT ELEMENTS   
-----------------------------------------------------------*/
 
 fieldset {
     border: 1px solid #ddd;
@@ -206,28 +170,25 @@ input[type="submit"] {
     padding: 5px;
 }
 
-/* TABLE
-----------------------------------------------------------*/
 
 table {
-    border: solid 1px #e8eef4;
+    border: solid 1px #ccc;
     border-collapse: collapse;
+    background-color: White;
 }
 
 table td {
     padding: 5px;
-    border: solid 1px #e8eef4;
+    border: solid 1px  #ccc;
 }
 
 table th {
     padding: 6px 5px;
     text-align: left;
-    background-color: #e8eef4;
-    border: solid 1px #e8eef4;
+    background-color: #f2f2f2;
+    border: solid 1px  #ccc;
 }
 
-/* MISC  
-----------------------------------------------------------*/
 .clear {
     clear: both;
 }
@@ -247,31 +208,39 @@ div#title {
     text-align: left;
 }
 
-#logindisplay {
-    font-size: 1.1em;
-    display: block;
-    text-align: right;
-    margin: 10px;
+div#logoutdisplay
+{  
     color: White;
+    padding: 0;  
+}
+
+
+div#logindisplay {
+    display: block;    
+    text-align: right;
 }
 
 #logindisplay a:link {
-    color: white;
-    text-decoration: underline;
+	display: inline-block;
+	padding: 5px;
+	outline: 0;
+	font-weight: bold;
+	font-size:  1.2em;
+	text-decoration: none;
+	cursor: pointer;
+	color: white;    
 }
 
 #logindisplay a:visited {
-    color: white;
-    text-decoration: underline;
+    color: white;    
 }
 
 #logindisplay a:hover {
-    color: white;
+    color: #e97b00;
     text-decoration: none;
 }
 
-/* Styles for validation helpers
------------------------------------------------------------*/
+
 .field-validation-error {
     color: #ff0000;
 }
@@ -294,8 +263,6 @@ div#title {
     display: none;
 }
 
-/* Styles for editor and display helpers
-----------------------------------------------------------*/
 .display-label, 
 .editor-label {
     margin: 1em 0 0 0;

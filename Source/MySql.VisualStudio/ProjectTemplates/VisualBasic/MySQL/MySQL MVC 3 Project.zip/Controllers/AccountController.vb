@@ -5,18 +5,13 @@ Imports System.Web.Routing
 Public Class AccountController
     Inherits System.Web.Mvc.Controller
 
-    '
-    ' GET: /Account/LogOn
-
-    Public Function LogOn() As ActionResult
+    Public Function Login() As ActionResult
         Return View()
     End Function
 
-    '
-    ' POST: /Account/LogOn
-
+	
     <HttpPost()> _
-    Public Function LogOn(ByVal model As LogOnModel, ByVal returnUrl As String) As ActionResult
+    Public Function Login(ByVal model As LoginModel, ByVal returnUrl As String) As ActionResult
         If ModelState.IsValid Then
             If Membership.ValidateUser(model.UserName, model.Password) Then
                 FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe)
@@ -27,35 +22,29 @@ Public Class AccountController
                     Return RedirectToAction("Index", "Home")
                 End If
             Else
-                ModelState.AddModelError("", "The user name or password provided is incorrect.")
+                ModelState.AddModelError("", "The user name or password is not correct.")
             End If
         End If
-
-        ' If we got this far, something failed, redisplay form
+    
         Return View(model)
     End Function
 
-    '
-    ' GET: /Account/LogOff
+        
 
-    Public Function LogOff() As ActionResult
+    Public Function SignOut() As ActionResult
         FormsAuthentication.SignOut()
 
         Return RedirectToAction("Index", "Home")
     End Function
 
-    '
-    ' GET: /Account/Register
-
-    Public Function Register() As ActionResult
+  
+    Public Function CreateUser() As ActionResult
         Return View()
     End Function
 
-    '
-    ' POST: /Account/Register
-
+    
     <HttpPost()> _
-    Public Function Register(ByVal model As RegisterModel) As ActionResult
+    Public Function CreateUser(ByVal model As CreateUserModel) As ActionResult
         If ModelState.IsValid Then
             ' Attempt to register the user
             Dim createStatus As MembershipCreateStatus
@@ -81,15 +70,11 @@ Public Class AccountController
         Return View()
     End Function
 
-    '
-    ' POST: /Account/ChangePassword
 
     <Authorize()> _
     <HttpPost()> _
     Public Function ChangePassword(ByVal model As ChangePasswordModel) As ActionResult
-        If ModelState.IsValid Then
-            ' ChangePassword will throw an exception rather
-            ' than return false in certain failure scenarios.
+        If ModelState.IsValid Then            
             Dim changePasswordSucceeded As Boolean
 
             Try
@@ -102,16 +87,13 @@ Public Class AccountController
             If changePasswordSucceeded Then
                 Return RedirectToAction("ChangePasswordSuccess")
             Else
-                ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.")
+                ModelState.AddModelError("", "The password is incorrect or new password is invalid.")
             End If
         End If
-
-        ' If we got this far, something failed, redisplay form
+        
         Return View(model)
     End Function
 
-    '
-    ' GET: /Account/ChangePasswordSuccess
 
     Public Function ChangePasswordSuccess() As ActionResult
         Return View()
@@ -147,7 +129,7 @@ Public Class AccountController
                 Return "The authentication provider returned an error. Please verify and try again."
 
             Case MembershipCreateStatus.UserRejected
-                Return "The user creation request has been canceled. Please verify and try again."
+                Return "The user creation request has been cancelled. Please verify and try again."
 
             Case Else
                 Return "An unknown error occurred."

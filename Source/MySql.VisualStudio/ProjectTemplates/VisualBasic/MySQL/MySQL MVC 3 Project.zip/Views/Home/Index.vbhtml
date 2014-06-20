@@ -1,5 +1,5 @@
 ﻿@Code
-    ViewData("Title") = "Home Page"
+    ViewData("Title") = "Home"
 End Code
 
 <h2>@ViewData("Message")</h2>

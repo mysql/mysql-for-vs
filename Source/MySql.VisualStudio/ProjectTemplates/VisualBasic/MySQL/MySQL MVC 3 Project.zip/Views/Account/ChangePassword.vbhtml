@@ -16,9 +16,7 @@ End Code
 @Using Html.BeginForm()
     @Html.ValidationSummary(True, "Password change was unsuccessful. Please correct the errors and try again.")
     @<div>
-        <fieldset>
-            <legend>Account Information</legend>
-
+        <fieldset>            
             <div class="editor-label">
                 @Html.LabelFor(Function(m) m.OldPassword)
             </div>

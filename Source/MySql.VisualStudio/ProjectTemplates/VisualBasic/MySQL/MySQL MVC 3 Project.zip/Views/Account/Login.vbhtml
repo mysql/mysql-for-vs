@@ -1,22 +1,17 @@
-﻿@ModelType $safeprojectname$.LogOnModel
+﻿@ModelType $safeprojectname$.LoginModel
 
 @Code
-    ViewData("Title") = "Log On"
+    ViewData("Title") = "Login"
 End Code
 
-<h2>Log On</h2>
-<p>
-    Please enter your user name and password. @Html.ActionLink("Register", "Register") if you don't have an account.
-</p>
+<h2>Login</h2>
 
 
 @Html.ValidationSummary(True, "Login was unsuccessful. Please correct the errors and try again.")
 
 @Using Html.BeginForm()
     @<div>
-        <fieldset>
-            <legend>Account Information</legend>
-
+        <fieldset>            
             <div class="editor-label">
                 @Html.LabelFor(Function(m) m.UserName)
             </div>
@@ -39,8 +34,11 @@ End Code
             </div>
 
             <p>
-                <input type="submit" value="Log On" />
+                <input type="submit" value="Login" />
             </p>
+			<p>
+				@Html.ActionLink("Register", "CreateUser") if you don't have an account.
+			</p>
         </fieldset>
     </div>
 End Using

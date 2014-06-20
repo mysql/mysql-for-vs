@@ -3,7 +3,6 @@
 @Code
     ViewData("Title") = "Error"
 End Code
-
 <h2>
-    Sorry, an error occurred while processing your request.
+    An error occurred while processing the current request.
 </h2>

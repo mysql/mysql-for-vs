@@ -32,7 +32,7 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="Global.asax">Global.asax</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Global.asax.cs">Global.asax.cs</ProjectItem>
       <Folder Name="Models" TargetFolderName="Models">
-        <ProjectItem ReplaceParameters="true" TargetFileName="AccountModels.cs">AccountModels.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="UserModels.cs">UserModels.cs</ProjectItem>
       </Folder>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
@@ -44,8 +44,8 @@
         <Folder Name="Account" TargetFolderName="Account">
           <ProjectItem ReplaceParameters="true" TargetFileName="ChangePassword.cshtml">ChangePassword.cshtml</ProjectItem>
           <ProjectItem ReplaceParameters="true" TargetFileName="ChangePasswordSuccess.cshtml">ChangePasswordSuccess.cshtml</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="LogOn.cshtml">LogOn.cshtml</ProjectItem>
-          <ProjectItem ReplaceParameters="true" TargetFileName="Register.cshtml">Register.cshtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Login.cshtml">Login.cshtml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="CreateUser.cshtml">CreateUser.cshtml</ProjectItem>
         </Folder>
         <Folder Name="Home" TargetFolderName="Home">
           <ProjectItem ReplaceParameters="true" TargetFileName="About.cshtml">About.cshtml</ProjectItem>
@@ -53,7 +53,7 @@
         </Folder>
         <Folder Name="Shared" TargetFolderName="Shared">
           <ProjectItem ReplaceParameters="true" TargetFileName="_Layout.cshtml">_Layout.cshtml</ProjectItem>
-          <ProjectItem ReplaceParameters="false" TargetFileName="_LogOnPartial.cshtml">_LogOnPartial.cshtml</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="_LoginPartial.cshtml">_LoginPartial.cshtml</ProjectItem>
           <ProjectItem ReplaceParameters="false" TargetFileName="Error.cshtml">Error.cshtml</ProjectItem>
         </Folder>
         <ProjectItem ReplaceParameters="true" TargetFileName="Web.config">Web.config</ProjectItem>

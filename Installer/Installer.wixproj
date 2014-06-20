@@ -166,7 +166,7 @@
   <PropertyGroup>
   </PropertyGroup>
   <Target Name="BeforeBuild">
-    <RemoveDir Directories="..\ProjectTemplatesZipFolder" ContinueOnError="true" />
+    <RemoveDir Directories="..\ProjectTemplatesZipFolder" ContinueOnError="false" />
     <MakeDir Directories="..\ProjectTemplatesZipFolder\VisualBasic" />
     <ItemGroup>
       <Mvc3CsharpTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\**" />
