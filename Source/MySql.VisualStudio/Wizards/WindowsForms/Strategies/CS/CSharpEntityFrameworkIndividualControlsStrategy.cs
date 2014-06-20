@@ -120,7 +120,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         ColumnValidation cv = ValidationColumns[i];
         string idColumnCanonical = GetCanonicalIdentifier( cv.Name );
-
+        
         if (cv.HasLookup)
         {
           Writer.WriteLine("private System.Windows.Forms.ComboBox {0}_comboBox;", idColumnCanonical);
