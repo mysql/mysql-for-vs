@@ -23,6 +23,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
         <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
@@ -31,6 +32,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
         <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
@@ -39,6 +41,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
         <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
     <Otherwise>

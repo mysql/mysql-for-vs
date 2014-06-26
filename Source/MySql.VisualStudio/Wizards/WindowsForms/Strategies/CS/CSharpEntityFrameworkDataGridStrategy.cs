@@ -51,17 +51,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
       {
         Writer.WriteLine("using System.Data.Entity.Core.Objects;");
-		Writer.WriteLine("using System.Data.Entity;");
+		    Writer.WriteLine("using System.Data.Entity;");
       }
     }
 
     protected override void WriteFormLoadCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("ctx = new Model1Entities();");
-	  if (DataAccessTech == DataAccessTechnology.EntityFramework5)
+	    if (DataAccessTech == DataAccessTechnology.EntityFramework5)
       {
         Writer.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", CanonicalTableName);
-	  }
+	    }
       else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
       {
         Writer.WriteLine("ctx.{0}.Load();", CanonicalTableName);
@@ -78,30 +83,57 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("bindingNavigatorMoveNextItem.Enabled = false;");
       Writer.WriteLine("bindingNavigatorMoveLastItem.Enabled = false;");
       Writer.WriteLine("toolStripButton1.Enabled = true;");
-
+      
       WriteDataGridColumnInitialization();
+
       Writer.WriteLine("dataGridView1.DataSource = _entities;");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteVariablesUserCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("private Model1Entities ctx;");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteSaveEventCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName);
       Writer.WriteLine("ctx.SaveChanges();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlDeclCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", CanonicalTableName);
       Writer.WriteLine("private System.Windows.Forms.DataGridView dataGridView1;");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlInitCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", CanonicalTableName);
       Writer.WriteLine("this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;");
       Writer.WriteLine("this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;");
@@ -115,34 +147,56 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);");
       }
       Writer.WriteLine("this.Panel1.Controls.Add(this.dataGridView1);");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.dataGridView1 = new System.Windows.Forms.DataGridView();");
       Writer.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", CanonicalTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
       Writer.WriteLine("this.Panel1.Padding = new System.Windows.Forms.Padding(10);");
       Writer.WriteLine("this.Controls.Add(this.Panel1);");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteControlInitialization(bool addBindings)
     {
-      Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
+      // nothing
     }
-
     internal override string GetDataSourceForCombo( ColumnValidation cv )
     {
       string colName = cv.Name;

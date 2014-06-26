@@ -38,7 +38,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   public partial class DetailValidationConfig : WizardPage
   {
     private Dictionary<string, Column> _detailColumns;       
-    private List<ColumnValidation> _colValidationsDetail;    
+    private List<ColumnValidation> _colValidationsDetail;
+    private Dictionary<string, ColumnValidation> _colValsByName;
     private string _detailTable;
     private string _connectionString;
 
@@ -65,6 +66,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       InitializeComponent();
       _colValidationsDetail = new List<ColumnValidation>();
       grdColumnsDetail.CellValidating += grdColumnsDetail_CellValidating;
+      grdColumnsDetail.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(grdColumnsDetail_EditingControlShowing);
       SetDefaults();
     }
 
@@ -74,13 +76,50 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       chkValidations_CheckedChanged(chkValidations, EventArgs.Empty);
     }
 
+    internal override void OnStarting(BaseWizardForm wizard)
+    {
+      WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
+
+      // Populate grid
+      grdColumnsDetail.DataSource = null;
+      _connectionString = wiz.Connection.ConnectionString;
+      _detailTable = wiz.DetailTableName;
+      if (string.IsNullOrEmpty(_detailTable)) return;
+      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
+      _colValidationsDetail.Clear();
+      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
+      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
+      lblTitleDetail.Text = string.Format("Columns to add validations from table: {0}", _detailTable);
+
+      _colValsByName = new Dictionary<string, ColumnValidation>();
+      for (int i = 0; i < _colValidationsDetail.Count; i++)
+      {
+        _colValsByName.Add(_colValidationsDetail[i].Name, _colValidationsDetail[i]);
+      }
+    }
+
+    void grdColumnsDetail_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+    {
+      if (e.Control is DataGridViewComboBoxEditingControl)
+      {
+        DataGridViewComboBoxEditingControl cb = e.Control as DataGridViewComboBoxEditingControl;
+        ColumnValidation cv = _colValsByName[(string)grdColumnsDetail.CurrentRow.Cells[0].Value];
+        cb.DataSource = cv.ReferenceableColumns;
+      }
+    }
+
+    internal override bool IsValid()
+    {
+      return true;
+    }
+
     void grdColumnsDetail_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
     {
       DataGridViewRow row = grdColumnsDetail.Rows[e.RowIndex];
       object value = e.FormattedValue;
       e.Cancel = false;
       if (row.IsNewRow) return;
-      if (e.ColumnIndex == 4) // Min Value
+      if (e.ColumnIndex == ValidationsGrid.IdxColMinValue) // Min Value
       {
         double v = 0;
         if ((value is DBNull) || string.IsNullOrEmpty(value.ToString())) { row.ErrorText = ""; return; }
@@ -125,7 +164,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           row.ErrorText = "";
         }
       }
-      else if (e.ColumnIndex == 5)  // Max Value
+      else if (e.ColumnIndex == ValidationsGrid.IdxColMaxValue)  // Max Value
       {
         double v = 0;
         if ((value is DBNull) || string.IsNullOrEmpty(value.ToString())) { row.ErrorText = ""; return; }
@@ -185,30 +224,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    internal override void OnStarting(BaseWizardForm wizard)
-    {
-      WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
-
-      // Populate grid
-      grdColumnsDetail.DataSource = null;
-      _connectionString = wiz.Connection.ConnectionString;
-      _detailTable = wiz.DetailTableName;
-      if (string.IsNullOrEmpty(_detailTable)) return;
-      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
-      _colValidationsDetail.Clear();
-      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
-      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
-      lblTitleDetail.Text = string.Format("Columns to add validations from table: {0}", _detailTable);
-    }
-  
-    internal override bool IsValid()
-    {
-      return true;
-    }
-
     private void chkValidations_CheckedChanged(object sender, EventArgs e)
     {
-      grdColumnsDetail.Enabled = chkValidations.Checked;   
+      grdColumnsDetail.Enabled = chkValidations.Checked;
     }
   }
 }
