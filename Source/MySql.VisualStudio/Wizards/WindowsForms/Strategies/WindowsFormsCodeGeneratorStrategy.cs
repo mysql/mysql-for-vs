@@ -26,6 +26,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+#if NET_40_OR_GREATER
+using System.Threading.Tasks;
+#endif
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
@@ -37,7 +40,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public abstract class WindowsFormsCodeGeneratorStrategy : BaseCodeGeneratorStrategy
   {
-    internal protected StreamWriter Writer;
+    internal IdentedStreamWriter Writer;
     protected string CanonicalTableName;
     internal Dictionary<string, Column> Columns;
     internal DataAccessTechnology DataAccessTech;
@@ -249,5 +252,228 @@ from information_schema.key_column_usage where `constraint_name` = '{0}'", Const
         con.Close();
       }
     }
+  }
+
+  /// <summary>
+  /// This class adds identation capabilities to standard StreamWriter.
+  /// </summary>
+  internal class IdentedStreamWriter : StreamWriter
+  {
+    private static readonly char IDENT_CHAR = '\t';
+    private int _identationLevel = 0;
+    private Stack<int> _stackIdentationLevels = new Stack<int>();
+    private int lineNumber = 0;
+    private StringBuilder sb = new StringBuilder();
+
+    internal void IncreaseIdentation()
+    {
+      _identationLevel++;
+    }
+
+    internal void DecreaseIdentation()
+    {
+      _identationLevel--;
+    }
+
+    internal void PushIdentationLevel()
+    {
+      _stackIdentationLevels.Push(_identationLevel);
+      _identationLevel = 0;
+    }
+
+    internal void PopIdentationLevel()
+    {
+      _identationLevel = _stackIdentationLevels.Pop();
+    }
+
+    private bool NeedIncreaseIdentation( string line )
+    {
+      if (line.StartsWith( "{" ) || line.StartsWith( "Namespace " ) || line.StartsWith( "Partial Class " ) ||
+        line.StartsWith("Public Class") || line.StartsWith("Private Sub ") || line.Trim().EndsWith(" Then") ||
+        line.StartsWith("Protected Overrides Sub "))
+        return true;
+      return false;
+    }
+
+    private bool NeedDecreaseIdentation( string line )
+    {
+      if (line.StartsWith( "}" ) || line.StartsWith( "End Sub" ) || line.StartsWith( "End Namespace" ) || 
+        line.StartsWith( "End Class" ) || line.StartsWith( "End If" ) || line.StartsWith( "ElseIf" ))
+        return true;
+      return false;
+    }
+
+    private string GetCurrentIdentation()
+    {
+      return new string(IDENT_CHAR, _identationLevel);
+    }
+    private void WriteIdentation()
+    {
+      sb.Append(GetCurrentIdentation());
+      base.Write( GetCurrentIdentation() );
+    }
+    
+    public IdentedStreamWriter(Stream stream) : base( stream )
+    {
+    }
+    
+    public IdentedStreamWriter(string path) : base( path )
+    {
+    }
+    
+    public IdentedStreamWriter(Stream stream, Encoding encoding) : base(stream, encoding)
+    {
+    }
+    
+    public IdentedStreamWriter(string path, bool append) : base( path, append )
+    {
+
+    }
+    
+    public IdentedStreamWriter(Stream stream, Encoding encoding, int bufferSize) : base( stream, encoding, bufferSize )
+    {
+
+    }
+    
+    public IdentedStreamWriter(string path, bool append, Encoding encoding) : base( path, append, encoding )
+    {
+
+    }
+    
+#if NET_45_OR_GREATER
+    public IdentedStreamWriter(Stream stream, Encoding encoding, int bufferSize, bool leaveOpen) : base( stream, encoding, bufferSize, leaveOpen )
+    {
+
+    }
+#endif
+
+    public IdentedStreamWriter(string path, bool append, Encoding encoding, int bufferSize) : base( path, append, encoding, bufferSize )
+    {
+
+    }
+
+    public override void Write(char value)
+    {
+      Write(value.ToString());
+    }
+
+    public override void Write(char[] buffer)
+    {
+      Write(buffer.ToString());
+    }
+
+    public override void Write(string value)
+    {
+      lineNumber++;
+      string line = value.Trim( new char[] { '\t', ' ' } );
+      if (NeedDecreaseIdentation(line))
+      {
+        System.Diagnostics.Debug.WriteLine(string.Format("Decrease identation at {1} / \"{0}\"", lineNumber, line));
+        DecreaseIdentation();
+      }
+      WriteIdentation();
+      sb.Append( line );
+      base.Write( line );
+      if( NeedIncreaseIdentation( line ))
+      {
+        System.Diagnostics.Debug.WriteLine(string.Format("Increase identation at {1} / \"{0}\"", lineNumber, line));
+        IncreaseIdentation();
+      }
+    }
+
+    public override void WriteLine()
+    {
+      Write(NewLine);
+    }
+
+    public override void WriteLine( string value )
+    {
+      Write(value + NewLine);
+    }
+    
+    public override void WriteLine(string format, object arg0)
+    {
+      WriteLine(format, new object[] { arg0 });
+    }
+
+    public override void WriteLine(string format, params object[] arg)
+    {
+      WriteLine(string.Format(format, arg));
+    }
+    
+    public override void WriteLine(char[] buffer, int index, int count)
+    {
+      WriteLine(new string(buffer, index, count));
+    }
+    
+    public override void WriteLine(string format, object arg0, object arg1)
+    {
+      WriteLine(format, new object[] { arg0, arg1 });
+    }
+    
+    public override void WriteLine(string format, object arg0, object arg1, object arg2)
+    {
+      WriteLine(format, new object[] { arg0, arg1, arg2 });
+    }
+
+    public override void Write(char[] buffer, int index, int count)
+    {
+      Write(new string(buffer, index, count));
+    }
+
+#if NET_45_OR_GREATER
+    public override Task WriteAsync(char value)
+    {
+      return WriteAsync(value.ToString());
+    }
+
+    public override Task WriteAsync(string value)
+    {
+      string line = value.Trim();
+      if (NeedIncreaseIdentation(line))
+      {
+        IncreaseIdentation();
+        WriteIdentation();
+        return base.WriteAsync(value);
+      }
+      else if (NeedDecreaseIdentation(line))
+      {
+        DecreaseIdentation();
+        WriteIdentation();
+        return base.WriteAsync(value);
+      }
+      else
+      {
+        WriteIdentation();
+        return base.WriteAsync(value);
+      }
+    }
+
+    public override Task WriteAsync(char[] buffer, int index, int count)
+    {
+      return WriteAsync(new string(buffer, index, count));
+    }
+
+    public override Task WriteLineAsync()
+    {
+      WriteIdentation();
+      return base.WriteLineAsync();
+    }
+
+    public override Task WriteLineAsync(char value)
+    {
+      return WriteLineAsync(value.ToString());
+    }
+
+    public override Task WriteLineAsync(string value)
+    {
+      return WriteAsync(value + NewLine);
+    }
+
+    public override Task WriteLineAsync(char[] buffer, int index, int count)
+    {
+      return WriteLineAsync(new string(buffer, index, count));
+    }
+#endif
   }
 }

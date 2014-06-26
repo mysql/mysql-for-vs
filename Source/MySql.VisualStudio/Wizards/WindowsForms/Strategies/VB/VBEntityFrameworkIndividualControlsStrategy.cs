@@ -57,6 +57,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteFormLoadCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("ctx = new Model1Entities()");
       if (DataAccessTech == DataAccessTechnology.EntityFramework5)
       {
@@ -100,21 +105,40 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
         }
       }
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteVariablesUserCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Private ctx As Model1Entities");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteSaveEventCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("{0}BindingSource.EndEdit()", CanonicalTableName);
       Writer.WriteLine("ctx.SaveChanges()");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlDeclCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Friend WithEvents {0}BindingSource As System.Windows.Forms.BindingSource", CanonicalTableName);
       for (int i = 0; i < ValidationColumns.Count; i++)
       {
@@ -143,11 +167,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Friend WithEvents panel4 As System.Windows.Forms.Panel");
       Writer.WriteLine("Friend WithEvents panel5 As System.Windows.Forms.Panel");
       Writer.WriteLine("Friend WithEvents panel6 As System.Windows.Forms.Panel");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlInitCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.bindingNavigator1.BindingSource = Me.{0}BindingSource", CanonicalTableName);
+
       WriteControlInitialization(false);
 
       // Panel4
@@ -191,30 +223,52 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Me.panel6.Size = New System.Drawing.Size(400, 10)");
       Writer.WriteLine("Me.panel6.TabIndex = 6");
 
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.{0}BindingSource = New System.Windows.Forms.BindingSource(Me.components)", CanonicalTableName);
       Writer.WriteLine("Me.panel3 = New System.Windows.Forms.Panel()");
       Writer.WriteLine("Me.panel4 = New System.Windows.Forms.Panel()");
       Writer.WriteLine("Me.panel5 = New System.Windows.Forms.Panel()");
       Writer.WriteLine("Me.panel6 = New System.Windows.Forms.Panel()");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.panel3.SuspendLayout()");
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).BeginInit()", CanonicalTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.Text = \"{0}\"", CapitalizeString(TableName));
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).EndInit()", CanonicalTableName);
       Writer.WriteLine("Me.Controls.Add(Me.panel3)");
       Writer.WriteLine("Me.panel3.ResumeLayout(False)");
       Writer.WriteLine("Me.panel3.PerformLayout()");
+
+      Writer.PopIdentationLevel();
     }
   }
 }

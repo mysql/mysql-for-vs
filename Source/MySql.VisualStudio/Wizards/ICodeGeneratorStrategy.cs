@@ -55,7 +55,7 @@ namespace MySql.Data.VisualStudio.Wizards
   public class StrategyConfig
   {
     internal GuiType Type;
-    internal StreamWriter Writer;
+    internal IdentedStreamWriter Writer;
     internal string CanonicalTableName;
     internal Dictionary<string, Column> Columns;
     internal Dictionary<string, Column> DetailColumns;
@@ -71,7 +71,7 @@ namespace MySql.Data.VisualStudio.Wizards
     internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys;
     internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys;
 
-    internal StrategyConfig(StreamWriter Writer, string CanonicalTableName,
+    internal StrategyConfig(IdentedStreamWriter Writer, string CanonicalTableName,
       Dictionary<string, Column> Columns, Dictionary<string, Column> DetailColumns, DataAccessTechnology DataAccessTech,
       GuiType Type, LanguageGenerator Language, bool ValidationsEnabled,
       List<ColumnValidation> ValidationColumns, List<ColumnValidation> DetailValidationColumns, string ConnectionString,

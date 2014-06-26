@@ -51,14 +51,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else if (DataAccessTech == DataAccessTechnology.EntityFramework6)
       {
         Writer.WriteLine("using System.Data.Entity.Core.Objects;");
-		Writer.WriteLine("using System.Data.Entity;");
+		    Writer.WriteLine("using System.Data.Entity;");
       }
     }
 
     protected override void WriteFormLoadCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("ctx = new Model1Entities();");
-	  if (DataAccessTech == DataAccessTechnology.EntityFramework5)
+	    if (DataAccessTech == DataAccessTechnology.EntityFramework5)
       {
         Writer.WriteLine("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", CanonicalTableName);
       }
@@ -100,21 +105,40 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             idColumnCanonical, cv.EfColumnMapping, CanonicalTableName);
         }
       }
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteVariablesUserCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("private Model1Entities ctx;");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteSaveEventCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName);
       Writer.WriteLine("ctx.SaveChanges();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlDeclCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", CanonicalTableName);
       for( int i = 0; i < ValidationColumns.Count; i++ )
       {
@@ -143,12 +167,21 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("private System.Windows.Forms.Panel panel4;");
       Writer.WriteLine("private System.Windows.Forms.Panel panel5;");
       Writer.WriteLine("private System.Windows.Forms.Panel panel6;");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlInitCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", CanonicalTableName);
+      
       WriteControlInitialization(false);
+
       // Panel4
       Writer.WriteLine("// ");
       Writer.WriteLine("// panel4");
@@ -190,30 +223,52 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("this.panel6.Size = new System.Drawing.Size(400, 10);");
       Writer.WriteLine("this.panel6.TabIndex = 6;");
 
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", CanonicalTableName);
       Writer.WriteLine("this.panel3 = new System.Windows.Forms.Panel();");
       Writer.WriteLine("this.panel4 = new System.Windows.Forms.Panel();");
       Writer.WriteLine("this.panel5 = new System.Windows.Forms.Panel();");
       Writer.WriteLine("this.panel6 = new System.Windows.Forms.Panel();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.panel3.SuspendLayout();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", CanonicalTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
       Writer.WriteLine("this.Controls.Add(this.panel3);");
       Writer.WriteLine("this.panel3.ResumeLayout(false);");
       Writer.WriteLine("this.panel3.PerformLayout();");
+
+      Writer.PopIdentationLevel();
     }
   }
 }
