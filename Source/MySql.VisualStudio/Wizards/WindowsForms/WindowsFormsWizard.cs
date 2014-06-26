@@ -76,7 +76,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           break;
         }
       }
-      if( !hasDateColumn )
+      if( !hasDateColumn && DetailColumns != null )
       {
         foreach (KeyValuePair<string, Column> kvp in DetailColumns)
         {
@@ -289,7 +289,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     private string _canonicalTableName;
     private string _bindingSourceName;
-    private StreamWriter sw;
+    private IdentedStreamWriter sw;
 
     private void AddBindings(string FormPath)
     {
@@ -298,7 +298,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       FileStream fs = new FileStream(FormPath, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
       using( StringReader sr = new StringReader(originalContents) )
       {
-        using( sw = new StreamWriter( fs ) )
+        using( sw = new IdentedStreamWriter( fs ) )
         {
           Strategy.Writer = sw;
           string line = null;

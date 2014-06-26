@@ -49,6 +49,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteFormLoadCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("string strConn = \"{0};\";", ConnectionString);
       Writer.WriteLine("ad = new MySqlDataAdapter(\"select * from `{0}`\", strConn);", TableName);
       Writer.WriteLine("MySqlCommandBuilder builder = new MySqlCommandBuilder(ad);");
@@ -69,15 +74,28 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
       WriteDataGridColumnInitialization();
       Writer.WriteLine("this.dataGridView1.DataSource = this.{0}BindingSource;", CanonicalTableName);
-    }    
+
+      Writer.PopIdentationLevel();
+    }
 
     protected override void WriteVariablesUserCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("private MySqlDataAdapter ad;");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteSaveEventCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       for (int i = 0; i < ValidationColumns.Count; i++)
       {
         ColumnValidation cv = ValidationColumns[i];
@@ -92,17 +110,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
       Writer.WriteLine("{0}BindingSource.EndEdit();", CanonicalTableName);
       Writer.WriteLine("ad.Update(this.newDataSet.{0});", CanonicalTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlDeclCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("private System.Windows.Forms.DataGridView dataGridView1;");
       Writer.WriteLine("private NewDataSet newDataSet;");
       Writer.WriteLine("private System.Windows.Forms.BindingSource {0}BindingSource;", CanonicalTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlInitCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.bindingNavigator1.BindingSource = this.{0}BindingSource;", CanonicalTableName);
       Writer.WriteLine("// ");
       Writer.WriteLine("// newDataSet");
@@ -128,30 +159,53 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         Writer.WriteLine("this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);");
       }
       Writer.WriteLine("this.Panel1.Controls.Add(this.dataGridView1);");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.dataGridView1 = new System.Windows.Forms.DataGridView();");
       Writer.WriteLine("this.newDataSet = new NewDataSet();");
       Writer.WriteLine("this.{0}BindingSource = new System.Windows.Forms.BindingSource(this.components);", CanonicalTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.newDataSet)).BeginInit();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).BeginInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("this.Text = \"{0}\";", CapitalizeString(TableName));
       Writer.WriteLine("this.Panel1.Padding = new System.Windows.Forms.Padding(10);");
       Writer.WriteLine("this.Controls.Add(this.Panel1);");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.newDataSet)).EndInit();");
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.{0}BindingSource)).EndInit();", CanonicalTableName);
       Writer.WriteLine("((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteControlInitialization(bool addBindings)

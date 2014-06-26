@@ -49,6 +49,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override void WriteFormLoadCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Dim strConn As string = \"{0};\"", ConnectionString);
       Writer.WriteLine("ad = new MySqlDataAdapter(\"select * from `{0}`\", strConn)", TableName);
       Writer.WriteLine("Dim builder As MySqlCommandBuilder = New MySqlCommandBuilder(ad)");
@@ -107,16 +112,29 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("{0}BindingSource.DataMember = \"{1}\"", CanonicalDetailTableName, ConstraintName);
       WriteDataGridColumnInitialization();
       Writer.WriteLine("dataGridView1.DataSource = {0}BindingSource", CanonicalDetailTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteVariablesUserCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Private ad As MySqlDataAdapter");
       Writer.WriteLine("Private ad{0} As MySqlDataAdapter", CanonicalDetailTableName );
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteSaveEventCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       for (int i = 0; i < ValidationColumns.Count; i++)
       {
         ColumnValidation cv = ValidationColumns[i];
@@ -133,10 +151,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("{0}BindingSource.EndEdit()", CanonicalDetailTableName );
       Writer.WriteLine("ad.Update(Me.newDataSet.{0})", CanonicalTableName );
       Writer.WriteLine("ad{0}.Update(Me.newDataSet.{0})", CanonicalDetailTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlDeclCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Friend WithEvents newDataSet As NewDataSet ");
       Writer.WriteLine("Friend WithEvents {0}BindingSource As System.Windows.Forms.BindingSource", CanonicalTableName);
       for (int i = 0; i < ValidationColumns.Count; i++)
@@ -168,10 +192,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Friend WithEvents panel4 As System.Windows.Forms.Panel");
       Writer.WriteLine("Friend WithEvents panel5 As System.Windows.Forms.Panel");
       Writer.WriteLine("Friend WithEvents lblDetails As System.Windows.Forms.Label");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerControlInitCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.bindingNavigator1.BindingSource = Me.{0}BindingSource", CanonicalTableName);
       Writer.WriteLine("' ");
       Writer.WriteLine("'newDataSet");
@@ -256,10 +287,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 		    Writer.WriteLine("AddHandler Me.dataGridView1.CellValidating, AddressOf Me.dataGridView1_CellValidating");
         Writer.WriteLine("AddHandler Me.dataGridView1.DataError, AddressOf Me.dataGridView1_DataError");
       }
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerBeforeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.newDataSet = New NewDataSet()");
       Writer.WriteLine("Me.dataGridView1 = New System.Windows.Forms.DataGridView()");
       Writer.WriteLine("Me.{0}BindingSource = New System.Windows.Forms.BindingSource(Me.components)", CanonicalTableName);
@@ -269,18 +307,32 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Me.panel3 = New System.Windows.Forms.Panel()");
       Writer.WriteLine("Me.panel4 = New System.Windows.Forms.Panel()");
       Writer.WriteLine("Me.panel5 = New System.Windows.Forms.Panel()");
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteDesignerAfterSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.panel3.SuspendLayout()");
       Writer.WriteLine("CType(Me.dataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()");
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).BeginInit()", CanonicalTableName);
       Writer.WriteLine("CType(Me.{0}BindingSource, System.ComponentModel.ISupportInitialize).BeginInit()", CanonicalDetailTableName);
+
+      Writer.PopIdentationLevel();
     }
 
     protected override void WriteBeforeResumeSuspendCode()
     {
+      Writer.PushIdentationLevel();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+      Writer.IncreaseIdentation();
+
       Writer.WriteLine("Me.Size = New System.Drawing.Size(682, 590)");
       Writer.WriteLine("Me.Text = \"{0}\"", CapitalizeString(TableName));
       Writer.WriteLine("CType(Me.dataGridView1, System.ComponentModel.ISupportInitialize).EndInit()");
@@ -292,6 +344,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Writer.WriteLine("Me.panel2.PerformLayout()");
       Writer.WriteLine("Me.panel3.ResumeLayout(False)");
       Writer.WriteLine("Me.panel3.PerformLayout()");
+
+      Writer.PopIdentationLevel();
     }
 
     internal override string GetDataSourceForCombo(ColumnValidation cv)
