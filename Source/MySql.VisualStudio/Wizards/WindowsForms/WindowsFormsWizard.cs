@@ -45,17 +45,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   ///  Wizard for generation of a Windows Forms based project.
   /// </summary>
   public class WindowsFormsWizard : BaseWizard<WindowsFormsWizardForm, WindowsFormsCodeGeneratorStrategy>
-  { 
-    private bool ValidationsEnabled
-    {
-      get
-      {
-        return WizardForm.ValidationColumns != null;
-      }
-    }
+  {    
 
-    public WindowsFormsWizard( LanguageGenerator Language )
-      : base( Language )
+    internal MySqlConnection Connection { get; set; }
+
+    public WindowsFormsWizard(LanguageGenerator Language)
+      : base(Language)
     {
       WizardForm = new WindowsFormsWizardForm(this);
       projectType = ProjectWizardType.WindowsForms;
@@ -65,7 +60,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// If there is a DateTimePicker column and a grid layout, add the support code for custom DateTimePicker for Grids.
     /// </summary>
     /// <param name="vsProj"></param>
-    private void EnsureCodeForDateTimeGridColumn( VSProject vsProj )
+    private void EnsureCodeForDateTimeGridColumn(VSProject vsProj)
     {
       bool hasDateColumn = false;
 
@@ -113,34 +108,36 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     public override void ProjectFinishedGenerating(Project project)
     {
       //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
-      VSProject vsProj = project.Object as VSProject;
-      string detailTableName = WizardForm.DetailTableName;
       
-      try
-      {
+      VSProject vsProj = project.Object as VSProject;
+
+      //string detailTableName = WizardForm.DetailTableName;
+      
+      //try
+      //{
         
-        Columns = WizardForm.Columns;
-        DetailColumns = WizardForm.DetailColumns;
-        _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
+      //  Columns = WizardForm.Columns;
+      //  DetailColumns = WizardForm.DetailColumns;
+      //  _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
      
-        string canonicalDetailTableName = GetCanonicalIdentifier( detailTableName );
+      //  string canonicalDetailTableName = GetCanonicalIdentifier( detailTableName );
 
-        AddColumnMappings(_canonicalTableName, WizardForm.ValidationColumns);
-        AddColumnMappings(canonicalDetailTableName, WizardForm.ValidationColumnsDetail);
+      //  AddColumnMappings(_canonicalTableName, WizardForm.ValidationColumns);
+      //  AddColumnMappings(canonicalDetailTableName, WizardForm.ValidationColumnsDetail);
 
-        // Create the strategy
-        StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
-          WizardForm.DataAccessTechnology, WizardForm.GuiType, Language,
-          ValidationsEnabled, WizardForm.ValidationColumns, WizardForm.ValidationColumnsDetail,
-          GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName,
-          detailTableName, WizardForm.ConstraintName, ForeignKeys, DetailForeignKeys );
-        Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
-        EnsureCodeForDateTimeGridColumn(vsProj);
-      }
-      catch (WizardException e)
-      {
-        SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
-      }
+      //  // Create the strategy
+      //  StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
+      //    WizardForm.DataAccessTechnology, WizardForm.GuiType, Language,
+      //    ValidationsEnabled, WizardForm.ValidationColumns, WizardForm.ValidationColumnsDetail,
+      //    GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName,
+      //    detailTableName, WizardForm.ConstraintName, ForeignKeys, DetailForeignKeys );
+      //  Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
+      //  EnsureCodeForDateTimeGridColumn(vsProj);
+      //}
+      //catch (WizardException e)
+      //{
+      //  SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
+      //}
 
 #if NET_40_OR_GREATER
 
@@ -169,19 +166,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         // Gather all the tables
 
-        SortedSet<string> tables = new SortedSet<string>();
-        tables.Add(WizardForm.TableName);
-        if (!string.IsNullOrEmpty(detailTableName))
-          tables.Add(detailTableName);
-        foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp in ForeignKeys)
-        {
-          tables.Add(kvp.Value.ReferencedTableName);
-        }
-        foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp in DetailForeignKeys)
-        {
-          tables.Add(kvp.Value.ReferencedTableName);
-        }
-
         InitializeColumnMappings(ForeignKeys);
         InitializeColumnMappings(DetailForeignKeys);
 
@@ -195,12 +179,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
 
           AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion, true);
-          GenerateEntityFrameworkModel(project, vsProj, WizardForm.Connection, "Model1", tables.ToList(), ProjectPath);
+          GenerateEntityFrameworkModel(project, vsProj, WizardForm.Connection, "Model1", WizardForm.dicConfig.Keys.ToList<String>(), ProjectPath);
         }
         else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
         {
           PopulateColumnMappingsForTypedDataSet();
-          GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
+          GenerateTypedDataSetModel(vsProj, WizardForm.Connection, WizardForm.dicConfig.Keys.ToList<String>());
         }
         AddBindings(vsProj);        
 
@@ -236,7 +220,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     }
 
-    internal void InitializeColumnMappings( Dictionary<string,ForeignKeyColumnInfo> fks )
+    internal void InitializeColumnMappings(Dictionary<string, ForeignKeyColumnInfo> fks)
     {
       foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp in fks)
       { 

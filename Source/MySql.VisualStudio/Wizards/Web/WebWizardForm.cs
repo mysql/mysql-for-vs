@@ -71,6 +71,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
+    internal override string ConnectionString
+    {
+      get { return connectionStringForModel; }
+    }
+
     internal string connectionStringNameForModel
     {
       get

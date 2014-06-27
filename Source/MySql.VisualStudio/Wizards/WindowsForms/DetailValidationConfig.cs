@@ -38,7 +38,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   public partial class DetailValidationConfig : WizardPage
   {
     private Dictionary<string, Column> _detailColumns;       
-    private List<ColumnValidation> _colValidationsDetail;
+    private List<ColumnValidation> _colValidationsDetail;    
     private Dictionary<string, ColumnValidation> _colValsByName;
     private string _detailTable;
     private string _connectionString;
@@ -224,9 +224,30 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
+    internal override void OnStarting(BaseWizardForm wizard)
+    {
+      AdvancedWizardForm wiz = (AdvancedWizardForm)wizard;
+
+      // Populate grid
+      grdColumnsDetail.DataSource = null;
+      _connectionString = wiz.Connection.ConnectionString;
+      _detailTable = wiz.DetailTableName;
+      if (string.IsNullOrEmpty(_detailTable)) return;
+      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
+      _colValidationsDetail.Clear();
+      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
+      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
+      lblTitleDetail.Text = string.Format("Setup the validations for the columns in the table {0}", _detailTable);
+    }
+  
+    internal override bool IsValid()
+    {
+      return true;
+    }
+
     private void chkValidations_CheckedChanged(object sender, EventArgs e)
     {
-      grdColumnsDetail.Enabled = chkValidations.Checked;
+      grdColumnsDetail.Enabled = chkValidations.Checked;   
     }
   }
 }

@@ -38,9 +38,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   {
    
     #region "Properties exposed"  
-
-    internal GuiType GuiType { get { return dataAccessTechnologyConfig1.GuiType; } }    
-
+    
     internal MySqlConnection Connection {
       get {
         if (string.IsNullOrEmpty(dataAccessConfig1.connectionString))
@@ -55,28 +53,32 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
     }
 
-    internal string TableName { get { return dataAccessConfig1.TableName; } }
+    internal DataAccessTechnology DataAccessTechnology
+    {
+      get {
+        return dataAccessConfig1.DataAccessTechnology;
+      }
+    }
 
-    internal DataAccessTechnology DataAccessTechnology { get { return dataAccessTechnologyConfig1.DataAccessTechnology; } }
+   internal Dictionary<string, AdvancedWizardForm> dicConfig
+    {
+      get {
+        return tablesSelection1.dicConfig;
+      }      
+    }
+  
 
-    internal string ConstraintName { get { return dataAccessTechnologyConfig1.ConstraintName; } }
-
-    internal string DetailTableName { get { return dataAccessTechnologyConfig1.DetailTableName; } }
-
-    internal List<ColumnValidation> ValidationColumns { get { return validationConfig1.ValidationColumns; } }
-
-    internal List<ColumnValidation> ValidationColumnsDetail { get { return detailValidationConfig1.DetailValidationColumns; } }
-
-    internal Dictionary<string, Column> Columns { get { return validationConfig1.Columns; } }
-
-    internal Dictionary<string, Column> DetailColumns { get { return detailValidationConfig1.DetailColumns; } }
+    internal override string ConnectionString
+    {
+      get { return this.Wizard.GetConnectionStringWithPassword(Connection); }
+    }
 
     #endregion
 
-    internal const int DATA_ACCESS_CONFIG_PAGE_IDX = 0;
-    internal const int DATA_ACCESS_TECHNOLOGY_CONFIG_PAGE_IDX = 1;
-    internal const int VALIDATION_CONFIG_PAGE_IDX = 2;
-    internal const int DETAIL_VALIDATION_CONFIG_PAGE_IDX = 3;
+    //internal const int DATA_ACCESS_CONFIG_PAGE_IDX = 0;
+    internal const int DATA_ACCESS_TECHNOLOGY_CONFIG_PAGE_IDX = 0;
+    internal const int VALIDATION_CONFIG_PAGE_IDX = 1;
+    internal const int DETAIL_VALIDATION_CONFIG_PAGE_IDX = 2;
 
     internal protected WindowsFormsWizard Wizard = null;
 
@@ -91,16 +93,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       // set up descriptions and title
       Descriptions.Add("Data Source Configuration,This wizard will create a full Windows Forms project connected to an existing MySQL database using Entity Framework or ADO.NET Typed Datasets.");
-      Descriptions.Add("Data Access Technology Configuration,This step will set up the data access technology that will be used in the generation of the Form.");      
-      Descriptions.Add("Columns Validation,This page allows you to customize input validations for each column in the selected table.");
-      Descriptions.Add("Detail Columns Validation, Within this step validations can be added on the columns for the child related table.");
+      Descriptions.Add("Database objects selection,Please select the tables that you want to include in the generation of your model");
       WizardName = "Windows Forms Project";
-
+            
       // Create linked list of wizard pages.
       Pages.Add(dataAccessConfig1);
-      Pages.Add(dataAccessTechnologyConfig1);
-      Pages.Add(validationConfig1);
-      Pages.Add(detailValidationConfig1);
+      Pages.Add(tablesSelection1);
+      
       CurPage = dataAccessConfig1;
       Current = 0;
       BaseWizardForm_Load(sender, e);
