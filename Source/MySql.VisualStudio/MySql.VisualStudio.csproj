@@ -785,6 +785,12 @@
     <Compile Include="Wizards\Web\ProviderConfiguration.Designer.cs">
       <DependentUpon>ProviderConfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.Designer.cs">
+      <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Wizards\WindowsForms\CSharpWindowsFormsWizard.cs" />
     <Compile Include="Wizards\WindowsForms\DetailValidationConfig.cs">
       <SubType>UserControl</SubType>
@@ -814,10 +820,16 @@
     <Compile Include="Wizards\WindowsForms\DataAccessConfig.Designer.cs">
       <DependentUpon>DataAccessConfig.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.resx">
+      <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\Templates\CS\MyDateTimePickerColumn.cs">
       <SubType>Component</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\Templates\VB\MyDateTimePickerColumn.vb" />
+    <Compile Include="Wizards\WindowsForms\TablesSelectionWinForms.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Wizards\WindowsForms\ValidationConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>

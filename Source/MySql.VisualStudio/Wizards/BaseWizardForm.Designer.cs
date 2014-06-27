@@ -185,7 +185,7 @@
 
     #endregion
 
-    protected System.Windows.Forms.Button btnNext;
+    public System.Windows.Forms.Button btnNext;
     protected System.Windows.Forms.Button btnCancel;
     protected System.Windows.Forms.Button btnBack;
     internal System.Windows.Forms.Label lblDescription;

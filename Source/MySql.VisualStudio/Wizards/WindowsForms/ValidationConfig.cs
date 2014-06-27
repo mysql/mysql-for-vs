@@ -39,7 +39,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   {
     
     private Dictionary<string, Column> _columns;
-    private List<ColumnValidation> _colValidations;
+    internal List<ColumnValidation> _colValidations;
     private Dictionary<string, ColumnValidation> _colValsByName;
     private string _table;
     
@@ -52,14 +52,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         return _columns;
       }
     }
-
-    internal List<ColumnValidation> ValidationColumns {
-      get {
-        if (chkValidations.Checked) return _colValidations;
-        else return new List<ColumnValidation>();
-      }
-    }    
-
+   
     public ValidationConfig()
     {
       InitializeComponent();
@@ -68,18 +61,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
       grdColumns.CellValidating += grdColumns_CellValidating;
       grdColumns.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(grdColumns_EditingControlShowing);
-      SetDefaults();
-    }
-
-    private void SetDefaults()
-    {
-      chkValidations.Checked = true;
-      chkValidations_CheckedChanged(chkValidations, EventArgs.Empty);
-    }
+      
+    }   
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
+      AdvancedWizardForm wiz = (AdvancedWizardForm)wizard;
 
       // Populate grid      
       grdColumns.DataSource = null;
@@ -91,7 +78,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _colValidations.Clear();
       wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _table, out wiz.Wizard.ForeignKeys);
       ValidationsGrid.LoadGridColumns(grdColumns, wiz.Connection, _table, out _colValidations, _columns, wiz.Wizard.ForeignKeys);
-      lblTitle.Text = string.Format("Columns to add validations from table: {0}", _table);
+      lblTitle.Text = string.Format("Setup the validations for the columns in the table {0}", _table);
 
       _colValsByName = new Dictionary<string, ColumnValidation>();
       for (int i = 0; i < _colValidations.Count; i++)
@@ -224,11 +211,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           }
         }
       }
-    }
-
-    private void chkValidations_CheckedChanged(object sender, EventArgs e)
-    {
-      grdColumns.Enabled = chkValidations.Checked;
-    }
+    }    
   }
 }

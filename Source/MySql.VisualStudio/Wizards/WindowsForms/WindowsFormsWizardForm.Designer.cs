@@ -28,10 +28,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.dataAccessConfig1 = new MySql.Data.VisualStudio.Wizards.WindowsForms.DataAccessConfig();
-      this.validationConfig1 = new MySql.Data.VisualStudio.Wizards.WindowsForms.ValidationConfig();
-      this.dataAccessTechnologyConfig1 = new MySql.Data.VisualStudio.Wizards.WindowsForms.DataAccessTechnologyConfig();
-      this.detailValidationConfig1 = new MySql.Data.VisualStudio.Wizards.WindowsForms.DetailValidationConfig();
+      this.dataAccessConfig1 = new DataAccessConfig();
+      this.tablesSelection1 = new TablesSelectionWinForms();
       this.SuspendLayout();
       // 
       // btnNext
@@ -54,60 +52,37 @@
       this.dataAccessConfig1.Size = new System.Drawing.Size(610, 380);
       this.dataAccessConfig1.TabIndex = 22;
       // 
-      // validationConfig1
+      // tablesSelection1
       // 
-      this.validationConfig1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-      this.validationConfig1.Location = new System.Drawing.Point(260, 83);
-      this.validationConfig1.Name = "validationConfig1";
-      this.validationConfig1.Size = new System.Drawing.Size(610, 380);
-      this.validationConfig1.TabIndex = 23;
-      // 
-      // dataAccessTechnologyConfig1
-      // 
-      this.dataAccessTechnologyConfig1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-      this.dataAccessTechnologyConfig1.Location = new System.Drawing.Point(260, 83);
-      this.dataAccessTechnologyConfig1.Name = "dataAccessTechnologyConfig1";
-      this.dataAccessTechnologyConfig1.Size = new System.Drawing.Size(610, 380);
-      this.dataAccessTechnologyConfig1.TabIndex = 24;
-      // 
-      // detailValidationConfig1
-      // 
-      this.detailValidationConfig1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-      this.detailValidationConfig1.Location = new System.Drawing.Point(260, 83);
-      this.detailValidationConfig1.Name = "detailValidationConfig1";
-      this.detailValidationConfig1.Size = new System.Drawing.Size(610, 380);
-      this.detailValidationConfig1.TabIndex = 25;
+      this.tablesSelection1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+      this.tablesSelection1.Location = new System.Drawing.Point(259, 84);
+      this.tablesSelection1.Name = "tablesSelection1";
+      this.tablesSelection1.Size = new System.Drawing.Size(584, 380);
+      this.tablesSelection1.TabIndex = 23;
       // 
       // WindowsFormsWizardForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(873, 510);
-      this.Controls.Add(this.detailValidationConfig1);
-      this.Controls.Add(this.dataAccessTechnologyConfig1);
-      this.Controls.Add(this.validationConfig1);
+      this.Controls.Add(this.tablesSelection1);
       this.Controls.Add(this.dataAccessConfig1);
       this.Name = "WindowsFormsWizardForm";
       this.Text = "Windows Forms Configuration ";
       this.Load += new System.EventHandler(this.WizardForm_Load);
+      this.Controls.SetChildIndex(this.btnFinish, 0);
       this.Controls.SetChildIndex(this.btnNext, 0);
       this.Controls.SetChildIndex(this.btnBack, 0);
       this.Controls.SetChildIndex(this.btnCancel, 0);
       this.Controls.SetChildIndex(this.dataAccessConfig1, 0);
-      this.Controls.SetChildIndex(this.validationConfig1, 0);
-      this.Controls.SetChildIndex(this.dataAccessTechnologyConfig1, 0);
-      this.Controls.SetChildIndex(this.detailValidationConfig1, 0);
+      this.Controls.SetChildIndex(this.tablesSelection1, 0);
       this.ResumeLayout(false);
       this.PerformLayout();
-
     }
 
     #endregion
 
     private DataAccessConfig dataAccessConfig1;
-    private ValidationConfig validationConfig1;
-    private DataAccessTechnologyConfig dataAccessTechnologyConfig1;
-    private DetailValidationConfig detailValidationConfig1;
-
+    private TablesSelectionWinForms tablesSelection1;
   }
 }

@@ -37,11 +37,12 @@
       // lblTitleDetail
       // 
       this.lblTitleDetail.AutoSize = true;
-      this.lblTitleDetail.Location = new System.Drawing.Point(13, 20);
+      this.lblTitleDetail.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+      this.lblTitleDetail.Location = new System.Drawing.Point(18, 18);
       this.lblTitleDetail.Name = "lblTitleDetail";
-      this.lblTitleDetail.Size = new System.Drawing.Size(205, 13);
+      this.lblTitleDetail.Size = new System.Drawing.Size(38, 20);
       this.lblTitleDetail.TabIndex = 62;
-      this.lblTitleDetail.Text = "";
+      this.lblTitleDetail.Text = "Title";
       // 
       // grdColumnsDetail
       // 
@@ -58,11 +59,13 @@
       // chkValidations
       // 
       this.chkValidations.AutoSize = true;
-      this.chkValidations.Location = new System.Drawing.Point(263, 348);
+      this.chkValidations.Checked = true;
+      this.chkValidations.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.chkValidations.Location = new System.Drawing.Point(466, 351);
       this.chkValidations.Name = "chkValidations";
-      this.chkValidations.Size = new System.Drawing.Size(323, 17);
+      this.chkValidations.Size = new System.Drawing.Size(120, 17);
       this.chkValidations.TabIndex = 64;
-      this.chkValidations.Text = "I will handle columns validations on my Application Code.";
+      this.chkValidations.Text = "Enable validations";
       this.chkValidations.UseVisualStyleBackColor = true;
       this.chkValidations.CheckedChanged += new System.EventHandler(this.chkValidations_CheckedChanged);
       // 

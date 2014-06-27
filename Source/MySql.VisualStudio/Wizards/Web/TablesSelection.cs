@@ -35,8 +35,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
   public partial class TablesSelection : WizardPage
   {
 
-    private BindingList<DbTables> _tables = new BindingList<DbTables>();
-    BindingSource _sourceTables = new BindingSource();
+    protected BindingList<DbTables> _tables = new BindingList<DbTables>();
+    internal BindingSource _sourceTables = new BindingSource();
+
+    internal string ConnectionString { get; set; }
 
     public TablesSelection()
     {
@@ -44,9 +46,30 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       listTables.CellContentClick +=new DataGridViewCellEventHandler(listTables_CellContentClick);
       chkSelectAllTables.CheckedChanged += chkSelectAllTables_CheckedChanged;
       txtFilter.KeyDown += txtFilter_KeyDown;
+
+      listTables.AutoGenerateColumns = false;
+      AddMoreColumns();
     }
 
-    void chkSelectAllTables_CheckedChanged(object sender, EventArgs e)
+    internal virtual void AddMoreColumns()
+    {
+      DataGridViewCheckBoxColumn colSelect = new DataGridViewCheckBoxColumn();
+      colSelect.DataPropertyName = "Selected";
+      colSelect.HeaderText = "Select";
+      colSelect.Name = "colSelect";
+      colSelect.Width = 45;
+      listTables.Columns.Add(colSelect);
+
+      DataGridViewTextBoxColumn colTable = new DataGridViewTextBoxColumn();
+      colTable.DataPropertyName = "Name";
+      colTable.HeaderText = "Table";
+      colTable.Name = "colTable";
+      colTable.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+      colTable.ReadOnly = true;
+      listTables.Columns.Add(colTable);
+    }
+
+    internal virtual void chkSelectAllTables_CheckedChanged(object sender, EventArgs e)
     {
         _tables.Where(t => t.Selected == !chkSelectAllTables.Checked).ToList().ForEach(t => { t.CheckObject(chkSelectAllTables.Checked); });
       listTables.Refresh();
@@ -61,7 +84,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     }
 
 
-     private void FillTables(string connectionString)
+    internal void FillTables(string connectionString)
     {
       var cnn = new MySqlConnection(connectionString);
       cnn.Open();
@@ -77,27 +100,28 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       _sourceTables.DataSource = _tables;
       listTables.DataSource = _sourceTables;
       FormatTablesList();
+      TablesFilled();
     }
 
-    private void FormatTablesList()
+    internal virtual void TablesFilled()
+    {
+      errorProvider1.SetError(listTables, "");
+    }
+
+    internal void FormatTablesList()
     {
       if (listTables.Rows.Count <= 1 && listTables.Columns.Count == 1)
       {
         _sourceTables.DataSource = new BindingList<DbTables>();
+        //listTables.AutoGenerateColumns = false;
         listTables.DataSource = _sourceTables;
         listTables.Update();
       }
-      listTables.Columns[0].HeaderText = "Select";
-      listTables.Columns[0].Width = 45;
-
-      listTables.Columns[1].HeaderText = "Table";
-      listTables.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      listTables.Columns[1].ReadOnly = true;
 
       listTables.Refresh();
     }
 
-    private void listTables_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    internal virtual void listTables_CellContentClick(object sender, DataGridViewCellEventArgs e)
     {
       if (e.RowIndex == -1) return;
       if (String.IsNullOrEmpty(listTables.Rows[e.RowIndex].Cells[1].Value as string))
@@ -115,11 +139,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      WebWizardForm wiz = (WebWizardForm)wizard;
-
-      if (!string.IsNullOrEmpty(wiz.connectionStringForModel))
+      BaseWizardForm wiz = (BaseWizardForm)wizard;
+      ConnectionString = wiz.ConnectionString;
+      if (!string.IsNullOrEmpty(wiz.ConnectionString))
       {
-        var cnn = new MySqlConnection(wiz.connectionStringForModel);
+        var cnn = new MySqlConnection(wiz.ConnectionString);
         try
         {
           cnn.Open();
@@ -132,7 +156,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             listTables.Enabled = false;
           }
         }
-        FillTables(wiz.connectionStringForModel);
+        FillTables(wiz.ConnectionString);
       }
     }
 
@@ -145,7 +169,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     }
 
 
-    void TableSelection_Validating(object sender, CancelEventArgs e)
+    internal void TableSelection_Validating(object sender, CancelEventArgs e)
     {   
         if (_tables != null)
         {
@@ -161,7 +185,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
     }
 
-    private void txtFilter_KeyDown(object sender, KeyEventArgs e)
+    internal void txtFilter_KeyDown(object sender, KeyEventArgs e)
     {
       if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
       {
@@ -180,17 +204,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    private void btnFilter_Click(object sender, EventArgs e)
+    internal void btnFilter_Click(object sender, EventArgs e)
     {
-      _sourceTables.DataSource = from s in _tables
-                                 where s.Name.StartsWith(txtFilter.Text.Trim())
-                                 select s;
+      _sourceTables.DataSource = _tables.Where(t => t.Name.StartsWith(txtFilter.Text.Trim())).ToList();   
       listTables.DataSource = _sourceTables;
       listTables.Update();
       FormatTablesList();
     }
 
-    private void txtFilter_TextChanged(object sender, EventArgs e)
+    internal void txtFilter_TextChanged(object sender, EventArgs e)
     {
 
     }

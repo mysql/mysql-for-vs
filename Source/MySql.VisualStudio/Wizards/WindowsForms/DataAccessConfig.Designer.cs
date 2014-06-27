@@ -29,8 +29,6 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      this.cmbTable = new System.Windows.Forms.ComboBox();
-      this.lblTable = new System.Windows.Forms.Label();
       this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
       this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.label3 = new System.Windows.Forms.Label();
@@ -40,25 +38,13 @@
       this.newConnString = new System.Windows.Forms.Button();
       this.noIncludeSensitiveInformationCheck = new System.Windows.Forms.RadioButton();
       this.includeSensitiveInformationCheck = new System.Windows.Forms.RadioButton();
+      this.grpboxTechnology = new System.Windows.Forms.GroupBox();
+      this.radEF6 = new System.Windows.Forms.RadioButton();
+      this.radEF5 = new System.Windows.Forms.RadioButton();
+      this.radTechTypedDataSet = new System.Windows.Forms.RadioButton();
       ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+      this.grpboxTechnology.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // cmbTable
-      // 
-      this.cmbTable.FormattingEnabled = true;
-      this.cmbTable.Location = new System.Drawing.Point(26, 275);
-      this.cmbTable.Name = "cmbTable";
-      this.cmbTable.Size = new System.Drawing.Size(541, 21);
-      this.cmbTable.TabIndex = 3;
-      // 
-      // lblTable
-      // 
-      this.lblTable.AutoSize = true;
-      this.lblTable.Location = new System.Drawing.Point(22, 249);
-      this.lblTable.Name = "lblTable";
-      this.lblTable.Size = new System.Drawing.Size(295, 13);
-      this.lblTable.TabIndex = 3;
-      this.lblTable.Text = "Select the main table to be used in the form generation:";
       // 
       // errorProvider1
       // 
@@ -122,7 +108,7 @@
       // 
       this.noIncludeSensitiveInformationCheck.AutoSize = true;
       this.noIncludeSensitiveInformationCheck.Checked = true;
-      this.noIncludeSensitiveInformationCheck.Location = new System.Drawing.Point(31, 186);
+      this.noIncludeSensitiveInformationCheck.Location = new System.Drawing.Point(31, 193);
       this.noIncludeSensitiveInformationCheck.Name = "noIncludeSensitiveInformationCheck";
       this.noIncludeSensitiveInformationCheck.Size = new System.Drawing.Size(503, 17);
       this.noIncludeSensitiveInformationCheck.TabIndex = 67;
@@ -134,17 +120,65 @@
       // includeSensitiveInformationCheck
       // 
       this.includeSensitiveInformationCheck.AutoSize = true;
-      this.includeSensitiveInformationCheck.Location = new System.Drawing.Point(31, 209);
+      this.includeSensitiveInformationCheck.Location = new System.Drawing.Point(31, 216);
       this.includeSensitiveInformationCheck.Name = "includeSensitiveInformationCheck";
       this.includeSensitiveInformationCheck.Size = new System.Drawing.Size(323, 17);
       this.includeSensitiveInformationCheck.TabIndex = 66;
       this.includeSensitiveInformationCheck.Text = "Yes, Include sensitive information in the connection string";
       this.includeSensitiveInformationCheck.UseVisualStyleBackColor = true;
       // 
+      // grpboxTechnology
+      // 
+      this.grpboxTechnology.Controls.Add(this.radEF6);
+      this.grpboxTechnology.Controls.Add(this.radEF5);
+      this.grpboxTechnology.Controls.Add(this.radTechTypedDataSet);
+      this.grpboxTechnology.Location = new System.Drawing.Point(28, 261);
+      this.grpboxTechnology.Name = "grpboxTechnology";
+      this.grpboxTechnology.Size = new System.Drawing.Size(522, 66);
+      this.grpboxTechnology.TabIndex = 68;
+      this.grpboxTechnology.TabStop = false;
+      this.grpboxTechnology.Text = "Select the Data Access Technology to connect with the database";
+      // 
+      // radEF6
+      // 
+      this.radEF6.AutoSize = true;
+      this.radEF6.Enabled = false;
+      this.radEF6.Location = new System.Drawing.Point(339, 28);
+      this.radEF6.Name = "radEF6";
+      this.radEF6.Size = new System.Drawing.Size(132, 17);
+      this.radEF6.TabIndex = 2;
+      this.radEF6.TabStop = true;
+      this.radEF6.Text = "Entity Framework 6.0";
+      this.radEF6.UseVisualStyleBackColor = true;
+      // 
+      // radEF5
+      // 
+      this.radEF5.AutoSize = true;
+      this.radEF5.Location = new System.Drawing.Point(161, 28);
+      this.radEF5.Name = "radEF5";
+      this.radEF5.Size = new System.Drawing.Size(132, 17);
+      this.radEF5.TabIndex = 1;
+      this.radEF5.TabStop = true;
+      this.radEF5.Text = "Entity Framework 5.0";
+      this.radEF5.UseVisualStyleBackColor = true;
+      // 
+      // radTechTypedDataSet
+      // 
+      this.radTechTypedDataSet.AutoSize = true;
+      this.radTechTypedDataSet.Checked = true;
+      this.radTechTypedDataSet.Location = new System.Drawing.Point(17, 28);
+      this.radTechTypedDataSet.Name = "radTechTypedDataSet";
+      this.radTechTypedDataSet.Size = new System.Drawing.Size(98, 17);
+      this.radTechTypedDataSet.TabIndex = 0;
+      this.radTechTypedDataSet.TabStop = true;
+      this.radTechTypedDataSet.Text = "Typed DataSet";
+      this.radTechTypedDataSet.UseVisualStyleBackColor = true;
+      // 
       // DataAccessConfig
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.grpboxTechnology);
       this.Controls.Add(this.noIncludeSensitiveInformationCheck);
       this.Controls.Add(this.includeSensitiveInformationCheck);
       this.Controls.Add(this.label1);
@@ -152,13 +186,13 @@
       this.Controls.Add(this.cmbConnections);
       this.Controls.Add(this.newConnString);
       this.Controls.Add(this.label3);
-      this.Controls.Add(this.lblTable);
-      this.Controls.Add(this.cmbTable);
       this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
       this.Name = "DataAccessConfig";
-      this.Size = new System.Drawing.Size(584, 315);
+      this.Size = new System.Drawing.Size(584, 347);
       this.Validating += new System.ComponentModel.CancelEventHandler(this.DataAccessConfig_Validating);
       ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+      this.grpboxTechnology.ResumeLayout(false);
+      this.grpboxTechnology.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -166,8 +200,6 @@
 
     #endregion
 
-    private System.Windows.Forms.ComboBox cmbTable;
-    private System.Windows.Forms.Label lblTable;
     private System.Windows.Forms.ErrorProvider errorProvider1;
     private System.Windows.Forms.ToolTip toolTip1;
     private System.Windows.Forms.Label label3;
@@ -177,5 +209,9 @@
     private System.Windows.Forms.Button newConnString;
     private System.Windows.Forms.RadioButton noIncludeSensitiveInformationCheck;
     private System.Windows.Forms.RadioButton includeSensitiveInformationCheck;
+    private System.Windows.Forms.GroupBox grpboxTechnology;
+    private System.Windows.Forms.RadioButton radEF6;
+    private System.Windows.Forms.RadioButton radEF5;
+    private System.Windows.Forms.RadioButton radTechTypedDataSet;
   }
 }

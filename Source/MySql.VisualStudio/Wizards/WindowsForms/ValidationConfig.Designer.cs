@@ -30,17 +30,18 @@
     {
       this.lblTitle = new System.Windows.Forms.Label();
       this.grdColumns = new System.Windows.Forms.DataGridView();
-      this.chkValidations = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.grdColumns)).BeginInit();
       this.SuspendLayout();
       // 
       // lblTitle
       // 
       this.lblTitle.AutoSize = true;
-      this.lblTitle.Location = new System.Drawing.Point(13, 20);
+      this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.lblTitle.Location = new System.Drawing.Point(16, 11);
       this.lblTitle.Name = "lblTitle";
-      this.lblTitle.Size = new System.Drawing.Size(0, 13);
+      this.lblTitle.Size = new System.Drawing.Size(38, 20);
       this.lblTitle.TabIndex = 58;
+      this.lblTitle.Text = "Title";
       // 
       // grdColumns
       // 
@@ -53,22 +54,10 @@
       this.grdColumns.Size = new System.Drawing.Size(570, 290);
       this.grdColumns.TabIndex = 57;
       // 
-      // chkValidations
-      // 
-      this.chkValidations.AutoSize = true;
-      this.chkValidations.Location = new System.Drawing.Point(263, 342);
-      this.chkValidations.Name = "chkValidations";
-      this.chkValidations.Size = new System.Drawing.Size(323, 17);
-      this.chkValidations.TabIndex = 60;
-      this.chkValidations.Text = "I will handle columns validations on my Application Code.";
-      this.chkValidations.UseVisualStyleBackColor = true;
-      this.chkValidations.CheckedChanged += new System.EventHandler(this.chkValidations_CheckedChanged);
-      // 
       // ValidationConfig
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.chkValidations);
       this.Controls.Add(this.lblTitle);
       this.Controls.Add(this.grdColumns);
       this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
@@ -84,7 +73,6 @@
 
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.DataGridView grdColumns;
-    private System.Windows.Forms.CheckBox chkValidations;
 
   }
 }
