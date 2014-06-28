@@ -51,6 +51,11 @@ namespace MySql.Data.VisualStudio.Wizards
       set;
     }
 
+    internal virtual string ConnectionString
+    {
+      get { throw new NotImplementedException(); }
+    }
+
     internal BindingSource connections;
        
     public BaseWizardForm()
@@ -129,7 +134,7 @@ namespace MySql.Data.VisualStudio.Wizards
       CurPage.OnStarting(this);
     }
 
-    private void ShowFinishButton(bool showFinish)
+    internal void ShowFinishButton(bool showFinish)
     {
       btnNext.Enabled = !showFinish;
       btnFinish.Enabled = showFinish;

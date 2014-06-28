@@ -486,9 +486,10 @@ namespace MySql.Data.VisualStudio.Wizards
       {
         if (!char.IsLetterOrDigit(chars[i])) chars[i] = '_';
       }
-      return new string(chars);    }
+      return new string(chars);
+    }
 
-    protected string GetConnectionStringWithPassword(MySqlConnection con)
+    internal string GetConnectionStringWithPassword(MySqlConnection con)
     {
       MySqlConnectionStringBuilder msb = GetConnectionSettings(con);
       return msb.ToString();

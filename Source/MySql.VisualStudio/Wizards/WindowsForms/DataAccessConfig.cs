@@ -52,7 +52,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
                 return null;
        }
     }
-        
+
+    internal DataAccessTechnology DataAccessTechnology
+    {
+      get
+      {
+        if (radTechTypedDataSet.Checked) return DataAccessTechnology.TypedDataSet;
+        else if (radEF5.Checked) return DataAccessTechnology.EntityFramework5;
+        else if (radEF6.Checked) return DataAccessTechnology.EntityFramework6;
+        else return DataAccessTechnology.None;
+      }
+    }
+
+       
     List<MyListItem> _constraints = new List<MyListItem>();
 
     internal string connectionString
@@ -69,14 +81,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         return cmbConnections.Text;
       }
     }
-
-    internal string TableName
-    {
-      get {
-        if (cmbTable.SelectedIndex == -1) return null;
-        else return ( string )cmbTable.SelectedItem;
-      }
-    }   
+  
    
     public DataAccessConfig()
     {
@@ -84,17 +89,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
       /* assign events */
       ConnectionStringTextBox.TextChanged += new EventHandler(ConnectionStringTextBox_TextChanged);
-      cmbConnections.SelectionChangeCommitted += new EventHandler(cmbConnections_SelectionChangeCommitted);
-      cmbTable.DropDown += cmbTable_DropDown;
-      
-    }
-
-    private void cmbTable_DropDown(object sender, EventArgs e)
-    {
-      if (ConnectionStringTextBox.Tag != null)
-      {
-        FillTables();
-      }
+      cmbConnections.SelectionChangeCommitted += new EventHandler(cmbConnections_SelectionChangeCommitted);            
     }
     
     private void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
@@ -107,8 +102,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         ShowConnectionDialog(false);
       }
-
-      cmbTable.Text = string.Empty;
+      
     }
 
     private void ConnectionStringTextBox_TextChanged(object sender, EventArgs e)
@@ -121,30 +115,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       ShowConnectionDialog(true);
     }
-
-    private void FillTables()
-    {      
-      if (ConnectionStringTextBox.Tag == null || String.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString())) return;
-
-      try
-      {
-          var cnn = new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
-          cnn.Open();
-          
-          string[] restrictions = new string[4];
-          restrictions[1] = cnn.Database;
-          DataTable t = cnn.GetSchema("Tables", restrictions);
-          cmbTable.Items.Clear();
-          for (int i = 0; i < t.Rows.Count; i++)
-          {
-              cmbTable.Items.Add(t.Rows[i][2]);
-          }
-          cmbTable.Text = string.Empty;
-      }
-      catch  {                    
-      }
-      
-    }
+  
 
     private void DataAccessConfig_Validating(object sender, CancelEventArgs e)
     {
@@ -158,17 +129,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else
       {
         errorProvider1.SetError(cmbConnections, "");
-      }     
-
-      if (string.IsNullOrEmpty((string)cmbTable.SelectedItem) || (cmbTable.SelectedIndex == -1))
-      {
-        e.Cancel = true;
-        errorProvider1.SetError(cmbTable, "A table must be selected from the list.");
-      }
-      else
-      {
-        errorProvider1.SetError(cmbTable, "");
-      } 
+      }      
     }
 
 
@@ -223,6 +184,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (ConnectionStringTextBox.Tag != null && !IsConnectionStringValid(ConnectionStringTextBox.Tag.ToString()))
       {
         ShowConnectionDialog(false);
+      }
+   
+      double version = double.Parse(((WindowsFormsWizardForm)wizard).Wizard.GetVisualStudioVersion());
+      
+      if (version >= 12.0)
+      {
+        radEF6.Enabled = true;
+      }
+      else
+      {
+        radEF6.Enabled = false;
       }
     }
 

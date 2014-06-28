@@ -223,7 +223,17 @@ namespace MySql.Data.VisualStudio.Wizards
 
       projectTypesList.Items.AddRange( new ListViewItem[] { item0, item1, item2, item3 });
       projectTypesList.SelectedIndexChanged += projectTypesList_SelectedIndexChanged;
+      projectTypesList.DoubleClick += projectTypesList_DoubleClick;
       
+    }
+
+    void projectTypesList_DoubleClick(object sender, EventArgs e)
+    {
+      if (projectTypesList.SelectedItems.Count > 0)
+      {
+        this.DialogResult = DialogResult.OK;
+        btnOK_Click(sender, e);
+      }
     }
 
     private void projectTypesList_SelectedIndexChanged(object sender, EventArgs e)

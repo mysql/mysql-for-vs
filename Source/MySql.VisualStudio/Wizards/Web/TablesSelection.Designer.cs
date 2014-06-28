@@ -124,12 +124,12 @@
 
     #endregion
 
-    private System.Windows.Forms.CheckBox chkSelectAllTables;
-    private System.Windows.Forms.DataGridView listTables;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ErrorProvider errorProvider1;
-    private System.Windows.Forms.TextBox txtFilter;
-    private System.Windows.Forms.Button btnFilter;
     private System.Windows.Forms.Label label1;
+    protected System.Windows.Forms.CheckBox chkSelectAllTables;
+    protected System.Windows.Forms.DataGridView listTables;
+    protected System.Windows.Forms.TextBox txtFilter;
+    protected System.Windows.Forms.Button btnFilter;
   }
 }

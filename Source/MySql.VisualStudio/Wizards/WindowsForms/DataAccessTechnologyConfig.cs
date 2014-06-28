@@ -38,11 +38,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   public partial class DataAccessTechnologyConfig : WizardPage
   {    
     private string _constraintTable = "";
-    private WindowsFormsWizardForm wizardForm;
+    private AdvancedWizardForm wizardForm;
     List<MyListItem> _constraints = new List<MyListItem>();
     private string _tableName;
     private MySqlConnection _con;
-
+    
     internal GuiType GuiType
     {
       get
@@ -51,6 +51,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         else if (radGrid.Checked) return GuiType.Grid;
         else if (radMasterDetail.Checked) return GuiType.MasterDetail;
         else return GuiType.None;
+      }
+      set
+      {
+        if ((GuiType)value == GuiType.IndividualControls)
+        radControls.Checked = true;
       }
     }
   
@@ -72,21 +77,20 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    internal DataAccessTechnology DataAccessTechnology
-    {
-      get
-      {
-        if (radTechTypedDataSet.Checked) return DataAccessTechnology.TypedDataSet;
-        else if (radEF5.Checked) return DataAccessTechnology.EntityFramework5;
-        else if (radEF6.Checked) return DataAccessTechnology.EntityFramework6;
-        else return DataAccessTechnology.None;
-      }
-    }
-
     public DataAccessTechnologyConfig()
     {
       InitializeComponent();
-      //cmbFkConstraints.DropDown += cmbFkConstraints_DropDown;
+      chkEnableAdvanced.CheckedChanged += chkEnableAdvanced_CheckedChanged;
+      cmbFkConstraints.DropDown += cmbFkConstraints_DropDown;
+      radMasterDetail.CheckedChanged += radMasterDetail_CheckedChanged;
+    }
+
+    void chkEnableAdvanced_CheckedChanged(object sender, EventArgs e)
+    {
+      var control = (CheckBox)sender;
+      
+      wizardForm.btnFinish.Enabled = !control.Checked;
+      wizardForm.btnNext.Enabled = control.Checked;
     }
 
     private void SetDefaults()
@@ -95,10 +99,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       radControls_CheckedChanged(radControls, EventArgs.Empty);
     }
 
-    //void cmbFkConstraints_DropDown(object sender, EventArgs e)
-    //{
-    //  GetForeignKeyConstraints();
-    //}
+    void cmbFkConstraints_DropDown(object sender, EventArgs e)
+    {
+      GetForeignKeyConstraints();
+    }
 
     private List<MyListItem> GetForeignKeyConstraints()
     {
@@ -193,21 +197,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      wizardForm = (WindowsFormsWizardForm)wizard;
-      SetDefaults();
-      // Enable EF6 only if we are in VS2013 or major
-      double version = double.Parse(wizardForm.Wizard.GetVisualStudioVersion());
+      wizardForm = (AdvancedWizardForm)wizard;            
       _tableName = wizardForm.TableName;
       _con = wizardForm.Connection;
-
-      if (version >= 12.0)
-      {
-        radEF6.Enabled = true;
-      }
-      else
-      {
-        radEF6.Enabled = false;
-      }
-    }
+      lblTableName.Text = "Select form layout for table " + _tableName;
+      SetDefaults();   
+    }   
   }
 }
