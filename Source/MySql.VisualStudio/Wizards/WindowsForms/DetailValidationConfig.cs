@@ -76,29 +76,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       chkValidations_CheckedChanged(chkValidations, EventArgs.Empty);
     }
 
-    internal override void OnStarting(BaseWizardForm wizard)
-    {
-      WindowsFormsWizardForm wiz = (WindowsFormsWizardForm)wizard;
-
-      // Populate grid
-      grdColumnsDetail.DataSource = null;
-      _connectionString = wiz.Connection.ConnectionString;
-      _detailTable = wiz.DetailTableName;
-      if (string.IsNullOrEmpty(_detailTable)) return;
-      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
-      _colValidationsDetail.Clear();
-      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
-      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
-      lblTitleDetail.Text = string.Format("Columns to add validations from table: {0}", _detailTable);
-
-      _colValsByName = new Dictionary<string, ColumnValidation>();
-      for (int i = 0; i < _colValidationsDetail.Count; i++)
-      {
-        _colValsByName.Add(_colValidationsDetail[i].Name, _colValidationsDetail[i]);
-      }
-    }
-
-    void grdColumnsDetail_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+     void grdColumnsDetail_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
     {
       if (e.Control is DataGridViewComboBoxEditingControl)
       {
@@ -238,13 +216,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
       ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
       lblTitleDetail.Text = string.Format("Setup the validations for the columns in the table {0}", _detailTable);
-    }
-  
-    internal override bool IsValid()
-    {
-      return true;
-    }
+      _colValsByName = new Dictionary<string, ColumnValidation>();
+      for (int i = 0; i < _colValidationsDetail.Count; i++)
+      {
+        _colValsByName.Add(_colValidationsDetail[i].Name, _colValidationsDetail[i]);
+      }
 
+    }
+     
     private void chkValidations_CheckedChanged(object sender, EventArgs e)
     {
       grdColumnsDetail.Enabled = chkValidations.Checked;   
