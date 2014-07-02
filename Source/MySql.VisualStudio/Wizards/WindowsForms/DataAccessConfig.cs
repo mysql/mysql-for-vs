@@ -52,19 +52,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
                 return null;
        }
     }
-
-    internal DataAccessTechnology DataAccessTechnology
-    {
-      get
-      {
-        if (radTechTypedDataSet.Checked) return DataAccessTechnology.TypedDataSet;
-        else if (radEF5.Checked) return DataAccessTechnology.EntityFramework5;
-        else if (radEF6.Checked) return DataAccessTechnology.EntityFramework6;
-        else return DataAccessTechnology.None;
-      }
-    }
-
-       
+    
     List<MyListItem> _constraints = new List<MyListItem>();
 
     internal string connectionString
@@ -82,6 +70,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
   
+    internal DataAccessTechnology DataAccessTechnology
+    {
+      get
+      {
+        if (radTechTypedDataSet.Checked) return DataAccessTechnology.TypedDataSet;
+        else if (radEF5.Checked) return DataAccessTechnology.EntityFramework5;
+        else if (radEF6.Checked) return DataAccessTechnology.EntityFramework6;
+        else return DataAccessTechnology.None;
+      }
+    }
    
     public DataAccessConfig()
     {
@@ -177,6 +175,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal override void OnStarting(BaseWizardForm wizard)
     {
       baseWizardForm = wizard;
+      WindowsFormsWizardForm wizardForm = (WindowsFormsWizardForm)wizard;
       _dte = ((WindowsFormsWizardForm)wizard).dte;
 
       MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox, "CSharpWinForms");
@@ -185,9 +184,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         ShowConnectionDialog(false);
       }
-   
-      double version = double.Parse(((WindowsFormsWizardForm)wizard).Wizard.GetVisualStudioVersion());
-      
+      // Enable EF6 only if we are in VS2013 or major
+      double version = double.Parse(wizardForm.Wizard.GetVisualStudioVersion());
       if (version >= 12.0)
       {
         radEF6.Enabled = true;

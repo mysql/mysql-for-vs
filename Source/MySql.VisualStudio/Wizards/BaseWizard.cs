@@ -49,7 +49,7 @@ namespace MySql.Data.VisualStudio.Wizards
   /// </summary>
   public class BaseWizard<TWizardForm,TCodeGeneratorStrategy> : IWizard 
     where TWizardForm : BaseWizardForm 
-    where TCodeGeneratorStrategy : ICodeGeneratorStrategy
+    //where TCodeGeneratorStrategy : ICodeGeneratorStrategy
   {
     /// <summary>
     /// The DTE instance.
@@ -66,10 +66,10 @@ namespace MySql.Data.VisualStudio.Wizards
     /// </summary>
     protected CodeDomProvider CodeProvider;
 
-    /// <summary>
-    /// The code generation strategy.
-    /// </summary>
-    protected TCodeGeneratorStrategy Strategy;
+    ///// <summary>
+    ///// The code generation strategy.
+    ///// </summary>
+    //protected TCodeGeneratorStrategy Strategy;
 
     /// <summary>
     /// The wizard form used with this Wizard.
@@ -97,11 +97,7 @@ namespace MySql.Data.VisualStudio.Wizards
       set;
     }
 
-    protected IVsOutputWindowPane _generalPane;
-
-    internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
-
-    internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
+    protected IVsOutputWindowPane _generalPane;    
 
     internal Dictionary<string, Dictionary<string, ColumnValidation>> ColumnMappings = new Dictionary<string, Dictionary<string, ColumnValidation>>();
 
@@ -117,15 +113,15 @@ namespace MySql.Data.VisualStudio.Wizards
       set;
     }
 
-    /// <summary>
-    /// The column metadata.
-    /// </summary>
-    internal Dictionary<string, Column> Columns;
+    ///// <summary>
+    ///// The column metadata.
+    ///// </summary>
+    //internal Dictionary<string, Column> Columns;
 
     /// <summary>
     /// The column metadata for the detail table.
     /// </summary>
-    internal Dictionary<string, Column> DetailColumns;
+    //internal Dictionary<string, Column> DetailColumns;
 
     // Some constants of Entity Framework versions as supposed to be feed to this class's methods for Nuget.
     internal protected readonly static string ENTITY_FRAMEWORK_VERSION_5 = "5.0.0";

@@ -197,11 +197,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      wizardForm = (AdvancedWizardForm)wizard;            
-      _tableName = wizardForm.TableName;
-      _con = wizardForm.Connection;
-      lblTableName.Text = "Select form layout for table " + _tableName;
+      wizardForm = (AdvancedWizardForm)wizard;
       SetDefaults();   
+      _tableName = wizardForm.TableName;
+       lblTableName.Text = "Select form layout for table " + _tableName;
+      _con = new MySqlConnection(wizardForm.ConnectionString);
+      _con.Open();
     }   
   }
 }

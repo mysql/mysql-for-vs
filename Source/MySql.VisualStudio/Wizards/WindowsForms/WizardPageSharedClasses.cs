@@ -24,10 +24,12 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 
 namespace MySql.Data.VisualStudio.Wizards
 {
@@ -202,10 +204,9 @@ namespace MySql.Data.VisualStudio.Wizards
     }
    
     internal static void LoadGridColumns(DataGridView grid, MySqlConnection con, string Table,
-      out List<ColumnValidation> colsValidation, Dictionary<string, Column> columns, 
+      List<ColumnValidation> colsValidation, Dictionary<string, Column> columns,
       Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
-      colsValidation = GetColumnValidactionList(columns, FKs);
 #if NET_40_OR_GREATER
       SortedSet<string> allColumns = new SortedSet<string>();
       BindingSource binding = new BindingSource();
@@ -214,7 +215,7 @@ namespace MySql.Data.VisualStudio.Wizards
       grid.DataSource = null;
       grid.Columns.Clear();
       grid.Rows.Clear();
-      grid.Update();      
+      grid.Update();
 
       for (int i = 0; i < colsValidation.Count; i++)
       {
@@ -321,7 +322,11 @@ namespace MySql.Data.VisualStudio.Wizards
       grid.Columns[IdxColMaxLength].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       grid.Columns[IdxColMinValue].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       grid.Columns[IdxColMaxValue].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      
+      if (FKs != null && FKs.Count > 0)
+      {
+        grid.Columns[IdxColHaslookup].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        grid.Columns[IdxColLookupColumn].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+      }
 #endif      
       grid.AllowUserToAddRows = false;
       grid.Refresh();
@@ -342,6 +347,51 @@ namespace MySql.Data.VisualStudio.Wizards
           }
         }
       }
+    }
+  }
+
+  public class DbTables : INotifyPropertyChanged
+  {
+
+    private bool _selected { get; set; }
+    private string _name { get; set; }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public bool Selected
+    {
+      get
+      {
+        return _selected;
+      }
+    }
+
+    public string Name
+    {
+      get
+      {
+        return _name;
+      }
+    }
+
+    public DbTables(bool selected, string name)
+    {
+      _selected = selected;
+      _name = name;
+    }
+
+    private void NotifyPropertyChanged(String propertyName)
+    {
+      if (PropertyChanged != null)
+      {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+      }
+    }
+
+    public void CheckObject(bool selected)
+    {
+      _selected = selected;
+      NotifyPropertyChanged("Selected");
     }
   }
 }

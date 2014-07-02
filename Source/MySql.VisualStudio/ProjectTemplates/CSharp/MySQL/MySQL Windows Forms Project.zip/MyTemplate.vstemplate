@@ -19,6 +19,9 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="Form1.cs">Form1.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Form1.Designer.cs">Form1.Designer.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Form1.resx">Form1.resx</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="frmMain.cs">frmMain.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="frmMain.Designer.cs">frmMain.Designer.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="frmMain.resx">frmMain.resx</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Program.cs">Program.cs</ProjectItem>
       <Folder Name="Properties" TargetFolderName="Properties">
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>

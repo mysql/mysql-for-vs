@@ -123,9 +123,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     private void ShowAdvancedForm(string tableName, int rowIndex)
     {
       AdvancedWizardForm dlg = dicConfig[tableName];
-      dlg.TableName = tableName;      
-      if (dlg.ShowDialog() == DialogResult.Cancel) return;
-
+      dlg.TableName = tableName;
+      dlg.ConnectionString = base.ConnectionString;
+      if (dlg.ShowDialog() == DialogResult.Cancel) return;      
       _tables.Where(t => t.Name.Equals(tableName)).Single().CheckObject(true);
 
       switch (dlg.GuiTypeForTable)

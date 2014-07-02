@@ -84,6 +84,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       return "Application.Designer.vb";
     }
 
+    internal protected override string GetExtension()
+    {
+      return ".vb";
+    }
     protected override void WriteUsingUserCode()
     {
       throw new NotImplementedException();

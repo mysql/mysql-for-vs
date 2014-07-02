@@ -36,54 +36,44 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class AdvancedWizardForm : BaseWizardForm
   {
+    internal string ConnectionString { get; set;}
 
     internal string TableName { get; set; }
 
     internal WindowsFormsWizard Wizard { get; set; }
 
     internal MySqlConnection Connection { get { return Wizard.Connection; } }
+   
+    internal string DetailTableName { get { return dataAccessTechnologyConfig1.DetailTableName; } }
+    internal GuiType GuiType { get { return dataAccessTechnologyConfig1.GuiType; } }
 
-    internal GuiType GuiTypeForTable  {
-      get
-      {
-        return dataAccessTechnologyConfig1.GuiType;
-      }
-      set
-      {
-        dataAccessTechnologyConfig1.GuiType = GuiType.IndividualControls;
-      }
-    }
-
-    internal string ConstraintName
-    {
-      get
-      {
-        return dataAccessTechnologyConfig1.ConstraintName;
-      }
-    }
-
-    internal string DetailTableName
-    {
-      get
-      {
-        return dataAccessTechnologyConfig1.DetailTableName;
-      }    
-    }    
-
-    internal List<ColumnValidation> ValidationColumns
-    {
-      get
-      {
-        return validationConfig1._colValidations;
-      }
-    }
-
+    internal string ConstraintName { get { return dataAccessTechnologyConfig1.ConstraintName; } }
+    
+    internal List<ColumnValidation> ValidationColumns { get { return validationConfig1.ValidationColumns; } }
+    
     internal List<ColumnValidation> ValidationColumnsDetail { get { return detailValidationConfig1.DetailValidationColumns; } }
 
     internal Dictionary<string, Column> Columns { get { return validationConfig1.Columns; } }
 
     internal Dictionary<string, Column> DetailColumns { get { return detailValidationConfig1.DetailColumns; } }
 
+    internal Dictionary<string, ForeignKeyColumnInfo> ForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
+
+    internal Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys = new Dictionary<string, ForeignKeyColumnInfo>();
+    
+    internal bool ValidationsEnabled { get { return ValidationColumns != null; } }
+
+    internal GuiType GuiTypeForTable
+    {
+      get
+      {
+        return dataAccessTechnologyConfig1.GuiType;
+      }
+      set
+      {
+        dataAccessTechnologyConfig1.GuiType = value;
+      }
+    }
         
     public AdvancedWizardForm(WindowsFormsWizard wizard)
     {
@@ -108,6 +98,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Current = 0;
       BaseWizardForm_Load(sender, e);
       ShowFinishButton(true);    
+    }
+
+    internal void GenerateModels()
+    {
+      if( validationConfig1.Columns == null || validationConfig1.Columns.Count == 0)
+        validationConfig1.GenerateModel(this);
+      if( (this.GuiType == Wizards.GuiType.MasterDetail) && 
+        (( detailValidationConfig1.DetailColumns == null) || (detailValidationConfig1.DetailColumns.Count == 0 )))
+      {
+        detailValidationConfig1.GenerateModel(this);
+      }
     }
   }
 }

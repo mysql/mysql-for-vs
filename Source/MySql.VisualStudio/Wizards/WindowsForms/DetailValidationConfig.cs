@@ -76,7 +76,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       chkValidations_CheckedChanged(chkValidations, EventArgs.Empty);
     }
 
-     void grdColumnsDetail_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+    private void grdColumnsDetail_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
     {
       if (e.Control is DataGridViewComboBoxEditingControl)
       {
@@ -202,19 +202,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
+    internal void GenerateModel(AdvancedWizardForm wiz)
+    {
+      if (wiz.DetailForeignKeys != null)
+        wiz.DetailForeignKeys.Clear();
+      _connectionString = wiz.Connection.ConnectionString;
+      _detailTable = wiz.DetailTableName;
+      if (string.IsNullOrEmpty(_detailTable)) return;
+      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
+      _colValidationsDetail.Clear();
+      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.DetailForeignKeys);
+      _colValidationsDetail = ValidationsGrid.GetColumnValidactionList(_detailColumns, wiz.DetailForeignKeys);
+    }
+
     internal override void OnStarting(BaseWizardForm wizard)
     {
       AdvancedWizardForm wiz = (AdvancedWizardForm)wizard;
 
       // Populate grid
       grdColumnsDetail.DataSource = null;
-      _connectionString = wiz.Connection.ConnectionString;
-      _detailTable = wiz.DetailTableName;
-      if (string.IsNullOrEmpty(_detailTable)) return;
-      _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
-      _colValidationsDetail.Clear();
-      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.Wizard.DetailForeignKeys);
-      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, out _colValidationsDetail, _detailColumns, wiz.Wizard.DetailForeignKeys);
+      GenerateModel(wiz);
+      ValidationsGrid.LoadGridColumns(grdColumnsDetail, wiz.Connection, _detailTable, _colValidationsDetail, _detailColumns, wiz.DetailForeignKeys);
       lblTitleDetail.Text = string.Format("Setup the validations for the columns in the table {0}", _detailTable);
       _colValsByName = new Dictionary<string, ColumnValidation>();
       for (int i = 0; i < _colValidationsDetail.Count; i++)
