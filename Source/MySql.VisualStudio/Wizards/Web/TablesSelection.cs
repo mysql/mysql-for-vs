@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Wizards;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -214,52 +215,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal void txtFilter_TextChanged(object sender, EventArgs e)
     {
-
-    }
-  }
-
-  public class DbTables : INotifyPropertyChanged
-  {
-
-    private bool _selected { get; set; }
-    private string _name { get; set; }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public bool Selected
-    {
-      get
-      {
-        return _selected;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return _name;
-      }
-    }
-
-    public DbTables(bool selected, string name)
-    {
-      _selected = selected;
-      _name = name;
-    }
-
-    private void NotifyPropertyChanged(String propertyName)
-    {
-      if (PropertyChanged != null)
-      {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-      }
-    }
-
-    public void CheckObject(bool selected)
-    {
-      _selected = selected;
-      NotifyPropertyChanged("Selected");
     }
   }
 }

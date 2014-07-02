@@ -179,9 +179,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal protected abstract string GetCanonicalIdentifier(string Identifier);
     internal protected abstract string GetEdmDesignerFileName();
     internal protected abstract string GetFormDesignerFileName();
+    internal protected string GetFormResxFileName()
+    {
+      return "Form1.resx";
+    }
     internal protected abstract string GetFormFileName();
     internal protected abstract string GetApplicationFileName();
 
+    internal protected abstract string GetExtension();
     protected abstract void WriteUsingUserCode();
     protected abstract void WriteFormLoadCode();
     protected abstract void WriteValidationCode();

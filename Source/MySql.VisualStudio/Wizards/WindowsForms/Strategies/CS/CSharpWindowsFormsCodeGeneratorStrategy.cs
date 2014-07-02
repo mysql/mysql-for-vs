@@ -85,6 +85,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       return "Application.Designer.cs";
     }
 
+    internal protected override string GetExtension()
+    {
+      return ".cs";
+    }
     protected override void WriteUsingUserCode()
     {
       throw new NotImplementedException();

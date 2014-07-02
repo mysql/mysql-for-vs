@@ -30,6 +30,7 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
+using MySql.Data.VisualStudio.Wizards;
 
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
@@ -53,25 +54,16 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
     }
 
-    internal DataAccessTechnology DataAccessTechnology
-    {
-      get {
-        return dataAccessConfig1.DataAccessTechnology;
-      }
-    }
-
-   internal Dictionary<string, AdvancedWizardForm> dicConfig
-    {
-      get {
-        return tablesSelection1.dicConfig;
-      }      
-    }
-  
+    internal DataAccessTechnology DataAccessTechnology { get { return this.dataAccessConfig1.DataAccessTechnology; } }
 
     internal override string ConnectionString
     {
       get { return this.Wizard.GetConnectionStringWithPassword(Connection); }
     }
+
+    internal Dictionary<string, AdvancedWizardForm> CrudConfiguration { get { return tablesSelection1.dicConfig; } }
+
+    internal List<DbTables> SelectedTables { get { return tablesSelection1.selectedTables; } }
 
     #endregion
 

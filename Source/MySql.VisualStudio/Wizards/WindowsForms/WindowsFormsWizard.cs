@@ -49,6 +49,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal MySqlConnection Connection { get; set; }
 
+    private bool _hasDataGridDateColumn;
     public WindowsFormsWizard(LanguageGenerator Language)
       : base(Language)
     {
@@ -60,7 +61,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// If there is a DateTimePicker column and a grid layout, add the support code for custom DateTimePicker for Grids.
     /// </summary>
     /// <param name="vsProj"></param>
-    private void EnsureCodeForDateTimeGridColumn(VSProject vsProj)
+    private void EnsureCodeForDateTimeGridColumn(
+      VSProject vsProj,
+      Dictionary<string,Column> Columns,
+      Dictionary<string,Column> DetailColumns )
     {
       bool hasDateColumn = false;
 
@@ -103,45 +107,82 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", ProjectNamespace));
         vsProj.Project.ProjectItems.AddFromFile( outFilePath );
       }
+      _hasDataGridDateColumn = hasDateColumn;
     }
 
     public override void ProjectFinishedGenerating(Project project)
     {
+#if NET_40_OR_GREATER
       //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
       
       VSProject vsProj = project.Object as VSProject;
+      SortedSet<string> tables = new SortedSet<string>();
+      Dictionary<string, WindowsFormsCodeGeneratorStrategy> strategies = new Dictionary<string, WindowsFormsCodeGeneratorStrategy>();
 
-      //string detailTableName = WizardForm.DetailTableName;
+      try
+      {
+        _hasDataGridDateColumn = false;
+        // Start a loop here, to generate screens for all the selected tables.
+        for (int i = 0; i < WizardForm.SelectedTables.Count; i++ )
+        {
+          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
+          // Ensure model exists, even if user didn't went through validation pages.
+          crud.GenerateModels();
+          Dictionary<string, Column> Columns = crud.Columns;
+          Dictionary<string, Column> DetailColumns = crud.DetailColumns;
+          string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+          string detailTableName = crud.DetailTableName;
+          string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
+
+          // Create the strategy
+          StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
+            WizardForm.DataAccessTechnology, crud.GuiType, Language,
+            crud.ValidationsEnabled, crud.ValidationColumns, crud.ValidationColumnsDetail,
+            GetConnectionStringWithPassword(WizardForm.Connection), crud.TableName,
+            detailTableName, crud.ConstraintName, crud.ForeignKeys, crud.DetailForeignKeys);
+          WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
+          strategies.Add(WizardForm.SelectedTables[i].Name, Strategy);
+
+          AddColumnMappings(_canonicalTableName, crud.ValidationColumns);
+          if (!string.IsNullOrEmpty(detailTableName))
+          {
+            AddColumnMappings(canonicalDetailTableName, crud.ValidationColumnsDetail);
+          }
       
-      //try
-      //{
-        
-      //  Columns = WizardForm.Columns;
-      //  DetailColumns = WizardForm.DetailColumns;
-      //  _canonicalTableName = GetCanonicalIdentifier(WizardForm.TableName);
-     
-      //  string canonicalDetailTableName = GetCanonicalIdentifier( detailTableName );
+          if (!_hasDataGridDateColumn)
+          {
+            EnsureCodeForDateTimeGridColumn(vsProj, Columns, DetailColumns);
+          }
 
-      //  AddColumnMappings(_canonicalTableName, WizardForm.ValidationColumns);
-      //  AddColumnMappings(canonicalDetailTableName, WizardForm.ValidationColumnsDetail);
+          // Gather all the tables
+          tables.Add(crud.TableName);
+          if (!string.IsNullOrEmpty(detailTableName))
+            tables.Add(detailTableName);
+          foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.ForeignKeys)
+          {
+            tables.Add(kvp2.Value.ReferencedTableName);
+          }
+          foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.DetailForeignKeys)
+          {
+            tables.Add(kvp2.Value.ReferencedTableName);
+          }
 
-      //  // Create the strategy
-      //  StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
-      //    WizardForm.DataAccessTechnology, WizardForm.GuiType, Language,
-      //    ValidationsEnabled, WizardForm.ValidationColumns, WizardForm.ValidationColumnsDetail,
-      //    GetConnectionStringWithPassword(WizardForm.Connection), WizardForm.TableName,
-      //    detailTableName, WizardForm.ConstraintName, ForeignKeys, DetailForeignKeys );
-      //  Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
-      //  EnsureCodeForDateTimeGridColumn(vsProj);
-      //}
-      //catch (WizardException e)
-      //{
-      //  SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
-      //}
+          InitializeColumnMappings(crud.ForeignKeys);
+          InitializeColumnMappings(crud.DetailForeignKeys);
 
-#if NET_40_OR_GREATER
+          string frmName = string.Format( "frm{0}", _canonicalTableName );
+          string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
+          // Add new form to project.
+          AddNewForm(project, frmName, Strategy);
+        }
+      }
+      catch (WizardException e)
+      {
+        SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
+      }
 
       vsProj.References.Add("MySql.Data");
+      project.DTE.SuppressUI = true;
       vsProj.Project.Save();
 
       bool found = false;
@@ -164,11 +205,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
        
       try
       {
-        // Gather all the tables
-
-        InitializeColumnMappings(ForeignKeys);
-        InitializeColumnMappings(DetailForeignKeys);
-
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
           WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
@@ -179,24 +215,36 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
 
           AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion, true);
-          GenerateEntityFrameworkModel(project, vsProj, WizardForm.Connection, "Model1", WizardForm.dicConfig.Keys.ToList<String>(), ProjectPath);
+          GenerateEntityFrameworkModel(project, vsProj, WizardForm.Connection, "Model1", tables.ToList(), ProjectPath);
         }
         else if (WizardForm.DataAccessTechnology == DataAccessTechnology.TypedDataSet)
         {
           PopulateColumnMappingsForTypedDataSet();
-          GenerateTypedDataSetModel(vsProj, WizardForm.Connection, WizardForm.dicConfig.Keys.ToList<String>());
+          GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
         }
-        AddBindings(vsProj);        
-
+        
+        // Now generated the bindings & custom code
+        List<string> formNames = new List<string>();
+        for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
+        {
+          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
+          string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+          string frmName = string.Format("frm{0}", _canonicalTableName);
+          formNames.Add(frmName);
+          string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
+          WindowsFormsCodeGeneratorStrategy strategy = strategies[WizardForm.SelectedTables[i].Name];
+          AddBindings(vsProj, strategy, frmName, frmDesignerName);
+        }
+        // Add menu entries for each form
+        AddMenuEntries(vsProj, formNames);
+        FixNamespaces();
 
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
         {
           // Change target version to 4.5 (only version currently supported for EF6).
-          project.DTE.SuppressUI = true;
           project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
         }
-
-        FixNamespaces();
+        
         SendToGeneralOutputWindow("Building Solution...");
         project.DTE.Solution.SolutionBuild.Build(true);
 
@@ -216,8 +264,44 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
       }
+#else
+      throw new NotImplementedException();
 #endif
 
+    }
+
+    /// <summary>
+    ///  Creates and adds a new Windows Forms to the project.
+    /// </summary>
+    /// <param name="project"></param>
+    /// <param name="formName"></param>
+    private void AddNewForm( Project project, string formName, WindowsFormsCodeGeneratorStrategy strategy )
+    {
+      //project.ProjectItems.Item(1).Remove();
+      string formFile = Path.Combine( ProjectPath, strategy.GetFormFileName().Replace("Form1", formName) );
+      string formFileDesigner = Path.Combine( ProjectPath,  strategy.GetFormDesignerFileName().Replace("Form1", formName));
+      string formFileResx = Path.Combine( ProjectPath, strategy.GetFormResxFileName().Replace("Form1", formName));
+      string contents = "";
+      
+      contents = File.ReadAllText(Path.Combine(ProjectPath, strategy.GetFormFileName()));
+      contents = contents.Replace("Form1", formName);
+      File.WriteAllText(formFile, contents);
+
+      contents = File.ReadAllText(Path.Combine(ProjectPath, strategy.GetFormDesignerFileName()));
+      contents = contents.Replace("Form1", formName);
+      File.WriteAllText(formFileDesigner, contents);
+
+      contents = File.ReadAllText(Path.Combine(ProjectPath, strategy.GetFormResxFileName()));
+      contents = contents.Replace("Form1", formName);
+      File.WriteAllText(formFileResx, contents);
+
+      // Now add the form
+      ProjectItem pi = project.ProjectItems.AddFromFile(formFile);
+      ProjectItem pi2 = pi.ProjectItems.AddFromFile(formFileDesigner);
+      ProjectItem pi3 = pi.ProjectItems.AddFromFile(formFileResx);
+      pi3.Properties.Item("ItemType").Value = "EmbeddedResource";
+      //pi.Properties.Item("ItemType").Value = "Compile";
+      pi.Properties.Item("SubType").Value = "Form";
     }
 
     internal void InitializeColumnMappings(Dictionary<string, ForeignKeyColumnInfo> fks)
@@ -240,11 +324,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     private void FixNamespaces()
     {
       if (Language != LanguageGenerator.VBNET) return;
-      string outputPath = Path.Combine(Path.Combine(ProjectPath, "My Project"), Strategy.GetApplicationFileName());
+      string outputPath = Path.Combine(Path.Combine(ProjectPath, "My Project"), "Application.Designer.vb");
       string contents = File.ReadAllText(outputPath);
-
-      contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.Form1", ProjectNamespace),
-          string.Format("Me.MainForm = {0}.Form1", ProjectNamespace));
+      contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.frmMain", ProjectNamespace),
+          string.Format("Me.MainForm = {0}.frmMain", ProjectNamespace));
       File.WriteAllText(outputPath, contents);
     }
 
@@ -258,26 +341,148 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
     }
 
-
-    private void AddBindings(VSProject vsProj)
+protected virtual void AddMenuEntries(VSProject vsProj, List<string> formNames)
     {
-      SendToGeneralOutputWindow("Customizing Form Code...");
-      // Get Form.cs
-      ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, Strategy.GetFormFileName() );
-      // Get Form.Designer.cs
-      ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, Strategy.GetFormDesignerFileName() );
-      
-      AddBindings((string)(item.Properties.Item("FullPath").Value));
-      AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value));
     }
 
-    private string _canonicalTableName;
-    private string _bindingSourceName;
+    protected virtual void WriteMenuHandler(StreamWriter sw, string formName)
+    {
+    }
+    
+    protected virtual void WriteMenuStripConstruction(StreamWriter sw, string formName) 
+    {
+    }
+
+    protected virtual void WriteMenuAddRange(StreamWriter sw, string formName)
+    {
+    }
+
+    protected virtual void WriteMenuControlInit(StreamWriter sw, string formName)
+    {
+    }
+
+    protected virtual void WriteAddRangeBegin( StreamWriter sw )
+    {
+    }
+
+    protected virtual void WriteAddRangeEnd( StreamWriter sw )
+    {
+    }
+
+    protected virtual void WriteMenuDeclaration( StreamWriter sw, string formName)
+    {
+    }
+
+    protected virtual string MenuEventHandlerMarker { get { return ""; } }
+
+    protected virtual string MenuDesignerControlDeclMarker { get { return ""; } }
+
+    protected virtual string MenuDesignerControlInitMarker { get { return ""; } }
+
+    protected virtual string MenuDesignerBeforeSuspendLayout { get { return ""; } }
+
+    protected void WriteMenuEntries(string path, List<string> formNames)
+    {
+      string originalContents = File.ReadAllText(path);
+      FileStream fs = new FileStream(path, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
+      using (StringReader sr = new StringReader(originalContents))
+      {
+        using (  StreamWriter sw = new StreamWriter(fs))
+        {
+          string line = null;
+          while ((line = sr.ReadLine()) != null)
+          {
+            if (line.Trim() == MenuEventHandlerMarker)
+            {
+              for (int i = 0; i < formNames.Count; i++)
+              {
+                string formName = formNames[i];
+                WriteMenuHandler(sw, formName);
+              }
+            }
+            else
+            {
+              sw.WriteLine(line);
+            }
+          }
+        }
+      }
+    }
+
+    protected void WriteMenuDesignerEntries( string path, List<string> formNames)
+    {
+      string originalContents = File.ReadAllText(path);
+      FileStream fs = new FileStream(path, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
+      using (StringReader sr = new StringReader(originalContents))
+      {
+        using (StreamWriter sw = new StreamWriter(fs))
+        {
+          string line = null;
+          while ((line = sr.ReadLine()) != null)
+          {
+            if (line.Trim() == MenuDesignerBeforeSuspendLayout)
+            {
+              for (int i = 0; i < formNames.Count; i++)
+              {
+                string formName = formNames[i];
+                WriteMenuStripConstruction(sw, formName);
+              }
+            }
+            else if (line.Trim() == MenuDesignerControlInitMarker)
+            {
+              WriteAddRangeBegin(sw);
+              for (int i = 0; i < formNames.Count; i++)
+              {
+                string formName = formNames[i];
+                WriteMenuAddRange(sw, formName);
+                if( i < formNames.Count - 1 )
+                {
+                  sw.Write(", ");
+                }
+              }
+              WriteAddRangeEnd(sw);
+
+              for (int i = 0; i < formNames.Count; i++)
+              {
+                string formName = formNames[i];
+                WriteMenuControlInit(sw, formName);
+              }
+            }
+            else if (line.Trim() == MenuDesignerControlDeclMarker)
+            {
+              for (int i = 0; i < formNames.Count; i++)
+              {
+                string formName = formNames[i];
+                WriteMenuDeclaration(sw, formName);
+              }
+            }
+            else
+            {
+              sw.WriteLine( line );
+            }
+          }
+        }
+      }
+    }
+
+    private void AddBindings(VSProject vsProj, WindowsFormsCodeGeneratorStrategy Strategy, 
+      string frmName, string frmDesignerName )
+    {
+      string ext = Strategy.GetExtension();
+      SendToGeneralOutputWindow("Customizing Form Code...");
+      // Get Form.cs
+      ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, frmName + ext );
+      // Get Form.Designer.cs
+      ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, frmDesignerName + ext );
+      
+      AddBindings((string)(item.Properties.Item("FullPath").Value), Strategy);
+      AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value), Strategy);
+    }
+    
     private IdentedStreamWriter sw;
 
-    private void AddBindings(string FormPath)
+    private void AddBindings(string FormPath, WindowsFormsCodeGeneratorStrategy Strategy)
     {
-      _bindingSourceName = string.Format("{0}BindingSource", _canonicalTableName);
       string originalContents = File.ReadAllText(FormPath);
       FileStream fs = new FileStream(FormPath, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
       using( StringReader sr = new StringReader(originalContents) )
