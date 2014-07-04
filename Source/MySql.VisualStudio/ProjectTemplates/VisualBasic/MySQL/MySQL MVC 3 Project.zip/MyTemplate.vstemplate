@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name>MySQL ASP.NET MVC 3 Project Template</Name>
-    <Description>Create a project with an application using ASP.NET MVC 3 using MySQL Membership provider and/or Entity Framework connected to MySQL Database.</Description>
+    <Name>MySQL ASP.NET MVC Project</Name>
+    <Description>Create a project with an application using ASP.NET MVC 3/4 using MySQL Membership provider and/or Entity Framework connected to MySQL Database.</Description>
     <ProjectType>VisualBasic</ProjectType>
     <ProjectSubType>
     </ProjectSubType>

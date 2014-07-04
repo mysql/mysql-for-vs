@@ -42,7 +42,21 @@ End Code
                 @Html.PasswordFor(Function(m) m.ConfirmPassword)
                 @Html.ValidationMessageFor(Function(m) m.ConfirmPassword)
             </div>
-
+			
+			<div class="editor-label">
+                @Html.LabelFor(Function(m) m.Question)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(Function(m) m.Question)
+                @Html.ValidationMessageFor(Function(m) m.Question)
+            </div>			
+			<div class="editor-label">
+                @Html.LabelFor(Function(m) m.Answer)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(Function(m) m.Answer)
+                @Html.ValidationMessageFor(Function(m) m.Answer)
+            </div>
             <p>
                 <input type="submit" value="Create User" />
             </p>			
