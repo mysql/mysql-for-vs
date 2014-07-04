@@ -225,11 +225,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 MembershipCreateStatus status;
                 if (!WizardForm.requireQuestionAndAnswer)
                 {
-                  provider.CreateUser("administrator", WizardForm.adminPassword, "temporary@email.com", null, null, true, null, out status);
+                  provider.CreateUser(WizardForm.adminName, WizardForm.adminPassword, "temporary@email.com", null, null, true, null, out status);
                 }
                 else
                 {
-                  provider.CreateUser("administrator", WizardForm.adminPassword, "temporary@email.com", WizardForm.userQuestion, WizardForm.userAnswer, true, null, out status);
+                  provider.CreateUser(WizardForm.adminName, WizardForm.adminPassword, "temporary@email.com", WizardForm.userQuestion, WizardForm.userAnswer, true, null, out status);
                 }
               }
             }
@@ -408,10 +408,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               sessionHost.Session["entityClassNameParameterWithNamespace"] =
                 string.Format("{0}.{1}", ProjectNamespace, table.Name);
             }
-            T4Callback cb = new T4Callback();          
-            string resultControllerFile = t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb);
+            T4Callback cb = new T4Callback();
+            StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));          
             string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1), fileExtension);
-            File.WriteAllText(controllerFilePath, resultControllerFile);
+          File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
             if (cb.errorMessages.Count > 0)
             {
               File.AppendAllLines(controllerFilePath, cb.errorMessages);

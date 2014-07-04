@@ -1181,6 +1181,6 @@ Check that the server is running, the database exists and the user Error establi
     <value>This wizard will create a full MVC project connected to a MySQL database existing or will create a new one with a web site that includes user authentication with the ASP.NET MySQL Membership provider.</value>
   </data>
   <data name="WinFormsProjectDescription" xml:space="preserve">
-    <value>This wizard will create a full Windows Forms project connected to an existing MySQL database using either Entity Framework or ADO.NET Typed Datasets as data access and one of several layouts (Individual Controls, Data Grid, Master Detail).</value>
+    <value>This wizard will create a Win Forms project connected to an existing MySQL database using either EF or ADO.NET Typed Datasets as data access with three layout options: Individual Controls, Grid or Master-Detail</value>
   </data>
 </root>

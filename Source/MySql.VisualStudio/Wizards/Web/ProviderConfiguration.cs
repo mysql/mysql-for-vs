@@ -42,6 +42,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }    
     }
 
+    internal string adminName
+    {
+      get {
+        return txtUserName.Text;
+      }
+    }
+
     internal string adminPassword
     {
       get {
