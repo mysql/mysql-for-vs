@@ -47,7 +47,7 @@ Public Class AccountController
     Public Function CreateUser(ByVal model As CreateUserModel) As ActionResult
         If ModelState.IsValid Then            
             Dim createStatus As MembershipCreateStatus
-            Membership.CreateUser(model.UserName, model.Password, model.Email, Nothing, Nothing, True, Nothing, createStatus)
+            Membership.CreateUser(model.UserName, model.Password, model.Email, model.Question, model.Answer, True, Nothing, createStatus)
 
             If createStatus = MembershipCreateStatus.Success Then
                 FormsAuthentication.SetAuthCookie(model.UserName, False)

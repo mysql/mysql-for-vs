@@ -167,6 +167,14 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
+    internal string adminName
+    {
+      get 
+      {
+        return providerConfiguration1.adminName;
+      }
+    }
+
     internal string adminPassword
     {
       get
