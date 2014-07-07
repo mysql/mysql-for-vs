@@ -50,7 +50,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       Wizard.Connection = con;
       foreach(DbTables t in base._tables)
       {
-        dicConfig.Add(t.Name, new AdvancedWizardForm(Wizard) { TableName = t.Name });
+        dicConfig.Add(t.Name, new AdvancedWizardForm(Wizard) { TableName = t.Name, Text = t.Name + " - CRUD Customization" });
       }
 
       base.TablesFilled();

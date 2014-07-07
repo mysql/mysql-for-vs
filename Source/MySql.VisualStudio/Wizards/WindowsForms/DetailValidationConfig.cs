@@ -210,7 +210,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _detailTable = wiz.DetailTableName;
       if (string.IsNullOrEmpty(_detailTable)) return;
       _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
-      _colValidationsDetail.Clear();
+
       wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.DetailForeignKeys);
       _colValidationsDetail = ValidationsGrid.GetColumnValidationList(_detailTable, _detailColumns, wiz.DetailForeignKeys);
     }

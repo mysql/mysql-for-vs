@@ -230,25 +230,28 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         
         // Now generated the bindings & custom code
         List<string> formNames = new List<string>();
+        List<string> tableNames = new List<string>();
         for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
         {
           AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
           string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
           string frmName = string.Format("frm{0}", _canonicalTableName);
           formNames.Add(frmName);
+          tableNames.Add(crud.TableName);
           string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
           WindowsFormsCodeGeneratorStrategy strategy = strategies[WizardForm.SelectedTables[i].Name];
           AddBindings(vsProj, strategy, frmName, frmDesignerName);
         }
         // Add menu entries for each form
-        AddMenuEntries(vsProj, formNames);
-        FixNamespaces();
+        AddMenuEntries(vsProj, formNames, tableNames);
 
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
         {
           // Change target version to 4.5 (only version currently supported for EF6).
           project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
         }
+
+        FixNamespaces();
         
         SendToGeneralOutputWindow("Building Solution...");
         project.DTE.Solution.SolutionBuild.Build(true);
@@ -331,8 +334,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (Language != LanguageGenerator.VBNET) return;
       string outputPath = Path.Combine(Path.Combine(ProjectPath, "My Project"), "Application.Designer.vb");
       string contents = File.ReadAllText(outputPath);
-      contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.frmMain", ProjectNamespace),
+      if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
+      {
+        contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.frmMain", ProjectNamespace),
+          string.Format("Me.MainForm = Global.{0}.{0}.frmMain", ProjectNamespace));
+      }
+      else { 
+        contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.frmMain", ProjectNamespace),
           string.Format("Me.MainForm = {0}.frmMain", ProjectNamespace));
+      }
       File.WriteAllText(outputPath, contents);
     }
 
@@ -346,7 +356,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
     }
 
-protected virtual void AddMenuEntries(VSProject vsProj, List<string> formNames)
+    protected virtual void AddMenuEntries(VSProject vsProj, List<string> formNames, List<string> tableNames)
     {
     }
 
@@ -362,7 +372,7 @@ protected virtual void AddMenuEntries(VSProject vsProj, List<string> formNames)
     {
     }
 
-    protected virtual void WriteMenuControlInit(StreamWriter sw, string formName)
+    protected virtual void WriteMenuControlInit(StreamWriter sw, string formName, string tableName)
     {
     }
 
@@ -414,7 +424,7 @@ protected virtual void AddMenuEntries(VSProject vsProj, List<string> formNames)
       }
     }
 
-    protected void WriteMenuDesignerEntries( string path, List<string> formNames)
+    protected void WriteMenuDesignerEntries(string path, List<string> formNames, List<string> tableNames)
     {
       string originalContents = File.ReadAllText(path);
       FileStream fs = new FileStream(path, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
@@ -450,7 +460,8 @@ protected virtual void AddMenuEntries(VSProject vsProj, List<string> formNames)
               for (int i = 0; i < formNames.Count; i++)
               {
                 string formName = formNames[i];
-                WriteMenuControlInit(sw, formName);
+                string tableName = tableNames[i];
+                WriteMenuControlInit(sw, formName, tableName);
               }
             }
             else if (line.Trim() == MenuDesignerControlDeclMarker)

@@ -46,7 +46,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     protected override string MenuDesignerBeforeSuspendLayout { get { return "// <WizardGeneratedCode>MenuDesigner BeforeSuspendLayout</WizardGeneratedCode>"; } }
 
-    protected override void AddMenuEntries(VSProject vsProj, List<string> formNames)
+    protected override void AddMenuEntries(VSProject vsProj, List<string> formNames, List<string> tableNames)
     {
       ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, "frmMain.cs");
       ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, "frmMain.Designer.cs");
@@ -55,7 +55,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       WriteMenuEntries(path, formNames);
 
       path = (string)(itemDesigner.Properties.Item("FullPath").Value);
-      WriteMenuDesignerEntries(path, formNames);
+      WriteMenuDesignerEntries(path, formNames, tableNames);
     }
 
     protected override void WriteMenuHandler(StreamWriter sw, string formName)
@@ -78,14 +78,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       sw.Write("      this.{0}ToolStripMenuItem ", formName);
     }
 
-    protected override void WriteMenuControlInit(StreamWriter sw, string formName)
+    protected override void WriteMenuControlInit(StreamWriter sw, string formName, string tableName)
     {
       sw.WriteLine("      // ");
       sw.WriteLine("      // {0}ToolStripMenuItem", formName);
       sw.WriteLine("      // " );
       sw.WriteLine("      this.{0}ToolStripMenuItem.Name = \"{0}ToolStripMenuItem\";", formName);
       sw.WriteLine("      this.{0}ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);", formName);
-      sw.WriteLine("      this.{0}ToolStripMenuItem.Text = \"{0}\";", formName);
+      sw.WriteLine("      this.{0}ToolStripMenuItem.Text = \"{1}\";", formName, tableName);
       sw.WriteLine("      this.{0}ToolStripMenuItem.Click += new System.EventHandler(this.{0}ToolStripMenuItem_Click);", formName);
     }
 
