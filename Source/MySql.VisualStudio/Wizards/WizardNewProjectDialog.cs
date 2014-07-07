@@ -108,9 +108,14 @@ namespace MySql.Data.VisualStudio.Wizards
     void solutionOptions_SelectedIndexChanged(object sender, EventArgs e)
     {
       if (solutionOptions.Text.Equals("Add to solution"))
-      {        
+      {
         txtProjectPath.Text = Path.GetDirectoryName(Environment.CurrentDirectory);
         solutionNameTextBox.Enabled = false;
+      }
+      else
+      {
+        txtProjectPath.Text = GetDefaultProjectPath();
+        solutionNameTextBox.Enabled = true;
       }
     }
 
@@ -186,6 +191,11 @@ namespace MySql.Data.VisualStudio.Wizards
       if (solutionOptions.Enabled)
          solutionOptions.Text = Settings.Default.CreateNewSolution;
 
+      if (solutionOptions.Text.Equals("Create new solution", StringComparison.InvariantCultureIgnoreCase))
+        solutionNameTextBox.Enabled = true;
+      else
+        solutionNameTextBox.Enabled = false;
+      
       // select project type
       var language = String.IsNullOrEmpty(Settings.Default.NewProjectLanguageSelected) ? "Visual C#" : Settings.Default.NewProjectLanguageSelected;
 
