@@ -122,12 +122,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       try
       {
         _hasDataGridDateColumn = false;
+        for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
+        {
+          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
+          // Ensure all model exists, even if user didn't went through validation pages.
+          // So metadata for table used in FKs is already loaded.
+          crud.GenerateModels();
+        }
         // Start a loop here, to generate screens for all the selected tables.
         for (int i = 0; i < WizardForm.SelectedTables.Count; i++ )
         {
           AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
-          // Ensure model exists, even if user didn't went through validation pages.
-          crud.GenerateModels();
           Dictionary<string, Column> Columns = crud.Columns;
           Dictionary<string, Column> DetailColumns = crud.DetailColumns;
           string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
@@ -312,7 +317,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         if( string.IsNullOrEmpty( fkTableName )) continue;
         if (ColumnMappings.ContainsKey(fkTableName)) continue;
         Dictionary<string,Column> dicCols = GetColumnsFromTable(fkTableName, WizardForm.Connection);
-        List<ColumnValidation> myColValidations = ValidationsGrid.GetColumnValidactionList(dicCols, null);
+        List<ColumnValidation> myColValidations = ValidationsGrid.GetColumnValidationList(fkTableName, dicCols, null);
         ColumnMappings.Add(fkTableName, myColValidations.ToDictionary(p => { return p.Name; }));
       }
     }

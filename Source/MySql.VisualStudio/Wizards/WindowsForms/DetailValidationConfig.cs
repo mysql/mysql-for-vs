@@ -212,7 +212,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
       _colValidationsDetail.Clear();
       wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.DetailForeignKeys);
-      _colValidationsDetail = ValidationsGrid.GetColumnValidactionList(_detailColumns, wiz.DetailForeignKeys);
+      _colValidationsDetail = ValidationsGrid.GetColumnValidationList(_detailTable, _detailColumns, wiz.DetailForeignKeys);
     }
 
     internal override void OnStarting(BaseWizardForm wizard)

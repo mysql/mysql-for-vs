@@ -87,7 +87,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _columns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_table, wiz.Connection);
       _colValidations.Clear();
       wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _table, out wiz.ForeignKeys);
-      _colValidations = ValidationsGrid.GetColumnValidactionList(_columns, wiz.ForeignKeys);
+      _colValidations = ValidationsGrid.GetColumnValidationList(_table, _columns, wiz.ForeignKeys);
     }
 
     internal override void OnStarting(BaseWizardForm wizard)
