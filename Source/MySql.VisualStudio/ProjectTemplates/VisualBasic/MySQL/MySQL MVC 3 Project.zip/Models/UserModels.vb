@@ -20,7 +20,7 @@ Public Class ChangePasswordModel
     End Property
 
     <Required()> _
-    <StringLength(100, ErrorMessage:="The {0} must be at least {2} characters long.", MinimumLength:=6)> _
+    <StringLength(100, ErrorMessage:="The {0} must be at least {2} characters long.", MinimumLength:=$minimumrequiredlength$)> _
     <DataType(DataType.Password)> _
     <Display(Name:="New password")> _
     Public Property NewPassword() As String
@@ -116,7 +116,7 @@ Public Class CreateUserModel
     End Property
 
     <Required()> _
-    <StringLength(100, ErrorMessage:="The {0} must be at least {2} characters long.", MinimumLength:=6)> _
+    <StringLength(100, ErrorMessage:="The {0} must be at least {2} characters long.", MinimumLength:=$minimumrequiredlength$)> _
     <DataType(DataType.Password)> _
     <Display(Name:="Password")> _
     Public Property Password() As String
