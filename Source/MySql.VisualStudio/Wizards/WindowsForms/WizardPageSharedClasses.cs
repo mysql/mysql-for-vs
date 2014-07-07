@@ -178,6 +178,11 @@ namespace MySql.Data.VisualStudio.Wizards
 
     private static Dictionary<string, List<ColumnValidation>> _metadata = new Dictionary<string, List<ColumnValidation>>();
 
+    internal static void ClearMetadataCache()
+    {
+      _metadata.Clear();
+    }
+
     internal static List<ColumnValidation> GetColumnValidationList(
       string table,
       Dictionary<string, Column> columns, Dictionary<string, ForeignKeyColumnInfo> FKs)

@@ -92,7 +92,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       var control = (CheckBox)sender;
       
-      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, !control.Checked);
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, !control.Checked || !radMasterDetail.Checked );
       wizardForm.SetSkipPage(WindowsFormsWizardForm.VALIDATION_CONFIG_PAGE_IDX, !control.Checked);
     }
 
@@ -188,7 +188,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       var control = (RadioButton)sender;
       cmbFkConstraints.Enabled = !control.Checked;
-      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, !chkEnableAdvanced.Checked );
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.VALIDATION_CONFIG_PAGE_IDX, !chkEnableAdvanced.Checked);
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, true );
       if (control.Checked)
         errorProvider1.SetError(cmbFkConstraints, "");
     }
@@ -197,7 +198,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       var control = (RadioButton)sender;
       cmbFkConstraints.Enabled = !control.Checked;
-      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, !chkEnableAdvanced.Checked);
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.VALIDATION_CONFIG_PAGE_IDX, !chkEnableAdvanced.Checked);
+      wizardForm.SetSkipPage(WindowsFormsWizardForm.DETAIL_VALIDATION_CONFIG_PAGE_IDX, true);
       if (control.Checked)
          errorProvider1.SetError(cmbFkConstraints, "");
     }

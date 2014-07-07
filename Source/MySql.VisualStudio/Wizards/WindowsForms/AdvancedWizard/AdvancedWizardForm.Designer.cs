@@ -66,7 +66,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       this.Controls.Add(this.detailValidationConfig1);
       this.Controls.Add(this.dataAccessTechnologyConfig1);
       this.Name = "AdvancedWizardForm";
-      this.Text = "AdvancedWizardForm";
+      this.Text = "CRUD Customization";
       this.Load += new System.EventHandler(this.AdvancedWizardForm_Load);
       this.Controls.SetChildIndex(this.btnNext, 0);
       this.Controls.SetChildIndex(this.btnBack, 0);

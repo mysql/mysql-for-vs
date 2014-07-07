@@ -645,6 +645,8 @@ namespace MySql.Data.VisualStudio
       DTE env = (DTE)GetService(typeof(DTE));
       WizardNewProjectDialog dlg ;
 
+      MySql.Data.VisualStudio.Wizards.ValidationsGrid.ClearMetadataCache();
+
       if (String.IsNullOrEmpty(Settings.Default.NewProjectDialogSelected))
          dlg = new WizardNewProjectDialog(projectType);
       else
