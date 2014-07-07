@@ -242,9 +242,17 @@ namespace MySql.Data.VisualStudio
       if ((this.ActiveControl == database) && (keyData == Keys.Return))
       {
         connectionStringBuilder["database"] = database.Text.Trim();
-        var c = GetConnection(true);
-        if (c == null || c.State != ConnectionState.Open)
+        try
+        {
+          var c = GetConnection(true);
+          if (c == null || c.State != ConnectionState.Open)
+            return false;
+        }
+        catch (MySqlException mysqlexception)
+        {
+          MessageBox.Show(mysqlexception.Message, "Error", MessageBoxButtons.OK);          
           return false;
+        }        
       }           
       return base.ProcessCmdKey(ref msg, keyData);  
     }

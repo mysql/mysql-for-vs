@@ -43,7 +43,7 @@ namespace MySql.Data.VisualStudio.Wizards
     private static readonly string ProviderName = "MySql.Data.MySqlClient";
     private string efVersion;
     private Dictionary<string, Dictionary<string, ColumnValidation>> _mappings;
-private VSProject _vsProj;
+    private VSProject _vsProj;
 
     internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, 
       string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, VSProject vsProj, 
