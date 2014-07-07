@@ -649,12 +649,15 @@ con.Database, tableName );
 
     internal void AddColumnMappings(string table, List<ColumnValidation> columns)
     {
-      Dictionary<string, ColumnValidation> dic = new Dictionary<string, ColumnValidation>();
-      for (int i = 0; i < columns.Count; i++)
+      Dictionary<string, ColumnValidation> dic = columns.ToDictionary(p => p.Name);
+      if (ColumnMappings.ContainsKey(table))
       {
-        dic.Add(columns[i].Name, columns[i]);
+        ColumnMappings[table] = dic;
       }
-      ColumnMappings.Add(table, dic);
+      else 
+      {
+        ColumnMappings.Add(table, dic);
+      }
     }
 
     internal void PopulateColumnMappingsForTypedDataSet()

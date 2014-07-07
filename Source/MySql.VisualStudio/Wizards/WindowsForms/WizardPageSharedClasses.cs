@@ -176,10 +176,16 @@ namespace MySql.Data.VisualStudio.Wizards
     internal static int IdxColHaslookup { get; private set; }
     internal static int IdxColLookupColumn { get; private set; }
 
-    internal static List<ColumnValidation> GetColumnValidactionList(
+    private static Dictionary<string, List<ColumnValidation>> _metadata = new Dictionary<string, List<ColumnValidation>>();
+
+    internal static List<ColumnValidation> GetColumnValidationList(
+      string table,
       Dictionary<string, Column> columns, Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
-      List<ColumnValidation> colsValidation = new List<ColumnValidation>();
+      List<ColumnValidation> colsValidation = null;
+      // First examine the cache
+      if (_metadata.TryGetValue(table, out colsValidation)) return colsValidation;
+      colsValidation = new List<ColumnValidation>();
       foreach (KeyValuePair<string, Column> kvp in columns)
       {
         ColumnValidation cv = new ColumnValidation(kvp.Value);
@@ -200,6 +206,7 @@ namespace MySql.Data.VisualStudio.Wizards
         }
         colsValidation.Add(cv);
       }
+      _metadata[table] = colsValidation;
       return colsValidation;
     }
    
