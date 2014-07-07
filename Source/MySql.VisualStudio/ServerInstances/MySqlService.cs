@@ -86,13 +86,17 @@ namespace MySql.Data.VisualStudio
       if (parameters.DefaultsFile == null) return parameters;
 
       // we have a valid defaults file
-      IniFile f = new IniFile(parameters.DefaultsFile);
-      Int32.TryParse(f.ReadValue("mysqld", "port", parameters.Port.ToString()), out parameters.Port);
-      parameters.PipeName = f.ReadValue("mysqld", "socket", parameters.PipeName);
-
-      // now see if named pipes are enabled
-      parameters.NamedPipesEnabled = parameters.NamedPipesEnabled || f.HasKey("mysqld", "enable-named-pipe");
-
+      try
+      {
+        IniFile f = new IniFile(parameters.DefaultsFile);
+        Int32.TryParse(f.ReadValue("mysqld", "port", parameters.Port.ToString()), out parameters.Port);
+        parameters.PipeName = f.ReadValue("mysqld", "socket", parameters.PipeName);
+        // now see if named pipes are enabled
+        parameters.NamedPipesEnabled = parameters.NamedPipesEnabled || f.HasKey("mysqld", "enable-named-pipe");
+      }
+      catch
+      { }
+      
       return parameters;
     }
 
