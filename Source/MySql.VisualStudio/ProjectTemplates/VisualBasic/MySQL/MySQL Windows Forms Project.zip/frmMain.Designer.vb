@@ -49,7 +49,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "frmMain"
-        Me.Text = "frmMain"
+        Me.Text = "Main Form"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

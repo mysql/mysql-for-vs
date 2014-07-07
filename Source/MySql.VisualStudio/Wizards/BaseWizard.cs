@@ -113,16 +113,6 @@ namespace MySql.Data.VisualStudio.Wizards
       set;
     }
 
-    ///// <summary>
-    ///// The column metadata.
-    ///// </summary>
-    //internal Dictionary<string, Column> Columns;
-
-    /// <summary>
-    /// The column metadata for the detail table.
-    /// </summary>
-    //internal Dictionary<string, Column> DetailColumns;
-
     // Some constants of Entity Framework versions as supposed to be feed to this class's methods for Nuget.
     internal protected readonly static string ENTITY_FRAMEWORK_VERSION_5 = "5.0.0";
     internal protected readonly static string ENTITY_FRAMEWORK_VERSION_6 = "6.0.0";
