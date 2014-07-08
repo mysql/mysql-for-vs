@@ -187,10 +187,12 @@ namespace MySql.Data.VisualStudio.Wizards
       solutionNameTextBox.Text  = txtProjectName.Text = GetUniqueName(txtProjectPath.Text, projectName);      
       
       createDirectoryForSolutionChk.Checked = Settings.Default.CreateDirectoryForSolution;
-      
-      if (solutionOptions.Enabled)
-         solutionOptions.Text = Settings.Default.CreateNewSolution;
 
+      if (_dte.Solution.Count >= 1 && Settings.Default.CreateNewSolution.Equals("Add to solution", StringComparison.InvariantCultureIgnoreCase))
+        solutionOptions.Text = Settings.Default.CreateNewSolution;
+      else
+        solutionOptions.Text = "Create new solution";
+    
       if (solutionOptions.Text.Equals("Create new solution", StringComparison.InvariantCultureIgnoreCase))
         solutionNameTextBox.Enabled = true;
       else
