@@ -421,7 +421,7 @@
         <Icon guid="guidImages" id="bmpNewMySqlProject" />
         <Strings>
           <CommandName>cmdProjectTypeMvcProject</CommandName>
-          <ButtonText>Create new MySQL project</ButtonText>
+          <ButtonText>Create new MySQL MVC project</ButtonText>
         </Strings>
       </Button>
 
@@ -431,7 +431,7 @@
         <Icon guid="guidImages" id="bmpNewMySqlProject" />
         <Strings>
           <CommandName>cmdProjectTypeWinFormsProject</CommandName>
-          <ButtonText>Create new MySQL project</ButtonText>
+          <ButtonText>Create new MySQL Windows Forms project</ButtonText>
         </Strings>
       </Button>
       <!-- End menu of project types icons-->
