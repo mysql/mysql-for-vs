@@ -405,8 +405,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             } 
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
             {
-              sessionHost.Session["entityClassNameParameterWithNamespace"] =
-                string.Format("{0}.{1}", ProjectNamespace, table.Name);
+              sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Name);
             }
             T4Callback cb = new T4Callback();
             StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));          
