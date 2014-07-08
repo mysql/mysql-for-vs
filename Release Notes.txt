@@ -8,7 +8,7 @@ What's new in 1.2
 - Visual Studio integration support with versions 2008, 2010, 2012 and 2013.
 - Entity Framework version 6 Database First and Model First support is available when using Connector/Net 6.8.1 or later.
 - MySQL ASP.NET MVC Project template using MySQL Membership provider. A model can be optionally created with Entity Framework 5 or 6.
-- MySQL Windows Forms Project template using a Typed Dataset, or Entity Framework Model version 5 or 6.
+- MySQL Windows Forms Project template using a Typed Dataset, or Entity Framework Model version 5 or 6 also supported multiple tables.
 - Changes on web configuration tool that enables Site Map provider and/or Personalization provider when using Connector/Net 6.9 or later.
 
 Be sure to check the documentation for more information on these new features. 

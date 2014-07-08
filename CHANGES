@@ -14,3 +14,6 @@
 - Added implementation of MVC pattern of selected model tables for MVC Project.
 - Added action links of generated views in home page for MVC project.
 - Fix for Connect to database dialog not updated properly.
+
+1.2.2
+- Added support for Multiple tables application generation in MySQL Windows Forms Wizard.
