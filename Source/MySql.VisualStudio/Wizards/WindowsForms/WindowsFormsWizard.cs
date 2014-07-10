@@ -250,7 +250,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           // Change target version to 4.5 (only version currently supported for EF6).
           project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
         }
-
+        
         FixNamespaces();
         
         SendToGeneralOutputWindow("Building Solution...");
