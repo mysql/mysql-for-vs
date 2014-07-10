@@ -136,6 +136,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (String.IsNullOrEmpty(connectionString))
         return false;
 
+      if (String.IsNullOrEmpty(cmbConnections.Text))
+        return false;
+
+      if (String.IsNullOrEmpty(ConnectionStringTextBox.Text))
+        return false;
+
       var cnn = new MySqlConnection(connectionString);
       try
       {
