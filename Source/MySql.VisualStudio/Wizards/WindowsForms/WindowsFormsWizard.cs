@@ -249,8 +249,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           // Change target version to 4.5 (only version currently supported for EF6).
           project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
+          // This line is a hack to avoid "Project Unavailable" exceptions.
+          project = (Project)((Array)(Dte.ActiveSolutionProjects)).GetValue(0);
+          vsProj = project.Object as VSProject;
         }
-        
+
+        RemoveTemplateForm(vsProj);
+
         FixNamespaces();
         
         SendToGeneralOutputWindow("Building Solution...");
@@ -276,6 +281,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       throw new NotImplementedException();
 #endif
 
+    }
+
+    internal virtual void RemoveTemplateForm(VSProject proj)
+    {
     }
 
     /// <summary>

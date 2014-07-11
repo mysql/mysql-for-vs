@@ -110,5 +110,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       sw.WriteLine("    private System.Windows.Forms.ToolStripMenuItem {0}ToolStripMenuItem;", formName);
     }
+
+    internal override void RemoveTemplateForm(VSProject proj)
+    {
+      ProjectItem pi = proj.Project.ProjectItems.Item("Form1.cs");
+      pi.Remove();
+      File.Delete(Path.Combine(ProjectPath, "Form1.cs"));
+      File.Delete(Path.Combine(ProjectPath, "Form1.Designer.cs"));
+      File.Delete(Path.Combine(ProjectPath, "Form1.resx"));
+    }
   }
 }
