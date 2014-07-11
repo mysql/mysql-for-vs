@@ -31,7 +31,7 @@
       this.components = new System.ComponentModel.Container();
       this.chkSelectAllTables = new System.Windows.Forms.CheckBox();
       this.listTables = new System.Windows.Forms.DataGridView();
-      this.label5 = new System.Windows.Forms.Label();
+      this.lblText = new System.Windows.Forms.Label();
       this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
       this.txtFilter = new System.Windows.Forms.TextBox();
       this.btnFilter = new System.Windows.Forms.Button();
@@ -61,15 +61,15 @@
       this.listTables.Size = new System.Drawing.Size(540, 259);
       this.listTables.TabIndex = 65;
       // 
-      // label5
+      // lblText
       // 
-      this.label5.AutoSize = true;
-      this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
-      this.label5.Location = new System.Drawing.Point(18, 14);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(177, 13);
-      this.label5.TabIndex = 64;
-      this.label5.Text = "Select tables to include in model:";
+      this.lblText.AutoSize = true;
+      this.lblText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.lblText.Location = new System.Drawing.Point(18, 14);
+      this.lblText.Name = "lblText";
+      this.lblText.Size = new System.Drawing.Size(177, 13);
+      this.lblText.TabIndex = 64;
+      this.lblText.Text = "Select tables to include in model:";
       // 
       // errorProvider1
       // 
@@ -111,7 +111,7 @@
       this.Controls.Add(this.txtFilter);
       this.Controls.Add(this.chkSelectAllTables);
       this.Controls.Add(this.listTables);
-      this.Controls.Add(this.label5);
+      this.Controls.Add(this.lblText);
       this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
       this.Name = "TablesSelection";
       this.Size = new System.Drawing.Size(584, 380);
@@ -124,7 +124,7 @@
 
     #endregion
 
-    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Label lblText;
     private System.Windows.Forms.ErrorProvider errorProvider1;
     private System.Windows.Forms.Label label1;
     protected System.Windows.Forms.CheckBox chkSelectAllTables;
