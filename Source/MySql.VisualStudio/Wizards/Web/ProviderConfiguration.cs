@@ -145,7 +145,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         txtPwdConfirm.Text = string.Empty;
         errorProvider1.SetError(txtUserName, "");
         errorProvider1.SetError(txtPwd, "");
-        errorProvider1.SetError(txtPwdConfirm, "");
+        errorProvider1.SetError(txtPwdConfirm, "");        
       }
     }
 
@@ -158,8 +158,17 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     void txtPwd_TextChanged(object sender, EventArgs e)
     {
-      if (txtPwd.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
-        errorProvider1.SetError(txtPwd, "");
+      if (!txtPwd.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
+        return;
+      
+      var pwdLenght = 0;
+      if (int.TryParse(txtMinimumPasswordLenght.Text, out pwdLenght))
+      {
+        if (!(txtPwd.Text.Length >= pwdLenght))
+          return;
+      }
+
+      errorProvider1.SetError(txtPwd, "");
     }
 
     void txtPwdConfirm_TextChanged(object sender, EventArgs e)
@@ -199,6 +208,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           errorProvider1.SetError(txtPwd, "Passowrd doesn't match with the password confirmation");
         }
 
+
+        var pwdLenght = 7;
+        if (!int.TryParse(txtMinimumPasswordLenght.Text, out pwdLenght))
+        {
+          e.Cancel = true;
+          errorProvider1.SetError(txtMinimumPasswordLenght, "Password length should be a integer number");
+        }
+        
+        if (txtPwd.Text.Length < pwdLenght)
+          errorProvider1.SetError(txtPwd, "Administrator Password length is not valid");        
+        else
+          errorProvider1.SetError(txtPwd, "");
+
         if (chkQuestionAndAnswerRequired.Checked)
         {
           if (string.IsNullOrEmpty(txtQuestion.Text))
@@ -217,12 +239,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
       }
 
-      var pwdLenght = 7;
-      if (!int.TryParse(txtMinimumPasswordLenght.Text, out pwdLenght))
-      {
-        e.Cancel = true;
-        errorProvider1.SetError(txtMinimumPasswordLenght, "Password lenght should be a integer number");
-      }
+  
     }
 
     private void chkQuestionAndAnswerRequired_CheckedChanged(object sender, EventArgs e)
