@@ -180,8 +180,8 @@ namespace MySql.Data.VisualStudio.Wizards
     private void SetDefaults(string projectType)
     {
 
-      var projectName = projectType.Equals("Windows Forms Project") ? "MySqlWindowsFormsApplication" : "MySqlMvcApplication";
-      projectType = projectType.IndexOf("CSharp", StringComparison.CurrentCultureIgnoreCase) < 0 ? "Windows Forms Project" : "ASP.NET MVC 3 Project";
+      var projectName = projectType.IndexOf("WinForms", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "MySqlWindowsFormsApplication" : "MySqlMvcApplication";
+      projectType = projectType.IndexOf("WinForms", StringComparison.CurrentCultureIgnoreCase) >= 0 ? "Windows Forms Project" : "ASP.NET MVC 3 Project";
       txtProjectPath.Text = GetDefaultProjectPath();     
 
       solutionNameTextBox.Text  = txtProjectName.Text = GetUniqueName(txtProjectPath.Text, projectName);      
