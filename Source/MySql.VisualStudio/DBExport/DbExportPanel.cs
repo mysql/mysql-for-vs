@@ -402,10 +402,15 @@ namespace MySql.Data.VisualStudio.DBExport
               }
           }
           SetConnectionsList();
+          if (selected == null)
+          {
+            MessageBox.Show("Error: Cannot found any MySQL connection. Please review your settings.", "Error", MessageBoxButtons.OK);
+            return;
+          }
           cmbConnections.SelectedValue = selected.ConnectionString;
           SelectedConnection = selected;
           LoadSchemasForSelectedConnection();
-          _windowHandler = windowHandler;            
+          _windowHandler = windowHandler;             
         }
         catch (Exception)
         {

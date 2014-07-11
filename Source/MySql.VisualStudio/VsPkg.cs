@@ -340,6 +340,9 @@ namespace MySql.Data.VisualStudio
 
             DbExportWindowPane windowPanel = (DbExportWindowPane)window;
 
+            if (_mysqlConnectionsList == null || _mysqlConnectionsList.Count <= 0)
+               _mysqlConnectionsList = GetMySqlConnections();
+
             windowPanel.Connections = _mysqlConnectionsList;
             windowPanel.SelectedConnectionName = currentConnectionName;
             windowPanel.WindowHandler = window;
