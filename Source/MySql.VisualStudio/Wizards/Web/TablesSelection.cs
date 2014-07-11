@@ -38,6 +38,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     protected BindingList<DbTables> _tables = new BindingList<DbTables>();
     internal BindingSource _sourceTables = new BindingSource();
+    private BackgroundWorker _worker;
+    private Cursor _cursor;
+    private BaseWizardForm _wiz;
 
     internal string ConnectionString { get; set; }
 
@@ -49,7 +52,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       txtFilter.KeyDown += txtFilter_KeyDown;
 
       listTables.AutoGenerateColumns = false;
-      AddMoreColumns();
+      AddMoreColumns();      
     }
 
     internal virtual void AddMoreColumns()
@@ -87,21 +90,59 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal void FillTables(string connectionString)
     {
-      var cnn = new MySqlConnection(connectionString);
-      cnn.Open();
-
-      var dtTables = cnn.GetSchema("Tables", new string[] { null, cnn.Database });
-      _tables = new BindingList<DbTables>();
-
-      for (int i = 0; i < dtTables.Rows.Count; i++)
+      LockUI();
+      try
       {
-        _tables.Add(new DbTables(false, dtTables.Rows[i][2].ToString()));
-      }
+        DoWorkEventHandler doWorker = (worker, doWorkerArgs) =>
+        {          
+          Application.DoEvents();          
+          var cnn = new MySqlConnection(connectionString);
+          cnn.Open();
+          var dtTables = cnn.GetSchema("Tables", new string[] { null, cnn.Database });
+          cnn.Close();
+          _tables = new BindingList<DbTables>();
+          this.Invoke((Action)(() =>
+          {
+            for (int i = 0; i < dtTables.Rows.Count; i++)
+              _tables.Add(new DbTables(false, dtTables.Rows[i][2].ToString()));
 
-      _sourceTables.DataSource = _tables;
-      listTables.DataSource = _sourceTables;
-      FormatTablesList();
-      TablesFilled();
+            _sourceTables.DataSource = _tables;
+            listTables.DataSource = _sourceTables;
+            FormatTablesList();
+            TablesFilled();            
+          }));
+        };
+        if (_worker != null)
+        {
+          _worker.DoWork -= doWorker;
+          _worker.RunWorkerCompleted -= _worker_RunWorkerCompleted;
+          _worker.Dispose();
+        }
+        _worker = new BackgroundWorker();
+        _worker.WorkerSupportsCancellation = true;        
+        _worker.DoWork += doWorker;
+        _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_worker_RunWorkerCompleted);
+        _worker.RunWorkerAsync();
+      }
+      finally 
+      {
+        UnlockUI();             
+      }
+    }
+    
+
+    private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+    {
+      if (e.Error != null)
+      {
+        this.Invoke((Action)(() =>
+        {
+          MessageBox.Show(
+            string.Format("The following error ocurred while exporting: {0}", e.Error.Message),
+            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }));
+      }
+      UnlockUI();     
     }
 
     internal virtual void TablesFilled()
@@ -113,8 +154,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       if (listTables.Rows.Count <= 1 && listTables.Columns.Count == 1)
       {
-        _sourceTables.DataSource = new BindingList<DbTables>();
-        //listTables.AutoGenerateColumns = false;
+        _sourceTables.DataSource = new BindingList<DbTables>();        
         listTables.DataSource = _sourceTables;
         listTables.Update();
       }
@@ -140,11 +180,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      BaseWizardForm wiz = (BaseWizardForm)wizard;
-      ConnectionString = wiz.ConnectionString;
-      if (!string.IsNullOrEmpty(wiz.ConnectionString))
+      _wiz = (BaseWizardForm)wizard;
+      
+      ConnectionString = _wiz.ConnectionString;
+      if (!string.IsNullOrEmpty(_wiz.ConnectionString))
       {
-        var cnn = new MySqlConnection(wiz.ConnectionString);
+        var cnn = new MySqlConnection(_wiz.ConnectionString);
         try
         {
           cnn.Open();
@@ -157,7 +198,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             listTables.Enabled = false;
           }
         }
-        FillTables(wiz.ConnectionString);
+        FillTables(_wiz.ConnectionString);
       }
     }
 
@@ -215,6 +256,31 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal void txtFilter_TextChanged(object sender, EventArgs e)
     {
+    }
+
+    private void LockUI()
+    {
+      _cursor = this.Cursor;
+      this.Cursor = Cursors.WaitCursor;
+      EnableControls(false);
+    }
+
+    private void EnableControls(bool enabling)
+    {
+      txtFilter.Enabled = enabling;
+      btnFilter.Enabled = enabling;
+      _wiz.btnFinish.Enabled = enabling;
+      _wiz.btnBack.Enabled = enabling;
+      chkSelectAllTables.Enabled = enabling;      
+    }
+
+    private void UnlockUI()
+    {
+      if (!(_worker != null && _worker.IsBusy))
+      {        
+        this.Cursor = _cursor;
+        EnableControls(true);       
+      }
     }
   }
 }

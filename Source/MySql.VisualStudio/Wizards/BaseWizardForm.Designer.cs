@@ -187,7 +187,7 @@
 
     public System.Windows.Forms.Button btnNext;
     protected System.Windows.Forms.Button btnCancel;
-    protected System.Windows.Forms.Button btnBack;
+    public System.Windows.Forms.Button btnBack;
     internal System.Windows.Forms.Label lblDescription;
     private System.Windows.Forms.Label lblWizardName;
     private System.Windows.Forms.PictureBox pictureBox1;
