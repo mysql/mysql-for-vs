@@ -12,30 +12,30 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <Choose>
-	<When Condition=" '$(VisualStudioVersion)' == '12.0'">
-		<PropertyGroup>
-		<ProductVersion>9.0.30729</ProductVersion>
-		<SchemaVersion>2.0</SchemaVersion>
-		<Framework>4.5.1</Framework>
-		<TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-		<DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;</DefineConstants>
-		</PropertyGroup>
+    <When Condition=" '$(VisualStudioVersion)' == '12.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.5.1</Framework>
+        <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;</DefineConstants>
+      </PropertyGroup>
     </When>
-	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
-		<PropertyGroup>
-		<ProductVersion>9.0.30729</ProductVersion>
-		<SchemaVersion>2.0</SchemaVersion>
-		<Framework>4.5</Framework>
-		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-		<DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;</DefineConstants>
-		</PropertyGroup>
+    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.5</Framework>
+        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;</DefineConstants>
+      </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.0</Framework>
-		<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
@@ -45,11 +45,10 @@
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>3.5</Framework>
-		<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
-
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -69,105 +68,104 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-
   <Choose>
-	<When Condition=" '$(VisualStudioVersion)' == '12.0'">
-	  <ItemGroup>
-		<Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-		<SpecificVersion>False</SpecificVersion>
-		<HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Configuration.Install" />
-		<Reference Include="System.Core" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Management" />
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Xml.Linq" />
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Xml" />
-	  </ItemGroup>
+    <When Condition=" '$(VisualStudioVersion)' == '12.0'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Configuration.Install" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Management" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+      </ItemGroup>
     </When>
-	
-	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
-	  <ItemGroup>
-		<Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-		<SpecificVersion>False</SpecificVersion>
-		<HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Configuration.Install" />
-		<Reference Include="System.Core" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Management" />
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Xml.Linq" />
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Xml" />
-	  </ItemGroup>
+    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Configuration.Install" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Management" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+      </ItemGroup>
     </When>
-
-	<When Condition=" '$(VisualStudioVersion)' == '10.0'">
-	  <ItemGroup>
-		<Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-		  <SpecificVersion>False</SpecificVersion>
-		  <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Configuration.Install" />
-		<Reference Include="System.Core" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Management" />
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Xml.Linq" />
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Xml" />
-	  </ItemGroup>
+    <When Condition=" '$(VisualStudioVersion)' == '10.0'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Configuration.Install" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Management" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+      </ItemGroup>
     </When>
-
-	<When Condition=" '$(VisualStudioVersion)' == '9.0'">
-		<ItemGroup>
-			<Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-			<Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-			<Reference Include="Microsoft.VisualStudio.Shell.9.0, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-			<Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-			<SpecificVersion>False</SpecificVersion>
-			<HintPath>..\..\Dependencies\v2.0\Release\MySql.Data.dll</HintPath>
-		</Reference>
-			<Reference Include="System" />
-			<Reference Include="System.Configuration.Install" />
-			<Reference Include="System.Core">
-			  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-			</Reference>
-			<Reference Include="System.Drawing" />
-			<Reference Include="System.Windows.Forms" />
-			<Reference Include="System.Xml.Linq">
-			  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-			</Reference>
-			<Reference Include="System.Data.DataSetExtensions">
-			  <RequiredTargetFramework>3.5</RequiredTargetFramework>
-			</Reference>
-			<Reference Include="System.Data" />
-			<Reference Include="System.Xml" />
-		  </ItemGroup>
-	</When>
+    <When Condition=" '$(VisualStudioVersion)' == '9.0'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.Shell.9.0, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\..\Dependencies\v2.0\Release\MySql.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Configuration.Install" />
+        <Reference Include="System.Core">
+          <RequiredTargetFramework>3.5</RequiredTargetFramework>
+        </Reference>
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml.Linq">
+          <RequiredTargetFramework>3.5</RequiredTargetFramework>
+        </Reference>
+        <Reference Include="System.Data.DataSetExtensions">
+          <RequiredTargetFramework>3.5</RequiredTargetFramework>
+        </Reference>
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+      </ItemGroup>
+    </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\MySql.VisualStudio\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="AD7Breakpoint.cs" />
     <Compile Include="AD7DebugErrorBreakpoint.cs" />
     <Compile Include="AD7DebugErrorBreakpointResolution.cs" />

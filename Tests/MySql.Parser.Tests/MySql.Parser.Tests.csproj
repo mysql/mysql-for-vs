@@ -87,6 +87,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="DDL\Alter\AlterDatabase.cs" />
     <Compile Include="DDL\Alter\AlterEvent.cs" />
     <Compile Include="DDL\Alter\AlterFunction.cs" />
