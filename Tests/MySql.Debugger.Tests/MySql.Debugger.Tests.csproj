@@ -109,6 +109,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="SetUp.cs" />
     <Compile Include="Simple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,7 +128,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="Properties\Setup.sql" />    
+    <EmbeddedResource Include="Properties\Setup.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

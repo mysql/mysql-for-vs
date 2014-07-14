@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2007 MySQL AB
+// Copyright (C) 2004-2014 Oracle
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
