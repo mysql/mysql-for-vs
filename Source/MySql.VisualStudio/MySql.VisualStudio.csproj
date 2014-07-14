@@ -1040,24 +1040,44 @@
       <ItemGroup>
         <None Include="source.extension.vsixmanifest" />
       </ItemGroup>
+      <ItemGroup>
+        <VSCTCompile Include="PkgCmd.vsct">
+        <ResourceName>1000</ResourceName>
+        <SubType>Designer</SubType>
+        </VSCTCompile>
+      </ItemGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <ItemGroup>
         <None Include="source.extension.vsixmanifest" />
+      </ItemGroup>
+      <ItemGroup>
+        <VSCTCompile Include="PkgCmd.vsct">
+        <ResourceName>1000</ResourceName>
+        <SubType>Designer</SubType>
+        </VSCTCompile>
       </ItemGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
       <ItemGroup>
         <None Include="source.extension.vsixmanifest" />
       </ItemGroup>
+      <ItemGroup>
+        <VSCTCompile Include="PkgCmd.vsct">
+        <ResourceName>1000</ResourceName>
+        <SubType>Designer</SubType>
+        </VSCTCompile>
+      </ItemGroup>
+    </When>
+    <When Condition=" '$(VisualStudioVersion)' == '9.0'">
+      <ItemGroup>
+        <VSCTCompile Include="PkgCmd90.vsct">
+        <ResourceName>1000</ResourceName>
+        <SubType>Designer</SubType>
+        </VSCTCompile>
+      </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <VSCTCompile Include="PkgCmd.vsct">
-      <ResourceName>1000</ResourceName>
-      <SubType>Designer</SubType>
-    </VSCTCompile>
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />

@@ -186,7 +186,7 @@ namespace MySql.Data.VisualStudio
         CommandID cmdAddConnection = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdidAddConnection);
         OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
         mcs.AddCommand(cmdMenuAddConnection);
-
+#if NET_40_OR_GREATER
         CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
         OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
         mcs.AddCommand(cmdMenuCreateNewMvcProject);
@@ -194,7 +194,7 @@ namespace MySql.Data.VisualStudio
         CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
         OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
         mcs.AddCommand(cmdMenuCreateWinFormsProject);
-
+#endif
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
       }
 

@@ -46,6 +46,7 @@
       
       <Menu guid="guidIDEToolbarCmdSet" id="Toolbar" type="Toolbar" >
         <CommandFlag>DefaultDocked</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>MySQL</ButtonText>
           <CommandName>MySQL</CommandName>
@@ -405,7 +406,7 @@
         type="Button">
         <Parent guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" />
         <Icon guid="guidImages" id="bmpAddMySqlConnection" />
-        <CommandFlag>IconAndText</CommandFlag>                
+        <CommandFlag>IconAndText</CommandFlag>
         <Strings>
           <CommandName>cmdidAddConnection</CommandName>
           <ButtonText>MySQL Script with New Connection</ButtonText>
@@ -419,6 +420,8 @@
               type="Button">
         <Parent guid="guidIDEToolbarCmdSet" id="VSProjectTypeControllerGroup" />
         <Icon guid="guidImages" id="bmpNewMySqlProject" />
+        <!-- <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag> -->
         <Strings>
           <CommandName>cmdProjectTypeMvcProject</CommandName>
           <ButtonText>Create new MySQL MVC project</ButtonText>
@@ -429,6 +432,8 @@
               type="Button">
         <Parent guid="guidIDEToolbarCmdSet" id="VSProjectTypeControllerGroup" />
         <Icon guid="guidImages" id="bmpNewMySqlProject" />
+        <!-- <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag> -->
         <Strings>
           <CommandName>cmdProjectTypeWinFormsProject</CommandName>
           <ButtonText>Create new MySQL Windows Forms project</ButtonText>
