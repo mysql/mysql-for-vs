@@ -140,6 +140,9 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="DbExportTests.cs" />
     <Compile Include="DependenciesTests.cs" />
     <Compile Include="SchemaComparer.cs" />
