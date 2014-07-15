@@ -21,3 +21,4 @@
 
 1.2.3
 - Add the support to handle the Simple Membership Web Provider configuration in the Web Configuration Tool.
+- Fix for web configuration tool doesn't use the web.config from the startup project by default when using the Web Configuration Tool (Oracle Bug #19166855).
