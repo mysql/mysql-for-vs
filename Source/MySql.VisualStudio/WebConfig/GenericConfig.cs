@@ -106,12 +106,30 @@ namespace MySql.Data.VisualStudio.WebConfig
       // get the default provider
       XmlElement e = wc.GetProviderSection(sectionName);
       if (e != null)
-        DefaultProvider = e.GetAttribute("defaultProvider");
+      {
+        //OrininallyEnabled property should be true just when the current provider is already configured as default
+        string currentProvider = e.GetAttribute("defaultProvider");
+        if (!currentProvider.Equals(typeName, StringComparison.InvariantCultureIgnoreCase))
+        {
+          DefaultProvider = typeName;
+          OriginallyEnabled = false;
+        }
+        else
+        {
+          DefaultProvider = currentProvider;
+          OriginallyEnabled = true;
+        }
+      }
 
       e = wc.GetProviderElement(sectionName);
       if (e != null)
       {
-        values.ProviderName = e.GetAttribute("name");
+        //use the ProviderName configured just when is the current Provider, because this will cause conflicts when two providers are in the same section with a different name
+        if (e.HasAttribute("name"))
+        {
+          string providerName = e.GetAttribute("name");
+          values.ProviderName = !OriginallyEnabled ? typeName : providerName;
+        }
         if (e.HasAttribute("connectionStringName"))
           values.ConnectionStringName = e.GetAttribute("connectionStringName");
         if (e.HasAttribute("description"))
@@ -126,9 +144,9 @@ namespace MySql.Data.VisualStudio.WebConfig
           values.EnableExpireCallback = GetBoolValue(e.GetAttribute("enableExpireCallback"), false);
       }
       values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
-      Enabled = OriginallyEnabled = DefaultProvider != null &&
-          (DefaultProvider == values.ProviderName ||
-          DefaultProvider == defaults.ProviderName);
+      //enable the provider by default just when it was already configured as default
+      Enabled = OriginallyEnabled;
+      //Enabled = OriginallyEnabled = DefaultProvider != null && (DefaultProvider == values.ProviderName || DefaultProvider == defaults.ProviderName);
     }
 
     protected virtual void SaveProvider(XmlElement provider)
@@ -159,7 +177,8 @@ namespace MySql.Data.VisualStudio.WebConfig
       // we are enabled so we want to set our defaultProvider attribute
       wc.SetDefaultProvider(sectionName, values.ProviderName);
 
-      if (defaults.Equals(values)) return;
+      //we need to skip this validation, because if the user enables a Provider and don't do any changes the tool will add just the provider section without adding the provider configuration
+      //if (defaults.Equals(values)) return;
 
       // our defaults do not equal our new values so we need to redefine our provider
       XmlElement provider = wc.AddProvider(sectionName, defaults.ProviderName, values.ProviderName);
