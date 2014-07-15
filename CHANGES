@@ -18,3 +18,6 @@
 
 1.2.2
 - Added support for Multiple tables application generation in MySQL Windows Forms Wizard.
+
+1.2.3
+- Add the support to handle the Simple Membership Web Provider configuration in the Web Configuration Tool.

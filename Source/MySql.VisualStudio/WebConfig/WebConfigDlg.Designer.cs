@@ -40,15 +40,29 @@
       this.cancelButton = new System.Windows.Forms.Button();
       this.nextButton = new System.Windows.Forms.Button();
       this.configPanel = new System.Windows.Forms.Panel();
+      this.useProvider = new System.Windows.Forms.CheckBox();
+      this.pnlSimpleMembership = new System.Windows.Forms.Panel();
+      this.chbAutoGenTbl = new System.Windows.Forms.CheckBox();
+      this.txtUserNameCol = new System.Windows.Forms.TextBox();
+      this.lblUserNameCol = new System.Windows.Forms.Label();
+      this.txtUserIdCol = new System.Windows.Forms.TextBox();
+      this.lblUserIdCol = new System.Windows.Forms.Label();
+      this.txtUserTable = new System.Windows.Forms.TextBox();
+      this.lblUserTable = new System.Windows.Forms.Label();
+      this.btnEditSM = new System.Windows.Forms.Button();
+      this.txtConnStringSM = new System.Windows.Forms.TextBox();
+      this.lblConnString = new System.Windows.Forms.Label();
+      this.txtConnStringName = new System.Windows.Forms.TextBox();
+      this.lblConnStringName = new System.Windows.Forms.Label();
       this.controlPanel = new System.Windows.Forms.Panel();
       this.enableExpCallback = new System.Windows.Forms.CheckBox();
       this.advancedBtn = new System.Windows.Forms.Button();
-      this.useProvider = new System.Windows.Forms.CheckBox();
       this.pageLabel = new System.Windows.Forms.Label();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.pageDesc = new System.Windows.Forms.Label();
       this.backButton = new System.Windows.Forms.Button();
       this.configPanel.SuspendLayout();
+      this.pnlSimpleMembership.SuspendLayout();
       this.controlPanel.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.SuspendLayout();
@@ -154,13 +168,153 @@
       // 
       // configPanel
       // 
-      this.configPanel.Controls.Add(this.controlPanel);
       this.configPanel.Controls.Add(this.useProvider);
+      this.configPanel.Controls.Add(this.controlPanel);
+      this.configPanel.Controls.Add(this.pnlSimpleMembership);
       this.configPanel.Location = new System.Drawing.Point(2, 58);
       this.configPanel.Name = "configPanel";
       this.configPanel.Size = new System.Drawing.Size(492, 225);
       this.configPanel.TabIndex = 8;
       this.configPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.configPanel_Paint);
+      // 
+      // useProvider
+      // 
+      this.useProvider.AutoSize = true;
+      this.useProvider.Location = new System.Drawing.Point(118, 11);
+      this.useProvider.Name = "useProvider";
+      this.useProvider.Size = new System.Drawing.Size(80, 17);
+      this.useProvider.TabIndex = 10;
+      this.useProvider.Text = "checkBox1";
+      this.useProvider.UseVisualStyleBackColor = true;
+      this.useProvider.CheckStateChanged += new System.EventHandler(this.useProvider_CheckStateChanged);
+      // 
+      // pnlSimpleMembership
+      // 
+      this.pnlSimpleMembership.Controls.Add(this.chbAutoGenTbl);
+      this.pnlSimpleMembership.Controls.Add(this.txtUserNameCol);
+      this.pnlSimpleMembership.Controls.Add(this.lblUserNameCol);
+      this.pnlSimpleMembership.Controls.Add(this.txtUserIdCol);
+      this.pnlSimpleMembership.Controls.Add(this.lblUserIdCol);
+      this.pnlSimpleMembership.Controls.Add(this.txtUserTable);
+      this.pnlSimpleMembership.Controls.Add(this.lblUserTable);
+      this.pnlSimpleMembership.Controls.Add(this.btnEditSM);
+      this.pnlSimpleMembership.Controls.Add(this.txtConnStringSM);
+      this.pnlSimpleMembership.Controls.Add(this.lblConnString);
+      this.pnlSimpleMembership.Controls.Add(this.txtConnStringName);
+      this.pnlSimpleMembership.Controls.Add(this.lblConnStringName);
+      this.pnlSimpleMembership.Enabled = false;
+      this.pnlSimpleMembership.Location = new System.Drawing.Point(3, 30);
+      this.pnlSimpleMembership.Name = "pnlSimpleMembership";
+      this.pnlSimpleMembership.Size = new System.Drawing.Size(486, 187);
+      this.pnlSimpleMembership.TabIndex = 13;
+      this.pnlSimpleMembership.Visible = false;
+      // 
+      // chbAutoGenTbl
+      // 
+      this.chbAutoGenTbl.AutoSize = true;
+      this.chbAutoGenTbl.Checked = true;
+      this.chbAutoGenTbl.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.chbAutoGenTbl.Location = new System.Drawing.Point(115, 171);
+      this.chbAutoGenTbl.Name = "chbAutoGenTbl";
+      this.chbAutoGenTbl.Size = new System.Drawing.Size(117, 17);
+      this.chbAutoGenTbl.TabIndex = 11;
+      this.chbAutoGenTbl.Text = "Auto Create Tables";
+      this.chbAutoGenTbl.UseVisualStyleBackColor = true;
+      // 
+      // txtUserNameCol
+      // 
+      this.txtUserNameCol.Location = new System.Drawing.Point(114, 141);
+      this.txtUserNameCol.Name = "txtUserNameCol";
+      this.txtUserNameCol.Size = new System.Drawing.Size(132, 20);
+      this.txtUserNameCol.TabIndex = 10;
+      this.txtUserNameCol.Text = "UserName";
+      // 
+      // lblUserNameCol
+      // 
+      this.lblUserNameCol.AutoSize = true;
+      this.lblUserNameCol.Location = new System.Drawing.Point(-3, 144);
+      this.lblUserNameCol.Name = "lblUserNameCol";
+      this.lblUserNameCol.Size = new System.Drawing.Size(101, 13);
+      this.lblUserNameCol.TabIndex = 9;
+      this.lblUserNameCol.Text = "User Name Column:";
+      // 
+      // txtUserIdCol
+      // 
+      this.txtUserIdCol.Location = new System.Drawing.Point(115, 111);
+      this.txtUserIdCol.Name = "txtUserIdCol";
+      this.txtUserIdCol.Size = new System.Drawing.Size(131, 20);
+      this.txtUserIdCol.TabIndex = 8;
+      this.txtUserIdCol.Text = "UserId";
+      // 
+      // lblUserIdCol
+      // 
+      this.lblUserIdCol.AutoSize = true;
+      this.lblUserIdCol.Location = new System.Drawing.Point(16, 114);
+      this.lblUserIdCol.Name = "lblUserIdCol";
+      this.lblUserIdCol.Size = new System.Drawing.Size(82, 13);
+      this.lblUserIdCol.TabIndex = 7;
+      this.lblUserIdCol.Text = "User Id Column:";
+      // 
+      // txtUserTable
+      // 
+      this.txtUserTable.Location = new System.Drawing.Point(115, 81);
+      this.txtUserTable.Name = "txtUserTable";
+      this.txtUserTable.Size = new System.Drawing.Size(131, 20);
+      this.txtUserTable.TabIndex = 6;
+      this.txtUserTable.Text = "Users";
+      // 
+      // lblUserTable
+      // 
+      this.lblUserTable.AutoSize = true;
+      this.lblUserTable.Location = new System.Drawing.Point(5, 84);
+      this.lblUserTable.Name = "lblUserTable";
+      this.lblUserTable.Size = new System.Drawing.Size(93, 13);
+      this.lblUserTable.TabIndex = 5;
+      this.lblUserTable.Text = "User Table Name:";
+      // 
+      // btnEditSM
+      // 
+      this.btnEditSM.Location = new System.Drawing.Point(395, 37);
+      this.btnEditSM.Name = "btnEditSM";
+      this.btnEditSM.Size = new System.Drawing.Size(81, 25);
+      this.btnEditSM.TabIndex = 4;
+      this.btnEditSM.Text = "Edit...";
+      this.btnEditSM.UseVisualStyleBackColor = true;
+      this.btnEditSM.Click += new System.EventHandler(this.btnEditSM_Click);
+      // 
+      // txtConnStringSM
+      // 
+      this.txtConnStringSM.Location = new System.Drawing.Point(115, 33);
+      this.txtConnStringSM.Multiline = true;
+      this.txtConnStringSM.Name = "txtConnStringSM";
+      this.txtConnStringSM.Size = new System.Drawing.Size(275, 40);
+      this.txtConnStringSM.TabIndex = 3;
+      // 
+      // lblConnString
+      // 
+      this.lblConnString.AutoSize = true;
+      this.lblConnString.Location = new System.Drawing.Point(4, 40);
+      this.lblConnString.Name = "lblConnString";
+      this.lblConnString.Size = new System.Drawing.Size(94, 13);
+      this.lblConnString.TabIndex = 2;
+      this.lblConnString.Text = "Connection String:";
+      // 
+      // txtConnStringName
+      // 
+      this.txtConnStringName.Location = new System.Drawing.Point(115, 5);
+      this.txtConnStringName.Name = "txtConnStringName";
+      this.txtConnStringName.Size = new System.Drawing.Size(361, 20);
+      this.txtConnStringName.TabIndex = 1;
+      this.txtConnStringName.Text = "LocalMySqlServer";
+      // 
+      // lblConnStringName
+      // 
+      this.lblConnStringName.AutoSize = true;
+      this.lblConnStringName.Location = new System.Drawing.Point(3, 8);
+      this.lblConnStringName.Name = "lblConnStringName";
+      this.lblConnStringName.Size = new System.Drawing.Size(95, 13);
+      this.lblConnStringName.TabIndex = 0;
+      this.lblConnStringName.Text = "Connection Name:";
       // 
       // controlPanel
       // 
@@ -199,17 +353,6 @@
       this.advancedBtn.Text = "Advanced...";
       this.advancedBtn.UseVisualStyleBackColor = true;
       this.advancedBtn.Click += new System.EventHandler(this.advancedBtn_Click);
-      // 
-      // useProvider
-      // 
-      this.useProvider.AutoSize = true;
-      this.useProvider.Location = new System.Drawing.Point(118, 14);
-      this.useProvider.Name = "useProvider";
-      this.useProvider.Size = new System.Drawing.Size(80, 17);
-      this.useProvider.TabIndex = 10;
-      this.useProvider.Text = "checkBox1";
-      this.useProvider.UseVisualStyleBackColor = true;
-      this.useProvider.CheckStateChanged += new System.EventHandler(this.useProvider_CheckStateChanged);
       // 
       // pageLabel
       // 
@@ -275,6 +418,8 @@
       this.Text = "MySQL Website Configuration";
       this.configPanel.ResumeLayout(false);
       this.configPanel.PerformLayout();
+      this.pnlSimpleMembership.ResumeLayout(false);
+      this.pnlSimpleMembership.PerformLayout();
       this.controlPanel.ResumeLayout(false);
       this.controlPanel.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -305,5 +450,18 @@
     private System.Windows.Forms.Button backButton;
     private System.Windows.Forms.Panel controlPanel;
     private System.Windows.Forms.CheckBox enableExpCallback;
+    private System.Windows.Forms.Panel pnlSimpleMembership;
+    private System.Windows.Forms.CheckBox chbAutoGenTbl;
+    private System.Windows.Forms.TextBox txtUserNameCol;
+    private System.Windows.Forms.Label lblUserNameCol;
+    private System.Windows.Forms.TextBox txtUserIdCol;
+    private System.Windows.Forms.Label lblUserIdCol;
+    private System.Windows.Forms.TextBox txtUserTable;
+    private System.Windows.Forms.Label lblUserTable;
+    private System.Windows.Forms.Button btnEditSM;
+    private System.Windows.Forms.TextBox txtConnStringSM;
+    private System.Windows.Forms.Label lblConnString;
+    private System.Windows.Forms.TextBox txtConnStringName;
+    private System.Windows.Forms.Label lblConnStringName;
   }
 }

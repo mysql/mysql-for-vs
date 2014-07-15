@@ -165,7 +165,7 @@ namespace MySql.Data.VisualStudio.WebConfig
 
       foreach (XmlNode node in parentNode.ChildNodes)
       {
-        if (String.Compare(node.Attributes["name"].Value, name, true) == 0)
+        if (node.Attributes != null && String.Compare(node.Attributes["name"].Value, name, true) == 0)
           toBeDeleted.Add(node);
       }
       foreach (XmlNode node in toBeDeleted)
@@ -232,9 +232,22 @@ namespace MySql.Data.VisualStudio.WebConfig
         {
           webNode = webNode.FirstChild; //locate on personalization section
         }
-        webNode.AppendChild(webDoc.CreateElement("providers"));
+
+        //verify if the system.web node already has the providers node, if not exists then add it
+        if(!HasNode(webNode, "providers"))
+          webNode.AppendChild(webDoc.CreateElement("providers"));
       }
       return webNode;
+    }
+
+    private bool HasNode(XmlNode parentNode, string nodeName)
+    {
+      foreach (XmlNode childNode in parentNode.ChildNodes)
+      {
+        if (childNode.Name.Equals(nodeName, StringComparison.InvariantCultureIgnoreCase))
+          return true;
+      }
+      return false;
     }
 
     private string GetDefaultRoleProvider()
