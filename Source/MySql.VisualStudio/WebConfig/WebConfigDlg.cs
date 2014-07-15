@@ -67,7 +67,30 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void FindCurrentWebProject()
     {
-      project = (Project)solution.Projects.Item(1);
+      //get the project(s?) configured as startup project, the data is stored as object array and it contains strings with the following format "namespace\projectName.csproj"
+      string startupProj = "";
+      object[] startupProjArray = dte.Solution.SolutionBuild.StartupProjects as object[];
+      if (startupProjArray != null)
+      {
+        startupProj = startupProjArray[0] as string;
+      }
+
+      //get the project configured as startup project, in case we don't have it return the first project found
+      if (!string.IsNullOrEmpty(startupProj))
+      {
+        foreach (Project proj in solution.Projects)
+        {
+          if (proj.UniqueName.Equals(startupProj, StringComparison.InvariantCultureIgnoreCase))
+          {
+            project = proj;
+            return;
+          }
+        }
+      }
+      else
+      {
+        project = (Project)solution.Projects.Item(1);
+      }
     }
 
     private void EnsureWebConfig()
