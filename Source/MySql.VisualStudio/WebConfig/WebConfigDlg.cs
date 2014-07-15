@@ -47,9 +47,10 @@ namespace MySql.Data.VisualStudio.WebConfig
     private Solution2 solution;
     private Project project;
     private int page;
-    private WizardPage[] pages = new WizardPage[6];
+    private WizardPage[] pages = new WizardPage[7];
     private const int MEMBERSHIP_INDEX = 0;
-    private const int PERSONALIZATION_INDEX = 5;
+    private const int SimpleMembershipIndex = 1;
+    private const int PERSONALIZATION_INDEX = 6;
 
     public WebConfigDlg()
     {
@@ -89,6 +90,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       WebConfig wc = new WebConfig(webConfigFileName);
       LoadInitialMembershipState();
+      LoadInitialSimpleMembershipState();
       LoadInitialRoleState();
       LoadInitialProfileState();
       LoadInitialSessionState();
@@ -109,34 +111,34 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void LoadInitialRoleState()
     {
-      pages[1].Title = "Roles";
-      pages[1].Description = "Set options for use with the role provider";
-      pages[1].EnabledString = "Use MySQL to manage my roles";
-      pages[1].ProviderConfig = new RoleConfig();
+      pages[2].Title = "Roles";
+      pages[2].Description = "Set options for use with the role provider";
+      pages[2].EnabledString = "Use MySQL to manage my roles";
+      pages[2].ProviderConfig = new RoleConfig();
     }
 
     private void LoadInitialProfileState()
     {
-      pages[2].Title = "Profiles";
-      pages[2].Description = "Set options for use with the profile provider";
-      pages[2].EnabledString = "Use MySQL to manage my profiles";
-      pages[2].ProviderConfig = new ProfileConfig();
+      pages[3].Title = "Profiles";
+      pages[3].Description = "Set options for use with the profile provider";
+      pages[3].EnabledString = "Use MySQL to manage my profiles";
+      pages[3].ProviderConfig = new ProfileConfig();
     }
 
     private void LoadInitialSessionState()
     {
-      pages[3].Title = "Session State";
-      pages[3].Description = "Set options for use with the session state provider";
-      pages[3].EnabledString = "Use MySQL to manage my ASP.Net session state";
-      pages[3].ProviderConfig = new SessionStateConfig();      
+      pages[4].Title = "Session State";
+      pages[4].Description = "Set options for use with the session state provider";
+      pages[4].EnabledString = "Use MySQL to manage my ASP.Net session state";
+      pages[4].ProviderConfig = new SessionStateConfig();      
     }
 
     private void LoadInitialSiteMapState()
     {
-      pages[4].Title = "Site Map";
-      pages[4].Description = "Set options for use with the sitemap provider";
-      pages[4].EnabledString = "Use MySQL to manage my ASP.NET site map";
-      pages[4].ProviderConfig = new SiteMapConfig();
+      pages[5].Title = "Site Map";
+      pages[5].Description = "Set options for use with the sitemap provider";
+      pages[5].EnabledString = "Use MySQL to manage my ASP.NET site map";
+      pages[5].ProviderConfig = new SiteMapConfig();
     }
 
 
@@ -147,6 +149,14 @@ namespace MySql.Data.VisualStudio.WebConfig
       pages[PERSONALIZATION_INDEX].EnabledString = "Use MySQL to manage my ASP.NET personalization provider";
       pages[PERSONALIZATION_INDEX].ProviderConfig = new PersonalizationConfig();      
     
+    }
+
+    private void LoadInitialSimpleMembershipState()
+    {
+      pages[SimpleMembershipIndex].Title = "Simple Membership";
+      pages[SimpleMembershipIndex].Description = "Set options for use with the simple membership provider";
+      pages[SimpleMembershipIndex].EnabledString = "Use MySQL to manage my simple membership records";
+      pages[SimpleMembershipIndex].ProviderConfig = new SimpleMembershipConfig();
     }
 
     private void advancedBtn_Click(object sender, EventArgs e)
@@ -188,28 +198,39 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void backButton_Click(object sender, EventArgs e)
     {
-      SavePageData();
+      if (!SavePageData()) return;
       page--;
       PageChanged();
     }
 
     private bool SavePageData()
     {
-      if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
+      if (!IsValidData())
       {
-        MessageBox.Show(this, Resources.WebConfigConnStrNoEmpty, Resources.ErrorTitle,
-            MessageBoxButtons.OK, MessageBoxIcon.Error);
         return false;
       }
 
       GenericConfig config = pages[page].ProviderConfig;
+      if (IsSimpleMembershipPage && useProvider.Checked)
+      {
+        SimpleMembershipOptions options = new SimpleMembershipOptions();
+        options.AutoGenerateTables = chbAutoGenTbl.Checked;
+        options.UserTableName = txtUserTable.Text;
+        options.UserIdColumn = txtUserIdCol.Text;
+        options.UserNameColumn = txtUserNameCol.Text;
+        ((SimpleMembershipConfig)pages[SimpleMembershipIndex].ProviderConfig).SimpleMemberOptions = options;
+
+        config.Enabled = useProvider.Checked;
+      }
+      
       Options o = config.GenericOptions;
       o.AppName = appName.Text;
       o.AppDescription = appDescription.Text.Trim();
       o.WriteExceptionToLog = writeExToLog.Checked;
       o.AutoGenSchema = autogenSchema.Checked;
       o.EnableExpireCallback = enableExpCallback.Checked;
-      o.ConnectionString = connectionString.Text.Trim();
+      o.ConnectionString = (IsSimpleMembershipPage && useProvider.Checked) ? txtConnStringSM.Text.Trim() : connectionString.Text.Trim();
+      o.ConnectionStringName = (IsSimpleMembershipPage && useProvider.Checked) ? txtConnStringName.Text.Trim() : o.ConnectionStringName;
       config.GenericOptions = o;
       return true;
     }
@@ -220,23 +241,28 @@ namespace MySql.Data.VisualStudio.WebConfig
       pageDesc.Text = pages[page].Description;
       useProvider.Text = pages[page].EnabledString;
 
-      GenericConfig config = pages[page].ProviderConfig;      
+      GenericConfig config = pages[page].ProviderConfig;
+
       Options o = config.GenericOptions;
       appName.Text = o.AppName;
-      useProvider.Checked = config.Enabled; 
+      useProvider.Checked = config.Enabled;
       appDescription.Text = o.AppDescription;
       writeExToLog.Checked = o.WriteExceptionToLog;
       autogenSchema.Checked = o.AutoGenSchema;
-      enableExpCallback.Checked = o.EnableExpireCallback;      
+      enableExpCallback.Checked = o.EnableExpireCallback;
       controlPanel.Enabled = config.Enabled;
-      connectionString.Text = o.ConnectionString;
+
+      if(IsSimpleMembershipPage)
+        txtConnStringSM.Text = o.ConnectionString;
+      else
+        connectionString.Text = o.ConnectionString;
 
       advancedBtn.Visible = page == 0;
       writeExToLog.Visible = page != 2;
       enableExpCallback.Visible = page == 3;
       nextButton.Text = (page == pages.Length - 1) ? "Finish" : "Next";
       backButton.Enabled = page > 0;
-      
+
       if (page == PERSONALIZATION_INDEX)
         useProvider.Enabled = IsMembershipSelected();
       else
@@ -247,16 +273,50 @@ namespace MySql.Data.VisualStudio.WebConfig
         useProvider.Checked = false;
         useProvider.Enabled = false;
       }
+
+      if (IsSimpleMembershipPage)
+      {
+        pnlSimpleMembership.Visible = true;
+        controlPanel.Visible = false;
+
+        if (config.NotInstalled)
+        {
+          useProvider.Enabled = false;
+          useProvider.Checked = false;
+          pnlSimpleMembership.Enabled = false;
+        }
+        else
+        {
+          useProvider.Enabled = !IsMembershipSelected();
+          if (config.Enabled && IsMembershipSelected())
+            useProvider.Checked = false;
+        }
+      }
+      else
+      {
+        pnlSimpleMembership.Visible = false;
+        controlPanel.Visible = true;
+      }
     }
 
     private void Finish()
     {
       WebConfig w = new WebConfig(webConfigFileName);
-      pages[MEMBERSHIP_INDEX].ProviderConfig.Save(w);
-      pages[1].ProviderConfig.Save(w);
+      //is Membership is selected then save Simple Membership first, because these providers are in the same section so if any is removed but called second place it will remove the entire section
+      if (IsMembershipSelected())
+      {
+        pages[SimpleMembershipIndex].ProviderConfig.Save(w);
+        pages[MEMBERSHIP_INDEX].ProviderConfig.Save(w);
+      }
+      else 
+      {
+        pages[MEMBERSHIP_INDEX].ProviderConfig.Save(w);
+        pages[SimpleMembershipIndex].ProviderConfig.Save(w);
+      }
       pages[2].ProviderConfig.Save(w);
       pages[3].ProviderConfig.Save(w);
       pages[4].ProviderConfig.Save(w);
+      pages[5].ProviderConfig.Save(w);
       pages[PERSONALIZATION_INDEX].ProviderConfig.Save(w);
       w.Save();
       Close();
@@ -279,8 +339,20 @@ namespace MySql.Data.VisualStudio.WebConfig
     private void useProvider_CheckStateChanged(object sender, EventArgs e)
     {
       GenericConfig config = pages[page].ProviderConfig;
-      config.Enabled = useProvider.Checked;
-      controlPanel.Enabled = config.Enabled;
+      if (!IsSimpleMembershipPage)
+      {
+        config.Enabled = useProvider.Checked;
+        controlPanel.Enabled = config.Enabled;
+        controlPanel.Visible = true;
+        pnlSimpleMembership.Visible = false;
+      }
+      else
+      {
+        config.Enabled = useProvider.Checked;
+        pnlSimpleMembership.Enabled = config.Enabled;
+        pnlSimpleMembership.Visible = true;
+        controlPanel.Visible = false;
+      }
     }
 
     private bool IsMembershipSelected()
@@ -289,6 +361,72 @@ namespace MySql.Data.VisualStudio.WebConfig
       return config.Enabled;
     }
 
+    private void btnEditSM_Click(object sender, EventArgs e)
+    {
+      ConnectionStringEditorDlg dlg = new ConnectionStringEditorDlg();
+      try
+      {
+        dlg.ConnectionString = txtConnStringSM.Text;
+        if (DialogResult.Cancel == dlg.ShowDialog(this)) return;
+        txtConnStringSM.Text = dlg.ConnectionString;
+      }
+      catch (ArgumentException)
+      {
+        MessageBox.Show(this, Resources.ConnectionStringInvalid, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+    }
+
+    private bool IsSimpleMembershipPage
+    {
+      get { return page == SimpleMembershipIndex; }
+    }
+
+    private bool IsValidData()
+    {
+      if (!IsSimpleMembershipPage)
+      {
+        if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
+        {
+          MessageBox.Show(this, Resources.WebConfigConnStrNoEmpty, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          return false;
+        }
+      }
+      else 
+      {
+        if (useProvider.Checked)
+        {
+          bool valid = true;
+          string controlsToValidate = "";
+          foreach (Control control in pnlSimpleMembership.Controls)
+          {
+            if (ControlsFriendlyName.ContainsKey(control.Name))
+            {
+              controlsToValidate += controlsToValidate.Length > 0 ? ", " : "";
+              TextBox txt = control as TextBox;
+              if (txt != null && string.IsNullOrEmpty(txt.Text))
+              {
+                valid = false;
+                controlsToValidate += string.Format("{0}, ", ControlsFriendlyName[txt.Name]);
+              }
+            }
+          }
+
+          if (!valid)
+          {
+            controlsToValidate = (controlsToValidate += ".").Replace(", .", ".");
+            MessageBox.Show(this, string.Format("Please set a valid value for the following fields: {0}", controlsToValidate), Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    private Dictionary<string, string> ControlsFriendlyName = new Dictionary<string, string>() {
+                                                              { "txtConnStringSM", "Connection String" },
+                                                              { "txtUserTable", "User Table" },
+                                                              { "txtUserIdCol", "User Id Column" },
+                                                              { "txtUserNameCol", "User Name Column" } };
   }
 
   internal struct WizardPage
