@@ -54,6 +54,8 @@ namespace MySql.Data.VisualStudio
         root = "10.0";
       else if (Context.Parameters["version"] == "VS2012")
         root = "11.0";
+      else if (Context.Parameters["version"] == "VS2013")
+        root = "12.0";
       else
         throw new NotSupportedException();
 

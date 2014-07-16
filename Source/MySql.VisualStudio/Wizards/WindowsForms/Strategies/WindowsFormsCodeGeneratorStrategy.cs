@@ -224,13 +224,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       bool sourceFirst = false;
       FkColumnsDest = new List<string>();
       FkColumnsSource = new List<string>();
-      string sql = string.Format(
+      string sql = 
 @"select `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
-from information_schema.key_column_usage where `constraint_name` = '{0}'", ConstraintName);
+from information_schema.key_column_usage where `constraint_name` = '{0}' and table_schema = '{1}'";
 
       MySqlConnection con = new MySqlConnection(ConnectionString);
-      MySqlCommand cmd = new MySqlCommand(sql, con);
       con.Open();
+      sql = string.Format(sql, ConstraintName, con.Database);
+      MySqlCommand cmd = new MySqlCommand(sql, con);
+
       try
       {
         using (MySqlDataReader r = cmd.ExecuteReader())
