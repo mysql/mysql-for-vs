@@ -285,7 +285,10 @@ namespace MySql.Data.VisualStudio
           }
         }
       }
-      
+
+      if (cmbConnections.DataSource != null)
+        cmbConnections.DataSource = null;
+
       cmbConnections.DataSource = connections; 
       cmbConnections.DisplayMember = "DisplayName";
       cmbConnections.ValueMember = "ConnectionString";
