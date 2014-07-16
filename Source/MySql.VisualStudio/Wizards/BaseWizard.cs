@@ -600,7 +600,7 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
     {
       string sql = string.Format(
 @"select `constraint_name`, `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
-from information_schema.key_column_usage where `constraint_name` in ( 
+from information_schema.key_column_usage where table_schema = '{0}' and `constraint_name` in ( 
 select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = '{0}' and `table_name` = '{1}' )
 ",
 con.Database, tableName );
