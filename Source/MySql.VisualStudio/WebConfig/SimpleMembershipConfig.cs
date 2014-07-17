@@ -118,7 +118,7 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     public override void GetDefaults()
     {
-      _connectorVerInstalled = ConnectorVersionInstalled().First();
+      _connectorVerInstalled = ConnectorVersionInstalled().FirstOrDefault();
       ProviderSettings providerSet = GetMachineSettings();
       if (providerSet != null)
       {
@@ -159,10 +159,23 @@ namespace MySql.Data.VisualStudio.WebConfig
     internal IEnumerable<string> ConnectorVersionInstalled()
     {
       List<string> mysqlVers = new List<string>();
-      string displayName = "";
-      foreach (string registryKey in new string[] { @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", })
+      try
       {
-        using (Microsoft.Win32.RegistryKey regKey = Registry.LocalMachine.OpenSubKey(registryKey))
+        string displayName = "";
+        foreach (string registryKey in new string[] { @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", })
+        {
+          using (Microsoft.Win32.RegistryKey regKey = Registry.LocalMachine.OpenSubKey(registryKey))
+          {
+            foreach (RegistryKey subKey in regKey.GetSubKeyNames().Select(keyName => regKey.OpenSubKey(keyName)))
+            {
+              displayName = subKey.GetValue("DisplayName") as string;
+              if (!string.IsNullOrEmpty(displayName) && !displayName.StartsWith("{"))
+                mysqlVers.Add(displayName);
+            }
+          }
+        }
+
+        using (Microsoft.Win32.RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
         {
           foreach (RegistryKey subKey in regKey.GetSubKeyNames().Select(keyName => regKey.OpenSubKey(keyName)))
           {
@@ -171,24 +184,20 @@ namespace MySql.Data.VisualStudio.WebConfig
               mysqlVers.Add(displayName);
           }
         }
+
+        return (from regKeyName in mysqlVers
+                let connectorVers = regKeyName
+                where regKeyName.ToLower().Contains("connector net")
+                let vers = connectorVers.Split(' ').Where(ver => ver.Contains("."))
+                from ver in vers
+                select ver).Distinct();
+      }
+      catch 
+      {     
       }
 
-      using (Microsoft.Win32.RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
-      {
-        foreach (RegistryKey subKey in regKey.GetSubKeyNames().Select(keyName => regKey.OpenSubKey(keyName)))
-        {
-          displayName = subKey.GetValue("DisplayName") as string;
-          if (!string.IsNullOrEmpty(displayName) && !displayName.StartsWith("{"))
-            mysqlVers.Add(displayName);
-        }
-      }
-
-      return (from regKeyName in mysqlVers
-       let connectorVers = regKeyName 
-       where regKeyName.ToLower().Contains("connector net")
-       let vers = connectorVers.Split(' ').Where(ver => ver.Contains("."))
-       from ver in vers
-       select ver).Distinct();
+      return mysqlVers;
+      
     }
   }
 }
