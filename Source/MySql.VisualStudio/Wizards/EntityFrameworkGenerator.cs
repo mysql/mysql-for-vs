@@ -31,6 +31,9 @@ using System.Data.Metadata.Edm;
 using System.Xml;
 using VSLangProj;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -44,6 +47,14 @@ namespace MySql.Data.VisualStudio.Wizards
     private string efVersion;
     private Dictionary<string, Dictionary<string, ColumnValidation>> _mappings;
     private VSProject _vsProj;
+    private List<String> _tablesIncluded = new List<string>();
+    protected IVsOutputWindowPane _generalPane;
+
+    internal List<String> TablesInModel {
+      get {
+        return _tablesIncluded;
+      }    
+    }
 
     internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, 
       string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, VSProject vsProj, 
@@ -65,11 +76,11 @@ namespace MySql.Data.VisualStudio.Wizards
       _vsProj = vsProj;
     }
 
-    internal override string Generate()
+    internal override bool Generate()
     {
 
       IList<EdmSchemaError> errors = null;
-
+     
       // generate the SSDL
       string ssdlNamespace = _modelName + "Model.Store";
       EntityStoreSchemaGenerator essg =
@@ -85,7 +96,6 @@ namespace MySql.Data.VisualStudio.Wizards
       else {
         filters.Add(new EntityStoreSchemaFilterEntry(null, null, _table, EntityStoreSchemaFilterObjectTypes.Table, EntityStoreSchemaFilterEffect.Allow));
       }
-
       
       filters.Add(new EntityStoreSchemaFilterEntry(null, null, "%", EntityStoreSchemaFilterObjectTypes.View, EntityStoreSchemaFilterEffect.Exclude));
       Version entityVersion = new Version(2, 0, 0, 0);
@@ -96,10 +106,11 @@ namespace MySql.Data.VisualStudio.Wizards
 #endif
 
       // write out errors
-      if ((errors != null && errors.Count > 0) && !OnlyWarnings(errors))
-      {
+      if ((errors != null && errors.Count > 0))
+      {        
         WriteErrors(errors);
-        return null;
+        SendErrorsToGeneralOuput();
+        //return false;
       }
 
       // write the SSDL to a string
@@ -112,7 +123,7 @@ namespace MySql.Data.VisualStudio.Wizards
       string csdlNamespace = _artifactNamespace;
       string csdlEntityContainerName = _modelName + "Entities";
 
-      EntityModelSchemaGenerator emsg = new EntityModelSchemaGenerator( essg.EntityContainer, csdlNamespace, csdlEntityContainerName);
+      EntityModelSchemaGenerator emsg = new EntityModelSchemaGenerator(essg.EntityContainer, csdlNamespace, csdlEntityContainerName);
 #if NET_40_OR_GREATER
       emsg.GenerateForeignKeyProperties = true;
 
@@ -122,10 +133,11 @@ namespace MySql.Data.VisualStudio.Wizards
 #endif
 
       // write out errors
-      if (errors != null && errors.Count > 0 && !OnlyWarnings(errors))
-      {
+      if ((errors != null && errors.Count > 0))
+      {       
         WriteErrors(errors);
-        return null;
+        SendErrorsToGeneralOuput();        
+        //return false;
       }
 
       // write CSDL to a string
@@ -154,14 +166,19 @@ namespace MySql.Data.VisualStudio.Wizards
       if (_mappings != null && _mappings.Count != 0)
         GetColumnMappings(fi);
 
-      AddToProject( fi.FullName);
+      AddToProject(fi.FullName);
 
-      return fi.FullName;
+      if ( _warnings.Count > 0)
+      {
+        SendErrorsToGeneralOuput();
+        _tablesIncluded = GetTablesInModel(fi.FullName);
+      }
+
+      return true;
     }
 
-    private void AddToProject( string edmxPath)
-    {
-      string edmxCodePath;
+    private void AddToProject(string edmxPath)
+    {      
       ProjectItem pi = _vsProj.Project.ProjectItems.AddFromFile(edmxPath);
       // this little magic replaces having to use System.Data.Entity.Design.EntityCodeGenerator
       pi.Properties.Item("ItemType").Value = "EntityDeploy";
@@ -323,24 +340,88 @@ namespace MySql.Data.VisualStudio.Wizards
       }
     }
 
-    private bool OnlyWarnings(IList<EdmSchemaError> errors)
-    {
-      for (int i = 0; i < errors.Count; i++)
+
+    private List<String> GetTablesInModel(string edmxPath)
+    {      
+      XmlDocument edmxFile = new XmlDocument();
+      edmxFile.Load(edmxPath);
+
+      XmlNamespaceManager xmlNSManager = new XmlNamespaceManager(edmxFile.NameTable);
+      xmlNSManager.AddNamespace("edmx", "http://schemas.microsoft.com/ado/2008/10/edmx");
+      xmlNSManager.AddNamespace("ssdl", "http://schemas.microsoft.com/ado/2009/02/edm/ssdl");
+      xmlNSManager.AddNamespace("cs", "http://schemas.microsoft.com/ado/2008/09/mapping/cs");
+      string xpath = "/edmx:Edmx/edmx:Runtime/edmx:StorageModels/ssdl:Schema/ssdl:EntityType";
+      XmlNodeList entityTypes = edmxFile.DocumentElement.SelectNodes(xpath, xmlNSManager);
+
+      List<String> tables = new List<string>();
+
+      foreach (XmlNode entity in entityTypes)
       {
-        if (errors[i].Severity == EdmSchemaErrorSeverity.Error) return false;
+        foreach (XmlAttribute attribute in entity.Attributes)
+        {
+          if (attribute.Name.Equals("Name"))
+          {
+            tables.Add(attribute.Value);
+            break;
+          }
+        }
       }
-      return true;
+      return tables;
     }
 
     private void WriteErrors(IList<EdmSchemaError> errors)
     {
       for (int i = 0; i < errors.Count; i++)
       {
-        if (errors[i].Severity == EdmSchemaErrorSeverity.Error)
+        switch (errors[i].Severity)
         {
-          _errors.Add(errors[i].Message);
+          case EdmSchemaErrorSeverity.Error:
+            _errors.Add(errors[i].Message);
+            break;
+          case EdmSchemaErrorSeverity.Warning:
+            _warnings.Add(errors[i].Message);
+            break;
+          default:
+            break;
+        }               
+      }
+    }
+
+    private void SendErrorsToGeneralOuput()
+    {
+      if (_generalPane == null)
+      {
+        // get the general output window      
+        IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+        Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+        if (outWindow != null)
+        {
+          outWindow.CreatePane(ref generalPaneGuid, "General", 1, 0);
+          outWindow.GetPane(ref generalPaneGuid, out _generalPane);
+          _generalPane.Activate();
         }
       }
+
+      if (_generalPane == null)
+        return;
+      
+      _generalPane.OutputString(Environment.NewLine);
+      if (Errors.Count() > 0)
+      {
+        _generalPane.OutputString("The following errors were found when generating the Entity Framework model:");
+        foreach (var error in Errors)
+        {
+          _generalPane.OutputString(Environment.NewLine + error);
+        }
+      }
+      if (Warnings.Count() > 0)
+      {
+        _generalPane.OutputString("The following warnings were found when generating the Entity Framework model:");
+        foreach (var warning in Warnings)
+        {
+          _generalPane.OutputString(Environment.NewLine + warning);
+        }
+      }              
     }
   }
 }
