@@ -146,7 +146,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion, true);
             string modelPath = Path.Combine(ProjectPath, "Models");
             GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables, modelPath);
-            GenerateMVCItems(vsProj);
+            GenerateMVCItems(vsProj);         
 
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
             {
@@ -315,22 +315,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           break;
       }
       
-      StringBuilder catalogs = new StringBuilder();
-
-      if (WizardForm.dEVersion != DataEntityVersion.None)
-      {
-        catalogs = new StringBuilder("<h3> Catalog list</h3>");
-        catalogs.AppendLine();
-
-        foreach (var table in WizardForm.selectedTables)
-        {
-          if (!TablesIncludedInModel.ContainsKey( table.Name ))
-            continue;
-          catalogs.AppendLine(string.Format(@"<div> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</div>", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));
-        }                
-      }
-
-      replacementsDictionary.Add("$catalogList$", catalogs.ToString());      
       ProjectPath = replacementsDictionary["$destinationdirectory$"];
       ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
@@ -368,10 +352,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       if (Language == LanguageGenerator.CSharp)
       {
-        //controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpControllerClass.tt");
-        //IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpIndexFile.tt");
-        controllerClassPath = Path.GetFullPath(@"..\..\..\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt");
-        IndexFilePath = Path.GetFullPath(@"..\..\..\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt");
+        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpControllerClass.tt");
+        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpIndexFile.tt");
         fileExtension = "cs";
       }
       else
@@ -380,19 +362,30 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\VisualBasic\VisualBasicIndexFile.tt");
         fileExtension = "vb";
       }
+
+      StringBuilder catalogs = new StringBuilder();
+      catalogs = new StringBuilder("<h3> Catalog list</h3>");
+      catalogs.AppendLine();
+
+      foreach (var table in TablesIncludedInModel)
+      {        
+        catalogs.AppendLine(string.Format(@"<div> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</div>", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));
+      }
+      string indexPath = (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+        "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value);
+      string contents = File.ReadAllText(indexPath);
+      contents = contents.Replace("$catalogList$", catalogs.ToString());
+      File.WriteAllText(indexPath, contents);
+
       try
-      {                    
-        foreach (var table in WizardForm.selectedTables)
-        {
-
-          if (!TablesIncludedInModel.ContainsKey(table.Name) )
-            continue;
-
+      {                        
+        foreach(var table in TablesIncludedInModel)
+        {      
            // creating controller file
             sessionHost.Session = sessionHost.CreateSession();
             sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
             sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
-            sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1));
+            sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1));
             if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
               Language == LanguageGenerator.CSharp )
             {
@@ -402,22 +395,22 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             {
               sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
             }
-            sessionHost.Session["classNameParameter"] = table.Name;
-            sessionHost.Session["entityNameParameter"] = table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1);          
-            sessionHost.Session["entityClassNameParameter"] = table.Name;
+            sessionHost.Session["classNameParameter"] = table.Key;
+            sessionHost.Session["entityNameParameter"] = table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1);          
+            sessionHost.Session["entityClassNameParameter"] = table.Key;
             if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
                 Language == LanguageGenerator.CSharp)
             {
               sessionHost.Session["entityClassNameParameterWithNamespace"] = 
-                string.Format( "{0}.{1}", ProjectNamespace, table.Name );
+                string.Format( "{0}.{1}", ProjectNamespace, table.Key );
             } 
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
             {
-              sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Name);
+              sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
             }
             T4Callback cb = new T4Callback();
             StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));          
-            string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1), fileExtension);
+            string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1), fileExtension);
           File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
             if (cb.errorMessages.Count > 0)
             {
@@ -426,7 +419,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
             vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);         
 
-            var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));  
+            var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));  
             Directory.CreateDirectory(viewPath);          
             string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
             File.WriteAllText(string.Format(viewPath + @"\Index.{0}html",fileExtension), resultViewFile);
