@@ -350,6 +350,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       Version productVersion = Assembly.GetExecutingAssembly().GetName().Version;
       var version = String.Format("{0}.{1}.{2}", productVersion.Major, productVersion.Minor, productVersion.Build);
 
+      double visualStudioVersion = double.Parse(WizardForm.Wizard.GetVisualStudioVersion());
+
       if (Language == LanguageGenerator.CSharp)
       {
         controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpControllerClass.tt");
@@ -403,13 +405,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             sessionHost.Session["classNameParameter"] = table.Key;
             sessionHost.Session["entityNameParameter"] = table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1);          
             sessionHost.Session["entityClassNameParameter"] = table.Key;
-            if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+            if ((visualStudioVersion < 12.0 && Language == LanguageGenerator.VBNET) ||
                 Language == LanguageGenerator.CSharp)
             {
               sessionHost.Session["entityClassNameParameterWithNamespace"] = 
                 string.Format( "{0}.{1}", ProjectNamespace, table.Key );
-            } 
-            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+            }
+            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET && visualStudioVersion >= 12.0)
             {
               sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
             }
