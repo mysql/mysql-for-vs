@@ -423,14 +423,21 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               sessionHost.Session["entityClassNameParameterWithNamespace"] = 
                 string.Format( "{0}.{1}", ProjectNamespace, table.Key );
             }
-            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET && visualStudioVersion >= 12.0)
+            else if ( Language == LanguageGenerator.VBNET && visualStudioVersion >= 12.0)
             {
-              sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
+              if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
+              {
+                sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
+              } 
+              else if( WizardForm.dEVersion == DataEntityVersion.EntityFramework6 )
+              {
+                sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{1}", ProjectNamespace, table.Key);
+              }
             }
             T4Callback cb = new T4Callback();
             StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));          
             string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1), fileExtension);
-          File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
+            File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
             if (cb.errorMessages.Count > 0)
             {
               File.AppendAllLines(controllerFilePath, cb.errorMessages);
