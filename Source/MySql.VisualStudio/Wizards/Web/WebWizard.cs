@@ -137,25 +137,37 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           SendToGeneralOutputWindow("Generating Entity Framework model...");
           if (tables.Count > 0)
           {
-                         
+
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
             else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
-             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;                        
+              CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
 
             AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion, true);
             string modelPath = Path.Combine(ProjectPath, "Models");
             GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables, modelPath);
-            GenerateMVCItems(vsProj);         
+            GenerateMVCItems(vsProj);
 
             if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
             {
               project.DTE.SuppressUI = true;
               project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
             }
-
           }
         }
+
+        else
+        {          
+            string indexPath = Language == LanguageGenerator.CSharp ? (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+       "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value) :
+        (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+       "Home").ProjectItems, "Index.vbhtml").Properties.Item("FullPath").Value);
+
+            string contents = File.ReadAllText(indexPath);
+            contents = contents.Replace("$catalogList$", String.Empty);
+            File.WriteAllText(indexPath, contents);                 
+        }
+
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
         SendToGeneralOutputWindow("Starting provider configuration...");
         try
