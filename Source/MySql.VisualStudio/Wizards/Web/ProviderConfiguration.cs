@@ -158,23 +158,28 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     void txtPwd_TextChanged(object sender, EventArgs e)
     {
-      if (!txtPwd.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
-        return;
+      if (txtPwd.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
+         errorProvider1.SetError(txtPwdConfirm, "");      
       
       var pwdLenght = 0;
       if (int.TryParse(txtMinimumPasswordLenght.Text, out pwdLenght))
       {
-        if (!(txtPwd.Text.Length >= pwdLenght))
-          return;
-      }
-
-      errorProvider1.SetError(txtPwd, "");
+        if (txtPwd.Text.Length >= pwdLenght)
+          errorProvider1.SetError(txtPwdConfirm, "");      
+      }      
     }
 
     void txtPwdConfirm_TextChanged(object sender, EventArgs e)
     {
       if (txtPwdConfirm.Text.Trim().Equals(txtPwdConfirm.Text.Trim()))
-        errorProvider1.SetError(txtPwdConfirm, "");    
+        errorProvider1.SetError(txtPwdConfirm, "");
+
+      var pwdLenght = 0;
+      if (int.TryParse(txtMinimumPasswordLenght.Text, out pwdLenght))
+      {
+        if (txtPwdConfirm.Text.Length >= pwdLenght)
+          errorProvider1.SetError(txtPwdConfirm, "");
+      }
     }
 
     internal override bool IsValid()
@@ -221,8 +226,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           e.Cancel = true;
           errorProvider1.SetError(txtPwd, "Administrator Password length is not valid");
         }
-        else
-          errorProvider1.SetError(txtPwd, "");
+
 
         if (chkQuestionAndAnswerRequired.Checked)
         {
