@@ -215,9 +215,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           e.Cancel = true;
           errorProvider1.SetError(txtMinimumPasswordLenght, "Password length should be a integer number");
         }
-        
+
         if (txtPwd.Text.Length < pwdLenght)
-          errorProvider1.SetError(txtPwd, "Administrator Password length is not valid");        
+        {
+          e.Cancel = true;
+          errorProvider1.SetError(txtPwd, "Administrator Password length is not valid");
+        }
         else
           errorProvider1.SetError(txtPwd, "");
 

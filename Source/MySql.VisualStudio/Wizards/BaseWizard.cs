@@ -101,6 +101,8 @@ namespace MySql.Data.VisualStudio.Wizards
 
     internal Dictionary<string, Dictionary<string, ColumnValidation>> ColumnMappings = new Dictionary<string, Dictionary<string, ColumnValidation>>();
 
+    internal Dictionary<string, string> TablesIncludedInModel = new Dictionary<string, string>();
+
     public enum ProjectWizardType : int
     {
       AspNetMVC = 1,
@@ -223,11 +225,16 @@ namespace MySql.Data.VisualStudio.Wizards
       EntityFrameworkGenerator gen = new EntityFrameworkGenerator(
         con, modelName, tables, modelPath, ns, CurrentEntityFrameworkVersion, Language, vsProj, ColumnMappings);
       vsProj = project.Object as VSProject;
+
       AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
       if( projectType == ProjectWizardType.WindowsForms )
         SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
       project.DTE.Solution.SolutionBuild.Build(true);
       gen.Generate();
+        
+      if (gen.TablesInModel.Count() > 0)
+          TablesIncludedInModel = gen.TablesInModel.ToDictionary<string, string>(p => p);
+      
       TryErrorsEntityFrameworkGenerator(gen);
     }
 
@@ -446,7 +453,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
       TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace, Language, VsProj );
-      string file = gen.Generate();
+      gen.Generate();
     }    
 
     protected ProjectItem FindProjectItem(ProjectItems Items, string Name)

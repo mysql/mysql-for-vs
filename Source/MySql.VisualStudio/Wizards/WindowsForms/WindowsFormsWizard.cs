@@ -119,73 +119,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       SortedSet<string> tables = new SortedSet<string>();
       Dictionary<string, WindowsFormsCodeGeneratorStrategy> strategies = new Dictionary<string, WindowsFormsCodeGeneratorStrategy>();
 
-      try
-      {
-        _hasDataGridDateColumn = false;
-        for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
-        {
-          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
-          // Ensure all model exists, even if user didn't went through validation pages.
-          // So metadata for table used in FKs is already loaded.
-          crud.GenerateModels();
-        }
-        // Start a loop here, to generate screens for all the selected tables.
-        for (int i = 0; i < WizardForm.SelectedTables.Count; i++ )
-        {
-          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
-          Dictionary<string, Column> Columns = crud.Columns;
-          Dictionary<string, Column> DetailColumns = crud.DetailColumns;
-          string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
-          string detailTableName = crud.DetailTableName;
-          string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
-
-          // Create the strategy
-          StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
-            WizardForm.DataAccessTechnology, crud.GuiType, Language,
-            crud.ValidationsEnabled, crud.ValidationColumns, crud.ValidationColumnsDetail,
-            GetConnectionStringWithPassword(WizardForm.Connection), crud.TableName,
-            detailTableName, crud.ConstraintName, crud.ForeignKeys, crud.DetailForeignKeys);
-          WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
-          strategies.Add(WizardForm.SelectedTables[i].Name, Strategy);
-
-          AddColumnMappings(_canonicalTableName, crud.ValidationColumns);
-          if (!string.IsNullOrEmpty(detailTableName))
-          {
-            AddColumnMappings(canonicalDetailTableName, crud.ValidationColumnsDetail);
-          }
-      
-          if (!_hasDataGridDateColumn)
-          {
-            EnsureCodeForDateTimeGridColumn(vsProj, Columns, DetailColumns);
-          }
-
-          // Gather all the tables
-          tables.Add(crud.TableName);
-          if (!string.IsNullOrEmpty(detailTableName))
-            tables.Add(detailTableName);
-          foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.ForeignKeys)
-          {
-            tables.Add(kvp2.Value.ReferencedTableName);
-          }
-          foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.DetailForeignKeys)
-          {
-            tables.Add(kvp2.Value.ReferencedTableName);
-          }
-
-          InitializeColumnMappings(crud.ForeignKeys);
-          InitializeColumnMappings(crud.DetailForeignKeys);
-
-          string frmName = string.Format( "frm{0}", _canonicalTableName );
-          string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
-          // Add new form to project.
-          AddNewForm(project, frmName, Strategy);
-        }
-      }
-      catch (WizardException e)
-      {
-        SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
-      }
-
       vsProj.References.Add("MySql.Data");
       project.DTE.SuppressUI = true;
       vsProj.Project.Save();
@@ -210,6 +143,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
        
       try
       {
+
+        for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
+        {
+          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
+          // Ensure all model exists, even if user didn't went through validation pages.
+          // So metadata for table used in FKs is already loaded.
+          crud.GenerateModels();
+          InitializeColumnMappings(crud.ForeignKeys);
+          InitializeColumnMappings(crud.DetailForeignKeys);
+        }
+
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
           WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
@@ -227,6 +171,66 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           PopulateColumnMappingsForTypedDataSet();
           GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
         }
+
+        try
+        {
+          _hasDataGridDateColumn = false;
+          // Start a loop here, to generate screens for all the selected tables.
+          for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
+          {
+            AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
+            Dictionary<string, Column> Columns = crud.Columns;
+            Dictionary<string, Column> DetailColumns = crud.DetailColumns;
+            string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+            string detailTableName = crud.DetailTableName;
+            string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
+
+            if (!TablesIncludedInModel.ContainsKey(crud.TableName))
+              continue;
+
+            // Create the strategy
+            StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
+              WizardForm.DataAccessTechnology, crud.GuiType, Language,
+              crud.ValidationsEnabled, crud.ValidationColumns, crud.ValidationColumnsDetail,
+              GetConnectionStringWithPassword(WizardForm.Connection), crud.TableName,
+              detailTableName, crud.ConstraintName, crud.ForeignKeys, crud.DetailForeignKeys);
+            WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
+            strategies.Add(WizardForm.SelectedTables[i].Name, Strategy);
+
+            AddColumnMappings(_canonicalTableName, crud.ValidationColumns);
+            if (!string.IsNullOrEmpty(detailTableName))
+            {
+              AddColumnMappings(canonicalDetailTableName, crud.ValidationColumnsDetail);
+            }
+
+            if (!_hasDataGridDateColumn)
+            {
+              EnsureCodeForDateTimeGridColumn(vsProj, Columns, DetailColumns);
+            }
+
+            // Gather all the tables
+            tables.Add(crud.TableName);
+            if (!string.IsNullOrEmpty(detailTableName))
+              tables.Add(detailTableName);
+            foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.ForeignKeys)
+            {
+              tables.Add(kvp2.Value.ReferencedTableName);
+            }
+            foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.DetailForeignKeys)
+            {
+              tables.Add(kvp2.Value.ReferencedTableName);
+            }
+
+            string frmName = string.Format("frm{0}", _canonicalTableName);
+            string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
+            // Add new form to project.
+            AddNewForm(project, frmName, Strategy);
+          }
+        }
+        catch (WizardException e)
+        {
+          SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
+        }
         
         // Now generated the bindings & custom code
         List<string> formNames = new List<string>();
@@ -235,6 +239,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
           string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+          if (!TablesIncludedInModel.ContainsKey(crud.TableName))
+              continue;
+
           string frmName = string.Format("frm{0}", _canonicalTableName);
           formNames.Add(frmName);
           tableNames.Add(crud.TableName);
