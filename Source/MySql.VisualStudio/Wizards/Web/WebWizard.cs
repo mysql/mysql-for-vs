@@ -323,7 +323,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         catalogs.AppendLine();
 
         foreach (var table in WizardForm.selectedTables)
-        {           
+        {
+          if (!TablesIncludedInModel.ContainsKey( table.Name ))
+            continue;
           catalogs.AppendLine(string.Format(@"<div> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</div>", table.Name[0].ToString().ToUpperInvariant() + table.Name.Substring(1)));
         }                
       }
@@ -366,8 +368,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       if (Language == LanguageGenerator.CSharp)
       {
-        controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpControllerClass.tt");
-        IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpIndexFile.tt");
+        //controllerClassPath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpControllerClass.tt");
+        //IndexFilePath = Path.GetFullPath(@"..\IDE\Extensions\Oracle\MySQL for Visual Studio\" + version + @"\T4Templates\CSharp\CSharpIndexFile.tt");
+        controllerClassPath = Path.GetFullPath(@"..\..\..\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt");
+        IndexFilePath = Path.GetFullPath(@"..\..\..\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt");
         fileExtension = "cs";
       }
       else
@@ -377,9 +381,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         fileExtension = "vb";
       }
       try
-      {     
+      {                    
         foreach (var table in WizardForm.selectedTables)
         {
+
+          if (!TablesIncludedInModel.ContainsKey(table.Name) )
+            continue;
+
            // creating controller file
             sessionHost.Session = sessionHost.CreateSession();
             sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);

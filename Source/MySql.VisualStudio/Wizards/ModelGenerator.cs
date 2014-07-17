@@ -41,11 +41,17 @@ namespace MySql.Data.VisualStudio.Wizards
     protected string _path;
     protected string _artifactNamespace;
     protected List<string> _errors = new List<string>();
+    protected List<string> _warnings = new List<string>();
     protected LanguageGenerator Language;
 
     internal IEnumerable<string> Errors
     {
       get { return _errors.AsEnumerable(); }
+    }
+
+    internal IEnumerable<string> Warnings
+    {
+      get { return _warnings.AsEnumerable(); } 
     }
 
     internal ModelGenerator(MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace, LanguageGenerator Language)
@@ -75,7 +81,7 @@ namespace MySql.Data.VisualStudio.Wizards
     /// Generates the model.
     /// </summary>
     /// <returns>Returns the path of the model file generated, or null in case of errors, is so Errors property can be inspected to look for specific errors.</returns>
-    internal virtual string Generate()
+    internal virtual bool Generate()
     {
       throw new NotImplementedException();
     }

@@ -61,7 +61,7 @@ namespace MySql.Data.VisualStudio.Wizards
       _vsProj = vsProj;
     }
 
-    internal override string Generate()
+    internal override bool Generate()
     {
       DataSet dsPrev = null;
       int i = 0;
@@ -89,8 +89,8 @@ namespace MySql.Data.VisualStudio.Wizards
       string xsd = sb.ToString();
       string xsdPath = Path.Combine(_path, FILENAME_ARTIFACT + ".xsd");
       File.WriteAllText(xsdPath, xsd, Encoding.Unicode);
-      AddToProject( xsdPath );
-      return xsdPath;
+      AddToProject(xsdPath);
+      return true;
     }
 
     private void AddToProject( string xsdPath )
