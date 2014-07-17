@@ -371,8 +371,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       {        
         catalogs.AppendLine(string.Format(@"<div> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</div>", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));
       }
-      string indexPath = (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
-        "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value);
+
+
+      string indexPath = Language == LanguageGenerator.CSharp ? (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+        "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value) :
+         (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+        "Home").ProjectItems, "Index.vbhtml").Properties.Item("FullPath").Value);
+
       string contents = File.ReadAllText(indexPath);
       contents = contents.Replace("$catalogList$", catalogs.ToString());
       File.WriteAllText(indexPath, contents);
