@@ -109,8 +109,7 @@ namespace MySql.Data.VisualStudio.Wizards
       if ((errors != null && errors.Count > 0))
       {        
         WriteErrors(errors);
-        SendErrorsToGeneralOuput();
-        //return false;
+        SendErrorsToGeneralOuput();        
       }
 
       // write the SSDL to a string
@@ -136,8 +135,7 @@ namespace MySql.Data.VisualStudio.Wizards
       if ((errors != null && errors.Count > 0))
       {       
         WriteErrors(errors);
-        SendErrorsToGeneralOuput();        
-        //return false;
+        SendErrorsToGeneralOuput();                
       }
 
       // write CSDL to a string
@@ -168,10 +166,14 @@ namespace MySql.Data.VisualStudio.Wizards
 
       AddToProject(fi.FullName);
 
-      if ( _warnings.Count > 0)
+      if (_warnings.Count > 0)
       {
         SendErrorsToGeneralOuput();
         _tablesIncluded = GetTablesInModel(fi.FullName);
+      }
+      else
+      {
+        _tablesIncluded = _tables;
       }
 
       return true;
