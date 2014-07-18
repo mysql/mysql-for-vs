@@ -80,7 +80,7 @@ namespace MySql.Data.VisualStudio.Wizards
 
     }
 
-    private void btnCancel_Click(object sender, EventArgs e)
+    internal virtual void btnCancel_Click(object sender, EventArgs e)
     {
       this.Close();
     }
