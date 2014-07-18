@@ -113,5 +113,17 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         detailValidationConfig1.GenerateModel(this);
       }
     }
+
+    internal override void btnCancel_Click(object sender, EventArgs e)
+    {
+      if (CurPage == dataAccessTechnologyConfig1)
+      {
+        if( GuiType == Wizards.GuiType.MasterDetail )
+        {
+          GuiType = Wizards.GuiType.IndividualControls;
+        }
+      }
+      base.btnCancel_Click(sender, e);
+    }
   }
 }

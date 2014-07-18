@@ -516,7 +516,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       string frmName, string frmDesignerName )
     {
       string ext = Strategy.GetExtension();
-      SendToGeneralOutputWindow("Customizing Form Code...");
+      SendToGeneralOutputWindow( string.Format( "Customizing Form {0} Code...", frmName ));
       // Get Form.cs
       ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, frmName + ext );
       // Get Form.Designer.cs
