@@ -47,24 +47,6 @@ namespace MySql.Data.VisualStudio.Wizards
     private string efVersion;
     private Dictionary<string, Dictionary<string, ColumnValidation>> _mappings;
     private VSProject _vsProj;
-    private List<String> _tablesIncluded = new List<string>();
-    protected IVsOutputWindowPane _generalPane;
-
-    internal List<String> TablesInModel {
-      get {
-        return _tablesIncluded;
-      }    
-    }
-
-    internal EntityFrameworkGenerator(MySqlConnection con, string modelName, string table, 
-      string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, VSProject vsProj, 
-      Dictionary<string, Dictionary<string, ColumnValidation>> Mappings) :
-      base( con, modelName, table, path, artifactNamespace, Language )
-    {
-      efVersion = EfVersion;
-      _mappings = Mappings;
-      _vsProj = vsProj;
-    }
 
     internal EntityFrameworkGenerator(MySqlConnection con, string modelName, List<string> tables, 
       string path, string artifactNamespace, string EfVersion, LanguageGenerator Language, VSProject vsProj, 
@@ -391,19 +373,6 @@ namespace MySql.Data.VisualStudio.Wizards
 
     private void SendErrorsToGeneralOuput()
     {
-      if (_generalPane == null)
-      {
-        // get the general output window      
-        IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-        Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
-        if (outWindow != null)
-        {
-          outWindow.CreatePane(ref generalPaneGuid, "General", 1, 0);
-          outWindow.GetPane(ref generalPaneGuid, out _generalPane);
-          _generalPane.Activate();
-        }
-      }
-
       if (_generalPane == null)
         return;
       

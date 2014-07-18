@@ -454,6 +454,8 @@ namespace MySql.Data.VisualStudio.Wizards
       string canonicalNamespace = GetCanonicalIdentifier(ProjectNamespace);
       TypedDataSetGenerator gen = new TypedDataSetGenerator(con, "", tables, ProjectPath, canonicalNamespace, Language, VsProj );
       gen.Generate();
+      if (gen.TablesInModel.Count() > 0)
+        TablesIncludedInModel = gen.TablesInModel.ToDictionary<string, string>(p => p);
     }    
 
     protected ProjectItem FindProjectItem(ProjectItems Items, string Name)
