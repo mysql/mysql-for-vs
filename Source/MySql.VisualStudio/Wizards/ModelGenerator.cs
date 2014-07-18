@@ -25,6 +25,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio;
 
 
 namespace MySql.Data.VisualStudio.Wizards
@@ -43,6 +46,16 @@ namespace MySql.Data.VisualStudio.Wizards
     protected List<string> _errors = new List<string>();
     protected List<string> _warnings = new List<string>();
     protected LanguageGenerator Language;
+    protected List<String> _tablesIncluded = new List<string>();
+    protected IVsOutputWindowPane _generalPane;
+
+    internal List<String> TablesInModel
+    {
+      get
+      {
+        return _tablesIncluded;
+      }
+    }
 
     internal IEnumerable<string> Errors
     {
@@ -65,16 +78,8 @@ namespace MySql.Data.VisualStudio.Wizards
       _path = path;
       _artifactNamespace = artifactNamespace;
       this.Language = Language;
-    }
 
-    internal ModelGenerator(MySqlConnection con, string modelName, string table, string path, string artifactNamespace, LanguageGenerator Language)
-    {
-      _con = con;
-      _modelName = modelName;
-      _table = table;
-      _path = path;
-      _artifactNamespace = artifactNamespace;
-      this.Language = Language;
+      EnsureGeneralLogInitialized();
     }
 
     /// <summary>
@@ -84,6 +89,22 @@ namespace MySql.Data.VisualStudio.Wizards
     internal virtual bool Generate()
     {
       throw new NotImplementedException();
+    }
+
+    protected void EnsureGeneralLogInitialized()
+    {
+      if (_generalPane == null)
+      {
+        // get the general output window      
+        IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+        Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+        if (outWindow != null)
+        {
+          outWindow.CreatePane(ref generalPaneGuid, "General", 1, 0);
+          outWindow.GetPane(ref generalPaneGuid, out _generalPane);
+          _generalPane.Activate();
+        }
+      }
     }
   }
 }

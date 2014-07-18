@@ -45,15 +45,6 @@ namespace MySql.Data.VisualStudio.Wizards
     private VSProject _vsProj;
 
     internal TypedDataSetGenerator(
-      MySqlConnection con, string modelName, string table, string path, string ArtifactNamespace, 
-      LanguageGenerator Language, VSProject vsProj ) : 
-      base( con, modelName, table, path, ArtifactNamespace, Language  )
-    {
-      _tables = new string[] { table }.ToList();
-      _vsProj = vsProj;
-    }
-
-    internal TypedDataSetGenerator(
       MySqlConnection con, string modelName, List<string> tables, string path, string artifactNamespace,
       LanguageGenerator Language, VSProject vsProj) :
       base(con, modelName, tables, path, artifactNamespace, Language)
@@ -82,6 +73,8 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       while (++i < _tables.Count);
 
+      SetTablesIncluded(dsPrev);
+
       StringBuilder sb = new StringBuilder();
       StringWriter sw = new StringWriter(sb);
       dsPrev.WriteXmlSchema(sw);
@@ -91,6 +84,22 @@ namespace MySql.Data.VisualStudio.Wizards
       File.WriteAllText(xsdPath, xsd, Encoding.Unicode);
       AddToProject(xsdPath);
       return true;
+    }
+
+    private void SetTablesIncluded( DataSet ds )
+    {
+      for (int i = 0; i < ds.Tables.Count; i++ )
+      {
+        DataTable t = ds.Tables[ i ];
+        if( t.PrimaryKey.Length != 0 )
+        {
+          _tablesIncluded.Add(t.TableName);
+        }
+        else
+        {
+          _generalPane.OutputString( string.Format( "Warning: Table '{0}' does not have primary key.", t.TableName ) );
+        }
+      }
     }
 
     private void AddToProject( string xsdPath )
