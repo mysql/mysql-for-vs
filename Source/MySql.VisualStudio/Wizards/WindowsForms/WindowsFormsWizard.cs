@@ -150,6 +150,28 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           // Ensure all model exists, even if user didn't went through validation pages.
           // So metadata for table used in FKs is already loaded.
           crud.GenerateModels();
+          string detailTableName = crud.DetailTableName;
+          string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+          string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
+          // Gather all the tables
+          tables.Add(crud.TableName);
+          if (!string.IsNullOrEmpty(detailTableName))
+              tables.Add(detailTableName);
+          foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.ForeignKeys)
+          {
+            tables.Add(kvp2.Value.ReferencedTableName);
+          }
+          foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.DetailForeignKeys)
+          {
+            tables.Add(kvp2.Value.ReferencedTableName);
+          }
+
+          AddColumnMappings(_canonicalTableName, crud.ValidationColumns);
+          if (!string.IsNullOrEmpty(detailTableName))
+          {
+            AddColumnMappings(canonicalDetailTableName, crud.ValidationColumnsDetail);
+          }
+
           InitializeColumnMappings(crud.ForeignKeys);
           InitializeColumnMappings(crud.DetailForeignKeys);
         }
@@ -170,6 +192,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           PopulateColumnMappingsForTypedDataSet();
           GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
+          TablesIncludedInModel.Clear();
+          foreach( string tbl in tables )
+          {
+              TablesIncludedInModel.Add(tbl, tbl);
+          }
         }
 
         try
@@ -197,28 +224,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
             strategies.Add(WizardForm.SelectedTables[i].Name, Strategy);
 
-            AddColumnMappings(_canonicalTableName, crud.ValidationColumns);
-            if (!string.IsNullOrEmpty(detailTableName))
-            {
-              AddColumnMappings(canonicalDetailTableName, crud.ValidationColumnsDetail);
-            }
-
             if (!_hasDataGridDateColumn)
             {
               EnsureCodeForDateTimeGridColumn(vsProj, Columns, DetailColumns);
-            }
-
-            // Gather all the tables
-            tables.Add(crud.TableName);
-            if (!string.IsNullOrEmpty(detailTableName))
-              tables.Add(detailTableName);
-            foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.ForeignKeys)
-            {
-              tables.Add(kvp2.Value.ReferencedTableName);
-            }
-            foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.DetailForeignKeys)
-            {
-              tables.Add(kvp2.Value.ReferencedTableName);
             }
 
             string frmName = string.Format("frm{0}", _canonicalTableName);
