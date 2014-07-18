@@ -192,11 +192,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           PopulateColumnMappingsForTypedDataSet();
           GenerateTypedDataSetModel(vsProj, WizardForm.Connection, tables.ToList());
-          TablesIncludedInModel.Clear();
-          foreach( string tbl in tables )
-          {
-              TablesIncludedInModel.Add(tbl, tbl);
-          }
         }
 
         try
@@ -213,7 +208,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
 
             if (!TablesIncludedInModel.ContainsKey(crud.TableName))
+            {
+              SendToGeneralOutputWindow(string.Format("Skipping generation of screen for table '{0}' because it does not have primary key.", crud.TableName));
               continue;
+            }
+
+            if ( (crud.GuiType == GuiType.MasterDetail) && !TablesIncludedInModel.ContainsKey(crud.DetailTableName))
+            {
+              // If Detail table does not have PK, then you cannot edit details, "degrade" layout from Master Detail to Individual Controls.
+              crud.GuiType = GuiType.IndividualControls;
+              SendToGeneralOutputWindow( string.Format(
+                "Degrading layout for table '{0}' from master detail to single controls (because detail table '{1}' does not have primary key).",
+                crud.TableName, crud.DetailTableName ) );
+            }
 
             // Create the strategy
             StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,

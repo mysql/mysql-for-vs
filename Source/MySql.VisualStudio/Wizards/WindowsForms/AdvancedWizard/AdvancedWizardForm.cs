@@ -45,7 +45,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal MySqlConnection Connection { get { return Wizard.Connection; } }
    
     internal string DetailTableName { get { return dataAccessTechnologyConfig1.DetailTableName; } }
-    internal GuiType GuiType { get { return dataAccessTechnologyConfig1.GuiType; } }
+    internal GuiType GuiType { 
+      get { return dataAccessTechnologyConfig1.GuiType; }
+      set { dataAccessTechnologyConfig1.GuiType = value; }
+    }
 
     internal string ConstraintName { get { return dataAccessTechnologyConfig1.ConstraintName; } }
     
