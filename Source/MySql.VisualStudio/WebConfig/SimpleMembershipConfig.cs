@@ -28,6 +28,7 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.Web.Security;
 using System.Xml;
+using System.Reflection;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
@@ -43,7 +44,8 @@ namespace MySql.Data.VisualStudio.WebConfig
   {
     private new SimpleMembershipOptions defaults = new SimpleMembershipOptions();
     private new SimpleMembershipOptions values;
-    private string _connectorVerInstalled;
+    private bool _mySqlSimpleMembershipFound;
+    private string _connectorVerInstalled = string.Empty;
 
     public SimpleMembershipConfig()
       : base()
@@ -60,8 +62,8 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     public override void Initialize(WebConfig wc)
     {
-      base.Initialize(wc);
-      //GetDefaults();
+      base.Initialize(wc);      
+      
       XmlElement e = wc.GetProviderSection(sectionName);
       if (e != null)
       {
@@ -98,7 +100,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       base.values.ConnectionString = wc.GetConnectionString(base.values.ConnectionStringName);
 
-      NotInstalled = !_connectorVerInstalled.Contains("6.9");
+      NotInstalled = !_mySqlSimpleMembershipFound;
 
       Enabled = OriginallyEnabled;
 
@@ -118,7 +120,8 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     public override void GetDefaults()
     {
-      _connectorVerInstalled = ConnectorVersionInstalled().FirstOrDefault();
+      _mySqlSimpleMembershipFound = MySqlSimpleMembershipFound();
+
       ProviderSettings providerSet = GetMachineSettings();
       if (providerSet != null)
       {
@@ -156,48 +159,29 @@ namespace MySql.Data.VisualStudio.WebConfig
       return null;
     }
 
-    internal IEnumerable<string> ConnectorVersionInstalled()
+    internal bool MySqlSimpleMembershipFound()
     {
-      List<string> mysqlVers = new List<string>();
-      try
-      {
-        string displayName = "";
-        foreach (string registryKey in new string[] { @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", })
-        {
-          using (Microsoft.Win32.RegistryKey regKey = Registry.LocalMachine.OpenSubKey(registryKey))
-          {
-            foreach (RegistryKey subKey in regKey.GetSubKeyNames().Select(keyName => regKey.OpenSubKey(keyName)))
-            {
-              displayName = subKey.GetValue("DisplayName") as string;
-              if (!string.IsNullOrEmpty(displayName) && !displayName.StartsWith("{"))
-                mysqlVers.Add(displayName);
-            }
-          }
-        }
-
-        using (Microsoft.Win32.RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"))
-        {
-          foreach (RegistryKey subKey in regKey.GetSubKeyNames().Select(keyName => regKey.OpenSubKey(keyName)))
-          {
-            displayName = subKey.GetValue("DisplayName") as string;
-            if (!string.IsNullOrEmpty(displayName) && !displayName.StartsWith("{"))
-              mysqlVers.Add(displayName);
-          }
-        }
-
-        return (from regKeyName in mysqlVers
-                let connectorVers = regKeyName
-                where regKeyName.ToLower().Contains("connector net")
-                let vers = connectorVers.Split(' ').Where(ver => ver.Contains("."))
-                from ver in vers
-                select ver).Distinct();
-      }
-      catch 
-      {     
-      }
-
-      return mysqlVers;
-      
+       ProviderSettings machineSettings = this.GetMachineSettings();
+       if (machineSettings != null)
+       {
+         var providerType = machineSettings.Type;
+         if (providerType != null)
+         { 
+           var name = providerType.ToString();
+           if (name.IndexOf("Version=") != -1)
+           {
+             _connectorVerInstalled = name.Substring(name.IndexOf("Version=") + 8, 7);
+             Assembly assembly = Assembly.Load(string.Format("MySql.Web, Version={0}, Culture=neutral, PublicKeyToken=c5687fc88969c44d", _connectorVerInstalled));
+             if (assembly != null)
+             {
+               var mysqlSimpleMembership = assembly.GetType("MySql.Web.Security.MySqlSimpleMembershipProvider");
+               if (mysqlSimpleMembership != null)
+                 return true;
+             }
+           }
+         }
+       }
+       return false;
     }
   }
 }
