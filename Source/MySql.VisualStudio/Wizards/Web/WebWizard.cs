@@ -302,8 +302,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
       }
 
-      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.dEVersion != DataEntityVersion.None ? connectionstringForModel : string.Empty);
-      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringNameForAspNetTables);
+      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.dEVersion != DataEntityVersion.None ? connectionstringForModel : string.Empty);      
       replacementsDictionary.Add("$EntityFrameworkReference$", WizardForm.dEVersion != DataEntityVersion.None ? @"<add assembly=""System.Data.Entity, Version=4.0.0.0, Culture=neutral,PublicKeyToken=b77a5c561934e089""/>" : string.Empty);
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
