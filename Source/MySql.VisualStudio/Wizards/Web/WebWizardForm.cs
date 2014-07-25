@@ -38,6 +38,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
   {    
 
     #region "Properties exposed"
+
+    string _connectionStringSafeForAspNet = string.Empty;
      
      internal string serverExplorerConnectionSelected
      {
@@ -50,7 +52,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       get
       {
-        return dataSourceConfiguration1.connectionString;
+        if (string.IsNullOrEmpty(_connectionStringSafeForAspNet))        
+          _connectionStringSafeForAspNet = dataSourceConfiguration1.connectionString;
+          return _connectionStringSafeForAspNet;        
+      }
+      set
+      {
+        _connectionStringSafeForAspNet = value;
       }
     }
 
