@@ -61,6 +61,25 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       get { return this.Wizard.GetConnectionStringWithPassword(Connection); }
     }
 
+    internal string ConnectionStringWithIncludedPassword
+    {
+      get {
+        if (IncludePassword)
+          return this.Wizard.GetConnectionStringWithPassword(Connection);
+        else
+        {
+          MySqlConnectionStringBuilder msb = new MySqlConnectionStringBuilder(Connection.ConnectionString);
+          msb.Password = "";
+          return msb.ToString();
+        }
+      }
+    }
+
+    internal bool IncludePassword
+    {
+      get { return this.dataAccessConfig1.IncludePassword; }
+    }
+
     internal Dictionary<string, AdvancedWizardForm> CrudConfiguration { get { return tablesSelection1.dicConfig; } }
 
     internal List<DbTables> SelectedTables { get { return tablesSelection1.selectedTables; } }

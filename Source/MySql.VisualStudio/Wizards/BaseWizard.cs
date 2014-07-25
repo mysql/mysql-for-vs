@@ -228,7 +228,7 @@ namespace MySql.Data.VisualStudio.Wizards
 
       AddDataEntityArtifactsToProject(gen, modelName, vsProj, con);
       if( projectType == ProjectWizardType.WindowsForms )
-        SetupConfigFileEntityFramework(vsProj, con.ConnectionString, modelName);
+        SetupConfigFileEntityFramework(vsProj, GetConnectionString(), modelName);
       project.DTE.Solution.SolutionBuild.Build(true);
       gen.Generate();
         
@@ -236,6 +236,11 @@ namespace MySql.Data.VisualStudio.Wizards
           TablesIncludedInModel = gen.TablesInModel.ToDictionary<string, string>(p => p);
       
       TryErrorsEntityFrameworkGenerator(gen);
+    }
+
+    protected virtual string GetConnectionString()
+    {
+      return "";
     }
 
     private void TryErrorsEntityFrameworkGenerator(EntityFrameworkGenerator gen)

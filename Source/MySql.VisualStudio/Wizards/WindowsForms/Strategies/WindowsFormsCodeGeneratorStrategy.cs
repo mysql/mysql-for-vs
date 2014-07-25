@@ -50,6 +50,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal List<ColumnValidation> ValidationColumns;
     internal List<ColumnValidation> DetailValidationColumns;
     protected string ConnectionString;
+    protected string ConnectionStringWithPassword;
     protected string TableName;
     protected string DetailTableName;
     protected string CanonicalDetailTableName;
@@ -68,6 +69,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       ValidationColumns = config.ValidationColumns;
       DetailValidationColumns = config.DetailValidationColumns;
       ConnectionString = config.ConnectionString;
+      ConnectionStringWithPassword = config.ConnectionStringWithPassword;
       TableName = config.TableName;
       DetailTableName = config.DetailTableName;
       CanonicalDetailTableName = GetCanonicalIdentifier(DetailTableName);
@@ -228,7 +230,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 @"select `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
 from information_schema.key_column_usage where `constraint_name` = '{0}' and table_schema = '{1}'";
 
-      MySqlConnection con = new MySqlConnection(ConnectionString);
+      MySqlConnection con = new MySqlConnection(ConnectionStringWithPassword);
       con.Open();
       sql = string.Format(sql, ConstraintName, con.Database);
       MySqlCommand cmd = new MySqlCommand(sql, con);

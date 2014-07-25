@@ -65,6 +65,7 @@ namespace MySql.Data.VisualStudio.Wizards
     internal List<ColumnValidation> ValidationColumns;
     internal List<ColumnValidation> DetailValidationColumns;
     internal string ConnectionString;
+    internal string ConnectionStringWithPassword;
     internal string TableName;
     internal string DetailTableName;
     internal string ConstraintName;
@@ -74,7 +75,7 @@ namespace MySql.Data.VisualStudio.Wizards
     internal StrategyConfig(IdentedStreamWriter Writer, string CanonicalTableName,
       Dictionary<string, Column> Columns, Dictionary<string, Column> DetailColumns, DataAccessTechnology DataAccessTech,
       GuiType Type, LanguageGenerator Language, bool ValidationsEnabled,
-      List<ColumnValidation> ValidationColumns, List<ColumnValidation> DetailValidationColumns, string ConnectionString,
+      List<ColumnValidation> ValidationColumns, List<ColumnValidation> DetailValidationColumns, string ConnectionString, string ConnectionStringWithPassword,
       string TableName, string DetailTableName, string ConstraintName, Dictionary<string, ForeignKeyColumnInfo> ForeignKeys,
       Dictionary<string, ForeignKeyColumnInfo> DetailForeignKeys)
     {
@@ -88,6 +89,7 @@ namespace MySql.Data.VisualStudio.Wizards
       this.ValidationsEnabled = ValidationsEnabled;
       this.ValidationColumns = ValidationColumns;
       this.ConnectionString = ConnectionString;
+      this.ConnectionStringWithPassword = ConnectionStringWithPassword;
       this.TableName = TableName;
       this.DetailTableName = DetailTableName;
       this.DetailValidationColumns = DetailValidationColumns;

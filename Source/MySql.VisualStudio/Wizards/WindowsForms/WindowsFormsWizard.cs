@@ -226,7 +226,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
               WizardForm.DataAccessTechnology, crud.GuiType, Language,
               crud.ValidationsEnabled, crud.ValidationColumns, crud.ValidationColumnsDetail,
-              GetConnectionStringWithPassword(WizardForm.Connection), crud.TableName,
+              WizardForm.ConnectionStringWithIncludedPassword, WizardForm.ConnectionString, crud.TableName,
               detailTableName, crud.ConstraintName, crud.ForeignKeys, crud.DetailForeignKeys);
             WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
             strategies.Add(WizardForm.SelectedTables[i].Name, Strategy);
@@ -303,6 +303,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       throw new NotImplementedException();
 #endif
 
+    }
+
+    protected override string GetConnectionString()
+    {
+      return WizardForm.ConnectionStringWithIncludedPassword;
     }
 
     internal virtual void RemoveTemplateForm(VSProject proj)
