@@ -69,6 +69,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         return cmbConnections.Text;
       }
     }
+
+    internal bool IncludePassword
+    {
+        get
+        {
+            return includeSensitiveInformationCheck.Checked;
+        }
+    }
   
     internal DataAccessTechnology DataAccessTechnology
     {
