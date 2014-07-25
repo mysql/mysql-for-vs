@@ -140,6 +140,7 @@
       // includeSensitiveInformationCheck
       // 
       this.includeSensitiveInformationCheck.AutoSize = true;
+      this.includeSensitiveInformationCheck.Checked = true;
       this.includeSensitiveInformationCheck.Location = new System.Drawing.Point(25, 211);
       this.includeSensitiveInformationCheck.Name = "includeSensitiveInformationCheck";
       this.includeSensitiveInformationCheck.Size = new System.Drawing.Size(323, 17);
@@ -151,12 +152,10 @@
       // noIncludeSensitiveInformationCheck
       // 
       this.noIncludeSensitiveInformationCheck.AutoSize = true;
-      this.noIncludeSensitiveInformationCheck.Checked = true;
       this.noIncludeSensitiveInformationCheck.Location = new System.Drawing.Point(25, 188);
       this.noIncludeSensitiveInformationCheck.Name = "noIncludeSensitiveInformationCheck";
       this.noIncludeSensitiveInformationCheck.Size = new System.Drawing.Size(503, 17);
       this.noIncludeSensitiveInformationCheck.TabIndex = 62;
-      this.noIncludeSensitiveInformationCheck.TabStop = true;
       this.noIncludeSensitiveInformationCheck.Text = "No, Exclude sensitive information in the connection string. I will set it in my a" +
     "pplication code.";
       this.noIncludeSensitiveInformationCheck.UseVisualStyleBackColor = true;
