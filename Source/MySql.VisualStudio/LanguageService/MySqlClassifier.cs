@@ -46,7 +46,7 @@ namespace MySql.Data.VisualStudio
       BuildTypesList(registry);
     }
 
-        /// <summary>
+    /// <summary>
     /// This method scans the given SnapshotSpan for potential matches for this classification.
     /// In this instance, it classifies everything and returns each span as a new ClassificationSpan.
     /// </summary>
