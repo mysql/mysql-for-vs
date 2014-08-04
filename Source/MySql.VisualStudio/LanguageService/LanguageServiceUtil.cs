@@ -67,8 +67,7 @@ namespace MySql.Data.VisualStudio
 
     public static TokenStreamRemovable GetTokenStream(string sql, Version version)
     {
-      sql = sql.TrimStart();
-      Dictionary<Version, TokenStreamRemovable> lines = null;      
+      Dictionary<Version, TokenStreamRemovable> lines = null;
       if (_parserCache.TryGetValue(sql, out lines))
       {
         TokenStreamRemovable tsr = null;
