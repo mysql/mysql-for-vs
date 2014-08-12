@@ -505,10 +505,14 @@ like_or_where
   
 explain
   : (( EXPLAIN | DESCRIBE | DESC )
-	(( EXTENDED | explain_partitions | explain_type )? ( select_inner | explain_stmt )
+	(( EXTENDED | explain_partitions | explain_type )? ( select_inner | explain_stmt | explain_for_connection )
 	-> ^( EXPLAIN_STMT select_inner? explain_stmt? )  
 	)
 	| (( EXPLAIN | DESCRIBE | DESC ) simple_table_ref_alias -> ^( EXPLAIN_STMT simple_table_ref_alias )) )
+  ;
+
+explain_for_connection
+  : { this.mysqlVersion >= 5.7 }? => FOR CONNECTION INT_NUMBER
   ;
 
 explain_partitions
