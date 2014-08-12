@@ -1,4 +1,4 @@
-﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -174,6 +174,22 @@ namespace MySql.Parser.Tests
       StringBuilder sb;
       MySQL51Parser.program_return r = Utility.ParseSql(
         "explain format = traditional UPDATE t1 set col1 = val1, col2 = val2;", false, out sb, new Version(5, 6));
+    }
+
+    [Fact]
+    public void ExplainForConnection_56()
+    {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          "explain format = traditional for connection 1;", true, out sb, new Version(5, 6));
+    }
+
+    [Fact]
+    public void ExplainForConnection_57()
+    {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          "explain format = traditional for connection 1;", false, out sb, new Version(5, 7));
     }
   }
 }
