@@ -73,7 +73,6 @@
             <Directory Id='DocsDir' Name='Documentation'>
               <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
             </Directory>
-            <Directory Id='SampleDir' Name='Samples'/>
             <Directory Id='Dependencies' Name='Dependencies' />                          
           </Directory>
         </Directory>
