@@ -1,4 +1,4 @@
-﻿// Copyright © 2011-2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2011-2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -20,13 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Threading;
 using System.Windows.Media;
-using Microsoft.VisualStudio.Editor;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
@@ -77,8 +72,8 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public MySqlComment()
     {
-      this.DisplayName = "MySql Comment";
-      this.ForegroundColor = Colors.Green;
+      DisplayName = "MySQL Comment";
+      ForegroundColor = Colors.ForestGreen;
     }
   }
 
@@ -97,8 +92,8 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public MySqlLiteral()
     {
-      this.DisplayName = "MySql Literal";
-      this.ForegroundColor = Colors.Brown;
+      DisplayName = "MySQL Literal";
+      ForegroundColor = Colors.Brown;
     }
   }
 
@@ -117,8 +112,8 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public MySqlKeyword()
     {
-      this.DisplayName = "MySql Keyword";
-      this.ForegroundColor = Colors.Blue;
+      DisplayName = "MySQL Keyword";
+      ForegroundColor = Colors.DodgerBlue;
     }
   }
 
@@ -137,28 +132,8 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public MySqlOperator()
     {
-      this.DisplayName = "MySql Operator";
-      this.ForegroundColor = Colors.Gray;
-    }
-  }
-
-  /// <summary>
-  /// Represents an editor format for the MySqlText type.
-  /// </summary>
-  [Export(typeof(EditorFormatDefinition))]
-  [ClassificationType(ClassificationTypeNames = MySqlClassifierDefinitions.Text)]
-  [Name(MySqlClassifierDefinitions.Text)]
-  [UserVisible(true)]
-  [Order(Before = Priority.Default)]
-  internal sealed class MySqlText : ClassificationFormatDefinition
-  {
-    /// <summary>
-    /// Initializes a new instance of the MySqlText class.
-    /// </summary>
-    public MySqlText()
-    {
-      this.DisplayName = "MySql Text";
-      this.ForegroundColor = Colors.Black;
+      DisplayName = "MySQL Operator";
+      ForegroundColor = Colors.DarkGray;
     }
   }
 }
