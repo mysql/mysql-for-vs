@@ -1,4 +1,4 @@
-﻿// Copyright © 2011-2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2011-2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -783,11 +783,10 @@ namespace MySql.Data.VisualStudio
     private void BuildTypesList(IClassificationTypeRegistryService typeService)
     {
       mySqlTypes = new Dictionary<MySqlTokenType, IClassificationType>();
-      mySqlTypes[MySqlTokenType.Comment] = typeService.GetClassificationType("MySqlComment");
-      mySqlTypes[MySqlTokenType.Keyword] = typeService.GetClassificationType("MySqlKeyword");
-      mySqlTypes[MySqlTokenType.Operator] = typeService.GetClassificationType("MySqlOperator");
-      mySqlTypes[MySqlTokenType.Literal] = typeService.GetClassificationType("MySqlLiteral");
-      mySqlTypes[MySqlTokenType.Text] = typeService.GetClassificationType("MySqlText");
+      foreach (MySqlTokenType tokenType in Enum.GetValues(typeof(MySqlTokenType)))
+      {
+        mySqlTypes[tokenType] = typeService.GetClassificationType("MySql" + tokenType);
+      }
     }
   }
 }
