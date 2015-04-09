@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -40,7 +40,7 @@ namespace MySql.Data.VisualStudio
     public const uint cmdCreateProcedure = 0x120;
     public const uint cmdAlterProcedure = 0x121;
     public const uint cmdDebugProcedure = 0x122;
-    
+
 
     public const uint cmdCreateFunction = 0x130;
 
@@ -48,26 +48,27 @@ namespace MySql.Data.VisualStudio
     public const uint cmdAlterTrigger = 0x141;
 
     public const uint cmdCreateUDF = 0x150;
-    public const uint cmdDelete = 0x160;        
+    public const uint cmdDelete = 0x160;
 
     public const uint cmdidGlobalCreateTable = 500;
     public const uint cmdidGlobalCreateView = 501;
     public const uint cmdidGlobalCreateProcedure = 502;
     public const uint cmdidGlobalCreateFunction = 503;
-    public const uint cmdidGlobalCreateUDF = 504;        
+    public const uint cmdidGlobalCreateUDF = 504;
     public const uint cmdidGenerateDatabaseScript = 507;
     public const uint cmdidSchemaCompareTo = 508;
-    public const uint cmdidSchemaCompare = 509;        
+    public const uint cmdidSchemaCompare = 509;
     public const uint cmdidDBExport = 511;
     public const uint cmdidLaunchWorkbench = 512;
     public const uint cmdidOpenUtilitiesPrompt = 513;
+    public const uint cmdidNewMySQLScript = 13609;
 
     public const uint cmdidAddConnection = 0x301;
     public const uint cmdidMRUList = 0x0401;
 
     public const uint cmdProjectTypeMvcProject = 0x103;
     public const uint cmdProjectTypeWinFormsProject = 0x104;
-       
+
   };
 
   static class SharedCommands

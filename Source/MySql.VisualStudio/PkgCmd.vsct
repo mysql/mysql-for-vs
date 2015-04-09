@@ -43,7 +43,7 @@
           <ButtonText>&amp;Add New</ButtonText>
         </Strings>
       </Menu>
-      
+
       <Menu guid="guidIDEToolbarCmdSet" id="Toolbar" type="Toolbar" >
         <CommandFlag>DefaultDocked</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -67,7 +67,7 @@
 
       <!--Menu item for project type-->
       <Menu guid="guidIDEToolbarCmdSet" id="VSProjectTypeMenuController" priority="0x0201" type="MenuController">
-        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup"/>        
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup"/>
         <CommandFlag>TextChanges</CommandFlag>
         <CommandFlag>TextIsAnchorCommand</CommandFlag>
         <Strings>
@@ -92,7 +92,7 @@
       <Group guid="guidIDEToolbarCmdSet" id="ToolbarGroup" priority="0x0000">
         <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
       </Group>
-      
+
       <!-- New group for the items in the menu controller -->
       <Group guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" priority="0x0600">
         <Parent guid="guidIDEToolbarCmdSet" id="VSCTMenuController"/>
@@ -108,9 +108,9 @@
         <Parent guid="guidIDEToolbarCmdSet" id="VSCTMenuController"/>
       </Group>
       <!-- end of the dynamic list group-->
-      
+
     </Groups>
-    
+
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button 
         or combo box in a toolbar. -->
@@ -187,17 +187,9 @@
         <Strings>
           <ButtonText>Create View</ButtonText>
         </Strings>
-      </Button>     
-	  <!--<Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySqlScript" type="Button" priority="0x103">
-        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />                
-        <Icon guid="guidImages" id="bmpMySqlScript" />
-        <Strings>
-          <CommandName>cmdidNewMySQLScript</CommandName>
-            <ButtonText>New MySQL Script</ButtonText>
-        </Strings>
-      </Button>-->
+      </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateProcedure" type="Button" priority ="0x100">
-        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>        
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
@@ -267,7 +259,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Icon guid="guidImages" id="bmpConfig" />
-        <Strings> 
+        <Strings>
           <CommandName>cmdidConfig</CommandName>
           <ButtonText>MySQL Website Configuration</ButtonText>
         </Strings>
@@ -291,7 +283,7 @@
           <CommandName>cmdidDebugRoutine</CommandName>
           <ButtonText>Debug MySQL Routine</ButtonText>
         </Strings>
-      </Button>      
+      </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -301,8 +293,8 @@
           <ButtonText>&amp;MySQL Data Export</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button" priority ="0x207">
-	   <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button" priority ="0x207">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Icon guid="guidImages" id="bmpDbExport" />
@@ -311,40 +303,48 @@
           <ButtonText>MySQL Data Export</ButtonText>
         </Strings>
       </Button>
-	  
+
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>  
-        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
-	    <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>  
-        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-	 	  
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">	  
+
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
           <ButtonText>&amp;Launch MySQL Workbench</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
-		<Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidNewMySQLScript</CommandName>
+          <ButtonText>New MySQL &amp;Script</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
@@ -371,7 +371,7 @@
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidSchemaCompare" type="Button">
         <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>DefaultInvisible</CommandFlag>        
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <CommandName>cmdidSchemaCompare</CommandName>
           <ButtonText>Compare Schema...</ButtonText>
@@ -385,7 +385,7 @@
           <ButtonText>Compare Schema To</ButtonText>
         </Strings>
       </Button>
-      
+
       <!-- Placeholder button for the dynamic list-->
       <Button guid="guidIDEToolbarCmdSet" id="cmdidMRUList" type="Button" priority="0x0104">
         <Parent guid="guidIDEToolbarCmdSet" id="MRUListGroup" />
@@ -411,13 +411,13 @@
           <CommandName>cmdidAddConnection</CommandName>
           <ButtonText>MySQL Script with New Connection</ButtonText>
         </Strings>
-      </Button>     
-     
+      </Button>
+
       <!-- End Menu Controller buttons-->
-      
+
       <!-- Project Type Menu Controller -->
-       <Button guid="guidIDEToolbarCmdSet" id="cmdProjectTypeMvcProject" priority="0x0104"
-              type="Button">
+      <Button guid="guidIDEToolbarCmdSet" id="cmdProjectTypeMvcProject" priority="0x0104"
+             type="Button">
         <Parent guid="guidIDEToolbarCmdSet" id="VSProjectTypeControllerGroup" />
         <Icon guid="guidImages" id="bmpNewMySqlProject" />
         <!-- <CommandFlag>DefaultInvisible</CommandFlag>
@@ -440,7 +440,7 @@
         </Strings>
       </Button>
       <!-- End menu of project types icons-->
-      
+
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -465,6 +465,9 @@
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
@@ -476,7 +479,7 @@
     </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
-    </CommandPlacement>  
+    </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
     </CommandPlacement>
@@ -502,7 +505,7 @@
       <IDSymbol name="Toolbar" value="0x1000"/>
       <IDSymbol name="ToolbarGroup" value="0x1050"/>
       <!-- Menu controller commands-->
-      <IDSymbol name="cmdidAddConnection" value="0x301" />      
+      <IDSymbol name="cmdidAddConnection" value="0x301" />
       <!-- end Menu controller commands-->
       <!-- ID's of the menu controller -->
       <IDSymbol name="VSCTMenuController" value="0x0101" />
@@ -517,7 +520,7 @@
       <IDSymbol name="VSProjectTypeControllerGroup" value="0x0202" />
       <!--menu controller project type end-->
 
-      <!-- Commands for project type list-->            
+      <!-- Commands for project type list-->
       <IDSymbol name="cmdProjectTypeMvcProject" value="0x103"/>
       <IDSymbol name="cmdProjectTypeWinFormsProject" value="0x104"/>
       <!--end of the Project Type List-->
@@ -545,13 +548,14 @@
       <IDSymbol name="cmdidAlterRoutine" value="0x121" />
       <IDSymbol name="cmdidDebugRoutine" value="0x122" />
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
-      <IDSymbol name="cmdidDelete" value="0x160"/>     
+      <IDSymbol name="cmdidDelete" value="0x160"/>
       <IDSymbol name="cmdidGenerateDatabaseScript" value="507"/>
       <IDSymbol name="cmdidSchemaCompareTo" value="508"/>
-      <IDSymbol name="cmdidSchemaCompare" value="509"/>            
+      <IDSymbol name="cmdidSchemaCompare" value="509"/>
       <IDSymbol name="cmdidDBExport" value="511" />
-      <IDSymbol name="cmdidLaunchWorkbench" value="512"/>  
-      <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>                	  	  
+      <IDSymbol name="cmdidLaunchWorkbench" value="512"/>
+      <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>
+      <IDSymbol name="cmdidNewMySQLScript" value="13609"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
@@ -590,9 +594,9 @@
     </GuidSymbol>
     <GuidSymbol name="guidImages" value="{db91e508-7dbc-49d4-a0b3-5e4920e43655}" >
       <IDSymbol name="bmpConfig" value="1" />
-      <IDSymbol name="bmpMySqlScript" value="2" />	  	  	 
+      <IDSymbol name="bmpMySqlScript" value="2" />
       <IDSymbol name="bmpDebugRoutineToolBar" value="3" />
-      <IDSymbol name="bmpDbExport" value="4" />	  
+      <IDSymbol name="bmpDbExport" value="4" />
       <IDSymbol name="bmpLaunchWorkbenchToolBar" value="5" />
       <IDSymbol name="bmpOpenUtilitiesPromptToolBar" value="6" />
       <IDSymbol name="bmpAddMySqlConnection" value="7" />

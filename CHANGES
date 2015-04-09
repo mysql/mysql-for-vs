@@ -2,6 +2,7 @@
 
 1.3.0
 - Fixed problem with font colors that made them difficult to read when using the Visual Studio's Dark theme.
+- Added a new option to create MySQL scripts directly from Server Explorer.
 
 1.2.4
 - Fix for MySQL parser does not support new syntax in 'explain' for grammar 5.7 (Oracle bug #19431740).

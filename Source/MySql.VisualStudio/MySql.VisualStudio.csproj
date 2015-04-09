@@ -905,6 +905,7 @@
     <EmbeddedResource Include="DDEX\MySqlDataObjectSupport.xml">
     </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlDataViewSupport.xml">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlNewPasswordDialog.resx">
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
@@ -1043,8 +1044,8 @@
       </ItemGroup>
       <ItemGroup>
         <VSCTCompile Include="PkgCmd.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
@@ -1054,8 +1055,8 @@
       </ItemGroup>
       <ItemGroup>
         <VSCTCompile Include="PkgCmd.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
@@ -1065,16 +1066,16 @@
       </ItemGroup>
       <ItemGroup>
         <VSCTCompile Include="PkgCmd.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '9.0'">
       <ItemGroup>
         <VSCTCompile Include="PkgCmd90.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
