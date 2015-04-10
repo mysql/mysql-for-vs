@@ -209,6 +209,11 @@ namespace MySql.Data.VisualStudio
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
 
+    /// <summary>
+    /// Handles the BeforeQueryStatus event of the cmdMenuNewMySQLScript control, sets the connection object to be used by the opening SQL Editor.
+    /// </summary>
+    /// <param name="sender">The generator of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     void cmdMenuNewMySQLScript_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand newScriptbtn = sender as OleMenuCommand;
@@ -222,7 +227,11 @@ namespace MySql.Data.VisualStudio
       newScriptbtn.Visible = newScriptbtn.Enabled = GetConnection(ConnectionName) != null;
     }
 
-    private void CreateNewMySqlScript(IVsDataExplorerConnection connection)
+    /// <summary>
+    /// Creates a new MySQL script file, opens the script editor window and deletes the file from the system.
+    /// </summary>
+    /// <param name="connection">The connection to </param>
+    private void CreateNewMySqlScript()
     {
       //Create a new file with .mysql extension so the editor is able to open it.
       var tempFileInfo = new FileInfo(Path.GetTempFileName());
@@ -459,16 +468,21 @@ namespace MySql.Data.VisualStudio
         MySqlWorkbench.LaunchUtilitiesShell();
     }
 
+    /// <summary>
+    /// News the script callback.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void NewScriptCallback(object sender, EventArgs e)
     {
-      IVsDataExplorerConnection connection = GetConnection(ConnectionName);
+      var connection = GetCurrentConnection();
       if (connection == null) return;
 
       //Set the selected connection so when the editor window is open it can work with.
-      MysqlConnectionSelected = GetCurrentConnection();
+      MysqlConnectionSelected = connection;
 
       //Create New SQL Script file and open the editor with it.
-      CreateNewMySqlScript(connection);
+      CreateNewMySqlScript();
     }
 
     private void LaunchWBCallback(object sender, EventArgs e)
