@@ -567,6 +567,16 @@
     </Compile>
     <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs">
     </Compile>
+    <Compile Include="Editors\GenericEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\MyJsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\MyJsEditor.Designer.cs">
+      <DependentUpon>MyJsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\MyJsEditorPane.cs" />
     <Compile Include="Editors\VSCodeEditorUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -589,8 +599,6 @@
     </Compile>
     <Compile Include="Editors\GenerateChangeScriptDialog.Designer.cs">
       <DependentUpon>GenerateChangeScriptDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\IEditor.cs">
     </Compile>
     <Compile Include="Editors\IndexColumnEditorDialog.cs">
       <SubType>Form</SubType>

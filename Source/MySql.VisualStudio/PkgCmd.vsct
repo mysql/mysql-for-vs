@@ -341,6 +341,14 @@
           <ButtonText>New MySQL &amp;Script</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidNewJavascript</CommandName>
+          <ButtonText>New &amp;Javascript</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
@@ -468,6 +476,9 @@
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" priority="0x0100">
+      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
+    </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
@@ -556,6 +567,7 @@
       <IDSymbol name="cmdidLaunchWorkbench" value="512"/>
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>
       <IDSymbol name="cmdidNewMySQLScript" value="13609"/>
+      <IDSymbol name="cmdidNewJavascript" value="13610"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>
     </GuidSymbol>
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">

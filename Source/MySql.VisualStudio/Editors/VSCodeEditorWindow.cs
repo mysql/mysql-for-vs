@@ -1,53 +1,54 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
-using System.Threading;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell.Interop;
+using System.Windows.Forms;
+using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using System.Windows.Forms;
-using System.Drawing;
+using Constants = Microsoft.VisualStudio.OLE.Interop.Constants;
+using IMessageFilter = System.Windows.Forms.IMessageFilter;
 
-namespace MySql.Data.VisualStudio.Editors 
+namespace MySql.Data.VisualStudio.Editors
 {
 
   /// <summary>
-  /// This class serves as 
+  /// This class serves as
   /// a) Command broker (subscribing once to the mappable keys of Visual Studio, instead of many times
-  /// Solving a bug of backspace affecting the wrong mysql editor window when more than one is open).
-  /// b) A repository to serve the connections of each SqlEditor for the Intellisense classifiers.
+  /// Solving a bug of backspace affecting the wrong mysql editorWindow window when more than one is open).
+  /// b) A repository to serve the connections of each Editor for the Intellisense classifiers.
   /// </summary>
-  internal class EditorBroker : IOleCommandTarget 
+  internal class EditorBroker : IOleCommandTarget
   {
     private Dictionary<string, VSCodeEditorWindow> dic = new Dictionary<string, VSCodeEditorWindow>();
-    private EnvDTE.DTE Dte;
+    private DTE Dte;
     private uint CmdTargetCookie;
-    internal static EditorBroker Broker { get; private set; }        
+    internal static EditorBroker Broker { get; private set; }
 
     private EditorBroker(ServiceBroker sb)
     {
@@ -57,29 +58,29 @@ namespace MySql.Data.VisualStudio.Editors
 
       if (hr != VSConstants.S_OK)
         Marshal.ThrowExceptionForHR(hr);
-      this.Dte = (EnvDTE.DTE)sb.Site.GetService(typeof(EnvDTE.DTE));
+      this.Dte = (DTE)sb.Site.GetService(typeof(DTE));
     }
 
     // this method must be externally synchronized
     internal static void CreateSingleton(ServiceBroker sb)
     {
       if (Broker != null)
-        throw new InvalidOperationException( "The singleton broker has alreaby been created." );
+        throw new InvalidOperationException("The singleton broker has alreaby been created.");
       Broker = new EditorBroker(sb);
     }
 
-    internal static void RegisterEditor( VSCodeEditorWindow editor )
+    internal static void RegisterEditor(VSCodeEditorWindow editorWindow)
     {
-      Broker.dic.Add(editor.Parent.SqlEditor.Pane.DocumentPath, editor);
+      Broker.dic.Add(editorWindow.Parent.Editor.GetDocumentPath(), editorWindow);
     }
 
     internal static void UnregisterEditor(VSCodeEditorWindow editor)
     {
-      Broker.dic.Remove( editor.Parent.SqlEditor.Pane.DocumentPath );
+      Broker.dic.Remove(editor.Parent.Editor.GetDocumentPath());
     }
 
     /// <summary>
-    /// Returns the DbConnection associated with the current mysql editor.
+    /// Returns the DbConnection associated with the current mysql editorWindow.
     /// </summary>
     /// <returns></returns>
     internal DbConnection GetCurrentConnection()
@@ -87,11 +88,11 @@ namespace MySql.Data.VisualStudio.Editors
       VSCodeEditorWindow editor;
       if (Dte.ActiveDocument == null) return null;
       dic.TryGetValue(Dte.ActiveDocument.FullName, out editor);
-      // Null here means No connection opened for the current mysql editor, or current active window not a mysql editor.
+      // Null here means No connection opened for the current mysql editorWindow, or current active window not a mysql editorWindow.
       if (editor == null) return null;
       else
       {
-        return editor.Parent.SqlEditor.Connection;
+        return editor.Parent.Editor.Connection;
       }
     }
 
@@ -104,39 +105,38 @@ namespace MySql.Data.VisualStudio.Editors
       VSCodeEditorWindow editor;
       if (Dte.ActiveDocument == null) return null;
       dic.TryGetValue(Dte.ActiveDocument.FullName, out editor);
-      // Null here means No connection opened for the current mysql editor, or current active window not a mysql editor.
+      // Null here means No connection opened for the current mysql editorWindow, or current active window not a mysql editorWindow.
       if (editor == null) return null;
       else
       {
-        return editor.Parent.SqlEditor.CurrentDatabase;
+        return editor.Parent.Editor.CurrentDatabase;
       }
     }
 
     public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
     {
       VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null) 
-        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      if (Dte.ActiveDocument == null)
+        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
       if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
         return ((IOleCommandTarget)editor).Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
       else
-        return ( int )Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
     }
 
     public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
     {
       VSCodeEditorWindow editor;
       if (Dte.ActiveDocument == null)
-        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
       if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
         return ((IOleCommandTarget)editor).QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
       else
-        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
     }
   }
 
-  internal class VSCodeEditorWindow : NativeWindow,
-      System.Windows.Forms.IMessageFilter, IOleCommandTarget, IDisposable
+  internal class VSCodeEditorWindow : NativeWindow, IMessageFilter, IOleCommandTarget, IDisposable
   {
     ServiceBroker services;
     VSCodeEditor coreEditor;
@@ -144,13 +144,13 @@ namespace MySql.Data.VisualStudio.Editors
     private uint cmdTargetCookie;
     internal VSCodeEditorUserControl Parent { get; set; }
 
-    public VSCodeEditorWindow(ServiceBroker sb, UserControl parent)
+    public VSCodeEditorWindow(ServiceBroker sb, VSCodeEditorUserControl parent)
     {
-      Parent = (VSCodeEditorUserControl)parent;
+      Parent = parent;
       services = sb;
-      coreEditor = new VSCodeEditor(parent.Handle, services);
+      coreEditor = new VSCodeEditor(Parent, services);
 
-      //Create window            
+      //Create window
       IVsCodeWindow win = coreEditor.CodeWindow;
       cmdTarget = win as IOleCommandTarget;
 
@@ -172,7 +172,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       lock (typeof(EditorBroker))
       {
-        if (EditorBroker.Broker == null) 
+        if (EditorBroker.Broker == null)
         {
           EditorBroker.CreateSingleton(services);
         }
@@ -291,7 +291,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="pvaOut">Pointer to command output</param>
     /// <returns></returns>
     public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-    {      
+    {
       return cmdTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
     }
 

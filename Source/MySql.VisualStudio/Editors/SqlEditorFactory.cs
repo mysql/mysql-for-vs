@@ -1,32 +1,31 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -56,11 +55,28 @@ namespace MySql.Data.VisualStudio.Editors
       pgrfCDW = 0;
       LastDocumentPath = pszMkDocument;
       pguidCmdUI = VSConstants.GUID_TextEditorFactory;
-      SqlEditorPane editor = new SqlEditorPane(serviceProvider, this);
-      ppunkDocData = Marshal.GetIUnknownForObject(editor.Window);
-      ppunkDocView = Marshal.GetIUnknownForObject(editor);
+
+      ppunkDocData = IntPtr.Zero;
+      ppunkDocView = IntPtr.Zero;
+      WindowPane editor;
+
+      FileInfo fileInfo = new FileInfo(LastDocumentPath);
+      if (fileInfo.Extension.ToLower().Equals(".mysql"))
+      {
+        editor = new SqlEditorPane(serviceProvider, this);
+      }
+      else
+      {
+        editor = new MyJsEditorPane(serviceProvider, this);
+      }
+      if (editor.Window != null)
+      {
+        ppunkDocData = Marshal.GetIUnknownForObject(editor.Window);
+        ppunkDocView = Marshal.GetIUnknownForObject(editor);
+      }
+
       pbstrEditorCaption = "";
-      return VSConstants.S_OK; 
+      return VSConstants.S_OK;
     }
 
     int IVsEditorFactory.MapLogicalView(ref Guid logicalView, out string physicalView)
@@ -78,7 +94,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
     }
 
-    int IVsEditorFactory.SetSite(Microsoft.VisualStudio.OLE.Interop.IServiceProvider psp)
+    int IVsEditorFactory.SetSite(IOleServiceProvider psp)
     {
       serviceProvider = new ServiceProvider(psp);
       return VSConstants.S_OK;

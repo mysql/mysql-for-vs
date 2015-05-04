@@ -33,7 +33,7 @@ using System.IO;
 
 namespace MySql.Data.VisualStudio
 {
-  [Guid("D949EA95-EDA1-4b65-8A9E-266949A99360")]
+  [Guid(GuidStrings.SqlEditorFactory)]
   class MySqlProviderObjectFactory : AdoDotNetProviderObjectFactory
   {
     private static DbProviderFactory factory;

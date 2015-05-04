@@ -1,52 +1,50 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
-using System.Text;
+using System.Data.Common;
+using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
-using System.Data.Common;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using System.Globalization;
-using System.IO;
-
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  public partial class SqlEditor : BaseEditorControl
+  /// <summary>
+  /// This class will handle the logic for the MySQL Files Editor.
+  /// </summary>
+  internal partial class SqlEditor : GenericEditor
   {
-    private DbConnection connection;
-    internal DbConnection Connection { get { return connection; } }
-    private DbProviderFactory factory;
+    /// <summary>
+    /// Gets the pane for the current editor. In this case, the pane is from type SqlEditorPane.
+    /// </summary>
     internal SqlEditorPane Pane { get; set; }
 
-    private bool[] _isColBlob = null;
-    internal string CurrentDatabase = null;
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SqlEditor"/> class.
+    /// </summary>
+    /// <exception cref="System.Exception">MySql Data Provider is not correctly registered</exception>
     public SqlEditor()
     {
       InitializeComponent();
@@ -56,7 +54,12 @@ namespace MySql.Data.VisualStudio.Editors
       tabControl1.TabPages.Remove(resultsPage);
     }
 
-    internal SqlEditor(ServiceProvider sp, SqlEditorPane pane )
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SqlEditor"/> class.
+    /// </summary>
+    /// <param name="sp">The sp.</param>
+    /// <param name="pane">The pane.</param>
+    internal SqlEditor(ServiceProvider sp, SqlEditorPane pane)
       : this()
     {
       Pane = pane;
@@ -73,44 +76,75 @@ namespace MySql.Data.VisualStudio.Editors
             connection.Open();
           UpdateButtons();
         }
-      }          
+      }
     }
 
     #region Overrides
 
+    /// <summary>
+    /// Gets the file format list.
+    /// </summary>
+    /// <returns>The string with the file name and extensions for the 'Save as' dialog.</returns>
     protected override string GetFileFormatList()
     {
       return "MySQL Script Files (*.mysql)\n*.mysql\n\n";
     }
-
-    protected override void SaveFile(string fileName)
+    /// <summary>
+    /// Gets the document path.
+    /// </summary>
+    /// <returns></returns>
+    public override string GetDocumentPath()
     {
-      using (StreamWriter writer = new StreamWriter(fileName, false))
+      return Pane.DocumentPath;
+    }
+
+    /// <summary>
+    /// Saves the file.
+    /// </summary>
+    /// <param name="newFileName">New name of the file.</param>
+    protected override void SaveFile(string newFileName)
+    {
+      using (StreamWriter writer = new StreamWriter(newFileName, false))
       {
         writer.Write(codeEditor.Text);
       }
     }
 
-    protected override void LoadFile(string fileName)
+    /// <summary>
+    /// Loads the file.
+    /// </summary>
+    /// <param name="newFileName">New name of the file.</param>
+    protected override void LoadFile(string newFileName)
     {
-      if (!File.Exists(fileName)) return;
-      using (StreamReader reader = new StreamReader(fileName))
+      if (!File.Exists(newFileName)) return;
+      using (StreamReader reader = new StreamReader(newFileName))
       {
         string sql = reader.ReadToEnd();
         codeEditor.Text = sql;
       }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is dirty.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is dirty; otherwise, <c>false</c>.
+    /// </value>
     protected override bool IsDirty
     {
       get { return codeEditor.IsDirty; }
       set { codeEditor.IsDirty = value; }
     }
 
-    #endregion    
+    #endregion
 
+    /// <summary>
+    /// Handles the Click event of the connectButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void connectButton_Click(object sender, EventArgs e)
-    {      
+    {
       resultsPage.Hide();
       ConnectDialog d = new ConnectDialog();
       d.Connection = connection;
@@ -133,6 +167,11 @@ Check that the server is running, the database exist and the user credentials ar
       }
     }
 
+    /// <summary>
+    /// Handles the Click event of the runSqlButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void runSqlButton_Click(object sender, EventArgs e)
     {
       string sql = codeEditor.Text.Trim();
@@ -157,6 +196,10 @@ Check that the server is running, the database exist and the user credentials ar
       else CurrentDatabase = (string)val;
     }
 
+    /// <summary>
+    /// Executes the select.
+    /// </summary>
+    /// <param name="sql">The SQL.</param>
     private void ExecuteSelect(string sql)
     {
       tabControl1.TabPages.Clear();
@@ -166,10 +209,10 @@ Check that the server is running, the database exist and the user credentials ar
       {
         da.Fill(dt);
         tabControl1.TabPages.Add(resultsPage);
-        resultsGrid.CellFormatting -= new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
+        resultsGrid.CellFormatting -= new DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
         resultsGrid.DataSource = dt;
         SanitizeBlobs();
-        resultsGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
+        resultsGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
       }
       catch (Exception ex)
       {
@@ -197,9 +240,9 @@ Check that the server is running, the database exist and the user credentials ar
         DataGridViewTextBoxColumn newCol = null;
         if (!(col is DataGridViewImageColumn)) continue;
         coll.Insert(i, newCol = new DataGridViewTextBoxColumn()
-        { 
-          DataPropertyName = col.DataPropertyName, 
-          HeaderText = col.HeaderText, 
+        {
+          DataPropertyName = col.DataPropertyName,
+          HeaderText = col.HeaderText,
           ReadOnly = true
         });
         coll.Remove(col);
@@ -207,10 +250,15 @@ Check that the server is running, the database exist and the user credentials ar
       }
     }
 
+    /// <summary>
+    /// Handles the CellFormatting event of the resultsGrid control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> instance containing the event data.</param>
     private void resultsGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
-      if( e.ColumnIndex == -1 ) return;
-      if( _isColBlob[ e.ColumnIndex ] )
+      if (e.ColumnIndex == -1) return;
+      if (_isColBlob[e.ColumnIndex])
       {
         if (e.Value == null || e.Value is DBNull)
           e.Value = "<NULL>";
@@ -219,6 +267,10 @@ Check that the server is running, the database exist and the user credentials ar
       }
     }
 
+    /// <summary>
+    /// Executes the script.
+    /// </summary>
+    /// <param name="sql">The SQL.</param>
     private void ExecuteScript(string sql)
     {
       tabControl1.TabPages.Clear();
@@ -238,17 +290,20 @@ Check that the server is running, the database exist and the user credentials ar
       }
     }
 
-    private void validateSqlButton_Click(object sender, EventArgs e)
-    {
-
-    }
-
+    /// <summary>
+    /// Handles the Click event of the disconnectButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void disconnectButton_Click(object sender, EventArgs e)
     {
       connection.Close();
       UpdateButtons();
     }
 
+    /// <summary>
+    /// Updates the buttons.
+    /// </summary>
     private void UpdateButtons()
     {
       bool connected = connection.State == ConnectionState.Open;

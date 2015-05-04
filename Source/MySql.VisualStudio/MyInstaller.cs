@@ -1,28 +1,27 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
 using Microsoft.Win32;
@@ -97,7 +96,7 @@ namespace MySql.Data.VisualStudio
       RegistryKey dsKey = rootKey.CreateSubKey(keyPath);
       dsKey.SetValue(null, "MySQL Server");
       RegistryKey dsSubKey = dsKey.CreateSubKey("SupportingProviders").CreateSubKey(
-          Guids.Provider.ToString("B"));
+          GuidList.Provider.ToString("B"));
       dsSubKey.SetValue("Description",
           "Provider_Description, MySql.Data.VisualStudio.Properties.Resources");
       dsSubKey.SetValue("DisplayName",
@@ -108,7 +107,7 @@ namespace MySql.Data.VisualStudio
 
       // Data Provider
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\DataProviders\{1}",
-          version, Guids.Provider.ToString("B"));
+          version, GuidList.Provider.ToString("B"));
       RegistryKey dpKey = rootKey.CreateSubKey(keyPath);
       dpKey.SetValue(null, ".NET Framework Data Provider for MySQL");
       dpKey.SetValue("DisplayName",
@@ -118,7 +117,7 @@ namespace MySql.Data.VisualStudio
       dpKey.SetValue("Description",
           "Provider_Description, MySql.Data.VisualStudio.Properties.Resources");
       dpKey.SetValue("Technology", "{77AB9A9D-78B9-4ba7-91AC-873F5338F1D2}");
-      dpKey.SetValue("FactoryService", GuidList.EditorFactoryCLSID.ToString("B"));
+      dpKey.SetValue("FactoryService", GuidList.SqlEditorFactoryGuid.ToString("B"));
       dpKey.SetValue("InvariantName", "MySql.Data.MySqlClient");
       RegistryKey dpKeySO = dpKey.CreateSubKey("SupportedObjects");
       dpKeySO.CreateSubKey("DataConnectionPromptDialog");
@@ -138,46 +137,48 @@ namespace MySql.Data.VisualStudio
 
       if (version.Equals("8.0") || version.Equals("9.0"))
       {
-        CreateCompactFrameworkKey(rootKey, cfVersion, "PocketPC", Guids.Package.ToString("B"));
-        CreateCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", Guids.Package.ToString("B"));
-        CreateCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", Guids.Package.ToString("B"));
+        CreateCompactFrameworkKey(rootKey, cfVersion, "PocketPC", GuidList.Package.ToString("B"));
+        CreateCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", GuidList.Package.ToString("B"));
+        CreateCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", GuidList.Package.ToString("B"));
       }
 
       // Menus
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Menus", version);
       RegistryKey menuKey = rootKey.OpenSubKey(keyPath, true);
-      menuKey.SetValue(Guids.Package.ToString("B"), ",1000,1");
+      menuKey.SetValue(GuidList.Package.ToString("B"), ",1000,1");
 
       // Templates
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Projects\{{a2fe74e1-b743-11d0-ae1a-00a0c90fffc3}}\AddItemTemplates\TemplateDirs\{1}",
-          version, Guids.Package.ToString("B"));
+          version, GuidList.Package.ToString("B"));
       RegistryKey templateKey = rootKey.CreateSubKey(keyPath);
       RegistryKey templateSubKey = templateKey.CreateSubKey("/1");
       templateSubKey.SetValue(null, "#105");
       string path = Assembly.GetExecutingAssembly().CodeBase;
       path = path.Substring(8);
       string root = System.IO.Path.GetDirectoryName(path);
-      templateSubKey.SetValue("Package", Guids.Package.ToString("B"));
+      templateSubKey.SetValue("Package", GuidList.Package.ToString("B"));
       templateSubKey.SetValue("TemplatesDir", root);
       templateSubKey.SetValue("SortPriority", 32);
 
-      // Editor
+      // Editors      
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Editors\{1}",
-          version, Guids.SqlEditorFactory.ToString("B"));
+          version, GuidList.SqlEditorFactoryGuid.ToString("B"));
       RegistryKey editorKey = rootKey.CreateSubKey(keyPath);
       editorKey.SetValue(null, "Package name");
       editorKey.SetValue("DisplayName", "#105");
-      editorKey.SetValue("Package", Guids.Package.ToString("B"));
+      editorKey.SetValue("Package", GuidList.Package.ToString("B"));
       RegistryKey extensionsKey = editorKey.CreateSubKey("Extensions");
       extensionsKey.SetValue("mysql", 32);
+      extensionsKey = editorKey.CreateSubKey("Extensions2");
+      extensionsKey.SetValue("myjs", 32);
       RegistryKey logicalViewsKey = editorKey.CreateSubKey("LogicalViews");
       logicalViewsKey.SetValue("{7651a703-06e5-11d1-8ebd-00a0c90f26ea}", "");
 
       // Service
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Services\{1}",
-          version, GuidList.EditorFactoryCLSID.ToString("B"));
+          version, GuidList.SqlEditorFactoryGuid.ToString("B"));
       RegistryKey srvKey = rootKey.CreateSubKey(keyPath);
-      srvKey.SetValue(null, Guids.Package.ToString("B"));
+      srvKey.SetValue(null, GuidList.Package.ToString("B"));
       srvKey.SetValue("Name", "MySQL Provider Object Factory");
 
       Assembly a = Assembly.GetExecutingAssembly();
@@ -189,7 +190,7 @@ namespace MySql.Data.VisualStudio
           version, assemblyVersion);
       RegistryKey ipKey = rootKey.CreateSubKey(keyPath);
       ipKey.SetValue(null, String.Format("MySQL for Visual Studio {0}", assemblyVersion));
-      ipKey.SetValue("Package", Guids.Package.ToString("B"));
+      ipKey.SetValue("Package", GuidList.Package.ToString("B"));
       ipKey.SetValue("UseInterface", 1);
 
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MySQL", version);
@@ -201,7 +202,7 @@ namespace MySql.Data.VisualStudio
 
       // Package
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
-          version, Guids.Package.ToString("B"));
+          version, GuidList.Package.ToString("B"));
       RegistryKey packageKey = rootKey.CreateSubKey(keyPath);
       packageKey.SetValue(null, String.Format("MySQL for Visual Studio {0}", assemblyVersion));
       packageKey.SetValue("InprocServer32",
@@ -222,7 +223,7 @@ namespace MySql.Data.VisualStudio
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\AutoLoadPackages\{{F1536EF8-92EC-443C-9ED7-FDADF150DA82}}",
           version);
       RegistryKey autoLoadKey = rootKey.OpenSubKey(keyPath, true);
-      autoLoadKey.SetValue(Guids.Package.ToString("B"), 0);
+      autoLoadKey.SetValue(GuidList.Package.ToString("B"), 0);
     }
 
     private static void CreateCompactFrameworkKey(RegistryKey rootKey, string version, string platform, string providerGuid)
@@ -250,7 +251,7 @@ namespace MySql.Data.VisualStudio
 
       // Data Provider
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\DataProviders\{1}",
-          version, Guids.Provider.ToString("B"));
+          version, GuidList.Provider.ToString("B"));
       key = rootKey.OpenSubKey(keyPath);
       if (key != null)
       {
@@ -267,20 +268,20 @@ namespace MySql.Data.VisualStudio
 
       if (!string.IsNullOrEmpty(cfVersion))
       {
-        RemoveCompactFrameworkKey(rootKey, cfVersion, "PocketPC", Guids.Package.ToString("B"));
-        RemoveCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", Guids.Package.ToString("B"));
-        RemoveCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", Guids.Package.ToString("B"));
+        RemoveCompactFrameworkKey(rootKey, cfVersion, "PocketPC", GuidList.Package.ToString("B"));
+        RemoveCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", GuidList.Package.ToString("B"));
+        RemoveCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", GuidList.Package.ToString("B"));
       }
 
       // Menus
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Menus", version);
       RegistryKey menuKey = rootKey.OpenSubKey(keyPath, true);
-      menuKey.DeleteValue(Guids.Package.ToString("B"), false);
+      menuKey.DeleteValue(GuidList.Package.ToString("B"), false);
 
 
       // Templates
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Projects\{{a2fe74e1-b743-11d0-ae1a-00a0c90fffc3}}\AddItemTemplates\TemplateDirs\{1}",
-          version, Guids.Package.ToString("B"));
+          version, GuidList.Package.ToString("B"));
       key = rootKey.OpenSubKey(keyPath);
       if (key != null)
       {
@@ -290,7 +291,7 @@ namespace MySql.Data.VisualStudio
 
       // Editor
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Editors\{1}",
-          version, Guids.SqlEditorFactory.ToString("B"));
+          version, GuidList.SqlEditorFactoryGuid.ToString("B"));
       key = rootKey.OpenSubKey(keyPath);
       if (key != null)
       {
@@ -300,7 +301,7 @@ namespace MySql.Data.VisualStudio
 
       // Service
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Services\{1}",
-          version, GuidList.EditorFactoryCLSID.ToString("B"));
+          version, GuidList.SqlEditorFactoryGuid.ToString("B"));
       key = rootKey.OpenSubKey(keyPath);
       if (key != null)
       {
@@ -332,7 +333,7 @@ namespace MySql.Data.VisualStudio
 
       // Package
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
-          version, Guids.Package.ToString("B"));
+          version, GuidList.Package.ToString("B"));
       key = rootKey.OpenSubKey(keyPath);
       if (key != null)
       {
@@ -344,7 +345,7 @@ namespace MySql.Data.VisualStudio
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\AutoLoadPackages\{{F1536EF8-92EC-443C-9ED7-FDADF150DA82}}",
           version);
       RegistryKey autoLoadKey = rootKey.OpenSubKey(keyPath, true);
-      autoLoadKey.DeleteValue(Guids.Package.ToString("B"), false);
+      autoLoadKey.DeleteValue(GuidList.Package.ToString("B"), false);
     }
 
     private static void RemoveCompactFrameworkKey(RegistryKey rootKey, string version, string platform, string providerGuid)

@@ -1,27 +1,28 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio;
@@ -31,6 +32,9 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
 {
+  /// <summary>
+  /// VSCodeEditor class will handle COM objects related to the code panel at the Editor class.
+  /// </summary>
   internal class VSCodeEditor
   {
     private ServiceBroker services;
@@ -39,17 +43,27 @@ namespace MySql.Data.VisualStudio.Editors
     private IntPtr hwnd;
     private bool noContent;
     private IVsTextBuffer textBuffer;
+    private VSCodeEditorUserControl parent;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VSCodeEditor"/> class.
+    /// </summary>
     public VSCodeEditor()
     {
       hwnd = IntPtr.Zero;
       parentHandle = IntPtr.Zero;
     }
 
-    public VSCodeEditor(IntPtr parent, ServiceBroker services)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VSCodeEditor"/> class.
+    /// </summary>
+    /// <param name="windowParent">The parent window.</param>
+    /// <param name="services">The services broker.</param>
+    public VSCodeEditor(VSCodeEditorUserControl windowParent, ServiceBroker services)
       : this()
     {
-      parentHandle = parent;
+      parent = windowParent;
+      parentHandle = parent.Handle;
       this.services = services;
       CreateCodeWindow();
     }
@@ -151,7 +165,16 @@ namespace MySql.Data.VisualStudio.Editors
           typeof(IVsTextBuffer).GUID) as IVsTextBuffer;
       textBuffer.InitializeContent("ed", 2);
 
-      Guid langSvc = new Guid(MySqlLanguageService.IID);
+      Guid langSvc = new Guid();
+      if (typeof(SqlEditor) == parent.Editor.GetType())
+      {
+        langSvc = new Guid(MySqlLanguageService.IID);
+      }
+      else
+      {
+        //TODO: [MYSQLFORVS-276] - CREATE A CLASSIFIER EXTENSION THAT COLORS THE APPROPRIATE TEXT (MYJS FILES).
+        //langSvc = new Guid(MyJsLanguageService.IID);
+      }
 
       int hr = textBuffer.SetLanguageServiceID(ref langSvc);
       if (hr != VSConstants.S_OK)

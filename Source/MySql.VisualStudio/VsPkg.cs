@@ -90,11 +90,16 @@ namespace MySql.Data.VisualStudio
       TemplateDir = @"..\..\Templates",
       NameResourceID = 105,
       DefaultName = "MySQL SQL Editor")]
+  [ProvideEditorExtension(typeof(SqlEditorFactory), ".myjs", 32,
+      ProjectGuid = "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}",
+      TemplateDir = @"..\..\Templates",
+      NameResourceID = 114,
+      DefaultName = "MySQL Javascript Editor")]
   [ProvideEditorLogicalView(typeof(SqlEditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
   [ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
-  // In order be loaded inside Visual Studio in a machine that has not the VS SDK installed, 
-  // package needs to have a valid load key (it can be requested at 
-  // http://msdn.microsoft.com/vstudio/extend/). This attributes tells the shell that this 
+  // In order be loaded inside Visual Studio in a machine that has not the VS SDK installed,
+  // package needs to have a valid load key (it can be requested at
+  // http://msdn.microsoft.com/vstudio/extend/). This attributes tells the shell that this
   // package has a load key embedded in its resources.
   [ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
   // This attribute is needed to let the shell know that this package exposes some menus.
@@ -158,32 +163,37 @@ namespace MySql.Data.VisualStudio
       if (null != mcs)
       {
         // Create the command for the menu item.
-        CommandID menuCommandID = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidConfig);
+        CommandID menuCommandID = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidConfig);
         OleMenuCommand menuItem = new OleMenuCommand(ConfigCallback, menuCommandID);
         menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
         mcs.AddCommand(menuItem);
 
-        CommandID cmdOpenUtilitiesPrompt = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidOpenUtilitiesPrompt);
+        CommandID cmdOpenUtilitiesPrompt = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidOpenUtilitiesPrompt);
         OleMenuCommand cmdItem = new OleMenuCommand(OpenMySQLUtilitiesCallback, cmdOpenUtilitiesPrompt);
         cmdItem.BeforeQueryStatus += new EventHandler(cmdOpenUtilitiesPrompt_BeforeQueryStatus);
         mcs.AddCommand(cmdItem);
 
-        CommandID cmdLaunchWB = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidLaunchWorkbench);
+        CommandID cmdLaunchWB = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidLaunchWorkbench);
         OleMenuCommand cmdMenuLaunchWB = new OleMenuCommand(LaunchWBCallback, cmdLaunchWB);
         cmdMenuLaunchWB.BeforeQueryStatus += new EventHandler(cmdLaunchWB_BeforeQueryStatus);
         mcs.AddCommand(cmdMenuLaunchWB);
 
-        CommandID cmdNewMySQLScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidNewMySQLScript);
-        OleMenuCommand cmdMenuNewMySQLScript = new OleMenuCommand(NewScriptCallback, cmdNewMySQLScript);
+        CommandID cmdNewMySQLScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidNewMySQLScript);
+        OleMenuCommand cmdMenuNewMySQLScript = new OleMenuCommand(NewMySQLScriptCallback, cmdNewMySQLScript);
         cmdMenuNewMySQLScript.BeforeQueryStatus += cmdMenuNewMySQLScript_BeforeQueryStatus;
         mcs.AddCommand(cmdMenuNewMySQLScript);
 
-        CommandID menuGenDbScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
+        CommandID cmdNewJavascript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidNewJavascript);
+        OleMenuCommand cmdMenuNewJavascript = new OleMenuCommand(NewJavascriptCallback, cmdNewJavascript);
+        cmdMenuNewJavascript.BeforeQueryStatus += cmdMenuNewJavascript_BeforeQueryStatus;
+        mcs.AddCommand(cmdMenuNewJavascript);
+
+        CommandID menuGenDbScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
         OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
         menuItemGenDbScript.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
         mcs.AddCommand(menuItemGenDbScript);
 
-        CommandID cmdDbExportTool = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidDBExport);
+        CommandID cmdDbExportTool = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidDBExport);
         OleMenuCommand cmdMenuDbExport = new OleMenuCommand(cmdDbExport_Callback, cmdDbExportTool);
         cmdMenuDbExport.BeforeQueryStatus += new EventHandler(cmdMenuDbExport_BeforeQueryStatus);
         mcs.AddCommand(cmdMenuDbExport);
@@ -207,6 +217,100 @@ namespace MySql.Data.VisualStudio
       MySqlLanguageService languageService = new MySqlLanguageService();
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
+    }
+
+    /// <summary>
+    /// Handles the BeforeQueryStatus event of the cmdMenuNewJavascript control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    private void cmdMenuNewJavascript_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand newScriptbtn = sender as OleMenuCommand;
+
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+
+      if (selectedItems != null)
+      {
+        ConnectionName = ((UIHierarchyItem) selectedItems.GetValue(0)).Name;
+      }
+
+      var connection = GetConnection(ConnectionName);
+      newScriptbtn.Visible = newScriptbtn.Enabled = connection != null; // && connection.IsMySQLXCapable;
+    }
+
+    /// <summary>
+    /// News the javascript callback.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+     private void NewJavascriptCallback(object sender, EventArgs e)
+    {
+      var connection = GetCurrentConnection();
+      if (connection == null) return;
+
+      //Set the selected connection so when the editor window is open it can work with.
+      MysqlConnectionSelected = connection;
+
+      //Create New SQL Script file and open the editor with it.
+      CreateNewJavascript();
+    }
+
+     /// <summary>
+     /// Creates the new javascript file and opens the editor for it, then deletes the temporary file afterwards.
+     /// </summary>
+    private void CreateNewJavascript()
+    {
+      //Create a new file with .mysql extension so the editor is able to open it.
+      var tempFileInfo = new FileInfo(Path.GetTempFileName());
+      if (tempFileInfo.Directory == null) return;
+      var tempDir = tempFileInfo.Directory.ToString();
+      tempDir = tempDir.EndsWith(@"\") ? tempDir : tempDir + @"\";
+      const string fileNameBase = "NewScript";
+      const string scriptExtension = ".myjs";
+      var counter = 1;
+
+      while (File.Exists(tempDir + fileNameBase + counter + scriptExtension))
+      {
+        counter++;
+      }
+
+      var fullFileName = tempDir + fileNameBase + counter + scriptExtension;
+
+      try
+      {
+        // Write the file to the hard disk and close the stream so the file is not locked for the editor to open it.
+        using (var fs = File.Create(fullFileName))
+        {
+          var info = new UTF8Encoding(true).GetBytes("");
+          fs.Write(info, 0, info.Length);
+        }
+
+        //Open this new file with mysql editor.
+        var applicationObject = GetDTE2();
+        applicationObject.ExecuteCommand("File.OpenFile", fullFileName);
+
+        // Delete the file if it still exists
+        if (File.Exists(fullFileName))
+        {
+          // Note that no lock is put on the file and the possibility exists that another process could do something with it between the calls to Exists and Delete.
+          File.Delete(fullFileName);
+        }
+      }
+      catch (UnauthorizedAccessException ex)
+      {
+        MessageBox.Show(Resources.FileCreationErrorPermissions + tempDir, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+      }
+      catch (IOException ex)
+      {
+        MessageBox.Show(Resources.FileCreationErrorCreatingFile, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(Resources.MessageBoxErrorDetail + ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+      }
     }
 
     /// <summary>
@@ -238,7 +342,7 @@ namespace MySql.Data.VisualStudio
       if (tempFileInfo.Directory == null) return;
       var tempDir = tempFileInfo.Directory.ToString();
       tempDir = tempDir.EndsWith(@"\") ? tempDir : tempDir + @"\";
-      const string fileNameBase = "NewSript";
+      const string fileNameBase = "NewScript";
       const string scriptExtension = ".mysql";
       var counter = 1;
 
@@ -473,7 +577,7 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void NewScriptCallback(object sender, EventArgs e)
+    private void NewMySQLScriptCallback(object sender, EventArgs e)
     {
       var connection = GetCurrentConnection();
       if (connection == null) return;
@@ -544,7 +648,7 @@ namespace MySql.Data.VisualStudio
         DTE env = (DTE)GetService(typeof(DTE));
         Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)env);
         IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
-        seConnectionsMgr.AddConnection(string.Format("{0}({1})", MysqlConnectionSelected.DataSource, MysqlConnectionSelected.Database), Guids.Provider, MysqlConnectionSelected.ConnectionString, false);
+        seConnectionsMgr.AddConnection(string.Format("{0}({1})", MysqlConnectionSelected.DataSource, MysqlConnectionSelected.Database), GuidList.Provider, MysqlConnectionSelected.ConnectionString, false);
         ItemOperations ItemOp = env.ItemOperations;
         ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
       }
@@ -607,7 +711,7 @@ namespace MySql.Data.VisualStudio
 
       foreach (var connection in connections)
       {
-        if (Guids.Provider.Equals(connection.Value.Provider) && connection.Value.DisplayName.Equals(connectionName))
+        if (GuidList.Provider.Equals(connection.Value.Provider) && connection.Value.DisplayName.Equals(connectionName))
           return connection.Value;
       }
       return null;
@@ -624,7 +728,7 @@ namespace MySql.Data.VisualStudio
         _mysqlConnectionsList = new List<IVsDataExplorerConnection>();
         foreach (var connection in connections)
         {
-          if (Guids.Provider.Equals(connection.Value.Provider))
+          if (GuidList.Provider.Equals(connection.Value.Provider))
             _mysqlConnectionsList.Add(connection.Value);
         }
         return _mysqlConnectionsList;
@@ -649,7 +753,7 @@ namespace MySql.Data.VisualStudio
 
         foreach (var connection in connections)
         {
-          if (Guids.Provider.Equals(connection.Value.Provider))
+          if (GuidList.Provider.Equals(connection.Value.Provider))
           {
             var selectedNodes = connection.Value.SelectedNodes;
             foreach (var node in selectedNodes)

@@ -1,23 +1,23 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 
@@ -61,7 +61,7 @@ namespace MySql.Data.VisualStudio
 
     private MySqlStartupParameters GetStartupParameters()
     {
-      
+
       parameters.PipeName = "mysql";
 
       // get our host information
@@ -96,7 +96,7 @@ namespace MySql.Data.VisualStudio
       }
       catch
       { }
-      
+
       return parameters;
     }
 
@@ -115,20 +115,20 @@ namespace MySql.Data.VisualStudio
 
 
   public static class MySqlServiceInstances
-  { 
+  {
     public static List<MySqlService> GetMySqlInstalledInstances()
     {
       var foundMySqlServices = new List<MySqlService>();
       var services = Service.GetInstances(".*mysqld.*");
-      
+
       foreach (var item in services)
-         foundMySqlServices.Add(new MySqlService(item.Properties["DisplayName"].Value.ToString()));
+        foundMySqlServices.Add(new MySqlService(item.Properties["DisplayName"].Value.ToString()));
 
       if (foundMySqlServices.Count > 0)
         foundMySqlServices = foundMySqlServices.Where(t => t.realMySqlService).ToList();
 
       return foundMySqlServices;
-    }  
+    }
   }
 
   internal static class MySqlServerExplorerConnections
@@ -139,7 +139,7 @@ namespace MySql.Data.VisualStudio
 
       if (dte == null)
       {
-         throw new ArgumentNullException("dte");         
+        throw new ArgumentNullException("dte");
       }
 
       try
@@ -154,38 +154,38 @@ namespace MySql.Data.VisualStudio
         {
 
           if ((MySqlConnection)dlg.Connection == null) return;
-          
+
           var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
           if (csb == null) return;
-          
-           //make sure we don't have already the same connection
-           if (cmbConnections.FindString(String.Format("{0}({1})", csb.Server, csb.Database)) < 0)
-           {              
-              connectionStringTextBox.Tag = csb.ConnectionString;
-              if (!String.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) && addSEConnection)
-              {
-                // adding connection to server explorer connections          
-                Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)dte);
-                IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
-                seConnectionsMgr.AddConnection(string.Format("{0}({1})", csb.Server, csb.Database), Guids.Provider, connectionStringTextBox.Tag.ToString(), false);
 
-                var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
-                connections.Add(new MySqlServerExplorerConnection { DisplayName = string.Format("{0}({1})", csb.Server, csb.Database), ConnectionString = csb.ConnectionString });
-                cmbConnections.DataSource = null;                
-                cmbConnections.DataSource = connections;
-                cmbConnections.ValueMember = "ConnectionString";
-                cmbConnections.DisplayMember = "DisplayName";                
-              }
+          //make sure we don't have already the same connection
+          if (cmbConnections.FindString(String.Format("{0}({1})", csb.Server, csb.Database)) < 0)
+          {
+            connectionStringTextBox.Tag = csb.ConnectionString;
+            if (!String.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) && addSEConnection)
+            {
+              // adding connection to server explorer connections
+              Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)dte);
+              IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
+              seConnectionsMgr.AddConnection(string.Format("{0}({1})", csb.Server, csb.Database), GuidList.Provider, connectionStringTextBox.Tag.ToString(), false);
+
+              var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
+              connections.Add(new MySqlServerExplorerConnection { DisplayName = string.Format("{0}({1})", csb.Server, csb.Database), ConnectionString = csb.ConnectionString });
+              cmbConnections.DataSource = null;
+              cmbConnections.DataSource = connections;
+              cmbConnections.ValueMember = "ConnectionString";
+              cmbConnections.DisplayMember = "DisplayName";
             }
-           cmbConnections.Text = String.Format("{0}({1})", csb.Server, csb.Database);
-           connectionStringTextBox.Text = MaskPassword(csb.ConnectionString);
-           connectionStringTextBox.Tag = csb.ConnectionString;
-        }    
+          }
+          cmbConnections.Text = String.Format("{0}({1})", csb.Server, csb.Database);
+          connectionStringTextBox.Text = MaskPassword(csb.ConnectionString);
+          connectionStringTextBox.Tag = csb.ConnectionString;
+        }
       }
       catch (Exception ex)
       {
         MessageBox.Show(string.Format("The connection string is not valid: {0}", ex.Message));
-      }      
+      }
     }
 
 
@@ -201,39 +201,39 @@ namespace MySql.Data.VisualStudio
         IDictionary<string, IVsDataExplorerConnection> serverExplorerconnections = seConnectionsMgr.Connections;
         foreach (var connection in serverExplorerconnections)
         {
-          if (Guids.Provider.Equals(connection.Value.Provider))
+          if (GuidList.Provider.Equals(connection.Value.Provider))
             mysqlDataExplorerConnections.Add(connection.Value);
         }
       }
-      
+
       var connections = new BindingSource();
       connections.DataSource = new List<MySqlServerExplorerConnection>();
       if (mysqlDataExplorerConnections != null)
       {
-          foreach (IVsDataExplorerConnection con in mysqlDataExplorerConnections)
+        foreach (IVsDataExplorerConnection con in mysqlDataExplorerConnections)
+        {
+          // get complete connections
+          try
           {
-             // get complete connections
-              try
+            var activeConnection = (MySqlConnection)(con.Connection).GetLockedProviderObject();
+            if (activeConnection != null)
+            {
+              var csb = (MySqlConnectionStringBuilder)activeConnection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(activeConnection, null);
+              if (csb != null)
               {
-                  var activeConnection = (MySqlConnection)(con.Connection).GetLockedProviderObject();
-                  if (activeConnection != null)
-                  {
-                      var csb = (MySqlConnectionStringBuilder)activeConnection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(activeConnection, null);
-                      if (csb != null)
-                      {
-                          connections.Add(new MySqlServerExplorerConnection { DisplayName = con.DisplayName, ConnectionString = csb.ConnectionString });
-                      }
-                  }
+                connections.Add(new MySqlServerExplorerConnection { DisplayName = con.DisplayName, ConnectionString = csb.ConnectionString });
               }
-              catch { }
-              finally
-              {
-                  (con.Connection).UnlockProviderObject();
-              }              
+            }
           }
+          catch { }
+          finally
+          {
+            (con.Connection).UnlockProviderObject();
+          }
+        }
       }
 
-      return connections;    
+      return connections;
     }
 
 
@@ -245,26 +245,26 @@ namespace MySql.Data.VisualStudio
       switch (wizardName)
       {
         case "CSharpMVC":
-          connectionFromSettings = Settings.Default.MVCWizardConnection;   
+          connectionFromSettings = Settings.Default.MVCWizardConnection;
           break;
         case "CSharpWinForms":
-          connectionFromSettings = Settings.Default.WinFormsWizardConnection;   
+          connectionFromSettings = Settings.Default.WinFormsWizardConnection;
           break;
         case "VBMVC":
           break;
         case "VBWinForms":
-          break;        
+          break;
       }
 
- 
-      if (mySqlConnections == null)
-          return;
 
-      var connections = mySqlConnections.DataSource as List<MySqlServerExplorerConnection>; 
+      if (mySqlConnections == null)
+        return;
+
+      var connections = mySqlConnections.DataSource as List<MySqlServerExplorerConnection>;
 
       if (mySqlConnections != null)
       {
-     
+
         if (connections != null && connections.Count() == 0)
         {
           var mysqlInstances = MySqlServiceInstances.GetMySqlInstalledInstances();
@@ -289,10 +289,10 @@ namespace MySql.Data.VisualStudio
       if (cmbConnections.DataSource != null)
         cmbConnections.DataSource = null;
 
-      cmbConnections.DataSource = connections; 
+      cmbConnections.DataSource = connections;
       cmbConnections.DisplayMember = "DisplayName";
       cmbConnections.ValueMember = "ConnectionString";
-      
+
       if (!String.IsNullOrEmpty(connectionFromSettings) && cmbConnections.Items.Count > 0)
       {
         cmbConnections.Text = connectionFromSettings;
@@ -304,16 +304,16 @@ namespace MySql.Data.VisualStudio
         cmbConnections.SelectedValue = ((MySqlServerExplorerConnection)cmbConnections.Items[0]).ConnectionString;
         connectionStringTextBox.Text = MaskPassword(((MySqlServerExplorerConnection)cmbConnections.Items[0]).ConnectionString);
         connectionStringTextBox.Tag = ((MySqlServerExplorerConnection)cmbConnections.Items[0]).ConnectionString;
-      }         
-    }  
-  
+      }
+    }
+
     internal static string MaskPassword(string connectionString)
     {
       if (!(connectionString.IndexOf("password", StringComparison.InvariantCultureIgnoreCase) != -1))
-            return connectionString;
+        return connectionString;
 
       var regex = new Regex("password=[^;]*;", RegexOptions.IgnoreCase);
-      return regex.Replace(connectionString, string.Format("password={0};", new string('*',8)));
-    }  
+      return regex.Replace(connectionString, string.Format("password={0};", new string('*', 8)));
+    }
   }
 }
