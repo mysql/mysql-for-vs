@@ -28,6 +28,10 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using System.Windows.Forms.Integration;
+using System.Reflection;
+using System.Diagnostics;
+
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -50,8 +54,10 @@ namespace MySql.Data.VisualStudio.Editors
       InitializeComponent();
       factory = MySqlClientFactory.Instance;
       if (factory == null)
+      {
         throw new Exception("MySql Data Provider is not correctly registered");
-      tabControl1.TabPages.Remove(resultsPage);
+    }
+      tabControl1.TabPages.Clear();
     }
 
     /// <summary>
@@ -175,16 +181,27 @@ Check that the server is running, the database exist and the user credentials ar
     private void runSqlButton_Click(object sender, EventArgs e)
     {
       string sql = codeEditor.Text.Trim();
-      bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection);
+      tabControl1.TabPages.Clear();
+      string[] sqlStmt = sql.BreakSqlStatements().ToArray();
+      int ctr = 1;
+      for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
+      {
+        bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)connection);
       if (isResultSet)
-        ExecuteSelect(sql);
+        {
+          ExecuteSelect(sqlStmt[sqlIdx], ctr);
+          ctr++;
+        }
       else
-        ExecuteScript(sql);
+        {
+          ExecuteScript(sqlStmt[sqlIdx]);
+        }
+      }
       StoreCurrentDatabase();
     }
 
     /// <summary>
-    /// Reads the current database from the last query executed or batch 
+    /// Reads the current database from the last query executed or batch
     /// of queries.
     /// </summary>
     private void StoreCurrentDatabase()
@@ -200,29 +217,28 @@ Check that the server is running, the database exist and the user credentials ar
     /// Executes the select.
     /// </summary>
     /// <param name="sql">The SQL.</param>
-    private void ExecuteSelect(string sql)
+    /// <param name="counter">Query counter</param>
+    private void ExecuteSelect(string sql, int counter)
     {
-      tabControl1.TabPages.Clear();
-      MySqlDataAdapter da = new MySqlDataAdapter(sql, (MySqlConnection)connection);
-      DataTable dt = new DataTable();
+      if (string.IsNullOrEmpty(sql))
+      {
+        return;
+      }
+
       try
       {
-        da.Fill(dt);
-        tabControl1.TabPages.Add(resultsPage);
-        resultsGrid.CellFormatting -= new DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
-        resultsGrid.DataSource = dt;
-        SanitizeBlobs();
-        resultsGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
+        TabPage newResPage = CreateResultPage(counter);
+        DetailedResultsetView detailedData = new DetailedResultsetView();
+        detailedData.Dock = DockStyle.Fill;
+        detailedData.SetQuery((MySqlConnection)connection, sql);
+        newResPage.Controls.Add(detailedData);
+        tabControl1.TabPages.Add(newResPage);
       }
       catch (Exception ex)
       {
-        messages.Text = ex.Message;
+        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
       }
-      finally
-      {
-        tabControl1.TabPages.Add(messagesPage);
       }
-    }
 
     /// <summary>
     /// In DataGridView column with blob data type are by default associated with a DataGridViewImageColumn
@@ -273,22 +289,22 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="sql">The SQL.</param>
     private void ExecuteScript(string sql)
     {
-      tabControl1.TabPages.Clear();
+      if (string.IsNullOrEmpty(sql))
+      {
+        return;
+      }
+
       MySqlScript script = new MySqlScript((MySqlConnection)connection, sql);
       try
       {
         int rows = script.Execute();
-        messages.Text = String.Format("{0} row(s) affected", rows);
+        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", rows), Messagetype.Information);
       }
       catch (Exception ex)
       {
-        messages.Text = ex.Message;
+        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
       }
-      finally
-      {
-        tabControl1.TabPages.Add(messagesPage);
       }
-    }
 
     /// <summary>
     /// Handles the Click event of the disconnectButton control.
@@ -308,7 +324,6 @@ Check that the server is running, the database exist and the user credentials ar
     {
       bool connected = connection.State == ConnectionState.Open;
       runSqlButton.Enabled = connected;
-      //            validateSqlButton.Enabled = connected;
       disconnectButton.Enabled = connected;
       connectButton.Enabled = !connected;
       serverLabel.Text = String.Format("Server: {0}",
@@ -320,5 +335,16 @@ Check that the server is running, the database exist and the user credentials ar
       dbLabel.Text = String.Format("Database: {0}",
           connected ? connection.Database : "<none>");
     }
+
+    private TabPage CreateResultPage(int counter)
+    {
+      TabPage newResPage = new TabPage();
+      newResPage.AutoScroll = true;
+      newResPage.Text = string.Format("Result{0}", (counter > 0 ? counter.ToString() : ""));
+      newResPage.ImageIndex = 1;
+      newResPage.UseVisualStyleBackColor = true;
+      newResPage.Padding = new Padding(3);
+      return newResPage;
+  }
   }
 }

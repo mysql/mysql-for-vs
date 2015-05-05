@@ -567,6 +567,44 @@
     </Compile>
     <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs">
     </Compile>
+    <Compile Include="Editors\DetailedResultsetView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\DetailedResultsetView.Designer.cs">
+      <DependentUpon>DetailedResultsetView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ExecutionPlanView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ExecutionPlanView.Designer.cs">
+      <DependentUpon>ExecutionPlanView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\FieldTypesGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\FieldTypesGrid.Designer.cs">
+      <DependentUpon>FieldTypesGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\GridResultSet.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\GridResultSet.Designer.cs">
+      <DependentUpon>GridResultSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\QueryStatsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\QueryStatsView.Designer.cs">
+      <DependentUpon>QueryStatsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Utils.cs" />
+    <Compile Include="Editors\VerticalMenuButton.cs" />
+    <Compile Include="Editors\VerticalMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\VerticalMenu.Designer.cs">
+      <DependentUpon>VerticalMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\GenericEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -829,6 +867,24 @@
     <Compile Include="Wizards\WindowsForms\DataAccessConfig.Designer.cs">
       <DependentUpon>DataAccessConfig.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Editors\DetailedResultsetView.resx">
+      <DependentUpon>DetailedResultsetView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ExecutionPlanView.resx">
+      <DependentUpon>ExecutionPlanView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FieldTypesGrid.resx">
+      <DependentUpon>FieldTypesGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\GridResultSet.resx">
+      <DependentUpon>GridResultSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\QueryStatsView.resx">
+      <DependentUpon>QueryStatsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\VerticalMenu.resx">
+      <DependentUpon>VerticalMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.resx">
       <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1020,6 +1076,13 @@
     <Content Include="Resources\Banner.png" />
     <Content Include="Resources\MySQL.png" />
     <None Include="Resources\mysql_project_wizard.png" />
+    <Content Include="Resources\output_type-executionplan.png" />
+    <Content Include="Resources\output_type-fieldtypes.png" />
+    <Content Include="Resources\output_type-item_selected.png" />
+    <Content Include="Resources\output_type-querystats.png" />
+    <Content Include="Resources\output_type-resultset.png" />
+    <None Include="Resources\selectedItem.Image.png" />
+    <None Include="Resources\selected_item.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">
@@ -1102,7 +1165,9 @@
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>

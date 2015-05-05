@@ -5,6 +5,10 @@
 - Added a new option to create new MySQL scripts directly from Server Explorer.
 - Added a new Editor to handle Javascript files.
 - Added a new option to create new MyJs scripts directly from Server Explorer.
+- Move info messages from "Messages" Tab in the current Query Editor to the VS output Window.
+- Added a Workbench-like vertical menu to the current Query Editor which will be shown with script results to switch between the following views: Result Set, Field Types, Query Stats and Execution Plan.
+- Added new information panes to the current Query Editor that are going to be displayed in the result set area: Field Types, Query Stats and Execution Plan.
+- Added the support to handle multiple result sets in the current Query Editor.
 
 1.2.4
 - Fix for MySQL parser does not support new syntax in 'explain' for grammar 5.7 (Oracle bug #19431740).

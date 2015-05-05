@@ -96,11 +96,11 @@ namespace MySql.Data.VisualStudio.DBExport
       _dumpOutput = new StringBuilder();
       _errorsOutput = new StringBuilder();
       _logInfo = new StringBuilder();
-      
-      _dumpFilePath = Utility.GetInstallLocation("MySQL for Visual Studio");
+
+      _dumpFilePath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
       if (!String.IsNullOrEmpty(_dumpFilePath))
         _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
-      
+
       IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
       if (outWindow != null)

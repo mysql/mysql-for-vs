@@ -1,23 +1,23 @@
 ﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
@@ -67,8 +67,8 @@ namespace MySql.Data.VisualStudio
   /// The minimum requirement for a class to be considered a valid package for Visual Studio
   /// is to implement the IVsPackage interface and register itself with the shell.
   /// This package uses the helper classes defined inside the Managed Package Framework (MPF)
-  /// to do it: it derives from the Package class that provides the implementation of the 
-  /// IVsPackage interface and uses the registration attributes defined in the framework to 
+  /// to do it: it derives from the Package class that provides the implementation of the
+  /// IVsPackage interface and uses the registration attributes defined in the framework to
   /// register itself and its components with the shell.
   /// </summary>
   [ComVisible(true)]
@@ -115,9 +115,9 @@ namespace MySql.Data.VisualStudio
 
     /// <summary>
     /// Default constructor of the package.
-    /// Inside this method you can place any initialization code that does not require 
-    /// any Visual Studio service because at this point the package object is created but 
-    /// not sited yet inside Visual Studio environment. The place to do all the other 
+    /// Inside this method you can place any initialization code that does not require
+    /// any Visual Studio service because at this point the package object is created but
+    /// not sited yet inside Visual Studio environment. The place to do all the other
     /// initialization is the Initialize method.
     /// </summary>
     public MySqlDataProviderPackage()
@@ -455,7 +455,7 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
 
       ////this feature can be shown only if Connector/Net is installed too
-      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Connector/Net")))
+      if (String.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Connector/Net")))
         return;
 
       DTE dte = GetService(typeof(DTE)) as DTE;
@@ -491,16 +491,13 @@ namespace MySql.Data.VisualStudio
       dbExportButton.Visible = false;
 
       if (selectedItems != null)
+      {
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      if (GetConnection(ConnectionName) != null)
-      {
-        dbExportButton.Visible = true;
-        dbExportButton.Enabled = true;
       }
-      else
-      {
-        dbExportButton.Enabled = false;
-      }
+
+      bool exportAvailable = GetConnection(ConnectionName) != null;
+      dbExportButton.Visible = exportAvailable;
+      dbExportButton.Enabled = exportAvailable;
     }
 
     private void cmdDbExport_Callback(object sender, EventArgs e)
@@ -536,7 +533,7 @@ namespace MySql.Data.VisualStudio
 
             object currentFrameMode;
             windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, out currentFrameMode);
-            // switch to dock mode.                  
+            // switch to dock mode.
             if ((VSFRAMEMODE)currentFrameMode == VSFRAMEMODE.VSFM_Float)
               windowFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_Dock);
 
@@ -550,9 +547,9 @@ namespace MySql.Data.VisualStudio
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Utilities")))
+      if (String.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Utilities")))
       {
-        var pathWorkbench = Utility.GetInstallLocation("Workbench");
+        var pathWorkbench = Utility.GetMySqlAppInstallLocation("Workbench");
         var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
 
         if (!Directory.Exists(pathUtilities))
@@ -661,7 +658,6 @@ namespace MySql.Data.VisualStudio
     }
 
 
-
     public string GetCurrentConnectionName()
     {
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
@@ -738,8 +734,6 @@ namespace MySql.Data.VisualStudio
 
       return new List<IVsDataExplorerConnection>();
     }
-
-
 
     public string GetConnectionStringBasedOnNode(string name)
     {

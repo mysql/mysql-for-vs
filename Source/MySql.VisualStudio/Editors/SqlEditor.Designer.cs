@@ -170,7 +170,7 @@
       this.tabControl1.TabIndex = 4;
       // 
       // resultsPage
-      // 
+      //
       this.resultsPage.Controls.Add(this.resultsGrid);
       this.resultsPage.ImageIndex = 1;
       this.resultsPage.Location = new System.Drawing.Point(4, 23);
