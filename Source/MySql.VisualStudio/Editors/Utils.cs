@@ -32,6 +32,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySqlX.Shell;
+using System.Data;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -178,6 +180,51 @@ namespace MySql.Data.VisualStudio.Editors
 
       MySQL.Utility.Classes.MySqlTokenizer tokenizer = new MySQL.Utility.Classes.MySqlTokenizer(sqlStatements.Trim());
       return tokenizer.BreakIntoStatements();
+    }
+
+    /// <summary>
+    /// Parse a DocumentResultSet object to string with JSON format
+    /// </summary>
+    /// <param name="document">The document to parse</param>
+    /// <returns>String with JSON format</returns>
+    public static string ToJson(this DocumentResultSet document)
+    {
+      StringBuilder sbData = new StringBuilder();
+      Dictionary<string, object>[] data = document.GetData().ToArray();
+      sbData.AppendLine("{");
+      for (int idx = 0; idx < data.Length;idx++)
+      {
+        sbData.AppendLine("{");
+        int ctr = 0;
+        foreach (KeyValuePair<string, object> kvp in data[idx])
+        {
+          sbData.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (ctr == data.Length - 1) ? "" : ",");
+          ctr++;
+        }
+        sbData.AppendLine(idx < data.Length ? "}," : "}");
+      }
+      sbData.AppendLine("}");
+      return sbData.ToString();
+    }
+
+    /// <summary>
+    /// Parse a TableResultSet to a DataTable object
+    /// </summary>
+    /// <param name="resultSet">TableResultSet to parse</param>
+    /// <returns>Object parse to DataTable object</returns>
+    public static System.Data.DataTable ToDataTable(this TableResultSet resultSet)
+    {
+      DataTable result = new DataTable("Result");
+      foreach (MySqlX.Shell.ResultSetMetadata column in resultSet.GetMetadata())
+      {
+        result.Columns.Add(column.GetName());
+      }
+
+      foreach (object[] row in resultSet.GetData())
+      {
+        result.Rows.Add(row);
+      }
+      return result;
     }
   }
 

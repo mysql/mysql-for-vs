@@ -91,6 +91,8 @@
     <DeployExtension>True</DeployExtension>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -591,6 +593,7 @@
     <Compile Include="Editors\GridResultSet.Designer.cs">
       <DependentUpon>GridResultSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\NgShellWrapper.cs" />
     <Compile Include="Editors\QueryStatsView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1158,6 +1161,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v2.0\Release\MySql.Web.dll</HintPath>
     </Reference>
+    <Reference Include="simple_shell_client_managed, Version=0.0.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\xShell\simple_shell_client_managed.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Management" />
@@ -1315,6 +1322,14 @@
       </PropertyGroup>
     </When>
   </Choose>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q
+copy /Y "$(SolutionDir)\Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
