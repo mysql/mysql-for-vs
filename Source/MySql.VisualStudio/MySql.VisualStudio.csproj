@@ -600,6 +600,12 @@
     <Compile Include="Editors\QueryStatsView.Designer.cs">
       <DependentUpon>QueryStatsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\TextViewPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\TextViewPane.Designer.cs">
+      <DependentUpon>TextViewPane.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\TreeViewResult.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -890,6 +896,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\QueryStatsView.resx">
       <DependentUpon>QueryStatsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\TextViewPane.resx">
+      <DependentUpon>TextViewPane.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\TreeViewResult.resx">
       <DependentUpon>TreeViewResult.cs</DependentUpon>

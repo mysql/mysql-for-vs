@@ -194,14 +194,14 @@ namespace MySql.Data.VisualStudio.Editors
       sbData.AppendLine("{");
       for (int idx = 0; idx < data.Length;idx++)
       {
-        sbData.AppendLine("{");
+        sbData.AppendLine("\t{");
         int ctr = 0;
         foreach (KeyValuePair<string, object> kvp in data[idx])
         {
-          sbData.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (ctr == data.Length - 1) ? "" : ",");
+          sbData.AppendFormat("\t\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (ctr < data[idx].Count - 1) ? "," : "");
           ctr++;
         }
-        sbData.AppendLine(idx < data.Length ? "}," : "}");
+        sbData.AppendLine(idx < data.Length - 1 ? "\t}," : "\t}");
       }
       sbData.AppendLine("}");
       return sbData.ToString();
