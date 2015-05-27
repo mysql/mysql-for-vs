@@ -61,6 +61,7 @@ namespace MySql.Data.VisualStudio
     public const uint cmdidDBExport = 511;
     public const uint cmdidLaunchWorkbench = 512;
     public const uint cmdidOpenUtilitiesPrompt = 513;
+    public const uint NewScriptSubMenu = 13611;
     public const uint cmdidNewMySQLScript = 13609;
     public const uint cmdidNewJavascript = 13610;
 

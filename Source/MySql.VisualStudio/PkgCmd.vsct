@@ -53,6 +53,15 @@
         </Strings>
       </Menu>
 
+      <!-- New Script Submenu  -->
+      <Menu guid="guidMySqlProviderCmdSet" id="NewScriptSubMenu" priority="0x0100" type="Menu">
+        <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>New Script...</ButtonText>
+        </Strings>
+      </Menu>
+
       <!--New item representing the menu controller for connections-->
       <Menu guid="guidIDEToolbarCmdSet" id="VSCTMenuController" priority="0x0200" type="MenuController">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup"/>
@@ -92,6 +101,10 @@
       <Group guid="guidIDEToolbarCmdSet" id="ToolbarGroup" priority="0x0000">
         <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
       </Group>
+
+       <Group guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" priority="0x0000">
+         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenu"/>
+       </Group>
 
       <!-- New group for the items in the menu controller -->
       <Group guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" priority="0x0600">
@@ -323,7 +336,6 @@
           <ButtonText>Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -334,19 +346,21 @@
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" type="Button">
+        <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidNewMySQLScript</CommandName>
-          <ButtonText>New MySQL &amp;Script</ButtonText>
+          <ButtonText>&amp;MySQL</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" type="Button">
+        <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidNewJavascript</CommandName>
-          <ButtonText>New &amp;Javascript</ButtonText>
+          <ButtonText>&amp;Javascript</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
@@ -473,10 +487,7 @@
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
-    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" priority="0x0100">
-      <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" priority="0x0100">
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="NewScriptSubMenu" priority="0x0100">
       <Parent guid="guidVSData" id="IDG_DV_CONNECTION" />
     </CommandPlacement>
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" priority="0x0100">
@@ -569,7 +580,10 @@
       <IDSymbol name="cmdidNewMySQLScript" value="13609"/>
       <IDSymbol name="cmdidNewJavascript" value="13610"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>
+      <IDSymbol name="NewScriptSubMenu" value="0x1100"/>
+      <IDSymbol name="NewScriptSubMenuGroup" value="0x1150"/>
     </GuidSymbol>
+    <!--<IDSymbol name="cmdidTestSubCommand" value="0x0105"/>-->
     <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
       <IDSymbol name="IDG_VS_PROJ_ADMIN"    value="0x014E"/>
       <IDSymbol name="IDG_VS_PROJ_TOOLBAR4" value="0x01D6"/>

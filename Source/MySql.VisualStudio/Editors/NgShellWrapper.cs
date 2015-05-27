@@ -5,13 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using MySqlX.Shell;
 using System.Data;
+using System.Data.Common;
 
 namespace MySql.Data.VisualStudio.Editors
 {
   public class NgShellWrapper
   {
     /// <summary>
-    /// Variable to store the connection string
+    /// Variable to store the connection of the wrapper.
+    /// </summary>
+    private DbConnection _connection;
+    /// <summary>
+    /// Variable to store the connection string for the wrapper.
     /// </summary>
     private string _connString;
     /// <summary>
@@ -21,6 +26,38 @@ namespace MySql.Data.VisualStudio.Editors
     public NgShellWrapper(string connectionString)
     {
       _connString = connectionString;
+    }
+
+    /// <summary>
+    /// Creates an instance of NgShellWrapper
+    /// </summary>
+    /// <param name="connectionString">Connection object that will be used to set the connection string. Format: "user:pass@server:port"</param>
+    public NgShellWrapper(DbConnection connection)
+    {
+      _connection = connection;
+
+      var parameters = _connection.ConnectionString.Split(';');
+      Dictionary<string, string> conn = new Dictionary<string, string>();
+      foreach (var parameter in parameters)
+      {
+        var keyAndValue = parameter.Split('=');
+        if (keyAndValue.Length > 1)
+        {
+          var key = keyAndValue[0];
+          var value = keyAndValue[1];
+          conn.Add(key, value);
+        }
+      }
+
+      //TODO: find a way to unhardcode this value and obtain it directly from the connection object;
+      //It seems the port should be defaulted to 3306 if the connection string doesn't specify it.
+      conn.Add("port", "3306");
+
+      _connString =
+        conn["user id"] + ":" + //TODO: this value could also come in the form of "user"
+        conn["password"] + "@" +
+        conn["server"] + ":" +
+        conn["port"];
     }
 
     /// <summary>

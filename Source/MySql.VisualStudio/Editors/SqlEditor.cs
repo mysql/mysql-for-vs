@@ -28,10 +28,6 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using System.Windows.Forms.Integration;
-using System.Reflection;
-using System.Diagnostics;
-
 
 namespace MySql.Data.VisualStudio.Editors
 {

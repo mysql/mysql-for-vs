@@ -1,23 +1,23 @@
 ﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
@@ -76,7 +76,7 @@ namespace MySql.Data.VisualStudio.Editors
             connection.Open();
           UpdateButtons();
         }
-      }  
+      }
     }
 
     #region Overrides
@@ -134,8 +134,8 @@ namespace MySql.Data.VisualStudio.Editors
       set { codeEditor.IsDirty = value; }
     }
 
-    #endregion      
-    
+    #endregion
+
     /// <summary>
     /// Handles the Click event of the connectButton control.
     /// </summary>
@@ -170,19 +170,31 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void runSqlButton_Click(object sender, EventArgs e)
+    private void runJsButton_Click(object sender, EventArgs e)
     {
-      string js = codeEditor.Text.Trim();
-      bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(js, (MySqlConnection)Connection);
-      if (isResultSet)
-        ExecuteSelect(js);
-      else
-        ExecuteScript(js);
-      StoreCurrentDatabase();
+      try
+      {
+        string js = codeEditor.Text.Trim();
+        NgShellWrapper ngshell = new NgShellWrapper(Connection);
+        var documentResultSet = ngshell.ExecuteJavaScript(js);
+        GridViewResult gvr = new GridViewResult();
+        gvr.Dock = DockStyle.Fill;
+
+        gvr.SetData(documentResultSet);
+        resultsPage.Controls.Clear();
+        resultsPage.Controls.Add(gvr);
+        tabControl1.TabPages.Add(resultsPage);
+        resultsPage.Show();
+        StoreCurrentDatabase();
+      }
+      catch (Exception ex)
+      {
+        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
+      }
     }
 
     /// <summary>
-    /// Reads the current database from the last query executed or batch 
+    /// Reads the current database from the last query executed or batch
     /// of queries.
     /// </summary>
     private void StoreCurrentDatabase()

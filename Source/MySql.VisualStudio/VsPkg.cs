@@ -219,6 +219,34 @@ namespace MySql.Data.VisualStudio
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
 
+    private void NewScriptCallback(object sender, EventArgs e)
+    {
+      var connection = GetCurrentConnection();
+      if (connection == null) return;
+
+      //Set the selected connection so when the editor window is open it can work with.
+      MysqlConnectionSelected = connection;
+    }
+
+    private void cmdMenuNewScript_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand newScriptbtn = sender as OleMenuCommand;
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+
+      if (selectedItems != null)
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+
+      if (GetConnection(ConnectionName) != null)
+      {
+        newScriptbtn.Enabled = true;
+        newScriptbtn.Visible = true;
+      }
+      else
+        newScriptbtn.Visible = newScriptbtn.Enabled = false;
+    }
+
     /// <summary>
     /// Handles the BeforeQueryStatus event of the cmdMenuNewJavascript control.
     /// </summary>
@@ -234,7 +262,7 @@ namespace MySql.Data.VisualStudio
 
       if (selectedItems != null)
       {
-        ConnectionName = ((UIHierarchyItem) selectedItems.GetValue(0)).Name;
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
       var connection = GetConnection(ConnectionName);
@@ -246,7 +274,7 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-     private void NewJavascriptCallback(object sender, EventArgs e)
+    private void NewJavascriptCallback(object sender, EventArgs e)
     {
       var connection = GetCurrentConnection();
       if (connection == null) return;
@@ -258,9 +286,9 @@ namespace MySql.Data.VisualStudio
       CreateNewJavascript();
     }
 
-     /// <summary>
-     /// Creates the new javascript file and opens the editor for it, then deletes the temporary file afterwards.
-     /// </summary>
+    /// <summary>
+    /// Creates the new javascript file and opens the editor for it, then deletes the temporary file afterwards.
+    /// </summary>
     private void CreateNewJavascript()
     {
       //Create a new file with .mysql extension so the editor is able to open it.
