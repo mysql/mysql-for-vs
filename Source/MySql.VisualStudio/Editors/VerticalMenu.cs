@@ -94,9 +94,12 @@ namespace MySql.Data.VisualStudio.Editors
         case ImageType.FieldType:
           return ((System.Drawing.Image)(resources.GetObject("field_types")));
         case ImageType.ExecutionPlan:
+        case ImageType.TreeView:
           return ((System.Drawing.Image)(resources.GetObject("execution_plan")));
         case ImageType.QueryStats:
           return ((System.Drawing.Image)(resources.GetObject("query_stats")));
+        case ImageType.TextView:
+          return ((System.Drawing.Image)(resources.GetObject("json")));
         default:
           return null;
       }

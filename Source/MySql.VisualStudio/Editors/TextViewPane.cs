@@ -49,7 +49,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="document"></param>
     public void SetData(DocumentResultSet document)
     {
-      txtJsondata.Text = document.ToJson();
+      txtJsondata.AppendText(document.ToJson());
     }
   }
 }

@@ -85,20 +85,28 @@ namespace MySql.Data.VisualStudio.Editors
   public enum ImageType
   {
     /// <summary>
-    /// Image for Result Set button view
+    /// Image for Result Set button view in Sql editor
     /// </summary>
     Resultset,
     /// <summary>
-    /// Image for Field Types button view
+    /// Image for Field Types button view in Sql editor
     /// </summary>
     FieldType,
     /// <summary>
-    /// Image for Execution Plan button view
+    /// Image for Execution Plan button view in Sql editor
     /// </summary>
     ExecutionPlan,
     /// <summary>
-    /// Image for Query Stats button view
+    /// Image for Query Stats button view in Sql editor
     /// </summary>
-    QueryStats
+    QueryStats,
+    /// <summary>
+    /// Image for Text button view in JS editor
+    /// </summary>
+    TextView,
+    /// <summary>
+    /// Image for Tree button view in JS editor
+    /// </summary>
+    TreeView
   }
 }

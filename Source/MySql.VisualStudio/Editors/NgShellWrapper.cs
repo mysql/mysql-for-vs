@@ -11,6 +11,9 @@ namespace MySql.Data.VisualStudio.Editors
 {
   public class NgShellWrapper
   {
+    private bool _keepSession;
+    ShellClient _shellClient;
+
     /// <summary>
     /// Variable to store the connection of the wrapper.
     /// </summary>
@@ -23,9 +26,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// Creates an instance of NgShellWrapper
     /// </summary>
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port"</param>
-    public NgShellWrapper(string connectionString)
+    public NgShellWrapper(string connectionString, bool keepNgSession)
     {
       _connString = connectionString;
+      _keepSession = keepNgSession;
+      _shellClient = new ShellClient();
     }
 
     /// <summary>
@@ -71,7 +76,12 @@ namespace MySql.Data.VisualStudio.Editors
       {
         return null;
       }
-      return ExecuteQuery(Mode.JScript, script) as DocumentResultSet;
+      ResultSet result = ExecuteQuery(Mode.JScript, script);
+      if ((result as DocumentResultSet) == null)
+      {
+        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount());
+      }
+      return result as DocumentResultSet;
     }
 
     /// <summary>
@@ -85,7 +95,12 @@ namespace MySql.Data.VisualStudio.Editors
       {
         return null;
       }
-      return ExecuteQuery(Mode.SQL, script) as TableResultSet;
+      ResultSet result = ExecuteQuery(Mode.SQL, script);
+      if ((result as TableResultSet) == null)
+      {
+        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount());
+      }
+      return result as TableResultSet;
     }
 
     /// <summary>
@@ -96,12 +111,31 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>A resultset with the data returned from the server</returns>
     private ResultSet ExecuteQuery(Mode mode, string script)
     {
-      ShellClient shellClient = new ShellClient();
-      shellClient.MakeConnection(_connString);
-      shellClient.SwitchMode(mode);
-      ResultSet result = shellClient.Execute(script);
-      shellClient.Dispose();
+      ExecutionResult = "";
+      if (!_keepSession)
+      {
+        _shellClient = new ShellClient();
+      }
+
+      _shellClient.MakeConnection(_connString);
+      _shellClient.SwitchMode(mode);
+      ResultSet result = _shellClient.Execute(script);
+
+      if (!_keepSession)
+      {
+        _shellClient.Dispose();
+      }
+
       return result;
+    }
+
+    /// <summary>
+    /// This property will contains a message about the script executed when the script doesn't return a resultset
+    /// </summary>
+    public string ExecutionResult
+    {
+      private set;
+      get;
     }
   }
 

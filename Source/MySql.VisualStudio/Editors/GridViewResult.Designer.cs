@@ -53,15 +53,16 @@ namespace MySql.Data.VisualStudio.Editors
     private void InitializeComponent()
     {
       this.gvData = new System.Windows.Forms.DataGridView();
+      ((System.ComponentModel.ISupportInitialize)(this.gvData)).BeginInit();
       this.SuspendLayout();
       // 
       // gvData
       // 
+      this.gvData.Dock = System.Windows.Forms.DockStyle.Fill;
       this.gvData.Location = new System.Drawing.Point(0, 0);
       this.gvData.Name = "gvData";
       this.gvData.Size = new System.Drawing.Size(600, 500);
       this.gvData.TabIndex = 0;
-      this.gvData.Dock = DockStyle.Fill;
       // 
       // GridViewResult
       // 
@@ -70,6 +71,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.Controls.Add(this.gvData);
       this.Name = "GridViewResult";
       this.Size = new System.Drawing.Size(600, 500);
+      ((System.ComponentModel.ISupportInitialize)(this.gvData)).EndInit();
       this.ResumeLayout(false);
 
     }

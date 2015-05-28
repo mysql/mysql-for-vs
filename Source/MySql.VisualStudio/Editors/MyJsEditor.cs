@@ -51,7 +51,7 @@ namespace MySql.Data.VisualStudio.Editors
       factory = MySqlClientFactory.Instance;
       if (factory == null)
         throw new Exception("MySql Data Provider is not correctly registered");
-      tabControl1.TabPages.Remove(resultsPage);
+      tabControl1.TabPages.Clear();
     }
 
     /// <summary>
@@ -172,25 +172,9 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void runJsButton_Click(object sender, EventArgs e)
     {
-      try
-      {
         string js = codeEditor.Text.Trim();
-        NgShellWrapper ngshell = new NgShellWrapper(Connection);
-        var documentResultSet = ngshell.ExecuteJavaScript(js);
-        GridViewResult gvr = new GridViewResult();
-        gvr.Dock = DockStyle.Fill;
-
-        gvr.SetData(documentResultSet);
-        resultsPage.Controls.Clear();
-        resultsPage.Controls.Add(gvr);
-        tabControl1.TabPages.Add(resultsPage);
-        resultsPage.Show();
+        ExecuteScript(js);
         StoreCurrentDatabase();
-      }
-      catch (Exception ex)
-      {
-        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
-      }
     }
 
     /// <summary>
@@ -207,96 +191,31 @@ Check that the server is running, the database exist and the user credentials ar
     }
 
     /// <summary>
-    /// Executes the select statement.
+    /// Executes the script typed by the user
     /// </summary>
-    /// <param name="sql">The SQL.</param>
-    private void ExecuteSelect(string sql)
-    {
-      tabControl1.TabPages.Clear();
-      MySqlDataAdapter da = new MySqlDataAdapter(sql, (MySqlConnection)Connection);
-      DataTable dt = new DataTable();
-      try
-      {
-        da.Fill(dt);
-        tabControl1.TabPages.Add(resultsPage);
-        resultsGrid.CellFormatting -= new DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
-        resultsGrid.DataSource = dt;
-        SanitizeBlobs();
-        resultsGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(this.resultsGrid_CellFormatting);
-      }
-      catch (Exception ex)
-      {
-        messages.Text = ex.Message;
-      }
-      finally
-      {
-        tabControl1.TabPages.Add(messagesPage);
-      }
-    }
-
-    /// <summary>
-    /// In DataGridView column with blob data type are by default associated with a DataGridViewImageColumn
-    /// this column internally uses the System.Drawing APIs to try to load images, obviously not all blobs
-    /// are images, so that fails.
-    ///   The fix implemented in this function represents blobs a a fixed &lt;Blob&gt; string.
-    /// </summary>
-    private void SanitizeBlobs()
-    {
-      DataGridViewColumnCollection coll = resultsGrid.Columns;
-      _isColBlob = new bool[coll.Count];
-      for (int i = 0; i < coll.Count; i++)
-      {
-        DataGridViewColumn col = coll[i];
-        DataGridViewTextBoxColumn newCol = null;
-        if (!(col is DataGridViewImageColumn)) continue;
-        coll.Insert(i, newCol = new DataGridViewTextBoxColumn()
-        {
-          DataPropertyName = col.DataPropertyName,
-          HeaderText = col.HeaderText,
-          ReadOnly = true
-        });
-        coll.Remove(col);
-        _isColBlob[i] = true;
-      }
-    }
-
-    /// <summary>
-    /// Handles the CellFormatting event of the resultsGrid control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> instance containing the event data.</param>
-    private void resultsGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-    {
-      if (e.ColumnIndex == -1) return;
-      if (_isColBlob[e.ColumnIndex])
-      {
-        if (e.Value == null || e.Value is DBNull)
-          e.Value = "<NULL>";
-        else
-          e.Value = "<BLOB>";
-      }
-    }
-
-    /// <summary>
-    /// Executes the script.
-    /// </summary>
-    /// <param name="js">The javascript code.</param>
+    /// <param name="js">Script to execute</param>
     private void ExecuteScript(string js)
     {
-      tabControl1.TabPages.Clear();
-      MySqlScript script = new MySqlScript((MySqlConnection)Connection, js);
+      if (string.IsNullOrEmpty(js))
+      {
+        return;
+      }
+
       try
       {
-        int rows = script.Execute();
-        messages.Text = String.Format("{0} row(s) affected", rows);
+        TabPage newResPage = Utils.CreateResultPage(0);
+        JSResultsetView resultViews = new JSResultsetView();
+        resultViews.Dock = DockStyle.Fill;
+        resultViews.SetScript((MySqlConnection)connection, js);
+        if (resultViews.HasResultSet)
+        {
+          newResPage.Controls.Add(resultViews);
+          tabControl1.TabPages.Add(newResPage);
+        }
       }
       catch (Exception ex)
       {
-        messages.Text = ex.Message;
-      }
-      finally
-      {
-        tabControl1.TabPages.Add(messagesPage);
+        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
       }
     }
 

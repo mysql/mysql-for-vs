@@ -52,7 +52,7 @@ namespace MySql.Data.VisualStudio.Editors
       if (factory == null)
       {
         throw new Exception("MySql Data Provider is not correctly registered");
-    }
+      }
       tabControl1.TabPages.Clear();
     }
 
@@ -183,12 +183,12 @@ Check that the server is running, the database exist and the user credentials ar
       for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
       {
         bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)connection);
-      if (isResultSet)
+        if (isResultSet)
         {
           ExecuteSelect(sqlStmt[sqlIdx], ctr);
           ctr++;
         }
-      else
+        else
         {
           ExecuteScript(sqlStmt[sqlIdx]);
         }
@@ -223,7 +223,7 @@ Check that the server is running, the database exist and the user credentials ar
 
       try
       {
-        TabPage newResPage = CreateResultPage(counter);
+        TabPage newResPage = Utils.CreateResultPage(counter);
         DetailedResultsetView detailedData = new DetailedResultsetView();
         detailedData.Dock = DockStyle.Fill;
         detailedData.SetQuery((MySqlConnection)connection, sql);
@@ -234,7 +234,7 @@ Check that the server is running, the database exist and the user credentials ar
       {
         Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
       }
-      }
+    }
 
     /// <summary>
     /// In DataGridView column with blob data type are by default associated with a DataGridViewImageColumn
@@ -300,7 +300,7 @@ Check that the server is running, the database exist and the user credentials ar
       {
         Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
       }
-      }
+    }
 
     /// <summary>
     /// Handles the Click event of the disconnectButton control.
@@ -331,16 +331,5 @@ Check that the server is running, the database exist and the user credentials ar
       dbLabel.Text = String.Format("Database: {0}",
           connected ? connection.Database : "<none>");
     }
-
-    private TabPage CreateResultPage(int counter)
-    {
-      TabPage newResPage = new TabPage();
-      newResPage.AutoScroll = true;
-      newResPage.Text = string.Format("Result{0}", (counter > 0 ? counter.ToString() : ""));
-      newResPage.ImageIndex = 1;
-      newResPage.UseVisualStyleBackColor = true;
-      newResPage.Padding = new Padding(3);
-      return newResPage;
-  }
   }
 }

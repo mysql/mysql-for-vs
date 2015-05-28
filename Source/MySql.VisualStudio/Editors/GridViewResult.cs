@@ -58,9 +58,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="rows">Data to generate the tree nodes</param>
     private void GenerateItem(List<Dictionary<string, object>> rows)
     {
-      int rowCtr = 1;
-      string nodeId = "";
-      TreeNode[] currnodes = null;
       var dt = new DataTable();
       var colNames = new List<string>();
       rows.ForEach(item => colNames.AddRange(item.Keys.Where(name => !colNames.Contains(name))));
@@ -84,7 +81,6 @@ namespace MySql.Data.VisualStudio.Editors
 
         dt.Rows.Add(dr);
       }
-
       gvData.DataSource = dt;
     }
 

@@ -22,7 +22,7 @@
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  partial class TreeViewResult
+  partial class JSResultsetView
   {
     /// <summary> 
     /// Required designer variable.
@@ -50,30 +50,61 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private void InitializeComponent()
     {
-      this.tvData = new System.Windows.Forms.TreeView();
+      this.ctrlGridView = new MySql.Data.VisualStudio.Editors.GridViewResult();
+      this.ctrlTreeView = new MySql.Data.VisualStudio.Editors.TreeViewResult();
+      this.ctrlMenu = new MySql.Data.VisualStudio.Editors.VerticalMenu();
+      this.ctrlTextView = new MySql.Data.VisualStudio.Editors.TextViewPane();
       this.SuspendLayout();
       // 
-      // tvData
+      // ctrlGridView
       // 
-      this.tvData.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tvData.Location = new System.Drawing.Point(0, 0);
-      this.tvData.Name = "tvData";
-      this.tvData.Size = new System.Drawing.Size(600, 500);
-      this.tvData.TabIndex = 0;
+      this.ctrlGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ctrlGridView.Location = new System.Drawing.Point(0, 0);
+      this.ctrlGridView.Name = "ctrlGridView";
+      this.ctrlGridView.Size = new System.Drawing.Size(600, 500);
+      this.ctrlGridView.TabIndex = 3;
       // 
-      // TreeViewResult
+      // ctrlTreeView
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.tvData);
-      this.Name = "TreeViewResult";
-      this.Size = new System.Drawing.Size(600, 500);
+      this.ctrlTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ctrlTreeView.Location = new System.Drawing.Point(0, 0);
+      this.ctrlTreeView.Name = "ctrlTreeView";
+      this.ctrlTreeView.Size = new System.Drawing.Size(600, 500);
+      this.ctrlTreeView.TabIndex = 2;
+      // 
+      // ctrlMenu
+      // 
+      this.ctrlMenu.Dock = System.Windows.Forms.DockStyle.Right;
+      this.ctrlMenu.Location = new System.Drawing.Point(600, 0);
+      this.ctrlMenu.Name = "ctrlMenu";
+      this.ctrlMenu.Size = new System.Drawing.Size(58, 500);
+      this.ctrlMenu.TabIndex = 0;
+      // 
+      // ctrlTextView
+      // 
+      this.ctrlTextView.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ctrlTextView.Location = new System.Drawing.Point(0, 0);
+      this.ctrlTextView.Name = "ctrlTextView";
+      this.ctrlTextView.Size = new System.Drawing.Size(658, 500);
+      this.ctrlTextView.TabIndex = 1;
+      // 
+      // JSResultsetView
+      // 
+      this.Controls.Add(this.ctrlGridView);
+      this.Controls.Add(this.ctrlTreeView);
+      this.Controls.Add(this.ctrlMenu);
+      this.Controls.Add(this.ctrlTextView);
+      this.Name = "JSResultsetView";
+      this.Size = new System.Drawing.Size(658, 500);
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private System.Windows.Forms.TreeView tvData;
+    private VerticalMenu ctrlMenu;
+    private TextViewPane ctrlTextView;
+    private TreeViewResult ctrlTreeView;
+    private GridViewResult ctrlGridView;
   }
 }

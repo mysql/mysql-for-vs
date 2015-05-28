@@ -194,14 +194,14 @@ namespace MySql.Data.VisualStudio.Editors
       sbData.AppendLine("{");
       for (int idx = 0; idx < data.Length;idx++)
       {
-        sbData.AppendLine("\t{");
+        sbData.AppendLine("  {");
         int ctr = 0;
         foreach (KeyValuePair<string, object> kvp in data[idx])
         {
-          sbData.AppendFormat("\t\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (ctr < data[idx].Count - 1) ? "," : "");
+          sbData.AppendLine(string.Format("    \"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (ctr < data[idx].Count - 1) ? "," : ""));
           ctr++;
         }
-        sbData.AppendLine(idx < data.Length - 1 ? "\t}," : "\t}");
+        sbData.AppendLine(idx < data.Length - 1 ? "  }," : "  }");
       }
       sbData.AppendLine("}");
       return sbData.ToString();
@@ -226,6 +226,41 @@ namespace MySql.Data.VisualStudio.Editors
       }
       return result;
     }
+
+    /// <summary>
+    /// Parse a MySqlConnection object to a string format useb by the NgWrapper
+    /// </summary>
+    /// <param name="connection">Connection to parse</param>
+    /// <returns>Connection string with the format "user:pass@server:port"</returns>
+    public static string ToNgFormat(this MySql.Data.MySqlClient.MySqlConnection connection)
+    {
+      MySqlConnectionProperties connProp = new MySqlConnectionProperties();
+      connProp.ConnectionStringBuilder.ConnectionString = connection.ConnectionString;
+      string user = connProp["User Id"] as string;
+      string pass = connProp["Password"] as string;
+      string server = connProp["server"] as string;
+      UInt32 port = 3306; //assign the default port
+
+      //verify if the user is not using the default port, if not then extract the value
+      object givenPort = connProp["Port"];
+      if (givenPort != null)
+      {
+        port = (UInt32)givenPort;
+      }
+
+      return string.Format("{0}:{1}@{2}:{3}", user, pass, server, port);
+    }
+
+    public static TabPage CreateResultPage(int counter)
+    {
+      TabPage newResPage = new TabPage();
+      newResPage.AutoScroll = true;
+      newResPage.Text = string.Format("Result{0}", (counter > 0 ? counter.ToString() : ""));
+      newResPage.ImageIndex = 1;
+      newResPage.UseVisualStyleBackColor = true;
+      newResPage.Padding = new Padding(3);
+      return newResPage;
+    }
   }
 
   /// <summary>
@@ -245,5 +280,36 @@ namespace MySql.Data.VisualStudio.Editors
     /// Use this option to clasify the message as Warning
     /// </summary>
     Warning
+  }
+
+  /// <summary>
+  /// Enum used to know which information view will be shown to the user
+  /// </summary>
+  internal enum DataViewOption
+  {
+    /// <summary>
+    /// Result Set pane for Sql Editor
+    /// </summary>
+    ResultSet,
+    /// <summary>
+    /// Field Types pane for Sql Editor
+    /// </summary>
+    FieldTypes,
+    /// <summary>
+    /// Execution Plan pane for Sql Editor
+    /// </summary>
+    ExecutionPlan,
+    /// <summary>
+    /// Query Stats Pane for Sql Editor
+    /// </summary>
+    Querystats,
+    /// <summary>
+    /// Text view Pane for JS Editor
+    /// </summary>
+    TextView,
+    /// <summary>
+    /// Tree view Pane for JS Editor
+    /// </summary>
+    TreeView
   }
 }

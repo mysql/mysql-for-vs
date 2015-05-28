@@ -593,6 +593,12 @@
     <Compile Include="Editors\GridResultSet.Designer.cs">
       <DependentUpon>GridResultSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\JSResultsetView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\JSResultsetView.Designer.cs">
+      <DependentUpon>JSResultsetView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\NgShellWrapper.cs" />
     <Compile Include="Editors\QueryStatsView.cs">
       <SubType>UserControl</SubType>
@@ -900,6 +906,9 @@
     <EmbeddedResource Include="Editors\GridResultSet.resx">
       <DependentUpon>GridResultSet.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editors\JSResultsetView.resx">
+      <DependentUpon>JSResultsetView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\QueryStatsView.resx">
       <DependentUpon>QueryStatsView.cs</DependentUpon>
     </EmbeddedResource>
@@ -1113,6 +1122,7 @@
     <Content Include="Resources\output_type-resultset.png" />
     <None Include="Resources\selectedItem.Image.png" />
     <None Include="Resources\selected_item.png" />
+    <None Include="Resources\output_type_json.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">

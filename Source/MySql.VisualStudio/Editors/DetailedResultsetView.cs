@@ -142,29 +142,6 @@ namespace MySql.Data.VisualStudio.Editors
     private readonly string _queryKey = "baseQuery";
 
     /// <summary>
-    /// Enum used to know which information view will be shown to the user
-    /// </summary>
-    private enum DataViewOption
-    {
-      /// <summary>
-      /// Result Set pane
-      /// </summary>
-      ResultSet,
-      /// <summary>
-      /// Field Types pane
-      /// </summary>
-      FieldTypes,
-      /// <summary>
-      /// Execution Plan pane
-      /// </summary>
-      ExecutionPlan,
-      /// <summary>
-      /// Query Stats Pane
-      /// </summary>
-      Querystats
-    }
-
-    /// <summary>
     /// Dictionary used to store the queries that are executed in the database which are generated after a query is received
     /// </summary>
     private Dictionary<string, string> _queries;
@@ -354,7 +331,7 @@ namespace MySql.Data.VisualStudio.Editors
         new VerticalMenuButton() {
                                     ButtonText = "Field\nTypes",
                                     Name = "btnFieldTypes",
-                                    ToolTip = "Fiedl Types",
+                                    ToolTip = "Field Types",
                                     ImageToLoad = ImageType.FieldType,
                                     ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.FieldTypes); } },
         new VerticalMenuButton() {
@@ -377,7 +354,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Choose wich information view will be shown to the user basis in the enum option given
     /// </summary>
-    /// <param name="controlToShow"></param>
+    /// <param name="controlToShow">Pane that will be displayed</param>
     private void ShowControl(DataViewOption controlToShow)
     {
       ctrlResultSet.Visible = (controlToShow == DataViewOption.ResultSet);
