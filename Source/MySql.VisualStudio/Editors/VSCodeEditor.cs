@@ -166,7 +166,7 @@ namespace MySql.Data.VisualStudio.Editors
       textBuffer.InitializeContent("ed", 2);
 
       Guid langSvc = new Guid();
-      if (typeof(SqlEditor) == parent.Editor.GetType())
+      if (parent == null || typeof(SqlEditor) == parent.Editor.GetType())
       {
         langSvc = new Guid(MySqlLanguageService.IID);
       }
