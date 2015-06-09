@@ -58,7 +58,7 @@
         <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
-          <ButtonText>New Script...</ButtonText>
+          <ButtonText>New MySQL &amp;Script</ButtonText>
         </Strings>
       </Menu>
 
@@ -351,7 +351,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidNewMySQLScript</CommandName>
-          <ButtonText>&amp;MySQL</ButtonText>
+          <ButtonText>&amp;SQL</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" type="Button">
@@ -360,7 +360,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidNewJavascript</CommandName>
-          <ButtonText>&amp;Javascript</ButtonText>
+          <ButtonText>&amp;JavaScript</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
