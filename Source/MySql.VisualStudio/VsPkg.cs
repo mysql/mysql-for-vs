@@ -20,44 +20,30 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio;
-using MySql.Data.VisualStudio.Properties;
-using System.Reflection;
 using EnvDTE;
-using Microsoft.VisualStudio.CommandBars;
-using MySql.Data.VisualStudio.Editors;
-using MySQL.Utility;
-using Microsoft.VisualStudio.Data;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Data.Services;
-using Microsoft.VisualStudio.Data.Interop;
-using System.Linq;
-using System.Data;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using Microsoft.VisualStudio.Data.Core;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.MySqlClient;
-using System.Text;
-using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.DBExport;
+using MySql.Data.VisualStudio.Editors;
+using MySql.Data.VisualStudio.Properties;
+using MySql.Data.VisualStudio.SchemaComparer;
+using MySql.Data.VisualStudio.Wizards;
 using MySQL.Utility.Classes;
 using MySQL.Utility.Classes.MySQLWorkbench;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using MySql.Data.VisualStudio.Wizards;
-#if NET_40_OR_GREATER
-using Microsoft.VSDesigner.ServerExplorer;
-using MySql.Data.VisualStudio.Wizards;
-#endif
-
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio
 {
@@ -112,6 +98,19 @@ namespace MySql.Data.VisualStudio
   {
     public static MySqlDataProviderPackage Instance;
     public MySqlConnection MysqlConnectionSelected;
+
+    /// <summary>
+    /// The Sql extension
+    /// </summary>
+    public const string SQL_EXTENSION = ".mysql";
+    /// <summary>
+    /// The JavaScrip extension
+    /// </summary>
+    public const string JAVASCRIPT_EXTENSION = ".myjs";
+    /// <summary>
+    /// The Python extension
+    /// </summary>
+    public const string PYTHON_EXTENSION = ".py";
 
     /// <summary>
     /// Default constructor of the package.
@@ -282,63 +281,8 @@ namespace MySql.Data.VisualStudio
       //Set the selected connection so when the editor window is open it can work with.
       MysqlConnectionSelected = connection;
 
-      //Create New SQL Script file and open the editor with it.
-      CreateNewJavascript();
-    }
-
-    /// <summary>
-    /// Creates the new javascript file and opens the editor for it, then deletes the temporary file afterwards.
-    /// </summary>
-    private void CreateNewJavascript()
-    {
-      //Create a new file with .mysql extension so the editor is able to open it.
-      var tempFileInfo = new FileInfo(Path.GetTempFileName());
-      if (tempFileInfo.Directory == null) return;
-      var tempDir = tempFileInfo.Directory.ToString();
-      tempDir = tempDir.EndsWith(@"\") ? tempDir : tempDir + @"\";
-      const string fileNameBase = "NewScript";
-      const string scriptExtension = ".myjs";
-      var counter = 1;
-
-      while (File.Exists(tempDir + fileNameBase + counter + scriptExtension))
-      {
-        counter++;
-      }
-
-      var fullFileName = tempDir + fileNameBase + counter + scriptExtension;
-
-      try
-      {
-        // Write the file to the hard disk and close the stream so the file is not locked for the editor to open it.
-        using (var fs = File.Create(fullFileName))
-        {
-          var info = new UTF8Encoding(true).GetBytes("");
-          fs.Write(info, 0, info.Length);
-        }
-
-        //Open this new file with mysql editor.
-        var applicationObject = GetDTE2();
-        applicationObject.ExecuteCommand("File.OpenFile", fullFileName);
-
-        // Delete the file if it still exists
-        if (File.Exists(fullFileName))
-        {
-          // Note that no lock is put on the file and the possibility exists that another process could do something with it between the calls to Exists and Delete.
-          File.Delete(fullFileName);
-        }
-      }
-      catch (UnauthorizedAccessException ex)
-      {
-        MessageBox.Show(Resources.FileCreationErrorPermissions + tempDir, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
-      catch (IOException ex)
-      {
-        MessageBox.Show(Resources.FileCreationErrorCreatingFile, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(Resources.MessageBoxErrorDetail + ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
+      //Create New JavaScript file and open the editor with it.
+      CreateNewScript(ScriptType.JavaScript);
     }
 
     /// <summary>
@@ -357,62 +301,6 @@ namespace MySql.Data.VisualStudio
       if (selectedItems != null)
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       newScriptbtn.Visible = newScriptbtn.Enabled = GetConnection(ConnectionName) != null;
-    }
-
-    /// <summary>
-    /// Creates a new MySQL script file, opens the script editor window and deletes the file from the system.
-    /// </summary>
-    /// <param name="connection">The connection to </param>
-    private void CreateNewMySqlScript()
-    {
-      //Create a new file with .mysql extension so the editor is able to open it.
-      var tempFileInfo = new FileInfo(Path.GetTempFileName());
-      if (tempFileInfo.Directory == null) return;
-      var tempDir = tempFileInfo.Directory.ToString();
-      tempDir = tempDir.EndsWith(@"\") ? tempDir : tempDir + @"\";
-      const string fileNameBase = "NewScript";
-      const string scriptExtension = ".mysql";
-      var counter = 1;
-
-      while (File.Exists(tempDir + fileNameBase + counter + scriptExtension))
-      {
-        counter++;
-      }
-
-      var fullFileName = tempDir + fileNameBase + counter + scriptExtension;
-
-      try
-      {
-        // Write the file to the hard disk and close the stream so the file is not locked for the editor to open it.
-        using (var fs = File.Create(fullFileName))
-        {
-          var info = new UTF8Encoding(true).GetBytes("");
-          fs.Write(info, 0, info.Length);
-        }
-
-        //Open this new file with mysql editor.
-        var applicationObject = GetDTE2();
-        applicationObject.ExecuteCommand("File.OpenFile", fullFileName);
-
-        // Delete the file if it still exists
-        if (File.Exists(fullFileName))
-        {
-          // Note that no lock is put on the file and the possibility exists that another process could do something with it between the calls to Exists and Delete.
-          File.Delete(fullFileName);
-        }
-      }
-      catch (UnauthorizedAccessException ex)
-      {
-        MessageBox.Show(Resources.FileCreationErrorPermissions + tempDir, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
-      catch (IOException ex)
-      {
-        MessageBox.Show(Resources.FileCreationErrorCreatingFile, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show(Resources.MessageBoxErrorDetail + ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
     }
 
     #endregion
@@ -611,7 +499,7 @@ namespace MySql.Data.VisualStudio
       MysqlConnectionSelected = connection;
 
       //Create New SQL Script file and open the editor with it.
-      CreateNewMySqlScript();
+      CreateNewScript(ScriptType.Sql);
     }
 
     private void LaunchWBCallback(object sender, EventArgs e)
@@ -906,6 +794,40 @@ namespace MySql.Data.VisualStudio
       sol.AddFromTemplate(templatePath, solutionPath, dlg.ProjectName, dlg.CreateNewSolution);
     }
 
+    /// <summary>
+    /// Creates the new script file with its corresponding extension according to the type.
+    /// </summary>
+    /// <param name="scriptType">Type of the script to be created.</param>
+    private void CreateNewScript(ScriptType scriptType)
+    {
+      if (Instance == null) return;
+
+      try
+      {
+        string scriptExtension = String.Empty;
+        switch (scriptType)
+        {
+          case ScriptType.Sql:
+            scriptExtension = SQL_EXTENSION;
+            break;
+          case ScriptType.JavaScript:
+            scriptExtension = JAVASCRIPT_EXTENSION;
+            break;
+          case ScriptType.Phyton:
+            scriptExtension = PYTHON_EXTENSION;
+            break;
+        }
+
+        var itemOp = Instance.GetDTE2().ItemOperations;
+        const string fileNameBase = "MySQL Script";
+        itemOp.NewFile(@"General\Text File", fileNameBase + scriptExtension, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("An error ocurred when trying to launch a MySql Script window: " + ex.Message);
+      }
+    }
+
     public struct ConnectionParameters
     {
       public string HostName;
@@ -915,6 +837,16 @@ namespace MySql.Data.VisualStudio
       public bool NamedPipesEnabled;
       public string UserId;
       public string DataBaseName;
+    }
+
+    /// <summary>
+    /// Defines a series of script file types.
+    /// </summary>
+    private enum ScriptType
+    {
+      Sql,
+      JavaScript,
+      Phyton
     }
 
     #region IVsInstalledProduct Members
@@ -952,7 +884,6 @@ namespace MySql.Data.VisualStudio
       pbstrPID = String.Format("{0}.{1}.{2}", versionParts[0], versionParts[1], versionParts[2]);
       return VSConstants.S_OK;
     }
-
     #endregion
   }
 }

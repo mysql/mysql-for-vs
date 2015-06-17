@@ -924,6 +924,9 @@
     <EmbeddedResource Include="Editors\VerticalMenu.resx">
       <DependentUpon>VerticalMenu.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="VsPkg.resx">
+      <DependentUpon>VsPkg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.resx">
       <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1006,6 +1009,7 @@
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlDataObjectSupport.xml">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlDataViewSupport.xml">
       <SubType>Designer</SubType>
