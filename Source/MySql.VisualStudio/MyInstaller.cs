@@ -49,7 +49,11 @@ namespace MySql.Data.VisualStudio
         root = "8.0";
       }
       else if (Context.Parameters["version"] == "VS2008")
+      {
+        if (ranu)
+          throw new NotSupportedException("RANU not supported for Visual Studio 2008");
         root = "9.0";
+      }
       else if (Context.Parameters["version"] == "VS2010")
         root = "10.0";
       else if (Context.Parameters["version"] == "VS2012")

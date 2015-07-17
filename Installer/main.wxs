@@ -40,6 +40,15 @@
     </Property>
     <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
 
+    <!-- Ensure a valid VS version is installed (2010, 2012, 2013, 2015) -->
+    <PropertyRef Id="VS2010_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2012_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2013_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2015_ROOT_FOLDER"/>
+    <Condition Message="Visual Studio version 2010, 2012, 2013 or 2015 must be installed.">
+      NOT (VS2010_ROOT_FOLDER = "" AND VS2012_ROOT_FOLDER = "" AND VS2013_ROOT_FOLDER = "" AND VS2015_ROOT_FOLDER = "")
+    </Condition>
+
     <!-- now make sure that we don't have an old version that doesn't support upgrades -->
     <Property Id="PREUPGRADEVERSION">
       <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
@@ -68,7 +77,6 @@
             </Directory>
             <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
               <Directory Id='PFTemplatesDir' Name='Templates'/>
-              <Directory Id='VS2008Integration' Name='2008'/>
             </Directory>
             <Directory Id='DocsDir' Name='Documentation'>
               <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
@@ -83,20 +91,6 @@
         <Directory Id='PMCompanyDir' Name='MySQL'>
           <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>
         </Directory>
-      </Directory>
-
-      <!-- VS2008 folders -->
-      <Directory Id="VS_2008_PATH">
-        <Directory Id="VS90_ProjectTemplates" Name="ProjectTemplates" >
-          <Directory Id="VS90_CSharpPT" Name="CSharp">
-            <Directory Id="VS90_CSharpPTMySQL" Name="MySQL"/>
-          </Directory>
-          <Directory Id="VS90_VisualBasicPT" Name="VisualBasic">
-            <Directory Id="VS90_VisualBasicPTMySQL" Name="MySQL"/>
-          </Directory>
-        </Directory>
-        <Directory Id="VS90_PrivateAssemblies" Name="PrivateAssemblies" />
-        <Directory Id="VS90_PublicAssemblies" Name="PublicAssemblies" />
       </Directory>
 
       <!-- VS2010 Extension folders -->
@@ -326,7 +320,6 @@
     <!--<FeatureRef Id="WebProviders"/>-->
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
-      <FeatureRef Id='VS2008Int'/>
       <FeatureRef Id='VS2010Int'/>
       <FeatureRef Id='VS2012Int'/>
       <FeatureRef Id='VS2013Int'/>
@@ -360,15 +353,9 @@
 
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
-      <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
-      <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
       <Custom Action="SetHLMPath" After="AppSearch"></Custom>
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
     </InstallExecuteSequence>
-
-    <!-- Custom actions for VS2008 help -->
-    <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
-    <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
 
     <!-- custom actions for VS2010 help -->
     <CustomAction Id="SetHLMPath" Property="HelpLibManager" Value="[HLM_LOCATION]HelpLibManager.exe"/>

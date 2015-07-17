@@ -1,86 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
-    <DirectoryRef Id='PFTemplatesDir'>
-      <Component Id='PFTemplates' Guid='CB74DD46-A5D0-402f-9413-63A8DEFB3A26'>
-        <File Id='PFScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='PFScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
-      </Component>
-    </DirectoryRef>
-
-    <!-- integration of VS2008 -->
-    <DirectoryRef Id='VS2008Integration'>
-      <!-- common DDEX component to be installed if VS2008 is selected -->
-      <Component Id='VS2008_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
-        <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v3.5\release\MySQL.VisualStudio.dll' />
-        <File Id='MySql.Debugger_2008' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v3.5\release\MySql.Debugger.dll'/>
-        <File Id='MySql.Debugger.VisualStudio_2008' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Debugger.VisualStudio.dll'/>
-        <File Id='MySqlParser.2008' Name='MySql.Parser.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Parser.dll'/>
-        <File Id='Antlr3.Runtime_2008' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v3.5\release\Antlr3.Runtime.dll'/>
-        <File Id='MySql.Utility_2008' Name='MySql.Utility.dll' DiskId='1'
-            Source='..\Dependencies\v2.0\release\MySQL.Utility.dll'/>
-      </Component>
-
-      <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
-        <!--<RegistryKey Id="VS_2008_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VS_2008_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
-        </RegistryKey>-->
-        <?include VS2008_Registry.wxi?>
-        <?include VS2008_Data.wxi?>
-        <!-- Debugger -->
-        <RegistryKey Id="VS_2008_Debugger_Engine" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\AD7Metrics\Engine\{EEEE0740-10F7-4E5F-8BC4-1CC0AC9ED5B0}">
-          <RegistryValue Name="CLSID" Value="{EEEE066A-1103-451F-BC7A-6AEF76558AE2}" Type="string" Action="write"/>
-          <RegistryValue Name="ProgramProvider" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
-          <RegistryValue Name="Attach" Value="1" Type="integer" Action="write"/>
-          <RegistryValue Name="AddressBP" Value="0" Type="integer" Action="write"/>
-          <RegistryValue Name="AutoSelectPriority" Value="4" Type="integer" Action="write"/>
-          <RegistryValue Name="CallstackBP" Value="1" Type="integer" Action="write"/>
-          <RegistryValue Name="Name" Value="MySql Stored Procedure Debug Engine" Type="string" Action="write"/>
-          <RegistryValue Name="PortSupplier" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
-          <RegistryValue Name="AlwaysLoadLocal" Value="0" Type="integer" Action="write"/>
-        </RegistryKey>
-        <RegistryKey Id="VS_2008_Debugger_CLSID_Engine" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\CLSID\{EEEE066A-1103-451F-BC7A-6AEF76558AE2}">
-          <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
-          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7Engine" Type="string" Action="write"/>
-          <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
-          <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio_2008]" Type="string" Action="write"/>
-        </RegistryKey>
-        <RegistryKey Id="VS_2008_Debugger_CLSID_Provider" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\CLSID\{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}">
-          <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
-          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7ProgramProvide" Type="string" Action="write"/>
-          <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
-          <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio_2008]" Type="string" Action="write"/>
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS90_PrivateAssemblies'>
-      <Component Id='VS2008_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250A'>
-        <File Id='VS2008_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v2.0\Release\MySql.Data.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS90_CSharpPTMySQL'>
-      <Component Id='VS2008_VSTDIR' Guid='BA082C85-9D64-8B79-8910-C6C25655250A'>
-        <File Id='VS2008_VSTDIR' Name='ProjectTemplates.vstdir' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\ProjectTemplates.vstdir' />
-        <File Id='VS2008_VSCSharpTemplate' Name='CSharpMvc3.zip' DiskId='1'
-              Source='..\ProjectTemplatesZipFolder\MySQL MVC 3 Project.zip' />
-      </Component>
-    </DirectoryRef>
-
     <!-- Visual Studio 2010 -->
     <DirectoryRef Id='VS10_ExtVersionDir'>
       <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
@@ -410,13 +330,6 @@
     </DirectoryRef>
 
     <!--Removing files from Private Assemblies Folders-->
-    <DirectoryRef Id='VS90_PrivateAssemblies'>
-      <Component Id='Remove.VS2008_MD.Library' Guid='AA082C85-9D64-4B79-8910-C6C25655250A'>
-        <RemoveFile Id='RemoveVS2008_MySql.DataLib' Name='MySql.Data.dll' On='uninstall'/>
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id='VS10_PrivateAssemblies'>
       <Component Id='Remove.VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C2565525CA'>
         <RemoveFile Id='RemoveVS2010_MySql.DataLib' Name='MySql.Data.dll' On='uninstall' />
@@ -466,17 +379,6 @@
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
-
-    <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
-      <Condition Level='0'>Not VS_2008_PATH AND Not Installed</Condition>
-      <ComponentRef Id='VS2008_Common'/>
-      <ComponentRef Id='PFTemplates'/>
-      <ComponentRef Id='VS_2008_Registry'/>
-      <ComponentRef Id='VS2008_MD.Library'/>
-      <ComponentRef Id='Remove.VS2008_MD.Library'/>
-      <ComponentRef Id='AutoLoadPackageVS2008'/>
-      <ComponentRef Id='VS2008_VSTDIR'/>
-    </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
@@ -563,14 +465,6 @@
       </Feature>
     </Feature>
 
-    <!-- Visual Studio 2008 integration actions -->
-    <Property Id='VS_2008_PATH'>
-      <RegistrySearch Id='Find_VS2008_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\9.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
-    </Property>
-    <CustomAction Id="VS_2008_SETUP" Property="VS_2008_SETUP_EXEC" Value='"[VS_2008_PATH]\devenv.com" /setup'/>
-    <CustomAction Id="VS_2008_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
-
     <!-- Visual Studio 2010 installation location -->
     <Property Id='VS_2010_PATH' Secure='yes'>
       <RegistrySearch Id='Find_VS2010_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
@@ -612,17 +506,6 @@
     <CustomAction Id="VS14_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2015" BinaryKey="VS14_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Adding AutoLoadPackage option so our connections are available -->
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="AutoLoadPackageVS2008" Guid="*">
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
-                     ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
-          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="AutoLoadPackageVS2010" Guid="*">
         <RegistryKey Root="HKLM"
@@ -668,9 +551,6 @@
     </DirectoryRef>
 
     <InstallExecuteSequence>
-      <!-- now vs2008 scheduling -->
-      <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
-      <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS2010Setup' Before='InstallFinalize'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
       <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action='VS2012Setup' Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
