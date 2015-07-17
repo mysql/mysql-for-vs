@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="VS14_MySQLWindowsFormsProject.zip">
+      <Directory Id="vs14dirDEE58BD9C1C57B61E9BC8128F6140E2F" Name="Properties" />
+      <Directory Id="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Name="Resources" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="VS14_WindowsFormsCsharpTemplateDirectoryComponents">
+      <Component Id="vs14cmp6E99945176A1ADEF015826B4CBFEE305" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="6FC8A6F5-CC0A-4A06-B5C8-75AB75B95F5C">
+        <File Id="vs14filA9AD042992DE57684FA656331098C55A" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\app.config" />
+      </Component>
+      <Component Id="vs14cmp7D9B6F69E1D0588B9E11E833A90AF9D9" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="40E34AA4-D1FA-4E52-B385-67B5457897C2">
+        <File Id="vs14filCDE61D3D3C1884168EE8B28B4B3AB590" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Form1.cs" />
+      </Component>
+      <Component Id="vs14cmp4C9A6980BEC4F8D195362B388A347739" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="FD3A421A-E182-47C8-AAAF-BB105E89053B">
+        <File Id="vs14filAC624ACFDF9F6A2D79C3D73CCF70412C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Form1.Designer.cs" />
+      </Component>
+      <Component Id="vs14cmp47BF3F6FD4D197D256C0152B2133941A" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="1C8BFB38-AAB6-4A47-972E-D1769EDC09B2">
+        <File Id="vs14fil1AF197E7580BDF68244033535B129EF6" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Form1.resx" />
+      </Component>
+      <Component Id="vs14cmp2958FA17FA317D2D11AD0F0D7B9346B9" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="18BE7359-55FA-4756-A2DF-2F0DC2056383">
+        <File Id="vs14filD365D57AD2EB6A50FF3E3042DF5AD5BA" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\MyTemplate.vstemplate" />
+      </Component>
+      <Component Id="vs14cmp74802C2669B83E0A6F1CEC8F0063B7C3" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="A7747567-57CF-4C89-9871-A7589497D06F">
+        <File Id="vs14fil9B2E45885232ED802F9A594E43A5F8A3" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Program.cs" />
+      </Component>
+      <Component Id="vs14cmpCA921D67F72D17567AC42676B54F532D" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="EC1DC44B-52D8-48BD-90A1-07D000693EF9">
+        <File Id="vs14fil966DD2870EA489C36A6CB1296F8BB5E8" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\WindowsTemplateProject.csproj" />
+      </Component>
+      <Component Id="vs14cmpA5E89D4B51BAE01193E675954BD252B3" Directory="VS14_MySQLWindowsFormsProject.zip" Guid="164F6A78-89C4-4CCF-991C-4EB18A086EEC">
+        <File Id="vs14filB4CF79144F1D16BF4F0034BA045BFFFB" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\__TemplateIcon.ico" />
+      </Component>
+      <Component Id="vs14cmpCAC63D635A03F0CAF989A006A04735ED" Directory="vs14dirDEE58BD9C1C57B61E9BC8128F6140E2F" Guid="57FB6820-8423-412C-A9BB-1C34105FEE51">
+        <File Id="vs14fil191B2BE16889A494F199DED2D011B8C1" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Properties\AssemblyInfo.cs" />
+      </Component>
+      <Component Id="vs14cmp872512C27915716303541D2A95817BD1" Directory="vs14dirDEE58BD9C1C57B61E9BC8128F6140E2F" Guid="F3240567-BF3E-405F-B31F-75246BA94BF6">
+        <File Id="vs14filFB007B7941E80D6386DF9AEC3D5F7634" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Properties\Resources.Designer.cs" />
+      </Component>
+      <Component Id="vs14cmp22DE1A14A9764E42A1BA533AADDAA1A6" Directory="vs14dirDEE58BD9C1C57B61E9BC8128F6140E2F" Guid="B42A58C6-969E-40BC-BB18-D4E8014137DD">
+        <File Id="vs14filDD46D83822AFAE37CEE156604CC9788D" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Properties\Resources.resx" />
+      </Component>
+      <Component Id="vs14cmpDFB2847AD8E3E05268B5877A35154053" Directory="vs14dirDEE58BD9C1C57B61E9BC8128F6140E2F" Guid="E6FA595C-1C44-4748-B378-AB4D37C21F21">
+        <File Id="vs14fil5FF5D691A08072CAB603A26E04901A0C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Properties\Settings.Designer.cs" />
+      </Component>
+      <Component Id="vs14cmp3E9C33E1FB4CC63167CA2D96B0330E6C" Directory="vs14dirDEE58BD9C1C57B61E9BC8128F6140E2F" Guid="9638900A-6AC5-4597-B6A5-CCEA3D0CD19F">
+        <File Id="vs14filC9B61F7A4D793A0B07812A8184CD0335" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Properties\Settings.settings" />
+      </Component>
+      <Component Id="vs14cmp67AF18D1EADC6AF483088F5647F30ACE" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="CF849B37-260D-4F35-9B54-A1C9FB05613D">
+        <File Id="vs14fil5F41CE2508EF28C6486E372862A65836" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorAddNewItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmpCCE194072C5D13ABA66267E7586BE818" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="C5E5C002-7E23-48C3-930B-2A397BE6ABBF">
+        <File Id="vs14filCCCCD5DF3AA4F218AB111DB0CFAB4438" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorDeleteItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmp05FB4B67016AE4FA4532B6A712DEC9BF" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="BEF61D71-B1E8-4566-904D-A164164A01EA">
+        <File Id="vs14fil1504DDF368288F41CC4A84128FEC385F" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorMoveFirstItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmp61FD8D7898B0647AC8D6C0C86B27BA68" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="271DB5D2-D57A-41E1-8734-AFF0B0AE9EC8">
+        <File Id="vs14filFF5A420C179DB8AB6964CEA4B0F3BE5C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorMoveLastItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmpC593E576C55FBC7E9EF2E009BD8FA751" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="03F39BCE-E5F5-4A27-ACC7-EEE18A21DC47">
+        <File Id="vs14filA08E32847B0C02BDBF2BDD41519BE269" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorMoveNextItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmp862812777E9DE1B1B2BDA21B015B468E" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="EA6A015D-4C7F-484A-825A-3D655107916F">
+        <File Id="vs14filE832F31B8BC1E073E048D7895615677E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorMovePreviousItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmp5FBAE016E0D5F06492A5638E085A2A21" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="1AF00E76-1695-49C9-8AB5-42B899672BB1">
+        <File Id="vs14filBFB0EC4E7805778EB6708C8710E0CF9E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\bindingNavigatorSaveItem.Image.png" />
+      </Component>
+      <Component Id="vs14cmp92887D424031B7E160FAE2EEB9CC3CE9" Directory="vs14dir6E8D3B7215BF9A7193BEBF636375B3C1" Guid="4A52854C-706F-49FF-900D-B6E46AA54F9A">
+        <File Id="vs14fil632AA8451CD4F3444A772A98C75D2AEB" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL Windows Forms Project.zip\Resources\Thumbs.db" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

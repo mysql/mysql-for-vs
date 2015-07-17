@@ -118,6 +118,10 @@
     <Compile Include="ComponentGroups\VS12_CSharpWindowsForms.zip.wxs" />
     <Compile Include="ComponentGroups\VS12_VisualBasicMvc3.zip.wxs" />
     <Compile Include="ComponentGroups\VS12_VisualBasicWindowsFormsProject.zip.wxs" />
+	  <Compile Include="ComponentGroups\VS14_CSharpMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_VisualBasicMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_VisualBasicWindowsFormsProject.zip.wxs" />
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
     <Compile Include="main.wxs" />
