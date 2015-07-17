@@ -1,6 +1,7 @@
 
 
 1.2.4
+- Removed support for VS2008 (JIRA Bug #MYSQLFORVS-331).
 - Added support for VS2015 so the plugin can be installed properly (MySQL Bug #77708, Oracle Bug #21438524).
 - Fix for MySQL parser does not support new syntax in 'explain' for grammar 5.7 (Oracle Bug #19431740).
 
