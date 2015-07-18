@@ -18,3 +18,5 @@ Documentation/Output
 _UpgradeReport_Files
 VS.targets
 **/*.sln.cache
+*.diff
+*.py
