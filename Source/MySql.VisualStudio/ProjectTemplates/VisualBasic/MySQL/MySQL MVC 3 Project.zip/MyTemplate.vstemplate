@@ -69,7 +69,7 @@
     </Project>
   </TemplateContent>
    <WizardExtension>
-    <Assembly>MySql.VisualStudio, Version=1.2.3.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
+    <Assembly>MySql.VisualStudio, Version=1.2.4.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
     <FullClassName>MySql.Data.VisualStudio.Wizards.Web.VisualBasicWebWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>
