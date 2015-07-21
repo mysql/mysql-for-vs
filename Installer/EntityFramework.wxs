@@ -68,9 +68,9 @@
     <DirectoryRef Id="VS14_DBGenDir">
       <Component Id="EF.T4.VS15" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
         <File Id="VS15.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL.tt"/>
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL.tt"/>
         <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\GenerateMySQL.Utility.ttinclude"/>
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
       </Component>
     </DirectoryRef>
 
