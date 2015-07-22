@@ -454,6 +454,7 @@
       <ComponentRef Id='Remove.VS2015_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2015'/>
       <Feature Id='VS2015_AddProjectTemplate' Title='ProjectTemplates' Level='1' >
+        <Condition Level='0'>Not MVC_4_32 AND Not MVC_4_64</Condition>
         <ComponentRef Id='VS2015_VSTDIR'/>
         <ComponentRef Id='VS2015_VSTVisualBasicDIR'/>
         <ComponentRef Id='VS2015_T4TemplatesCSharpDir' />
@@ -464,6 +465,18 @@
         <ComponentGroupRef Id='VS14_WinFormsVisualBasicTemplateDirectoryComponents'/>
       </Feature>
     </Feature>
+
+    <Property Id="MVC_4_32" Secure="yes">
+      <DirectorySearch Id='MVC_DLL_DIR_32' Path='[ProgramFilesFolder]\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies'>
+        <FileSearch Id='MVC_DLL_FILE_32' Name='System.Web.Mvc.dll' />
+      </DirectorySearch>
+    </Property>
+
+    <Property Id="MVC_4_64" Secure="yes">
+      <DirectorySearch Id='MVC_DLL_DIR_64' Path='[ProgramFiles64Folder]\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies'>
+        <FileSearch Id='MVC_DLL_FILE_64' Name='System.Web.Mvc.dll' />
+      </DirectorySearch>
+    </Property>
 
     <!-- Visual Studio 2010 installation location -->
     <Property Id='VS_2010_PATH' Secure='yes'>

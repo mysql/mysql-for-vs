@@ -106,7 +106,9 @@ namespace MySql.Data.VisualStudio
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
   {
     public static MySqlDataProviderPackage Instance;
-    public MySqlConnection MysqlConnectionSelected;    
+    public MySqlConnection MysqlConnectionSelected;
+    private const string MVC4_64_Path = "C:\\Program Files (x86)\\Microsoft ASP.NET\\ASP.NET MVC 4";
+    private const string MVC4_32_Path = "C:\\Program Files\\Microsoft ASP.NET\\ASP.NET MVC 4";
 
     /// <summary>
     /// Default constructor of the package.
@@ -189,10 +191,22 @@ namespace MySql.Data.VisualStudio
 #if NET_40_OR_GREATER
         CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
         OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
+        
+        if (!IsMVC4Installed())
+        {
+          cmdMenuCreateNewMvcProject.Enabled = false;
+        }
+
         mcs.AddCommand(cmdMenuCreateNewMvcProject);
 
         CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
         OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
+        
+        if (!IsMVC4Installed())
+        {
+          cmdMenuCreateWinFormsProject.Enabled = false;
+        }
+
         mcs.AddCommand(cmdMenuCreateWinFormsProject);
 #endif
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
@@ -210,23 +224,33 @@ namespace MySql.Data.VisualStudio
     {
       CreateNewMySqlProject("Windows Forms Project");
     }
- 
 
     private void cmdCreateNewMvcProject_Callback(object sender, EventArgs e)
     {
       CreateNewMySqlProject("ASP.NET MVC 3 Project");
     }
 
+    /// <summary>
+    /// Method to detect if "Microsoft ASP.NET MVC4" is installed, searching for it in it's predefined "ProgramFiles" path.
+    /// </summary>
+    /// <returns>
+    /// returns true if "Microsoft ASP.NET MVC4" is installed
+    /// </returns>
+    private bool IsMVC4Installed()
+    {
+      string path = Environment.Is64BitOperatingSystem ? MVC4_64_Path : MVC4_32_Path;
+      return Directory.Exists(path);
+    }
+
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand openUtilities = sender as OleMenuCommand;
-            
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
       UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
-      
-      if (selectedItems != null)            
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;      
+
+      if (selectedItems != null)
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       if (GetConnection(ConnectionName) != null)
       {
         if (MySqlWorkbench.IsInstalled)
