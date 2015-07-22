@@ -20,14 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using Microsoft.VisualStudio.PlatformUI;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -43,6 +37,27 @@ namespace MySql.Data.VisualStudio.Editors
     public ExecutionPlanView()
     {
       InitializeComponent();
+      VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+      SetColors();
+    }
+
+
+    /// <summary>
+    /// Responds to the event when Visual Studio theme changed.
+    /// </summary>
+    /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
+    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    {
+      SetColors();
+    }
+
+    /// <summary>
+    /// Sets the colors corresponding to current Visual Studio theme.
+    /// </summary>
+    private void SetColors()
+    {
+      Controls.SetColors();
+      BackColor = Utils.BackgroundColor;
     }
 
     /// <summary>

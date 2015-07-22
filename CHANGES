@@ -1,6 +1,6 @@
 
 
-1.3.0
+2.0.0
 - Fixed problem with font colors that made them difficult to read when using the Visual Studio's Dark theme.
 - Added a new option to create new MySQL scripts directly from Server Explorer.
 - Added a new Editor to handle Javascript files.
@@ -9,6 +9,7 @@
 - Added a Workbench-like vertical menu to the current Query Editor which will be shown with script results to switch between the following views: Result Set, Field Types, Query Stats and Execution Plan.
 - Added new information panes to the current Query Editor that are going to be displayed in the result set area: Field Types, Query Stats and Execution Plan.
 - Added the support to handle multiple result sets in the current Query Editor.
+- Fix controls color to match default provided VS Themes (Dark, Blue and Light).
 
 1.2.4
 - Fix for MySQL parser does not support new syntax in 'explain' for grammar 5.7 (Oracle bug #19431740).

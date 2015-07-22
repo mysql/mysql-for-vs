@@ -1,4 +1,6 @@
-﻿namespace MySql.Data.VisualStudio.Editors
+﻿using System.Windows.Forms;
+
+namespace MySql.Data.VisualStudio.Editors
 {
   partial class MyJsEditor
   {
@@ -75,6 +77,7 @@
             this.dbLabel});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
+      this.toolStrip1.RenderMode = ToolStripRenderMode.System;
       this.toolStrip1.Size = new System.Drawing.Size(604, 25);
       this.toolStrip1.TabIndex = 1;
       this.toolStrip1.Text = "toolStrip1";
@@ -169,6 +172,7 @@
       this.tabControl1.SelectedIndex = 0;
       this.tabControl1.Size = new System.Drawing.Size(604, 185);
       this.tabControl1.TabIndex = 4;
+      this.tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
       // 
       // resultsPage
       // 

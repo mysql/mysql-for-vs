@@ -23,8 +23,10 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -49,9 +51,31 @@ namespace MySql.Data.VisualStudio.Editors
     {
       InitializeComponent();
       factory = MySqlClientFactory.Instance;
-      if (factory == null)
-        throw new Exception("MySql Data Provider is not correctly registered");
+      if (factory == null) throw new Exception("MySql Data Provider is not correctly registered");
+
       tabControl1.TabPages.Clear();
+      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
+      tabControl1.Visible = false;
+      VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+      SetColors();
+    }
+
+    /// <summary>
+    /// Responds to the event when Visual Studio theme changed.
+    /// </summary>
+    /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
+    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    {
+      SetColors();
+    }
+
+    /// <summary>
+    /// Sets the colors corresponding to current Visual Studio theme.
+    /// </summary>
+    private void SetColors()
+    {
+      Controls.SetColors();
+      BackColor = Utils.BackgroundColor;
     }
 
     /// <summary>
@@ -172,9 +196,12 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void runJsButton_Click(object sender, EventArgs e)
     {
-        string js = codeEditor.Text.Trim();
-        ExecuteScript(js);
-        StoreCurrentDatabase();
+      string js = codeEditor.Text.Trim();
+      tabControl1.TabPages.Clear();
+      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
+      tabControl1.Visible = false;
+      ExecuteScript(js);
+      StoreCurrentDatabase();
     }
 
     /// <summary>
@@ -204,13 +231,12 @@ Check that the server is running, the database exist and the user credentials ar
       try
       {
         TabPage newResPage = Utils.CreateResultPage(0);
-        JSResultsetView resultViews = new JSResultsetView();
-        resultViews.Dock = DockStyle.Fill;
-        resultViews.SetScript((MySqlConnection)connection, js);
+        JSResultsetView resultViews = new JSResultsetView((MySqlConnection)connection, js);
         if (resultViews.HasResultSet)
         {
           newResPage.Controls.Add(resultViews);
           tabControl1.TabPages.Add(newResPage);
+          tabControl1.Visible = true;
         }
       }
       catch (Exception ex)

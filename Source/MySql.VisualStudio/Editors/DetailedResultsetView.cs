@@ -20,16 +20,15 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using Microsoft.VisualStudio.PlatformUI;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -94,6 +93,17 @@ namespace MySql.Data.VisualStudio.Editors
       InitializeComponent();
       LoadResources();
       ConfigureMenu();
+      VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+      Controls.SetColors();
+    }
+
+    /// <summary>
+    /// Set colors to match the selected visual studio theme.
+    /// </summary>
+    /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
+    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    {
+      Controls.SetColors();
     }
 
     /// <summary>

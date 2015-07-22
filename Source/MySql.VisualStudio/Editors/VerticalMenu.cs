@@ -24,11 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.PlatformUI;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -37,12 +35,26 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   public partial class VerticalMenu : UserControl
   {
+    private string _lastSelectedButton;
+
     /// <summary>
     /// Control Constructor
     /// </summary>
     public VerticalMenu()
     {
       InitializeComponent();
+      VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+      Controls.SetColors();
+    }
+
+    /// <summary>
+    /// Set colors to match the selected visual studio theme.
+    /// </summary>
+    /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
+    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    {
+      Controls.SetColors();
+      ApplySelectedStyle(_lastSelectedButton);
     }
 
     /// <summary>
@@ -61,19 +73,20 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="button">Configuration for the button that will be created</param>
     private void GenerateButton(VerticalMenuButton button)
     {
-      ToolStripButton newBtn = new ToolStripButton() {
-                               Name = string.Format("tsbtn_{0}", button.Name),
-                               Width = 58,
-                               Height = 68,
-                               Text = button.ButtonText,
-                               ToolTipText = button.ToolTip,
-                               Image = ImageButton(button.ImageToLoad),
-                               ImageAlign = ContentAlignment.TopCenter,
-                               ImageScaling = ToolStripItemImageScaling.None,
-                               TextAlign = ContentAlignment.BottomCenter,
-                               TextImageRelation = TextImageRelation.ImageAboveText,
-                               AutoSize = false
-                               };
+      ToolStripButton newBtn = new ToolStripButton()
+      {
+        Name = string.Format("tsbtn_{0}", button.Name),
+        Width = 58,
+        Height = 68,
+        Text = button.ButtonText,
+        ToolTipText = button.ToolTip,
+        Image = ImageButton(button.ImageToLoad),
+        ImageAlign = ContentAlignment.TopCenter,
+        ImageScaling = ToolStripItemImageScaling.None,
+        TextAlign = ContentAlignment.BottomCenter,
+        TextImageRelation = TextImageRelation.ImageAboveText,
+        AutoSize = false
+      };
       newBtn.Click += button.ClickEvent;
       newBtn.Click += (object sender, EventArgs e) => { ApplySelectedStyle(newBtn.Name); };
       tsMenu.Items.Add(newBtn);
@@ -111,6 +124,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="buttonName">Name of the button clicked</param>
     private void ApplySelectedStyle(string buttonName)
     {
+      var fontColor = Utils.FontColor;
+
       ComponentResourceManager resources = new ComponentResourceManager(typeof(VerticalMenu));
       for (int ctr = 0; ctr < tsMenu.Items.Count; ctr++)
       {
@@ -121,10 +136,12 @@ namespace MySql.Data.VisualStudio.Editors
         }
         else
         {
-          tsMenu.Items[ctr].ForeColor = Color.Black;
+          tsMenu.Items[ctr].ForeColor = fontColor;
           tsMenu.Items[ctr].BackgroundImage = null;
         }
       }
+
+      _lastSelectedButton = buttonName;
     }
   }
 }

@@ -20,14 +20,7 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -59,11 +52,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Apply style to the grid used to show the data
     /// </summary>
-    private void SetDataGridStyle()
+    public void SetDataGridStyle()
     {
       dgvFieldTypes.ColumnHeadersDefaultCellStyle = Utils.GetHeaderStyle();
       dgvFieldTypes.RowsDefaultCellStyle = Utils.GetRowStyle();
       dgvFieldTypes.AlternatingRowsDefaultCellStyle = Utils.GetAlternateRowStyle();
+      dgvFieldTypes.BorderStyle = BorderStyle.None;
     }
   }
 }

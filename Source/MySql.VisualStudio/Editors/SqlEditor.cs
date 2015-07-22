@@ -23,8 +23,10 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -54,6 +56,28 @@ namespace MySql.Data.VisualStudio.Editors
         throw new Exception("MySql Data Provider is not correctly registered");
       }
       tabControl1.TabPages.Clear();
+      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
+      tabControl1.Visible = false;
+      VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+      SetColors();
+    }
+
+    /// <summary>
+    /// Responds to the event when Visual Studio theme changed.
+    /// </summary>
+    /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
+    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    {
+      SetColors();
+    }
+
+    /// <summary>
+    /// Sets the colors corresponding to current Visual Studio theme.
+    /// </summary>
+    private void SetColors()
+    {
+      Controls.SetColors();
+      BackColor = Utils.BackgroundColor;
     }
 
     /// <summary>
@@ -178,6 +202,8 @@ Check that the server is running, the database exist and the user credentials ar
     {
       string sql = codeEditor.Text.Trim();
       tabControl1.TabPages.Clear();
+      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
+      tabControl1.Visible = false;
       string[] sqlStmt = sql.BreakSqlStatements().ToArray();
       int ctr = 1;
       for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
@@ -229,6 +255,7 @@ Check that the server is running, the database exist and the user credentials ar
         detailedData.SetQuery((MySqlConnection)connection, sql);
         newResPage.Controls.Add(detailedData);
         tabControl1.TabPages.Add(newResPage);
+        tabControl1.Visible = true;
       }
       catch (Exception ex)
       {

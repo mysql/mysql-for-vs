@@ -87,11 +87,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Apply style to the grid used to show the data
     /// </summary>
-    private void SetDataGridStyle()
+    public void SetDataGridStyle()
     {
       gvData.ColumnHeadersDefaultCellStyle = Utils.GetHeaderStyle();
       gvData.RowsDefaultCellStyle = Utils.GetRowStyle();
       gvData.AlternatingRowsDefaultCellStyle = Utils.GetAlternateRowStyle();
+      gvData.BorderStyle = BorderStyle.None;
     }
   }
 }

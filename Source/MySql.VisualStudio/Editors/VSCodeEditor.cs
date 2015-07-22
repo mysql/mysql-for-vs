@@ -202,29 +202,6 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void CustomizeCodeWindow()
     {
-      //// initialize code window
-      //INITVIEW[] initView = new INITVIEW[1];
-      //initView[0].fSelectionMargin = 0;
-      //initView[0].IndentStyle = vsIndentStyle.vsIndentStyleSmart;
-      //initView[0].fWidgetMargin = 0;
-      //initView[0].fVirtualSpace = 0;
-      //initView[0].fDragDropMove = 1;
-      //initView[0].fVisibleWhitespace = 0;
-
-      //IVsCodeWindowEx codeWindowEx = codeWindow as IVsCodeWindowEx;
-      //int hr = codeWindowEx.Initialize((uint)_codewindowbehaviorflags.CWB_DISABLEDROPDOWNBAR,
-      //    //(uint)_codewindowbehaviorflags.CWB_DISABLESPLITTER,
-      //    0, null, null,
-      //    (int)TextViewInitFlags.VIF_SET_WIDGET_MARGIN |
-      //    (int)TextViewInitFlags.VIF_SET_SELECTION_MARGIN |
-      //    (int)TextViewInitFlags2.VIF_ACTIVEINMODALSTATE |
-      //    (int)TextViewInitFlags2.VIF_SUPPRESSBORDER |
-      //    (int)TextViewInitFlags2.VIF_SUPPRESS_STATUS_BAR_UPDATE |
-      //    (int)TextViewInitFlags2.VIF_SUPPRESSTRACKCHANGES,
-      //    initView);
-
-      //if (hr != VSConstants.S_OK)
-      //    Marshal.ThrowExceptionForHR(hr);
     }
   }
 }
