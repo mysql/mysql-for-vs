@@ -42,14 +42,12 @@
       </Component>
     </DirectoryRef>
 
-
     <DirectoryRef Id='VS11_PublicAssemblies'>
       <Component Id="EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C9" DiskId="1">
         <File Id="MySql.EF.PA11.v4" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>        
+              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
-
 
     <DirectoryRef Id="VS12_DBGenDir">
       <Component Id="EF.T4.VS12" Guid="6555D339-120C-4D62-B60C-08764D8CA741">
@@ -60,7 +58,6 @@
       </Component>
     </DirectoryRef>
 
-    
     <DirectoryRef Id='VS12_PrivateAssemblies'>
       <Component Id="EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C1" DiskId="1">
         <File Id="MySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll"
@@ -68,17 +65,30 @@
       </Component>
     </DirectoryRef>
 
-    
-    <!--Removing files from Public Assemblies Folders-->
+    <DirectoryRef Id="VS14_DBGenDir">
+      <Component Id="EF.T4.VS15" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
+        <File Id="VS15.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL.tt"/>
+        <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
 
+    <DirectoryRef Id='VS14_PrivateAssemblies'>
+      <Component Id="EF.PA14.v45" Guid="45F17AF0-0EF0-4343-824A-9F450EC93F54" DiskId="1">
+        <File Id="MySql.EF.PA14.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <!--Removing files from Public Assemblies Folders-->
     <DirectoryRef Id='VS10_PublicAssemblies'>
       <Component Id="Remove.EF.PA.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E8" DiskId="1">
         <RemoveFile Id="RemoveMySql.EF.PA.v4" Name="MySql.Data.Entity.dll" On="uninstall"/>
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
-    
-    
+
     <DirectoryRef Id='VS11_PublicAssemblies'>
       <Component Id="Remove.EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E9" DiskId="1">
         <RemoveFile Id="RemoveMySql.EF.PA11.v4" Name="MySql.Data.Entity.dll" On="uninstall" />
@@ -87,16 +97,22 @@
     </DirectoryRef>
 
     <!--Removing files from Private Assemblies Folders-->
-
     <DirectoryRef Id='VS12_PrivateAssemblies'>
       <Component Id="Remove.EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61A9" DiskId="1">
         <RemoveFile Id="RemoveMySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
-    
+
+    <DirectoryRef Id='VS14_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA14.v45" Guid="29548C71-81EE-4585-858C-E5E84E3F0C31" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA14.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
     <Feature Id="EntityFramework2010" Level="1" Display="expand" Title="Entity Framework Support for VS 2010"
-                 Description="Support for the entity framework">      
+                 Description="Support for the entity framework">
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id="EF.T4.VS10"/>
       <ComponentRef Id="EF.PA.v4"/>
@@ -104,12 +120,11 @@
       <ComponentRef Id="EF.v4"/>
       <ComponentRef Id="Remove.EF.PA.v4"/>
     </Feature>
-    
 
     <Feature Id="EntityFramework2012" Level="1" Display="expand" Title="Entity Framework Support for VS 2012"
                  Description="Support for the entity framework">
     <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
-    <ComponentRef Id="EF.T4.VS11"/>    
+    <ComponentRef Id="EF.T4.VS11"/>
     <ComponentRef Id="EF.PA11.v4"/>
     <ComponentRef Id="Remove.EF.PA11.v4"/>
     </Feature>
@@ -121,9 +136,14 @@
       <ComponentRef Id="EF.PA12.v45"/>
       <ComponentRef Id="Remove.EF.PA12.v45"/>
     </Feature>
-    
-    
-    
+
+    <Feature Id="EntityFramework2015" Level="1" Display="expand" Title="Entity Framework Support for VS 2015"
+               Description="Support for the entity framework">
+      <Condition Level='0'>Not VS_2015_PATH AND Not Installed</Condition>
+      <ComponentRef Id="EF.T4.VS15" />
+      <ComponentRef Id="EF.PA14.v45"/>
+      <ComponentRef Id="Remove.EF.PA14.v45"/>
+    </Feature>
   </Fragment>
 </Wix>
 

@@ -4,14 +4,14 @@
   <Product Id="*" Name="$(var.ProductName)" Manufacturer="Oracle" Version="$(var.Version)"
            UpgradeCode="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7A" Language="1033">
     <Package Compressed="yes" InstallerVersion="200" InstallScope="perMachine"/>
-   
+
     <Upgrade Id="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7A">
       <UpgradeVersion OnlyDetect="yes" Minimum="$(var.Version)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
       <UpgradeVersion OnlyDetect="no" Maximum="$(var.Version)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="yes" />
     </Upgrade>
 
     <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
-    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>   
+    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
 
     <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
@@ -23,10 +23,10 @@
 
     <!-- First make sure that .NET is installed -->
     <PropertyRef Id="NETFRAMEWORK20"/>
-    <PropertyRef Id="NETFRAMEWORK40FULL"/>    
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
     <Condition Message="The .NET Framework 2.0 or 4.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20 OR NETFRAMEWORK40FULL</Condition>
 
-     <!--now make sure that we don't have an old version still around--> 
+    <!--now make sure that we don't have an old version still around-->
     <Property Id="OLDVERSION">
       <RegistrySearch Id="Ver5081" Key="Software\MySQL AB\MySQL Connector/Net 5.0.8.1" Name="Location" Root="HKLM" Type="raw"/>
       <RegistrySearch Id="Ver507" Key="Software\MySQL AB\MySQL Connector/Net 5.0.7" Name="Location" Root="HKLM" Type="raw"/>
@@ -39,7 +39,16 @@
       <RegistrySearch Id="Ver500" Key="Software\MySQL AB\MySQL Connector/Net 5.0.0" Name="Location" Root="HKLM" Type="raw"/>
     </Property>
     <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
-    
+
+    <!-- Ensure a valid VS version is installed (2010, 2012, 2013, 2015) -->
+    <PropertyRef Id="VS2010_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2012_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2013_ROOT_FOLDER"/>
+    <PropertyRef Id="VS2015_ROOT_FOLDER"/>
+    <Condition Message="Visual Studio version 2010, 2012, 2013 or 2015 must be installed.">
+      NOT (VS2010_ROOT_FOLDER = "" AND VS2012_ROOT_FOLDER = "" AND VS2013_ROOT_FOLDER = "" AND VS2015_ROOT_FOLDER = "")
+    </Condition>
+
     <!-- now make sure that we don't have an old version that doesn't support upgrades -->
     <Property Id="PREUPGRADEVERSION">
       <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
@@ -65,38 +74,23 @@
             <Directory Id='AssembliesDir' Name='Assemblies'>
               <Directory Id='assemblies_v2' Name='v2.0'/>
               <Directory Id='assemblies_v4' Name='v4.0'/>
-            </Directory>            
+            </Directory>
             <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
               <Directory Id='PFTemplatesDir' Name='Templates'/>
-              <Directory Id='VS2008Integration' Name='2008'/>
             </Directory>
             <Directory Id='DocsDir' Name='Documentation'>
               <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
             </Directory>
-            <Directory Id='Dependencies' Name='Dependencies' />                          
+            <Directory Id='SampleDir' Name='Samples'/>
+            <Directory Id='Dependencies' Name='Dependencies' />
           </Directory>
         </Directory>
       </Directory>
 
       <Directory Id="ProgramMenuFolder" Name="PMFolder">
         <Directory Id='PMCompanyDir' Name='MySQL'>
-          <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>          
-        </Directory>        
-      </Directory>      
-
-
-      <!-- VS2008 folders -->
-      <Directory Id="VS_2008_PATH">
-        <Directory Id="VS90_ProjectTemplates" Name="ProjectTemplates" >
-          <Directory Id="VS90_CSharpPT" Name="CSharp">
-            <Directory Id="VS90_CSharpPTMySQL" Name="MySQL"/>
-          </Directory>
-          <Directory Id="VS90_VisualBasicPT" Name="VisualBasic">
-            <Directory Id="VS90_VisualBasicPTMySQL" Name="MySQL"/>
-          </Directory>
+          <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>
         </Directory>
-        <Directory Id="VS90_PrivateAssemblies" Name="PrivateAssemblies" />
-        <Directory Id="VS90_PublicAssemblies" Name="PublicAssemblies" />
       </Directory>
 
       <!-- VS2010 Extension folders -->
@@ -145,7 +139,7 @@
         </Directory>
       </Directory>
 
-      <!-- VS2012 Extension folders -->      
+      <!-- VS2012 Extension folders -->
       <Directory Id="VS2012_ROOT_FOLDER">
         <Directory Id="VS11.Common7Folder" Name="Common7">
           <Directory Id="VS11.IDEFolder" Name="IDE">
@@ -223,7 +217,7 @@
               <Directory Id="VS12_CSharpPT" Name="CSharp">
                 <Directory Id="VS12_CSharpPTMySQL" Name="MySQL"/>
               </Directory>
-               <Directory Id="VS12_VisualBasicPT" Name="VisualBasic">
+              <Directory Id="VS12_VisualBasicPT" Name="VisualBasic">
                 <Directory Id="VS12_VisualBasicPTMySQL" Name="MySQL"/>
               </Directory>
             </Directory>
@@ -244,7 +238,57 @@
           </Directory>
         </Directory>
       </Directory>
-    </Directory>      
+
+      <!-- VS2015 Extension folders -->
+      <Directory Id="VS_2015_PATH" Name="VSPath2015">
+        <Directory Id="VS14.Common7Folder" Name="Common7">
+          <Directory Id="VS14.IDEFolder" Name="IDE">
+            <Directory Id="VS14.T4.ExtensionDir" Name="Extensions">
+              <Directory Id="VS14.T4.MicrosoftDir" Name="Microsoft">
+                <Directory Id="VS14.T4.EFToolsDir" Name="Entity Framework Tools">
+                  <Directory Id="VS14_DBGenDir" Name="DBGen"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS14_OracleDir" Name="Oracle">
+                <Directory Id="VS14_ExtensionDir" Name="MySQL for Visual Studio ">
+                  <Directory Id="VS14_ExtVersionDir" Name="$(var.Version)">
+                    <Directory Id='VS14_TemplatesDir' Name='Templates'/>
+                    <Directory Id='VS14_T4TemplatesDir' Name='T4Templates' >
+                      <Directory Id='VS14_T4TemplatesCSharpDir' Name='CSharp' />
+                      <Directory Id='VS14_T4TemplatesVBDir' Name='VisualBasic' />
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="VS14_PrivateAssemblies" Name="PrivateAssemblies" />
+            <Directory Id="VS14_PublicAssemblies" Name="PublicAssemblies" />
+            <Directory Id="VS14_ProjectTemplates" Name="ProjectTemplates" >
+              <Directory Id="VS14_CSharpPT" Name="CSharp">
+                <Directory Id="VS14_CSharpPTMySQL" Name="MySQL"/>
+              </Directory>
+              <Directory Id="VS14_VisualBasicPT" Name="VisualBasic">
+                <Directory Id="VS14_VisualBasicPTMySQL" Name="MySQL"/>
+              </Directory>
+            </Directory>
+            <Directory Id="VS14_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
+              <Directory Id="VS14_CSharpPTCache" Name="CSharp">
+                <Directory Id="VS14_CSharpPTMySQLCache" Name="MySQL">
+                  <Directory Id="VS14_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
+                  <Directory Id="VS14_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS14_VisualBasicPTCache" Name="VisualBasic">
+                <Directory Id="VS14_VisualBasicPTMySQLCache" Name="MySQL">
+                  <Directory Id="VS14_VisualBasicMySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
+                  <Directory Id="VS14_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
 
     <!-- Docs -->
     <DirectoryRef Id='DocsDir'>
@@ -256,7 +300,7 @@
         <File Id="docs5" Name="COL_Master_F.HxK" Source="..\Documentation\CollectionFiles\COL_Master_F.HxK" DiskId="1"/>
         <File Id="docs6" Name="COL_Master_K.HxK" Source="..\Documentation\CollectionFiles\COL_Master_K.HxK" DiskId="1"/>
         <File Id="docs7" Name="COL_Master_N.HxK" Source="..\Documentation\CollectionFiles\COL_Master_N.HxK" DiskId="1"/>
-        <File Id="docs8" Name="MySql.Data.HxS" Source="..\Documentation\Output\MySqlForVisualStudio.HxS" DiskId="1"/>
+        <!--<File Id="docs8" Name="MySql.Data.HxS" Source="..\Documentation\Output\MySqlForVisualStudio.HxS" DiskId="1"/>-->
         <File Id="H2Reg.ini" Name="help.cmd" Source="Binary\h2reg.ini" DiskId="1"/>
         <File Id="MSHA_File" Name="HelpContentSetup.msha" Source="..\Documentation\Output\MySqlForVisualStudio.msha" DiskId="1"/>
         <File Id="MSHC_File" Name="MySql.Data.mshc" Source="..\Documentation\Output\MySqlForVisualStudio.mshc" DiskId="1"/>
@@ -268,19 +312,18 @@
         <File Id="SecureHash" Name="license-us-secure-hash.html" Source="..\Documentation\Licenses for Third-Party Components\license-us-secure-hash.html" DiskId="1"/>
         <File Id="Zlib" Name="license-zlib.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib.html" DiskId="1"/>
         <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib-net.html" DiskId="1"/>
-        <File Id="Antlr" Name="license-antlr.html" Source="..\Documentation\Licenses for Third-Party Components\license-antlr.html" DiskId="1"/>        
+        <File Id="Antlr" Name="license-antlr.html" Source="..\Documentation\Licenses for Third-Party Components\license-antlr.html" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
-   <FeatureRef Id='Core.Feature'/>
+    <FeatureRef Id='Core.Feature'/>
     <!--<FeatureRef Id="WebProviders"/>-->
-    
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
-      <FeatureRef Id='VS2008Int'/>
       <FeatureRef Id='VS2010Int'/>
       <FeatureRef Id='VS2012Int'/>
-      <FeatureRef Id='VS2013Int'/>      
+      <FeatureRef Id='VS2013Int'/>
+      <FeatureRef Id='VS2015Int'/>
     </Feature>
 
     <Feature Id="EntityFramework"  Title="Entity Framework Designer Integration" Display="expand"
@@ -289,6 +332,7 @@
       <FeatureRef Id="EntityFramework2010"/>
       <FeatureRef Id="EntityFramework2012"/>
       <FeatureRef Id="EntityFramework2013"/>
+      <FeatureRef Id="EntityFramework2015"/>
     </Feature>
 
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
@@ -306,18 +350,12 @@
     <WixVariable Id="WixUICostingPopupOptOut" Value="true"/>
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
-    
-    <InstallExecuteSequence>    
-      <RemoveExistingProducts After="InstallInitialize" />     
-      <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
-      <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
-      <Custom Action="SetHLMPath" After="AppSearch"></Custom>      
-      <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>      
-    </InstallExecuteSequence>
 
-    <!-- Custom actions for VS2008 help -->
-    <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
-    <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+      <Custom Action="SetHLMPath" After="AppSearch"></Custom>
+      <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
+    </InstallExecuteSequence>
 
     <!-- custom actions for VS2010 help -->
     <CustomAction Id="SetHLMPath" Property="HelpLibManager" Value="[HLM_LOCATION]HelpLibManager.exe"/>

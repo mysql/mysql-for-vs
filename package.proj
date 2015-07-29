@@ -79,11 +79,6 @@
       <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.dll"/>
       <V2Assemblies Include="Dependencies\v2.0\Release\mysql.web.dll"/>
       <V2Assemblies Include="Dependencies\v2.0\Release\mysql.data.entity.dll"/>
-      <V2Assemblies Include="Source\MySql.VisualStudio\bin\v3.5\release\mysql.visualstudio.dll"/>      
-      <V2Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v3.5\release\Antlr3.Runtime.dll"/>
-      <V2Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Debugger.dll"/>
-      <V2Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Parser.dll"/>
-      <V2Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v3.5\release\MySql.Debugger.VisualStudio.dll"/>
     </ItemGroup>
 
     <ItemGroup>

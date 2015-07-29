@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008 - 2015 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -48,13 +48,19 @@ namespace MySql.Data.VisualStudio
         root = "8.0";
       }
       else if (Context.Parameters["version"] == "VS2008")
+      {
+        if (ranu)
+          throw new NotSupportedException("RANU not supported for Visual Studio 2008");
         root = "9.0";
+      }
       else if (Context.Parameters["version"] == "VS2010")
         root = "10.0";
       else if (Context.Parameters["version"] == "VS2012")
         root = "11.0";
       else if (Context.Parameters["version"] == "VS2013")
         root = "12.0";
+      else if (Context.Parameters["version"] == "VS2015")
+        root = "14.0";
       else
         throw new NotSupportedException();
 

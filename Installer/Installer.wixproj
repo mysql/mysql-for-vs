@@ -118,6 +118,10 @@
     <Compile Include="ComponentGroups\VS12_CSharpWindowsForms.zip.wxs" />
     <Compile Include="ComponentGroups\VS12_VisualBasicMvc3.zip.wxs" />
     <Compile Include="ComponentGroups\VS12_VisualBasicWindowsFormsProject.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_CSharpMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_CSharpWindowsForms.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_VisualBasicMvc3.zip.wxs" />
+    <Compile Include="ComponentGroups\VS14_VisualBasicWindowsFormsProject.zip.wxs" />
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
     <Compile Include="main.wxs" />
@@ -133,10 +137,6 @@
       <Output TaskParameter="Value" PropertyName="DefineConstants" />
     </CreateProperty>
   </Target>
-  <ItemGroup>
-    <Content Include="VS2008_Data.wxi" />
-    <Content Include="VS2008_Registry.wxi" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="ComponentGroups\" />
   </ItemGroup>
