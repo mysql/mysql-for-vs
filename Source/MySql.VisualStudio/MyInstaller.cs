@@ -206,6 +206,13 @@ namespace MySql.Data.VisualStudio
       langKey.SetValue("LangResID", 101);
       langKey.SetValue("RequestStockColors", 1);
 
+      keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MyJs", version);
+      langKey = rootKey.CreateSubKey(keyPath);
+      langKey.SetValue(null, "{cc93f80a-2457-4510-ac24-c926049e39df}");
+      langKey.SetValue("Package", "{79a115c9-b133-4891-9e7b-242509dad272}");
+      langKey.SetValue("LangResID", 102);
+      langKey.SetValue("RequestStockColors", 1);
+
       // Package
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
           version, GuidList.Package.ToString("B"));

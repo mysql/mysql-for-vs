@@ -353,7 +353,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Gets the corresponding enum for the current Visual Studio theme selected.
     /// </summary>
-    /// <returns></returns>
     private static void SetCurrentVsTheme()
     {
       if (_isUpdating)
@@ -402,7 +401,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Gets the current Visual Studio theme Guid from the register.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current Visual Studio theme guid</returns>
     public static string GetThemeId()
     {
       var modules = System.Diagnostics.Process.GetCurrentProcess().Modules;

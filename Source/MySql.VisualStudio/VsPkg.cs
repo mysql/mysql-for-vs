@@ -226,10 +226,15 @@ namespace MySql.Data.VisualStudio
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
       }
 
-      // Register and initialize language service
+      // Register and initialize language services
       MySqlLanguageService languageService = new MySqlLanguageService();
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
+
+      MyJsLanguageService jslanguageService = new MyJsLanguageService();
+      jslanguageService.SetSite(this);
+      ((IServiceContainer)this).AddService(typeof(MyJsLanguageService), jslanguageService, true);
+
     }
 
     private void NewScriptCallback(object sender, EventArgs e)
