@@ -1113,6 +1113,9 @@
     <None Include="Resources\sql_editor_banner.bmp">
     </None>
     <None Include="Resources\page-title-mysql-export.png" />
+    <Compile Include="Resources\402.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Content Include="Resources\Background.png" />
     <Content Include="Resources\Banner.png" />
     <Content Include="Resources\MySQL.png" />
@@ -1133,14 +1136,16 @@
     </Content>
     <Content Include="Resources\sql_editor_validatesql.png">
     </Content>
+    <None Include="Resources\__TemplateIcon.ico" />
     <Content Include="Templates\MySQL Script.mysql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Templates\MySqlDataProviderPackage.vsdir">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\401.ico">
-    </None>
+    <Compile Include="Resources\401.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Content Include="Resources\icon.bmp">
     </Content>
     <Content Include="Resources\Package.ico">
@@ -1148,6 +1153,9 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\MyJs Script.myjs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Choose>

@@ -891,9 +891,6 @@ Would you like to create it?</value>
   <data name="DisplayName_UDF_Type" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\package.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Description_Trigger_Orientation" xml:space="preserve">
     <value>An atomic object of a trigger action</value>
   </data>
@@ -1075,13 +1072,13 @@ Would you like to create it?</value>
     <value>MySQL Script</value>
   </data>
   <data name="107" xml:space="preserve">
-    <value>MySQL Script</value>
+    <value>MyJs Script</value>
   </data>
   <data name="109" xml:space="preserve">
     <value>A blank mysql file.</value>
   </data>
-  <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="110" xml:space="preserve">
+    <value>A blank myjs file.</value>
   </data>
   <data name="sql_editor_banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sql_editor_banner.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -1185,5 +1182,17 @@ Check that the server is running, the database exists and the user Error establi
   </data>
   <data name="MessageBoxErrorTitle" xml:space="preserve">
     <value>Error</value>
+  </data>
+  <data name="package" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\package.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="402" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\402.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="__TemplateIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\__TemplateIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
