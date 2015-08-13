@@ -25,8 +25,10 @@
 
     <DirectoryRef Id='VS10_TemplatesDir'>
       <Component Id='VS2010_Templates' Guid='BA082C85-9D64-4B79-8910-C6C25655250B'>
-        <File Id='VS2010_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+        <File Id='VS2010_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2010_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
         <File Id='VS2010_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
@@ -107,8 +109,10 @@
 
     <DirectoryRef Id='VS11_TemplatesDir'>
       <Component Id='VS2012_Templates' Guid='260283FF-817E-408E-8D87-7A4BF99BA818'>
-        <File Id='VS2012_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+        <File Id='VS2012_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2012_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
         <File Id='VS2012_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
@@ -159,9 +163,9 @@
     <DirectoryRef Id='VS11_T4TemplatesVBDir' >
       <Component Id='VS2012_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525AA'>
         <File Id='VS2012_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+              Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
         <File Id='VS2012_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+              Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
       </Component>
     </DirectoryRef>
 
@@ -189,8 +193,10 @@
 
     <DirectoryRef Id='VS12_TemplatesDir'>
       <Component Id='VS2013_Templates' Guid='299BAC3E-82EB-4FC2-9ECA-4E1C0F50F34C'>
-        <File Id='VS2013_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+        <File Id='VS2013_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2013_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
+      Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
         <File Id='VS2013_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
@@ -271,8 +277,10 @@
 
     <DirectoryRef Id='VS14_TemplatesDir'>
       <Component Id='VS2015_Templates' Guid='A7EB6122-2F0F-4C60-BC52-F3C5050DE211'>
-        <File Id='VS2015_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+        <File Id='VS2015_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2015_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
+      Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
         <File Id='VS2015_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
