@@ -37,7 +37,6 @@ namespace MySql.Data.VisualStudio.Editors
     public GridResultSet()
     {
       InitializeComponent();
-      SetDataGridStyle();
     }
 
     /// <summary>
@@ -47,6 +46,7 @@ namespace MySql.Data.VisualStudio.Editors
     public void SetData(DataTable data)
     {
       dgvResultSet.DataSource = data;
+      SetDataGridStyle();
       Utils.SanitizeBlobs(ref dgvResultSet);
     }
 

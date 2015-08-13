@@ -108,6 +108,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.Controls.Add(this.ctrlMenu);
       this.Name = "DetailedResultsetView";
       this.Size = new System.Drawing.Size(658, 500);
+      this.Load += new System.EventHandler(this.DetailedResultsetView_Load);
       this.ResumeLayout(false);
 
     }

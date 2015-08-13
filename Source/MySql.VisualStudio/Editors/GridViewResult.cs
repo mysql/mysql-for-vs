@@ -39,7 +39,6 @@ namespace MySql.Data.VisualStudio.Editors
     public GridViewResult()
     {
       InitializeComponent();
-      SetDataGridStyle();
     }
 
     /// <summary>
@@ -49,6 +48,7 @@ namespace MySql.Data.VisualStudio.Editors
     public void SetData(DocumentResultSet document)
     {
       GenerateItem(document.GetData());
+      SetDataGridStyle();
       Utils.SanitizeBlobs(ref gvData);
     }
 

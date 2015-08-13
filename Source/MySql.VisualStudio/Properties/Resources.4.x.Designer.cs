@@ -3270,53 +3270,5 @@ namespace MySql.Data.VisualStudio.Properties {
                 return ResourceManager.GetString("WinFormsProjectDescription", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap output_type_executionplan
-        {
-          get
-          {
-            object obj = ResourceManager.GetObject("output_type-executionplan", resourceCulture);
-            return ((System.Drawing.Bitmap)(obj));
-          }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap output_type_fieldtypes
-        {
-          get
-          {
-            object obj = ResourceManager.GetObject("output_type-fieldtypes", resourceCulture);
-            return ((System.Drawing.Bitmap)(obj));
-          }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap output_type_querystats
-        {
-          get
-          {
-            object obj = ResourceManager.GetObject("output_type-querystats", resourceCulture);
-            return ((System.Drawing.Bitmap)(obj));
-          }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap output_type_resultset
-        {
-          get
-          {
-            object obj = ResourceManager.GetObject("output_type-resultset", resourceCulture);
-            return ((System.Drawing.Bitmap)(obj));
-          }
-        }
     }
 }

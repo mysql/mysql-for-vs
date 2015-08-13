@@ -36,7 +36,6 @@ namespace MySql.Data.VisualStudio.Editors
     public FieldTypesGrid()
     {
       InitializeComponent();
-      SetDataGridStyle();
     }
 
     /// <summary>
@@ -46,6 +45,7 @@ namespace MySql.Data.VisualStudio.Editors
     public void SetData(DataTable data)
     {
       dgvFieldTypes.DataSource = data;
+      SetDataGridStyle();
       Utils.SanitizeBlobs(ref dgvFieldTypes);
     }
 

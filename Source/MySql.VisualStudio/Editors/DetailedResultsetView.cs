@@ -37,6 +37,38 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   public partial class DetailedResultsetView : UserControl
   {
+    #region PrivateFields
+    /// <summary>
+    /// Key used to set and get the performance schema configuration query in a queries dictionary
+    /// </summary>
+    private readonly string _perfSchemaKey = "perfSchemaConfig";
+
+    /// <summary>
+    /// Key used to set and get the field types query in a queries dictionary
+    /// </summary>
+    private readonly string _fieldTypeKey = "fieldTypes";
+
+    /// <summary>
+    /// Key used to set and get the query statistic query in a queries dictionary
+    /// </summary>
+    private readonly string _queryStatKey = "queryStats";
+
+    /// <summary>
+    /// Key used to set and get the execution plan query in a queries dictionary
+    /// </summary>
+    private readonly string _formatJsonKey = "formatJson";
+
+    /// <summary>
+    /// Key used to set and get the original query given in a queries dictionary
+    /// </summary>
+    private readonly string _queryKey = "baseQuery";
+
+    /// <summary>
+    /// Dictionary used to store the queries that are executed in the database which are generated after a query is received
+    /// </summary>
+    private Dictionary<string, string> _queries;
+    #endregion
+
     #region Properties
     /// <summary>
     /// This property stores the query used to configure the Performance_Schema database
@@ -84,15 +116,12 @@ namespace MySql.Data.VisualStudio.Editors
     }
     #endregion
 
-    #region PublicMembers
     /// <summary>
     /// Initializes a new instance of the DetailedResultsetView class.
     /// </summary>
     public DetailedResultsetView()
     {
       InitializeComponent();
-      LoadResources();
-      ConfigureMenu();
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       Controls.SetColors();
     }
@@ -123,38 +152,6 @@ namespace MySql.Data.VisualStudio.Editors
         GenerateQueryBatch(query);
       }
     }
-    #endregion
-
-    #region PrivateMembers
-    /// <summary>
-    /// Key used to set and get the performance schema configuration query in a queries dictionary
-    /// </summary>
-    private readonly string _perfSchemaKey = "perfSchemaConfig";
-
-    /// <summary>
-    /// Key used to set and get the field types query in a queries dictionary
-    /// </summary>
-    private readonly string _fieldTypeKey = "fieldTypes";
-
-    /// <summary>
-    /// Key used to set and get the query statistic query in a queries dictionary
-    /// </summary>
-    private readonly string _queryStatKey = "queryStats";
-
-    /// <summary>
-    /// Key used to set and get the execution plan query in a queries dictionary
-    /// </summary>
-    private readonly string _formatJsonKey = "formatJson";
-
-    /// <summary>
-    /// Key used to set and get the original query given in a queries dictionary
-    /// </summary>
-    private readonly string _queryKey = "baseQuery";
-
-    /// <summary>
-    /// Dictionary used to store the queries that are executed in the database which are generated after a query is received
-    /// </summary>
-    private Dictionary<string, string> _queries;
 
     /// <summary>
     /// Generates the queries that will be executed in the database basis on the original query received
@@ -372,6 +369,11 @@ namespace MySql.Data.VisualStudio.Editors
       ctrlExecPlan.Visible = (controlToShow == DataViewOption.ExecutionPlan);
       ctrlQueryStats.Visible = (controlToShow == DataViewOption.Querystats);
     }
-    #endregion
+
+    private void DetailedResultsetView_Load(object sender, EventArgs e)
+    {
+      LoadResources();
+      ConfigureMenu();
+    }
   }
 }

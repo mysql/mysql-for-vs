@@ -43,7 +43,6 @@ namespace MySql.Data.VisualStudio.Editors
     public QueryStatsView()
     {
       InitializeComponent();
-      AddDataBindings();
     }
 
     /// <summary>
@@ -53,6 +52,7 @@ namespace MySql.Data.VisualStudio.Editors
     public void SetData(DataTable data)
     {
       bsQueryStatsData.DataSource = data;
+      AddDataBindings();
     }
 
     /// <summary>
