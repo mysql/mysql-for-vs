@@ -267,6 +267,22 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Separates multiple javascript statements into single ones
+    /// </summary>
+    /// <param name="jsStatements">Javascript statements</param>
+    /// <returns>List of single statements</returns>
+    public static List<string> BreakJavaScriptStatements(this string jsStatements)
+    {
+      if (string.IsNullOrEmpty(jsStatements))
+      {
+        return null;
+      }
+
+      MySQL.Utility.Classes.MyJsTokenizer tokenizer = new MySQL.Utility.Classes.MyJsTokenizer(jsStatements.Trim());
+      return tokenizer.BreakIntoStatements();
+    }
+
+    /// <summary>
     /// Parse a DocumentResultSet object to string with JSON format
     /// </summary>
     /// <param name="document">The document to parse</param>

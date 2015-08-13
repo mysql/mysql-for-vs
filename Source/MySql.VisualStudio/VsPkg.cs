@@ -409,6 +409,9 @@ namespace MySql.Data.VisualStudio
 
       Project p = (Project)a.GetValue(0);
       configButton.Visible = false;
+      if (p.Properties == null)
+        return;
+
       foreach (Property prop in p.Properties)
       {
         if (prop.Name == "WebSiteType" || prop.Name.StartsWith("WebApplication", StringComparison.OrdinalIgnoreCase))

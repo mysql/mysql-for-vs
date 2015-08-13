@@ -30,6 +30,8 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using System.Collections.Generic;
+using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -40,7 +42,7 @@ namespace MySql.Data.VisualStudio.Editors
   {
     /// <summary>
     /// Gets the pane for the current editor. In this case, the pane is from type MyJsEditorPane.
-    /// </summary>    
+    /// </summary>
     internal MyJsEditorPane Pane { get; private set; }
 
     /// <summary>
@@ -151,7 +153,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is dirty.
-    /// </summary>    
+    /// </summary>
     protected override bool IsDirty
     {
       get { return codeEditor.IsDirty; }
@@ -218,7 +220,7 @@ Check that the server is running, the database exist and the user credentials ar
     }
 
     /// <summary>
-    /// Executes the script typed by the user
+    /// Executes the script typed by the user and create a tab page for each statement that returns a resultset from the database otherwise write statement execution info to the output window
     /// </summary>
     /// <param name="js">Script to execute</param>
     private void ExecuteScript(string js)
@@ -230,14 +232,36 @@ Check that the server is running, the database exist and the user credentials ar
 
       try
       {
-        TabPage newResPage = Utils.CreateResultPage(0);
-        JSResultsetView resultViews = new JSResultsetView((MySqlConnection)connection, js);
-        if (resultViews.HasResultSet)
+        NgShellWrapper ngwrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
+        List<ResultSet> results = ngwrapper.ExecuteJavaScript(js.BreakJavaScriptStatements().ToArray());
+
+        if (results == null)
         {
-          newResPage.Controls.Add(resultViews);
-          tabControl1.TabPages.Add(newResPage);
-          tabControl1.Visible = true;
+          return;
         }
+
+        int tabCounter = 1;
+        foreach (ResultSet result in results)
+        {
+          DocumentResultSet data = result as DocumentResultSet;
+          if (data != null)
+          {
+            TabPage newResPage = Utils.CreateResultPage(tabCounter);
+            JSResultsetView resultViews = new JSResultsetView();
+            resultViews.Dock = DockStyle.Fill;
+            resultViews.LoadData(data);
+            newResPage.Controls.Add(resultViews);
+            tabControl1.TabPages.Add(newResPage);
+          }
+          else
+          {
+            Utils.WriteToOutputWindow(string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount()), Messagetype.Information);
+          }
+
+          tabCounter++;
+        }
+
+        tabControl1.Visible = tabControl1.TabPages.Count > 0;
       }
       catch (Exception ex)
       {
@@ -263,7 +287,6 @@ Check that the server is running, the database exist and the user credentials ar
     {
       bool connected = Connection.State == ConnectionState.Open;
       runJsButton.Enabled = connected;
-      //            validateSqlButton.Enabled = connected;
       disconnectButton.Enabled = connected;
       connectButton.Enabled = !connected;
       serverLabel.Text = String.Format("Server: {0}",

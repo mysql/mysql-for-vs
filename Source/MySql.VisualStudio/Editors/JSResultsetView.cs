@@ -34,10 +34,6 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   public partial class JSResultsetView : UserControl
   {
-    NgShellWrapper _ngWrapper;
-    private MySqlConnection mySqlConnection;
-    private string js;
-
     /// <summary>
     /// Creates a new instance of JSResultsetView
     /// </summary>
@@ -45,18 +41,6 @@ namespace MySql.Data.VisualStudio.Editors
     {
       InitializeComponent();
       ConfigureMenu();
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JSResultsetView"/> class.
-    /// </summary>
-    /// <param name="mySqlConnection">The MySQL connection.</param>
-    /// <param name="js">The js content of the editor window.</param>
-    public JSResultsetView(MySqlConnection mySqlConnection, string js)
-      : this()
-    {
-      Dock = DockStyle.Fill;
-      SetScript(mySqlConnection, js);
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       Controls.SetColors();
     }
@@ -68,26 +52,6 @@ namespace MySql.Data.VisualStudio.Editors
     void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
     {
       Controls.SetColors();
-    }
-
-    /// <summary>
-    /// Set the script that will be used to get the information that will be displayed in the views
-    /// </summary>
-    /// <param name="connection">Connection taht will be used to execute the script</param>
-    /// <param name="script">Script that will be executed</param>
-    public void SetScript(MySqlConnection connection, string script)
-    {
-      if (string.IsNullOrEmpty(script))
-      {
-        return;
-      }
-
-      if (_ngWrapper == null)
-      {
-        _ngWrapper = new NgShellWrapper(connection.ToNgFormat(), true);
-      }
-
-      LoadData(script);
     }
 
     /// <summary>
@@ -131,30 +95,19 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Executes the script and if data is returned then is loaded into the views, otherwise a message in the output window will display info about the script executed
+    /// Load the data received into the views if it is valid
     /// </summary>
-    /// <param name="cmd">Script that will be executed</param>
-    private void LoadData(string cmd)
+    /// <param name="data">Data to be loaded</param>
+    public void LoadData(DocumentResultSet data)
     {
-      DocumentResultSet result = _ngWrapper.ExecuteJavaScript(cmd);
-      if (result != null)
+      if (data == null)
       {
-        HasResultSet = true;
-        ctrlGridView.SetData(result);
-        ctrlTreeView.SetData(result);
-        ctrlTextView.SetData(result);
+        return;
       }
-      else
-      {
-        HasResultSet = false;
-        Utils.WriteToOutputWindow(_ngWrapper.ExecutionResult, Messagetype.Information);
-      }
-    }
 
-    public bool HasResultSet
-    {
-      private set;
-      get;
+      ctrlGridView.SetData(data);
+      ctrlTreeView.SetData(data);
+      ctrlTextView.SetData(data);
     }
   }
 }
