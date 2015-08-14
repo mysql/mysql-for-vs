@@ -39,81 +39,64 @@ namespace MySql.Data.VisualStudio.Editors
   {
     #region PrivateFields
     /// <summary>
+    /// This property stores the query used to configure the Performance_Schema database
+    /// </summary>
+    private string _basePerformanceSchemaConfigurationQuery;
+
+    /// <summary>
+    /// This property stores the query used to get the field types information
+    /// </summary>
+    private string _baseFieldTypeQuery;
+
+    /// <summary>
+    /// This property stores the query used to get the query statistic information
+    /// </summary>
+    private string _baseQueryStatisticsQuery;
+
+    /// <summary>
+    /// This property stores the query used to get the execution plan in json format
+    /// </summary>
+    private string _baseExecutionPlanQuery;
+
+    /// <summary>
+    /// This property stores the MySqlConnection object used to execute the queries
+    /// </summary>
+    internal MySqlConnection Connection;
+
+    /// <summary>
+    /// Stores the Server version used in the current MySqlConnection
+    /// </summary>
+    private int _currentServerVersion;
+    
+    /// <summary>
     /// Key used to set and get the performance schema configuration query in a queries dictionary
     /// </summary>
-    private readonly string _perfSchemaKey = "perfSchemaConfig";
+    private const string _performanceSchemaKey = "perfSchemaConfig";
 
     /// <summary>
     /// Key used to set and get the field types query in a queries dictionary
     /// </summary>
-    private readonly string _fieldTypeKey = "fieldTypes";
+    private const string _fieldTypeKey = "fieldTypes";
 
     /// <summary>
     /// Key used to set and get the query statistic query in a queries dictionary
     /// </summary>
-    private readonly string _queryStatKey = "queryStats";
+    private const string _queryStatisticsKey = "queryStats";
 
     /// <summary>
     /// Key used to set and get the execution plan query in a queries dictionary
     /// </summary>
-    private readonly string _formatJsonKey = "formatJson";
+    private const string _executionPlanKey = "execPlan";
 
     /// <summary>
     /// Key used to set and get the original query given in a queries dictionary
     /// </summary>
-    private readonly string _queryKey = "baseQuery";
+    private const string _queryKey = "baseQuery";
 
     /// <summary>
     /// Dictionary used to store the queries that are executed in the database which are generated after a query is received
     /// </summary>
     private Dictionary<string, string> _queries;
-    #endregion
-
-    #region Properties
-    /// <summary>
-    /// This property stores the query used to configure the Performance_Schema database
-    /// </summary>
-    private string BasePerfSchemaConfig
-    {
-      get;
-      set;
-    }
-
-    /// <summary>
-    /// This property stores the query used to get the field types information
-    /// </summary>
-    private string BaseFieldTypeQuery
-    {
-      get;
-      set;
-    }
-
-    /// <summary>
-    /// This property stores the query used to get the query statistic information
-    /// </summary>
-    private string BaseQueryStatsQuery
-    {
-      get;
-      set;
-    }
-
-    /// <summary>
-    /// This property stores the query used to get the execution plan in json format
-    /// </summary>
-    private string BaseQueryFormatJson
-    {
-      get;
-      set;
-    }
-
-    /// <summary>
-    /// This property stores the MySqlConnection object used to execute the queries
-    /// </summary>
-    internal MySqlConnection Connection
-    {
-      private set;
-      get;
-    }
     #endregion
 
     /// <summary>
@@ -149,25 +132,35 @@ namespace MySql.Data.VisualStudio.Editors
           query += ";";
         }
         Connection = connection;
+        ValidateServerVersion();
+        LoadResources();
         GenerateQueryBatch(query);
       }
     }
 
     /// <summary>
-    /// Generates the queries that will be executed in the database basis on the original query received
+    /// <summary>    /// Generates the queries that will be executed in the database basis on the original query received
     /// </summary>
     /// <param name="baseQuery">Original query</param>
     private void GenerateQueryBatch(string baseQuery)
     {
+      if (string.IsNullOrEmpty(baseQuery))
+      {
+        return;
+      }
+
       _queries = new Dictionary<string, string>();
-      _queries.Add(_perfSchemaKey, BasePerfSchemaConfig);
+
       _queries.Add(_queryKey, baseQuery);
-
       var columns = GetColumnsFromQuery(baseQuery);
-      _queries.Add(_fieldTypeKey, string.Format(BaseFieldTypeQuery, columns, string.IsNullOrEmpty(columns) ? string.Empty : " and ", GetTablesFromQuery(baseQuery)));
+      _queries.Add(_fieldTypeKey, string.Format(_baseFieldTypeQuery, columns, string.IsNullOrEmpty(columns) ? string.Empty : " and ", GetTablesFromQuery(baseQuery)));
+      _queries.Add(_executionPlanKey, string.Format(_baseExecutionPlanQuery, baseQuery));
 
-      _queries.Add(_queryStatKey, string.Format(BaseQueryStatsQuery, baseQuery.Substring(0, baseQuery.LastIndexOf(';')).Trim().Replace("'", "''")));
-      _queries.Add(_formatJsonKey, string.Format(BaseQueryFormatJson, baseQuery));
+      if (_currentServerVersion > 55)
+      {
+        _queries.Add(_performanceSchemaKey, _basePerformanceSchemaConfigurationQuery);
+        _queries.Add(_queryStatisticsKey, string.Format(_baseQueryStatisticsQuery, baseQuery.Substring(0, baseQuery.LastIndexOf(';')).Trim().Replace("'", "''")));
+      }
 
       LoadData();
     }
@@ -177,10 +170,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private void LoadData()
     {
-      DataTable result = new DataTable("result");
-      DataTable fieldTypes = new DataTable("fieldTypes");
-      DataTable queryStats = new DataTable("queryStats");
-      string execPlan = "";
+      DataTable resultDataTable = new DataTable();
+      DataTable fieldTypesDataTable = new DataTable();
+      DataTable queryStatisticsDataTable = new DataTable();
+      string executionPlanJsonData = "";
+      DataTable executionPlanDataTable = new DataTable();
       bool closeConn = false;
 
 
@@ -197,30 +191,44 @@ namespace MySql.Data.VisualStudio.Editors
         cmd.Transaction = tran;
         try
         {
-          cmd.CommandText = _queries[_perfSchemaKey];
-          cmd.ExecuteNonQuery();
+          if (_queries.ContainsKey(_performanceSchemaKey))
+          {
+            cmd.CommandText = _queries[_performanceSchemaKey];
+            cmd.ExecuteNonQuery();
+          }
 
           cmd.CommandText = _queries[_queryKey];
-          result.Load(cmd.ExecuteReader());
+          resultDataTable.Load(cmd.ExecuteReader());
 
           cmd.CommandText = _queries[_fieldTypeKey];
-          fieldTypes.Load(cmd.ExecuteReader());
+          fieldTypesDataTable.Load(cmd.ExecuteReader());
 
-          cmd.CommandText = _queries[_queryStatKey];
-          queryStats.Load(cmd.ExecuteReader());
+          if (_queries.ContainsKey(_queryStatisticsKey))
+          {
+            cmd.CommandText = _queries[_queryStatisticsKey];
+            queryStatisticsDataTable.Load(cmd.ExecuteReader());
+          }
 
-          cmd.CommandText = _queries[_formatJsonKey];
-          var reader = cmd.ExecuteReader();
-          reader.Read();
-          execPlan = reader[0].ToString();
-          reader.Close();
+          if (_currentServerVersion > 55)
+          {
+            cmd.CommandText = _queries[_executionPlanKey];
+            var reader = cmd.ExecuteReader();
+            reader.Read();
+            executionPlanJsonData = reader[0].ToString();
+            reader.Close();
+          }
+          else
+          {
+            cmd.CommandText = _queries[_executionPlanKey];
+            executionPlanDataTable.Load(cmd.ExecuteReader());
+          }
 
           tran.Commit();
         }
         catch (Exception ex)
         {
           tran.Rollback();
-          throw ex;
+          Utils.WriteToOutputWindow(string.Format("Error trying to load the data: {0}", ex), Messagetype.Error);
         }
         finally
         {
@@ -231,10 +239,19 @@ namespace MySql.Data.VisualStudio.Editors
         }
       }
 
-      ctrlResultSet.SetData(result);
-      ctrlFieldtypes.SetData(fieldTypes);
-      ctrlExecPlan.SetData(execPlan);
-      ctrlQueryStats.SetData(queryStats);
+      ctrlResultSet.SetData(resultDataTable);
+      ctrlFieldtypes.SetData(fieldTypesDataTable);
+
+      if (_currentServerVersion > 55)
+      {
+        ctrlExecPlan.SetData(executionPlanJsonData);
+      }
+      else
+      {
+        ctrlExecPlan.SetData(executionPlanDataTable);
+      }
+
+      ctrlQueryStats.SetData(queryStatisticsDataTable, (ServerVersion)_currentServerVersion);
     }
 
     /// <summary>
@@ -244,7 +261,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>Tables separated by comma</returns>
     private string GetTablesFromQuery(string query)
     {
-      query = query.ToLower();
+      if (string.IsNullOrEmpty(query))
+      {
+        return "";
+      }
+
+      query = query.ToLower().Replace("`","");
       var result = new StringBuilder();
 
       string tablesSubstr = "";
@@ -280,7 +302,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>Columns separated by comma</returns>
     private string GetColumnsFromQuery(string query)
     {
-      query = query.ToLower();
+      if (string.IsNullOrEmpty(query))
+      {
+        return "";
+      }
+
+      query = query.ToLower().Replace("`", "");
       var result = new StringBuilder();
       var colsSubstr = query.Substring(query.IndexOf("select") + 6, query.IndexOf("from") - (query.IndexOf("select") + 6));
 
@@ -317,10 +344,18 @@ namespace MySql.Data.VisualStudio.Editors
     private void LoadResources()
     {
       ComponentResourceManager resources = new ComponentResourceManager(typeof(DetailedResultsetView));
-      BasePerfSchemaConfig = resources.GetString("basePerfSchemaConfig");
-      BaseFieldTypeQuery = resources.GetString("baseFieldTypeQuery");
-      BaseQueryStatsQuery = resources.GetString("baseQueryStatsQuery");
-      BaseQueryFormatJson = resources.GetString("baseFormatJson");
+      _baseFieldTypeQuery = resources.GetString("baseFieldTypeQuery");
+
+      if ((int)_currentServerVersion < 56)
+      {
+        _baseExecutionPlanQuery = resources.GetString("baseExecPlanQuery51_55");
+      }
+      else
+      {
+        _basePerformanceSchemaConfigurationQuery = resources.GetString("basePerfSchemaConfig");
+        _baseQueryStatisticsQuery = resources.GetString("baseQueryStatsQuery");
+        _baseExecutionPlanQuery = resources.GetString("baseFormatJson");
+      }
     }
 
     /// <summary>
@@ -374,6 +409,18 @@ namespace MySql.Data.VisualStudio.Editors
     {
       LoadResources();
       ConfigureMenu();
+    }
+
+    /// <summary>
+    /// Get the Server version from the current MySqlConnection and store it in a internal property
+    /// </summary>
+    private void ValidateServerVersion()
+    {
+      if (Connection != null)
+      {
+        Version serverVer = Parser.ParserUtils.GetVersion(Connection.ServerVersion);
+        _currentServerVersion = (serverVer.Major * 10) + serverVer.Minor;
+      }
     }
   }
 }

@@ -38,6 +38,11 @@ namespace MySql.Data.VisualStudio.Editors
   public partial class QueryStatsView : UserControl
   {
     /// <summary>
+    /// Message that will be displayed when the Server version is not supported
+    /// </summary>
+    private const string _infoNotAvailableMsg = "This information is not supported on MySql Server versions lower that 5.6";
+
+    /// <summary>
     /// Initializes a new instance of the QueryStatsView class.
     /// </summary>
     public QueryStatsView()
@@ -49,9 +54,25 @@ namespace MySql.Data.VisualStudio.Editors
     /// Loads the data received into the control
     /// </summary>
     /// <param name="data">The data to load</param>
-    public void SetData(DataTable data)
+    /// <param name="currentServerVer">Server version of the current MySqlConnection</param>
+    internal void SetData(DataTable data, ServerVersion currentServerVer)
     {
-      bsQueryStatsData.DataSource = data;
+      if (data == null)
+      {
+        return;
+      }
+
+      if ((int)currentServerVer < 56)
+      {
+        lblInfoNotAvailable.Text = _infoNotAvailableMsg;
+        DisplayLabelInformation(true);
+      }
+      else
+      {
+        bsQueryStatsData.DataSource = data;
+        DisplayLabelInformation(false);
+      }
+
       AddDataBindings();
     }
 
@@ -82,6 +103,15 @@ namespace MySql.Data.VisualStudio.Editors
       lblIndexUsedVal.DataBindings.Add("Text", bsQueryStatsData, "index_used");
       lblEventIdVal.DataBindings.Add("Text", bsQueryStatsData, "event_id");
       lblThreadIdVal.DataBindings.Add("Text", bsQueryStatsData, "thread_id");
+    }
+
+    /// <summary>
+    /// Display the proper information basis on the Server version
+    /// </summary>
+    /// <param name="versionNotSupported">The current server version is supported?</param>
+    private void DisplayLabelInformation(bool versionNotSupported)
+    {
+      this.Controls.OfType<Label>().ToList().ForEach(label => label.Visible = label.Visible ^ versionNotSupported);
     }
   }
 }

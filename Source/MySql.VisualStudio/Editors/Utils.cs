@@ -832,4 +832,27 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     TreeView
   }
+
+  /// <summary>
+  /// Enum used to know which server version is in use
+  /// </summary>
+  internal enum ServerVersion : int
+  {
+    /// <summary>
+    /// MySql Server 5.1
+    /// </summary>
+    Server51 = 51,
+    /// <summary>
+    /// MySql Server 5.5
+    /// </summary>
+    Server55 = 55,
+    /// <summary>
+    /// MySql Server 5.6
+    /// </summary>
+    Server56 = 56,
+    /// <summary>
+    /// MySql Server 5.7
+    /// </summary>
+    Server57 = 57
+  }
 }

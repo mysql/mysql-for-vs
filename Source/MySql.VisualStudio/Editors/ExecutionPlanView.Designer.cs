@@ -51,6 +51,8 @@ namespace MySql.Data.VisualStudio.Editors
     private void InitializeComponent()
     {
       this.txtExecPlan = new System.Windows.Forms.TextBox();
+      this.dgvExecPlan = new System.Windows.Forms.DataGridView();
+      ((System.ComponentModel.ISupportInitialize)(this.dgvExecPlan)).BeginInit();
       this.SuspendLayout();
       // 
       // txtExecPlan
@@ -64,13 +66,24 @@ namespace MySql.Data.VisualStudio.Editors
       this.txtExecPlan.Size = new System.Drawing.Size(600, 500);
       this.txtExecPlan.TabIndex = 0;
       // 
+      // dgvExecPlan
+      // 
+      this.dgvExecPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.dgvExecPlan.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.dgvExecPlan.Location = new System.Drawing.Point(0, 0);
+      this.dgvExecPlan.Name = "dgvExecPlan";
+      this.dgvExecPlan.Size = new System.Drawing.Size(600, 500);
+      this.dgvExecPlan.TabIndex = 1;
+      // 
       // ExecutionPlanView
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.txtExecPlan);
+      this.Controls.Add(this.dgvExecPlan);
       this.Name = "ExecutionPlanView";
       this.Size = new System.Drawing.Size(600, 500);
+      ((System.ComponentModel.ISupportInitialize)(this.dgvExecPlan)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -79,6 +92,7 @@ namespace MySql.Data.VisualStudio.Editors
     #endregion
 
     private System.Windows.Forms.TextBox txtExecPlan;
+    private System.Windows.Forms.DataGridView dgvExecPlan;
 
   }
 }

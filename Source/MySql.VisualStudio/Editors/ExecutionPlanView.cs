@@ -21,6 +21,7 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using Microsoft.VisualStudio.PlatformUI;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -31,6 +32,11 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   public partial class ExecutionPlanView : UserControl
   {
+    /// <summary>
+    /// If not valid data is received this message will be displayed to the user
+    /// </summary>
+    private const string _noValidDataMessage = "No valid data received for Execution Plan.";
+
     /// <summary>
     /// Initializes a new instance of the ExecutionPlanView class.
     /// </summary>
@@ -61,12 +67,53 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Loads the data received into the control
+    /// Loads the data received into a TextBox with Json format
     /// </summary>
     /// <param name="data">The data to load</param>
     public void SetData(string data)
     {
-      txtExecPlan.AppendText(data.Replace("\n", "\r\n"));
+      if (!string.IsNullOrEmpty(data))
+      {
+        txtExecPlan.AppendText(data.Replace("\n", "\r\n"));
+      }
+      else
+      {
+        txtExecPlan.AppendText(_noValidDataMessage);
+      }
+
+      txtExecPlan.Visible = true;
+      dgvExecPlan.Visible = false;
+    }
+
+    /// <summary>
+    /// Load the data received into a GridView
+    /// </summary>
+    /// <param name="data">Data to load</param>
+    public void SetData(DataTable data)
+    {
+      if (data == null)
+      {
+        txtExecPlan.AppendText(_noValidDataMessage);
+        txtExecPlan.Visible = true;
+        dgvExecPlan.Visible = false;
+        return;
+      }
+
+      dgvExecPlan.DataSource = data;
+      txtExecPlan.Visible = false;
+      dgvExecPlan.Visible = true;
+      SetDataGridStyle();
+      Utils.SanitizeBlobs(ref dgvExecPlan);
+    }
+
+    /// <summary>
+    /// Apply style to the grid used to show the data
+    /// </summary>
+    private void SetDataGridStyle()
+    {
+      dgvExecPlan.ColumnHeadersDefaultCellStyle = Utils.GetHeaderStyle();
+      dgvExecPlan.RowsDefaultCellStyle = Utils.GetRowStyle();
+      dgvExecPlan.AlternatingRowsDefaultCellStyle = Utils.GetAlternateRowStyle();
     }
   }
 }

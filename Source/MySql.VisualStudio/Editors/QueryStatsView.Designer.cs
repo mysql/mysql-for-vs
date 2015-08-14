@@ -102,6 +102,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.lblExecTime = new System.Windows.Forms.Label();
       this.lblServer = new System.Windows.Forms.Label();
       this.bsQueryStatsData = new System.Windows.Forms.BindingSource(this.components);
+      this.lblInfoNotAvailable = new System.Windows.Forms.Label();
       lblSortRange = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.bsQueryStatsData)).BeginInit();
       this.SuspendLayout();
@@ -543,10 +544,21 @@ namespace MySql.Data.VisualStudio.Editors
       this.lblServer.TabIndex = 50;
       this.lblServer.Text = "Timing (as measured by the server):";
       // 
+      // lblInfoNotAvailable
+      // 
+      this.lblInfoNotAvailable.AutoSize = true;
+      this.lblInfoNotAvailable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+      this.lblInfoNotAvailable.Location = new System.Drawing.Point(81, 142);
+      this.lblInfoNotAvailable.Name = "lblInfoNotAvailable";
+      this.lblInfoNotAvailable.Size = new System.Drawing.Size(0, 13);
+      this.lblInfoNotAvailable.TabIndex = 100;
+      this.lblInfoNotAvailable.Visible = false;
+      // 
       // QueryStatsView
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.lblInfoNotAvailable);
       this.Controls.Add(this.lblThreadIdVal);
       this.Controls.Add(this.lblEventIdVal);
       this.Controls.Add(this.lblIndexUsedVal);
@@ -657,6 +669,7 @@ namespace MySql.Data.VisualStudio.Editors
     private System.Windows.Forms.Label lblExecTime;
     private System.Windows.Forms.Label lblServer;
     private System.Windows.Forms.BindingSource bsQueryStatsData;
+    private System.Windows.Forms.Label lblInfoNotAvailable;
 
   }
 }
