@@ -34,11 +34,23 @@ using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
 {
+  /// <summary>
+  /// View to display data in a TreeView
+  /// </summary>
   public partial class TreeViewResult : UserControl
   {
+    /// <summary>
+    /// Object used to display the data as TreeView with columns
+    /// </summary>
+    private MySqlTreeView _treeData;
+
+    /// <summary>
+    /// Creates an instance of TreeViewResult
+    /// </summary>
     public TreeViewResult()
     {
       InitializeComponent();
+      SetUp();
     }
 
     /// <summary>
@@ -47,29 +59,132 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="document">Data to load</param>
     public void SetData(DocumentResultSet document)
     {
-      GenerateItem(document.GetData());
+      GenerateTreeView(document.GetData());
     }
 
     /// <summary>
     /// Create tree nodes from the data received to add it to the tree view and display the information
     /// </summary>
     /// <param name="rows">Data to generate the tree nodes</param>
-    private void GenerateItem(List<Dictionary<string, object>> rows)
+    private void GenerateTreeView(List<Dictionary<string, object>> rows)
     {
-      int rowCtr = 1;
+      if (rows == null)
+      {
+        return;
+      }
+
+      int rowCounter = 1;
       string nodeId = "";
-      TreeNode[] currnodes = null;
       foreach (Dictionary<string, object> row in rows)
       {
-        nodeId = string.Format("row_{0}", rowCtr);
-        tvData.Nodes.Add(nodeId, string.Format("Row {0}", rowCtr));
-        foreach(KeyValuePair<string, object> column in row)
+        nodeId = string.Format("row_{0}", rowCounter);
+        TreeNode parentNode = new TreeNode(string.Format("Row {0}", rowCounter));
+        parentNode.Name = nodeId;
+        parentNode.Tag = new string[] { string.Format("{0} Fields", row.Count), "Object" };
+        parentNode.ImageIndex = 0;
+
+        foreach (KeyValuePair<string, object> column in row)
         {
-          currnodes = tvData.Nodes.Find(nodeId, true);
-          currnodes[0].Nodes.Add(new TreeNode(column.Key, new TreeNode[] { new TreeNode(column.Value.ToString()) }));
+          TreeNode node = GenerateNode(column);
+          if (node != null)
+          {
+            parentNode.Nodes.Add(node);
+          }
         }
-        rowCtr++;
+
+        _treeData.TreeView.Nodes.Add(parentNode);
+        rowCounter++;
       }
+    }
+
+    /// <summary>
+    /// Create a TreeView Node from the data received
+    /// </summary>
+    /// <param name="column">Object that contains the Node text as well as the value to be displayed</param>
+    /// <returns></returns>
+    private TreeNode GenerateNode(KeyValuePair<string, object> column)
+    {
+      //since KeyValuePair is a non-nullable type, we verify if it has default values assigned if it then discard this item
+      if (column.Equals(default(KeyValuePair<string, object>)))
+      {
+        return null;
+      }
+
+      TreeNode parentNode = new TreeNode();
+      parentNode.ImageIndex = 0;
+      if (column.Value == null || column.Value.GetType() != typeof(Dictionary<string, object>))
+      {
+        parentNode.Text = column.Key;
+        parentNode.Tag = new string[] { GetNodeValue(column.Value), GetNodeType(column.Value) };
+      }
+      else
+      {
+        var cols = (Dictionary<string, object>)column.Value;
+        parentNode.Text = column.Key;
+        parentNode.Tag = new string[] { string.Format("{0} Fields", cols.Count), "Object" };
+        foreach (KeyValuePair<string, object> col in cols)
+        {
+          parentNode.Nodes.Add(GenerateNode(col));
+        }
+      }
+
+      return parentNode;
+    }
+
+    /// <summary>
+    /// Get the data that will be displayed as the Node value
+    /// </summary>
+    /// <param name="value">Object that contains the value to be displayed</param>
+    /// <returns>A string representation of the value when the object is not a type of Array otherwise a string with the item count is returned</returns>
+    private string GetNodeValue(object value)
+    {
+      if (value == null)
+      {
+        return "Null";
+      }
+
+      Type valType = value.GetType();
+      if (valType.BaseType == typeof(Array))
+      {
+        return string.Format("{0} Items", ((Array)value).Length);
+      }
+      else
+      {
+        return value.ToString();
+      }
+    }
+
+    /// <summary>
+    /// Get the type of the value that will be displayed
+    /// </summary>
+    /// <param name="value">Object that contains the value</param>
+    /// <returns>String representation of the data type</returns>
+    private string GetNodeType(object value)
+    {
+      if (value == null)
+      {
+        return typeof(Nullable).ToString().Replace("System.", "");
+      }
+
+      //currently the shell is handling the dates as string, we need to try to parse it to verify if is a valid date
+      DateTime tmpDate;
+      if (DateTime.TryParse(value.ToString(), out tmpDate))
+      {
+        return tmpDate.GetType().ToString().Replace("System.", "");
+      }
+
+      return value.GetType().ToString().Replace("System.", "");
+    }
+
+    /// <summary>
+    /// Initializes controls that will display the data in the view
+    /// </summary>
+    private void SetUp()
+    {
+      _treeData = new MySqlTreeView("Field", "Value", "Type");
+      _treeData.Location = new Point(0, 0);
+      _treeData.Dock = DockStyle.Fill;
+      this.Controls.Add(_treeData);
     }
   }
 }

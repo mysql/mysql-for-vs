@@ -569,6 +569,9 @@
     </Compile>
     <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs">
     </Compile>
+    <Compile Include="Editors\BufferedTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Editors\DetailedResultsetView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -598,6 +601,12 @@
     </Compile>
     <Compile Include="Editors\JSResultsetView.Designer.cs">
       <DependentUpon>JSResultsetView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\MySqlTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\MySqlTreeView.Designer.cs">
+      <DependentUpon>MySqlTreeView.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\NgShellWrapper.cs" />
     <Compile Include="Editors\QueryStatsView.cs">
@@ -910,6 +919,9 @@
     <EmbeddedResource Include="Editors\JSResultsetView.resx">
       <DependentUpon>JSResultsetView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editors\MySqlTreeView.resx">
+      <DependentUpon>MySqlTreeView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\QueryStatsView.resx">
       <DependentUpon>QueryStatsView.cs</DependentUpon>
     </EmbeddedResource>
@@ -921,6 +933,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\TreeViewResult.resx">
       <DependentUpon>TreeViewResult.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\VerticalMenu.resx">
       <DependentUpon>VerticalMenu.cs</DependentUpon>
@@ -1118,6 +1131,19 @@
     </Compile>
     <Content Include="Resources\Background.png" />
     <Content Include="Resources\Banner.png" />
+    <None Include="Resources\listViewItem.png" />
+    <None Include="Resources\collapse_item.png" />
+    <None Include="Resources\expand_item.png" />
+    <None Include="Resources\JS_Datatype_Array.png" />
+    <None Include="Resources\JS_Datatype_Bin.png" />
+    <None Include="Resources\JS_Datatype_Bool.png" />
+    <None Include="Resources\JS_Datatype_Date.png" />
+    <None Include="Resources\JS_Datatype_Null.png" />
+    <None Include="Resources\JS_Datatype_Number.png" />
+    <None Include="Resources\JS_Datatype_Object.png" />
+    <None Include="Resources\JS_Datatype_ObjectId.png" />
+    <None Include="Resources\JS_Datatype_String.png" />
+    <None Include="Resources\genericIcon.png" />
     <Content Include="Resources\MySQL.png" />
     <None Include="Resources\mysql_project_wizard.png" />
     <Content Include="Resources\output_type-executionplan.png" />
@@ -1356,22 +1382,22 @@
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+        <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+        <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
       </PropertyGroup>
     </When>
     <When Condition="'$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+        <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
       </PropertyGroup>
     </When>
   </Choose>
-  <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)\Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
