@@ -100,8 +100,8 @@ namespace MySql.Data.VisualStudio
     public MySqlConnection MysqlConnectionSelected;
     private const string MVC4_64_Path = "C:\\Program Files (x86)\\Microsoft ASP.NET\\ASP.NET MVC 4";
     private const string MVC4_32_Path = "C:\\Program Files\\Microsoft ASP.NET\\ASP.NET MVC 4";
-	
-	/// <summary>
+
+    /// <summary>
     /// The Sql extension
     /// </summary>
     public const string SQL_EXTENSION = ".mysql";
@@ -205,7 +205,7 @@ namespace MySql.Data.VisualStudio
 #if NET_40_OR_GREATER
         CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
         OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
-        
+
         if (!IsMVC4Installed())
         {
           cmdMenuCreateNewMvcProject.Enabled = false;
@@ -215,7 +215,7 @@ namespace MySql.Data.VisualStudio
 
         CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
         OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
-        
+
         if (!IsMVC4Installed())
         {
           cmdMenuCreateWinFormsProject.Enabled = false;
@@ -267,24 +267,41 @@ namespace MySql.Data.VisualStudio
 
     /// <summary>
     /// Handles the BeforeQueryStatus event of the cmdMenuNewJavascript control.
+    /// Hides the option from servers that do not support the X-Protocol.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void cmdMenuNewJavascript_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand newScriptbtn = sender as OleMenuCommand;
+      if (newScriptbtn == null)
+      {
+        return;
+      }
 
-      EnvDTE80.DTE2 _applicationObject = GetDTE2();
-      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
+      EnvDTE80.DTE2 applicationObject = GetDTE2();
+      UIHierarchy uih = applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
-
+      bool shownewScriptbtn = false;
       if (selectedItems != null)
       {
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
       var connection = GetConnection(ConnectionName);
-      newScriptbtn.Visible = newScriptbtn.Enabled = connection != null; // && connection.IsMySQLXCapable;
+      int version = 0;
+      if (connection != null && connection.Connection != null)
+      {
+        MySqlConnection currentConnection = (MySqlConnection)connection.Connection.GetLockedProviderObject();
+        if (currentConnection.ServerVersion != null)
+        {
+          Version serverVer = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
+          version = (serverVer.Major * 10) + serverVer.Minor;
+          shownewScriptbtn = version >= 57;
+        }
+      }
+
+      newScriptbtn.Visible = newScriptbtn.Enabled = shownewScriptbtn;
     }
 
     /// <summary>
