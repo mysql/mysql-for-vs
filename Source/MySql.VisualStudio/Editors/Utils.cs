@@ -339,14 +339,15 @@ namespace MySql.Data.VisualStudio.Editors
       string user = connProp["User Id"] as string;
       string pass = connProp["Password"] as string;
       string server = connProp["server"] as string;
-      UInt32 port = 3306; //assign the default port
+      UInt32 port = 33060; //assign the default Ng port
 
-      //verify if the user is not using the default port, if not then extract the value
-      object givenPort = connProp["Port"];
-      if (givenPort != null)
-      {
-        port = (UInt32)givenPort;
-      }
+      // TODO: Uncomment this code and reference it to the shell default port instead of the mysql default port. 
+      ////verify if the user is not using the default port, if not then extract the value
+      //object givenPort = connProp["Port"];
+      //if (givenPort != null)
+      //{
+      //  port = (UInt32)givenPort;
+      //}
 
       return string.Format("{0}:{1}@{2}:{3}", user, pass, server, port);
     }

@@ -78,8 +78,8 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       //TODO: find a way to unhardcode this value and obtain it directly from the connection object;
-      //It seems the port should be defaulted to 3306 if the connection string doesn't specify it.
-      conn.Add("port", "3306");
+      //It seems the port should be defaulted to 33060 if the connection string doesn't specify it.
+      conn.Add("port", "33060");
 
       _connString =
         conn["user id"] + ":" + //TODO: this value could also come in the form of "user"
