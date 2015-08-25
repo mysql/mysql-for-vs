@@ -43,6 +43,7 @@ namespace MySql.Data.VisualStudio.Editors
     public VerticalMenu()
     {
       InitializeComponent();
+#if VS_SDK_2013
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       Controls.SetColors();
     }
@@ -55,6 +56,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Controls.SetColors();
       ApplySelectedStyle(_lastSelectedButton);
+#endif
     }
 
     /// <summary>

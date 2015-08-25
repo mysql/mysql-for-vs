@@ -1,0 +1,8 @@
+DROP DATABASE IF EXISTS {0};
+CREATE DATABASE {0};
+USE {0};
+
+GRANT ALL ON `{0}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON `{0}`.* to 'test'@'%' IDENTIFIED BY 'test';
+
+FLUSH PRIVILEGES;

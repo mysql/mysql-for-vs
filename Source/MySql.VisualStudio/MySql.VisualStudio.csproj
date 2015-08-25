@@ -43,7 +43,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.5.1</Framework>
         <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;</DefineConstants>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;VS_SDK_2013;</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
@@ -52,7 +52,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.5</Framework>
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;</DefineConstants>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;VS_SDK_2012;</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
@@ -61,7 +61,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.0</Framework>
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER</DefineConstants>
+        <DefineConstants>NET_40_OR_GREATER;VS_SDK_2010;</DefineConstants>
         <OldToolsVersion>4.0</OldToolsVersion>
       </PropertyGroup>
     </When>

@@ -58,6 +58,7 @@ namespace MySql.Data.VisualStudio.Editors
       tabControl1.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       tabControl1.Visible = false;
+#if VS_SDK_2013
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
     }
@@ -78,6 +79,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Controls.SetColors();
       BackColor = Utils.BackgroundColor;
+#endif
     }
 
     /// <summary>

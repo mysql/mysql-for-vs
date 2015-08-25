@@ -28,26 +28,30 @@ using System.Threading.Tasks;
 using MySqlX.Shell;
 using System.Data;
 using System.Data.Common;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio.Editors
 {
   public class NgShellWrapper
   {
-    private bool _keepSession;
-    ShellClient _shellClient;
-
     /// <summary>
-    /// Variable to store the connection of the wrapper.
+    /// Stores the value that specifies if all the statements will be executed in the same session
     /// </summary>
-    private DbConnection _connection;
+    private bool _keepSession;
+    /// <summary>
+    /// Shell object used to execute the queries through the shell
+    /// </summary>
+    ShellClient _shellClient;
     /// <summary>
     /// Variable to store the connection string for the wrapper.
     /// </summary>
     private string _connString;
+
     /// <summary>
     /// Creates an instance of NgShellWrapper
     /// </summary>
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port"</param>
+    /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
     public NgShellWrapper(string connectionString, bool keepNgSession)
     {
       _connString = connectionString;
@@ -60,32 +64,13 @@ namespace MySql.Data.VisualStudio.Editors
     /// Creates an instance of NgShellWrapper
     /// </summary>
     /// <param name="connectionString">Connection object that will be used to set the connection string. Format: "user:pass@server:port"</param>
-    public NgShellWrapper(DbConnection connection)
+    /// /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
+    public NgShellWrapper(DbConnection connection, bool keepNgSession)
     {
-      _connection = connection;
-
-      var parameters = _connection.ConnectionString.Split(';');
-      Dictionary<string, string> conn = new Dictionary<string, string>();
-      foreach (var parameter in parameters)
-      {
-        var keyAndValue = parameter.Split('=');
-        if (keyAndValue.Length > 1)
-        {
-          var key = keyAndValue[0];
-          var value = keyAndValue[1];
-          conn.Add(key, value);
-        }
-      }
-
-      //TODO: find a way to unhardcode this value and obtain it directly from the connection object;
-      //It seems the port should be defaulted to 33060 if the connection string doesn't specify it.
-      conn.Add("port", "33060");
-
-      _connString =
-        conn["user id"] + ":" + //TODO: this value could also come in the form of "user"
-        conn["password"] + "@" +
-        conn["server"] + ":" +
-        conn["port"];
+      _connString = ((MySqlConnection)connection).ToNgFormat();
+      _keepSession = keepNgSession;
+      _shellClient = new ShellClient();
+      _shellClient.MakeConnection(_connString);
     }
 
     /// <summary>
@@ -99,11 +84,20 @@ namespace MySql.Data.VisualStudio.Editors
       {
         return null;
       }
+
       ResultSet result = ExecuteQuery(Mode.JScript, script);
+      TableResultSet tableResult = result as TableResultSet;
+
+      if (tableResult != null)
+      {
+        return TableResultToDocumentResult(tableResult);
+      }
+
       if ((result as DocumentResultSet) == null)
       {
         ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount());
       }
+
       return result as DocumentResultSet;
     }
 
@@ -185,6 +179,35 @@ namespace MySql.Data.VisualStudio.Editors
     {
       private set;
       get;
+    }
+
+    /// <summary>
+    /// Parse a TableResultSet object to a DocumentResultSet object
+    /// </summary>
+    /// <param name="tableResult">Object to parse</param>
+    /// <returns>Null if invalid data given otherwise parsed data</returns>
+    public DocumentResultSet TableResultToDocumentResult(TableResultSet tableResult)
+    {
+      if (tableResult == null)
+      {
+        return null;
+      }
+
+      List<Dictionary<string, object>> parsedData = new List<Dictionary<string, object>>();
+      ResultSetMetadata[] metaData = tableResult.GetMetadata().ToArray();
+      object[][] data = tableResult.GetData().ToArray();
+
+      for (int row = 0; row < data.Length; row++)
+      {
+        Dictionary<string, object> rowData = new Dictionary<string, object>();
+        for (int column = 0; column < metaData.Length; column++)
+        {
+          rowData.Add(metaData[column].GetName(), data[row][column]);
+        }
+        parsedData.Add(rowData);
+      }
+
+      return new DocumentResultSet(parsedData, tableResult.GetAffectedRows(), tableResult.GetWarningCount(), tableResult.GetExecutionTime());
     }
   }
 

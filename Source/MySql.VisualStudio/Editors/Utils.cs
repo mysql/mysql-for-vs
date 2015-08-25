@@ -339,10 +339,11 @@ namespace MySql.Data.VisualStudio.Editors
       string user = connProp["User Id"] as string;
       string pass = connProp["Password"] as string;
       string server = connProp["server"] as string;
-      UInt32 port = 33060; //assign the default Ng port
 
-      // TODO: Uncomment this code and reference it to the shell default port instead of the mysql default port. 
-      ////verify if the user is not using the default port, if not then extract the value
+      //TODO: currently the Shell gets connected to the server using the port 33060 and there is no way to specify other port
+      //so we'll use the 33060 port by default until we have support to specify it
+      UInt32 port = 33060; //assign the default port
+      //verify if the user is not using the default port, if not then extract the value
       //object givenPort = connProp["Port"];
       //if (givenPort != null)
       //{

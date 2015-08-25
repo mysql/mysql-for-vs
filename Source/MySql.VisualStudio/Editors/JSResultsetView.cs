@@ -41,6 +41,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       InitializeComponent();
       ConfigureMenu();
+#if VS_SDK_2013
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       Controls.SetColors();
     }
@@ -52,6 +53,7 @@ namespace MySql.Data.VisualStudio.Editors
     void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
     {
       Controls.SetColors();
+#endif
     }
 
     /// <summary>

@@ -58,6 +58,7 @@ namespace MySql.Data.VisualStudio.Editors
       tabControl1.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       tabControl1.Visible = false;
+#if VS_SDK_2013
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
     }
@@ -78,6 +79,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Controls.SetColors();
       BackColor = Utils.BackgroundColor;
+#endif
     }
 
     /// <summary>
@@ -246,16 +248,19 @@ Check that the server is running, the database exist and the user credentials ar
           DocumentResultSet data = result as DocumentResultSet;
           if (data != null)
           {
-            TabPage newResPage = Utils.CreateResultPage(tabCounter);
-            JSResultsetView resultViews = new JSResultsetView();
-            resultViews.Dock = DockStyle.Fill;
-            resultViews.LoadData(data);
-            newResPage.Controls.Add(resultViews);
-            tabControl1.TabPages.Add(newResPage);
+            CreateResultPane(data, tabCounter);
           }
           else
           {
-            Utils.WriteToOutputWindow(string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount()), Messagetype.Information);
+            TableResultSet tableResult = result as TableResultSet;
+            if (tableResult != null)
+            {
+              CreateResultPane(ngwrapper.TableResultToDocumentResult(tableResult), tabCounter);
+            }
+            else
+            {
+              Utils.WriteToOutputWindow(string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount()), Messagetype.Information);
+            }
           }
 
           tabCounter++;
@@ -267,6 +272,26 @@ Check that the server is running, the database exist and the user credentials ar
       {
         Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
       }
+    }
+
+    /// <summary>
+    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
+    /// </summary>
+    /// <param name="data">Data to load</param>
+    /// <param name="resultNumber">Result counter</param>
+    private void CreateResultPane(DocumentResultSet data, int resultNumber)
+    {
+      if (data == null)
+      {
+        return;
+      }
+
+      TabPage newResPage = Utils.CreateResultPage(resultNumber);
+      JSResultsetView resultViews = new JSResultsetView();
+      resultViews.Dock = DockStyle.Fill;
+      resultViews.LoadData(data);
+      newResPage.Controls.Add(resultViews);
+      tabControl1.TabPages.Add(newResPage);
     }
 
     /// <summary>
