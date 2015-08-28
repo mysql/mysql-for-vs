@@ -297,7 +297,7 @@ namespace MySql.Data.VisualStudio
         {
           Version serverVer = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
           version = (serverVer.Major * 10) + serverVer.Minor;
-          shownewScriptbtn = version >= 57;
+          shownewScriptbtn = version > 57 || (version == 57 && serverVer.Build >= 9);
         }
       }
 
