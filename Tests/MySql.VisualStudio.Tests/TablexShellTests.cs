@@ -775,8 +775,6 @@ namespace MySql.VisualStudio.Tests
       _ngShell = new MySimpleClientShell();
       _ngShell.MakeConnection(_ngConnString);
       _ngShell.SwitchMode(Mode.JScript);
-      _ngShell.Execute(_setMysqlxVar);
-      _ngShell.Execute(_setSessionVar);
     }
 
     /// <summary>
@@ -785,54 +783,6 @@ namespace MySql.VisualStudio.Tests
     public void Dispose()
     {
       _setUp.Dispose();
-    }
-  }
-
-  /// <summary>
-  /// Custom direct NgWrapper Implementation for the current tests
-  /// </summary>
-  class MySimpleClientShell : SimpleClientShell
-  {
-    /// <summary>
-    /// Overrides the Print Method to write data in a custom way
-    /// </summary>
-    /// <param name="text">Text to write</param>
-    public override void Print(string text)
-    {
-      Console.WriteLine(text);
-    }
-
-    /// <summary>
-    /// Overrides the PrintError Method to write data in a custom way
-    /// </summary>
-    /// <param name="text">Text to write</param>
-    public override void PrintError(string text)
-    {
-      Console.WriteLine("***ERROR***{0}", text);
-    }
-
-    /// <summary>
-    /// Overrides the Input Method to write and return data in a custom way
-    /// </summary>
-    /// <param name="text">Text to write</param>
-    /// <param name="ret">Value to return</param>
-    /// <returns></returns>
-    public override bool Input(string text, ref string ret)
-    {
-      Console.WriteLine(text);
-      ret = Console.ReadLine();
-      return ret != null;
-    }
-
-    /// <summary>
-    /// Overrides the Password Method to return data in a custom way
-    /// </summary>
-    /// <param name="text">Data information</param>
-    /// <param name="ret">Data to Return</param>
-    /// <returns></returns>
-    public override bool Password(string text, ref string ret)
-    {
-      return Input(text, ref ret);
     }
   }
 }

@@ -146,8 +146,10 @@
     <Compile Include="..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="CollectionxShellTests.cs" />
     <Compile Include="DbExportTests.cs" />
     <Compile Include="DependenciesTests.cs" />
+    <Compile Include="MySimpleShellClient.cs" />
     <Compile Include="SchemaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUp.cs" />
