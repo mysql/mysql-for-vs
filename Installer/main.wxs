@@ -135,6 +135,9 @@
               <Directory Id="VS10_VisualBasicMySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
               <Directory Id="VS10_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
             </Directory>
+            <Directory Id='VS2010_NgModulesDir' Name='modules'>
+              <Directory Id='VS2010_NgJsDir' Name='js' />
+            </Directory>
           </Directory>
         </Directory>
       </Directory>
@@ -184,6 +187,9 @@
                   <Directory Id="VS11_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
                 </Directory>
               </Directory>
+            </Directory>
+            <Directory Id='VS11_NgModulesDir' Name='modules'>
+              <Directory Id='VS11_NgJsDir' Name='js' />
             </Directory>
           </Directory>
         </Directory>
@@ -235,6 +241,9 @@
                 </Directory>
               </Directory>
             </Directory>
+            <Directory Id='VS12_NgModulesDir' Name='modules'>
+              <Directory Id='VS12_NgJsDir' Name='js' />
+            </Directory>
           </Directory>
         </Directory>
       </Directory>
@@ -285,6 +294,9 @@
                 </Directory>
               </Directory>
             </Directory>
+          </Directory>
+          <Directory Id='VS14_NgModulesDir' Name='modules'>
+            <Directory Id='VS14_NgJsDir' Name='js' />
           </Directory>
         </Directory>
       </Directory>
