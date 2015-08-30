@@ -64,6 +64,16 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Variable to store the value to know if the user wants to execute the statements in the same session or not
+    /// </summary>
+    private JsSessionOption _sessionOption = JsSessionOption.UseSameSession;
+
+    /// <summary>
+    /// Variable used to executes the script
+    /// </summary>
+    private NgShellWrapper _ngWrapper;
+
+    /// <summary>
     /// Responds to the event when Visual Studio theme changed.
     /// </summary>
     /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
@@ -234,9 +244,17 @@ Check that the server is running, the database exist and the user credentials ar
 
       try
       {
-        NgShellWrapper ngwrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
-        List<ResultSet> results = ngwrapper.ExecuteJavaScript(js.BreakJavaScriptStatements().ToArray());
+        switch (_sessionOption)
+        {
+          case JsSessionOption.UseSameSession:
+            _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
+            break;
+          case JsSessionOption.UseNewSession:
+            _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), false);
+            break;
+        }
 
+        List<ResultSet> results = _ngWrapper.ExecuteJavaScript(js.BreakJavaScriptStatements().ToArray());
         if (results == null)
         {
           return;
@@ -255,7 +273,7 @@ Check that the server is running, the database exist and the user credentials ar
             TableResultSet tableResult = result as TableResultSet;
             if (tableResult != null)
             {
-              CreateResultPane(ngwrapper.TableResultToDocumentResult(tableResult), tabCounter);
+              CreateResultPane(_ngWrapper.TableResultToDocumentResult(tableResult), tabCounter);
             }
             else
             {
@@ -322,6 +340,54 @@ Check that the server is running, the database exist and the user credentials ar
           connected ? builder["userid"] as string : "<none>");
       dbLabel.Text = String.Format("Database: {0}",
           connected ? Connection.Database : "<none>");
+    }
+
+    /// <summary>
+    /// Event fired when the Session Option is changed
+    /// </summary>
+    /// <param name="sender">Sender that calls the event (item clicked)</param>
+    /// <param name="e">Event arguments</param>
+    private void ToolStripMenuItemClickHandler(object sender, EventArgs e)
+    {
+      ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+      _sessionOption = (JsSessionOption)clickedItem.Tag;
+
+      if (_ngWrapper != null)
+      {
+        _ngWrapper.CleanConnection();
+        _ngWrapper = null;
+      }
+
+      foreach (ToolStripMenuItem item in toolStripSplitButton1.DropDownItems)
+      {
+        item.Checked = item.Name == clickedItem.Name;
+      }
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        if (components != null)
+        {
+          components.Dispose();
+        }
+
+        if (_ngWrapper != null)
+        {
+          _ngWrapper.CleanConnection();
+        }
+
+        if (connection.State != ConnectionState.Closed)
+        {
+          connection.Close();
+        }
+      }
+      base.Dispose(disposing);
     }
   }
 }

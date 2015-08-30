@@ -9,19 +9,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary> 
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && (components != null))
-      {
-        components.Dispose();
-      }
-      base.Dispose(disposing);
-    }
-
     #region Component Designer generated code
 
     /// <summary> 
@@ -30,10 +17,9 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private void InitializeComponent()
     {
-      components = new System.ComponentModel.Container();
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyJsEditor));
+      this.components = new System.ComponentModel.Container();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+      this.toolStripLabelJs = new System.Windows.Forms.ToolStripLabel();
       this.connectButton = new System.Windows.Forms.ToolStripButton();
       this.disconnectButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -44,6 +30,10 @@ namespace MySql.Data.VisualStudio.Editors
       this.userLabel = new System.Windows.Forms.ToolStripLabel();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.dbLabel = new System.Windows.Forms.ToolStripLabel();
+      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+      this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+      this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
       this.splitter1 = new System.Windows.Forms.Splitter();
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.resultsPage = new System.Windows.Forms.TabPage();
@@ -52,7 +42,6 @@ namespace MySql.Data.VisualStudio.Editors
       this.messages = new System.Windows.Forms.Label();
       this.imageList1 = new System.Windows.Forms.ImageList(this.components);
       this.codeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
-      this.toolStripLabelJs = new System.Windows.Forms.ToolStripLabel();
       this.toolStrip1.SuspendLayout();
       this.tabControl1.SuspendLayout();
       this.resultsPage.SuspendLayout();
@@ -74,13 +63,22 @@ namespace MySql.Data.VisualStudio.Editors
             this.toolStripSeparator3,
             this.userLabel,
             this.toolStripSeparator4,
-            this.dbLabel});
+            this.dbLabel,
+            this.toolStripSeparator5,
+            this.toolStripSplitButton1});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
-      this.toolStrip1.RenderMode = ToolStripRenderMode.System;
+      this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
       this.toolStrip1.Size = new System.Drawing.Size(604, 25);
       this.toolStrip1.TabIndex = 1;
       this.toolStrip1.Text = "toolStrip1";
+      // 
+      // toolStripLabelJs
+      // 
+      this.toolStripLabelJs.ForeColor = System.Drawing.Color.DodgerBlue;
+      this.toolStripLabelJs.Name = "toolStripLabelJs";
+      this.toolStripLabelJs.Size = new System.Drawing.Size(67, 22);
+      this.toolStripLabelJs.Text = "MyJs Editor";
       // 
       // connectButton
       // 
@@ -152,6 +150,43 @@ namespace MySql.Data.VisualStudio.Editors
       this.dbLabel.Size = new System.Drawing.Size(104, 22);
       this.dbLabel.Text = "Database: <none>";
       // 
+      // toolStripSeparator5
+      // 
+      this.toolStripSeparator5.Name = "toolStripSeparator5";
+      this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+      // 
+      // toolStripSplitButton1
+      // 
+      this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1, this.toolStripMenuItem2});
+      this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+      this.toolStripSplitButton1.Text = "Session Option";
+      this.toolStripSplitButton1.Size = new System.Drawing.Size(16, 22);
+      this.toolStripSplitButton1.DefaultItem = toolStripMenuItem1;
+      // 
+      // toolStripMenuItem1
+      // 
+      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+      this.toolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
+      this.toolStripMenuItem1.AutoToolTip = true;
+      this.toolStripMenuItem1.Checked = true;
+      this.toolStripMenuItem1.CheckOnClick = true;
+      this.toolStripMenuItem1.Text = "Preserve JS Variables";
+      this.toolStripMenuItem1.Tag = JsSessionOption.UseSameSession;
+      this.toolStripMenuItem1.ToolTipText = "Use this option to always run scripts in the same session.";
+      this.toolStripMenuItem1.Click += new System.EventHandler(ToolStripMenuItemClickHandler);
+      // 
+      // toolStripMenuItem2
+      // 
+      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+      this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 22);
+      this.toolStripMenuItem2.AutoToolTip = true;
+      this.toolStripMenuItem2.CheckOnClick = true;
+      this.toolStripMenuItem2.Text = "Not Preserve JS Variables";
+      this.toolStripMenuItem2.Tag = JsSessionOption.UseNewSession;
+      this.toolStripMenuItem2.ToolTipText = "Use this option to always run scripts in a new session.";
+      this.toolStripMenuItem2.Click += new System.EventHandler(ToolStripMenuItemClickHandler);
+      // 
       // splitter1
       // 
       this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -166,13 +201,13 @@ namespace MySql.Data.VisualStudio.Editors
       this.tabControl1.Controls.Add(this.resultsPage);
       this.tabControl1.Controls.Add(this.messagesPage);
       this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
       this.tabControl1.ImageList = this.imageList1;
       this.tabControl1.Location = new System.Drawing.Point(0, 281);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
       this.tabControl1.Size = new System.Drawing.Size(604, 185);
       this.tabControl1.TabIndex = 4;
-      this.tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
       // 
       // resultsPage
       // 
@@ -218,6 +253,12 @@ namespace MySql.Data.VisualStudio.Editors
       this.messages.Size = new System.Drawing.Size(590, 152);
       this.messages.TabIndex = 0;
       // 
+      // imageList1
+      // 
+      this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+      this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+      this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+      // 
       // codeEditor
       // 
       this.codeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -226,13 +267,6 @@ namespace MySql.Data.VisualStudio.Editors
       this.codeEditor.Name = "codeEditor";
       this.codeEditor.Size = new System.Drawing.Size(604, 246);
       this.codeEditor.TabIndex = 2;
-      // 
-      // toolStripLabelJs
-      // 
-      this.toolStripLabelJs.ForeColor = System.Drawing.Color.DodgerBlue;
-      this.toolStripLabelJs.Name = "toolStripLabelJs";
-      this.toolStripLabelJs.Size = new System.Drawing.Size(67, 22);
-      this.toolStripLabelJs.Text = "MyJs Editor";
       // 
       // MyJsEditor
       // 
@@ -273,10 +307,14 @@ namespace MySql.Data.VisualStudio.Editors
     private System.Windows.Forms.ToolStripLabel userLabel;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ToolStripLabel dbLabel;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+    private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
     private System.Windows.Forms.DataGridView resultsGrid;
     private System.Windows.Forms.Label messages;
     private System.Windows.Forms.ImageList imageList1;
     private System.Windows.Forms.ToolStripLabel toolStripLabelJs;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 
   }
 }

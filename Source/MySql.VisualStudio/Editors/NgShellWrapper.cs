@@ -38,14 +38,21 @@ namespace MySql.Data.VisualStudio.Editors
     /// Stores the value that specifies if all the statements will be executed in the same session
     /// </summary>
     private bool _keepSession;
+
     /// <summary>
     /// Shell object used to execute the queries through the shell
     /// </summary>
     ShellClient _shellClient;
+
     /// <summary>
     /// Variable to store the connection string for the wrapper.
     /// </summary>
     private string _connString;
+
+    /// <summary>
+    /// Statement used to clean the session in use
+    /// </summary>
+    private const string _cleanSession = "session.close();";
 
     /// <summary>
     /// Creates an instance of NgShellWrapper
@@ -56,8 +63,11 @@ namespace MySql.Data.VisualStudio.Editors
     {
       _connString = connectionString;
       _keepSession = keepNgSession;
-      _shellClient = new ShellClient();
-      _shellClient.MakeConnection(_connString);
+      if (keepNgSession)
+      {
+        _shellClient = new ShellClient();
+        _shellClient.MakeConnection(_connString);
+      }
     }
 
     /// <summary>
@@ -69,8 +79,11 @@ namespace MySql.Data.VisualStudio.Editors
     {
       _connString = ((MySqlConnection)connection).ToNgFormat();
       _keepSession = keepNgSession;
-      _shellClient = new ShellClient();
-      _shellClient.MakeConnection(_connString);
+      if (keepNgSession)
+      {
+        _shellClient = new ShellClient();
+        _shellClient.MakeConnection(_connString);
+      }
     }
 
     /// <summary>
@@ -85,7 +98,7 @@ namespace MySql.Data.VisualStudio.Editors
         return null;
       }
 
-      ResultSet result = ExecuteQuery(Mode.JScript, script);
+      ResultSet result = ExecuteQuery(Mode.JScript, script).First();
       TableResultSet tableResult = result as TableResultSet;
 
       if (tableResult != null)
@@ -113,18 +126,7 @@ namespace MySql.Data.VisualStudio.Editors
         return null;
       }
 
-      List<ResultSet> result = new List<ResultSet>();
-      for (int counter = 0; counter < script.Length; counter++)
-      {
-        if (string.IsNullOrEmpty(script[counter]))
-        {
-          continue;
-        }
-
-        result.Add(ExecuteQuery(Mode.JScript, script[counter]));
-      }
-
-      return result;
+      return ExecuteQuery(Mode.JScript, script);
     }
 
     /// <summary>
@@ -138,11 +140,14 @@ namespace MySql.Data.VisualStudio.Editors
       {
         return null;
       }
-      ResultSet result = ExecuteQuery(Mode.SQL, script);
+
+      ResultSet result = ExecuteQuery(Mode.SQL, script).First();
+
       if ((result as TableResultSet) == null)
       {
         ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount());
       }
+
       return result as TableResultSet;
     }
 
@@ -151,10 +156,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="mode">Mode that will be used to execute the script received</param>
     /// <param name="script">Script to execute</param>
-    /// <returns>A resultset with the data returned from the server</returns>
-    private ResultSet ExecuteQuery(Mode mode, string script)
+    /// <returns>A list of resultset with the data returned from the server</returns>
+    private List<ResultSet> ExecuteQuery(Mode mode, params string[] statements)
     {
       ExecutionResult = "";
+      List<ResultSet> result = new List<ResultSet>();
+
       if (!_keepSession)
       {
         _shellClient = new ShellClient();
@@ -162,11 +169,19 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       _shellClient.SwitchMode(mode);
-      ResultSet result = _shellClient.Execute(script);
+      foreach (string statement in statements)
+      {
+        if (string.IsNullOrEmpty(statement))
+        {
+          continue;
+        }
+
+        result.Add(_shellClient.Execute(statement));
+      }
 
       if (!_keepSession)
       {
-        _shellClient.Dispose();
+        CleanConnection();
       }
 
       return result;
@@ -208,6 +223,21 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       return new DocumentResultSet(parsedData, tableResult.GetAffectedRows(), tableResult.GetWarningCount(), tableResult.GetExecutionTime());
+    }
+
+    /// <summary>
+    /// Dispose the resources used by the current session
+    /// </summary>
+    public void CleanConnection()
+    {
+      if (_shellClient == null)
+      {
+        return;
+      }
+
+      _shellClient.Execute(_cleanSession);
+      _shellClient.Dispose();
+      _shellClient = null;
     }
   }
 

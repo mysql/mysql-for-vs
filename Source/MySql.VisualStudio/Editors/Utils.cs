@@ -857,4 +857,20 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     Server57 = 57
   }
+
+  /// <summary>
+  /// Enum used to know how the user wants to executes the statements in the JS Editor
+  /// </summary>
+  internal enum JsSessionOption
+  {
+    /// <summary>
+    /// All the statement that the user types will have the same session scope
+    /// </summary>
+    UseSameSession,
+
+    /// <summary>
+    /// All the statement that the user types will have its own session scope
+    /// </summary>
+    UseNewSession
+  }
 }
