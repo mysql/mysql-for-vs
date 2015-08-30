@@ -1382,19 +1382,22 @@
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
-        <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
+        <!-- UNCOMMENT FOR DEBUG -->
+        <!-- <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent> -->
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
-        <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
+        <!-- UNCOMMENT FOR DEBUG -->
+        <!-- <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent> -->
       </PropertyGroup>
     </When>
     <When Condition="'$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
-        <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent>
+        <!-- UNCOMMENT FOR DEBUG -->
+        <!-- <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\1.0.0"</PostBuildEvent> -->
       </PropertyGroup>
     </When>
   </Choose>
