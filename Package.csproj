@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="Installer\Binary\MyTasks.dll" TaskName="GetVersion" />
+  <UsingTask AssemblyFile="Installer\Binary\MyTasks.dll" TaskName="ReplaceText" />
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Package</RootNamespace>
+    <AssemblyName>Package</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Choose>
+    <When Condition=" '$(PackageCommercial)' == 'y' ">
+	  <PropertyGroup>
+        <BuildInstallerCommercial>BuildInstallerCommercial;</BuildInstallerCommercial>
+        <PackageCleanCommercial>PackageCleanCommercial;</PackageCleanCommercial>
+        <PackageInstallCommercial>PackageInstallCommercial;</PackageInstallCommercial>
+        <PackageSigningCommercial>PackageSigningCommercial;</PackageSigningCommercial>
+        <PackageSourceCommercial>PackageSourceCommercial;</PackageSourceCommercial>
+        <PackageNoInstallCommercial>PackageNoInstallCommercial;</PackageNoInstallCommercial>
+	  </PropertyGroup>
+    </When>
+	<Otherwise>
+	  <PropertyGroup>
+	    <BuildInstallerCommercial></BuildInstallerCommercial>
+        <PackageCleanCommercial></PackageCleanCommercial>
+		<PackageInstallCommercial></PackageInstallCommercial>
+		<PackageSigningCommercial></PackageSigningCommercial>
+		<PackageSourceCommercial></PackageSourceCommercial>
+		<PackageNoInstallCommercial></PackageNoInstallCommercial>
+      </PropertyGroup>
+	</Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition=" '$(Signing)' == 'y' ">
+      <PropertyGroup>
+        <PackageSigning>PackageSigning;</PackageSigning>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <PackageSigning></PackageSigning>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Source\MySql.VisualStudio\Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- Targets we care about -->
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
+    <CallTarget Targets="Build40;Build45;Build451;BuildInstaller;GetPackageVersion;PackageClean;$(PackageSigning)PackageInstall;PackageNoInstall;PackageSource" />
+    <RemoveDir Directories="**/obj; **/bin" />
+  </Target>
+  <!-- Build Source Targets -->
+  <Target Name="Build40" Condition=" '$(VisualStudioVersion)' == '10.0' Or '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' ">
+    <Message Text="Building VisualStudioVersion=10.0" Importance="high" />
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=10.0" />
+  </Target>
+  <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' ">
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=11.0" />
+  </Target>
+  <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' ">
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=12.0" />
+  </Target>
+  <!-- Package Installer Build Targets -->
+  <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
+  <Target Name="BuildInstallerGPL">
+    <MSBuild Projects="Installer/installer.wixproj" Properties="Configuration=GPL;Platform=x86" />
+  </Target>
+  <Target Name="BuildInstallerCommercial">
+    <MSBuild Projects="Installer/installer.wixproj" Properties="Configuration=Commercial;Platform=x86" />
+  </Target>
+  <!-- Get product version -->
+  <Target Name="GetPackageVersion">
+    <GetVersion Assembly="Source\MySql.VisualStudio\bin\v4.0\Release\MySql.VisualStudio.dll" Format="{0}.{1}.{2}">
+      <Output TaskParameter="AsString" PropertyName="Version" />
+    </GetVersion>
+  </Target>
+  <!-- Package Clean Targets -->
+  <Target Name="PackageClean" DependsOnTargets="PackageCleanGPL;$(PackageCleanCommercial)" />
+  <Target Name="PackageCleanGPL">
+    <Delete Files="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix).msi" TreatErrorsAsWarnings="true" />
+    <Delete Files="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" TreatErrorsAsWarnings="true" />
+    <Delete Files="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip" TreatErrorsAsWarnings="true" />
+    <RemoveDir Directories="bin/GPL" ContinueOnError="true" />
+    <MakeDir Directories="bin/GPL" ContinueOnError="true" />
+  </Target>
+  <Target Name="PackageCleanCommercial">
+    <Delete Files="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix).msi" TreatErrorsAsWarnings="true" />
+    <Delete Files="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" TreatErrorsAsWarnings="true" />
+    <Delete Files="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip" TreatErrorsAsWarnings="true" />
+    <RemoveDir Directories="bin/Commercial" ContinueOnError="true" />
+    <MakeDir Directories="bin/Commercial" ContinueOnError="true" />
+  </Target>
+  <!-- Signing Targets -->
+  <Target Name="PackageSigning" DependsOnTargets="PackageSigningGPL;$(PackageSigningCommercial)" />
+  <Target Name="PackageSigningGPL">
+    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\files\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/GPL/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/GPL/signed&quot;" ContinueOnError="false" />
+    <Copy SourceFiles="Installer/bin/GPL/signed/MySql.VisualStudio.Plugin.msi" DestinationFiles="Installer/bin/GPL/MySql.VisualStudio.Plugin.msi" />
+  </Target>
+  <Target Name="PackageSigningCommercial">
+    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\files\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/Commercial/signed&quot;" ContinueOnError="false" />
+    <Copy SourceFiles="Installer/bin/Commercial/signed/MySql.VisualStudio.Plugin.msi" DestinationFiles="Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi" />
+  </Target>
+  <!-- MSI Targets -->
+  <Target Name="PackageInstall" DependsOnTargets="PackageInstallGPL;$(PackageInstallCommercial)" />
+  <Target Name="PackageInstallGPL">
+    <Copy SourceFiles="Installer/bin/GPL/MySql.VisualStudio.Plugin.msi" DestinationFiles="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix).msi" />
+  </Target>
+  <Target Name="PackageInstallCommercial">
+    <Copy SourceFiles="Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi" DestinationFiles="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix).msi" />
+  </Target>
+  <!-- No Install Targets -->
+  <Target Name="PackageNoInstall" DependsOnTargets="PackageNoInstallPrepare;PackageNoInstallGPL;$(PackageNoInstallCommercial)" />
+  <Target Name="PackageNoInstallPrepare">
+    <ItemGroup>
+      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
+      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
+      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
+      <V4Assemblies Include="Source\MySql.VisualStudio\bin\v4.0\release\mysql.visualstudio.dll" />
+      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\Antlr3.Runtime.dll" />
+      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.dll" />
+      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Parser.dll" />
+      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <V45Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
+      <V45Assemblies Include="Source\MySql.VisualStudio\bin\v4.5\release\mysql.visualstudio.dll" />
+      <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5\release\Antlr3.Runtime.dll" />
+      <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5\release\MySql.Debugger.dll" />
+      <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5\release\MySql.Parser.dll" />
+      <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5\release\MySql.Debugger.VisualStudio.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <V451Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
+      <V451Assemblies Include="Source\MySql.VisualStudio\bin\v4.5.1\release\mysql.visualstudio.dll" />
+      <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\Antlr3.Runtime.dll" />
+      <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.dll" />
+      <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll" />
+      <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <ReleaseFiles Include="Release Notes.txt" />
+      <ReleaseFiles Include="CHANGES" />
+    </ItemGroup>
+    <ItemGroup>
+      <DocFiles Include="Documentation\Output\MySqlForVisualStudio.chm" />
+    </ItemGroup>
+    <ItemGroup>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-us-secure-hash.html" />
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-zlib.html" />
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-zlib-net.html" />
+    </ItemGroup>
+	<RemoveDir Directories="tmp" ContinueOnError="true" />
+    <MakeDir Directories="tmp" />
+    <Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="tmp" />
+    <Copy SourceFiles="@(V4Assemblies)" DestinationFolder="tmp\v4" />
+    <Copy SourceFiles="@(V45Assemblies)" DestinationFolder="tmp\v45" />
+    <Copy SourceFiles="@(V451Assemblies)" DestinationFolder="tmp\v451" />
+    <Copy SourceFiles="@(DocFiles)" DestinationFolder="tmp/Documentation" />
+    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="tmp/Documentation/Licenses for Third-Party Components" />
+  </Target>
+  <Target Name="PackageNoInstallGPL">
+    <ItemGroup>
+      <OtherGplFiles Include="COPYING" />
+      <OtherGplFiles Include="README" />
+    </ItemGroup>
+	<Copy SourceFiles="@(OtherGplFiles)" DestinationFolder="tmp" />
+    <ItemGroup>
+      <ZipFilesGPL Include="tmp/**" />
+    </ItemGroup>
+	<Zip ZipFileName="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip" Files="@(ZipFilesGPL)" workingDirectory="tmp" />
+  </Target>
+  <Target Name="PackageNoInstallCommercial">
+	<ItemGroup>
+      <OtherCommercialFiles Include="README-Commercial" />
+      <OtherCommercialFiles Include="License.MYSQL" />
+    </ItemGroup>
+	<Delete Files="tmp/COPYING" TreatErrorsAsWarnings="true" />
+	<Delete Files="tmp/README" TreatErrorsAsWarnings="true" />
+	<Copy SourceFiles="@(OtherCommercialFiles)" DestinationFolder="tmp" />
+    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
+	<ItemGroup>
+      <ZipFilesCommercial Include="tmp/**" />
+    </ItemGroup>
+	<Zip ZipFileName="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip" Files="@(ZipFilesCommercial)" workingDirectory="tmp" />
+  </Target>
+  <!-- Source Targets -->
+  <Target Name="PackageSource" DependsOnTargets="PackageSourcePrepare;PackageSourceGPL;$(PackageSourceCommercial)PackageSourceClean" />
+  <Target Name="PackageSourcePrepare">
+    <RemoveDir Directories="tmp" ContinueOnError="true" />
+    <MakeDir Directories="tmp" />
+	<ItemGroup>
+      <SourceCodeFiles Include="**/**" Exclude="**/tmp/**;**/bin/**;**/obj/**;**/packages/**;**/.svn/**;**/output/**;**/user;**/debug/**;**/release/**;**/*.suo;**/cnet.snk;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;**/installer/**;**/PackageLoadKey.txt;**/*.cache;**/*.proj;**/COPYING;**/*.bak;**/*.user;**/*.SourceAnalysis;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;**/.bzr-mysql/**;**/UpgradeLog*.*;**/*.bzrignore;**/*.~??" />
+    </ItemGroup>
+	<Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="tmp/%(RecursiveDir)" />
+  </Target>
+  <Target Name="PackageSourceGPL">
+	<ItemGroup>
+      <FilesToZipGPL Include="tmp/**" Exclude="tmp/Readme-Commercial;tmp/License.MYSQL" />
+    </ItemGroup>
+	<Zip ZipFileName="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" Files="@(FilesToZipGPL)" WorkingDirectory="tmp" />
+  </Target>
+  <Target Name="PackageSourceCommercial">
+    <Delete Files="tmp/README" />
+    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
+	<ItemGroup>
+      <ReplaceGplBannerFiles Include="tmp/**/*.cs" />
+    </ItemGroup>
+	<ReplaceText HeaderFile="Installer\GPL-Banner.txt" NewHeaderFile="Installer\Commercial-Banner.txt" Files="@(ReplaceGplBannerFiles)" />
+	<ItemGroup>
+      <FilesToZipCommercial Include="tmp/**" Exclude="tmp/COPYING" />
+    </ItemGroup>
+	<Zip ZipFileName="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" Files="@(FilesToZipCommercial)" WorkingDirectory="tmp" />
+  </Target>
+  <Target Name="PackageSourceClean">
+    <RemoveDir Directories="tmp" ContinueOnError="true" />
+  </Target>
+</Project>
