@@ -8,7 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5c97df05-1229-4b30-9711-789d0d6ff81b}</ProjectGuid>
-    <SHFBSchemaVersion>1.9.5.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>1.9.9.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
          Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
@@ -38,7 +38,7 @@
     <CleanIntermediates>False</CleanIntermediates>
     <BuildLogFile>
     </BuildLogFile>
-    <HelpFileFormat>HtmlHelp1, MSHelp2, MSHelpViewer</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1, MSHelpViewer</HelpFileFormat>
     <FrameworkVersion>.NET Framework 4.0</FrameworkVersion>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Reference</RootNamespaceTitle>
@@ -61,6 +61,11 @@
       </PlugInConfig>
     </PlugInConfigurations>
     <VendorName>Oracle</VendorName>
+    <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
+    <IndentHtml>False</IndentHtml>
+    <KeepLogFile>True</KeepLogFile>
+    <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
+    <CppCommentsFixup>False</CppCommentsFixup>
   </PropertyGroup>
   <!-- There are no properties for these two groups but they need to appear in
        order for Visual Studio to perform the build. -->
@@ -73,8 +78,8 @@
     <Folder Include="media\" />
     <Folder Include="Users Guide\" />
   </ItemGroup>
-  <ItemGroup>    
-    <None Include="Users Guide\debugging-sp-and-functions.aml" />    
+  <ItemGroup>
+    <None Include="Users Guide\debugging-sp-and-functions.aml" />
     <None Include="Users Guide\connector-net-install.aml" />
     <None Include="Users Guide\connector-net-versions.aml" />
     <None Include="Users Guide\connector-net-support.aml" />
