@@ -1,4 +1,4 @@
-﻿// Copyright © 2008 - 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -28,11 +28,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MySQL for Visual Studio")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("MySQL for Visual Studio provides access to MySQL objects and data without forcing your developers to leave Visual Studio. Designed and developed as a Visual Studio package, MySQL for Visual Studio integrates directly into Server Explorer providing a seamless experience for setting up new connections and working with database objects.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("MySQL for Visual Studio")]
-[assembly: AssemblyCopyright("Copyright © 2008 - 2015, Oracle and/or its affiliates. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
