@@ -46,6 +46,16 @@ namespace MySql.Data.VisualStudio.Editors
     internal MyJsEditorPane Pane { get; private set; }
 
     /// <summary>
+    /// Variable to store the value to know if the user wants to execute the statements in the same session or not
+    /// </summary>
+    private JsSessionOption _sessionOption = JsSessionOption.UseSameSession;
+
+    /// <summary>
+    /// Variable used to executes the script
+    /// </summary>
+    private NgShellWrapper _ngWrapper;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="MyJsEditor"/> class.
     /// </summary>
     /// <exception cref="System.Exception">MySql Data Provider is not correctly registered</exception>
@@ -62,17 +72,7 @@ namespace MySql.Data.VisualStudio.Editors
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
     }
-
-    /// <summary>
-    /// Variable to store the value to know if the user wants to execute the statements in the same session or not
-    /// </summary>
-    private JsSessionOption _sessionOption = JsSessionOption.UseSameSession;
-
-    /// <summary>
-    /// Variable used to executes the script
-    /// </summary>
-    private NgShellWrapper _ngWrapper;
-
+    
     /// <summary>
     /// Responds to the event when Visual Studio theme changed.
     /// </summary>
