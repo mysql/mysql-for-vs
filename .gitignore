@@ -20,3 +20,4 @@ VS.targets
 **/*.sln.cache
 *.diff
 *.py
+**/ProjectTemplatesZipFolder
