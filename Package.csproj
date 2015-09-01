@@ -32,6 +32,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <Choose>
+    <When Condition=" '$(NoPackage)' == 'y' ">
+	  <PropertyGroup>
+        <GetPackageVersion></GetPackageVersion>
+        <PackageClean></PackageClean>
+        <PackageInstall></PackageInstall>
+        <PackageNoInstall></PackageNoInstall>
+        <PackageSource></PackageSource>
+	  </PropertyGroup>
+    </When>
+	<Otherwise>
+	  <PropertyGroup>
+        <GetPackageVersion>GetPackageVersion;</GetPackageVersion>
+        <PackageClean>PackageClean;</PackageClean>
+        <PackageInstall>PackageInstall;</PackageInstall>
+        <PackageNoInstall>PackageNoInstall:</PackageNoInstall>
+        <PackageSource>PackageSource</PackageSource>
+	  </PropertyGroup>
+	</Otherwise>
+  </Choose>
+  <Choose>
     <When Condition=" '$(PackageCommercial)' == 'y' ">
 	  <PropertyGroup>
         <BuildInstallerCommercial>BuildInstallerCommercial;</BuildInstallerCommercial>
@@ -54,7 +74,7 @@
 	</Otherwise>
   </Choose>
   <Choose>
-    <When Condition=" '$(Signing)' == 'y' ">
+    <When Condition=" '$(Signing)' == 'y' AND '$(NoPackage)' != 'y' ">
       <PropertyGroup>
         <PackageSigning>PackageSigning;</PackageSigning>
       </PropertyGroup>
@@ -83,7 +103,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Targets we care about -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
-    <CallTarget Targets="Build40;Build45;Build451;BuildInstaller;GetPackageVersion;PackageClean;$(PackageSigning)PackageInstall;PackageNoInstall;PackageSource" />
+    <CallTarget Targets="Build40;Build45;Build451;BuildInstaller;$(GetPackageVersion)$(PackageClean)$(PackageSigning)$(PackageInstall)$(PackageNoInstall)$(PackageSource)" />
     <RemoveDir Directories="**/obj; **/bin" />
   </Target>
   <!-- Build Source Targets -->
