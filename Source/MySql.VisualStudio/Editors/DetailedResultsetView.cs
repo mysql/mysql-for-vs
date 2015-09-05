@@ -105,7 +105,7 @@ namespace MySql.Data.VisualStudio.Editors
     public DetailedResultsetView()
     {
       InitializeComponent();
-#if VS_SDK_2013
+#if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       Controls.SetColors();
     }
