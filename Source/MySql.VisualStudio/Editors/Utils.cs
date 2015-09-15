@@ -491,6 +491,12 @@ namespace MySql.Data.VisualStudio.Editors
             continue;
           }
 
+          if (control is ToolStripSplitButton)
+          {
+            ((ToolStripSplitButton)control).SetColor();
+            continue;
+          }
+
           if (control is TabControl)
           {
             ((TabControl)control).SetColor();
@@ -573,7 +579,7 @@ namespace MySql.Data.VisualStudio.Editors
       foreach (var item in control.Items)
       {
         var itemType = item.GetType();
-        if (itemType != typeof(ToolStripLabel) || itemType == typeof(ToolStripButton))
+        if (itemType != typeof(ToolStripLabel) && itemType != typeof(ToolStripButton) && itemType != typeof(ToolStripSplitButton))
         {
           continue;
         }
@@ -581,11 +587,16 @@ namespace MySql.Data.VisualStudio.Editors
         if (itemType == typeof(ToolStripLabel))
         {
           ((ToolStripLabel)item).SetColor();
-          continue;
         }
+
         if (itemType == typeof(ToolStripButton))
         {
           ((ToolStripButton)item).SetColor();
+        }
+
+        if (itemType == typeof(ToolStripSplitButton))
+        {
+          ((ToolStripSplitButton)item).SetColor();
         }
       }
     }
@@ -604,6 +615,15 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="control">The ToolStripButton control to be updated.</param>
     public static void SetColor(this ToolStripButton control)
+    {
+      control.ForeColor = FontColor;
+    }
+
+    /// <summary>
+    /// Sets the color of the ToolStripSplitButton control to match the current visual studio theme selected.
+    /// </summary>
+    /// <param name="control">The ToolStripSplitButton control to be updated.</param>
+    public static void SetColor(this ToolStripSplitButton control)
     {
       control.ForeColor = FontColor;
     }
