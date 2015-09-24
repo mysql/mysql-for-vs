@@ -82,9 +82,6 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
         </Reference>
-        <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-        </Reference>
         <Reference Include="MySql.Data">
           <HintPath>..\..\Dependencies\v2.0\Release\MySql.Data.dll</HintPath>
         </Reference>

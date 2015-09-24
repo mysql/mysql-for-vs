@@ -418,53 +418,37 @@
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.3.5.resx</DependentUpon>
+          <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
     </When>
     <When Condition="'$(Framework)' == '4.0'">
       <ItemGroup>
-        <Compile Include="Properties\Resources.4.x.Designer.cs">
+        <Compile Include="Properties\Resources.Designer.cs">
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
-          <DependentUpon>Resources.4.x.resx</DependentUpon>
+          <DependentUpon>Resources.resx</DependentUpon>
+          <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
     </When>
     <When Condition="'$(Framework)' == '4.5'">
       <ItemGroup>
-        <Compile Include="Properties\Resources.4.x.Designer.cs">
+        <Compile Include="Properties\Resources.Designer.cs">
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
-          <DependentUpon>Resources.4.x.resx</DependentUpon>
+          <DependentUpon>Resources.resx</DependentUpon>
+          <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
-    </When>
-    <When Condition="'$(Framework)' == '4.5.1'">
-      <ItemGroup>
-        <Compile Include="Properties\Resources.4.x.Designer.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>Resources.4.x.resx</DependentUpon>
-        </Compile>
-      </ItemGroup>
-    </When>
+    </When>  
   </Choose>
-  <Choose>
-    <When Condition="'$(Framework)' == '4.5.1'">
-      <ItemGroup>
-        <EmbeddedResource Include="Properties\Resources.4.x.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>Resources.4.x.Designer.cs</LastGenOutput>
-          <MergeWithCTO>true</MergeWithCTO>
-          <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
-        </EmbeddedResource>
-      </ItemGroup>
-    </When>
+  <Choose>   
     <When Condition="'$(Framework)' == '4.5'">
       <ItemGroup>
-        <EmbeddedResource Include="Properties\Resources.4.x.resx">
+        <EmbeddedResource Include="Properties\Resources.resx">
           <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>Resources.4.x.Designer.cs</LastGenOutput>
+          <LastGenOutput>Resources.Designer.cs</LastGenOutput>
           <MergeWithCTO>true</MergeWithCTO>
           <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
           <SubType>Designer</SubType>
@@ -473,12 +457,12 @@
     </When>
     <When Condition="'$(Framework)' == '4.0'">
       <ItemGroup>
-        <EmbeddedResource Include="Properties\Resources.4.x.resx">
+        <EmbeddedResource Include="Properties\Resources.resx">
           <Generator>ResXFileCodeGenerator</Generator>
           <MergeWithCTO>true</MergeWithCTO>
           <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
           <SubType>Designer</SubType>
-          <LastGenOutput>Resources.4.x.Designer.cs</LastGenOutput>
+          <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
       </ItemGroup>
     </When>
@@ -613,11 +597,11 @@
     <Compile Include="Editors\GridResultSet.Designer.cs">
       <DependentUpon>GridResultSet.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\JSResultsetView.cs">
+    <Compile Include="Editors\MySqlHybridScriptResultsetView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editors\JSResultsetView.Designer.cs">
-      <DependentUpon>JSResultsetView.cs</DependentUpon>
+    <Compile Include="Editors\MySqlHybridScriptResultsetView.Designer.cs">
+      <DependentUpon>MySqlHybridScriptResultsetView.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\MySqlTreeView.cs">
       <SubType>UserControl</SubType>
@@ -661,13 +645,13 @@
     <Compile Include="Editors\GenericEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editors\MyJsEditor.cs">
+    <Compile Include="Editors\MySqlHybridScriptEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editors\MyJsEditor.Designer.cs">
-      <DependentUpon>MyJsEditor.cs</DependentUpon>
+    <Compile Include="Editors\MySqlHybridScriptEditor.Designer.cs">
+      <DependentUpon>MySqlHybridScriptEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\MyJsEditorPane.cs" />
+    <Compile Include="Editors\MySqlHybridScriptEditorPane.cs" />
     <Compile Include="Editors\VSCodeEditorUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -787,6 +771,12 @@
     <Compile Include="Nodes\TableNode.cs">
     </Compile>
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <MergeWithCTO>true</MergeWithCTO>
+    </Compile>
     <Compile Include="Properties\VersionInfo.cs">
     </Compile>
     <Compile Include="SchemaComparer\Comparer.cs">
@@ -933,8 +923,8 @@
     <EmbeddedResource Include="Editors\GridResultSet.resx">
       <DependentUpon>GridResultSet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\JSResultsetView.resx">
-      <DependentUpon>JSResultsetView.cs</DependentUpon>
+    <EmbeddedResource Include="Editors\MySqlHybridScriptResultsetView.resx">
+      <DependentUpon>MySqlHybridScriptResultsetView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\MySqlTreeView.resx">
       <DependentUpon>MySqlTreeView.cs</DependentUpon>
@@ -954,6 +944,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\VerticalMenu.resx">
       <DependentUpon>VerticalMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <MergeWithCTO>true</MergeWithCTO>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VsPkg.resx">
+      <DependentUpon>VsPkg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.resx">
       <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
@@ -1126,6 +1125,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WizardNewProjectDialog.resx">
       <DependentUpon>WizardNewProjectDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WizardPage.resx">
       <DependentUpon>WizardPage.cs</DependentUpon>
@@ -1143,14 +1143,23 @@
     <None Include="Resources\sql_editor_banner.bmp">
     </None>
     <None Include="Resources\page-title-mysql-export.png" />
-    <Compile Include="Resources\402.ico">
+    <Content Include="Resources\402.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
+    </Content>
+    <Content Include="Resources\401.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\402.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\403.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\403.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Background.png" />
     <Content Include="Resources\Banner.png" />
-    <None Include="Resources\listViewItem.png" />
-    <None Include="Resources\collapse_item.png" />
-    <None Include="Resources\expand_item.png" />
     <None Include="Resources\JS_Datatype_Array.png" />
     <None Include="Resources\JS_Datatype_Bin.png" />
     <None Include="Resources\JS_Datatype_Bool.png" />
@@ -1165,10 +1174,8 @@
     <None Include="Resources\mysql_project_wizard.png" />
     <Content Include="Resources\output_type-executionplan.png" />
     <Content Include="Resources\output_type-fieldtypes.png" />
-    <Content Include="Resources\output_type-item_selected.png" />
     <Content Include="Resources\output_type-querystats.png" />
     <Content Include="Resources\output_type-resultset.png" />
-    <None Include="Resources\selectedItem.Image.png" />
     <None Include="Resources\selected_item.png" />
     <None Include="Resources\output_type_json.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
@@ -1186,9 +1193,9 @@
     <Content Include="Templates\MySqlDataProviderPackage.vsdir">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Resources\401.ico">
+    <Content Include="Resources\401.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
+    </Content>
     <Content Include="Resources\icon.bmp">
     </Content>
     <Content Include="Resources\Package.ico">
@@ -1196,6 +1203,9 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\MyPy Script.mypy">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\MyJs Script.myjs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

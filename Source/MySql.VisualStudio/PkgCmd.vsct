@@ -363,6 +363,15 @@
           <ButtonText>&amp;JavaScript</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewPythonscript" type="Button">
+        <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidNewPythonscript</CommandName>
+          <ButtonText>&amp;Python</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
@@ -579,6 +588,7 @@
       <IDSymbol name="cmdidOpenUtilitiesPrompt" value="513"/>
       <IDSymbol name="cmdidNewMySQLScript" value="13609"/>
       <IDSymbol name="cmdidNewJavascript" value="13610"/>
+      <IDSymbol name="cmdidNewPythonscript" value="13611"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>
       <IDSymbol name="NewScriptSubMenu" value="0x1100"/>
       <IDSymbol name="NewScriptSubMenuGroup" value="0x1150"/>

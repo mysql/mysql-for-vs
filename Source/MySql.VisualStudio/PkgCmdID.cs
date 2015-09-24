@@ -64,6 +64,7 @@ namespace MySql.Data.VisualStudio
     public const uint NewScriptSubMenu = 13611;
     public const uint cmdidNewMySQLScript = 13609;
     public const uint cmdidNewJavascript = 13610;
+    public const uint cmdidNewPythonscript = 13611;
 
     public const uint cmdidAddConnection = 0x301;
     public const uint cmdidMRUList = 0x0401;

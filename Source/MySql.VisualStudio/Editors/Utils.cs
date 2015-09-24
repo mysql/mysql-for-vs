@@ -881,7 +881,7 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// Enum used to know how the user wants to executes the statements in the JS Editor
   /// </summary>
-  internal enum JsSessionOption
+  internal enum SessionOption
   {
     /// <summary>
     /// All the statement that the user types will have the same session scope
@@ -892,5 +892,15 @@ namespace MySql.Data.VisualStudio.Editors
     /// All the statement that the user types will have its own session scope
     /// </summary>
     UseNewSession
+  }
+
+  /// <summary>
+  /// Defines a series of script file types.
+  /// </summary>
+  public enum ScriptType
+  {
+    Sql,
+    JavaScript,
+    Python
   }
 }

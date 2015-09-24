@@ -21,10 +21,7 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using MySqlX.Shell;
 using Xunit;
 using MySql.Data.MySqlClient;
@@ -620,7 +617,7 @@ namespace MySql.VisualStudio.Tests
         script.AppendLine(_deleteRecordSingleLine);
 
         var tokenizer = new MyJsTokenizer(script.ToString());
-        xshell.ExecuteJavaScript(tokenizer.BreakIntoStatements().ToArray());
+        xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray());
 
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
 
@@ -675,7 +672,7 @@ namespace MySql.VisualStudio.Tests
         script.AppendLine(_deleteRecordCmd3);
 
         var tokenizer = new MyJsTokenizer(script.ToString());
-        xshell.ExecuteJavaScript(tokenizer.BreakIntoStatements().ToArray());
+        xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray());
 
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
 

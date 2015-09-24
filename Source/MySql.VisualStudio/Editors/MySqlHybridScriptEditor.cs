@@ -23,7 +23,6 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.PlatformUI;
@@ -36,19 +35,19 @@ using MySqlX.Shell;
 namespace MySql.Data.VisualStudio.Editors
 {
   /// <summary>
-  /// This class will handle the logic for the MyJs Files Editor.
+  /// This class will handle the logic for the Script Files Editor.
   /// </summary>
-  internal partial class MyJsEditor : GenericEditor
+  internal partial class MySqlHybridScriptEditor : GenericEditor
   {
     /// <summary>
-    /// Gets the pane for the current editor. In this case, the pane is from type MyJsEditorPane.
+    /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
     /// </summary>
-    internal MyJsEditorPane Pane { get; private set; }
+    internal MySqlHybridScriptEditorPane Pane { get; private set; }
 
     /// <summary>
     /// Variable to store the value to know if the user wants to execute the statements in the same session or not
     /// </summary>
-    private JsSessionOption _sessionOption = JsSessionOption.UseSameSession;
+    private SessionOption _sessionOption = SessionOption.UseSameSession;
 
     /// <summary>
     /// Variable used to executes the script
@@ -56,10 +55,15 @@ namespace MySql.Data.VisualStudio.Editors
     private NgShellWrapper _ngWrapper;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MyJsEditor"/> class.
+    /// The script type.
+    /// </summary>
+    public ScriptType ScriptType;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
     /// </summary>
     /// <exception cref="System.Exception">MySql Data Provider is not correctly registered</exception>
-    public MyJsEditor()
+    public MySqlHybridScriptEditor()
     {
       InitializeComponent();
       factory = MySqlClientFactory.Instance;
@@ -68,6 +72,7 @@ namespace MySql.Data.VisualStudio.Editors
       tabControl1.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       tabControl1.Visible = false;
+      ScriptType = ScriptType.JavaScript;
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -93,13 +98,15 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MyJsEditor"/> class.
+    /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
     /// </summary>
     /// <param name="sp">The service provider.</param>
     /// <param name="pane">The pane.</param>
-    internal MyJsEditor(ServiceProvider sp, MyJsEditorPane pane)
+    /// <param name="scriptType">Indicates the script type.</param>
+    internal MySqlHybridScriptEditor(ServiceProvider sp, MySqlHybridScriptEditorPane pane, ScriptType scriptType = ScriptType.JavaScript)
       : this()
     {
+      ScriptType = scriptType;
       Pane = pane;
       serviceProvider = sp;
       codeEditor.Init(sp, this);
@@ -125,7 +132,17 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>The string with the file name and extensions for the 'Save as' dialog.</returns>
     protected override string GetFileFormatList()
     {
-      return "MyJs Script Files (*.myjs)\n*.myjs\n\n";
+      switch (ScriptType)
+      {
+        case ScriptType.Sql:
+          return "MySql Script Files (*.mysql)\n*.mysql\n\n";
+        case ScriptType.JavaScript:
+          return "MyJs Script Files (*.myjs)\n*.myjs\n\n";
+        case ScriptType.Python:
+          return "MyPy Script Files (*.mypy)\n*.mypy\n\n";
+        default:
+          return "MyJs Script Files (*.myjs)\n*.myjs\n\n";
+      }
     }
 
     /// <summary>
@@ -208,13 +225,13 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void runJsButton_Click(object sender, EventArgs e)
+    private void runScriptButton_Click(object sender, EventArgs e)
     {
-      string js = codeEditor.Text.Trim();
+      string script = codeEditor.Text.Trim();
       tabControl1.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       tabControl1.Visible = false;
-      ExecuteScript(js);
+      ExecuteScript(script);
       StoreCurrentDatabase();
     }
 
@@ -234,10 +251,10 @@ Check that the server is running, the database exist and the user credentials ar
     /// <summary>
     /// Executes the script typed by the user and create a tab page for each statement that returns a resultset from the database otherwise write statement execution info to the output window
     /// </summary>
-    /// <param name="js">Script to execute</param>
-    private void ExecuteScript(string js)
+    /// <param name="script">Script to execute</param>
+    private void ExecuteScript(string script)
     {
-      if (string.IsNullOrEmpty(js))
+      if (string.IsNullOrEmpty(script))
       {
         return;
       }
@@ -246,15 +263,15 @@ Check that the server is running, the database exist and the user credentials ar
       {
         switch (_sessionOption)
         {
-          case JsSessionOption.UseSameSession:
+          case SessionOption.UseSameSession:
             _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
             break;
-          case JsSessionOption.UseNewSession:
+          case SessionOption.UseNewSession:
             _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), false);
             break;
         }
 
-        List<ResultSet> results = _ngWrapper.ExecuteJavaScript(js.BreakJavaScriptStatements().ToArray());
+        List<ResultSet> results = _ngWrapper.ExecuteScript(script.BreakJavaScriptStatements().ToArray(), ScriptType);
         if (results == null)
         {
           return;
@@ -305,7 +322,7 @@ Check that the server is running, the database exist and the user credentials ar
       }
 
       TabPage newResPage = Utils.CreateResultPage(resultNumber);
-      JSResultsetView resultViews = new JSResultsetView();
+      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
       resultViews.Dock = DockStyle.Fill;
       resultViews.LoadData(data);
       newResPage.Controls.Add(resultViews);
@@ -329,7 +346,7 @@ Check that the server is running, the database exist and the user credentials ar
     private void UpdateButtons()
     {
       bool connected = Connection.State == ConnectionState.Open;
-      runJsButton.Enabled = connected;
+      runScriptButton.Enabled = connected;
       disconnectButton.Enabled = connected;
       connectButton.Enabled = !connected;
       serverLabel.Text = String.Format("Server: {0}",
@@ -350,7 +367,7 @@ Check that the server is running, the database exist and the user credentials ar
     private void ToolStripMenuItemClickHandler(object sender, EventArgs e)
     {
       ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
-      _sessionOption = (JsSessionOption)clickedItem.Tag;
+      _sessionOption = (SessionOption)clickedItem.Tag;
 
       if (_ngWrapper != null)
       {
@@ -358,7 +375,7 @@ Check that the server is running, the database exist and the user credentials ar
         _ngWrapper = null;
       }
 
-      foreach (ToolStripMenuItem item in toolStripSplitButton1.DropDownItems)
+      foreach (ToolStripMenuItem item in toolStripSplitButton.DropDownItems)
       {
         item.Checked = item.Name == clickedItem.Name;
       }

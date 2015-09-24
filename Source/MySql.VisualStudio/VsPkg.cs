@@ -81,6 +81,11 @@ namespace MySql.Data.VisualStudio
       TemplateDir = @"..\..\Templates",
       NameResourceID = 114,
       DefaultName = "MySQL Javascript Editor")]
+  [ProvideEditorExtension(typeof(SqlEditorFactory), ".mypy", 32,
+      ProjectGuid = "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}",
+      TemplateDir = @"..\..\Templates",
+      NameResourceID = 115,
+      DefaultName = "MySQL Python Editor")]
   [ProvideEditorLogicalView(typeof(SqlEditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
   [ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
   // In order be loaded inside Visual Studio in a machine that has not the VS SDK installed,
@@ -112,7 +117,7 @@ namespace MySql.Data.VisualStudio
     /// <summary>
     /// The Python extension
     /// </summary>
-    public const string PYTHON_EXTENSION = ".py";
+    public const string PYTHON_EXTENSION = ".mypy";
 
     /// <summary>
     /// Default constructor of the package.
@@ -188,6 +193,11 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdMenuNewJavascript = new OleMenuCommand(NewJavascriptCallback, cmdNewJavascript);
         cmdMenuNewJavascript.BeforeQueryStatus += cmdMenuNewJavascript_BeforeQueryStatus;
         mcs.AddCommand(cmdMenuNewJavascript);
+
+        CommandID cmdNewPythonScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidNewPythonscript);
+        OleMenuCommand cmdMenuNewPythonscript = new OleMenuCommand(NewPythonScriptCallback, cmdNewPythonScript);
+        cmdMenuNewPythonscript.BeforeQueryStatus += cmdMenuNewPythonScript_BeforeQueryStatus;
+        mcs.AddCommand(cmdMenuNewPythonscript);
 
         CommandID menuGenDbScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
         OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
@@ -339,6 +349,61 @@ namespace MySql.Data.VisualStudio
       newScriptbtn.Visible = newScriptbtn.Enabled = GetConnection(ConnectionName) != null;
     }
 
+    /// <summary>
+    /// Handles the BeforeQueryStatus event of the cmdMenuNewPythonScript control.
+    /// Hides the option from servers that do not support the X-Protocol.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    private void cmdMenuNewPythonScript_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand newScriptbtn = sender as OleMenuCommand;
+      if (newScriptbtn == null)
+      {
+        return;
+      }
+
+      EnvDTE80.DTE2 applicationObject = GetDTE2();
+      UIHierarchy uih = applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
+      bool shownewScriptbtn = false;
+      if (selectedItems != null)
+      {
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      }
+
+      var connection = GetConnection(ConnectionName);
+      int version = 0;
+      if (connection != null && connection.Connection != null)
+      {
+        MySqlConnection currentConnection = (MySqlConnection)connection.Connection.GetLockedProviderObject();
+        if (currentConnection.ServerVersion != null)
+        {
+          Version serverVer = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
+          version = (serverVer.Major * 10) + serverVer.Minor;
+          shownewScriptbtn = version > 57 || (version == 57 && serverVer.Build >= 9);
+        }
+      }
+
+      newScriptbtn.Visible = newScriptbtn.Enabled = shownewScriptbtn;
+    }
+
+    /// <summary>
+    /// News the PythonScript callback.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    private void NewPythonScriptCallback(object sender, EventArgs e)
+    {
+      var connection = GetCurrentConnection();
+      if (connection == null) return;
+
+      //Set the selected connection so when the editor window is open it can work with.
+      MysqlConnectionSelected = connection;
+
+      //Create New PythonScript file and open the editor with it.
+      CreateNewScript(ScriptType.Python);
+    }
     #endregion
 
     private void cmdCreateWinFormsProject_Callback(object sender, EventArgs e)
@@ -862,7 +927,7 @@ namespace MySql.Data.VisualStudio
           case ScriptType.JavaScript:
             scriptExtension = JAVASCRIPT_EXTENSION;
             break;
-          case ScriptType.Phyton:
+          case ScriptType.Python:
             scriptExtension = PYTHON_EXTENSION;
             break;
         }
@@ -886,16 +951,6 @@ namespace MySql.Data.VisualStudio
       public bool NamedPipesEnabled;
       public string UserId;
       public string DataBaseName;
-    }
-
-    /// <summary>
-    /// Defines a series of script file types.
-    /// </summary>
-    private enum ScriptType
-    {
-      Sql,
-      JavaScript,
-      Phyton
     }
 
     #region IVsInstalledProduct Members

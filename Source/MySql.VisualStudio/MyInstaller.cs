@@ -177,6 +177,8 @@ namespace MySql.Data.VisualStudio
       extensionsKey.SetValue("mysql", 32);
       extensionsKey = editorKey.CreateSubKey("Extensions2");
       extensionsKey.SetValue("myjs", 32);
+      extensionsKey = editorKey.CreateSubKey("Extensions3");
+      extensionsKey.SetValue("mypy", 32);
       RegistryKey logicalViewsKey = editorKey.CreateSubKey("LogicalViews");
       logicalViewsKey.SetValue("{7651a703-06e5-11d1-8ebd-00a0c90f26ea}", "");
 

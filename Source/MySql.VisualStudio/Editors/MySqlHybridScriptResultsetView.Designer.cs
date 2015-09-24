@@ -22,7 +22,7 @@
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  partial class JSResultsetView
+  partial class MySqlHybridScriptResultsetView
   {
     /// <summary> 
     /// Required designer variable.
@@ -88,13 +88,13 @@ namespace MySql.Data.VisualStudio.Editors
       this.ctrlTextView.Size = new System.Drawing.Size(658, 500);
       this.ctrlTextView.TabIndex = 1;
       // 
-      // JSResultsetView
+      // MySqlHybridScriptResultsetView
       // 
       this.Controls.Add(this.ctrlGridView);
       this.Controls.Add(this.ctrlTreeView);
       this.Controls.Add(this.ctrlMenu);
       this.Controls.Add(this.ctrlTextView);
-      this.Name = "JSResultsetView";
+      this.Name = "MySqlHybridScriptResultsetView";
       this.Size = new System.Drawing.Size(658, 500);
       this.ResumeLayout(false);
 

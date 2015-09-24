@@ -173,7 +173,10 @@ namespace MySql.Data.VisualStudio.Editors
       else
       {
         //TODO: [MYSQLFORVS-276] - CREATE A CLASSIFIER EXTENSION THAT COLORS THE APPROPRIATE TEXT (MYJS FILES).
-        langSvc = new Guid(MyJsLanguageService.IID);
+        if (parent == null || typeof(MySqlHybridScriptEditor) == parent.Editor.GetType() && ((MySqlHybridScriptEditor)parent.Editor).ScriptType == ScriptType.JavaScript)
+          langSvc = new Guid(MyJsLanguageService.IID);
+        //else
+        //TODO: [MYSQLFORVS-402] - CREATE A CLASSIFIER EXTENSION THAT COLORS THE APPROPRIATE TEXT (MYPY FILES).
       }
 
       int hr = textBuffer.SetLanguageServiceID(ref langSvc);

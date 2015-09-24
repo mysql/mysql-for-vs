@@ -2,7 +2,7 @@
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  partial class MyJsEditor
+  partial class MySqlHybridScriptEditor
   {
     /// <summary> 
     /// Required designer variable.
@@ -19,11 +19,10 @@ namespace MySql.Data.VisualStudio.Editors
     {
       this.components = new System.ComponentModel.Container();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-      this.toolStripLabelJs = new System.Windows.Forms.ToolStripLabel();
       this.connectButton = new System.Windows.Forms.ToolStripButton();
       this.disconnectButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.runJsButton = new System.Windows.Forms.ToolStripButton();
+      this.runScriptButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
       this.serverLabel = new System.Windows.Forms.ToolStripLabel();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -31,7 +30,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
       this.dbLabel = new System.Windows.Forms.ToolStripLabel();
       this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-      this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+      this.toolStripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
       this.splitter1 = new System.Windows.Forms.Splitter();
@@ -53,11 +52,10 @@ namespace MySql.Data.VisualStudio.Editors
       // 
       this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabelJs,
             this.connectButton,
             this.disconnectButton,
             this.toolStripSeparator1,
-            this.runJsButton,
+            this.runScriptButton,
             this.toolStripSeparator2,
             this.serverLabel,
             this.toolStripSeparator3,
@@ -65,20 +63,13 @@ namespace MySql.Data.VisualStudio.Editors
             this.toolStripSeparator4,
             this.dbLabel,
             this.toolStripSeparator5,
-            this.toolStripSplitButton1});
+            this.toolStripSplitButton});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
       this.toolStrip1.Size = new System.Drawing.Size(604, 25);
       this.toolStrip1.TabIndex = 1;
       this.toolStrip1.Text = "toolStrip1";
-      // 
-      // toolStripLabelJs
-      // 
-      this.toolStripLabelJs.ForeColor = System.Drawing.Color.DodgerBlue;
-      this.toolStripLabelJs.Name = "toolStripLabelJs";
-      this.toolStripLabelJs.Size = new System.Drawing.Size(67, 22);
-      this.toolStripLabelJs.Text = "MyJs Editor";
       // 
       // connectButton
       // 
@@ -105,17 +96,17 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStripSeparator1.Name = "toolStripSeparator1";
       this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
       // 
-      // runJsButton
+      // runScriptButton
       // 
-      this.runJsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.runJsButton.Enabled = false;
-      this.runJsButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
-      this.runJsButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.runJsButton.Name = "runJsButton";
-      this.runJsButton.Size = new System.Drawing.Size(23, 22);
-      this.runJsButton.Text = "runJsButton";
-      this.runJsButton.ToolTipText = "Run Js";
-      this.runJsButton.Click += new System.EventHandler(this.runJsButton_Click);
+      this.runScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.runScriptButton.Enabled = false;
+      this.runScriptButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
+      this.runScriptButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.runScriptButton.Name = "runScriptButton";
+      this.runScriptButton.Size = new System.Drawing.Size(23, 22);
+      this.runScriptButton.Text = "runScriptButton";
+      this.runScriptButton.ToolTipText = "Run Js";
+      this.runScriptButton.Click += new System.EventHandler(this.runScriptButton_Click);
       // 
       // toolStripSeparator2
       // 
@@ -155,14 +146,14 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStripSeparator5.Name = "toolStripSeparator5";
       this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
       // 
-      // toolStripSplitButton1
+      // toolStripSplitButton
       // 
-      this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+      this.toolStripSplitButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1, this.toolStripMenuItem2});
-      this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-      this.toolStripSplitButton1.Text = "Session Option";
-      this.toolStripSplitButton1.Size = new System.Drawing.Size(16, 22);
-      this.toolStripSplitButton1.DefaultItem = toolStripMenuItem1;
+      this.toolStripSplitButton.Name = "toolStripSplitButton";
+      this.toolStripSplitButton.Text = "Session Option";
+      this.toolStripSplitButton.Size = new System.Drawing.Size(16, 22);
+      this.toolStripSplitButton.DefaultItem = toolStripMenuItem1;
       // 
       // toolStripMenuItem1
       // 
@@ -172,7 +163,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStripMenuItem1.Checked = true;
       this.toolStripMenuItem1.CheckOnClick = true;
       this.toolStripMenuItem1.Text = "Preserve JS Variables";
-      this.toolStripMenuItem1.Tag = JsSessionOption.UseSameSession;
+      this.toolStripMenuItem1.Tag = SessionOption.UseSameSession;
       this.toolStripMenuItem1.ToolTipText = "Use this option to always run scripts in the same session.";
       this.toolStripMenuItem1.Click += new System.EventHandler(ToolStripMenuItemClickHandler);
       // 
@@ -183,7 +174,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStripMenuItem2.AutoToolTip = true;
       this.toolStripMenuItem2.CheckOnClick = true;
       this.toolStripMenuItem2.Text = "Not Preserve JS Variables";
-      this.toolStripMenuItem2.Tag = JsSessionOption.UseNewSession;
+      this.toolStripMenuItem2.Tag = SessionOption.UseNewSession;
       this.toolStripMenuItem2.ToolTipText = "Use this option to always run scripts in a new session.";
       this.toolStripMenuItem2.Click += new System.EventHandler(ToolStripMenuItemClickHandler);
       // 
@@ -268,7 +259,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.codeEditor.Size = new System.Drawing.Size(604, 246);
       this.codeEditor.TabIndex = 2;
       // 
-      // MyJsEditor
+      // MySqlScriptEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -276,7 +267,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.Controls.Add(this.splitter1);
       this.Controls.Add(this.codeEditor);
       this.Controls.Add(this.toolStrip1);
-      this.Name = "MyJsEditor";
+      this.Name = "MySqlScriptEditor";
       this.Size = new System.Drawing.Size(604, 466);
       this.toolStrip1.ResumeLayout(false);
       this.toolStrip1.PerformLayout();
@@ -299,7 +290,7 @@ namespace MySql.Data.VisualStudio.Editors
     private System.Windows.Forms.TabPage messagesPage;
     private System.Windows.Forms.ToolStripButton connectButton;
     private System.Windows.Forms.ToolStripLabel serverLabel;
-    private System.Windows.Forms.ToolStripButton runJsButton;
+    private System.Windows.Forms.ToolStripButton runScriptButton;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     private System.Windows.Forms.ToolStripButton disconnectButton;
@@ -308,11 +299,10 @@ namespace MySql.Data.VisualStudio.Editors
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     private System.Windows.Forms.ToolStripLabel dbLabel;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-    private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
+    private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton;
     private System.Windows.Forms.DataGridView resultsGrid;
     private System.Windows.Forms.Label messages;
     private System.Windows.Forms.ImageList imageList1;
-    private System.Windows.Forms.ToolStripLabel toolStripLabelJs;
     private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 

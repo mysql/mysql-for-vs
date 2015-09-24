@@ -32,12 +32,12 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// ResultSet control for Js files
   /// </summary>
-  public partial class JSResultsetView : UserControl
+  public partial class MySqlHybridScriptResultsetView : UserControl
   {
     /// <summary>
-    /// Creates a new instance of JSResultsetView
+    /// Creates a new instance of MySqlHybridScriptResultsetView
     /// </summary>
-    public JSResultsetView()
+    public MySqlHybridScriptResultsetView()
     {
       InitializeComponent();
       ConfigureMenu();

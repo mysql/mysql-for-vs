@@ -67,7 +67,14 @@ namespace MySql.Data.VisualStudio.Editors
       }
       else
       {
-        editor = new MyJsEditorPane(serviceProvider, this);
+        ScriptType scriptType = ScriptType.JavaScript;
+        if (fileInfo.Extension.ToLower().Equals(".mypy"))
+        {
+          scriptType = ScriptType.Python;
+        }
+
+
+        editor = new MySqlHybridScriptEditorPane(serviceProvider, this, scriptType);
       }
       if (editor.Window != null)
       {

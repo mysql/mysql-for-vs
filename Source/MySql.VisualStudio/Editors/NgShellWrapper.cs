@@ -23,10 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySqlX.Shell;
-using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 
@@ -117,16 +114,26 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Execute a list of javascript commands using the NG Shell
     /// </summary>
-    /// <param name="script">The script to execute</param>
+    /// <param name="script">The script to execute.</param>
+    /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
     /// <returns>A list of ResultSet returned by each of the command executed.</returns>
-    public List<ResultSet> ExecuteJavaScript(string[] script)
+    public List<ResultSet> ExecuteScript(string[] script, ScriptType scriptType = ScriptType.JavaScript)
     {
       if (script == null || script.Length <= 0)
       {
         return null;
       }
 
-      return ExecuteQuery(Mode.JScript, script);
+      switch (scriptType)
+      {
+        case ScriptType.Sql:
+          return ExecuteQuery(Mode.SQL, script);
+        case ScriptType.Python:
+          return ExecuteQuery(Mode.Python, script);
+        case ScriptType.JavaScript:
+        default:
+          return ExecuteQuery(Mode.JScript, script);
+      }
     }
 
     /// <summary>

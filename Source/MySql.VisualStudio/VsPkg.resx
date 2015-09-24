@@ -156,4 +156,7 @@
   <data name="114" xml:space="preserve">
     <value>MyJs Files</value>
   </data>
+  <data name="115" xml:space="preserve">
+    <value>MyPy Files</value>
+  </data>
 </root>

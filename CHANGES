@@ -1,4 +1,6 @@
-
+2.0.1
+- Added a new Editor to handle MySQL Phyton script files.
+- Added a new option to create new MySQL Phyton script directly from Server Explorer.
 
 2.0.0
 - Fixed problem with font colors that made them difficult to read when using the Visual Studio's Dark theme.
