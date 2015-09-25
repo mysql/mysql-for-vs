@@ -432,16 +432,6 @@
         </Compile>
       </ItemGroup>
     </When>
-    <When Condition="'$(Framework)' == '4.5'">
-      <ItemGroup>
-        <Compile Include="Properties\Resources.Designer.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>Resources.resx</DependentUpon>
-          <MergeWithCTO>true</MergeWithCTO>
-        </Compile>
-      </ItemGroup>
-    </When>  
   </Choose>
   <Choose>   
     <When Condition="'$(Framework)' == '4.5'">
@@ -775,7 +765,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <MergeWithCTO>true</MergeWithCTO>
     </Compile>
     <Compile Include="Properties\VersionInfo.cs">
     </Compile>
