@@ -925,11 +925,6 @@
     <EmbeddedResource Include="Editors\VerticalMenu.resx">
       <DependentUpon>VerticalMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="VsPkg.resx">
       <DependentUpon>VsPkg.cs</DependentUpon>
     </EmbeddedResource>
