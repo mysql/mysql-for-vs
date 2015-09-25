@@ -418,61 +418,23 @@
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.3.5.resx</DependentUpon>
+		  <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
     </When>
-    <When Condition="'$(Framework)' == '4.0'">
+    <Otherwise>
       <ItemGroup>
         <Compile Include="Properties\Resources.Designer.cs">
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.resx</DependentUpon>
+		  <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
-    </When>
-    <When Condition="'$(Framework)' == '4.5'">
-      <ItemGroup>
-        <Compile Include="Properties\Resources.Designer.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>Resources.resx</DependentUpon>
-        </Compile>
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Framework)' == '4.5.1'">
-      <ItemGroup>
-        <Compile Include="Properties\Resources.Designer.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>Resources.resx</DependentUpon>
-        </Compile>
-      </ItemGroup>
-    </When>
+    </Otherwise>
   </Choose>
   <Choose>
-    <When Condition="'$(Framework)' == '4.5'">
-      <ItemGroup>
-        <EmbeddedResource Include="Properties\Resources.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-          <MergeWithCTO>true</MergeWithCTO>
-          <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
-          <SubType>Designer</SubType>
-        </EmbeddedResource>
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Framework)' == '4.0'">
-      <ItemGroup>
-        <EmbeddedResource Include="Properties\Resources.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <MergeWithCTO>true</MergeWithCTO>
-          <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
-          <SubType>Designer</SubType>
-          <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Framework)' == '3.5'">
+	<When Condition="'$(Framework)' == '3.5'">
       <ItemGroup>
         <EmbeddedResource Include="Properties\Resources.3.5.resx">
           <Generator>ResXFileCodeGenerator</Generator>
@@ -482,6 +444,17 @@
         </EmbeddedResource>
       </ItemGroup>
     </When>
+    <Otherwise>
+      <ItemGroup>
+        <EmbeddedResource Include="Properties\Resources.resx">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+          <MergeWithCTO>true</MergeWithCTO>
+          <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+          <SubType>Designer</SubType>
+        </EmbeddedResource>
+      </ItemGroup>
+    </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="DBExport\DbExportPanel.cs">
