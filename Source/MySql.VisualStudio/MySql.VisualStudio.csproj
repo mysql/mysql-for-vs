@@ -418,7 +418,6 @@
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.3.5.resx</DependentUpon>
-          <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
     </When>
@@ -428,12 +427,29 @@
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.resx</DependentUpon>
-          <MergeWithCTO>true</MergeWithCTO>
+        </Compile>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Framework)' == '4.5'">
+      <ItemGroup>
+        <Compile Include="Properties\Resources.Designer.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Framework)' == '4.5.1'">
+      <ItemGroup>
+        <Compile Include="Properties\Resources.Designer.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
       </ItemGroup>
     </When>
   </Choose>
-  <Choose>   
+  <Choose>
     <When Condition="'$(Framework)' == '4.5'">
       <ItemGroup>
         <EmbeddedResource Include="Properties\Resources.resx">
@@ -761,11 +777,6 @@
     <Compile Include="Nodes\TableNode.cs">
     </Compile>
     <Compile Include="PkgCmdID.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="Properties\VersionInfo.cs">
     </Compile>
     <Compile Include="SchemaComparer\Comparer.cs">
