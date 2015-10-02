@@ -516,11 +516,6 @@
       </Concepts>
 
       <Identifier>
-        <Part name="Database" itemName="ROUTINE_CATALOG">
-          <Concepts>
-            <Concept name="Identifier0"/>
-          </Concepts>
-        </Part>
         <Part name="Schema" itemName="ROUTINE_SCHEMA">
           <Concepts>
             <Concept name="Identifier1"/>
@@ -541,6 +536,7 @@
       </Restrictions>
 
       <Properties>
+        <Property name="Database" type="System.String" itemName="ROUTINE_CATALOG" />
         <Property name="Schema" type="System.String" itemName="ROUTINE_SCHEMA">
           <Concepts>
             <Concept name="Schema" />
@@ -578,35 +574,36 @@
       </Actions>
     </Type>
 
+    <!-- Stored procedure column -->
     <Type name="StoredProcedureColumn" defaultSort="Database, Schema, StoredProcedure, Id">
       <Concepts>
         <Concept name="StoredProcedureColumn" restrictions="{Catalog},{Schema},{StoredProcedure},{Name}"/>
       </Concepts>
       <Identifier>
-        <Part name="Database" itemName="BaseCatalogName">
+        <Part name="Database" itemName="Database">
           <Concepts>
             <Concept name="Identifier0"/>
           </Concepts>
         </Part>
-        <Part name="Schema" itemName="BaseSchemaName">
+        <Part name="Schema" itemName="Schema">
           <Concepts>
             <Concept name="Identifier1"/>
           </Concepts>
         </Part>
-        <Part name="StoredProcedure" itemName="RoutineName">
+        <Part name="StoredProcedure" itemName="StoredProcedure">
           <Concepts>
             <Concept name="Identifier2"/>
           </Concepts>
         </Part>
-        <Part name="Name" itemName="ColumnName">
+        <Part name="Name" itemName="Name">
           <Concepts>
             <Concept name="Identifier3"/>
           </Concepts>
         </Part>
       </Identifier>
       <Properties>
-        <Property name="Name" type="System.String" itemName="ColumnName"/>
-        <Property name="Id" type="System.Int32" itemName="ColumnOrdinal">
+        <Property name="Name" type="System.String" itemName="Name"/>
+        <Property name="Id" type="System.Int32" itemName="Ordinal">
           <Concepts>
             <Concept name="Ordinal"/>
           </Concepts>
@@ -616,7 +613,7 @@
             <Concept name="ProviderDataType"/>
           </Concepts>
         </Property>
-        <Property name="FrameworkType" type="System.Type" itemName="DataType">
+        <Property name="FrameworkType" type="System.Type" itemName="FrameworkType">
           <Concepts>
             <Concept name="FrameworkDataType">
               <Conversion>
@@ -625,27 +622,26 @@
             </Concept>
           </Concepts>
         </Property>
-        <Property name="Length" type="System.Int32" itemName="ColumnSize">
+        <Property name="Length" type="System.Int32" itemName="MaxLength">
           <Concepts>
             <Concept name="Length"/>
           </Concepts>
         </Property>
-        <Property name="NumericPrecision" type="System.Int32">
+        <Property name="NumericPrecision" type="System.Int32" itemName="Precision">
           <Concepts>
             <Concept name="Precision"/>
           </Concepts>
         </Property>
-        <Property name="NumericScale" type="System.Int32">
+        <Property name="NumericScale" type="System.Int32" itemName="Scale">
           <Concepts>
             <Concept name="Scale"/>
           </Concepts>
         </Property>
-        <Property name="Nullable" type="System.Boolean" itemName="AllowDBNull">
+        <Property name="Nullable" type="System.Boolean" itemName="IsNullable">
           <Concepts>
             <Concept name="Nullable"/>
           </Concepts>
         </Property>
-        <Property name="IsAutoIncrement" type="System.Boolean" itemName="IsAutoIncrement"/>
       </Properties>
       <Actions>
         <Action guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" name="Enumerate" handler="MySql.Data.VisualStudio.StoredProcedureColumnEnumerator"/>
