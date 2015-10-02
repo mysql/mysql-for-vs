@@ -487,6 +487,7 @@
     <Compile Include="DBExport\MySqlDbExportSaveOptions.cs" />
     <Compile Include="DBExport\MySqlDumpFacade.cs" />
     <Compile Include="DBExport\SchemaColumn.cs" />
+    <Compile Include="DDEX\DbCommandExtensions.cs" />
     <Compile Include="DDEX\DynamicItemMenuCommand.cs" />
     <Compile Include="DDEX\MySqlConnectionListMenu.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
@@ -1043,8 +1044,8 @@
       </ItemGroup>
       <ItemGroup>
         <VSCTCompile Include="PkgCmd.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
@@ -1054,8 +1055,8 @@
       </ItemGroup>
       <ItemGroup>
         <VSCTCompile Include="PkgCmd.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
@@ -1065,16 +1066,16 @@
       </ItemGroup>
       <ItemGroup>
         <VSCTCompile Include="PkgCmd.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '9.0'">
       <ItemGroup>
         <VSCTCompile Include="PkgCmd90.vsct">
-        <ResourceName>1000</ResourceName>
-        <SubType>Designer</SubType>
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
         </VSCTCompile>
       </ItemGroup>
     </When>
