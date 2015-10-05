@@ -103,7 +103,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to update a record in the test table in a single command
     /// </summary>
-    private const string _updateRecordSingleLine = "var res = table.update().set({gender: 'female'}).where(\"name = 'jacky'\").execute();";
+    private const string _updateRecordSingleLine = "var res = table.update().set('gender', 'female').where(\"name = 'jacky'\").execute();";
     /// <summary>
     /// First statement to update a record in the test table in multiple commands
     /// </summary>
@@ -111,7 +111,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Second statement to update a record in the test table in multiple commands
     /// </summary>
-    private const string _updateRecordCmd2 = "upd.set({ gender: 'female'}).where(\"name = 'jacky'\");";
+    private const string _updateRecordCmd2 = "upd.set('gender', 'female').where(\"name = 'jacky'\");";
     /// <summary>
     /// Third statement to update a record in the test table in multiple commands
     /// </summary>
@@ -144,9 +144,9 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _showDbs = "show databases;";
     /// <summary>
-    /// Search for a table in the schema.tables information. Use: string.format(_searchTable, "myTable")
+    /// Search for a table in the schema.tables information. Use: string.format(_searchTable, "myTable", "myDatabase")
     /// </summary>
-    private const string _searchTable = "select count(*) from information_schema.TABLES where table_name='{0}';";
+    private const string _searchTable = "select count(*) from information_schema.TABLES where table_name='{0}' and table_schema='{1}';";
     /// <summary>
     /// Sql statement to drop the test database
     /// </summary>
@@ -264,7 +264,7 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_createTestDatabase);
         _ngShell.Execute(_useTestDatabase);
         _ngShell.Execute(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
         var result = _command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -301,7 +301,7 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_createTestDatabase);
         _ngShell.Execute(_useTestDatabase);
         _ngShell.Execute(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;
@@ -354,7 +354,7 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_createTestDatabase);
         _ngShell.Execute(_useTestDatabase);
         _ngShell.Execute(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;
@@ -454,7 +454,7 @@ namespace MySql.VisualStudio.Tests
         xshell.ExecuteJavaScript(_createTestDatabase);
         xshell.ExecuteJavaScript(_useTestDatabase);
         xshell.ExecuteJavaScript(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
         var result = _command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -493,7 +493,7 @@ namespace MySql.VisualStudio.Tests
         xshell.ExecuteJavaScript(_createTestDatabase);
         xshell.ExecuteJavaScript(_useTestDatabase);
         xshell.ExecuteJavaScript(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;
@@ -548,7 +548,7 @@ namespace MySql.VisualStudio.Tests
         xshell.ExecuteJavaScript(_createTestDatabase);
         xshell.ExecuteJavaScript(_useTestDatabase);
         xshell.ExecuteJavaScript(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;
@@ -619,7 +619,7 @@ namespace MySql.VisualStudio.Tests
         var tokenizer = new MyJsTokenizer(script.ToString());
         xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray());
 
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;
@@ -674,7 +674,7 @@ namespace MySql.VisualStudio.Tests
         var tokenizer = new MyJsTokenizer(script.ToString());
         xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray());
 
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;
@@ -713,7 +713,7 @@ namespace MySql.VisualStudio.Tests
         xshell.ExecuteJavaScript(_createTestDatabase);
         xshell.ExecuteJavaScript(_useTestDatabase);
         xshell.ExecuteJavaScript(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName), _connection);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
         int count;

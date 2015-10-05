@@ -66,26 +66,24 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Database test name
     /// </summary>
-    private const string _testSchemaName = "js_shell_test";
+    private const string _testSchemaName = "js_schema_test";
 
     //TODO: Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
-    //private const string _dropTestDatabase = "session.dropSchema('js_shell_test;').execute();";
+    //private const string _dropTestDatabase = "session.dropSchema('" + _testSchemaName + "')";
     /// <summary>
     /// Statement to drop the test database
     /// </summary>
-    private const string _dropSchemaTest = "session.sql('drop schema if exists js_shell_test;').execute();";
+    private const string _dropSchemaTest = "session.sql('drop schema if exists " + _testSchemaName + ";').execute();";
 
-    //TODO: Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
-    //private const string _createTestDatabase = "session.createSchema('js_shell_test;').execute();";
     /// <summary>
     /// Statement to create the test database
     /// </summary>
-    private const string _createSchemaTest = "session.sql('create schema js_shell_test;').execute();";
+    private const string _createSchemaTest = "session.createSchema('" + _testSchemaName + "');";
 
     /// <summary>
     /// Statement to use the test database
     /// </summary>
-    private const string _useSchemaTest = "session.sql('use js_shell_test;').execute();";
+    private const string _useSchemaTest = "session.sql('use " + _testSchemaName + ";').execute();";
     /// <summary>
     /// Table test name
     /// </summary>
@@ -93,7 +91,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to create the test table
     /// </summary>
-    private const string _createCollectionTest = "session.js_shell_test.createCollection('" + _testCollectionName + "');";
+    private const string _createCollectionTest = "session." + _testSchemaName + ".createCollection('" + _testCollectionName + "');";
 
     //TODO: Adjust this test for when this method is fully implemented in x-Shell for the JS sintaxis. It should look like:
     //private const string _deleteCollectionTest = "session." + _testCollectionName + ".drop();";
@@ -105,11 +103,11 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Get and set the test database
     /// </summary>
-    private const string _setSchemaVar = "var schema = session.getSchema('js_shell_test');";
+    private const string _setSchemaVar = "var schema = session.getSchema('" + _testSchemaName + "');";
     /// <summary>
     /// Get and set the test table
     /// </summary>
-    private const string _setCollectionVar = "var coll = session.js_shell_test.getCollection('collection1');";
+    private const string _setCollectionVar = "var coll = session." + _testSchemaName + ".getCollection('collection1');";
     /// <summary>
     /// Statement to insert multiple records at the same time on a single statement to the test collection
     /// </summary>
@@ -129,7 +127,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to get all the records from the test table as TableResultSet
     /// </summary>
-    private const string _findAllDocumentsInCollection = "var docs = coll.find(); docs.execute();";
+    private const string _findAllDocumentsInCollection = "coll.find().execute();";
     /// <summary>
     /// Statement to update a record in the test table in a single command
     /// </summary>
@@ -160,7 +158,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Sql statement to drop the test database
     /// </summary>
-    private const string _dropTestDbSqlSyntax = "drop schema if exists js_shell_test;";
+    private const string _dropTestDbSqlSyntax = "drop schema if exists " + _testSchemaName + ";";
     #endregion
 
     #region AssertFailMessages
