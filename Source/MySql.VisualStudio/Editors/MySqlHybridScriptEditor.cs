@@ -271,7 +271,18 @@ Check that the server is running, the database exist and the user credentials ar
             break;
         }
 
-        List<ResultSet> results = _ngWrapper.ExecuteScript(script.BreakJavaScriptStatements().ToArray(), ScriptType);
+        List<string> statements = new List<string>();
+        switch (ScriptType)
+        {
+          case Editors.ScriptType.JavaScript:
+            statements = script.BreakJavaScriptStatements();
+            break;
+          case Editors.ScriptType.Python:
+            statements = script.BreakPythonStatements();
+            break;
+        }
+
+        List<ResultSet> results = _ngWrapper.ExecuteScript(statements.ToArray(), ScriptType);
         if (results == null)
         {
           return;

@@ -283,6 +283,22 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Separates multiple python statements into single ones
+    /// </summary>
+    /// <param name="jsStatements">Python statements</param>
+    /// <returns>List of single statements</returns>
+    public static List<string> BreakPythonStatements(this string pythonStatements)
+    {
+      if (string.IsNullOrEmpty(pythonStatements))
+      {
+        return null;
+      }
+
+      MySQL.Utility.Classes.MyPythonTokenizer tokenizer = new MySQL.Utility.Classes.MyPythonTokenizer(pythonStatements.Trim());
+      return tokenizer.BreakIntoStatements();
+    }
+
+    /// <summary>
     /// Parse a DocumentResultSet object to string with JSON format
     /// </summary>
     /// <param name="document">The document to parse</param>

@@ -68,7 +68,7 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _testSchemaName = "js_schema_test";
 
-    //TODO: Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
+    //TODO: [MYSQLFORVS-413] Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
     //private const string _dropTestDatabase = "session.dropSchema('" + _testSchemaName + "')";
     /// <summary>
     /// Statement to drop the test database
@@ -93,7 +93,7 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _createCollectionTest = "session." + _testSchemaName + ".createCollection('" + _testCollectionName + "');";
 
-    //TODO: Adjust this test for when this method is fully implemented in x-Shell for the JS sintaxis. It should look like:
+    //TODO: [MYSQLFORVS-414] Adjust this test for when this method is fully implemented in x-Shell for the JS sintaxis. It should look like:
     //private const string _deleteCollectionTest = "session." + _testCollectionName + ".drop();";
     /// <summary>
     /// Statement to delete the test table
