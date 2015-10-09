@@ -264,7 +264,10 @@ Check that the server is running, the database exist and the user credentials ar
         switch (_sessionOption)
         {
           case SessionOption.UseSameSession:
-            _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
+            if (_ngWrapper == null)
+            {
+              _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
+            }
             break;
           case SessionOption.UseNewSession:
             _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), false);

@@ -49,7 +49,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Statement used to clean the session in use
     /// </summary>
-    private const string _cleanSession = "session.close();";
+    private const string _cleanSession = "session.close()";
 
     /// <summary>
     /// Creates an instance of NgShellWrapper
