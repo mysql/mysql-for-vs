@@ -147,8 +147,10 @@
     <Compile Include="DbExportTests.cs" />
     <Compile Include="DependenciesTests.cs" />
     <Compile Include="MySimpleShellClient.cs" />
-    <Compile Include="PyCollectionxShellTests.cs" />
-    <Compile Include="PyTablexShellTests.cs" />
+    <Compile Include="PyCollectionSimpleClientTests.cs" />
+    <Compile Include="PyCollectionNgWrapperTests.cs" />
+    <Compile Include="PyTableSimpleClientTests.cs" />
+    <Compile Include="PyTableNgWrapperTests.cs" />
     <Compile Include="SchemaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUp.cs" />

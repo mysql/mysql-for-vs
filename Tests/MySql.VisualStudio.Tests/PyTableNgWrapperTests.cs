@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright � 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -33,81 +33,81 @@ namespace MySql.VisualStudio.Tests
   /// <summary>
   /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
   /// </summary>
-  public class TablexShellTests : IUseFixture<SetUpXShell>, IDisposable
+  public class PyTableNgWrapperTests : IUseFixture<SetUpXShell>
   {
     #region CommonShellQueries
     /// <summary>
     /// Get and set the mysqlx protocol instance
     /// </summary>
-    private const string _setMysqlxVar = "var mysqlx = require('mysqlx').mysqlx;";
+    private const string _setMysqlxVar = "import mysqlx";
     /// <summary>
     /// Get and set the node session from the mysqlx protocol instance
     /// </summary>
-    private const string _setSessionVar = "var session = mysqlx.getNodeSession('root:@localhost:33060');";
+    private const string _setSessionVar = "session = mysqlx.getNodeSession('root:@localhost:33060')";
     /// <summary>
     /// Database test name
     /// </summary>
-    private const string _testDatabaseName = "js_shell_test";
+    private const string _testDatabaseName = "py_schema_test";
     /// <summary>
     /// Statement to drop the test database
     /// </summary>
-    private const string _dropTestDatabase = "session.sql('drop schema if exists " + _testDatabaseName + ";').execute();";
+    private const string _dropTestDatabase = "session.sql('drop schema if exists " + _testDatabaseName + ";').execute()";
     /// <summary>
     /// Statement to create the test database
     /// </summary>
-    private const string _createTestDatabase = "session.sql('create schema " + _testDatabaseName + ";').execute();";
+    private const string _createTestDatabase = "session.sql('create schema " + _testDatabaseName + ";').execute()";
     /// <summary>
     /// Statement to use the test database
     /// </summary>
-    private const string _useTestDatabase = "session.sql('use " + _testDatabaseName + ";').execute();";
+    private const string _useTestDatabase = "session.sql('use " + _testDatabaseName + ";').execute()";
     /// <summary>
     /// Table test name
     /// </summary>
-    private const string _testTableName = "xshelltest";
+    private const string _testTableName = "_simpleClienttest";
     /// <summary>
     /// Statement to create the test table
     /// </summary>
-    private const string _createTestTable = "session.sql('create table xshelltest (name varchar(50), age integer, gender varchar(20));').execute();";
+    private const string _createTestTable = "session.sql('create table _simpleClienttest (name varchar(50), age integer, gender varchar(20));').execute()";
     /// <summary>
     /// Statement to delete the test table
     /// </summary>
-    private const string _deleteTestTable = "session.sql('drop table xshelltest;').execute();";
+    private const string _deleteTestTable = "session.sql('drop table _simpleClienttest;').execute()";
     /// <summary>
     /// Get and set the test database
     /// </summary>
-    private const string _setSchemaVar = "var schema = session.getSchema('" + _testDatabaseName + "');";
+    private const string _setSchemaVar = "schema = session.getSchema('" + _testDatabaseName + "')";
     /// <summary>
     /// Get and set the test table
     /// </summary>
-    private const string _setTableVar = "var table = schema.getTable('xshelltest');";
+    private const string _setTableVar = "table = schema.getTable('_simpleClienttest')";
     /// <summary>
     /// Statement to insert two records at the same time to the test table
     /// </summary>
-    private const string _insertTwoRecords = "var res = table.insert('name', 'age', 'gender').values('jack', 17,'male').values('jacky', 17,'male').execute();";
+    private const string _insertTwoRecords = "res = table.insert('name', 'age', 'gender').values('jack', 17,'male').values('jacky', 17,'male').execute()";
     /// <summary>
     /// Statement to insert a record to the test table
     /// </summary>
-    private const string _insertRecordJson1 = "var res = table.insert({name: 'jack', age: 17, gender: 'male'}).execute();";
+    private const string _insertRecordJson1 = "res = table.insert({'name' : 'jack', 'age' : 17, 'gender' : 'male'}).execute()";
     /// <summary>
     /// Statement to insert a record to the test table
     /// </summary>
-    private const string _insertRecordJson2 = "var res = table.insert({name: 'jacky', age: 17, gender: 'male'}).execute();";
+    private const string _insertRecordJson2 = "res = table.insert({'name' : 'jacky', 'age' : 17, 'gender' : 'male'}).execute()";
     /// <summary>
     /// Statement to get all the records from the test table as DocumentResultSet
     /// </summary>
-    private const string _selectTestTable = "table.select().execute().all();";
+    private const string _selectTestTable = "table.select().execute().all()";
     /// <summary>
     /// Statement to get all the records from the test table as TableResultSet
     /// </summary>
-    private const string _selectForTableResult = "table.select().execute();";
+    private const string _selectForTableResult = "table.select().execute()";
     /// <summary>
     /// Statement to update a record in the test table in a single command
     /// </summary>
-    private const string _updateRecordSingleLine = "var res = table.update().set('gender', 'female').where(\"name = 'jacky'\").execute();";
+    private const string _updateRecordSingleLine = "res = table.update().set('gender', 'female').where(\"name = 'jacky'\").execute()";
     /// <summary>
     /// First statement to update a record in the test table in multiple commands
     /// </summary>
-    private const string _updateRecordCmd1 = "var upd = table.update();";
+    private const string _updateRecordCmd1 = "upd = table.update()";
     /// <summary>
     /// Second statement to update a record in the test table in multiple commands
     /// </summary>
@@ -115,7 +115,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Third statement to update a record in the test table in multiple commands
     /// </summary>
-    private const string _updateRecordCmd3 = "upd.execute();";
+    private const string _updateRecordCmd3 = "upd.execute()";
     /// <summary>
     /// Statement to select the update record from the test table
     /// </summary>
@@ -123,19 +123,11 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to delete a record in the test table in a single command
     /// </summary>
-    private const string _deleteRecordSingleLine = "var res = table.delete().where(\"gender='male'\").execute();";
+    private const string _deleteRecordSingleLine = "res = table.delete().where(\"gender='male'\").execute()";
     /// <summary>
     /// First statement to delete a record in the test table in multiple commands
     /// </summary>
-    private const string _deleteRecordCmd1 = "var del = table.delete();";
-    /// <summary>
-    /// Second statement to delete a record in the test table in multiple commands
-    /// </summary>
-    private const string _deleteRecordCmd2 = "del.where(\"gender='male'\");";
-    /// <summary>
-    /// Third statement to delete a record in the test table in multiple commands
-    /// </summary>
-    private const string _deleteRecordCmd3 = "del.execute();";
+    private const string _deleteRecordCmd1 = "table.delete().where(\"gender='male'\").execute()";
     #endregion
 
     #region CommonAssertQueries
@@ -191,7 +183,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Object to access and execute commands to the current database connection through the mysqlx protocol
     /// </summary>
-    private MySimpleClientShell _ngShell;
+    private NgShellWrapper _ngShell;
     /// <summary>
     /// Stores the connection string format used by the mysqlx protocol
     /// </summary>
@@ -208,19 +200,44 @@ namespace MySql.VisualStudio.Tests
       _ngConnString = string.Format("{0}:{1}@{2}:{3}", _setUp.rootUser, _setUp.rootPassword, _setUp.host, 33060);
     }
 
+
     /// <summary>
-    /// Test to create a Database using the NgWrapper
+    /// Test to Insert, Update and Delete data from a table using the NgWrapper, executing the commands in a single line
     /// </summary>
     [Fact]
-    public void CreateDatabase_XShellDirectly()
+    public void InsertUpdateDelete_AllTests()
     {
       OpenConnection();
 
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropTestDatabase);
-        _ngShell.Execute(_createTestDatabase);
+
+        //Tokenizer and batch script tests
+        var script = new StringBuilder();
+        script.AppendLine(_dropTestDatabase);
+        script.AppendLine(_createTestDatabase);
+        script.AppendLine(_useTestDatabase);
+        script.AppendLine(_createTestTable);
+        script.AppendLine(_setSchemaVar);
+        script.AppendLine(_setTableVar);
+        script.AppendLine(_insertRecordJson1);
+        script.AppendLine(_insertRecordJson2);
+
+        var tokenizer = new MyPythonTokenizer(script.ToString());
+        _ngShell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.Python);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
+        var result = _command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+
+        //Create Schema
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
         bool success = false;
@@ -236,44 +253,57 @@ namespace MySql.VisualStudio.Tests
         }
 
         Assert.True(success, string.Format(_dbNotFound, _testDatabaseName));
-      }
-      catch (Exception ex)
-      {
-        throw ex;
-      }
-      finally
-      {
-        _setUp.ExecuteSQLAsRoot(_dropTestDbSqlSyntax);
-        CloseConnection();
-      }
-    }
 
-    /// <summary>
-    /// Test to create a Table using the NgWrapper
-    /// </summary>
-    [Fact]
-    public void CreateTable_XShellDirectly()
-    {
-      OpenConnection();
-
-      try
-      {
-        InitNgShell();
-
-        _ngShell.Execute(_dropTestDatabase);
-        _ngShell.Execute(_createTestDatabase);
-        _ngShell.Execute(_useTestDatabase);
-        _ngShell.Execute(_createTestTable);
+        //Create Table
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
-        var result = _command.ExecuteScalar();
-        int count;
+        result = _command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        _ngShell.Execute(_deleteTestTable);
+        //Insert Rows
+        _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+
+        //Update Rows
+        _ngShell.ExecuteScript(_updateRecordSingleLine, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+
+        //Delete Rows
+        _ngShell.ExecuteScript(_deleteRecordSingleLine, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+
+        //Delete Table
+        _ngShell.ExecuteScript(_deleteTestTable, ScriptType.Python);
         result = _command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(_tableNotDeleted, _testTableName));
+
+        //Delete Schema
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _command = new MySqlCommand(_showDbs, _connection);
+        reader = _command.ExecuteReader();
+        success = true;
+
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testDatabaseName)
+          {
+            success = false;
+            reader.Close();
+            break;
+          }
+        }
+        Assert.True(success, string.Format(_dbNotFound, _testDatabaseName));
       }
       catch (Exception ex)
       {
@@ -287,20 +317,30 @@ namespace MySql.VisualStudio.Tests
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete data from a table using the NgWrapper, executing the commands in a single line
+    /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in multiple lines and in a single script
     /// </summary>
-    [Fact]
-    public void InsertUpdateDelete_XShellDirectly()
+    //[Fact]
+    public void Insert_JsonFormat_SingleScript_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropTestDatabase);
-        _ngShell.Execute(_createTestDatabase);
-        _ngShell.Execute(_useTestDatabase);
-        _ngShell.Execute(_createTestTable);
+
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        var script = new StringBuilder();
+        script.AppendLine(_dropTestDatabase);
+        script.AppendLine(_createTestDatabase);
+        script.AppendLine(_useTestDatabase);
+        script.AppendLine(_createTestTable);
+
+        script.AppendLine(_setSchemaVar);
+        script.AppendLine(_setTableVar);
+        script.AppendLine(_insertRecordJson1);
+        script.AppendLine(_insertRecordJson2);
+
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
@@ -308,25 +348,9 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        _ngShell.Execute(_setSchemaVar);
-        _ngShell.Execute(_setTableVar);
-        _ngShell.Execute(_insertTwoRecords);
-        var selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
-
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
-
-        _ngShell.Execute(_updateRecordSingleLine);
-        selectResult = _ngShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
-
-        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
-
-        _ngShell.Execute(_deleteRecordSingleLine);
-        selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
-
-        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -339,79 +363,23 @@ namespace MySql.VisualStudio.Tests
       }
     }
 
-    /// <summary>
-    /// Test to Insert, Update and Delete data from a table using the NgWrapper, executing the commands in multiple lines
-    /// </summary>
-    [Fact]
-    public void InsertUpdateDelete_JsonFormat_XShellDirectly()
-    {
-      OpenConnection();
-
-      try
-      {
-        InitNgShell();
-        _ngShell.Execute(_dropTestDatabase);
-        _ngShell.Execute(_createTestDatabase);
-        _ngShell.Execute(_useTestDatabase);
-        _ngShell.Execute(_createTestTable);
-        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
-
-        var result = _command.ExecuteScalar();
-        int count;
-        int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
-
-        _ngShell.Execute(_setSchemaVar);
-        _ngShell.Execute(_setTableVar);
-        _ngShell.Execute(_insertRecordJson1);
-        _ngShell.Execute(_insertRecordJson2);
-        var selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
-
-        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
-
-        _ngShell.Execute(_updateRecordCmd1);
-        _ngShell.Execute(_updateRecordCmd2);
-        _ngShell.Execute(_updateRecordCmd3);
-        selectResult = _ngShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
-
-        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
-
-        _ngShell.Execute(_deleteRecordCmd1);
-        _ngShell.Execute(_deleteRecordCmd2);
-        _ngShell.Execute(_deleteRecordCmd3);
-        selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
-
-        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
-      }
-      catch (Exception ex)
-      {
-        throw ex;
-      }
-      finally
-      {
-        _setUp.ExecuteSQLAsRoot(_dropTestDbSqlSyntax);
-        CloseConnection();
-      }
-    }
 
     /// <summary>
     /// Test to create a Database using our custom implementation of the NgWrapper
     /// </summary>
-    [Fact]
-    public void CreateDatabase_CustomXShell()
+    //[Fact]
+    public void CreateDatabase_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestDatabase, ScriptType.JavaScript);
+        InitNgShell();
+
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
         bool success = false;
@@ -440,27 +408,28 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to create a Table using our custom implementation of the NgWrapper
     /// </summary>
-    [Fact]
-    public void CreateTable_CustomXShell()
+    //[Fact]
+    public void CreateTable_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_useTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestTable, ScriptType.JavaScript);
+        InitNgShell();
+
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
         var result = _command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        xshell.ExecuteScript(_deleteTestTable, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_deleteTestTable, ScriptType.Python);
         result = _command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(_tableNotDeleted, _testTableName));
@@ -479,20 +448,21 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in a single line
     /// </summary>
-    [Fact]
-    public void InsertUpdateDelete_CustomXShell()
+    //[Fact]
+    public void InsertUpdateDelete_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_useTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestTable, ScriptType.JavaScript);
+        InitNgShell();
+
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
@@ -500,22 +470,22 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        xshell.ExecuteScript(_setSchemaVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setTableVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_insertTwoRecords, ScriptType.JavaScript);
-        var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
 
-        xshell.ExecuteScript(_updateRecordSingleLine, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_selectUpdatedRecord, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_updateRecordSingleLine, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
 
-        xshell.ExecuteScript(_deleteRecordSingleLine, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_deleteRecordSingleLine, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
@@ -534,20 +504,21 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in multiple lines
     /// </summary>
-    [Fact]
-    public void InsertUpdateDelete_JsonFormat_CustomXShell()
+    //[Fact]
+    public void InsertUpdateDelete_JsonFormat_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_useTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestTable, ScriptType.JavaScript);
+        InitNgShell();
+
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
@@ -555,27 +526,25 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        xshell.ExecuteScript(_setSchemaVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setTableVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_insertRecordJson1, ScriptType.JavaScript);
-        xshell.ExecuteScript(_insertRecordJson2, ScriptType.JavaScript);
-        var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertRecordJson1, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertRecordJson2, ScriptType.Python);
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
 
-        xshell.ExecuteScript(_updateRecordCmd1, ScriptType.JavaScript);
-        xshell.ExecuteScript(_updateRecordCmd2, ScriptType.JavaScript);
-        xshell.ExecuteScript(_updateRecordCmd3, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_selectUpdatedRecord, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_updateRecordCmd1, ScriptType.Python);
+        _ngShell.ExecuteScript(_updateRecordCmd2, ScriptType.Python);
+        _ngShell.ExecuteScript(_updateRecordCmd3, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
 
-        xshell.ExecuteScript(_deleteRecordCmd1, ScriptType.JavaScript);
-        xshell.ExecuteScript(_deleteRecordCmd2, ScriptType.JavaScript);
-        xshell.ExecuteScript(_deleteRecordCmd3, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_deleteRecordCmd1, ScriptType.Python);
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
@@ -594,30 +563,26 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in a single line and in a single script
     /// </summary>
-    [Fact]
-    public void InsertUpdateDelete_SingleScript_CustomXShell()
+    //[Fact]
+    public void InsertUpdateDelete_SingleScript_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        var script = new StringBuilder();
-        script.AppendLine(_dropTestDatabase);
-        script.AppendLine(_createTestDatabase);
-        script.AppendLine(_useTestDatabase);
-        script.AppendLine(_createTestTable);
+        InitNgShell();
 
-        script.AppendLine(_setSchemaVar);
-        script.AppendLine(_setTableVar);
-        script.AppendLine(_insertTwoRecords);
-        script.AppendLine(_updateRecordSingleLine);
-        script.AppendLine(_deleteRecordSingleLine);
-
-        var tokenizer = new MyJsTokenizer(script.ToString());
-        xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
+        _ngShell.ExecuteScript(_updateRecordSingleLine, ScriptType.Python);
+        _ngShell.ExecuteScript(_deleteRecordSingleLine, ScriptType.Python);
 
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
@@ -626,7 +591,7 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
       }
@@ -644,35 +609,30 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in multiple lines and in a single script
     /// </summary>
-    [Fact]
-    public void InsertUpdateDelete_JsonFormat_SingleScript_CustomXShell()
+    //[Fact]
+    public void InsertUpdateDelete_JsonFormat_SingleScript_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        var script = new StringBuilder();
-        script.AppendLine(_dropTestDatabase);
-        script.AppendLine(_createTestDatabase);
-        script.AppendLine(_useTestDatabase);
-        script.AppendLine(_createTestTable);
+        InitNgShell();
 
-        script.AppendLine(_setSchemaVar);
-        script.AppendLine(_setTableVar);
-        script.AppendLine(_insertRecordJson1);
-        script.AppendLine(_insertRecordJson2);
-        script.AppendLine(_updateRecordCmd1);
-        script.AppendLine(_updateRecordCmd2);
-        script.AppendLine(_updateRecordCmd3);
-        script.AppendLine(_deleteRecordCmd1);
-        script.AppendLine(_deleteRecordCmd2);
-        script.AppendLine(_deleteRecordCmd3);
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
 
-        var tokenizer = new MyJsTokenizer(script.ToString());
-        xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertRecordJson1, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertRecordJson2, ScriptType.Python);
+        _ngShell.ExecuteScript(_updateRecordCmd1, ScriptType.Python);
+        _ngShell.ExecuteScript(_updateRecordCmd2, ScriptType.Python);
+        _ngShell.ExecuteScript(_updateRecordCmd3, ScriptType.Python);
+        _ngShell.ExecuteScript(_deleteRecordCmd1, ScriptType.Python);
 
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
@@ -681,7 +641,7 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
       }
@@ -699,20 +659,21 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Parse a TableResultSet to a DocumentResultSet data returned from the server when a statment that returns a result set is executed
     /// </summary>
-    [Fact]
-    public void ParseTableResultToDocumentResult_CustomXShell()
+    //[Fact]
+    public void ParseTableResultToDocumentResult_Custom_simpleClient()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_useTestDatabase, ScriptType.JavaScript);
-        xshell.ExecuteScript(_createTestTable, ScriptType.JavaScript);
+        InitNgShell();
+
+        _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_useTestDatabase, ScriptType.Python);
+        _ngShell.ExecuteScript(_createTestTable, ScriptType.Python);
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
@@ -720,10 +681,10 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        xshell.ExecuteScript(_setSchemaVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_setTableVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_insertTwoRecords, ScriptType.JavaScript);
-        var selectResult = xshell.ExecuteScript(_selectForTableResult, ScriptType.JavaScript);
+        _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
+        _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
+        var selectResult = _ngShell.ExecuteScript(_selectForTableResult, ScriptType.Python) as DocumentResultSet;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
@@ -738,6 +699,7 @@ namespace MySql.VisualStudio.Tests
         CloseConnection();
       }
     }
+
 
     /// <summary>
     /// Open a MySqlConnection when it is not opened
@@ -767,11 +729,11 @@ namespace MySql.VisualStudio.Tests
     private void InitNgShell()
     {
       if (_ngShell != null)
+      {
         return;
+      }
 
-      _ngShell = new MySimpleClientShell();
-      _ngShell.MakeConnection(_ngConnString);
-      _ngShell.SwitchMode(Mode.JScript);
+      _ngShell = new NgShellWrapper(_ngConnString, true);
     }
 
     /// <summary>

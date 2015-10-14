@@ -20,12 +20,11 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using MySqlX.Shell;
 using System.Data.Common;
+using System.Linq;
 using MySql.Data.MySqlClient;
+using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -70,7 +69,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Creates an instance of NgShellWrapper
     /// </summary>
-    /// <param name="connectionString">Connection object that will be used to set the connection string. Format: "user:pass@server:port"</param>
+    /// <param name="connection">Connection object that will be used to set the connection string. Format: "user:pass@server:port"</param>
     /// /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
     public NgShellWrapper(DbConnection connection, bool keepNgSession)
     {
@@ -87,15 +86,26 @@ namespace MySql.Data.VisualStudio.Editors
     /// Execute a javascript command using the NG Shell
     /// </summary>
     /// <param name="script">The script to execute</param>
+    /// <param name="scriptType"></param>
     /// <returns>Null if a string empty query is received, otherwise a document resultset returned from the server</returns>
-    public DocumentResultSet ExecuteJavaScript(string script)
+    public DocumentResultSet ExecuteScript(string script, ScriptType scriptType)
     {
       if (string.IsNullOrEmpty(script))
       {
         return null;
       }
 
-      ResultSet result = ExecuteQuery(Mode.JScript, script).First();
+      var result = ExecuteScript(new string[] { script }, scriptType).First();
+      return ResultSetToDocumentResult(result);
+    }
+
+    /// <summary>
+    /// Forces the convertion of the the result object to a document result.
+    /// </summary>
+    /// <param name="result">The result object.</param>
+    /// <returns></returns>
+    private DocumentResultSet ResultSetToDocumentResult(ResultSet result)
+    {
       TableResultSet tableResult = result as TableResultSet;
 
       if (tableResult != null)
@@ -117,7 +127,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="script">The script to execute.</param>
     /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
     /// <returns>A list of ResultSet returned by each of the command executed.</returns>
-    public List<ResultSet> ExecuteScript(string[] script, ScriptType scriptType = ScriptType.JavaScript)
+    public List<ResultSet> ExecuteScript(string[] script, ScriptType scriptType)
     {
       if (script == null || script.Length <= 0)
       {

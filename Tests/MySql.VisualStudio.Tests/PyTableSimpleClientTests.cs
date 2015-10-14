@@ -33,7 +33,7 @@ namespace MySql.VisualStudio.Tests
   /// <summary>
   /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
   /// </summary>
-  public class PyTablexShellTests : IUseFixture<SetUpXShell>, IDisposable
+  public class PyTableSimpleClientTests : IUseFixture<SetUpXShell>
   {
     #region CommonShellQueries
     /// <summary>
@@ -183,7 +183,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Object to access and execute commands to the current database connection through the mysqlx protocol
     /// </summary>
-    private MySimpleClientShell _ngShell;
+    private MySimpleClientShell _simpleClient;
     /// <summary>
     /// Stores the connection string format used by the mysqlx protocol
     /// </summary>
@@ -201,32 +201,192 @@ namespace MySql.VisualStudio.Tests
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in multiple lines and in a single script
+    /// Test to Insert, Update and Delete data from a table using the NgWrapper, executing the commands in a single line
     /// </summary>
     [Fact]
-    public void Insert_JsonFormat_SingleScript_CustomXShell()
+    public void InsertUpdateDelete_AllTests()
     {
       OpenConnection();
 
       try
       {
-        var xshell = new NgShellWrapper(_ngConnString, true);
-        xshell.ExecuteJavaScript(_setMysqlxVar);
-        xshell.ExecuteJavaScript(_setSessionVar);
-        var script = new StringBuilder();
-        script.AppendLine(_dropTestDatabase);
-        script.AppendLine(_createTestDatabase);
-        script.AppendLine(_useTestDatabase);
-        script.AppendLine(_createTestTable);
+        InitSimpleShell();
 
-        script.AppendLine(_setSchemaVar);
-        script.AppendLine(_setTableVar);
-        script.AppendLine(_insertRecordJson1);
-        script.AppendLine(_insertRecordJson2);
+        //Create Schema
+        _simpleClient.Execute(_dropTestDatabase);
+        _simpleClient.Execute(_createTestDatabase);
+        _command = new MySqlCommand(_showDbs, _connection);
+        var reader = _command.ExecuteReader();
+        bool success = false;
 
-        var tokenizer = new MyJsTokenizer(script.ToString());
-        xshell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray());
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testDatabaseName)
+          {
+            success = true;
+            reader.Close();
+            break;
+          }
+        }
 
+        Assert.True(success, string.Format(_dbNotFound, _testDatabaseName));
+
+        //Create Table
+        _simpleClient.Execute(_useTestDatabase);
+        _simpleClient.Execute(_createTestTable);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
+        var result = _command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
+
+        //Insert Rows
+        _simpleClient.Execute(_setSchemaVar);
+        _simpleClient.Execute(_setTableVar);
+        _simpleClient.Execute(_insertTwoRecords);
+        var selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+
+        //Update Rows
+        _simpleClient.Execute(_updateRecordSingleLine);
+        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+
+        //Delete Rows
+        _simpleClient.Execute(_deleteRecordSingleLine);
+        selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+
+        //Delete Table
+        _simpleClient.Execute(_deleteTestTable);
+        result = _command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(_tableNotDeleted, _testTableName));
+
+        //Delete Schema
+        _simpleClient.Execute(_dropTestDatabase);
+        _command = new MySqlCommand(_showDbs, _connection);
+        reader = _command.ExecuteReader();
+        success = true;
+
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testDatabaseName)
+          {
+            success = false;
+            reader.Close();
+            break;
+          }
+        }
+        Assert.True(success, string.Format(_dbNotFound, _testDatabaseName));
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+        _setUp.ExecuteSQLAsRoot(_dropTestDbSqlSyntax);
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create a Database using the NgWrapper
+    /// </summary>
+    //[Fact]
+    public void CreateDatabase_XShellDirectly()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitSimpleShell();
+        _simpleClient.Execute(_dropTestDatabase);
+        _simpleClient.Execute(_createTestDatabase);
+        _command = new MySqlCommand(_showDbs, _connection);
+        var reader = _command.ExecuteReader();
+        bool success = false;
+
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testDatabaseName)
+          {
+            success = true;
+            reader.Close();
+            break;
+          }
+        }
+
+        Assert.True(success, string.Format(_dbNotFound, _testDatabaseName));
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+        _setUp.ExecuteSQLAsRoot(_dropTestDbSqlSyntax);
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create a Table using the NgWrapper
+    /// </summary>
+    //[Fact]
+    public void CreateTable_XShellDirectly()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitSimpleShell();
+
+        _simpleClient.Execute(_dropTestDatabase);
+        _simpleClient.Execute(_createTestDatabase);
+        _simpleClient.Execute(_useTestDatabase);
+        _simpleClient.Execute(_createTestTable);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
+        var result = _command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
+
+        _simpleClient.Execute(_deleteTestTable);
+        result = _command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(_tableNotDeleted, _testTableName));
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+        _setUp.ExecuteSQLAsRoot(_dropTestDbSqlSyntax);
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to Insert, Update and Delete data from a table using the NgWrapper, executing the commands in a single line
+    /// </summary>
+    //[Fact]
+    public void InsertUpdateDelete_XShellDirectly()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitSimpleShell();
+        _simpleClient.Execute(_dropTestDatabase);
+        _simpleClient.Execute(_createTestDatabase);
+        _simpleClient.Execute(_useTestDatabase);
+        _simpleClient.Execute(_createTestTable);
         _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
 
         var result = _command.ExecuteScalar();
@@ -234,9 +394,81 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        var selectResult = xshell.ExecuteJavaScript(_selectTestTable);
+        _simpleClient.Execute(_setSchemaVar);
+        _simpleClient.Execute(_setTableVar);
+        _simpleClient.Execute(_insertTwoRecords);
+        var selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
         Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+
+        _simpleClient.Execute(_updateRecordSingleLine);
+        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocumentResultSet;
+
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+
+        _simpleClient.Execute(_deleteRecordSingleLine);
+        selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+        _setUp.ExecuteSQLAsRoot(_dropTestDbSqlSyntax);
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to Insert, Update and Delete data from a table using the NgWrapper, executing the commands in multiple lines
+    /// </summary>
+    //[Fact]
+    public void InsertUpdateDelete_JsonFormat_XShellDirectly()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitSimpleShell();
+        _simpleClient.Execute(_dropTestDatabase);
+        _simpleClient.Execute(_createTestDatabase);
+        _simpleClient.Execute(_useTestDatabase);
+        _simpleClient.Execute(_createTestTable);
+        _command = new MySqlCommand(string.Format(_searchTable, _testTableName, _testDatabaseName), _connection);
+
+        var result = _command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
+
+        _simpleClient.Execute(_setSchemaVar);
+        _simpleClient.Execute(_setTableVar);
+        _simpleClient.Execute(_insertRecordJson1);
+        _simpleClient.Execute(_insertRecordJson2);
+        var selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+
+        _simpleClient.Execute(_updateRecordCmd1);
+        _simpleClient.Execute(_updateRecordCmd2);
+        _simpleClient.Execute(_updateRecordCmd3);
+        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocumentResultSet;
+
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+
+        _simpleClient.Execute(_deleteRecordCmd1);
+        selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+
+        Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
+        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -274,14 +506,14 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Initializes the NgShell instance with common statements
     /// </summary>
-    private void InitNgShell()
+    private void InitSimpleShell()
     {
-      if (_ngShell != null)
+      if (_simpleClient != null)
         return;
 
-      _ngShell = new MySimpleClientShell();
-      _ngShell.MakeConnection(_ngConnString);
-      _ngShell.SwitchMode(Mode.Python);
+      _simpleClient = new MySimpleClientShell();
+      _simpleClient.MakeConnection(_ngConnString);
+      _simpleClient.SwitchMode(Mode.Python);
     }
 
     /// <summary>
