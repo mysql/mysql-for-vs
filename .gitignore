@@ -21,3 +21,6 @@ VS.targets
 *.diff
 *.py
 **/ProjectTemplatesZipFolder
+.bzrignore
+**/.bzr-mysql/**
+**/packages/**
