@@ -8,7 +8,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Package", "Package.csproj", "{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5C97DF05-1229-4B30-9711-789D0D6FF81B} = {5C97DF05-1229-4B30-9711-789D0D6FF81B}
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3} = {F533FC43-6C05-4A64-8AF6-72B690EB06C3}
 	EndProjectSection
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{F533FC43-6C05-4A64-8AF6-72B690EB06C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +33,7 @@ Global
 		{5C97DF05-1229-4B30-9711-789D0D6FF81B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5C97DF05-1229-4B30-9711-789D0D6FF81B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5C97DF05-1229-4B30-9711-789D0D6FF81B}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C97DF05-1229-4B30-9711-789D0D6FF81B}.Release|x86.Build.0 = Release|Any CPU
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -40,6 +44,15 @@ Global
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Release|x86.ActiveCfg = Release|Any CPU
+		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Release|x86.Build.0 = Release|Any CPU
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Any CPU.ActiveCfg = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Mixed Platforms.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Mixed Platforms.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x86.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x86.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Any CPU.ActiveCfg = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Mixed Platforms.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x86.ActiveCfg = Commercial|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
