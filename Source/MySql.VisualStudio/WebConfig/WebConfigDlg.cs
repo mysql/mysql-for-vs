@@ -1,23 +1,23 @@
-﻿// Copyright © 2009, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
@@ -42,27 +42,108 @@ namespace MySql.Data.VisualStudio.WebConfig
 {
   public partial class WebConfigDlg : Form
   {
+    internal struct WizardPage
+    {
+      public string Title;
+      public string Description;
+      public string EnabledString;
+      public GenericConfig ProviderConfig;
+    }
+
     private string webConfigFileName;
     private DTE2 dte;
     private Solution2 solution;
     private Project project;
     private int page;
-    private WizardPage[] pages = new WizardPage[7];
-    private const int MEMBERSHIP_INDEX = 0;
-    private const int SimpleMembershipIndex = 1;
-    private const int PERSONALIZATION_INDEX = 6;
+    private WizardPage[] pages = new WizardPage[8];
+    private const int ENTITYFRAMEWORK_INDEX = 0;
+    private const int MEMBERSHIP_INDEX = 1;
+    private const int SimpleMembershipIndex = 2;
+    private const int ROLES_INDEX = 3;
+    private const int PROFILES_INDEX = 4;
+    private const int SESSION_INDEX = 5;
+    private const int SITEMAP_INDEX = 6;
+    private const int PERSONALIZATION_INDEX = 7;
+    private string[] pagesDescription = new string[8] { "Entity Framework", "Membership", "Simple Membership", "Roles", "Profiles", "Session State", "Site Map", "Web Personalization" };
+    private Dictionary<string, string> ControlsFriendlyName = new Dictionary<string, string>() {
+                                                              { "txtConnStringSM", "Connection String" },
+                                                              { "txtUserTable", "User Table" },
+                                                              { "txtUserIdCol", "User Id Column" },
+                                                              { "txtUserNameCol", "User Name Column" } };
+    private bool IsSimpleMembershipPage
+    {
+      get { return page == SimpleMembershipIndex; }
+    }
+
+    private bool IsEntityFrameworkPage
+    {
+      get { return page == ENTITYFRAMEWORK_INDEX; }
+    }
 
     public WebConfigDlg()
     {
       InitializeComponent();
-
-      dte = MySqlDataProviderPackage.GetGlobalService(
-          typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
-      solution = (Solution2)dte.Solution;
+      CreateStepsLabels();
+      SetSelectedStepLabel(pagesDescription[0]);
+      dte = MySqlDataProviderPackage.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
+      if (dte != null)
+      {
+        solution = (Solution2)dte.Solution;
+      }
       FindCurrentWebProject();
       EnsureWebConfig();
       LoadInitialState();
       PageChanged();
+    }
+
+    /// <summary>
+    /// Method to create the pages' steps labels in the left panel of the web config dialog.
+    /// </summary>
+    private void CreateStepsLabels()
+    {
+      int xAxis = 25, yAxis = 80;
+
+      foreach (string description in pagesDescription)
+      {
+        Label lbl = new Label();
+        lbl.AutoSize = false;
+        lbl.Size = new Size(169, 23);
+        lbl.Location = new Point(xAxis, yAxis);
+        lbl.BackColor = Color.FromArgb(41, 41, 41);
+        lbl.Font = new Font("Segoe UI", 8, FontStyle.Regular, GraphicsUnit.Point);
+        lbl.ForeColor = Color.FromArgb(138, 138, 138);
+        lbl.Text = description;
+        lbl.Name = string.Format("lbl{0}", description);
+        pnlSteps.Controls.Add(lbl);
+        yAxis += 25;
+      }
+    }
+
+    /// <summary>
+    /// Method to highlight the selected step label.
+    /// </summary>
+    /// <param name="stepName">Name of the step to be highlighted.</param>
+    private void SetSelectedStepLabel(string stepName)
+    {
+      ResetSelectedLabels();
+      Label lbl = (Label)pnlSteps.Controls.Find(string.Format("lbl{0}", stepName), true)[0];
+      lbl.Font = new System.Drawing.Font("Segoe UI", 8, FontStyle.Bold, GraphicsUnit.Point);
+      lbl.ForeColor = Color.FloralWhite;
+    }
+
+    /// <summary>
+    /// Resets all the steps labels to its original font and size.
+    /// </summary>
+    private void ResetSelectedLabels()
+    {
+      foreach (Control control in pnlSteps.Controls)
+      {
+        if (control is Label)
+        {
+          control.Font = new Font("Segoe UI", 8, FontStyle.Regular, GraphicsUnit.Point);
+          control.ForeColor = Color.FromArgb(138, 138, 138);
+        }
+      }
     }
 
     private void FindCurrentWebProject()
@@ -97,7 +178,11 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       foreach (ProjectItem items in project.ProjectItems)
       {
-        if (!String.Equals(items.Name, "web.config", StringComparison.InvariantCultureIgnoreCase)) continue;
+        if (!String.Equals(items.Name, "web.config", StringComparison.InvariantCultureIgnoreCase))
+        {
+          continue;
+        }
+
         webConfigFileName = items.get_FileNames(1);
         break;
       }
@@ -112,6 +197,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     private void LoadInitialState()
     {
       WebConfig wc = new WebConfig(webConfigFileName);
+      LoadInitialEntityFrameworkState();
       LoadInitialMembershipState();
       LoadInitialSimpleMembershipState();
       LoadInitialRoleState();
@@ -121,7 +207,20 @@ namespace MySql.Data.VisualStudio.WebConfig
       LoadInitialPersonalizationState();
 
       foreach (WizardPage page in pages)
+      {
         page.ProviderConfig.Initialize(wc);
+      }
+    }
+
+    /// <summary>
+    /// Sets the initial state of the entity framework configuration (Title, description and initializes the EntityFrameworkConfig object).
+    /// </summary>
+    private void LoadInitialEntityFrameworkState()
+    {
+      pages[ENTITYFRAMEWORK_INDEX].Title = "Entity Framework";
+      pages[ENTITYFRAMEWORK_INDEX].Description = "Set options for use with Entity Framework";
+      pages[ENTITYFRAMEWORK_INDEX].EnabledString = "Use MySQL with Entity Framework";
+      pages[ENTITYFRAMEWORK_INDEX].ProviderConfig = new EntityFrameworkConfig();
     }
 
     private void LoadInitialMembershipState()
@@ -134,44 +233,43 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void LoadInitialRoleState()
     {
-      pages[2].Title = "Roles";
-      pages[2].Description = "Set options for use with the role provider";
-      pages[2].EnabledString = "Use MySQL to manage my roles";
-      pages[2].ProviderConfig = new RoleConfig();
+      pages[ROLES_INDEX].Title = "Roles";
+      pages[ROLES_INDEX].Description = "Set options for use with the role provider";
+      pages[ROLES_INDEX].EnabledString = "Use MySQL to manage my roles";
+      pages[ROLES_INDEX].ProviderConfig = new RoleConfig();
     }
 
     private void LoadInitialProfileState()
     {
-      pages[3].Title = "Profiles";
-      pages[3].Description = "Set options for use with the profile provider";
-      pages[3].EnabledString = "Use MySQL to manage my profiles";
-      pages[3].ProviderConfig = new ProfileConfig();
+      pages[PROFILES_INDEX].Title = "Profiles";
+      pages[PROFILES_INDEX].Description = "Set options for use with the profile provider";
+      pages[PROFILES_INDEX].EnabledString = "Use MySQL to manage my profiles";
+      pages[PROFILES_INDEX].ProviderConfig = new ProfileConfig();
     }
 
     private void LoadInitialSessionState()
     {
-      pages[4].Title = "Session State";
-      pages[4].Description = "Set options for use with the session state provider";
-      pages[4].EnabledString = "Use MySQL to manage my ASP.Net session state";
-      pages[4].ProviderConfig = new SessionStateConfig();      
+      pages[SESSION_INDEX].Title = "Session State";
+      pages[SESSION_INDEX].Description = "Set options for use with the session state provider";
+      pages[SESSION_INDEX].EnabledString = "Use MySQL to manage my ASP.Net session state";
+      pages[SESSION_INDEX].ProviderConfig = new SessionStateConfig();
     }
 
     private void LoadInitialSiteMapState()
     {
-      pages[5].Title = "Site Map";
-      pages[5].Description = "Set options for use with the sitemap provider";
-      pages[5].EnabledString = "Use MySQL to manage my ASP.NET site map";
-      pages[5].ProviderConfig = new SiteMapConfig();
+      pages[SITEMAP_INDEX].Title = "Site Map";
+      pages[SITEMAP_INDEX].Description = "Set options for use with the sitemap provider";
+      pages[SITEMAP_INDEX].EnabledString = "Use MySQL to manage my ASP.NET site map";
+      pages[SITEMAP_INDEX].ProviderConfig = new SiteMapConfig();
     }
-
 
     private void LoadInitialPersonalizationState()
     {
       pages[PERSONALIZATION_INDEX].Title = "Web Personalization";
       pages[PERSONALIZATION_INDEX].Description = "Set options for use with the personalization provider";
       pages[PERSONALIZATION_INDEX].EnabledString = "Use MySQL to manage my ASP.NET personalization provider";
-      pages[PERSONALIZATION_INDEX].ProviderConfig = new PersonalizationConfig();      
-    
+      pages[PERSONALIZATION_INDEX].ProviderConfig = new PersonalizationConfig();
+
     }
 
     private void LoadInitialSimpleMembershipState()
@@ -185,10 +283,14 @@ namespace MySql.Data.VisualStudio.WebConfig
     private void advancedBtn_Click(object sender, EventArgs e)
     {
       MembershipOptionsDlg dlg = new MembershipOptionsDlg();
-      MembershipConfig config = pages[0].ProviderConfig as MembershipConfig;
+      MembershipConfig config = pages[MEMBERSHIP_INDEX].ProviderConfig as MembershipConfig;
       dlg.Options = config.MemberOptions;
       DialogResult r = dlg.ShowDialog();
-      if (DialogResult.Cancel == r) return;
+      if (DialogResult.Cancel == r)
+      {
+        return;
+      }
+
       config.MemberOptions = dlg.Options;
     }
 
@@ -198,7 +300,11 @@ namespace MySql.Data.VisualStudio.WebConfig
       try
       {
         dlg.ConnectionString = connectionString.Text;
-        if (DialogResult.Cancel == dlg.ShowDialog(this)) return;
+        if (DialogResult.Cancel == dlg.ShowDialog(this))
+        {
+          return;
+        }
+
         connectionString.Text = dlg.ConnectionString;
       }
       catch (ArgumentException)
@@ -209,20 +315,32 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void nextButton_Click(object sender, EventArgs e)
     {
-      if (!SavePageData()) return;
+      if (!SavePageData())
+      {
+        return;
+      }
+
       if (page == pages.Length - 1)
+      {
         Finish();
+      }
       else
       {
         page++;
+        SetSelectedStepLabel(pagesDescription[page]);
         PageChanged();
       }
     }
 
     private void backButton_Click(object sender, EventArgs e)
     {
-      if (!SavePageData()) return;
+      if (!SavePageData())
+      {
+        return;
+      }
+
       page--;
+      SetSelectedStepLabel(pagesDescription[page]);
       PageChanged();
     }
 
@@ -242,10 +360,18 @@ namespace MySql.Data.VisualStudio.WebConfig
         options.UserIdColumn = txtUserIdCol.Text;
         options.UserNameColumn = txtUserNameCol.Text;
         ((SimpleMembershipConfig)pages[SimpleMembershipIndex].ProviderConfig).SimpleMemberOptions = options;
-
         config.Enabled = useProvider.Checked;
       }
-      
+
+      if (IsEntityFrameworkPage && useProvider.Checked)
+      {
+        EntityFrameworkOptions options = new EntityFrameworkOptions();
+        options.EF5 = radioBtnEF5.Checked;
+        options.EF6 = radioBtnEF6.Checked;
+        ((EntityFrameworkConfig)pages[ENTITYFRAMEWORK_INDEX].ProviderConfig).EntityFrameworkOptions = options;
+        config.Enabled = useProvider.Checked;
+      }
+
       Options o = config.GenericOptions;
       o.AppName = appName.Text;
       o.AppDescription = appDescription.Text.Trim();
@@ -263,9 +389,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       pageLabel.Text = pages[page].Title;
       pageDesc.Text = pages[page].Description;
       useProvider.Text = pages[page].EnabledString;
-
       GenericConfig config = pages[page].ProviderConfig;
-
       Options o = config.GenericOptions;
       appName.Text = o.AppName;
       useProvider.Checked = config.Enabled;
@@ -275,21 +399,38 @@ namespace MySql.Data.VisualStudio.WebConfig
       enableExpCallback.Checked = o.EnableExpireCallback;
       controlPanel.Enabled = config.Enabled;
 
-      if(IsSimpleMembershipPage)
-        txtConnStringSM.Text = o.ConnectionString;
+      if (IsEntityFrameworkPage)
+      {
+        EntityFrameworkOptions options = ((EntityFrameworkConfig)pages[ENTITYFRAMEWORK_INDEX].ProviderConfig).EntityFrameworkOptions;
+        radioBtnEF5.Checked = options.EF5;
+        radioBtnEF6.Checked = options.EF6;
+      }
       else
-        connectionString.Text = o.ConnectionString;
+      {
+        if (IsSimpleMembershipPage)
+        {
+          txtConnStringSM.Text = o.ConnectionString;
+        }
+        else
+        {
+          connectionString.Text = o.ConnectionString;
+        }
+      }
 
       advancedBtn.Visible = page == 0;
-      writeExToLog.Visible = page != 2;
-      enableExpCallback.Visible = page == 3;
+      writeExToLog.Visible = page != 3;
+      enableExpCallback.Visible = page == 4;
       nextButton.Text = (page == pages.Length - 1) ? "Finish" : "Next";
       backButton.Enabled = page > 0;
 
       if (page == PERSONALIZATION_INDEX)
+      {
         useProvider.Enabled = IsMembershipSelected();
+      }
       else
+      {
         useProvider.Enabled = true;
+      }
 
       if (config.NotInstalled)
       {
@@ -297,51 +438,71 @@ namespace MySql.Data.VisualStudio.WebConfig
         useProvider.Enabled = false;
       }
 
-      if (IsSimpleMembershipPage)
+      if (IsEntityFrameworkPage)
       {
-        pnlSimpleMembership.Visible = true;
+        pnlSimpleMembership.Visible = false;
         controlPanel.Visible = false;
-
-        if (config.NotInstalled)
-        {
-          useProvider.Enabled = false;
-          useProvider.Checked = false;
-          pnlSimpleMembership.Enabled = false;
-        }
-        else
-        {
-          useProvider.Enabled = !IsMembershipSelected();
-          if (config.Enabled && IsMembershipSelected())
-            useProvider.Checked = false;
-        }
+        entityFrameworkPanel.Visible = true;
+        entityFrameworkPanel.Enabled = config.Enabled;
       }
       else
       {
-        pnlSimpleMembership.Visible = false;
-        controlPanel.Visible = true;
+        entityFrameworkPanel.Visible = false;
+        entityFrameworkPanel.Enabled = false;
+
+        if (IsSimpleMembershipPage)
+        {
+          pnlSimpleMembership.Visible = true;
+          controlPanel.Visible = false;
+
+          if (config.NotInstalled)
+          {
+            useProvider.Enabled = false;
+            useProvider.Checked = false;
+            pnlSimpleMembership.Enabled = false;
+          }
+          else
+          {
+            useProvider.Enabled = !IsMembershipSelected();
+            if (config.Enabled && IsMembershipSelected())
+            {
+              useProvider.Checked = false;
+            }
+          }
+        }
+        else
+        {
+          pnlSimpleMembership.Visible = false;
+          controlPanel.Visible = true;
+        }
       }
     }
 
     private void Finish()
     {
       WebConfig w = new WebConfig(webConfigFileName);
-      //is Membership is selected then save Simple Membership first, because these providers are in the same section so if any is removed but called second place it will remove the entire section
+      //If Membership is selected then save Simple Membership first, because these providers are in the same section,
+      //so if any is removed but called second place it will remove the entire section
       if (IsMembershipSelected())
       {
         pages[SimpleMembershipIndex].ProviderConfig.Save(w);
         pages[MEMBERSHIP_INDEX].ProviderConfig.Save(w);
       }
-      else 
+      else
       {
         pages[MEMBERSHIP_INDEX].ProviderConfig.Save(w);
         pages[SimpleMembershipIndex].ProviderConfig.Save(w);
       }
-      pages[2].ProviderConfig.Save(w);
-      pages[3].ProviderConfig.Save(w);
-      pages[4].ProviderConfig.Save(w);
-      pages[5].ProviderConfig.Save(w);
+
+      pages[ROLES_INDEX].ProviderConfig.Save(w);
+      pages[PROFILES_INDEX].ProviderConfig.Save(w);
+      pages[SESSION_INDEX].ProviderConfig.Save(w);
+      pages[SITEMAP_INDEX].ProviderConfig.Save(w);
       pages[PERSONALIZATION_INDEX].ProviderConfig.Save(w);
       w.Save();
+      WebConfig webConfig = new WebConfig(webConfigFileName);
+      pages[ENTITYFRAMEWORK_INDEX].ProviderConfig.Save(webConfig);
+      project.DTE.Solution.SolutionBuild.Build(true);
       Close();
     }
 
@@ -362,25 +523,44 @@ namespace MySql.Data.VisualStudio.WebConfig
     private void useProvider_CheckStateChanged(object sender, EventArgs e)
     {
       GenericConfig config = pages[page].ProviderConfig;
-      if (!IsSimpleMembershipPage)
+      if (IsEntityFrameworkPage)
       {
         config.Enabled = useProvider.Checked;
-        controlPanel.Enabled = config.Enabled;
-        controlPanel.Visible = true;
+        entityFrameworkPanel.Enabled = config.Enabled;
+        entityFrameworkPanel.Visible = true;
+        controlPanel.Visible = false;
         pnlSimpleMembership.Visible = false;
       }
       else
       {
-        config.Enabled = useProvider.Checked;
-        pnlSimpleMembership.Enabled = config.Enabled;
-        pnlSimpleMembership.Visible = true;
-        controlPanel.Visible = false;
+        if (!IsSimpleMembershipPage)
+        {
+          config.Enabled = useProvider.Checked;
+          controlPanel.Enabled = config.Enabled;
+          controlPanel.Visible = true;
+          pnlSimpleMembership.Visible = false;
+          entityFrameworkPanel.Visible = false;
+        }
+        else
+        {
+          config.Enabled = useProvider.Checked;
+          pnlSimpleMembership.Enabled = config.Enabled;
+          pnlSimpleMembership.Visible = true;
+          controlPanel.Visible = false;
+          entityFrameworkPanel.Visible = false;
+        }
       }
     }
 
     private bool IsMembershipSelected()
     {
       MembershipConfig config = pages[MEMBERSHIP_INDEX].ProviderConfig as MembershipConfig;
+      return config.Enabled;
+    }
+
+    private bool IsEntityFrameworkSelected()
+    {
+      EntityFrameworkConfig config = pages[ENTITYFRAMEWORK_INDEX].ProviderConfig as EntityFrameworkConfig;
       return config.Enabled;
     }
 
@@ -399,64 +579,57 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
     }
 
-    private bool IsSimpleMembershipPage
-    {
-      get { return page == SimpleMembershipIndex; }
-    }
-
     private bool IsValidData()
     {
-      if (!IsSimpleMembershipPage)
+      if (IsEntityFrameworkPage)
       {
-        if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
+        if (useProvider.Checked && !radioBtnEF5.Checked && !radioBtnEF6.Checked)
         {
-          MessageBox.Show(this, Resources.WebConfigConnStrNoEmpty, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(this, "Please select the Entity Framework version.", Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
           return false;
         }
       }
-      else 
+      else
       {
-        if (useProvider.Checked)
+        if (!IsSimpleMembershipPage)
         {
-          bool valid = true;
-          string controlsToValidate = "";
-          foreach (Control control in pnlSimpleMembership.Controls)
+          if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
           {
-            if (ControlsFriendlyName.ContainsKey(control.Name))
+            MessageBox.Show(this, Resources.WebConfigConnStrNoEmpty, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+          }
+        }
+        else
+        {
+          if (useProvider.Checked)
+          {
+            bool valid = true;
+            string controlsToValidate = "";
+            foreach (Control control in pnlSimpleMembership.Controls)
             {
-              controlsToValidate += controlsToValidate.Length > 0 ? ", " : "";
-              TextBox txt = control as TextBox;
-              if (txt != null && string.IsNullOrEmpty(txt.Text))
+              if (ControlsFriendlyName.ContainsKey(control.Name))
               {
-                valid = false;
-                controlsToValidate += string.Format("{0}, ", ControlsFriendlyName[txt.Name]);
+                controlsToValidate += controlsToValidate.Length > 0 ? ", " : "";
+                TextBox txt = control as TextBox;
+                if (txt != null && string.IsNullOrEmpty(txt.Text))
+                {
+                  valid = false;
+                  controlsToValidate += string.Format("{0}, ", ControlsFriendlyName[txt.Name]);
+                }
               }
             }
-          }
 
-          if (!valid)
-          {
-            controlsToValidate = (controlsToValidate += ".").Replace(", .", ".");
-            MessageBox.Show(this, string.Format("Please set a valid value for the following fields: {0}", controlsToValidate), Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
+            if (!valid)
+            {
+              controlsToValidate = (controlsToValidate += ".").Replace(", .", ".");
+              MessageBox.Show(this, string.Format("{0}: {1}", Resources.WrongNetFxVersionMessage, controlsToValidate),
+                                      Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+              return false;
+            }
           }
         }
       }
       return true;
     }
-
-    private Dictionary<string, string> ControlsFriendlyName = new Dictionary<string, string>() {
-                                                              { "txtConnStringSM", "Connection String" },
-                                                              { "txtUserTable", "User Table" },
-                                                              { "txtUserIdCol", "User Id Column" },
-                                                              { "txtUserNameCol", "User Name Column" } };
-  }
-
-  internal struct WizardPage
-  {
-    public string Title;
-    public string Description;
-    public string EnabledString;
-    public GenericConfig ProviderConfig;   
   }
 }

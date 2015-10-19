@@ -1,7 +1,10 @@
+1.2.5
+- Added the "Entity Framework" option to the MySQL Website Configuration Dialog, for web projects, so Entity Framework version 5 or 6 can be used with a MySQL database provider, automatically adding the configuration/references needed to the web.config file and the project itself.
+- Fixed the bug where the dataset designer wizard was not showing the stored procedure parameters when creating a "TableAdapter" using existing stored procedures for the "Select" command. Also, fixed the bug where the stored procedure command having an "error" command was avoiding the dataset to be created (MySQL Bug #74195, Oracle Bug #20233133).
 
 
 1.2.4
-- Removed support for VS2008 (JIRA Bug #MYSQLFORVS-331).
+- Removed support for VS2008.
 - Added support for VS2015 so the plugin can be installed properly (MySQL Bug #77708, Oracle Bug #21438524).
 - Fix for MySQL parser does not support new syntax in 'explain' for grammar 5.7 (Oracle Bug #19431740).
 
