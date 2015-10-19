@@ -504,17 +504,17 @@
     </Property>
 
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
-    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
     <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2013 Custom Action (update packages file) -->
-    <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
     <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2015 Custom Action (update packages file) -->
-    <Binary Id="VS14_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS14_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
     <CustomAction Id="VS2015_SetPathProp" Property="VS14_UpdatePackageFile" Value="VS2015_PathProp=[VS_2015_PATH]" Return="check" />
     <CustomAction Id="VS14_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2015" BinaryKey="VS14_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
@@ -564,16 +564,16 @@
     </DirectoryRef>
 
     <InstallExecuteSequence>
-      <Custom Action='VS2010Setup' Before='InstallFinalize'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
-      <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action='VS2012Setup' Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action='VS2013_SetPathProp' Before='VS12_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
-      <Custom Action='VS2013Setup' Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
-      <Custom Action='VS2015_SetPathProp' Before='VS14_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action='VS2015Setup' Before='InstallFinalize'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action="VS11_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action="VS12_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
-      <Custom Action="VS14_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
+      <Custom Action='VS2012_SetPathProp' Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action='VS2013_SetPathProp' After='VS2012_SetPathProp'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
+      <Custom Action='VS2015_SetPathProp' After='VS2013_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
+      <Custom Action="VS11_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action="VS12_UpdatePackageFile" After='VS11_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
+      <Custom Action="VS14_UpdatePackageFile" After='VS12_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
+      <Custom Action='VS2010Setup' After='VS14_UpdatePackageFile'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
+      <Custom Action='VS2012Setup' After='VS2010Setup'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action='VS2013Setup' After='VS2012Setup'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
+      <Custom Action='VS2015Setup' After='VS2013Setup'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
