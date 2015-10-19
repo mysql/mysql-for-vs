@@ -434,7 +434,7 @@
     <When Condition="'$(Framework)' == '4.5.1'">
       <ItemGroup>
         <EmbeddedResource Include="Properties\Resources.4.x.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
+          <Generator>PublicResXFileCodeGenerator</Generator>
           <LastGenOutput>Resources.4.x.Designer.cs</LastGenOutput>
           <MergeWithCTO>true</MergeWithCTO>
           <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
@@ -716,6 +716,7 @@
     <Compile Include="WebConfig\ConnectionStringEditorDlg.Designer.cs">
       <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebConfig\EntityFrameworkConfig.cs" />
     <Compile Include="WebConfig\GenericConfig.cs">
     </Compile>
     <Compile Include="WebConfig\MembershipConfig.cs">
@@ -743,6 +744,7 @@
     <Compile Include="WebConfig\WebConfigDlg.Designer.cs">
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebConfig\WebConfigTools.cs" />
     <Compile Include="Wizards\BaseWizard.cs" />
     <Compile Include="Wizards\BaseWizardForm.cs">
       <SubType>Form</SubType>
@@ -1012,6 +1014,7 @@
     <Content Include="Resources\Banner.png" />
     <Content Include="Resources\MySQL.png" />
     <None Include="Resources\mysql_project_wizard.png" />
+    <None Include="Resources\mysql_WebsiteConfig.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">
@@ -1091,6 +1094,7 @@
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Management" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
