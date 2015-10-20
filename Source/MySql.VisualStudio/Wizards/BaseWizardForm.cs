@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -44,12 +44,14 @@ namespace MySql.Data.VisualStudio.Wizards
     protected int Current = 0;
     protected WizardPage CurPage = null;
     protected string WizardName;
-    
+
     internal DTE dte
     {
       get;
       set;
     }
+
+    internal System.Windows.Forms.PictureBox PictureBox1 { get { return pictureBox1; } }
 
     internal virtual string ConnectionString
     {
@@ -57,7 +59,7 @@ namespace MySql.Data.VisualStudio.Wizards
     }
 
     internal BindingSource connections;
-       
+
     public BaseWizardForm()
     {
       InitializeComponent();
@@ -90,7 +92,7 @@ namespace MySql.Data.VisualStudio.Wizards
       int prevCurrent = Current;
       int i = prevCurrent;
 
-      while (--i >= 0 && Pages[i].Skipped ) ;
+      while (--i >= 0 && Pages[i].Skipped) ;
 
       if (i >= 0) Current = i + 1;
       else throw new WizardCancelledException();
@@ -129,7 +131,7 @@ namespace MySql.Data.VisualStudio.Wizards
         Pages[Current].Visible = true;
         btnBack.Enabled = true;
       }
-      SetLastPage();   
+      SetLastPage();
       SetLabels();
       CurPage.OnStarting(this);
     }
@@ -148,7 +150,7 @@ namespace MySql.Data.VisualStudio.Wizards
     private void btnFinish_Click(object sender, EventArgs e)
     {
       if (!CurPage.IsValid())
-      {      
+      {
         return;
       }
       else
@@ -165,7 +167,7 @@ namespace MySql.Data.VisualStudio.Wizards
       var labels = Descriptions[Current].Split(',');
       lblStepTitle.Text = labels[0];
       lblDescription.Text = labels[1];
-      lblWizardName.Text = WizardName;    
+      lblWizardName.Text = WizardName;
     }
 
     internal void SetSkipPage(int pageIndex, bool skip)
@@ -188,7 +190,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       bool isLastPage = false;
       int i = Current;
-      
+
       while (++i < Pages.Count && Pages[i].Skipped) ;
 
       if (i >= Pages.Count) isLastPage = true;
