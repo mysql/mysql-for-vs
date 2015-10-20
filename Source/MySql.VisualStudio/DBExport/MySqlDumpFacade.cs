@@ -97,7 +97,7 @@ namespace MySql.Data.VisualStudio.DBExport
       _errorsOutput = new StringBuilder();
       _logInfo = new StringBuilder();
       
-      _dumpFilePath = Utility.GetInstallLocation("MySQL for Visual Studio");
+      _dumpFilePath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
       if (!String.IsNullOrEmpty(_dumpFilePath))
         _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
       
