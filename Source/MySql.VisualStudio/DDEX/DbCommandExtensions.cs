@@ -148,7 +148,7 @@ namespace MySql.Data.VisualStudio.DDEX
         return string.Empty;
 
       string sProcDefinition = GetStoredProcedureDefinition(cmd, restrictions);
-      if (string.IsNullOrEmpty(sProcDefinition))
+      if (string.IsNullOrEmpty(sProcDefinition) || !sProcDefinition.ToUpper().Contains("SELECT"))
       {
         return string.Empty;
       }
