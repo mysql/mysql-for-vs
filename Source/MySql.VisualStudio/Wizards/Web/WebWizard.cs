@@ -57,7 +57,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     private string _fullconnectionstring = string.Empty;
 
-    public WebWizard(LanguageGenerator language): base(language)
+    public WebWizard(LanguageGenerator language)
+      : base(language)
     {
       WizardForm = new WebWizardForm(this);
       projectType = ProjectWizardType.AspNetMVC;
@@ -74,7 +75,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         Settings.Default.Save();
 
         if (_generalPane != null)
-            _generalPane.Activate();
+          _generalPane.Activate();
 
         SendToGeneralOutputWindow("Starting project generation...");
 
@@ -84,7 +85,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           vsProj.References.Add("MySql.Data");
         }
         catch
-        {         
+        {
           if (MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
                         + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
                          Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
@@ -101,11 +102,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           foreach (Reference item in refs)
           {
             switch (item.Name)
-            {            
+            {
               case "System.Web.Razor":
                 if (item.Version.Equals("1.0.0.0"))
                   vsProj.References.Find("System.Web.Razor").Remove();
-                break;            
+                break;
               case "System.Web.WebPages":
                 vsProj.References.Find("System.Web.WebPages").Remove();
                 break;
@@ -117,7 +118,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 break;
             }
           }
-          
+
           vsProj.References.Add("System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
           vsProj.References.Add("System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
           vsProj.References.Add("System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
@@ -159,28 +160,28 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
 
         else
-        {          
-            string indexPath = Language == LanguageGenerator.CSharp ? (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
-       "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value) :
-        (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
-       "Home").ProjectItems, "Index.vbhtml").Properties.Item("FullPath").Value);
+        {
+          string indexPath = Language == LanguageGenerator.CSharp ? (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+     "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value) :
+      (string)(FindProjectItem(FindProjectItem(FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
+     "Home").ProjectItems, "Index.vbhtml").Properties.Item("FullPath").Value);
 
-            string contents = File.ReadAllText(indexPath);
-            contents = contents.Replace("$catalogList$", String.Empty);
-            File.WriteAllText(indexPath, contents);                 
+          string contents = File.ReadAllText(indexPath);
+          contents = contents.Replace("$catalogList$", String.Empty);
+          File.WriteAllText(indexPath, contents);
         }
 
         var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
         SendToGeneralOutputWindow("Starting provider configuration...");
         try
-        {         
+        {
           try
           {
             string configPath = ProjectPath + @"\web.config";
 
             if (WizardForm.createAdministratorUser)
             {
-              SendToGeneralOutputWindow("Creating administrator user...");             
+              SendToGeneralOutputWindow("Creating administrator user...");
               using (AppConfig.Load(configPath))
               {
                 var configFile = new FileInfo(configPath);
@@ -201,13 +202,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                   }
                 }
                 catch
-                { }      
+                { }
 
-                MembershipSection section = (MembershipSection)config.GetSection("system.web/membership");                
+                MembershipSection section = (MembershipSection)config.GetSection("system.web/membership");
                 ProviderSettingsCollection settings = section.Providers;
                 NameValueCollection membershipParams = settings[section.DefaultProvider].Parameters;
                 var provider = new MySQLMembershipProvider();
-                
+
                 provider.Initialize(section.DefaultProvider, membershipParams);
 
                 //create the user
@@ -241,7 +242,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               options.WriteExceptionToLog = WizardForm.writeExceptionsToLog;
               profileConfig.GenericOptions = options;
               profileConfig.DefaultProvider = "MySQLProfileProvider";
-              profileConfig.Save(webConfig);        
+              profileConfig.Save(webConfig);
             }
 
             if (WizardForm.includeRoleProvider)
@@ -261,7 +262,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               options.WriteExceptionToLog = WizardForm.writeExceptionsToLog;
               roleConfig.GenericOptions = options;
               roleConfig.DefaultProvider = "MySQLRoleProvider";
-              roleConfig.Save(webConfig);              
+              roleConfig.Save(webConfig);
             }
             webConfig.Save();
           }
@@ -295,31 +296,31 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       var connectionstringForModel = string.Empty;
 
-      var path = Utility.GetInstallLocation("MySQL Connector/Net");
+      var path = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
       Version mysqlDataVersion = null;
-      
+
 
       if (!String.IsNullOrEmpty(path))
       {
-        mysqlDataVersion = new Version(Utility.GetProductVersion(Assembly.LoadFrom(path + @"\Assemblies\v2.0\MySql.Data.dll")));        
+        mysqlDataVersion = new Version(Utility.GetProductVersion(path + @"\Assemblies\v2.0\MySql.Data.dll"));
       }
 
-      _fullconnectionstring = WizardForm.connectionStringForAspNetTables;      
+      _fullconnectionstring = WizardForm.connectionStringForAspNetTables;
 
       if (!WizardForm.includeSensitiveInformation)
       {
         // connectionstringformodel
-        var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);        
-        csb.Password = null;        
-        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);        
+        var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);
+        csb.Password = null;
+        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);
         // connectionstringforaspnet                
         csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
-        csb.Password = null;        
-        WizardForm.connectionStringForAspNetTables = csb.ConnectionString;        
+        csb.Password = null;
+        WizardForm.connectionStringForAspNetTables = csb.ConnectionString;
       }
       else
       {
-        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);              
+        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);
       }
 
       replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
@@ -328,10 +329,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$EntityFrameworkReference$", WizardForm.dEVersion != DataEntityVersion.None ? @"<add assembly=""System.Data.Entity, Version=4.0.0.0, Culture=neutral,PublicKeyToken=b77a5c561934e089""/>" : string.Empty);
       replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
       replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
-      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");      
+      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
       replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
       replacementsDictionary.Add("$mySqlProviderVersion$", mysqlDataVersion != null ? string.Format("{0}.{1}.{2}.{3}", mysqlDataVersion.Major, mysqlDataVersion.Minor, mysqlDataVersion.Build, "0") : "6.8.3.0");
-      replacementsDictionary.Add("$jqueryversion$", JQUERY_VERSION);      
+      replacementsDictionary.Add("$jqueryversion$", JQUERY_VERSION);
 
       switch (WizardForm.dEVersion)
       {
@@ -347,7 +348,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         default:
           break;
       }
-      
+
       ProjectPath = replacementsDictionary["$destinationdirectory$"];
       ProjectNamespace = GetCanonicalIdentifier(replacementsDictionary["$safeprojectname$"]);
       NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
@@ -356,18 +357,18 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$webpages$", version >= 12.0 ? "2.0.0.0" : "1.0.0.0");
       replacementsDictionary.Add("$SystemWebHelpers$", version >= 12.0 ? "2.0.0.0" : "1.0.0.0");
       replacementsDictionary.Add("$SystemWebMvc$", version >= 12.0 ? "4.0.0.0" : "3.0.0.0");
-      replacementsDictionary.Add("$mvcbindingRedirect$", version >= 12.0 ? "4.0.0.0" : "3.0.0.0");      
-      
+      replacementsDictionary.Add("$mvcbindingRedirect$", version >= 12.0 ? "4.0.0.0" : "3.0.0.0");
+
       var requiredquestionandanswer = string.Empty;
       if (WizardForm.requireQuestionAndAnswer)
-        requiredquestionandanswer = WizardForm.Wizard.Language == LanguageGenerator.CSharp ?  "[Required]" : "<Required()> _";          
+        requiredquestionandanswer = WizardForm.Wizard.Language == LanguageGenerator.CSharp ? "[Required]" : "<Required()> _";
       replacementsDictionary.Add("$requiredquestionandanswer$", requiredquestionandanswer);
     }
 
     private void GenerateMVCItems(VSProject vsProj)
-    { 
+    {
       if (string.IsNullOrEmpty(WizardForm.connectionStringForModel))
-       return;
+        return;
 
       if (WizardForm.selectedTables == null || WizardForm.selectedTables.Count == 0)
         return;
@@ -376,8 +377,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       IServiceProvider serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)Dte);
       ITextTemplating t4 = serviceProvider.GetService(typeof(STextTemplating)) as ITextTemplating;
       ITextTemplatingSessionHost sessionHost = t4 as ITextTemplatingSessionHost;
-      
-      var controllerClassPath = string.Empty;        
+
+      var controllerClassPath = string.Empty;
       var IndexFilePath = string.Empty;
       var fileExtension = string.Empty;
       Version productVersion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -403,7 +404,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       catalogs.AppendLine();
 
       foreach (var table in TablesIncludedInModel)
-      {        
+      {
         catalogs.AppendLine(string.Format(@"<div> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</div>", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));
       }
 
@@ -418,66 +419,66 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       File.WriteAllText(indexPath, contents);
 
       try
-      {                        
-        foreach(var table in TablesIncludedInModel)
-        {      
-           // creating controller file
-            sessionHost.Session = sessionHost.CreateSession();
-            sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
-            sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
-            sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1));
-            if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
-              Language == LanguageGenerator.CSharp )
+      {
+        foreach (var table in TablesIncludedInModel)
+        {
+          // creating controller file
+          sessionHost.Session = sessionHost.CreateSession();
+          sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
+          sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
+          sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1));
+          if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+            Language == LanguageGenerator.CSharp)
+          {
+            sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+          }
+          else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+          {
+            sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
+          }
+          sessionHost.Session["classNameParameter"] = table.Key;
+          sessionHost.Session["entityNameParameter"] = table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1);
+          sessionHost.Session["entityClassNameParameter"] = table.Key;
+          if ((visualStudioVersion < 12.0 && Language == LanguageGenerator.VBNET) ||
+              Language == LanguageGenerator.CSharp)
+          {
+            sessionHost.Session["entityClassNameParameterWithNamespace"] =
+              string.Format("{0}.{1}", ProjectNamespace, table.Key);
+          }
+          else if (Language == LanguageGenerator.VBNET && visualStudioVersion >= 12.0)
+          {
+            if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
             {
-              sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+              sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
             }
-            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
             {
-              sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
+              sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{1}", ProjectNamespace, table.Key);
             }
-            sessionHost.Session["classNameParameter"] = table.Key;
-            sessionHost.Session["entityNameParameter"] = table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1);          
-            sessionHost.Session["entityClassNameParameter"] = table.Key;
-            if ((visualStudioVersion < 12.0 && Language == LanguageGenerator.VBNET) ||
-                Language == LanguageGenerator.CSharp)
-            {
-              sessionHost.Session["entityClassNameParameterWithNamespace"] = 
-                string.Format( "{0}.{1}", ProjectNamespace, table.Key );
-            }
-            else if ( Language == LanguageGenerator.VBNET && visualStudioVersion >= 12.0)
-            {
-              if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
-              {
-                sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
-              } 
-              else if( WizardForm.dEVersion == DataEntityVersion.EntityFramework6 )
-              {
-                sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{1}", ProjectNamespace, table.Key);
-              }
-            }
-            T4Callback cb = new T4Callback();
-            StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));          
-            string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1), fileExtension);
-            File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
-            if (cb.errorMessages.Count > 0)
-            {
-              File.AppendAllLines(controllerFilePath, cb.errorMessages);
-            }
+          }
+          T4Callback cb = new T4Callback();
+          StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));
+          string controllerFilePath = ProjectPath + string.Format(@"\Controllers\{0}Controller.{1}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1), fileExtension);
+          File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
+          if (cb.errorMessages.Count > 0)
+          {
+            File.AppendAllLines(controllerFilePath, cb.errorMessages);
+          }
 
-            vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);         
+          vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);
 
-            var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));  
-            Directory.CreateDirectory(viewPath);          
-            string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
-            File.WriteAllText(string.Format(viewPath + @"\Index.{0}html",fileExtension), resultViewFile);
-            if (cb.errorMessages.Count > 0)
-            {
-              File.AppendAllLines(controllerFilePath, cb.errorMessages);
-            }
-            vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));                
+          var viewPath = Path.GetFullPath(ProjectPath + string.Format(@"\Views\{0}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));
+          Directory.CreateDirectory(viewPath);
+          string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
+          File.WriteAllText(string.Format(viewPath + @"\Index.{0}html", fileExtension), resultViewFile);
+          if (cb.errorMessages.Count > 0)
+          {
+            File.AppendAllLines(controllerFilePath, cb.errorMessages);
+          }
+          vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));
         }
       }
-      catch 
+      catch
       {
         MessageBox.Show("An error occured when generating MVC items. The application is not completed.");
       }

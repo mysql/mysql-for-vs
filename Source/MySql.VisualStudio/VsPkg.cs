@@ -43,7 +43,7 @@ using System.Data;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio.Data.Core;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.Shell;  
+using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using System.Text;
 using MySql.Data.VisualStudio.SchemaComparer;
@@ -99,10 +99,10 @@ namespace MySql.Data.VisualStudio
   [ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
-  [ProvideToolWindow(typeof(DbExportWindowPane),Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
+  [ProvideToolWindow(typeof(DbExportWindowPane), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
   [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
   // This attribute registers a tool window exposed by this package.
-  [Guid(GuidStrings.Package)]  
+  [Guid(GuidStrings.Package)]
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
   {
     public static MySqlDataProviderPackage Instance;
@@ -123,14 +123,14 @@ namespace MySql.Data.VisualStudio
       if (Instance != null)
         throw new Exception("Creating second instance of package");
       Instance = this;
-      Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));            
+      Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
     }
 
     internal string ConnectionName { get; set; }
 
     internal List<IVsDataExplorerConnection> _mysqlConnectionsList;
-      
-     /////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////
     // Overriden Package Implementation
     #region Package Members
 
@@ -169,7 +169,7 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdItem = new OleMenuCommand(OpenMySQLUtilitiesCallback, cmdOpenUtilitiesPrompt);
         cmdItem.BeforeQueryStatus += new EventHandler(cmdOpenUtilitiesPrompt_BeforeQueryStatus);
         mcs.AddCommand(cmdItem);
-        
+
         CommandID cmdLaunchWB = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidLaunchWorkbench);
         OleMenuCommand cmdMenuLaunchWB = new OleMenuCommand(LaunchWBCallback, cmdLaunchWB);
         cmdMenuLaunchWB.BeforeQueryStatus += new EventHandler(cmdLaunchWB_BeforeQueryStatus);
@@ -178,7 +178,7 @@ namespace MySql.Data.VisualStudio
         CommandID menuGenDbScript = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
         OleMenuCommand menuItemGenDbScript = new OleMenuCommand(GenDbScriptCallback, menuGenDbScript);
         menuItemGenDbScript.BeforeQueryStatus += new EventHandler(GenDbScript_BeforeQueryStatus);
-        mcs.AddCommand(menuItemGenDbScript);       
+        mcs.AddCommand(menuItemGenDbScript);
 
         CommandID cmdDbExportTool = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidDBExport);
         OleMenuCommand cmdMenuDbExport = new OleMenuCommand(cmdDbExport_Callback, cmdDbExportTool);
@@ -191,7 +191,7 @@ namespace MySql.Data.VisualStudio
 #if NET_40_OR_GREATER
         CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
         OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
-        
+
         if (!IsMVC4Installed())
         {
           cmdMenuCreateNewMvcProject.Enabled = false;
@@ -201,7 +201,7 @@ namespace MySql.Data.VisualStudio
 
         CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
         OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
-        
+
         if (!IsMVC4Installed())
         {
           cmdMenuCreateWinFormsProject.Enabled = false;
@@ -262,20 +262,20 @@ namespace MySql.Data.VisualStudio
         }
       }
       else
-        openUtilities.Visible =  openUtilities.Enabled = false;
-    }   
+        openUtilities.Visible = openUtilities.Enabled = false;
+    }
 
     void cmdLaunchWB_BeforeQueryStatus(object sender, EventArgs e)
-    {      
-      OleMenuCommand launchWBbtn = sender as OleMenuCommand;            
-            
+    {
+      OleMenuCommand launchWBbtn = sender as OleMenuCommand;
+
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
       UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       Array selectedItems = (Array)uih.SelectedItems;
-      
+
       if (selectedItems != null)
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      
+
       if (GetConnection(ConnectionName) != null)
       {
         if (MySqlWorkbench.IsInstalled)
@@ -296,7 +296,7 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
 
       ////this feature can be shown only if Connector/Net is installed too
-      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Connector/Net")))
+      if (String.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Connector/Net")))
         return;
 
       DTE dte = GetService(typeof(DTE)) as DTE;
@@ -320,7 +320,7 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand cmd = sender as OleMenuCommand;
       cmd.Visible = false;
     }
-  
+
 
     void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
     {
@@ -331,14 +331,15 @@ namespace MySql.Data.VisualStudio
 
       dbExportButton.Visible = false;
 
-      if (selectedItems != null)            
+      if (selectedItems != null)
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       if (GetConnection(ConnectionName) != null)
       {
         dbExportButton.Visible = true;
         dbExportButton.Enabled = true;
       }
-      else {
+      else
+      {
         dbExportButton.Enabled = false;
       }
     }
@@ -365,7 +366,7 @@ namespace MySql.Data.VisualStudio
             DbExportWindowPane windowPanel = (DbExportWindowPane)window;
 
             if (_mysqlConnectionsList == null || _mysqlConnectionsList.Count <= 0)
-               _mysqlConnectionsList = GetMySqlConnections();
+              _mysqlConnectionsList = GetMySqlConnections();
 
             windowPanel.Connections = _mysqlConnectionsList;
             windowPanel.SelectedConnectionName = currentConnectionName;
@@ -385,14 +386,14 @@ namespace MySql.Data.VisualStudio
             break;
           }
         }
-      }     
+      }
     }
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      if (String.IsNullOrEmpty(Utility.GetInstallLocation("MySQL Utilities")))
+      if (String.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Utilities")))
       {
-        var pathWorkbench = Utility.GetInstallLocation("Workbench");
+        var pathWorkbench = Utility.GetMySqlAppInstallLocation("Workbench");
         var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
 
         if (!Directory.Exists(pathUtilities))
@@ -413,15 +414,15 @@ namespace MySql.Data.VisualStudio
     }
 
     private void LaunchWBCallback(object sender, EventArgs e)
-    {  
+    {
       IVsDataExplorerConnection connection = GetConnection(ConnectionName);
       if (connection != null)
       {
         var connList = MySqlWorkbench.Connections;
         var connStr = connection.Connection.DisplayConnectionString;
-        ConnectionParameters parameters = ParseConnectionString(connStr);                         
-        MySqlWorkbench.LaunchSqlEditor(FindMathchingWorkbenchConnection(parameters));      
-      }           
+        ConnectionParameters parameters = ParseConnectionString(connStr);
+        MySqlWorkbench.LaunchSqlEditor(FindMathchingWorkbenchConnection(parameters));
+      }
     }
 
     private void ConfigCallback(object sender, EventArgs e)
@@ -448,7 +449,7 @@ namespace MySql.Data.VisualStudio
       myCon.Open();
       try
       {
-          script = SelectObjects.GetDbScript(myCon);
+        script = SelectObjects.GetDbScript(myCon);
       }
       finally
       {
@@ -467,7 +468,7 @@ namespace MySql.Data.VisualStudio
       if (r == DialogResult.Cancel) return;
       try
       {
-        MysqlConnectionSelected = (MySqlConnection)d.Connection;        
+        MysqlConnectionSelected = (MySqlConnection)d.Connection;
         DTE env = (DTE)GetService(typeof(DTE));
         Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)env);
         IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
@@ -476,29 +477,29 @@ namespace MySql.Data.VisualStudio
         ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
       }
       catch (MySqlException)
-      {        
+      {
         MessageBox.Show(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
         return;
       }
       MysqlConnectionSelected = null;
     }
-  
+
 
 
     public string GetCurrentConnectionName()
     {
-        EnvDTE80.DTE2 _applicationObject = GetDTE2();
-        UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
-        Array selectedItems = (Array)uih.SelectedItems;
+      EnvDTE80.DTE2 _applicationObject = GetDTE2();
+      UIHierarchy uih = _applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
+      Array selectedItems = (Array)uih.SelectedItems;
 
-        if (selectedItems != null)
-            return ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-        
-        return string.Empty;
+      if (selectedItems != null)
+        return ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+
+      return string.Empty;
     }
 
     private MySqlConnection GetCurrentConnection()
-    {      
+    {
       IVsDataExplorerConnection con = GetConnection(GetCurrentConnectionName());
       try
       {
@@ -514,11 +515,11 @@ namespace MySql.Data.VisualStudio
           con.Connection.UnlockProviderObject();
         }
       }
-      catch 
+      catch
       {
         return null;
       }
-    }   
+    }
 
     internal EnvDTE80.DTE2 GetDTE2()
     {
@@ -527,15 +528,15 @@ namespace MySql.Data.VisualStudio
 
     public IVsDataExplorerConnection GetConnection(string connectionName)
     {
-     IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
-            if (connectionManager == null) return null;
+      IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+      if (connectionManager == null) return null;
 
       System.Collections.Generic.IDictionary<string, IVsDataExplorerConnection> connections = connectionManager.Connections;
 
       foreach (var connection in connections)
       {
-          if (Guids.Provider.Equals(connection.Value.Provider) && connection.Value.DisplayName.Equals(connectionName))
-              return connection.Value;                
+        if (Guids.Provider.Equals(connection.Value.Provider) && connection.Value.DisplayName.Equals(connectionName))
+          return connection.Value;
       }
       return null;
     }
@@ -559,7 +560,7 @@ namespace MySql.Data.VisualStudio
       catch
       { }
 
-      return new List<IVsDataExplorerConnection>();     
+      return new List<IVsDataExplorerConnection>();
     }
 
 
@@ -670,14 +671,14 @@ namespace MySql.Data.VisualStudio
     private void CreateNewMySqlProject(string projectType)
     {
       DTE env = (DTE)GetService(typeof(DTE));
-      WizardNewProjectDialog dlg ;
+      WizardNewProjectDialog dlg;
 
       MySql.Data.VisualStudio.Wizards.ValidationsGrid.ClearMetadataCache();
 
       if (String.IsNullOrEmpty(Settings.Default.NewProjectDialogSelected))
-         dlg = new WizardNewProjectDialog(projectType);
+        dlg = new WizardNewProjectDialog(projectType);
       else
-         dlg = new WizardNewProjectDialog(Settings.Default.NewProjectDialogSelected);
+        dlg = new WizardNewProjectDialog(Settings.Default.NewProjectDialogSelected);
 
       DialogResult result = dlg.ShowDialog();
       if (result != DialogResult.OK) return;
@@ -708,7 +709,7 @@ namespace MySql.Data.VisualStudio
     }
 
     public struct ConnectionParameters
-    {      
+    {
       public string HostName;
       public string HostIPv4;
       public int Port;

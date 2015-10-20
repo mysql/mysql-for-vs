@@ -92,7 +92,7 @@ namespace MySql.ConnectorInstaller
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utility.GetInstallLocation("MySQL for Visual Studio");
+      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
 
       if (String.IsNullOrEmpty(installedPath))
       {
@@ -141,7 +141,7 @@ namespace MySql.ConnectorInstaller
     [CustomAction]
     public static ActionResult GetConnectorNetVersion(Session session)
     {
-      var installedPath = Utility.GetInstallLocation("MySQL Connector/Net");
+      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
 
       session["CNETINSTALLED"] = "0";
       session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
