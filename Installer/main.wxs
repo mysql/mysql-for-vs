@@ -115,28 +115,31 @@
         </Directory>
         <Directory Id="VS10_PrivateAssemblies" Name="PrivateAssemblies" />
         <Directory Id="VS10_PublicAssemblies" Name="PublicAssemblies" />
-        <Directory Id="VS10_ProjectTemplates" Name="ProjectTemplates"  >
-          <Directory Id="VS10_CSharpPT" Name="CSharp">
-            <Directory Id="VS10_CSharpPTMySQL" Name="MySQL"/>
+
+        <!--Item Templates-->
+        <Directory Id="VS10_ItemTemplates" Name="ItemTemplates" >
+          <Directory Id="VS10_CSharpIT" Name="CSharp">
+            <Directory Id="VS10_CSharpITMySQL" Name="MySQL"/>
           </Directory>
-          <Directory Id="VS10_VisualBasicPT" Name="VisualBasic">
-            <Directory Id="VS10_VisualBasicPTMySQL" Name="MySQL"/>
-          </Directory>
-        </Directory>
-        <Directory Id="VS10_ProjectTemplatesCache" Name="ProjectTemplatesCache">
-          <Directory Id="VS10_CSharpPTCache" Name="CSharp">
-            <Directory Id="VS10_CSharpPTMySQLCache" Name="MySQL">
-              <Directory Id="VS10_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-              <Directory Id="VS10_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-            </Directory>
-          </Directory>
-          <Directory Id="VS10_VisualBasicPTCache" Name="VisualBasic">
-            <Directory Id="VS10_VisualBasicPTMySQLCache" Name="MySQL">
-              <Directory Id="VS10_VisualBasicMySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-              <Directory Id="VS10_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-            </Directory>
+          <Directory Id="VS10_VBIT" Name="VisualBasic">
+            <Directory Id="VS10_VBITMySQL" Name="MySQL"/>
           </Directory>
         </Directory>
+        <Directory Id="VS10_ItemTemplatesCache" Name="ItemTemplatesCache">
+          <Directory Id="VS10_CSharpITCache" Name="CSharp">
+            <Directory Id="VS10_CS_IT_MySQLCache" Name="MySQL">
+              <Directory Id="VS10_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+              <Directory Id="VS10_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+            </Directory>
+          </Directory>
+          <Directory Id="VS10_VBITCache" Name="VisualBasic">
+            <Directory Id="VS10_VB_IT_MySQLCache" Name="MySQL">
+              <Directory Id="VS10_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+              <Directory Id="VS10_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+            </Directory>
+          </Directory>
+        </Directory>
+
       </Directory>
 
       <!-- VS2012 Extension folders -->
@@ -163,28 +166,31 @@
             </Directory>
             <Directory Id="VS11_PrivateAssemblies" Name="PrivateAssemblies" />
             <Directory Id="VS11_PublicAssemblies" Name="PublicAssemblies" />
-            <Directory Id="VS11_ProjectTemplates" Name="ProjectTemplates" >
-              <Directory Id="VS11_CSharpPT" Name="CSharp">
-                <Directory Id="VS11_CSharpPTMySQL" Name="MySQL"/>
+
+            <!--Item Templates-->
+            <Directory Id="VS11_ItemTemplates" Name="ItemTemplates" >
+              <Directory Id="VS11_CSharpIT" Name="CSharp">
+                <Directory Id="VS11_CSharpITMySQL" Name="MySQL"/>
               </Directory>
-              <Directory Id="VS11_VisualBasicPT" Name="VisualBasic">
-                <Directory Id="VS11_VisualBasicPTMySQL" Name="MySQL"/>
-              </Directory>
-            </Directory>
-            <Directory Id="VS11_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
-              <Directory Id="VS11_CSharpPTCache" Name="CSharp">
-                <Directory Id="VS11_CSharpPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS11_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-                  <Directory Id="VS11_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS11_VisualBasicPTCache" Name="VisualBasic">
-                <Directory Id="VS11_VisualBasicPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS11_VisualBasicMySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-                  <Directory Id="VS11_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-                </Directory>
+              <Directory Id="VS11_VBIT" Name="VisualBasic">
+                <Directory Id="VS11_VBITMySQL" Name="MySQL"/>
               </Directory>
             </Directory>
+            <Directory Id="VS11_ItemTemplatesCache" Name="ItemTemplatesCache">
+              <Directory Id="VS11_CSharpITCache" Name="CSharp">
+                <Directory Id="VS11_CS_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS11_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+                  <Directory Id="VS11_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS11_VBITCache" Name="VisualBasic">
+                <Directory Id="VS11_VB_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS11_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+                  <Directory Id="VS11_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+
           </Directory>
         </Directory>
       </Directory>
@@ -213,28 +219,31 @@
             </Directory>
             <Directory Id="VS12_PrivateAssemblies" Name="PrivateAssemblies" />
             <Directory Id="VS12_PublicAssemblies" Name="PublicAssemblies" />
-            <Directory Id="VS12_ProjectTemplates" Name="ProjectTemplates" >
-              <Directory Id="VS12_CSharpPT" Name="CSharp">
-                <Directory Id="VS12_CSharpPTMySQL" Name="MySQL"/>
+
+            <!--Item Templates-->
+            <Directory Id="VS12_ItemTemplates" Name="ItemTemplates" >
+              <Directory Id="VS12_CSharpIT" Name="CSharp">
+                <Directory Id="VS12_CSharpITMySQL" Name="MySQL"/>
               </Directory>
-              <Directory Id="VS12_VisualBasicPT" Name="VisualBasic">
-                <Directory Id="VS12_VisualBasicPTMySQL" Name="MySQL"/>
-              </Directory>
-            </Directory>
-            <Directory Id="VS12_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
-              <Directory Id="VS12_CSharpPTCache" Name="CSharp">
-                <Directory Id="VS12_CSharpPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS12_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-                  <Directory Id="VS12_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS12_VisualBasicPTCache" Name="VisualBasic">
-                <Directory Id="VS12_VisualBasicPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS12_VisualBasicMySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-                  <Directory Id="VS12_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-                </Directory>
+              <Directory Id="VS12_VBIT" Name="VisualBasic">
+                <Directory Id="VS12_VBITMySQL" Name="MySQL"/>
               </Directory>
             </Directory>
+            <Directory Id="VS12_ItemTemplatesCache" Name="ItemTemplatesCache">
+              <Directory Id="VS12_CSharpITCache" Name="CSharp">
+                <Directory Id="VS12_CS_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS12_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+                  <Directory Id="VS12_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS12_VBITCache" Name="VisualBasic">
+                <Directory Id="VS12_VB_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS12_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+                  <Directory Id="VS12_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+
           </Directory>
         </Directory>
       </Directory>
@@ -263,28 +272,31 @@
             </Directory>
             <Directory Id="VS14_PrivateAssemblies" Name="PrivateAssemblies" />
             <Directory Id="VS14_PublicAssemblies" Name="PublicAssemblies" />
-            <Directory Id="VS14_ProjectTemplates" Name="ProjectTemplates" >
-              <Directory Id="VS14_CSharpPT" Name="CSharp">
-                <Directory Id="VS14_CSharpPTMySQL" Name="MySQL"/>
+
+            <!--Item Templates-->
+            <Directory Id="VS14_ItemTemplates" Name="ItemTemplates" >
+              <Directory Id="VS14_CSharpIT" Name="CSharp">
+                <Directory Id="VS14_CSharpITMySQL" Name="MySQL"/>
               </Directory>
-              <Directory Id="VS14_VisualBasicPT" Name="VisualBasic">
-                <Directory Id="VS14_VisualBasicPTMySQL" Name="MySQL"/>
-              </Directory>
-            </Directory>
-            <Directory Id="VS14_ProjectTemplatesCache" Name="ProjectTemplatesCache" >
-              <Directory Id="VS14_CSharpPTCache" Name="CSharp">
-                <Directory Id="VS14_CSharpPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS14_MySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-                  <Directory Id="VS14_MySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS14_VisualBasicPTCache" Name="VisualBasic">
-                <Directory Id="VS14_VisualBasicPTMySQLCache" Name="MySQL">
-                  <Directory Id="VS14_VisualBasicMySQLMVC3Project.zip" Name="MySQLMVC3Project.zip"/>
-                  <Directory Id="VS14_VisualBasicMySQLWindowsFormsProject.zip" Name="MySQLWindowsFormsProject.zip"/>
-                </Directory>
+              <Directory Id="VS14_VBIT" Name="VisualBasic">
+                <Directory Id="VS14_VBITMySQL" Name="MySQL"/>
               </Directory>
             </Directory>
+            <Directory Id="VS14_ItemTemplatesCache" Name="ItemTemplatesCache">
+              <Directory Id="VS14_CSharpITCache" Name="CSharp">
+                <Directory Id="VS14_CS_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS14_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+                  <Directory Id="VS14_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS14_VBITCache" Name="VisualBasic">
+                <Directory Id="VS14_VB_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS14_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+                  <Directory Id="VS14_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+
           </Directory>
         </Directory>
       </Directory>

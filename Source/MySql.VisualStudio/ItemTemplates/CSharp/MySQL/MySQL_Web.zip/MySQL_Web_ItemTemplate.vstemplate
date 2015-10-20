@@ -1,0 +1,21 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <ProjectType>CSharp</ProjectType>
+    <DefaultName>MySQL New MVC Item</DefaultName>
+    <Name>MySQL New MVC Item</Name>
+    <Description>An item template for creating a new MVC item with MySQL connectivity.</Description>
+    <Icon>icon.png</Icon>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <TemplateID>5b1fc1c2-c36b-4076-af28-f1a9abd8c3c4</TemplateID>
+    <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+  </TemplateData>
+
+  <TemplateContent>
+    <References />
+  </TemplateContent>
+
+  <WizardExtension>
+    <Assembly>MySql.VisualStudio, Version=1.2.4.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
+    <FullClassName>MySql.Data.VisualStudio.Wizards.ItemTemplates.ItemTemplatesWebWizardCSharp</FullClassName>
+  </WizardExtension>
+</VSTemplate>

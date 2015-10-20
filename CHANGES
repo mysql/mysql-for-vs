@@ -1,4 +1,7 @@
 1.2.5
+- Fixed the bug with the M4VS installer where having any plugin version installed on any Visual Studio version, and then uninstall Visual Studio first, the M4VS plugin couldn't be uninstalled or upgraded (MySQL Bug #71226, Oracle Bug #21953055).
+- Remove the "Project Templates" option from the plugin toolbar button and from the "File -> New -> Project" menu, in order to add the "Item Templates" feature with two options:
+MySQL MVC Item and MySQL Windows Forms Item, available as a context menu for existing projects, which will add a new windows forms or MVC controllers/views connected to MySQL.
 - Added the "Entity Framework" option to the MySQL Website Configuration Dialog, for web projects, so Entity Framework version 5 or 6 can be used with a MySQL database provider, automatically adding the configuration/references needed to the web.config file and the project itself.
 - Fixed the bug where the dataset designer wizard was not showing the stored procedure parameters when creating a "TableAdapter" using existing stored procedures for the "Select" command. Also, fixed the bug where the stored procedure command having an "error" command was avoiding the dataset to be created (MySQL Bug #74195, Oracle Bug #20233133).
 

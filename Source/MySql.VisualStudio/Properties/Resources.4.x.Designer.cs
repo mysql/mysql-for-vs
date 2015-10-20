@@ -2679,6 +2679,16 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap mysql_ItemTemplate_wizard {
+            get {
+                object obj = ResourceManager.GetObject("mysql_ItemTemplate_wizard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap mysql_project_wizard {
             get {
                 object obj = ResourceManager.GetObject("mysql_project_wizard", resourceCulture);

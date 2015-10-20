@@ -188,27 +188,6 @@ namespace MySql.Data.VisualStudio
         CommandID cmdAddConnection = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdidAddConnection);
         OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
         mcs.AddCommand(cmdMenuAddConnection);
-#if NET_40_OR_GREATER
-        CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
-        OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
-
-        if (!IsMVC4Installed())
-        {
-          cmdMenuCreateNewMvcProject.Enabled = false;
-        }
-
-        mcs.AddCommand(cmdMenuCreateNewMvcProject);
-
-        CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
-        OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
-
-        if (!IsMVC4Installed())
-        {
-          cmdMenuCreateWinFormsProject.Enabled = false;
-        }
-
-        mcs.AddCommand(cmdMenuCreateWinFormsProject);
-#endif
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
       }
 
@@ -217,30 +196,7 @@ namespace MySql.Data.VisualStudio
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
-
     #endregion
-
-    private void cmdCreateWinFormsProject_Callback(object sender, EventArgs e)
-    {
-      CreateNewMySqlProject("Windows Forms Project");
-    }
-
-    private void cmdCreateNewMvcProject_Callback(object sender, EventArgs e)
-    {
-      CreateNewMySqlProject("ASP.NET MVC 3 Project");
-    }
-
-    /// <summary>
-    /// Method to detect if "Microsoft ASP.NET MVC4" is installed, searching for it in it's predefined "ProgramFiles" path.
-    /// </summary>
-    /// <returns>
-    /// returns true if "Microsoft ASP.NET MVC4" is installed
-    /// </returns>
-    private bool IsMVC4Installed()
-    {
-      string path = Environment.Is64BitOperatingSystem ? MVC4_64_Path : MVC4_32_Path;
-      return Directory.Exists(path);
-    }
 
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
