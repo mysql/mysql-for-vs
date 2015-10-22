@@ -36,50 +36,80 @@ namespace MySql.Data.VisualStudio
   [Guid("D949EA95-EDA1-4b65-8A9E-266949A99360")]
   class MySqlProviderObjectFactory : AdoDotNetProviderObjectFactory
   {
-    private static DbProviderFactory factory;
+    private static DbProviderFactory _factory;
+    private static Assembly _connectorAssembly;
+    private static Version _minConnectorVersion;
+
+    public MySqlProviderObjectFactory()
+    {
+      _connectorAssembly = null;
+      _minConnectorVersion = null;
+    }
+
+    internal static Assembly ConnectorAssembly
+    {
+      get
+      {
+        if (_connectorAssembly == null)
+        {
+          _connectorAssembly = File.Exists(ConnectorAssemblyPath)
+            ? Assembly.LoadFrom(ConnectorAssemblyPath)
+            : null;
+        }
+
+        return _connectorAssembly;
+      }
+    }
+
+    private static string ConnectorAssemblyPath
+    {
+      get
+      {
+#if DEBUG
+        //return System.IO.Path.Combine(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v4.0\Release\MySql.Data.dll");
+        return "C:\\Code\\mysql-for-vs\\Dependencies\\v4.0\\Release\\MySql.Data.dll";
+#else
+        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"PrivateAssemblies\MySql.Data.dll");
+#endif
+      }
+    }
+
+    private static Version MinConnectorVersion
+    {
+      get
+      {
+        if (_minConnectorVersion == null && ConnectorAssembly != null)
+        {
+          _minConnectorVersion = ConnectorAssembly.GetName().Version;
+        }
+
+        return _minConnectorVersion;
+      }
+    }
 
     internal static DbProviderFactory Factory
     {
       get
       {
-        if (factory != null)
-          return factory;
+        if (_factory != null)
+        {
+          return _factory;
+        }
 
-        //try to get it from DbProviders table
-        try
+        //try to get it from DbProviders table        
+        _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        if (_factory == null || (MinConnectorVersion != null &&
+              _factory.GetType().Assembly.GetName().Version.CompareTo(MinConnectorVersion) < 0))
         {
-          factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+          _factory = GetConnectorFromPrivateAssembly();
         }
-        catch 
-        { }
         
-        if (factory == null)
-        {
-         
-#if DEBUG
-          var installedPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v2.0\Release\MySql.Data.dll"); 
-#else          
-          var installedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"PrivateAssemblies\MySql.Data.dll");
-#endif
-          if (!File.Exists(installedPath))
-           {
-             return null;
-           }
-          
-          Assembly a = Assembly.LoadFile(installedPath);
-          Type dbProviderInstance = a.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
-          if (dbProviderInstance != null)
-          {
-            var fieldInfo = dbProviderInstance.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
-            factory = (DbProviderFactory)fieldInfo.GetValue(dbProviderInstance);
-          }
-        }
-        return factory;
+        return _factory;
       }
     }
 
     public override object CreateObject(Type objType)
-    {         
+    {
       if (objType == typeof(DataConnectionUIControl))
         return new MySqlDataConnectionUI();
       else if (objType == typeof(DataConnectionProperties))
@@ -92,6 +122,24 @@ namespace MySql.Data.VisualStudio
         return new MySqlDataConnectionPromptDialog();
       else
         return base.CreateObject(objType);
+    }
+
+    private static DbProviderFactory GetConnectorFromPrivateAssembly()
+    {
+      if (ConnectorAssembly == null)
+      {
+        return null;
+      }
+
+      Type dbProviderInstance = ConnectorAssembly.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
+      if (dbProviderInstance == null)
+      {
+        return null;
+      }
+
+      var fieldInfo = dbProviderInstance.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
+      _factory = (DbProviderFactory)fieldInfo.GetValue(dbProviderInstance);
+      return _factory;
     }
   }
 }
