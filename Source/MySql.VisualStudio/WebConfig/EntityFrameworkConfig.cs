@@ -82,8 +82,9 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       typeName = "MySQLEntityFrameworkProvider";
       sectionName = "entityFramework";
-      _mySQLEF6Version = MySqlProviderObjectFactory.ConnectorAssembly != null
-        ? MySqlProviderObjectFactory.ConnectorAssembly.GetName().Version.ToString(3)
+      var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      _mySQLEF6Version = factory != null
+        ? factory.GetType().Assembly.GetName().Version.ToString(3)
         : mySQLEF5Version;
     }
 
