@@ -34,6 +34,7 @@ using EnvDTE;
 using VSLangProj;
 using System.Reflection;
 using System.IO;
+using System.Data.Common;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
@@ -70,7 +71,8 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string mySQLData = "MySql.Data";
     private const string mySQLEF = "MySql.Data.Entity";
     private const string mySQLEF5Version = "6.7.8";
-    private const string mySQLEF6Version = "6.9.6";
+    private string _mySQLEF6Version;
+    private static DbProviderFactory _mySqlFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EntityFrameworkConfig"/> class.
@@ -80,6 +82,9 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       typeName = "MySQLEntityFrameworkProvider";
       sectionName = "entityFramework";
+      _mySQLEF6Version = MySqlProviderObjectFactory.ConnectorAssembly != null
+        ? MySqlProviderObjectFactory.ConnectorAssembly.GetName().Version.ToString(3)
+        : mySQLEF5Version;
     }
 
     /// <summary>
@@ -173,7 +178,7 @@ namespace MySql.Data.VisualStudio.WebConfig
 
         if (values.EF6)
         {
-          SaveEFConfig(true, EF6Version, mySQLEF6Version);
+          SaveEFConfig(true, EF6Version, _mySQLEF6Version);
         }
       }
 
@@ -184,7 +189,7 @@ namespace MySql.Data.VisualStudio.WebConfig
 
       if (defaults.EF6 != values.EF6 && values.EF6)
       {
-        SaveEFConfig(true, EF6Version, mySQLEF6Version);
+        SaveEFConfig(true, EF6Version, _mySQLEF6Version);
       }
     }
 
@@ -263,15 +268,14 @@ namespace MySql.Data.VisualStudio.WebConfig
         TargetFramework targetNetworkMoniker = (TargetFramework)Enum.ToObject(typeof(TargetFramework), vsApp.Solution.Projects.Item(1).Properties.Item("TargetFramework").Value);
         string NetFxVersion = GetNetFxVersion(targetNetworkMoniker);
         AddNugetPackage(vsProj, projectPath, NetFxVersion, "EntityFramework", EFVersion, true);
+        AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLData, _mySQLEF6Version, true);
         switch (EFVersion)
         {
           case EF5Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLData, mySQLEF5Version, true);
             AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, mySQLEF5Version, true);
             break;
           case EF6Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLData, mySQLEF6Version, true);
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, mySQLEF6Version, true);
+            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, _mySQLEF6Version, true);
             break;
           default:
             throw new Exception("Not supported Entity Framework version.");
@@ -378,7 +382,7 @@ namespace MySql.Data.VisualStudio.WebConfig
           packagePath = Path.Combine(packagePath, PackageName + ".EF5.dll");
         }
 
-        if (Version == mySQLEF6Version)
+        if (Version == _mySQLEF6Version)
         {
           packagePath = Path.Combine(packagePath, PackageName + ".EF6.dll");
         }
@@ -413,7 +417,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         activeProj = (Project)activeProjects.GetValue(0);
         vsProj = activeProj.Object as VSProject;
         string projectPath = System.IO.Path.GetDirectoryName(activeProj.FullName);
-        WebConfigTools.EFWebConfigTransformation(projectPath, EFVersion, mySqlVersion);
+        WebConfigTools.EFWebConfigTransformation(projectPath, EFVersion, mySqlVersion, _mySQLEF6Version);
       }
     }
 
