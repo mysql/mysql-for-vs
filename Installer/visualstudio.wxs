@@ -44,7 +44,7 @@
     </DirectoryRef>
 
     <!--Item Templates-->
-    <DirectoryRef Id='VS10_CSharpITMySQL'>
+    <!--<DirectoryRef Id='VS10_CSharpITMySQL'>
       <Component Id='VS2010_VSIT_DIR' Guid='be68833b-6109-416d-8f77-cbcdadd4e8c2'>
         <File Id='VS2010_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
               Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
@@ -77,7 +77,7 @@
         <File Id='VS2010_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
       </Component>
-    </DirectoryRef>
+    </DirectoryRef>-->
 
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
@@ -122,7 +122,7 @@
     </DirectoryRef>
 
     <!--Item Templates-->
-    <DirectoryRef Id='VS11_CSharpITMySQL'>
+    <!--<DirectoryRef Id='VS11_CSharpITMySQL'>
       <Component Id='VS2012_VSIT_DIR' Guid='53498d20-e60d-4b46-8c94-27fa2a4333ea'>
         <File Id='VS2012_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
               Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
@@ -155,7 +155,7 @@
         <File Id='VS2012_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
       </Component>
-    </DirectoryRef>
+    </DirectoryRef>-->
 
     <!-- Visual Studio 2013 -->
     <DirectoryRef Id='VS12_ExtVersionDir'>
@@ -376,7 +376,7 @@
       <ComponentRef Id='Remove.VS2010_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2010'/>
       <!--Item Templates-->
-      <Feature Id='VS2010_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
+      <!--<Feature Id='VS2010_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
         <ComponentRef Id='VS2010_VSIT_DIR'/>
         <ComponentGroupRef Id='VS10_CS_WinForm_ItemTemplate_DirectoryComponents'/>
         <ComponentGroupRef Id='VS10_CS_Web_ItemTemplate_DirectoryComponents'/>
@@ -385,7 +385,7 @@
         <ComponentGroupRef Id='VS10_VB_Web_ItemTemplate_DirectoryComponents'/>
         <ComponentRef Id='VS10_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS10_T4TemplatesVBDir' />
-      </Feature>
+      </Feature>-->
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -398,7 +398,7 @@
       <ComponentRef Id='Remove.VS2012_Web.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2012'/>
       <!--Item Templates-->
-      <Feature Id='VS2012_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
+      <!--<Feature Id='VS2012_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
         <ComponentRef Id='VS2012_VSIT_DIR'/>
         <ComponentGroupRef Id='VS11_CS_WinForm_ItemTemplate_DirectoryComponents'/>
         <ComponentGroupRef Id='VS11_CS_Web_ItemTemplate_DirectoryComponents'/>
@@ -407,7 +407,7 @@
         <ComponentGroupRef Id='VS11_VB_Web_ItemTemplate_DirectoryComponents'/>
         <ComponentRef Id='VS2012_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2012_T4TemplatesVBDir' />
-      </Feature>
+      </Feature>-->
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>

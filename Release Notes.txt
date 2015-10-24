@@ -14,6 +14,9 @@ Welcome to the release notes for MySQL for Visual Studio 1.2.5 MR
 * Fixed the bug where the dataset designer wizard was not showing the stored procedure parameters when creating a "TableAdapter" using existing stored procedures for the "Select" command.
   Also, fixed the bug where the stored procedure command having an "error" command was avoiding the dataset to be created.
 
+Known Issues
+--------------------
+* The item templates feature will be available only for Visual Studio 2013 or a higher version, for lower versions will be available in a future release.
 
 
 
