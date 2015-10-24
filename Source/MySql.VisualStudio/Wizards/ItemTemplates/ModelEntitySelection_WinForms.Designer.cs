@@ -47,7 +47,7 @@
       this.radControls.Checked = true;
       this.radControls.Location = new System.Drawing.Point(6, 27);
       this.radControls.Name = "radControls";
-      this.radControls.Size = new System.Drawing.Size(134, 17);
+      this.radControls.Size = new System.Drawing.Size(139, 19);
       this.radControls.TabIndex = 81;
       this.radControls.TabStop = true;
       this.radControls.Text = "Single-column layout";
@@ -58,7 +58,7 @@
       this.radGrid.AutoSize = true;
       this.radGrid.Location = new System.Drawing.Point(6, 76);
       this.radGrid.Name = "radGrid";
-      this.radGrid.Size = new System.Drawing.Size(47, 17);
+      this.radGrid.Size = new System.Drawing.Size(47, 19);
       this.radGrid.TabIndex = 82;
       this.radGrid.Text = "Grid";
       this.radGrid.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
       this.radMasterDetail.AutoSize = true;
       this.radMasterDetail.Location = new System.Drawing.Point(6, 123);
       this.radMasterDetail.Name = "radMasterDetail";
-      this.radMasterDetail.Size = new System.Drawing.Size(94, 17);
+      this.radMasterDetail.Size = new System.Drawing.Size(96, 19);
       this.radMasterDetail.TabIndex = 83;
       this.radMasterDetail.TabStop = true;
       this.radMasterDetail.Text = "Master-Detail";
@@ -76,36 +76,38 @@
       // 
       // cmbFkConstraints
       // 
+      this.cmbFkConstraints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.cmbFkConstraints.Enabled = false;
       this.cmbFkConstraints.FormattingEnabled = true;
       this.cmbFkConstraints.Location = new System.Drawing.Point(26, 192);
       this.cmbFkConstraints.Name = "cmbFkConstraints";
-      this.cmbFkConstraints.Size = new System.Drawing.Size(273, 21);
+      this.cmbFkConstraints.Size = new System.Drawing.Size(265, 23);
       this.cmbFkConstraints.TabIndex = 84;
       // 
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label5.Location = new System.Drawing.Point(23, 47);
       this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(239, 13);
+      this.label5.Size = new System.Drawing.Size(265, 15);
       this.label5.TabIndex = 85;
       this.label5.Text = "A form based interface with individual text boxes.";
       // 
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label2.Location = new System.Drawing.Point(23, 96);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(266, 13);
+      this.label2.Size = new System.Drawing.Size(294, 15);
       this.label2.TabIndex = 86;
       this.label2.Text = "A table layout with rows and columns of a single table.";
       // 
       // label1
       // 
-      this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label1.Location = new System.Drawing.Point(23, 143);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(388, 17);
@@ -116,9 +118,9 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(23, 176);
+      this.label4.Location = new System.Drawing.Point(23, 174);
       this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(124, 13);
+      this.label4.Size = new System.Drawing.Size(126, 15);
       this.label4.TabIndex = 88;
       this.label4.Text = "Select the detail entity:";
       // 
@@ -134,6 +136,9 @@
       // 
       // pnlLayout
       // 
+      this.pnlLayout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.pnlLayout.Controls.Add(this.lblTableName);
       this.pnlLayout.Controls.Add(this.label4);
       this.pnlLayout.Controls.Add(this.label1);
@@ -144,22 +149,23 @@
       this.pnlLayout.Controls.Add(this.radGrid);
       this.pnlLayout.Controls.Add(this.radControls);
       this.pnlLayout.Enabled = false;
+      this.pnlLayout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.pnlLayout.Location = new System.Drawing.Point(3, 127);
       this.pnlLayout.Name = "pnlLayout";
-      this.pnlLayout.Size = new System.Drawing.Size(482, 219);
+      this.pnlLayout.Size = new System.Drawing.Size(488, 219);
       this.pnlLayout.TabIndex = 97;
       // 
       // ModelEntitySelection_WinForms
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
       this.Controls.Add(this.pnlLayout);
       this.Name = "ModelEntitySelection_WinForms";
-      this.Size = new System.Drawing.Size(489, 352);
+      this.Size = new System.Drawing.Size(495, 352);
       this.Controls.SetChildIndex(this.pnlLayout, 0);
       this.pnlLayout.ResumeLayout(false);
       this.pnlLayout.PerformLayout();
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 

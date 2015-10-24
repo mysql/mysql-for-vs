@@ -45,19 +45,21 @@
       // 
       // grdColumns
       // 
+      this.grdColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.grdColumns.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
       this.grdColumns.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
       this.grdColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grdColumns.Location = new System.Drawing.Point(16, 46);
       this.grdColumns.MinimumSize = new System.Drawing.Size(570, 290);
       this.grdColumns.Name = "grdColumns";
-      this.grdColumns.Size = new System.Drawing.Size(570, 290);
+      this.grdColumns.Size = new System.Drawing.Size(577, 290);
       this.grdColumns.TabIndex = 57;
       // 
       // ValidationConfig
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
       this.Controls.Add(this.lblTitle);
       this.Controls.Add(this.grdColumns);
       this.Font = new System.Drawing.Font("Segoe UI", 8.25F);

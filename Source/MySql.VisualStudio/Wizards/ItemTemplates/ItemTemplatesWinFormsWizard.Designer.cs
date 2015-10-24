@@ -42,8 +42,10 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       // 
       // btnFinish
       // 
+      this.btnFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnFinish.Enabled = false;
-      this.btnFinish.Location = new System.Drawing.Point(559, 397);
+      this.btnFinish.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.btnFinish.Location = new System.Drawing.Point(592, 394);
       this.btnFinish.Name = "btnFinish";
       this.btnFinish.Size = new System.Drawing.Size(75, 23);
       this.btnFinish.TabIndex = 11;
@@ -53,9 +55,11 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       // 
       // btnCancel
       // 
+      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.CausesValidation = false;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(640, 397);
+      this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.btnCancel.Location = new System.Drawing.Point(673, 394);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 10;
@@ -99,23 +103,23 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       this.modelEntitySelection_WinForms1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
       this.modelEntitySelection_WinForms1.Location = new System.Drawing.Point(250, 12);
       this.modelEntitySelection_WinForms1.Name = "modelEntitySelection_WinForms1";
-      this.modelEntitySelection_WinForms1.Size = new System.Drawing.Size(481, 351);
+      this.modelEntitySelection_WinForms1.Size = new System.Drawing.Size(495, 351);
       this.modelEntitySelection_WinForms1.TabIndex = 24;
       // 
-      // IT_WinFormWizard
+      // ItemTemplatesWinFormsWizard
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.btnCancel;
-      this.ClientSize = new System.Drawing.Size(742, 429);
-      this.ControlBox = false;
+      this.ClientSize = new System.Drawing.Size(760, 429);
       this.Controls.Add(this.modelEntitySelection_WinForms1);
       this.Controls.Add(this.panel1);
       this.Controls.Add(this.btnFinish);
       this.Controls.Add(this.btnCancel);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
-      this.Name = "IT_WinFormWizard";
+      this.MinimizeBox = false;
+      this.Name = "ItemTemplatesWinFormsWizard";
       this.Text = "Windows Forms Item Template";
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.panel1.ResumeLayout(false);

@@ -155,12 +155,12 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 
       if (Models_IsValid())
       {
-        pnlEntityContainer.Enabled = true;
-        FillTables(SelectedModel, Dte, projectType == ItemTemplateUtilities.ProjectWizardType.WindowsForms ? true : false);
+        comboEntities.Enabled = true;
+        FillTables(SelectedModel, Dte, projectType == ItemTemplateUtilities.ProjectWizardType.WindowsForms);
       }
       else
       {
-        pnlEntityContainer.Enabled = false;
+        comboEntities.Enabled = false;
       }
     }
 

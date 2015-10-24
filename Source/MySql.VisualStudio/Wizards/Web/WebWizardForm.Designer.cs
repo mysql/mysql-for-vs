@@ -36,19 +36,19 @@
       // 
       // btnNext
       // 
-      this.btnNext.Location = new System.Drawing.Point(657, 466);
+      this.btnNext.Location = new System.Drawing.Point(705, 475);
       // 
       // btnCancel
       // 
-      this.btnCancel.Location = new System.Drawing.Point(495, 466);
+      this.btnCancel.Location = new System.Drawing.Point(543, 475);
       // 
       // btnBack
       // 
-      this.btnBack.Location = new System.Drawing.Point(576, 466);
+      this.btnBack.Location = new System.Drawing.Point(624, 475);
       // 
       // btnFinish
       // 
-      this.btnFinish.Location = new System.Drawing.Point(738, 466);
+      this.btnFinish.Location = new System.Drawing.Point(786, 475);
       // 
       // dataSourceConfiguration1
       // 
@@ -82,11 +82,12 @@
       this.tablesSelection1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
       this.tablesSelection1.Location = new System.Drawing.Point(258, 83);
       this.tablesSelection1.Name = "tablesSelection1";
-      this.tablesSelection1.Size = new System.Drawing.Size(581, 357);
+      this.tablesSelection1.Size = new System.Drawing.Size(603, 357);
       this.tablesSelection1.TabIndex = 21;
       // 
       // WebWizardForm
       // 
+      this.AcceptButton = this.btnFinish;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(873, 510);
@@ -94,6 +95,8 @@
       this.Controls.Add(this.modelConfiguration1);
       this.Controls.Add(this.providerConfiguration1);
       this.Controls.Add(this.dataSourceConfiguration1);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+      this.MinimizeBox = false;
       this.Name = "WebWizardForm";
       this.Text = "MySQL ASP.NET MVC 3 Project Configuration";
       this.Load += new System.EventHandler(this.WebWizardForm_Load);

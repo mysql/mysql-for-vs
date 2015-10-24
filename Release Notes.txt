@@ -7,8 +7,9 @@ Welcome to the release notes for MySQL for Visual Studio 1.2.5 MR
 	MySQL MVC Item
 	MySQL Windows Forms Item
   available as a context menu for existing projects, which will add a new windows forms or MVC controllers/views connected to MySQL.
-* Added the "Entity Framework" option to the MySQL Website Configuration Dialog, for web projects, so Entity Framework version 5 or 6 can be used with a MySQL database provider,
-  automatically adding the configuration/references needed to the web.config file and the project itself.
+* Added the "Entity Framework" option to the MySQL Website Configuration dialog, for web projects, so Entity Framework version 5 or 6 can be used with a MySQL database provider,
+  automatically adding the configuration/references needed to the web.config file and the project itself. Enhanced this configuration dialog as well to show at its left side all
+  the configurations available and the current configuration page shown by the dialog.
 * Fixed a bug in the stand-alone MSI where having any plugin version installed on any Visual Studio version, and then uninstall Visual Studio first, MySQL for Visual Studio couldn't be uninstalled or upgraded.
   This fixes as well cases where a previous version of MySQL for Visual Studio is upgraded to this 1.2.5 version.
 * Fixed the bug where the dataset designer wizard was not showing the stored procedure parameters when creating a "TableAdapter" using existing stored procedures for the "Select" command.
