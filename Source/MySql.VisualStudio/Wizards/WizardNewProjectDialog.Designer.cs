@@ -61,9 +61,10 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // btnOK
       // 
+      this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.btnOK.Font = new System.Drawing.Font("Segoe UI", 9F);
-      this.btnOK.Location = new System.Drawing.Point(690, 475);
+      this.btnOK.Location = new System.Drawing.Point(786, 475);
       this.btnOK.Name = "btnOK";
       this.btnOK.Size = new System.Drawing.Size(75, 23);
       this.btnOK.TabIndex = 8;
@@ -73,10 +74,11 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // btnCancel
       // 
+      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.CausesValidation = false;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
-      this.btnCancel.Location = new System.Drawing.Point(771, 475);
+      this.btnCancel.Location = new System.Drawing.Point(705, 475);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 9;
@@ -95,7 +97,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // pictureBox1
       // 
-      this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_project_wizard;
+      this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
       this.pictureBox1.Location = new System.Drawing.Point(19, 23);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(214, 88);
@@ -115,10 +117,12 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // label2
       // 
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.label2.BackColor = System.Drawing.Color.White;
       this.label2.Location = new System.Drawing.Point(254, 2);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(686, 80);
+      this.label2.Size = new System.Drawing.Size(624, 80);
       this.label2.TabIndex = 19;
       // 
       // panel1
@@ -153,6 +157,8 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // txtProjectName
       // 
+      this.txtProjectName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.txtProjectName.Location = new System.Drawing.Point(383, 305);
       this.txtProjectName.Name = "txtProjectName";
       this.txtProjectName.Size = new System.Drawing.Size(463, 22);
@@ -161,6 +167,8 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // txtProjectPath
       // 
+      this.txtProjectPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.txtProjectPath.Location = new System.Drawing.Point(383, 336);
       this.txtProjectPath.Name = "txtProjectPath";
       this.txtProjectPath.Size = new System.Drawing.Size(382, 22);
@@ -169,6 +177,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // btnBrowse
       // 
+      this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnBrowse.Font = new System.Drawing.Font("Segoe UI", 9F);
       this.btnBrowse.Location = new System.Drawing.Point(771, 335);
       this.btnBrowse.Name = "btnBrowse";
@@ -195,6 +204,8 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // solutionNameTextBox
       // 
+      this.solutionNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.solutionNameTextBox.Location = new System.Drawing.Point(383, 397);
       this.solutionNameTextBox.Name = "solutionNameTextBox";
       this.solutionNameTextBox.Size = new System.Drawing.Size(463, 22);
@@ -212,6 +223,8 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // solutionOptions
       // 
+      this.solutionOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.solutionOptions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.solutionOptions.FormattingEnabled = true;
       this.solutionOptions.Items.AddRange(new object[] {
@@ -230,6 +243,8 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // projectTypesList
       // 
+      this.projectTypesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.projectTypesList.BorderStyle = System.Windows.Forms.BorderStyle.None;
       this.projectTypesList.HideSelection = false;
       this.projectTypesList.Location = new System.Drawing.Point(280, 98);
@@ -242,6 +257,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // lblProjectDescription
       // 
+      this.lblProjectDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblProjectDescription.BackColor = System.Drawing.Color.Transparent;
       this.lblProjectDescription.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblProjectDescription.ForeColor = System.Drawing.Color.Black;
@@ -256,6 +272,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // label5
       // 
+      this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label5.BackColor = System.Drawing.Color.Transparent;
       this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label5.ForeColor = System.Drawing.Color.Black;
@@ -268,6 +285,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // languageLbl
       // 
+      this.languageLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.languageLbl.BackColor = System.Drawing.Color.Transparent;
       this.languageLbl.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.languageLbl.ForeColor = System.Drawing.Color.Black;
@@ -280,6 +298,7 @@ namespace MySql.Data.VisualStudio.Wizards
       // 
       // createDirectoryForSolutionChk
       // 
+      this.createDirectoryForSolutionChk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.createDirectoryForSolutionChk.AutoSize = true;
       this.createDirectoryForSolutionChk.Location = new System.Drawing.Point(675, 425);
       this.createDirectoryForSolutionChk.Name = "createDirectoryForSolutionChk";
@@ -317,6 +336,7 @@ namespace MySql.Data.VisualStudio.Wizards
       this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
+      this.MinimizeBox = false;
       this.Name = "WizardNewProjectDialog";
       this.Text = "New Project";
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

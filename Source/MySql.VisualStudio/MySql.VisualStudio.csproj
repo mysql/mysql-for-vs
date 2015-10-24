@@ -870,6 +870,9 @@
     <EmbeddedResource Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.resx">
       <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\TablesSelectionWinForms.resx">
+      <DependentUpon>TablesSelectionWinForms.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\Templates\CS\MyDateTimePickerColumn.cs">
       <SubType>Component</SubType>
     </EmbeddedResource>

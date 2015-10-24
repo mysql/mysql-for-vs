@@ -46,37 +46,46 @@
       // 
       // includeProfileProviderCheck
       // 
+      this.includeProfileProviderCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.includeProfileProviderCheck.AutoSize = true;
       this.includeProfileProviderCheck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.includeProfileProviderCheck.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.includeProfileProviderCheck.Location = new System.Drawing.Point(25, 291);
       this.includeProfileProviderCheck.Name = "includeProfileProviderCheck";
-      this.includeProfileProviderCheck.Size = new System.Drawing.Size(165, 17);
+      this.includeProfileProviderCheck.Size = new System.Drawing.Size(170, 19);
       this.includeProfileProviderCheck.TabIndex = 43;
       this.includeProfileProviderCheck.Text = "Use MySQL profile provider";
       this.includeProfileProviderCheck.UseVisualStyleBackColor = false;
       // 
       // label4
       // 
+      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label4.AutoSize = true;
       this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
-      this.label4.Location = new System.Drawing.Point(25, 238);
+      this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label4.Location = new System.Drawing.Point(25, 239);
       this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(310, 13);
+      this.label4.Size = new System.Drawing.Size(315, 15);
       this.label4.TabIndex = 33;
       this.label4.Text = "Save Connection string in application configuration file as:";
       // 
       // ConnectionStringNameTextBox
       // 
+      this.ConnectionStringNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ConnectionStringNameTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ConnectionStringNameTextBox.Location = new System.Drawing.Point(25, 258);
       this.ConnectionStringNameTextBox.Name = "ConnectionStringNameTextBox";
-      this.ConnectionStringNameTextBox.Size = new System.Drawing.Size(541, 22);
+      this.ConnectionStringNameTextBox.Size = new System.Drawing.Size(541, 23);
       this.ConnectionStringNameTextBox.TabIndex = 30;
       // 
       // newConnString
       // 
-      this.newConnString.Location = new System.Drawing.Point(427, 38);
+      this.newConnString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.newConnString.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.newConnString.Location = new System.Drawing.Point(416, 38);
       this.newConnString.Name = "newConnString";
-      this.newConnString.Size = new System.Drawing.Size(137, 25);
+      this.newConnString.Size = new System.Drawing.Size(148, 25);
       this.newConnString.TabIndex = 32;
       this.newConnString.Text = "New Connection...";
       this.newConnString.UseVisualStyleBackColor = true;
@@ -86,10 +95,10 @@
       // 
       this.label3.AutoSize = true;
       this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
-      this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label3.Location = new System.Drawing.Point(25, 18);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(409, 13);
+      this.label3.Size = new System.Drawing.Size(429, 15);
       this.label3.TabIndex = 29;
       this.label3.Text = "&Which data connection should your application use to connect to the database?";
       // 
@@ -100,26 +109,35 @@
       // 
       // cmbConnections
       // 
+      this.cmbConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.cmbConnections.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cmbConnections.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.cmbConnections.FormattingEnabled = true;
       this.cmbConnections.Location = new System.Drawing.Point(25, 40);
       this.cmbConnections.Name = "cmbConnections";
-      this.cmbConnections.Size = new System.Drawing.Size(385, 21);
+      this.cmbConnections.Size = new System.Drawing.Size(385, 23);
       this.cmbConnections.TabIndex = 49;
       // 
       // includeRoleProviderCheck
       // 
+      this.includeRoleProviderCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.includeRoleProviderCheck.AutoSize = true;
       this.includeRoleProviderCheck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.includeRoleProviderCheck.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.includeRoleProviderCheck.Location = new System.Drawing.Point(25, 315);
       this.includeRoleProviderCheck.Name = "includeRoleProviderCheck";
-      this.includeRoleProviderCheck.Size = new System.Drawing.Size(151, 17);
+      this.includeRoleProviderCheck.Size = new System.Drawing.Size(156, 19);
       this.includeRoleProviderCheck.TabIndex = 56;
       this.includeRoleProviderCheck.Text = "Use MySQL role provider";
       this.includeRoleProviderCheck.UseVisualStyleBackColor = false;
       // 
       // ConnectionStringTextBox
       // 
+      this.ConnectionStringTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ConnectionStringTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ConnectionStringTextBox.Location = new System.Drawing.Point(25, 93);
       this.ConnectionStringTextBox.Multiline = true;
       this.ConnectionStringTextBox.Name = "ConnectionStringTextBox";
@@ -131,19 +149,22 @@
       // 
       this.label1.AutoSize = true;
       this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label1.Location = new System.Drawing.Point(25, 72);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(103, 13);
+      this.label1.Size = new System.Drawing.Size(105, 15);
       this.label1.TabIndex = 60;
       this.label1.Text = "Connection string:";
       // 
       // includeSensitiveInformationCheck
       // 
+      this.includeSensitiveInformationCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.includeSensitiveInformationCheck.AutoSize = true;
       this.includeSensitiveInformationCheck.Checked = true;
+      this.includeSensitiveInformationCheck.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.includeSensitiveInformationCheck.Location = new System.Drawing.Point(25, 211);
       this.includeSensitiveInformationCheck.Name = "includeSensitiveInformationCheck";
-      this.includeSensitiveInformationCheck.Size = new System.Drawing.Size(323, 17);
+      this.includeSensitiveInformationCheck.Size = new System.Drawing.Size(331, 19);
       this.includeSensitiveInformationCheck.TabIndex = 61;
       this.includeSensitiveInformationCheck.TabStop = true;
       this.includeSensitiveInformationCheck.Text = "Yes, Include sensitive information in the connection string";
@@ -151,10 +172,12 @@
       // 
       // noIncludeSensitiveInformationCheck
       // 
+      this.noIncludeSensitiveInformationCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.noIncludeSensitiveInformationCheck.AutoSize = true;
+      this.noIncludeSensitiveInformationCheck.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.noIncludeSensitiveInformationCheck.Location = new System.Drawing.Point(25, 188);
       this.noIncludeSensitiveInformationCheck.Name = "noIncludeSensitiveInformationCheck";
-      this.noIncludeSensitiveInformationCheck.Size = new System.Drawing.Size(503, 17);
+      this.noIncludeSensitiveInformationCheck.Size = new System.Drawing.Size(515, 19);
       this.noIncludeSensitiveInformationCheck.TabIndex = 62;
       this.noIncludeSensitiveInformationCheck.Text = "No, Exclude sensitive information in the connection string. I will set it in my a" +
     "pplication code.";
@@ -162,8 +185,7 @@
       // 
       // DataSourceConfiguration
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
       this.BackColor = System.Drawing.SystemColors.Control;
       this.Controls.Add(this.noIncludeSensitiveInformationCheck);
       this.Controls.Add(this.includeSensitiveInformationCheck);
