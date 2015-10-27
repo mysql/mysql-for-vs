@@ -310,14 +310,6 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
                               table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));
       }
 
-      string indexPath = _language == LanguageGenerator.CSharp
-          ? (string)(ItemTemplateUtilities.FindProjectItem(ItemTemplateUtilities.FindProjectItem(ItemTemplateUtilities.FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
-              "Home").ProjectItems, "Index.cshtml").Properties.Item("FullPath").Value)
-          : (string)(ItemTemplateUtilities.FindProjectItem(ItemTemplateUtilities.FindProjectItem(ItemTemplateUtilities.FindProjectItem(vsProj.Project.ProjectItems, "Views").ProjectItems,
-              "Home").ProjectItems, "Index.vbhtml").Properties.Item("FullPath").Value);
-      string contents = File.ReadAllText(indexPath);
-      contents = contents.Replace("$catalogList$", catalogs.ToString());
-      File.WriteAllText(indexPath, contents);
       try
       {
         foreach (var table in TablesIncludedInModel)
@@ -380,8 +372,9 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
           vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));
         }
       }
-      catch
+      catch (Exception ex)
       {
+        SendToGeneralOutputWindow(string.Format("An error occurred: {0}\n\n {1}", ex.Message, ex.StackTrace));
         MessageBox.Show("An error occured when generating MVC items. The application is not completed.");
       }
 #endif
