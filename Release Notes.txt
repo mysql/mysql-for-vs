@@ -17,7 +17,8 @@ Welcome to the release notes for MySQL for Visual Studio 1.2.5 MR
 
 Known Issues
 --------------------
-* The item templates feature will be available only for Visual Studio 2013 or a higher version, for lower versions will be available in a future release.
+There is a known issue with item templates not working correctly with MySQL Server 5.7.x, avoiding the user to create the entity framework model.
+
 
 
 
