@@ -71,7 +71,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     private string _currentEntityFrameworkVersion;
     private bool _hasDataGridDateColumn;
     private IdentedStreamWriter sw;
-    private DataAccessTechnology _dataAccessTechnology = DataAccessTechnology.EntityFramework6;
+    private DataAccessTechnology _dataAccessTechnology;
     private LanguageGenerator _language;
     private ItemTemplateUtilities.ProjectWizardType _projectType;
     #endregion
@@ -222,7 +222,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
           }
 
           // Create the strategy
-          StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns, DataAccessTechnology.EntityFramework6, _GuiType, _language,
+          StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns, _dataAccessTechnology, _GuiType, _language,
                                                     _colValidations != null, _colValidations, DetailValidationColumns, ItemTemplateUtilities.ConnectionStringWithIncludedPassword(_connection),
                                                     _connectionString, _selectedEntity, _detailEntity, _constraintName, ForeignKeys, DetailForeignKeys);
           WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
@@ -263,6 +263,20 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
           ItemTemplateUtilities.FixNamespaces(_language, _projectPath, _projectNamespace, _dataAccessTechnology);
           // Update the model name with the Conn string name
           ItemTemplateUtilities.UpdateModelName(project, frmName, _projectPath, _projectNamespace, _connectionName, _language);
+          if (_dataAccessTechnology == DataAccessTechnology.EntityFramework5)
+          {
+            string formFile = Path.Combine(_projectPath, _language == LanguageGenerator.CSharp ? string.Format("{0}.cs", frmName) : string.Format("{0}.vb", frmName));
+            if (File.Exists(formFile))
+            {
+              string contents = "";
+              contents = File.ReadAllText(formFile);
+              string strToReplace = string.Format("ObjectResult<{0}> _entities = ctx.{0}.Execute(MergeOption.AppendOnly);", _selectedEntity);
+              string strReplaceWith = string.Format("var _entities = ctx.{0}.ToList<{0}>();", _selectedEntity);
+              contents = contents.Replace(strToReplace, strReplaceWith);
+              File.WriteAllText(formFile, contents);
+            }
+          }
+
           SendToGeneralOutputWindow("Building Solution...");
           project.DTE.Solution.SolutionBuild.Build(true);
           Settings.Default.WinFormsWizardConnection = _connectionName;
@@ -331,7 +345,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
           _colValidationsDetail = new List<ColumnValidation>();
         }
 
-        return _colValidationsDetail;        
+        return _colValidationsDetail;
       }
     }
 
@@ -346,6 +360,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       _detailEntity = form.SelectedDetailEntity;
       _GuiType = form.GuiType;
       _constraintName = form.ConstraintName;
+      _dataAccessTechnology = form.DataAccessTechnology;
     }
 
     /// <summary>

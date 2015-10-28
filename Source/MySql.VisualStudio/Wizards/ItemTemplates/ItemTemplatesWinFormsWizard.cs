@@ -45,6 +45,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     internal Button BtnFinish { get { return btnFinish; } }
     internal string SelectedModel { get { return modelEntitySelection_WinForms1.ComboModelsList.Text; } }
     internal string SelectedEntity { get { return modelEntitySelection_WinForms1.ComboEntities.Text; } }
+    internal DataAccessTechnology DataAccessTechnology { get { return modelEntitySelection_WinForms1.DataAccessTechnology; } }
     internal GuiType GuiType
     {
       get
