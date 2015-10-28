@@ -250,9 +250,12 @@ namespace MySql.ConnectorInstaller
             session.Log(string.Format("Creating Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
             if (key == null)
             {
-              Registry.LocalMachine.CreateSubKey(keyPath);
-              Registry.LocalMachine.OpenSubKey(keyPath, true).SetValue(keyName, vsPath, RegistryValueKind.String);
-              session.Log(string.Format("Created Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+              key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
+              if (key != null)
+              {
+                key.SetValue(keyName, vsPath, RegistryValueKind.String);
+                session.Log(string.Format("Created Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+              }
             }
             else
             {
