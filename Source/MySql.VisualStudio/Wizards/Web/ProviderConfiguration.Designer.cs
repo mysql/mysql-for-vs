@@ -63,7 +63,7 @@
       this.chkWriteExceptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.chkWriteExceptions.Location = new System.Drawing.Point(22, 28);
       this.chkWriteExceptions.Name = "chkWriteExceptions";
-      this.chkWriteExceptions.Size = new System.Drawing.Size(174, 17);
+      this.chkWriteExceptions.Size = new System.Drawing.Size(176, 19);
       this.chkWriteExceptions.TabIndex = 63;
       this.chkWriteExceptions.Text = "Write Exceptions to Eventlog";
       this.chkWriteExceptions.UseVisualStyleBackColor = false;
@@ -74,7 +74,7 @@
       this.chkQuestionAndAnswerRequired.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.chkQuestionAndAnswerRequired.Location = new System.Drawing.Point(22, 51);
       this.chkQuestionAndAnswerRequired.Name = "chkQuestionAndAnswerRequired";
-      this.chkQuestionAndAnswerRequired.Size = new System.Drawing.Size(180, 17);
+      this.chkQuestionAndAnswerRequired.Size = new System.Drawing.Size(182, 19);
       this.chkQuestionAndAnswerRequired.TabIndex = 65;
       this.chkQuestionAndAnswerRequired.Text = "Require Question and Answer";
       this.chkQuestionAndAnswerRequired.UseVisualStyleBackColor = false;
@@ -86,23 +86,26 @@
       this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.label6.Location = new System.Drawing.Point(267, 29);
       this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(148, 13);
+      this.label6.Size = new System.Drawing.Size(153, 15);
       this.label6.TabIndex = 37;
       this.label6.Text = "Minimum password length:";
       // 
       // txtMinimumPasswordLenght
       // 
-      this.txtMinimumPasswordLenght.Location = new System.Drawing.Point(433, 23);
+      this.txtMinimumPasswordLenght.Location = new System.Drawing.Point(426, 26);
       this.txtMinimumPasswordLenght.Name = "txtMinimumPasswordLenght";
-      this.txtMinimumPasswordLenght.Size = new System.Drawing.Size(50, 22);
+      this.txtMinimumPasswordLenght.Size = new System.Drawing.Size(50, 23);
       this.txtMinimumPasswordLenght.TabIndex = 64;
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.txtMinimumPasswordLenght);
       this.groupBox1.Controls.Add(this.label6);
       this.groupBox1.Controls.Add(this.chkQuestionAndAnswerRequired);
       this.groupBox1.Controls.Add(this.chkWriteExceptions);
+      this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.groupBox1.Location = new System.Drawing.Point(25, 20);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(541, 84);
@@ -114,7 +117,7 @@
       // 
       this.txtUserName.Location = new System.Drawing.Point(139, 29);
       this.txtUserName.Name = "txtUserName";
-      this.txtUserName.Size = new System.Drawing.Size(100, 22);
+      this.txtUserName.Size = new System.Drawing.Size(100, 23);
       this.txtUserName.TabIndex = 67;
       // 
       // label1
@@ -122,7 +125,7 @@
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(19, 32);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(65, 13);
+      this.label1.Size = new System.Drawing.Size(68, 15);
       this.label1.TabIndex = 62;
       this.label1.Text = "User Name:";
       // 
@@ -132,7 +135,7 @@
       this.createAdministratorUserCheck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.createAdministratorUserCheck.Location = new System.Drawing.Point(16, 0);
       this.createAdministratorUserCheck.Name = "createAdministratorUserCheck";
-      this.createAdministratorUserCheck.Size = new System.Drawing.Size(156, 17);
+      this.createAdministratorUserCheck.Size = new System.Drawing.Size(159, 19);
       this.createAdministratorUserCheck.TabIndex = 66;
       this.createAdministratorUserCheck.Text = "Create administrator user";
       this.createAdministratorUserCheck.UseVisualStyleBackColor = false;
@@ -143,7 +146,7 @@
       this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.label8.Location = new System.Drawing.Point(19, 94);
       this.label8.Name = "label8";
-      this.label8.Size = new System.Drawing.Size(103, 13);
+      this.label8.Size = new System.Drawing.Size(107, 15);
       this.label8.TabIndex = 60;
       this.label8.Text = "Confirm Password:";
       // 
@@ -153,7 +156,7 @@
       this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.label7.Location = new System.Drawing.Point(19, 63);
       this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(59, 13);
+      this.label7.Size = new System.Drawing.Size(60, 15);
       this.label7.TabIndex = 59;
       this.label7.Text = "Password:";
       // 
@@ -162,7 +165,7 @@
       this.txtPwdConfirm.Location = new System.Drawing.Point(139, 91);
       this.txtPwdConfirm.Name = "txtPwdConfirm";
       this.txtPwdConfirm.PasswordChar = '*';
-      this.txtPwdConfirm.Size = new System.Drawing.Size(100, 22);
+      this.txtPwdConfirm.Size = new System.Drawing.Size(100, 23);
       this.txtPwdConfirm.TabIndex = 69;
       this.txtPwdConfirm.UseSystemPasswordChar = true;
       // 
@@ -171,7 +174,7 @@
       this.txtPwd.Location = new System.Drawing.Point(139, 60);
       this.txtPwd.Name = "txtPwd";
       this.txtPwd.PasswordChar = '*';
-      this.txtPwd.Size = new System.Drawing.Size(100, 22);
+      this.txtPwd.Size = new System.Drawing.Size(100, 23);
       this.txtPwd.TabIndex = 68;
       this.txtPwd.UseSystemPasswordChar = true;
       // 
@@ -180,7 +183,7 @@
       this.label2.AutoSize = true;
       this.label2.Location = new System.Drawing.Point(19, 125);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(57, 13);
+      this.label2.Size = new System.Drawing.Size(58, 15);
       this.label2.TabIndex = 64;
       this.label2.Text = "Question:";
       // 
@@ -188,7 +191,7 @@
       // 
       this.txtQuestion.Location = new System.Drawing.Point(139, 122);
       this.txtQuestion.Name = "txtQuestion";
-      this.txtQuestion.Size = new System.Drawing.Size(385, 22);
+      this.txtQuestion.Size = new System.Drawing.Size(385, 23);
       this.txtQuestion.TabIndex = 70;
       // 
       // label3
@@ -196,7 +199,7 @@
       this.label3.AutoSize = true;
       this.label3.Location = new System.Drawing.Point(19, 156);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(48, 13);
+      this.label3.Size = new System.Drawing.Size(49, 15);
       this.label3.TabIndex = 66;
       this.label3.Text = "Answer:";
       // 
@@ -204,11 +207,13 @@
       // 
       this.txtAnswer.Location = new System.Drawing.Point(139, 153);
       this.txtAnswer.Name = "txtAnswer";
-      this.txtAnswer.Size = new System.Drawing.Size(385, 22);
+      this.txtAnswer.Size = new System.Drawing.Size(385, 23);
       this.txtAnswer.TabIndex = 71;
       // 
       // groupBox2
       // 
+      this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox2.Controls.Add(this.txtAnswer);
       this.groupBox2.Controls.Add(this.label3);
       this.groupBox2.Controls.Add(this.txtQuestion);
@@ -220,6 +225,7 @@
       this.groupBox2.Controls.Add(this.label7);
       this.groupBox2.Controls.Add(this.txtPwdConfirm);
       this.groupBox2.Controls.Add(this.txtPwd);
+      this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.groupBox2.Location = new System.Drawing.Point(25, 134);
       this.groupBox2.Name = "groupBox2";
       this.groupBox2.Size = new System.Drawing.Size(539, 213);
@@ -228,8 +234,7 @@
       // 
       // ProviderConfiguration
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
       this.BackColor = System.Drawing.SystemColors.Control;
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);

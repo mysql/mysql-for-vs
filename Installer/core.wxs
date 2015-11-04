@@ -80,24 +80,24 @@
       </Component>
     </DirectoryRef>
 
-    <!-- Custom Action (updates machine.config after a repair) -->        
-    <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v3.5\Release\MySql.ConnectorInstaller.CA.dll" />
-       
+    <!-- Custom Action (updates machine.config after a repair) -->
+    <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
               ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
       <ComponentRef Id="BaseFiles"/>
-      <ComponentRef Id="AddRegistryValuesForProduct"/>      
+      <ComponentRef Id="AddRegistryValuesForProduct"/>
       <!--
       <ComponentRef Id="RegistryInstallFlag64"/>
-      <ComponentRef Id="RegistryInstallFlag32"/> -->      
+      <ComponentRef Id="RegistryInstallFlag32"/> -->
       <ComponentRef Id="PerfMon"/>
       <ComponentRef Id="MySqldumpx86"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
-    
+
     <InstallExecuteSequence>
       <!-- v2 custom action scheduling -->
-      <!-- none -->      
+      <!-- none -->
     </InstallExecuteSequence>
 
     <!--MaintenanceMode = "Modify" OR MaintenanceMode = "Repair"-->

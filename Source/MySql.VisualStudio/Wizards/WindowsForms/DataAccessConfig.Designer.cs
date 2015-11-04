@@ -59,10 +59,10 @@
       // 
       this.label3.AutoSize = true;
       this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
-      this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label3.Location = new System.Drawing.Point(25, 22);
+      this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label3.Location = new System.Drawing.Point(28, 25);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(409, 13);
+      this.label3.Size = new System.Drawing.Size(428, 15);
       this.label3.TabIndex = 30;
       this.label3.Text = "&Which data connection should your application use to connect to the database?";
       // 
@@ -70,14 +70,19 @@
       // 
       this.label1.AutoSize = true;
       this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label1.Location = new System.Drawing.Point(28, 75);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(103, 13);
+      this.label1.Size = new System.Drawing.Size(105, 15);
       this.label1.TabIndex = 65;
       this.label1.Text = "Connection string:";
       // 
       // ConnectionStringTextBox
       // 
+      this.ConnectionStringTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ConnectionStringTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ConnectionStringTextBox.Location = new System.Drawing.Point(28, 96);
       this.ConnectionStringTextBox.Multiline = true;
       this.ConnectionStringTextBox.Name = "ConnectionStringTextBox";
@@ -87,18 +92,23 @@
       // 
       // cmbConnections
       // 
+      this.cmbConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.cmbConnections.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cmbConnections.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.cmbConnections.FormattingEnabled = true;
       this.cmbConnections.Location = new System.Drawing.Point(28, 45);
       this.cmbConnections.Name = "cmbConnections";
-      this.cmbConnections.Size = new System.Drawing.Size(395, 21);
+      this.cmbConnections.Size = new System.Drawing.Size(395, 23);
       this.cmbConnections.TabIndex = 62;
       // 
       // newConnString
       // 
-      this.newConnString.Location = new System.Drawing.Point(441, 45);
+      this.newConnString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.newConnString.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.newConnString.Location = new System.Drawing.Point(429, 45);
       this.newConnString.Name = "newConnString";
-      this.newConnString.Size = new System.Drawing.Size(125, 25);
+      this.newConnString.Size = new System.Drawing.Size(140, 25);
       this.newConnString.TabIndex = 61;
       this.newConnString.Text = "New Connection...";
       this.newConnString.UseVisualStyleBackColor = true;
@@ -106,11 +116,13 @@
       // 
       // noIncludeSensitiveInformationCheck
       // 
+      this.noIncludeSensitiveInformationCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.noIncludeSensitiveInformationCheck.AutoSize = true;
       this.noIncludeSensitiveInformationCheck.Checked = true;
+      this.noIncludeSensitiveInformationCheck.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.noIncludeSensitiveInformationCheck.Location = new System.Drawing.Point(31, 193);
       this.noIncludeSensitiveInformationCheck.Name = "noIncludeSensitiveInformationCheck";
-      this.noIncludeSensitiveInformationCheck.Size = new System.Drawing.Size(503, 17);
+      this.noIncludeSensitiveInformationCheck.Size = new System.Drawing.Size(515, 19);
       this.noIncludeSensitiveInformationCheck.TabIndex = 67;
       this.noIncludeSensitiveInformationCheck.TabStop = true;
       this.noIncludeSensitiveInformationCheck.Text = "No, Exclude sensitive information in the connection string. I will set it in my a" +
@@ -119,22 +131,27 @@
       // 
       // includeSensitiveInformationCheck
       // 
+      this.includeSensitiveInformationCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.includeSensitiveInformationCheck.AutoSize = true;
+      this.includeSensitiveInformationCheck.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.includeSensitiveInformationCheck.Location = new System.Drawing.Point(31, 216);
       this.includeSensitiveInformationCheck.Name = "includeSensitiveInformationCheck";
-      this.includeSensitiveInformationCheck.Size = new System.Drawing.Size(323, 17);
+      this.includeSensitiveInformationCheck.Size = new System.Drawing.Size(331, 19);
       this.includeSensitiveInformationCheck.TabIndex = 66;
       this.includeSensitiveInformationCheck.Text = "Yes, Include sensitive information in the connection string";
       this.includeSensitiveInformationCheck.UseVisualStyleBackColor = true;
       // 
       // grpboxTechnology
       // 
+      this.grpboxTechnology.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.grpboxTechnology.Controls.Add(this.radEF6);
       this.grpboxTechnology.Controls.Add(this.radEF5);
       this.grpboxTechnology.Controls.Add(this.radTechTypedDataSet);
+      this.grpboxTechnology.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.grpboxTechnology.Location = new System.Drawing.Point(28, 261);
       this.grpboxTechnology.Name = "grpboxTechnology";
-      this.grpboxTechnology.Size = new System.Drawing.Size(522, 66);
+      this.grpboxTechnology.Size = new System.Drawing.Size(541, 66);
       this.grpboxTechnology.TabIndex = 68;
       this.grpboxTechnology.TabStop = false;
       this.grpboxTechnology.Text = "Select the Data Access Technology to connect with the database";
@@ -143,9 +160,9 @@
       // 
       this.radEF6.AutoSize = true;
       this.radEF6.Enabled = false;
-      this.radEF6.Location = new System.Drawing.Point(339, 28);
+      this.radEF6.Location = new System.Drawing.Point(373, 28);
       this.radEF6.Name = "radEF6";
-      this.radEF6.Size = new System.Drawing.Size(132, 17);
+      this.radEF6.Size = new System.Drawing.Size(135, 19);
       this.radEF6.TabIndex = 2;
       this.radEF6.TabStop = true;
       this.radEF6.Text = "Entity Framework 6.0";
@@ -154,9 +171,9 @@
       // radEF5
       // 
       this.radEF5.AutoSize = true;
-      this.radEF5.Location = new System.Drawing.Point(161, 28);
+      this.radEF5.Location = new System.Drawing.Point(184, 28);
       this.radEF5.Name = "radEF5";
-      this.radEF5.Size = new System.Drawing.Size(132, 17);
+      this.radEF5.Size = new System.Drawing.Size(135, 19);
       this.radEF5.TabIndex = 1;
       this.radEF5.TabStop = true;
       this.radEF5.Text = "Entity Framework 5.0";
@@ -168,7 +185,7 @@
       this.radTechTypedDataSet.Checked = true;
       this.radTechTypedDataSet.Location = new System.Drawing.Point(17, 28);
       this.radTechTypedDataSet.Name = "radTechTypedDataSet";
-      this.radTechTypedDataSet.Size = new System.Drawing.Size(98, 17);
+      this.radTechTypedDataSet.Size = new System.Drawing.Size(101, 19);
       this.radTechTypedDataSet.TabIndex = 0;
       this.radTechTypedDataSet.TabStop = true;
       this.radTechTypedDataSet.Text = "Typed DataSet";
@@ -176,8 +193,7 @@
       // 
       // DataAccessConfig
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
       this.Controls.Add(this.grpboxTechnology);
       this.Controls.Add(this.noIncludeSensitiveInformationCheck);
       this.Controls.Add(this.includeSensitiveInformationCheck);

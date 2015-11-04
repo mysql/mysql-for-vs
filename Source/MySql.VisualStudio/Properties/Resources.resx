@@ -1171,6 +1171,18 @@ Check that the server is running, the database exists and the user Error establi
   <data name="WinFormsProjectDescription" xml:space="preserve">
     <value>This wizard will create a WinForms project connected to an existing MySQL database using either EF or ADO.NET Typed Datasets as data access with three layout options: Individual Controls, Grid or Master-Detail.</value>
   </data>
+  <data name="mysql_ItemTemplate_wizard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mysql_ItemTemplate_wizard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mysql_WebsiteConfig" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mysql_WebsiteConfig.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WrongNetFxVersionMessage" xml:space="preserve">
+    <value>Only .NET versions 4.0/4.5/4.5.1 are supported</value>
+  </data>
+  <data name="InvalidValueFieldsMessage" xml:space="preserve">
+    <value>Please set a valid value for the following fields</value>
+  </data>
   <data name="FileCreationErrorCreatingFile" xml:space="preserve">
     <value>Error creating the file</value>
   </data>

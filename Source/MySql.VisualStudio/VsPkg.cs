@@ -23,6 +23,12 @@
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Data.Services;
+using Microsoft.VisualStudio.Data.Interop;
+using System.Linq;
+using System.Data;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using Microsoft.VisualStudio.Data.Core;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.MySqlClient;
@@ -34,16 +40,14 @@ using MySql.Data.VisualStudio.Wizards;
 using MySQL.Utility.Classes;
 using MySQL.Utility.Classes.MySQLWorkbench;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+
 
 namespace MySql.Data.VisualStudio
 {
@@ -212,27 +216,6 @@ namespace MySql.Data.VisualStudio
         CommandID cmdAddConnection = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdidAddConnection);
         OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
         mcs.AddCommand(cmdMenuAddConnection);
-#if NET_40_OR_GREATER
-        CommandID cmdCreateNewMvcProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeMvcProject);
-        OleMenuCommand cmdMenuCreateNewMvcProject = new OleMenuCommand(cmdCreateNewMvcProject_Callback, cmdCreateNewMvcProject);
-
-        if (!IsMVC4Installed())
-        {
-          cmdMenuCreateNewMvcProject.Enabled = false;
-        }
-
-        mcs.AddCommand(cmdMenuCreateNewMvcProject);
-
-        CommandID cmdCreateWinFormsProject = new CommandID(GuidList.guidIDEToolbarCmdSet, (int)PkgCmdIDList.cmdProjectTypeWinFormsProject);
-        OleMenuCommand cmdMenuCreateWinFormsProject = new OleMenuCommand(cmdCreateWinFormsProject_Callback, cmdCreateWinFormsProject);
-
-        if (!IsMVC4Installed())
-        {
-          cmdMenuCreateWinFormsProject.Enabled = false;
-        }
-
-        mcs.AddCommand(cmdMenuCreateWinFormsProject);
-#endif
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
       }
 
@@ -246,7 +229,6 @@ namespace MySql.Data.VisualStudio
       ((IServiceContainer)this).AddService(typeof(MyJsLanguageService), jslanguageService, true);
 
     }
-
     private void NewScriptCallback(object sender, EventArgs e)
     {
       var connection = GetCurrentConnection();
@@ -406,28 +388,6 @@ namespace MySql.Data.VisualStudio
     }
     #endregion
 
-    private void cmdCreateWinFormsProject_Callback(object sender, EventArgs e)
-    {
-      CreateNewMySqlProject("Windows Forms Project");
-    }
-
-    private void cmdCreateNewMvcProject_Callback(object sender, EventArgs e)
-    {
-      CreateNewMySqlProject("ASP.NET MVC 3 Project");
-    }
-
-    /// <summary>
-    /// Method to detect if "Microsoft ASP.NET MVC4" is installed, searching for it in it's predefined "ProgramFiles" path.
-    /// </summary>
-    /// <returns>
-    /// returns true if "Microsoft ASP.NET MVC4" is installed
-    /// </returns>
-    private bool IsMVC4Installed()
-    {
-      string path = Environment.Is64BitOperatingSystem ? MVC4_64_Path : MVC4_32_Path;
-      return Directory.Exists(path);
-    }
-
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand openUtilities = sender as OleMenuCommand;
@@ -525,9 +485,15 @@ namespace MySql.Data.VisualStudio
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
-      bool exportAvailable = GetConnection(ConnectionName) != null;
-      dbExportButton.Visible = exportAvailable;
-      dbExportButton.Enabled = exportAvailable;
+      if (GetConnection(ConnectionName) != null)
+      {
+        dbExportButton.Visible = true;
+        dbExportButton.Enabled = true;
+      }
+      else
+      {
+        dbExportButton.Enabled = false;
+      }
     }
 
     private void cmdDbExport_Callback(object sender, EventArgs e)
@@ -686,6 +652,7 @@ namespace MySql.Data.VisualStudio
       }
       MysqlConnectionSelected = null;
     }
+
 
 
     public string GetCurrentConnectionName()

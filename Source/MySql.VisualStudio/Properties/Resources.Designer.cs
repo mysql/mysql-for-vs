@@ -22,7 +22,7 @@ namespace MySql.Data.VisualStudio.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace MySql.Data.VisualStudio.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.VisualStudio.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace MySql.Data.VisualStudio.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -73,7 +73,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to H1PZDDC3CDP8CDKAH1HRAPE2ZQZECRQER1PEIKDCEKD9CMKPDKJZMKPZZIRHEIE2EQZHH9JTJED0ZDPTQ2I8RHJMCQRIZ1MDM9Q9Z1MZE8M2JQHTI1MCA2M3ZDRTEZAR.
         /// </summary>
-        internal static string _100 {
+        public static string _100 {
             get {
                 return ResourceManager.GetString("_100", resourceCulture);
             }
@@ -82,7 +82,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL.
         /// </summary>
-        internal static string _105 {
+        public static string _105 {
             get {
                 return ResourceManager.GetString("_105", resourceCulture);
             }
@@ -91,7 +91,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL Script.
         /// </summary>
-        internal static string _106 {
+        public static string _106 {
             get {
                 return ResourceManager.GetString("_106", resourceCulture);
             }
@@ -100,7 +100,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MyJs Script.
         /// </summary>
-        internal static string _107 {
+        public static string _107 {
             get {
                 return ResourceManager.GetString("_107", resourceCulture);
             }
@@ -109,7 +109,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A blank mysql file..
         /// </summary>
-        internal static string _109 {
+        public static string _109 {
             get {
                 return ResourceManager.GetString("_109", resourceCulture);
             }
@@ -145,13 +145,23 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon _401 {
+        public static System.Drawing.Icon _400 {
+            get {
+                object obj = ResourceManager.GetObject("_400", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon _401 {
             get {
                 object obj = ResourceManager.GetObject("_401", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
-        }
-        
+        }        
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -165,7 +175,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon _402 {
+        public static System.Drawing.Icon _402 {
             get {
                 object obj = ResourceManager.GetObject("_402", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -205,7 +215,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot alter trigger &apos;{0}&apos; on &apos;{1}&apos; because this trigger does not belong to this object. Specify the correct trigger name or the correct target object name..
         /// </summary>
-        internal static string AlterTriggerOnWrongTable {
+        public static string AlterTriggerOnWrongTable {
             get {
                 return ResourceManager.GetString("AlterTriggerOnWrongTable", resourceCulture);
             }
@@ -214,7 +224,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL for Visual Studio.
         /// </summary>
-        internal static string ApplicationName {
+        public static string ApplicationName {
             get {
                 return ResourceManager.GetString("ApplicationName", resourceCulture);
             }
@@ -223,7 +233,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ArrowKey {
+        public static System.Drawing.Bitmap ArrowKey {
             get {
                 object obj = ResourceManager.GetObject("ArrowKey", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -233,7 +243,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Any autoincrement columns needs to be set as primary key..
         /// </summary>
-        internal static string AutoIncrementPrimaryKey {
+        public static string AutoIncrementPrimaryKey {
             get {
                 return ResourceManager.GetString("AutoIncrementPrimaryKey", resourceCulture);
             }
@@ -242,7 +252,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bannrbmp {
+        public static System.Drawing.Bitmap bannrbmp {
             get {
                 object obj = ResourceManager.GetObject("bannrbmp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -252,7 +262,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
-        internal static string Category_Advanced {
+        public static string Category_Advanced {
             get {
                 return ResourceManager.GetString("Category_Advanced", resourceCulture);
             }
@@ -261,7 +271,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Authentication.
         /// </summary>
-        internal static string Category_Authentication {
+        public static string Category_Authentication {
             get {
                 return ResourceManager.GetString("Category_Authentication", resourceCulture);
             }
@@ -270,7 +280,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Base.
         /// </summary>
-        internal static string Category_Base {
+        public static string Category_Base {
             get {
                 return ResourceManager.GetString("Category_Base", resourceCulture);
             }
@@ -279,7 +289,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Connection.
         /// </summary>
-        internal static string Category_Connection {
+        public static string Category_Connection {
             get {
                 return ResourceManager.GetString("Category_Connection", resourceCulture);
             }
@@ -288,7 +298,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data Type.
         /// </summary>
-        internal static string Category_DataType {
+        public static string Category_DataType {
             get {
                 return ResourceManager.GetString("Category_DataType", resourceCulture);
             }
@@ -297,7 +307,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to (Identifier).
         /// </summary>
-        internal static string Category_Identifier {
+        public static string Category_Identifier {
             get {
                 return ResourceManager.GetString("Category_Identifier", resourceCulture);
             }
@@ -306,7 +316,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Pooling.
         /// </summary>
-        internal static string Category_Pooling {
+        public static string Category_Pooling {
             get {
                 return ResourceManager.GetString("Category_Pooling", resourceCulture);
             }
@@ -315,7 +325,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Security.
         /// </summary>
-        internal static string Category_Security {
+        public static string Category_Security {
             get {
                 return ResourceManager.GetString("Category_Security", resourceCulture);
             }
@@ -324,7 +334,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Statistic.
         /// </summary>
-        internal static string Category_Statistic {
+        public static string Category_Statistic {
             get {
                 return ResourceManager.GetString("Category_Statistic", resourceCulture);
             }
@@ -333,7 +343,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Column name missing for column definition.  Column will be deleted.  To correct, choose cancel and specify the name of the column..
         /// </summary>
-        internal static string ColumnWillBeDeleted {
+        public static string ColumnWillBeDeleted {
             get {
                 return ResourceManager.GetString("ColumnWillBeDeleted", resourceCulture);
             }
@@ -342,7 +352,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An error occurred that is normally caused by not having for Visual Studio properly installed..
         /// </summary>
-        internal static string ConnectionPropertiesNull {
+        public static string ConnectionPropertiesNull {
             get {
                 return ResourceManager.GetString("ConnectionPropertiesNull", resourceCulture);
             }
@@ -351,7 +361,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The specified connection string is invalid..
         /// </summary>
-        internal static string ConnectionStringInvalid {
+        public static string ConnectionStringInvalid {
             get {
                 return ResourceManager.GetString("ConnectionStringInvalid", resourceCulture);
             }
@@ -360,7 +370,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL Database.
         /// </summary>
-        internal static string DataSource_DisplayName {
+        public static string DataSource_DisplayName {
             get {
                 return ResourceManager.GetString("DataSource_DisplayName", resourceCulture);
             }
@@ -369,7 +379,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Default View.
         /// </summary>
-        internal static string DataView_Default {
+        public static string DataView_Default {
             get {
                 return ResourceManager.GetString("DataView_Default", resourceCulture);
             }
@@ -378,7 +388,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A path to a file was not provided..
         /// </summary>
-        internal static string DbExportPathNotProvided {
+        public static string DbExportPathNotProvided {
             get {
                 return ResourceManager.GetString("DbExportPathNotProvided", resourceCulture);
             }
@@ -387,7 +397,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL Data Export.
         /// </summary>
-        internal static string DbExportToolCaptionFrame {
+        public static string DbExportToolCaptionFrame {
             get {
                 return ResourceManager.GetString("DbExportToolCaptionFrame", resourceCulture);
             }
@@ -396,7 +406,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to True if you want to delay key updates until the table is closed.  (MyISAM only).
         /// </summary>
-        internal static string DelayKeyWriteDesc {
+        public static string DelayKeyWriteDesc {
             get {
                 return ResourceManager.GetString("DelayKeyWriteDesc", resourceCulture);
             }
@@ -405,7 +415,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Allows execution of multiple SQL commands in a single statement.
         /// </summary>
-        internal static string Description_AllowBatch {
+        public static string Description_AllowBatch {
             get {
                 return ResourceManager.GetString("Description_AllowBatch", resourceCulture);
             }
@@ -414,7 +424,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Should zero datetimes be supported.
         /// </summary>
-        internal static string Description_AllowZero {
+        public static string Description_AllowZero {
             get {
                 return ResourceManager.GetString("Description_AllowZero", resourceCulture);
             }
@@ -423,7 +433,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Indicates how many stored procedures can be cached at one time. A value of 0 effectively disables the procedure cache.
         /// </summary>
-        internal static string Description_CacheSize {
+        public static string Description_CacheSize {
             get {
                 return ResourceManager.GetString("Description_CacheSize", resourceCulture);
             }
@@ -432,7 +442,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Character set this connection should use.
         /// </summary>
-        internal static string Description_CharacterSet {
+        public static string Description_CharacterSet {
             get {
                 return ResourceManager.GetString("Description_CharacterSet", resourceCulture);
             }
@@ -441,7 +451,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The way this column participate table keys and indices..
         /// </summary>
-        internal static string Description_Column_ColumnKey {
+        public static string Description_Column_ColumnKey {
             get {
                 return ResourceManager.GetString("Description_Column_ColumnKey", resourceCulture);
             }
@@ -450,7 +460,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The default value used to initialize new row values for this column..
         /// </summary>
-        internal static string Description_Column_Default {
+        public static string Description_Column_Default {
             get {
                 return ResourceManager.GetString("Description_Column_Default", resourceCulture);
             }
@@ -459,7 +469,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The advanced options for the column..
         /// </summary>
-        internal static string Description_Column_Extra {
+        public static string Description_Column_Extra {
             get {
                 return ResourceManager.GetString("Description_Column_Extra", resourceCulture);
             }
@@ -468,7 +478,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Indicates if null values are allowed in this database object..
         /// </summary>
-        internal static string Description_Column_Nullable {
+        public static string Description_Column_Nullable {
             get {
                 return ResourceManager.GetString("Description_Column_Nullable", resourceCulture);
             }
@@ -477,7 +487,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum length (in bytes) that can be stored in the column. Should be the same as Length, except for multi-byte character sets..
         /// </summary>
-        internal static string Description_Column_OctetLength {
+        public static string Description_Column_OctetLength {
             get {
                 return ResourceManager.GetString("Description_Column_OctetLength", resourceCulture);
             }
@@ -486,7 +496,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The position of this object in the parent database object definition..
         /// </summary>
-        internal static string Description_Column_Ordinal {
+        public static string Description_Column_Ordinal {
             get {
                 return ResourceManager.GetString("Description_Column_Ordinal", resourceCulture);
             }
@@ -495,7 +505,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The privileges for the column..
         /// </summary>
-        internal static string Description_Column_Privileges {
+        public static string Description_Column_Privileges {
             get {
                 return ResourceManager.GetString("Description_Column_Privileges", resourceCulture);
             }
@@ -504,7 +514,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The ANSI SQL type definition for the column..
         /// </summary>
-        internal static string Description_Column_SqlType {
+        public static string Description_Column_SqlType {
             get {
                 return ResourceManager.GetString("Description_Column_SqlType", resourceCulture);
             }
@@ -513,7 +523,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Should the connection ues compression.
         /// </summary>
-        internal static string Description_Compression {
+        public static string Description_Compression {
             get {
                 return ResourceManager.GetString("Description_Compression", resourceCulture);
             }
@@ -522,7 +532,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to When true, indicates the connection state is reset when removed from the pool.
         /// </summary>
-        internal static string Description_ConnReset {
+        public static string Description_ConnReset {
             get {
                 return ResourceManager.GetString("Description_ConnReset", resourceCulture);
             }
@@ -531,7 +541,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Should illegal datetime values be converted to DateTime.MinValue.
         /// </summary>
-        internal static string Description_ConvertZero {
+        public static string Description_ConvertZero {
             get {
                 return ResourceManager.GetString("Description_ConvertZero", resourceCulture);
             }
@@ -540,7 +550,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The default schema name. Can be empty, but it is not recommended..
         /// </summary>
-        internal static string Description_Database {
+        public static string Description_Database {
             get {
                 return ResourceManager.GetString("Description_Database", resourceCulture);
             }
@@ -549,7 +559,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Specifies the type of driver to use for this connection.
         /// </summary>
-        internal static string Description_DriverType {
+        public static string Description_DriverType {
             get {
                 return ResourceManager.GetString("Description_DriverType", resourceCulture);
             }
@@ -558,7 +568,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The minimum amount of time (in seconds) for this connection to live in the pool before being destroyed.
         /// </summary>
-        internal static string Description_LifeTime {
+        public static string Description_LifeTime {
             get {
                 return ResourceManager.GetString("Description_LifeTime", resourceCulture);
             }
@@ -567,7 +577,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Enables output of diagnostic messages.
         /// </summary>
-        internal static string Description_Logging {
+        public static string Description_Logging {
             get {
                 return ResourceManager.GetString("Description_Logging", resourceCulture);
             }
@@ -576,7 +586,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum number of connections allowed in the pool.
         /// </summary>
-        internal static string Description_MaxPoolSize {
+        public static string Description_MaxPoolSize {
             get {
                 return ResourceManager.GetString("Description_MaxPoolSize", resourceCulture);
             }
@@ -585,7 +595,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The minimum number of connections allowed in the pool.
         /// </summary>
-        internal static string Description_MinPoolSize {
+        public static string Description_MinPoolSize {
             get {
                 return ResourceManager.GetString("Description_MinPoolSize", resourceCulture);
             }
@@ -594,7 +604,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The default character set that is used for the database object..
         /// </summary>
-        internal static string Description_Object_CharacterSet {
+        public static string Description_Object_CharacterSet {
             get {
                 return ResourceManager.GetString("Description_Object_CharacterSet", resourceCulture);
             }
@@ -603,7 +613,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The collation that is used to compare text for the database object..
         /// </summary>
-        internal static string Description_Object_Collation {
+        public static string Description_Object_Collation {
             get {
                 return ResourceManager.GetString("Description_Object_Collation", resourceCulture);
             }
@@ -612,7 +622,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The brief description of the database object..
         /// </summary>
-        internal static string Description_Object_Comment {
+        public static string Description_Object_Comment {
             get {
                 return ResourceManager.GetString("Description_Object_Comment", resourceCulture);
             }
@@ -621,7 +631,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The date and time when the database object was created..
         /// </summary>
-        internal static string Description_Object_CreationTime {
+        public static string Description_Object_CreationTime {
             get {
                 return ResourceManager.GetString("Description_Object_CreationTime", resourceCulture);
             }
@@ -630,7 +640,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The database catalog which owns the database object..
         /// </summary>
-        internal static string Description_Object_Database {
+        public static string Description_Object_Database {
             get {
                 return ResourceManager.GetString("Description_Object_Database", resourceCulture);
             }
@@ -639,7 +649,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Creator of the object.
         /// </summary>
-        internal static string Description_Object_Definer {
+        public static string Description_Object_Definer {
             get {
                 return ResourceManager.GetString("Description_Object_Definer", resourceCulture);
             }
@@ -648,7 +658,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The flags used to modify data type of this database object..
         /// </summary>
-        internal static string Description_Object_Flags {
+        public static string Description_Object_Flags {
             get {
                 return ResourceManager.GetString("Description_Object_Flags", resourceCulture);
             }
@@ -657,7 +667,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum length (in characters) that can be stored in this database object..
         /// </summary>
-        internal static string Description_Object_Length {
+        public static string Description_Object_Length {
             get {
                 return ResourceManager.GetString("Description_Object_Length", resourceCulture);
             }
@@ -666,7 +676,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SQL Mode of the object.
         /// </summary>
-        internal static string Description_Object_Mode {
+        public static string Description_Object_Mode {
             get {
                 return ResourceManager.GetString("Description_Object_Mode", resourceCulture);
             }
@@ -675,7 +685,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The native MySQL type for the database object..
         /// </summary>
-        internal static string Description_Object_MySqlType {
+        public static string Description_Object_MySqlType {
             get {
                 return ResourceManager.GetString("Description_Object_MySqlType", resourceCulture);
             }
@@ -684,7 +694,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The name of the database object..
         /// </summary>
-        internal static string Description_Object_Name {
+        public static string Description_Object_Name {
             get {
                 return ResourceManager.GetString("Description_Object_Name", resourceCulture);
             }
@@ -693,7 +703,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to For numeric data, the maximum number of decimal digits that can be stored in this database object..
         /// </summary>
-        internal static string Description_Object_Precision {
+        public static string Description_Object_Precision {
             get {
                 return ResourceManager.GetString("Description_Object_Precision", resourceCulture);
             }
@@ -702,7 +712,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to For numeric data, the maximum number of decimal digits that can be stored in this database object to the right of a decimal point..
         /// </summary>
-        internal static string Description_Object_Scale {
+        public static string Description_Object_Scale {
             get {
                 return ResourceManager.GetString("Description_Object_Scale", resourceCulture);
             }
@@ -711,7 +721,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The schema which owns the database object..
         /// </summary>
-        internal static string Description_Object_Schema {
+        public static string Description_Object_Schema {
             get {
                 return ResourceManager.GetString("Description_Object_Schema", resourceCulture);
             }
@@ -720,7 +730,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Security type of the object.
         /// </summary>
-        internal static string Description_Object_SecurityType {
+        public static string Description_Object_SecurityType {
             get {
                 return ResourceManager.GetString("Description_Object_SecurityType", resourceCulture);
             }
@@ -729,7 +739,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The host name of the MySQL server which runs underlying database..
         /// </summary>
-        internal static string Description_Object_Server {
+        public static string Description_Object_Server {
             get {
                 return ResourceManager.GetString("Description_Object_Server", resourceCulture);
             }
@@ -738,7 +748,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The table which owns the database object..
         /// </summary>
-        internal static string Description_Object_Table {
+        public static string Description_Object_Table {
             get {
                 return ResourceManager.GetString("Description_Object_Table", resourceCulture);
             }
@@ -747,7 +757,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A view owning this object.
         /// </summary>
-        internal static string Description_Object_View {
+        public static string Description_Object_View {
             get {
                 return ResourceManager.GetString("Description_Object_View", resourceCulture);
             }
@@ -756,7 +766,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the file with startup options.
         /// </summary>
-        internal static string Description_OptionFile {
+        public static string Description_OptionFile {
             get {
                 return ResourceManager.GetString("Description_OptionFile", resourceCulture);
             }
@@ -765,7 +775,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Shows if this parameter is the return value for the routine..
         /// </summary>
-        internal static string Description_Parameter_IsResult {
+        public static string Description_Parameter_IsResult {
             get {
                 return ResourceManager.GetString("Description_Parameter_IsResult", resourceCulture);
             }
@@ -774,7 +784,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The direction of this parameter..
         /// </summary>
-        internal static string Description_Parameter_Mode {
+        public static string Description_Parameter_Mode {
             get {
                 return ResourceManager.GetString("Description_Parameter_Mode", resourceCulture);
             }
@@ -783,7 +793,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The position of this object in the parent database object definition..
         /// </summary>
-        internal static string Description_Parameter_Ordinal {
+        public static string Description_Parameter_Ordinal {
             get {
                 return ResourceManager.GetString("Description_Parameter_Ordinal", resourceCulture);
             }
@@ -792,7 +802,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The stored procedure that owns this database object..
         /// </summary>
-        internal static string Description_Parameter_StoredProcedure {
+        public static string Description_Parameter_StoredProcedure {
             get {
                 return ResourceManager.GetString("Description_Parameter_StoredProcedure", resourceCulture);
             }
@@ -801,7 +811,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The database user password..
         /// </summary>
-        internal static string Description_Password {
+        public static string Description_Password {
             get {
                 return ResourceManager.GetString("Description_Password", resourceCulture);
             }
@@ -810,7 +820,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Indicates that performance counters should be updated during execution.
         /// </summary>
-        internal static string Description_PerfMonitor {
+        public static string Description_PerfMonitor {
             get {
                 return ResourceManager.GetString("Description_PerfMonitor", resourceCulture);
             }
@@ -819,7 +829,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to When false, security-sensitive information, such as the password, is not returned as part of the connection if the connection is open or has ever been in an open state.
         /// </summary>
-        internal static string Description_Persist {
+        public static string Description_Persist {
             get {
                 return ResourceManager.GetString("Description_Persist", resourceCulture);
             }
@@ -828,7 +838,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of pipe to use when connecting with named pipes (Win32 only).
         /// </summary>
-        internal static string Description_PipeName {
+        public static string Description_PipeName {
             get {
                 return ResourceManager.GetString("Description_PipeName", resourceCulture);
             }
@@ -837,7 +847,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to When true, the connection object is drawn from the appropriate pool, or if necessary, is created and added to the appropriate pool.
         /// </summary>
-        internal static string Description_Pooling {
+        public static string Description_Pooling {
             get {
                 return ResourceManager.GetString("Description_Pooling", resourceCulture);
             }
@@ -846,7 +856,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The port to use when connecting with sockets.
         /// </summary>
-        internal static string Description_Port {
+        public static string Description_Port {
             get {
                 return ResourceManager.GetString("Description_Port", resourceCulture);
             }
@@ -855,7 +865,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Protocol to use for connection to MySQL.
         /// </summary>
-        internal static string Description_Protocol {
+        public static string Description_Protocol {
             get {
                 return ResourceManager.GetString("Description_Protocol", resourceCulture);
             }
@@ -864,7 +874,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Return type of the routine.
         /// </summary>
-        internal static string Description_Routine_Returns {
+        public static string Description_Routine_Returns {
             get {
                 return ResourceManager.GetString("Description_Routine_Returns", resourceCulture);
             }
@@ -873,7 +883,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The schema that owns the database object..
         /// </summary>
-        internal static string Description_Schema {
+        public static string Description_Schema {
             get {
                 return ResourceManager.GetString("Description_Schema", resourceCulture);
             }
@@ -882,7 +892,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The MySQL server IP or hostname..
         /// </summary>
-        internal static string Description_Server {
+        public static string Description_Server {
             get {
                 return ResourceManager.GetString("Description_Server", resourceCulture);
             }
@@ -891,7 +901,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the shared memory object to use.
         /// </summary>
-        internal static string Description_SharedMemory {
+        public static string Description_SharedMemory {
             get {
                 return ResourceManager.GetString("Description_SharedMemory", resourceCulture);
             }
@@ -900,7 +910,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Language of the body of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_Body {
+        public static string Description_StoredProcedure_Body {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_Body", resourceCulture);
             }
@@ -909,7 +919,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Comments.
         /// </summary>
-        internal static string Description_StoredProcedure_Comment {
+        public static string Description_StoredProcedure_Comment {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_Comment", resourceCulture);
             }
@@ -918,7 +928,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type of data access of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_DataAccess {
+        public static string Description_StoredProcedure_DataAccess {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_DataAccess", resourceCulture);
             }
@@ -927,7 +937,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Body of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_Definition {
+        public static string Description_StoredProcedure_Definition {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_Definition", resourceCulture);
             }
@@ -936,7 +946,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to External language used to write the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_ExternalLanguage {
+        public static string Description_StoredProcedure_ExternalLanguage {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_ExternalLanguage", resourceCulture);
             }
@@ -945,7 +955,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to External name of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_ExternalName {
+        public static string Description_StoredProcedure_ExternalName {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_ExternalName", resourceCulture);
             }
@@ -954,7 +964,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Defines if the routine is deterministic.
         /// </summary>
-        internal static string Description_StoredProcedure_IsDeterministic {
+        public static string Description_StoredProcedure_IsDeterministic {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_IsDeterministic", resourceCulture);
             }
@@ -963,7 +973,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time of the last modification of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_LastModified {
+        public static string Description_StoredProcedure_LastModified {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_LastModified", resourceCulture);
             }
@@ -972,7 +982,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to List of parameters of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_ParameterList {
+        public static string Description_StoredProcedure_ParameterList {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_ParameterList", resourceCulture);
             }
@@ -981,7 +991,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Parameter style of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_ParameterStyle {
+        public static string Description_StoredProcedure_ParameterStyle {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_ParameterStyle", resourceCulture);
             }
@@ -990,7 +1000,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Specific name of the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_SpecificName {
+        public static string Description_StoredProcedure_SpecificName {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_SpecificName", resourceCulture);
             }
@@ -999,7 +1009,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SQL path to the routine.
         /// </summary>
-        internal static string Description_StoredProcedure_SqlPath {
+        public static string Description_StoredProcedure_SqlPath {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_SqlPath", resourceCulture);
             }
@@ -1008,7 +1018,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type of the routine (procedure or function).
         /// </summary>
-        internal static string Description_StoredProcedure_Type {
+        public static string Description_StoredProcedure_Type {
             get {
                 return ResourceManager.GetString("Description_StoredProcedure_Type", resourceCulture);
             }
@@ -1017,7 +1027,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The initial AUTO_INCREMENT value for the table. Only for MyISAM tables with a least one AUTO_INCREMENT column..
         /// </summary>
-        internal static string Description_Table_AutoIncrement {
+        public static string Description_Table_AutoIncrement {
             get {
                 return ResourceManager.GetString("Description_Table_AutoIncrement", resourceCulture);
             }
@@ -1026,7 +1036,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The average length for the rows in the table..
         /// </summary>
-        internal static string Description_Table_AverageRowLength {
+        public static string Description_Table_AverageRowLength {
             get {
                 return ResourceManager.GetString("Description_Table_AverageRowLength", resourceCulture);
             }
@@ -1035,7 +1045,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An approximation of the average row length for the table. Set this value only for large tables with variable-size records..
         /// </summary>
-        internal static string Description_Table_AverageRowLength_Option {
+        public static string Description_Table_AverageRowLength_Option {
             get {
                 return ResourceManager.GetString("Description_Table_AverageRowLength_Option", resourceCulture);
             }
@@ -1044,7 +1054,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The date and time when the table was checked last time..
         /// </summary>
-        internal static string Description_Table_CheckDateTime {
+        public static string Description_Table_CheckDateTime {
             get {
                 return ResourceManager.GetString("Description_Table_CheckDateTime", resourceCulture);
             }
@@ -1053,7 +1063,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The checksum for the table..
         /// </summary>
-        internal static string Description_Table_Checksum {
+        public static string Description_Table_Checksum {
             get {
                 return ResourceManager.GetString("Description_Table_Checksum", resourceCulture);
             }
@@ -1062,7 +1072,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Set this option if you want MySQL to maintain a live checksum for all rows (that is, a checksum that MySQL updates automatically as the table changes). This makes the table a little slower to update, but also makes it easier to find corrupted tables. The CHECKSUM TABLE statement reports the checksum. (MyISAM only.).
         /// </summary>
-        internal static string Description_Table_Checksum_Option {
+        public static string Description_Table_Checksum_Option {
             get {
                 return ResourceManager.GetString("Description_Table_Checksum_Option", resourceCulture);
             }
@@ -1071,7 +1081,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The connection string for a FEDERATED table. This option is available as of MySQL 5.0.13; before that, use a COMMENT option for the connection string..
         /// </summary>
-        internal static string Description_Table_Connection_Option {
+        public static string Description_Table_Connection_Option {
             get {
                 return ResourceManager.GetString("Description_Table_Connection_Option", resourceCulture);
             }
@@ -1080,7 +1090,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The options, used to create the table..
         /// </summary>
-        internal static string Description_Table_CreateOptions {
+        public static string Description_Table_CreateOptions {
             get {
                 return ResourceManager.GetString("Description_Table_CreateOptions", resourceCulture);
             }
@@ -1089,7 +1099,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to By using this option you can specify where the MyISAM storage engine should put a table&apos;s data file. The directory must be the full pathname to the directory, not a relative path..
         /// </summary>
-        internal static string Description_Table_DataDirectory_Option {
+        public static string Description_Table_DataDirectory_Option {
             get {
                 return ResourceManager.GetString("Description_Table_DataDirectory_Option", resourceCulture);
             }
@@ -1098,7 +1108,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string Description_Table_DataFree {
+        public static string Description_Table_DataFree {
             get {
                 return ResourceManager.GetString("Description_Table_DataFree", resourceCulture);
             }
@@ -1107,7 +1117,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The data length for the table..
         /// </summary>
-        internal static string Description_Table_DataLength {
+        public static string Description_Table_DataLength {
             get {
                 return ResourceManager.GetString("Description_Table_DataLength", resourceCulture);
             }
@@ -1116,7 +1126,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Set this option if you want to delay key updates for the table until the table is closed. (MyISAM only.).
         /// </summary>
-        internal static string Description_Table_DelayKeyWrite {
+        public static string Description_Table_DelayKeyWrite {
             get {
                 return ResourceManager.GetString("Description_Table_DelayKeyWrite", resourceCulture);
             }
@@ -1125,7 +1135,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The storage engine used for the table..
         /// </summary>
-        internal static string Description_Table_Engine {
+        public static string Description_Table_Engine {
             get {
                 return ResourceManager.GetString("Description_Table_Engine", resourceCulture);
             }
@@ -1134,7 +1144,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to By using this option you can specify where the MyISAM storage engine should put a table&apos;s index file. The directory must be the full pathname to the directory, not a relative path..
         /// </summary>
-        internal static string Description_Table_IndexDirectory_Option {
+        public static string Description_Table_IndexDirectory_Option {
             get {
                 return ResourceManager.GetString("Description_Table_IndexDirectory_Option", resourceCulture);
             }
@@ -1143,7 +1153,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The index length for the table..
         /// </summary>
-        internal static string Description_Table_IndexLength {
+        public static string Description_Table_IndexLength {
             get {
                 return ResourceManager.GetString("Description_Table_IndexLength", resourceCulture);
             }
@@ -1152,7 +1162,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to If you want to insert data into a MERGE table, you must specify with INSERT_METHOD the table into which the row should be inserted. INSERT_METHOD is an option useful for MERGE tables only. Use a value of FIRST or LAST to have inserts go to the first or last table, or a value of NO to prevent inserts..
         /// </summary>
-        internal static string Description_Table_InsertMethod {
+        public static string Description_Table_InsertMethod {
             get {
                 return ResourceManager.GetString("Description_Table_InsertMethod", resourceCulture);
             }
@@ -1161,7 +1171,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum data length for the table..
         /// </summary>
-        internal static string Description_Table_MaxDataLength {
+        public static string Description_Table_MaxDataLength {
             get {
                 return ResourceManager.GetString("Description_Table_MaxDataLength", resourceCulture);
             }
@@ -1170,7 +1180,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum number of rows you plan to store in the table. This is not a hard limit, but rather a hint to the storage engine that the table must be able to store at least this many rows..
         /// </summary>
-        internal static string Description_Table_MaxRows_Option {
+        public static string Description_Table_MaxRows_Option {
             get {
                 return ResourceManager.GetString("Description_Table_MaxRows_Option", resourceCulture);
             }
@@ -1179,7 +1189,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The minimum number of rows you plan to store in the table..
         /// </summary>
-        internal static string Description_Table_MinRows_Option {
+        public static string Description_Table_MinRows_Option {
             get {
                 return ResourceManager.GetString("Description_Table_MinRows_Option", resourceCulture);
             }
@@ -1188,7 +1198,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use this option to generate smaller indices. This usually makes updates slower and reads faster. Setting it to DEFAULT tells the storage engine to only pack long CHAR/VARCHAR columns..
         /// </summary>
-        internal static string Description_Table_PackKeys {
+        public static string Description_Table_PackKeys {
             get {
                 return ResourceManager.GetString("Description_Table_PackKeys", resourceCulture);
             }
@@ -1197,7 +1207,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use this option to encrypt the .frm file with a password. This option does nothing in the standard MySQL version..
         /// </summary>
-        internal static string Description_Table_Password {
+        public static string Description_Table_Password {
             get {
                 return ResourceManager.GetString("Description_Table_Password", resourceCulture);
             }
@@ -1206,7 +1216,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The row format used for the table..
         /// </summary>
-        internal static string Description_Table_RowFormat {
+        public static string Description_Table_RowFormat {
             get {
                 return ResourceManager.GetString("Description_Table_RowFormat", resourceCulture);
             }
@@ -1215,7 +1225,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Defines how the rows should be stored. For MyISAM tables, the option value can be FIXED or DYNAMIC for static or variable-length row format. myisampack sets the type to COMPRESSED..
         /// </summary>
-        internal static string Description_Table_RowFormat_Option {
+        public static string Description_Table_RowFormat_Option {
             get {
                 return ResourceManager.GetString("Description_Table_RowFormat_Option", resourceCulture);
             }
@@ -1224,7 +1234,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The amount of rows in the table..
         /// </summary>
-        internal static string Description_Table_TableRows {
+        public static string Description_Table_TableRows {
             get {
                 return ResourceManager.GetString("Description_Table_TableRows", resourceCulture);
             }
@@ -1233,7 +1243,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type of the table..
         /// </summary>
-        internal static string Description_Table_Type {
+        public static string Description_Table_Type {
             get {
                 return ResourceManager.GetString("Description_Table_Type", resourceCulture);
             }
@@ -1242,7 +1252,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to List of MyISAM tables that should be used by the MERGE table..
         /// </summary>
-        internal static string Description_Table_Union {
+        public static string Description_Table_Union {
             get {
                 return ResourceManager.GetString("Description_Table_Union", resourceCulture);
             }
@@ -1251,7 +1261,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The date and time when the table was updated last time..
         /// </summary>
-        internal static string Description_Table_UpdateDateTime {
+        public static string Description_Table_UpdateDateTime {
             get {
                 return ResourceManager.GetString("Description_Table_UpdateDateTime", resourceCulture);
             }
@@ -1260,7 +1270,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The storage engine version..
         /// </summary>
-        internal static string Description_Table_Version {
+        public static string Description_Table_Version {
             get {
                 return ResourceManager.GetString("Description_Table_Version", resourceCulture);
             }
@@ -1269,7 +1279,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The length of time (in seconds) to wait for a connection to the server before terminating the attempt and generating an error.
         /// </summary>
-        internal static string Description_Timeout {
+        public static string Description_Timeout {
             get {
                 return ResourceManager.GetString("Description_Timeout", resourceCulture);
             }
@@ -1278,7 +1288,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Condition of the trigger.
         /// </summary>
-        internal static string Description_Trigger_Condition {
+        public static string Description_Trigger_Condition {
             get {
                 return ResourceManager.GetString("Description_Trigger_Condition", resourceCulture);
             }
@@ -1287,7 +1297,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A catalog on which an action is performed.
         /// </summary>
-        internal static string Description_Trigger_EventCatalog {
+        public static string Description_Trigger_EventCatalog {
             get {
                 return ResourceManager.GetString("Description_Trigger_EventCatalog", resourceCulture);
             }
@@ -1296,7 +1306,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An event on which the trigger is switched on.
         /// </summary>
-        internal static string Description_Trigger_EventManipulation {
+        public static string Description_Trigger_EventManipulation {
             get {
                 return ResourceManager.GetString("Description_Trigger_EventManipulation", resourceCulture);
             }
@@ -1305,7 +1315,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A schema on which an action is performed.
         /// </summary>
-        internal static string Description_Trigger_EventSchema {
+        public static string Description_Trigger_EventSchema {
             get {
                 return ResourceManager.GetString("Description_Trigger_EventSchema", resourceCulture);
             }
@@ -1314,7 +1324,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A table on which an action is performed.
         /// </summary>
-        internal static string Description_Trigger_EventTable {
+        public static string Description_Trigger_EventTable {
             get {
                 return ResourceManager.GetString("Description_Trigger_EventTable", resourceCulture);
             }
@@ -1323,7 +1333,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The order number of the action.
         /// </summary>
-        internal static string Description_Trigger_Order {
+        public static string Description_Trigger_Order {
             get {
                 return ResourceManager.GetString("Description_Trigger_Order", resourceCulture);
             }
@@ -1332,7 +1342,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An atomic object of a trigger action.
         /// </summary>
-        internal static string Description_Trigger_Orientation {
+        public static string Description_Trigger_Orientation {
             get {
                 return ResourceManager.GetString("Description_Trigger_Orientation", resourceCulture);
             }
@@ -1341,7 +1351,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An action reference to a new row.
         /// </summary>
-        internal static string Description_Trigger_RefToNewRow {
+        public static string Description_Trigger_RefToNewRow {
             get {
                 return ResourceManager.GetString("Description_Trigger_RefToNewRow", resourceCulture);
             }
@@ -1350,7 +1360,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An action reference to a new table.
         /// </summary>
-        internal static string Description_Trigger_RefToNewTable {
+        public static string Description_Trigger_RefToNewTable {
             get {
                 return ResourceManager.GetString("Description_Trigger_RefToNewTable", resourceCulture);
             }
@@ -1359,7 +1369,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An action reference to an old row.
         /// </summary>
-        internal static string Description_Trigger_RefToOldRow {
+        public static string Description_Trigger_RefToOldRow {
             get {
                 return ResourceManager.GetString("Description_Trigger_RefToOldRow", resourceCulture);
             }
@@ -1368,7 +1378,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An action reference to an old table.
         /// </summary>
-        internal static string Description_Trigger_RefToOldTable {
+        public static string Description_Trigger_RefToOldTable {
             get {
                 return ResourceManager.GetString("Description_Trigger_RefToOldTable", resourceCulture);
             }
@@ -1377,7 +1387,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A statement executed by the trigger.
         /// </summary>
-        internal static string Description_Trigger_Statement {
+        public static string Description_Trigger_Statement {
             get {
                 return ResourceManager.GetString("Description_Trigger_Statement", resourceCulture);
             }
@@ -1386,7 +1396,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The trigger action time.
         /// </summary>
-        internal static string Description_Trigger_Timing {
+        public static string Description_Trigger_Timing {
             get {
                 return ResourceManager.GetString("Description_Trigger_Timing", resourceCulture);
             }
@@ -1395,7 +1405,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The basename of the file containing the implementation of the function..
         /// </summary>
-        internal static string Description_UDF_Dll {
+        public static string Description_UDF_Dll {
             get {
                 return ResourceManager.GetString("Description_UDF_Dll", resourceCulture);
             }
@@ -1404,7 +1414,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Indicates if the function is aggregate function..
         /// </summary>
-        internal static string Description_UDF_IsAgregate {
+        public static string Description_UDF_IsAgregate {
             get {
                 return ResourceManager.GetString("Description_UDF_IsAgregate", resourceCulture);
             }
@@ -1413,7 +1423,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type of the function..
         /// </summary>
-        internal static string Description_UDF_Type {
+        public static string Description_UDF_Type {
             get {
                 return ResourceManager.GetString("Description_UDF_Type", resourceCulture);
             }
@@ -1422,7 +1432,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Allows the use of old style @ syntax for parameters.
         /// </summary>
-        internal static string Description_UseOldSyntax {
+        public static string Description_UseOldSyntax {
             get {
                 return ResourceManager.GetString("Description_UseOldSyntax", resourceCulture);
             }
@@ -1431,7 +1441,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The database user login name..
         /// </summary>
-        internal static string Description_UserID {
+        public static string Description_UserID {
             get {
                 return ResourceManager.GetString("Description_UserID", resourceCulture);
             }
@@ -1440,7 +1450,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Should the connection use SSL. This currently has no effect.
         /// </summary>
-        internal static string Description_UseSSL {
+        public static string Description_UseSSL {
             get {
                 return ResourceManager.GetString("Description_UseSSL", resourceCulture);
             }
@@ -1449,7 +1459,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Logs inefficient database operations.
         /// </summary>
-        internal static string Description_UseUsage {
+        public static string Description_UseUsage {
             get {
                 return ResourceManager.GetString("Description_UseUsage", resourceCulture);
             }
@@ -1458,7 +1468,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Indicates how to treat a view in SQL statements.
         /// </summary>
-        internal static string Description_View_Algorithm {
+        public static string Description_View_Algorithm {
             get {
                 return ResourceManager.GetString("Description_View_Algorithm", resourceCulture);
             }
@@ -1467,7 +1477,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Check option.
         /// </summary>
-        internal static string Description_View_CheckOption {
+        public static string Description_View_CheckOption {
             get {
                 return ResourceManager.GetString("Description_View_CheckOption", resourceCulture);
             }
@@ -1476,7 +1486,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Definition of the view.
         /// </summary>
-        internal static string Description_View_Definition {
+        public static string Description_View_Definition {
             get {
                 return ResourceManager.GetString("Description_View_Definition", resourceCulture);
             }
@@ -1485,7 +1495,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Indicates if the table or view is updatable.
         /// </summary>
-        internal static string Description_View_IsUpdatable {
+        public static string Description_View_IsUpdatable {
             get {
                 return ResourceManager.GetString("Description_View_IsUpdatable", resourceCulture);
             }
@@ -1494,7 +1504,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Allow Batch.
         /// </summary>
-        internal static string DisplayName_AllowBatch {
+        public static string DisplayName_AllowBatch {
             get {
                 return ResourceManager.GetString("DisplayName_AllowBatch", resourceCulture);
             }
@@ -1503,7 +1513,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Allow Zero DateTime.
         /// </summary>
-        internal static string DisplayName_AllowZero {
+        public static string DisplayName_AllowZero {
             get {
                 return ResourceManager.GetString("DisplayName_AllowZero", resourceCulture);
             }
@@ -1512,7 +1522,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Procedure Cache Size.
         /// </summary>
-        internal static string DisplayName_CacheSize {
+        public static string DisplayName_CacheSize {
             get {
                 return ResourceManager.GetString("DisplayName_CacheSize", resourceCulture);
             }
@@ -1521,7 +1531,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Character Set.
         /// </summary>
-        internal static string DisplayName_CharacterSet {
+        public static string DisplayName_CharacterSet {
             get {
                 return ResourceManager.GetString("DisplayName_CharacterSet", resourceCulture);
             }
@@ -1530,7 +1540,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Column Key.
         /// </summary>
-        internal static string DisplayName_Column_ColumnKey {
+        public static string DisplayName_Column_ColumnKey {
             get {
                 return ResourceManager.GetString("DisplayName_Column_ColumnKey", resourceCulture);
             }
@@ -1539,7 +1549,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Default Value.
         /// </summary>
-        internal static string DisplayName_Column_Default {
+        public static string DisplayName_Column_Default {
             get {
                 return ResourceManager.GetString("DisplayName_Column_Default", resourceCulture);
             }
@@ -1548,7 +1558,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Extra.
         /// </summary>
-        internal static string DisplayName_Column_Extra {
+        public static string DisplayName_Column_Extra {
             get {
                 return ResourceManager.GetString("DisplayName_Column_Extra", resourceCulture);
             }
@@ -1557,7 +1567,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Is Nullable.
         /// </summary>
-        internal static string DisplayName_Column_Nullable {
+        public static string DisplayName_Column_Nullable {
             get {
                 return ResourceManager.GetString("DisplayName_Column_Nullable", resourceCulture);
             }
@@ -1566,7 +1576,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Octet Length.
         /// </summary>
-        internal static string DisplayName_Column_OctetLength {
+        public static string DisplayName_Column_OctetLength {
             get {
                 return ResourceManager.GetString("DisplayName_Column_OctetLength", resourceCulture);
             }
@@ -1575,7 +1585,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ordinal.
         /// </summary>
-        internal static string DisplayName_Column_Ordinal {
+        public static string DisplayName_Column_Ordinal {
             get {
                 return ResourceManager.GetString("DisplayName_Column_Ordinal", resourceCulture);
             }
@@ -1584,7 +1594,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Privileges.
         /// </summary>
-        internal static string DisplayName_Column_Privileges {
+        public static string DisplayName_Column_Privileges {
             get {
                 return ResourceManager.GetString("DisplayName_Column_Privileges", resourceCulture);
             }
@@ -1593,7 +1603,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SQL Type.
         /// </summary>
-        internal static string DisplayName_Column_SqlType {
+        public static string DisplayName_Column_SqlType {
             get {
                 return ResourceManager.GetString("DisplayName_Column_SqlType", resourceCulture);
             }
@@ -1602,7 +1612,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use Compression.
         /// </summary>
-        internal static string DisplayName_Compression {
+        public static string DisplayName_Compression {
             get {
                 return ResourceManager.GetString("DisplayName_Compression", resourceCulture);
             }
@@ -1611,7 +1621,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Connection Reset.
         /// </summary>
-        internal static string DisplayName_ConnReset {
+        public static string DisplayName_ConnReset {
             get {
                 return ResourceManager.GetString("DisplayName_ConnReset", resourceCulture);
             }
@@ -1620,7 +1630,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Convert Zero Datetime.
         /// </summary>
-        internal static string DisplayName_ConvertZero {
+        public static string DisplayName_ConvertZero {
             get {
                 return ResourceManager.GetString("DisplayName_ConvertZero", resourceCulture);
             }
@@ -1629,7 +1639,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Default Schema.
         /// </summary>
-        internal static string DisplayName_Database {
+        public static string DisplayName_Database {
             get {
                 return ResourceManager.GetString("DisplayName_Database", resourceCulture);
             }
@@ -1638,7 +1648,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Driver Type.
         /// </summary>
-        internal static string DisplayName_DriverType {
+        public static string DisplayName_DriverType {
             get {
                 return ResourceManager.GetString("DisplayName_DriverType", resourceCulture);
             }
@@ -1647,7 +1657,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Load Balance Timeout.
         /// </summary>
-        internal static string DisplayName_LifeTime {
+        public static string DisplayName_LifeTime {
             get {
                 return ResourceManager.GetString("DisplayName_LifeTime", resourceCulture);
             }
@@ -1656,7 +1666,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Logging.
         /// </summary>
-        internal static string DisplayName_Logging {
+        public static string DisplayName_Logging {
             get {
                 return ResourceManager.GetString("DisplayName_Logging", resourceCulture);
             }
@@ -1665,7 +1675,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Max Pool Size.
         /// </summary>
-        internal static string DisplayName_MaxPoolSize {
+        public static string DisplayName_MaxPoolSize {
             get {
                 return ResourceManager.GetString("DisplayName_MaxPoolSize", resourceCulture);
             }
@@ -1674,7 +1684,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Min Pool Size.
         /// </summary>
-        internal static string DisplayName_MinPoolSize {
+        public static string DisplayName_MinPoolSize {
             get {
                 return ResourceManager.GetString("DisplayName_MinPoolSize", resourceCulture);
             }
@@ -1683,7 +1693,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Character Set.
         /// </summary>
-        internal static string DisplayName_Object_CharacterSet {
+        public static string DisplayName_Object_CharacterSet {
             get {
                 return ResourceManager.GetString("DisplayName_Object_CharacterSet", resourceCulture);
             }
@@ -1692,7 +1702,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Collation.
         /// </summary>
-        internal static string DisplayName_Object_Collation {
+        public static string DisplayName_Object_Collation {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Collation", resourceCulture);
             }
@@ -1701,7 +1711,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
-        internal static string DisplayName_Object_Comment {
+        public static string DisplayName_Object_Comment {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Comment", resourceCulture);
             }
@@ -1710,7 +1720,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Creation date.
         /// </summary>
-        internal static string DisplayName_Object_CreateDateTime {
+        public static string DisplayName_Object_CreateDateTime {
             get {
                 return ResourceManager.GetString("DisplayName_Object_CreateDateTime", resourceCulture);
             }
@@ -1719,7 +1729,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Creation Time.
         /// </summary>
-        internal static string DisplayName_Object_CreationTime {
+        public static string DisplayName_Object_CreationTime {
             get {
                 return ResourceManager.GetString("DisplayName_Object_CreationTime", resourceCulture);
             }
@@ -1728,7 +1738,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Catalog.
         /// </summary>
-        internal static string DisplayName_Object_Database {
+        public static string DisplayName_Object_Database {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Database", resourceCulture);
             }
@@ -1737,7 +1747,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Definer.
         /// </summary>
-        internal static string DisplayName_Object_Definer {
+        public static string DisplayName_Object_Definer {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Definer", resourceCulture);
             }
@@ -1746,7 +1756,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Flags.
         /// </summary>
-        internal static string DisplayName_Object_Flags {
+        public static string DisplayName_Object_Flags {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Flags", resourceCulture);
             }
@@ -1755,7 +1765,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Length.
         /// </summary>
-        internal static string DisplayName_Object_Length {
+        public static string DisplayName_Object_Length {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Length", resourceCulture);
             }
@@ -1764,7 +1774,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SQL Mode.
         /// </summary>
-        internal static string DisplayName_Object_Mode {
+        public static string DisplayName_Object_Mode {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Mode", resourceCulture);
             }
@@ -1773,7 +1783,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Native Type.
         /// </summary>
-        internal static string DisplayName_Object_MySqlType {
+        public static string DisplayName_Object_MySqlType {
             get {
                 return ResourceManager.GetString("DisplayName_Object_MySqlType", resourceCulture);
             }
@@ -1782,7 +1792,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
-        internal static string DisplayName_Object_Name {
+        public static string DisplayName_Object_Name {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Name", resourceCulture);
             }
@@ -1791,7 +1801,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Precision.
         /// </summary>
-        internal static string DisplayName_Object_Precision {
+        public static string DisplayName_Object_Precision {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Precision", resourceCulture);
             }
@@ -1800,7 +1810,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Scale.
         /// </summary>
-        internal static string DisplayName_Object_Scale {
+        public static string DisplayName_Object_Scale {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Scale", resourceCulture);
             }
@@ -1809,7 +1819,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Schema.
         /// </summary>
-        internal static string DisplayName_Object_Schema {
+        public static string DisplayName_Object_Schema {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Schema", resourceCulture);
             }
@@ -1818,7 +1828,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Security Type.
         /// </summary>
-        internal static string DisplayName_Object_SecurityType {
+        public static string DisplayName_Object_SecurityType {
             get {
                 return ResourceManager.GetString("DisplayName_Object_SecurityType", resourceCulture);
             }
@@ -1827,7 +1837,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Server.
         /// </summary>
-        internal static string DisplayName_Object_Server {
+        public static string DisplayName_Object_Server {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Server", resourceCulture);
             }
@@ -1836,7 +1846,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Table.
         /// </summary>
-        internal static string DisplayName_Object_Table {
+        public static string DisplayName_Object_Table {
             get {
                 return ResourceManager.GetString("DisplayName_Object_Table", resourceCulture);
             }
@@ -1845,7 +1855,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to View.
         /// </summary>
-        internal static string DisplayName_Object_View {
+        public static string DisplayName_Object_View {
             get {
                 return ResourceManager.GetString("DisplayName_Object_View", resourceCulture);
             }
@@ -1854,7 +1864,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Option File.
         /// </summary>
-        internal static string DisplayName_OptionFile {
+        public static string DisplayName_OptionFile {
             get {
                 return ResourceManager.GetString("DisplayName_OptionFile", resourceCulture);
             }
@@ -1863,7 +1873,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Is Return Value.
         /// </summary>
-        internal static string DisplayName_Parameter_IsResult {
+        public static string DisplayName_Parameter_IsResult {
             get {
                 return ResourceManager.GetString("DisplayName_Parameter_IsResult", resourceCulture);
             }
@@ -1872,7 +1882,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Direction.
         /// </summary>
-        internal static string DisplayName_Parameter_Mode {
+        public static string DisplayName_Parameter_Mode {
             get {
                 return ResourceManager.GetString("DisplayName_Parameter_Mode", resourceCulture);
             }
@@ -1881,7 +1891,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ordinal.
         /// </summary>
-        internal static string DisplayName_Parameter_Ordinal {
+        public static string DisplayName_Parameter_Ordinal {
             get {
                 return ResourceManager.GetString("DisplayName_Parameter_Ordinal", resourceCulture);
             }
@@ -1890,7 +1900,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stored Procedure.
         /// </summary>
-        internal static string DisplayName_Parameter_StoredProcedure {
+        public static string DisplayName_Parameter_StoredProcedure {
             get {
                 return ResourceManager.GetString("DisplayName_Parameter_StoredProcedure", resourceCulture);
             }
@@ -1899,7 +1909,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
-        internal static string DisplayName_Password {
+        public static string DisplayName_Password {
             get {
                 return ResourceManager.GetString("DisplayName_Password", resourceCulture);
             }
@@ -1908,7 +1918,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use Performance Monitor.
         /// </summary>
-        internal static string DisplayName_PerfMonitor {
+        public static string DisplayName_PerfMonitor {
             get {
                 return ResourceManager.GetString("DisplayName_PerfMonitor", resourceCulture);
             }
@@ -1917,7 +1927,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Persist Security Info.
         /// </summary>
-        internal static string DisplayName_Persist {
+        public static string DisplayName_Persist {
             get {
                 return ResourceManager.GetString("DisplayName_Persist", resourceCulture);
             }
@@ -1926,7 +1936,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Pipe Name.
         /// </summary>
-        internal static string DisplayName_PipeName {
+        public static string DisplayName_PipeName {
             get {
                 return ResourceManager.GetString("DisplayName_PipeName", resourceCulture);
             }
@@ -1935,7 +1945,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Pooling.
         /// </summary>
-        internal static string DisplayName_Pooling {
+        public static string DisplayName_Pooling {
             get {
                 return ResourceManager.GetString("DisplayName_Pooling", resourceCulture);
             }
@@ -1944,7 +1954,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Port.
         /// </summary>
-        internal static string DisplayName_Port {
+        public static string DisplayName_Port {
             get {
                 return ResourceManager.GetString("DisplayName_Port", resourceCulture);
             }
@@ -1953,7 +1963,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Connection Protocol.
         /// </summary>
-        internal static string DisplayName_Protocol {
+        public static string DisplayName_Protocol {
             get {
                 return ResourceManager.GetString("DisplayName_Protocol", resourceCulture);
             }
@@ -1962,7 +1972,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Returns.
         /// </summary>
-        internal static string DisplayName_Routine_Returns {
+        public static string DisplayName_Routine_Returns {
             get {
                 return ResourceManager.GetString("DisplayName_Routine_Returns", resourceCulture);
             }
@@ -1971,7 +1981,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Server Host.
         /// </summary>
-        internal static string DisplayName_Server {
+        public static string DisplayName_Server {
             get {
                 return ResourceManager.GetString("DisplayName_Server", resourceCulture);
             }
@@ -1980,7 +1990,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Shared Memory Name.
         /// </summary>
-        internal static string DisplayName_SharedMemory {
+        public static string DisplayName_SharedMemory {
             get {
                 return ResourceManager.GetString("DisplayName_SharedMemory", resourceCulture);
             }
@@ -1989,7 +1999,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Body.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_Body {
+        public static string DisplayName_StoredProcedure_Body {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_Body", resourceCulture);
             }
@@ -1998,7 +2008,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_Comment {
+        public static string DisplayName_StoredProcedure_Comment {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_Comment", resourceCulture);
             }
@@ -2007,7 +2017,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data Access.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_DataAccess {
+        public static string DisplayName_StoredProcedure_DataAccess {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_DataAccess", resourceCulture);
             }
@@ -2016,7 +2026,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Definition.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_Definition {
+        public static string DisplayName_StoredProcedure_Definition {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_Definition", resourceCulture);
             }
@@ -2025,7 +2035,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to ExternalLanguage.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_ExternalLanguage {
+        public static string DisplayName_StoredProcedure_ExternalLanguage {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_ExternalLanguage", resourceCulture);
             }
@@ -2034,7 +2044,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to External Name.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_ExternalName {
+        public static string DisplayName_StoredProcedure_ExternalName {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_ExternalName", resourceCulture);
             }
@@ -2043,7 +2053,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Is Deterministic.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_IsDeterministic {
+        public static string DisplayName_StoredProcedure_IsDeterministic {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_IsDeterministic", resourceCulture);
             }
@@ -2052,7 +2062,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Last Modified.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_LastModified {
+        public static string DisplayName_StoredProcedure_LastModified {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_LastModified", resourceCulture);
             }
@@ -2061,7 +2071,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Parameter List.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_ParameterList {
+        public static string DisplayName_StoredProcedure_ParameterList {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_ParameterList", resourceCulture);
             }
@@ -2070,7 +2080,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Parameter Style.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_ParameterStyle {
+        public static string DisplayName_StoredProcedure_ParameterStyle {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_ParameterStyle", resourceCulture);
             }
@@ -2079,7 +2089,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Specific Name.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_SpecificName {
+        public static string DisplayName_StoredProcedure_SpecificName {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_SpecificName", resourceCulture);
             }
@@ -2088,7 +2098,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SQL path.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_SqlPath {
+        public static string DisplayName_StoredProcedure_SqlPath {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_SqlPath", resourceCulture);
             }
@@ -2097,7 +2107,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
-        internal static string DisplayName_StoredProcedure_Type {
+        public static string DisplayName_StoredProcedure_Type {
             get {
                 return ResourceManager.GetString("DisplayName_StoredProcedure_Type", resourceCulture);
             }
@@ -2106,7 +2116,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Auto Increment.
         /// </summary>
-        internal static string DisplayName_Table_AutoIncrement {
+        public static string DisplayName_Table_AutoIncrement {
             get {
                 return ResourceManager.GetString("DisplayName_Table_AutoIncrement", resourceCulture);
             }
@@ -2115,7 +2125,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Average Row Length.
         /// </summary>
-        internal static string DisplayName_Table_AverageRowLength {
+        public static string DisplayName_Table_AverageRowLength {
             get {
                 return ResourceManager.GetString("DisplayName_Table_AverageRowLength", resourceCulture);
             }
@@ -2124,7 +2134,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Average Row Length.
         /// </summary>
-        internal static string DisplayName_Table_AverageRowLength_Option {
+        public static string DisplayName_Table_AverageRowLength_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_AverageRowLength_Option", resourceCulture);
             }
@@ -2133,7 +2143,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Check date.
         /// </summary>
-        internal static string DisplayName_Table_CheckDateTime {
+        public static string DisplayName_Table_CheckDateTime {
             get {
                 return ResourceManager.GetString("DisplayName_Table_CheckDateTime", resourceCulture);
             }
@@ -2142,7 +2152,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Checksum.
         /// </summary>
-        internal static string DisplayName_Table_Checksum {
+        public static string DisplayName_Table_Checksum {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Checksum", resourceCulture);
             }
@@ -2151,7 +2161,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Checksum for Rows.
         /// </summary>
-        internal static string DisplayName_Table_Checksum_Option {
+        public static string DisplayName_Table_Checksum_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Checksum_Option", resourceCulture);
             }
@@ -2160,7 +2170,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Connection.
         /// </summary>
-        internal static string DisplayName_Table_Connection_Option {
+        public static string DisplayName_Table_Connection_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Connection_Option", resourceCulture);
             }
@@ -2169,7 +2179,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Create Options.
         /// </summary>
-        internal static string DisplayName_Table_CreateOptions {
+        public static string DisplayName_Table_CreateOptions {
             get {
                 return ResourceManager.GetString("DisplayName_Table_CreateOptions", resourceCulture);
             }
@@ -2178,7 +2188,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data Directory.
         /// </summary>
-        internal static string DisplayName_Table_DataDirectory_Option {
+        public static string DisplayName_Table_DataDirectory_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_DataDirectory_Option", resourceCulture);
             }
@@ -2187,7 +2197,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data Free.
         /// </summary>
-        internal static string DisplayName_Table_DataFree {
+        public static string DisplayName_Table_DataFree {
             get {
                 return ResourceManager.GetString("DisplayName_Table_DataFree", resourceCulture);
             }
@@ -2196,7 +2206,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data Length.
         /// </summary>
-        internal static string DisplayName_Table_DataLength {
+        public static string DisplayName_Table_DataLength {
             get {
                 return ResourceManager.GetString("DisplayName_Table_DataLength", resourceCulture);
             }
@@ -2205,7 +2215,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delay Key Updates.
         /// </summary>
-        internal static string DisplayName_Table_DelayKeyWrite {
+        public static string DisplayName_Table_DelayKeyWrite {
             get {
                 return ResourceManager.GetString("DisplayName_Table_DelayKeyWrite", resourceCulture);
             }
@@ -2214,7 +2224,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Engine.
         /// </summary>
-        internal static string DisplayName_Table_Engine {
+        public static string DisplayName_Table_Engine {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Engine", resourceCulture);
             }
@@ -2223,7 +2233,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Index Directory.
         /// </summary>
-        internal static string DisplayName_Table_IndexDirectory_Option {
+        public static string DisplayName_Table_IndexDirectory_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_IndexDirectory_Option", resourceCulture);
             }
@@ -2232,7 +2242,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Index Length.
         /// </summary>
-        internal static string DisplayName_Table_IndexLength {
+        public static string DisplayName_Table_IndexLength {
             get {
                 return ResourceManager.GetString("DisplayName_Table_IndexLength", resourceCulture);
             }
@@ -2241,7 +2251,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Insert Method.
         /// </summary>
-        internal static string DisplayName_Table_InsertMethod {
+        public static string DisplayName_Table_InsertMethod {
             get {
                 return ResourceManager.GetString("DisplayName_Table_InsertMethod", resourceCulture);
             }
@@ -2250,7 +2260,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Max Data Length.
         /// </summary>
-        internal static string DisplayName_Table_MaxDataLength {
+        public static string DisplayName_Table_MaxDataLength {
             get {
                 return ResourceManager.GetString("DisplayName_Table_MaxDataLength", resourceCulture);
             }
@@ -2259,7 +2269,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Maximum Rows.
         /// </summary>
-        internal static string DisplayName_Table_MaxRows_Option {
+        public static string DisplayName_Table_MaxRows_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_MaxRows_Option", resourceCulture);
             }
@@ -2268,7 +2278,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Minimum Rows.
         /// </summary>
-        internal static string DisplayName_Table_MinRows_Option {
+        public static string DisplayName_Table_MinRows_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_MinRows_Option", resourceCulture);
             }
@@ -2277,7 +2287,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Pack Keys.
         /// </summary>
-        internal static string DisplayName_Table_PackKeys {
+        public static string DisplayName_Table_PackKeys {
             get {
                 return ResourceManager.GetString("DisplayName_Table_PackKeys", resourceCulture);
             }
@@ -2286,7 +2296,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
-        internal static string DisplayName_Table_Password {
+        public static string DisplayName_Table_Password {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Password", resourceCulture);
             }
@@ -2295,7 +2305,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Row Format.
         /// </summary>
-        internal static string DisplayName_Table_RowFormat {
+        public static string DisplayName_Table_RowFormat {
             get {
                 return ResourceManager.GetString("DisplayName_Table_RowFormat", resourceCulture);
             }
@@ -2304,7 +2314,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Row Format.
         /// </summary>
-        internal static string DisplayName_Table_RowFormat_Option {
+        public static string DisplayName_Table_RowFormat_Option {
             get {
                 return ResourceManager.GetString("DisplayName_Table_RowFormat_Option", resourceCulture);
             }
@@ -2313,7 +2323,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Table rows.
         /// </summary>
-        internal static string DisplayName_Table_TableRows {
+        public static string DisplayName_Table_TableRows {
             get {
                 return ResourceManager.GetString("DisplayName_Table_TableRows", resourceCulture);
             }
@@ -2322,7 +2332,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Table type.
         /// </summary>
-        internal static string DisplayName_Table_Type {
+        public static string DisplayName_Table_Type {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Type", resourceCulture);
             }
@@ -2331,7 +2341,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Union.
         /// </summary>
-        internal static string DisplayName_Table_Union {
+        public static string DisplayName_Table_Union {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Union", resourceCulture);
             }
@@ -2340,7 +2350,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Update date.
         /// </summary>
-        internal static string DisplayName_Table_UpdateDateTime {
+        public static string DisplayName_Table_UpdateDateTime {
             get {
                 return ResourceManager.GetString("DisplayName_Table_UpdateDateTime", resourceCulture);
             }
@@ -2349,7 +2359,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Version.
         /// </summary>
-        internal static string DisplayName_Table_Version {
+        public static string DisplayName_Table_Version {
             get {
                 return ResourceManager.GetString("DisplayName_Table_Version", resourceCulture);
             }
@@ -2358,7 +2368,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Connect Timeout.
         /// </summary>
-        internal static string DisplayName_Timeout {
+        public static string DisplayName_Timeout {
             get {
                 return ResourceManager.GetString("DisplayName_Timeout", resourceCulture);
             }
@@ -2367,7 +2377,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Condition.
         /// </summary>
-        internal static string DisplayName_Trigger_Condition {
+        public static string DisplayName_Trigger_Condition {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_Condition", resourceCulture);
             }
@@ -2376,7 +2386,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Event Catalog.
         /// </summary>
-        internal static string DisplayName_Trigger_EventCatalog {
+        public static string DisplayName_Trigger_EventCatalog {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_EventCatalog", resourceCulture);
             }
@@ -2385,7 +2395,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Event Manipulation.
         /// </summary>
-        internal static string DisplayName_Trigger_EventManipulation {
+        public static string DisplayName_Trigger_EventManipulation {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_EventManipulation", resourceCulture);
             }
@@ -2394,7 +2404,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Event Schema.
         /// </summary>
-        internal static string DisplayName_Trigger_EventSchema {
+        public static string DisplayName_Trigger_EventSchema {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_EventSchema", resourceCulture);
             }
@@ -2403,7 +2413,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Event Table.
         /// </summary>
-        internal static string DisplayName_Trigger_EventTable {
+        public static string DisplayName_Trigger_EventTable {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_EventTable", resourceCulture);
             }
@@ -2412,7 +2422,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Order.
         /// </summary>
-        internal static string DisplayName_Trigger_Order {
+        public static string DisplayName_Trigger_Order {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_Order", resourceCulture);
             }
@@ -2421,7 +2431,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Orientation.
         /// </summary>
-        internal static string DisplayName_Trigger_Orientation {
+        public static string DisplayName_Trigger_Orientation {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_Orientation", resourceCulture);
             }
@@ -2430,7 +2440,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ref to New Row.
         /// </summary>
-        internal static string DisplayName_Trigger_RefToNewRow {
+        public static string DisplayName_Trigger_RefToNewRow {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_RefToNewRow", resourceCulture);
             }
@@ -2439,7 +2449,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ref to New Table.
         /// </summary>
-        internal static string DisplayName_Trigger_RefToNewTable {
+        public static string DisplayName_Trigger_RefToNewTable {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_RefToNewTable", resourceCulture);
             }
@@ -2448,7 +2458,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ref to Old Row.
         /// </summary>
-        internal static string DisplayName_Trigger_RefToOldRow {
+        public static string DisplayName_Trigger_RefToOldRow {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_RefToOldRow", resourceCulture);
             }
@@ -2457,7 +2467,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ref to Old Table.
         /// </summary>
-        internal static string DisplayName_Trigger_RefToOldTable {
+        public static string DisplayName_Trigger_RefToOldTable {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_RefToOldTable", resourceCulture);
             }
@@ -2466,7 +2476,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Statement.
         /// </summary>
-        internal static string DisplayName_Trigger_Statement {
+        public static string DisplayName_Trigger_Statement {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_Statement", resourceCulture);
             }
@@ -2475,7 +2485,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Timing.
         /// </summary>
-        internal static string DisplayName_Trigger_Timing {
+        public static string DisplayName_Trigger_Timing {
             get {
                 return ResourceManager.GetString("DisplayName_Trigger_Timing", resourceCulture);
             }
@@ -2484,7 +2494,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Library.
         /// </summary>
-        internal static string DisplayName_UDF_Dll {
+        public static string DisplayName_UDF_Dll {
             get {
                 return ResourceManager.GetString("DisplayName_UDF_Dll", resourceCulture);
             }
@@ -2493,7 +2503,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Is Agregate.
         /// </summary>
-        internal static string DisplayName_UDF_IsAgregate {
+        public static string DisplayName_UDF_IsAgregate {
             get {
                 return ResourceManager.GetString("DisplayName_UDF_IsAgregate", resourceCulture);
             }
@@ -2502,7 +2512,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
-        internal static string DisplayName_UDF_Type {
+        public static string DisplayName_UDF_Type {
             get {
                 return ResourceManager.GetString("DisplayName_UDF_Type", resourceCulture);
             }
@@ -2511,7 +2521,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use Old Syntax.
         /// </summary>
-        internal static string DisplayName_UseOldSyntax {
+        public static string DisplayName_UseOldSyntax {
             get {
                 return ResourceManager.GetString("DisplayName_UseOldSyntax", resourceCulture);
             }
@@ -2520,7 +2530,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
-        internal static string DisplayName_UserID {
+        public static string DisplayName_UserID {
             get {
                 return ResourceManager.GetString("DisplayName_UserID", resourceCulture);
             }
@@ -2529,7 +2539,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use SSL.
         /// </summary>
-        internal static string DisplayName_UseSSL {
+        public static string DisplayName_UseSSL {
             get {
                 return ResourceManager.GetString("DisplayName_UseSSL", resourceCulture);
             }
@@ -2538,7 +2548,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use Usage Advisor.
         /// </summary>
-        internal static string DisplayName_UseUsage {
+        public static string DisplayName_UseUsage {
             get {
                 return ResourceManager.GetString("DisplayName_UseUsage", resourceCulture);
             }
@@ -2547,7 +2557,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Algorithm.
         /// </summary>
-        internal static string DisplayName_View_Algorithm {
+        public static string DisplayName_View_Algorithm {
             get {
                 return ResourceManager.GetString("DisplayName_View_Algorithm", resourceCulture);
             }
@@ -2556,7 +2566,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Check Option.
         /// </summary>
-        internal static string DisplayName_View_CheckOption {
+        public static string DisplayName_View_CheckOption {
             get {
                 return ResourceManager.GetString("DisplayName_View_CheckOption", resourceCulture);
             }
@@ -2565,7 +2575,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Definition.
         /// </summary>
-        internal static string DisplayName_View_Definition {
+        public static string DisplayName_View_Definition {
             get {
                 return ResourceManager.GetString("DisplayName_View_Definition", resourceCulture);
             }
@@ -2574,7 +2584,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Is Updatable.
         /// </summary>
-        internal static string DisplayName_View_IsUpdatable {
+        public static string DisplayName_View_IsUpdatable {
             get {
                 return ResourceManager.GetString("DisplayName_View_IsUpdatable", resourceCulture);
             }
@@ -2583,7 +2593,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to drop the {0} &apos;{1}&apos;?.
         /// </summary>
-        internal static string DropConfirmation {
+        public static string DropConfirmation {
             get {
                 return ResourceManager.GetString("DropConfirmation", resourceCulture);
             }
@@ -2592,7 +2602,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Drop {0}?.
         /// </summary>
-        internal static string DropConfirmationCaption {
+        public static string DropConfirmationCaption {
             get {
                 return ResourceManager.GetString("DropConfirmationCaption", resourceCulture);
             }
@@ -2601,7 +2611,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to There was an error attempting to create the database &apos;{0}&apos;.
         /// </summary>
-        internal static string ErrorAttemptingToCreateDB {
+        public static string ErrorAttemptingToCreateDB {
             get {
                 return ResourceManager.GetString("ErrorAttemptingToCreateDB", resourceCulture);
             }
@@ -2610,7 +2620,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The following error occured while attempting to drop the {0} &apos;{1}&apos;: {2}.
         /// </summary>
-        internal static string ErrorAttemptingToDrop {
+        public static string ErrorAttemptingToDrop {
             get {
                 return ResourceManager.GetString("ErrorAttemptingToDrop", resourceCulture);
             }
@@ -2619,7 +2629,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
-        internal static string ErrorCaption {
+        public static string ErrorCaption {
             get {
                 return ResourceManager.GetString("ErrorCaption", resourceCulture);
             }
@@ -2628,7 +2638,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An error was encountered during loading..
         /// </summary>
-        internal static string ErrorDuringLoad {
+        public static string ErrorDuringLoad {
             get {
                 return ResourceManager.GetString("ErrorDuringLoad", resourceCulture);
             }
@@ -2638,7 +2648,7 @@ namespace MySql.Data.VisualStudio.Properties {
         ///   Looks up a localized string similar to Error establishing the database connection.
         ///Check that the server is running, the database exists and the user Error establishing the database connection. Check that the server is running, the database exists and the user credentials are valid..
         /// </summary>
-        internal static string ErrorOnConnection {
+        public static string ErrorOnConnection {
             get {
                 return ResourceManager.GetString("ErrorOnConnection", resourceCulture);
             }
@@ -2647,7 +2657,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
-        internal static string ErrorTitle {
+        public static string ErrorTitle {
             get {
                 return ResourceManager.GetString("ErrorTitle", resourceCulture);
             }
@@ -2674,7 +2684,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Both sides of a relationship must have the same number of columns..
         /// </summary>
-        internal static string FKColumnsNotMatched {
+        public static string FKColumnsNotMatched {
             get {
                 return ResourceManager.GetString("FKColumnsNotMatched", resourceCulture);
             }
@@ -2683,7 +2693,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Before closing you must set valid values for all grid cells..
         /// </summary>
-        internal static string FkDlgBeforeClose {
+        public static string FkDlgBeforeClose {
             get {
                 return ResourceManager.GetString("FkDlgBeforeClose", resourceCulture);
             }
@@ -2692,7 +2702,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Expected column name..
         /// </summary>
-        internal static string FKNeedColumn {
+        public static string FKNeedColumn {
             get {
                 return ResourceManager.GetString("FKNeedColumn", resourceCulture);
             }
@@ -2701,7 +2711,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to You need to define at least a pair of columns for Foreign Key {0}..
         /// </summary>
-        internal static string FkNoColumnsForForeignKey {
+        public static string FkNoColumnsForForeignKey {
             get {
                 return ResourceManager.GetString("FkNoColumnsForForeignKey", resourceCulture);
             }
@@ -2710,7 +2720,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot use the same column when the referenced table is the same as the source table..
         /// </summary>
-        internal static string FKSameColumn {
+        public static string FKSameColumn {
             get {
                 return ResourceManager.GetString("FKSameColumn", resourceCulture);
             }
@@ -2719,7 +2729,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data type is not valid..
         /// </summary>
-        internal static string InvalidDataType {
+        public static string InvalidDataType {
             get {
                 return ResourceManager.GetString("InvalidDataType", resourceCulture);
             }
@@ -2728,16 +2738,25 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invalid value on max-allowed-packet option..
         /// </summary>
-        internal static string InvalidMaxAllowedPacketValue {
+        public static string InvalidMaxAllowedPacketValue {
             get {
                 return ResourceManager.GetString("InvalidMaxAllowedPacketValue", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please set a valid value for the following fields.
+        /// </summary>
+        public static string InvalidValueFieldsMessage {
+            get {
+                return ResourceManager.GetString("InvalidValueFieldsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Key {
+        public static System.Drawing.Bitmap Key {
             get {
                 object obj = ResourceManager.GetObject("Key", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -2765,7 +2784,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Missing Server and User in Credentials..
         /// </summary>
-        internal static string MissingServerAndUser {
+        public static string MissingServerAndUser {
             get {
                 return ResourceManager.GetString("MissingServerAndUser", resourceCulture);
             }
@@ -2774,7 +2793,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to This wizard will create a full MVC project connected to a MySQL database existing or will create a new one with a web site that includes user authentication with the ASP.NET MySQL Membership provider..
         /// </summary>
-        internal static string MvcProjectTemplateDescription {
+        public static string MvcProjectTemplateDescription {
             get {
                 return ResourceManager.GetString("MvcProjectTemplateDescription", resourceCulture);
             }
@@ -2783,7 +2802,17 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mysql_project_wizard {
+        public static System.Drawing.Bitmap mysql_ItemTemplate_wizard {
+            get {
+                object obj = ResourceManager.GetObject("mysql_ItemTemplate_wizard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mysql_project_wizard {
             get {
                 object obj = ResourceManager.GetObject("mysql_project_wizard", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -2791,9 +2820,19 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mysql_WebsiteConfig {
+            get {
+                object obj = ResourceManager.GetObject("mysql_WebsiteConfig", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Export of database {1} has finished..
         /// </summary>
-        internal static string MySqlDumpEndingInfoLog {
+        public static string MySqlDumpEndingInfoLog {
             get {
                 return ResourceManager.GetString("MySqlDumpEndingInfoLog", resourceCulture);
             }
@@ -2802,7 +2841,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySql dump file was not found..
         /// </summary>
-        internal static string MySqlDumpPathNotFound {
+        public static string MySqlDumpPathNotFound {
             get {
                 return ResourceManager.GetString("MySqlDumpPathNotFound", resourceCulture);
             }
@@ -2811,7 +2850,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Running: mysqldump.exe {0}.
         /// </summary>
-        internal static string MySqlDumpRunning {
+        public static string MySqlDumpRunning {
             get {
                 return ResourceManager.GetString("MySqlDumpRunning", resourceCulture);
             }
@@ -2820,7 +2859,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} Dumping {1} ({2})..
         /// </summary>
-        internal static string MySqlDumpStartInfoLog {
+        public static string MySqlDumpStartInfoLog {
             get {
                 return ResourceManager.GetString("MySqlDumpStartInfoLog", resourceCulture);
             }
@@ -2829,7 +2868,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Exported {0} and its schema selected objects..
         /// </summary>
-        internal static string MySqlDumpSummary {
+        public static string MySqlDumpSummary {
             get {
                 return ResourceManager.GetString("MySqlDumpSummary", resourceCulture);
             }
@@ -2838,7 +2877,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Passwords don&apos;t match.
         /// </summary>
-        internal static string NewPassword_PasswordNotMatch {
+        public static string NewPassword_PasswordNotMatch {
             get {
                 return ResourceManager.GetString("NewPassword_PasswordNotMatch", resourceCulture);
             }
@@ -2847,7 +2886,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Please provide a new password.
         /// </summary>
-        internal static string NewPassword_ProvideNewPassword {
+        public static string NewPassword_ProvideNewPassword {
             get {
                 return ResourceManager.GetString("NewPassword_ProvideNewPassword", resourceCulture);
             }
@@ -2856,7 +2895,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stored Functions.
         /// </summary>
-        internal static string Node_Functions {
+        public static string Node_Functions {
             get {
                 return ResourceManager.GetString("Node_Functions", resourceCulture);
             }
@@ -2865,7 +2904,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stored Procedures.
         /// </summary>
-        internal static string Node_StoredProcedures {
+        public static string Node_StoredProcedures {
             get {
                 return ResourceManager.GetString("Node_StoredProcedures", resourceCulture);
             }
@@ -2874,7 +2913,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Tables.
         /// </summary>
-        internal static string Node_Tables {
+        public static string Node_Tables {
             get {
                 return ResourceManager.GetString("Node_Tables", resourceCulture);
             }
@@ -2883,7 +2922,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Triggers.
         /// </summary>
-        internal static string Node_Triggers {
+        public static string Node_Triggers {
             get {
                 return ResourceManager.GetString("Node_Triggers", resourceCulture);
             }
@@ -2892,7 +2931,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to UDFs.
         /// </summary>
-        internal static string Node_UDFs {
+        public static string Node_UDFs {
             get {
                 return ResourceManager.GetString("Node_UDFs", resourceCulture);
             }
@@ -2901,7 +2940,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Views.
         /// </summary>
-        internal static string Node_Views {
+        public static string Node_Views {
             get {
                 return ResourceManager.GetString("Node_Views", resourceCulture);
             }
@@ -2920,7 +2959,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap page_title_mysql_export {
+        public static System.Drawing.Bitmap page_title_mysql_export {
             get {
                 object obj = ResourceManager.GetObject("page_title_mysql_export", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -2930,7 +2969,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The given path is not valid..
         /// </summary>
-        internal static string PathNotValid {
+        public static string PathNotValid {
             get {
                 return ResourceManager.GetString("PathNotValid", resourceCulture);
             }
@@ -2939,7 +2978,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright 2007-2015 Oracle, Inc..
         /// </summary>
-        internal static string ProductDetails {
+        public static string ProductDetails {
             get {
                 return ResourceManager.GetString("ProductDetails", resourceCulture);
             }
@@ -2948,7 +2987,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL for Visual Studio.
         /// </summary>
-        internal static string ProductName {
+        public static string ProductName {
             get {
                 return ResourceManager.GetString("ProductName", resourceCulture);
             }
@@ -2957,7 +2996,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use this selection to connect to MySQL Server using the .NET Framework Data Provider for MySQL.
         /// </summary>
-        internal static string Provider_Description {
+        public static string Provider_Description {
             get {
                 return ResourceManager.GetString("Provider_Description", resourceCulture);
             }
@@ -2966,7 +3005,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .NET Framework Data Provider for MySQL.
         /// </summary>
-        internal static string Provider_DisplayName {
+        public static string Provider_DisplayName {
             get {
                 return ResourceManager.GetString("Provider_DisplayName", resourceCulture);
             }
@@ -2975,7 +3014,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MySQL Data Provider.
         /// </summary>
-        internal static string Provider_ShortDisplayName {
+        public static string Provider_ShortDisplayName {
             get {
                 return ResourceManager.GetString("Provider_ShortDisplayName", resourceCulture);
             }
@@ -2984,7 +3023,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sql_editor_banner {
+        public static System.Drawing.Bitmap sql_editor_banner {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_banner", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -2994,7 +3033,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sql_editor_connect {
+        public static System.Drawing.Bitmap sql_editor_connect {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_connect", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -3004,7 +3043,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sql_editor_disconnect {
+        public static System.Drawing.Bitmap sql_editor_disconnect {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_disconnect", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -3014,7 +3053,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sql_editor_executionplan {
+        public static System.Drawing.Bitmap sql_editor_executionplan {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_executionplan", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -3024,7 +3063,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sql_editor_runsql {
+        public static System.Drawing.Bitmap sql_editor_runsql {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_runsql", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -3034,7 +3073,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sql_editor_validatesql {
+        public static System.Drawing.Bitmap sql_editor_validatesql {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_validatesql", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -3044,7 +3083,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The starting auto-increment value for this table..
         /// </summary>
-        internal static string TableAutoIncStartDesc {
+        public static string TableAutoIncStartDesc {
             get {
                 return ResourceManager.GetString("TableAutoIncStartDesc", resourceCulture);
             }
@@ -3053,7 +3092,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The average row length for this table.  Set this only for large tables with variable-size rows..
         /// </summary>
-        internal static string TableAvgRowLengthDesc {
+        public static string TableAvgRowLengthDesc {
             get {
                 return ResourceManager.GetString("TableAvgRowLengthDesc", resourceCulture);
             }
@@ -3062,7 +3101,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The default character set to use for this table..
         /// </summary>
-        internal static string TableCharSetDesc {
+        public static string TableCharSetDesc {
             get {
                 return ResourceManager.GetString("TableCharSetDesc", resourceCulture);
             }
@@ -3071,7 +3110,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Set to true if you want a live checksum maintained for this table..
         /// </summary>
-        internal static string TableCheckSumDesc {
+        public static string TableCheckSumDesc {
             get {
                 return ResourceManager.GetString("TableCheckSumDesc", resourceCulture);
             }
@@ -3080,7 +3119,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The default collation to use for this table..
         /// </summary>
-        internal static string TableCollationDesc {
+        public static string TableCollationDesc {
             get {
                 return ResourceManager.GetString("TableCollationDesc", resourceCulture);
             }
@@ -3089,7 +3128,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A comment for this table..
         /// </summary>
-        internal static string TableCommentDesc {
+        public static string TableCommentDesc {
             get {
                 return ResourceManager.GetString("TableCommentDesc", resourceCulture);
             }
@@ -3098,7 +3137,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The directory used to store the data files for this table..
         /// </summary>
-        internal static string TableDataDirDesc {
+        public static string TableDataDirDesc {
             get {
                 return ResourceManager.GetString("TableDataDirDesc", resourceCulture);
             }
@@ -3107,7 +3146,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The storage engine to use..
         /// </summary>
-        internal static string TableEngineDescription {
+        public static string TableEngineDescription {
             get {
                 return ResourceManager.GetString("TableEngineDescription", resourceCulture);
             }
@@ -3116,7 +3155,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The directory used to store the index files for this table..
         /// </summary>
-        internal static string TableIndexDirDesc {
+        public static string TableIndexDirDesc {
             get {
                 return ResourceManager.GetString("TableIndexDirDesc", resourceCulture);
             }
@@ -3125,7 +3164,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Determines which table in a merge table receives updates..
         /// </summary>
-        internal static string TableInsertMethodDesc {
+        public static string TableInsertMethodDesc {
             get {
                 return ResourceManager.GetString("TableInsertMethodDesc", resourceCulture);
             }
@@ -3134,7 +3173,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Provides a hint to the storage engine as to how many rows you plan to store in the table..
         /// </summary>
-        internal static string TableMaxRowsDesc {
+        public static string TableMaxRowsDesc {
             get {
                 return ResourceManager.GetString("TableMaxRowsDesc", resourceCulture);
             }
@@ -3143,7 +3182,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The minimum number of rows you plan to store in the table..
         /// </summary>
-        internal static string TableMinRowsDesc {
+        public static string TableMinRowsDesc {
             get {
                 return ResourceManager.GetString("TableMinRowsDesc", resourceCulture);
             }
@@ -3152,7 +3191,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The name of this table..
         /// </summary>
-        internal static string TableNameDesc {
+        public static string TableNameDesc {
             get {
                 return ResourceManager.GetString("TableNameDesc", resourceCulture);
             }
@@ -3161,7 +3200,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Determines if indexes are packed.  This will slow down updates and inserts..
         /// </summary>
-        internal static string TablePackKeysDesc {
+        public static string TablePackKeysDesc {
             get {
                 return ResourceManager.GetString("TablePackKeysDesc", resourceCulture);
             }
@@ -3170,7 +3209,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Defines how the rows should be stored..
         /// </summary>
-        internal static string TableRowFormatDesc {
+        public static string TableRowFormatDesc {
             get {
                 return ResourceManager.GetString("TableRowFormatDesc", resourceCulture);
             }
@@ -3179,7 +3218,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The schema this table belongs to..
         /// </summary>
-        internal static string TableSchemaDesc {
+        public static string TableSchemaDesc {
             get {
                 return ResourceManager.GetString("TableSchemaDesc", resourceCulture);
             }
@@ -3188,7 +3227,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Column.
         /// </summary>
-        internal static string Type_Column {
+        public static string Type_Column {
             get {
                 return ResourceManager.GetString("Type_Column", resourceCulture);
             }
@@ -3197,7 +3236,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stored Function.
         /// </summary>
-        internal static string Type_StoredFunction {
+        public static string Type_StoredFunction {
             get {
                 return ResourceManager.GetString("Type_StoredFunction", resourceCulture);
             }
@@ -3206,7 +3245,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stored Procedure.
         /// </summary>
-        internal static string Type_StoredProcedure {
+        public static string Type_StoredProcedure {
             get {
                 return ResourceManager.GetString("Type_StoredProcedure", resourceCulture);
             }
@@ -3215,7 +3254,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stored Procedure Parameter.
         /// </summary>
-        internal static string Type_StoredProcedureParameter {
+        public static string Type_StoredProcedureParameter {
             get {
                 return ResourceManager.GetString("Type_StoredProcedureParameter", resourceCulture);
             }
@@ -3224,7 +3263,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Table.
         /// </summary>
-        internal static string Type_Table {
+        public static string Type_Table {
             get {
                 return ResourceManager.GetString("Type_Table", resourceCulture);
             }
@@ -3233,7 +3272,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Trigger.
         /// </summary>
-        internal static string Type_Trigger {
+        public static string Type_Trigger {
             get {
                 return ResourceManager.GetString("Type_Trigger", resourceCulture);
             }
@@ -3242,7 +3281,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to User-defined Function.
         /// </summary>
-        internal static string Type_UDF {
+        public static string Type_UDF {
             get {
                 return ResourceManager.GetString("Type_UDF", resourceCulture);
             }
@@ -3251,7 +3290,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to View.
         /// </summary>
-        internal static string Type_View {
+        public static string Type_View {
             get {
                 return ResourceManager.GetString("Type_View", resourceCulture);
             }
@@ -3260,7 +3299,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Column.
         /// </summary>
-        internal static string Type_ViewColumn {
+        public static string Type_ViewColumn {
             get {
                 return ResourceManager.GetString("Type_ViewColumn", resourceCulture);
             }
@@ -3269,7 +3308,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unable to execute the create script.  SQL batch must begin with CREATE or ALTER..
         /// </summary>
-        internal static string UnableToExecuteProcScript {
+        public static string UnableToExecuteProcScript {
             get {
                 return ResourceManager.GetString("UnableToExecuteProcScript", resourceCulture);
             }
@@ -3278,7 +3317,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unable to retrieve the list of databases.
         /// </summary>
-        internal static string UnableToRetrieveDatabaseList {
+        public static string UnableToRetrieveDatabaseList {
             get {
                 return ResourceManager.GetString("UnableToRetrieveDatabaseList", resourceCulture);
             }
@@ -3289,7 +3328,7 @@ namespace MySql.Data.VisualStudio.Properties {
         ///
         ///Would you like to create it?.
         /// </summary>
-        internal static string UnknownDbPromptCreate {
+        public static string UnknownDbPromptCreate {
             get {
                 return ResourceManager.GetString("UnknownDbPromptCreate", resourceCulture);
             }
@@ -3298,7 +3337,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to decimal.
         /// </summary>
-        internal static string Value_Decimal {
+        public static string Value_Decimal {
             get {
                 return ResourceManager.GetString("Value_Decimal", resourceCulture);
             }
@@ -3307,7 +3346,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to int.
         /// </summary>
-        internal static string Value_Int {
+        public static string Value_Int {
             get {
                 return ResourceManager.GetString("Value_Int", resourceCulture);
             }
@@ -3316,7 +3355,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to real.
         /// </summary>
-        internal static string Value_Real {
+        public static string Value_Real {
             get {
                 return ResourceManager.GetString("Value_Real", resourceCulture);
             }
@@ -3325,7 +3364,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to row.
         /// </summary>
-        internal static string Value_Row {
+        public static string Value_Row {
             get {
                 return ResourceManager.GetString("Value_Row", resourceCulture);
             }
@@ -3334,7 +3373,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to string.
         /// </summary>
-        internal static string Value_String {
+        public static string Value_String {
             get {
                 return ResourceManager.GetString("Value_String", resourceCulture);
             }
@@ -3343,7 +3382,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The connection string must not be empty..
         /// </summary>
-        internal static string WebConfigConnStrNoEmpty {
+        public static string WebConfigConnStrNoEmpty {
             get {
                 return ResourceManager.GetString("WebConfigConnStrNoEmpty", resourceCulture);
             }
@@ -3352,9 +3391,18 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to This wizard will create a WinForms project connected to an existing MySQL database using either EF or ADO.NET Typed Datasets as data access with three layout options: Individual Controls, Grid or Master-Detail..
         /// </summary>
-        internal static string WinFormsProjectDescription {
+        public static string WinFormsProjectDescription {
             get {
                 return ResourceManager.GetString("WinFormsProjectDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only .NET versions 4.0/4.5/4.5.1 are supported.
+        /// </summary>
+        public static string WrongNetFxVersionMessage {
+            get {
+                return ResourceManager.GetString("WrongNetFxVersionMessage", resourceCulture);
             }
         }
     }

@@ -1,0 +1,25 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <ProjectType>CSharp</ProjectType>
+    <DefaultName>WinForm</DefaultName>
+    <Name>MySQL New Windows Form</Name>
+    <Description>An item template for creating a new Windows Form with MySQL connectivity.</Description>
+    <Icon>icon.png</Icon>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <TemplateID>191c2d4b-7cd1-46cb-9d89-850e54e91b55</TemplateID>
+    <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+  </TemplateData>
+
+  <TemplateContent>
+    <References>
+    </References>
+	<ProjectItem ReplaceParameters="true" TargetFileName="FormMySQL1.cs">FormMySQL1.cs</ProjectItem>
+    <ProjectItem ReplaceParameters="true" TargetFileName="FormMySQL1.Designer.cs">FormMySQL1.Designer.cs</ProjectItem>
+    <ProjectItem ReplaceParameters="true" TargetFileName="FormMySQL1.resx">FormMySQL1.resx</ProjectItem>
+  </TemplateContent>
+
+  <WizardExtension>
+    <Assembly>MySql.VisualStudio, Version=2.0.1.0, Culture=Neutral, PublicKeyToken=c5687fc88969c44d</Assembly>
+    <FullClassName>MySql.Data.VisualStudio.Wizards.ItemTemplates.ItemTemplatesWinFormsWizardCSharp</FullClassName>
+  </WizardExtension>
+</VSTemplate>

@@ -20,7 +20,8 @@ VS.targets
 **/*.sln.cache
 *.diff
 *.py
-**/ProjectTemplatesZipFolder
+**/ProjectTemplatesZipFolder/**
+**/ItemTemplatesZipFolder/**
 .bzrignore
 **/.bzr-mysql/**
 **/packages/**

@@ -47,10 +47,13 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.groupBox1.Controls.Add(this.rdbNoModel);
       this.groupBox1.Controls.Add(this.Ef6);
       this.groupBox1.Controls.Add(this.Ef5);
+      this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.groupBox1.Location = new System.Drawing.Point(22, 61);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(540, 51);
@@ -64,7 +67,7 @@
       this.rdbNoModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.rdbNoModel.Location = new System.Drawing.Point(132, 23);
       this.rdbNoModel.Name = "rdbNoModel";
-      this.rdbNoModel.Size = new System.Drawing.Size(146, 17);
+      this.rdbNoModel.Size = new System.Drawing.Size(149, 19);
       this.rdbNoModel.TabIndex = 21;
       this.rdbNoModel.TabStop = true;
       this.rdbNoModel.Text = "Do not include a model";
@@ -76,7 +79,7 @@
       this.Ef6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
       this.Ef6.Location = new System.Drawing.Point(75, 23);
       this.Ef6.Name = "Ef6";
-      this.Ef6.Size = new System.Drawing.Size(40, 17);
+      this.Ef6.Size = new System.Drawing.Size(40, 19);
       this.Ef6.TabIndex = 20;
       this.Ef6.TabStop = true;
       this.Ef6.Text = "6.0";
@@ -89,7 +92,7 @@
       this.Ef5.Checked = true;
       this.Ef5.Location = new System.Drawing.Point(18, 23);
       this.Ef5.Name = "Ef5";
-      this.Ef5.Size = new System.Drawing.Size(40, 17);
+      this.Ef5.Size = new System.Drawing.Size(40, 19);
       this.Ef5.TabIndex = 19;
       this.Ef5.TabStop = true;
       this.Ef5.Text = "5.0";
@@ -97,19 +100,23 @@
       // 
       // label7
       // 
+      this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label7.AutoSize = true;
       this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label7.Location = new System.Drawing.Point(22, 281);
       this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(75, 13);
+      this.label7.Size = new System.Drawing.Size(79, 15);
       this.label7.TabIndex = 57;
       this.label7.Text = "Model Name:";
       // 
       // ModelNameTextBox
       // 
+      this.ModelNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.ModelNameTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ModelNameTextBox.Location = new System.Drawing.Point(22, 302);
       this.ModelNameTextBox.Name = "ModelNameTextBox";
-      this.ModelNameTextBox.Size = new System.Drawing.Size(540, 22);
+      this.ModelNameTextBox.Size = new System.Drawing.Size(540, 23);
       this.ModelNameTextBox.TabIndex = 56;
       // 
       // errorProvider1
@@ -118,18 +125,23 @@
       // 
       // cmbConnections
       // 
+      this.cmbConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.cmbConnections.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cmbConnections.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.cmbConnections.FormattingEnabled = true;
       this.cmbConnections.Location = new System.Drawing.Point(22, 150);
       this.cmbConnections.Name = "cmbConnections";
-      this.cmbConnections.Size = new System.Drawing.Size(414, 21);
+      this.cmbConnections.Size = new System.Drawing.Size(394, 23);
       this.cmbConnections.TabIndex = 59;
       // 
       // newConnString
       // 
-      this.newConnString.Location = new System.Drawing.Point(443, 149);
+      this.newConnString.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.newConnString.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.newConnString.Location = new System.Drawing.Point(422, 149);
       this.newConnString.Name = "newConnString";
-      this.newConnString.Size = new System.Drawing.Size(120, 25);
+      this.newConnString.Size = new System.Drawing.Size(141, 25);
       this.newConnString.TabIndex = 58;
       this.newConnString.Text = "New Connection...";
       this.newConnString.UseVisualStyleBackColor = true;
@@ -139,28 +151,33 @@
       // 
       this.label1.AutoSize = true;
       this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(242)))));
+      this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label1.Location = new System.Drawing.Point(22, 128);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(340, 13);
+      this.label1.Size = new System.Drawing.Size(346, 15);
       this.label1.TabIndex = 60;
       this.label1.Text = "Select the database connection to use in your model generation:";
       // 
       // ConnectionStringTextBox
       // 
-      this.ConnectionStringTextBox.Location = new System.Drawing.Point(22, 201);
+      this.ConnectionStringTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ConnectionStringTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.ConnectionStringTextBox.Location = new System.Drawing.Point(22, 192);
       this.ConnectionStringTextBox.Multiline = true;
       this.ConnectionStringTextBox.Name = "ConnectionStringTextBox";
       this.ConnectionStringTextBox.ReadOnly = true;
-      this.ConnectionStringTextBox.Size = new System.Drawing.Size(541, 63);
+      this.ConnectionStringTextBox.Size = new System.Drawing.Size(541, 72);
       this.ConnectionStringTextBox.TabIndex = 62;
       // 
       // chkUseSameConnection
       // 
       this.chkUseSameConnection.AutoSize = true;
-      this.chkUseSameConnection.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.chkUseSameConnection.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.chkUseSameConnection.Location = new System.Drawing.Point(25, 26);
       this.chkUseSameConnection.Name = "chkUseSameConnection";
-      this.chkUseSameConnection.Size = new System.Drawing.Size(284, 17);
+      this.chkUseSameConnection.Size = new System.Drawing.Size(303, 19);
       this.chkUseSameConnection.TabIndex = 64;
       this.chkUseSameConnection.Text = "Use a different connection for the Data Entity Model";
       this.chkUseSameConnection.UseVisualStyleBackColor = true;
@@ -168,8 +185,7 @@
       // 
       // ModelConfiguration
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
       this.BackColor = System.Drawing.SystemColors.Control;
       this.Controls.Add(this.chkUseSameConnection);
       this.Controls.Add(this.ConnectionStringTextBox);

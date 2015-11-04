@@ -46,7 +46,9 @@
       // 
       // btnFinish
       // 
-      this.btnFinish.Location = new System.Drawing.Point(757, 466);
+      this.btnFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnFinish.Font = new System.Drawing.Font("Segoe UI", 9F);
+      this.btnFinish.Location = new System.Drawing.Point(783, 475);
       this.btnFinish.Name = "btnFinish";
       this.btnFinish.Size = new System.Drawing.Size(75, 23);
       this.btnFinish.TabIndex = 11;
@@ -56,9 +58,11 @@
       // 
       // btnCancel
       // 
+      this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnCancel.CausesValidation = false;
       this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.btnCancel.Location = new System.Drawing.Point(515, 466);
+      this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
+      this.btnCancel.Location = new System.Drawing.Point(541, 475);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 10;
@@ -68,7 +72,9 @@
       // 
       // btnBack
       // 
-      this.btnBack.Location = new System.Drawing.Point(596, 466);
+      this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnBack.Font = new System.Drawing.Font("Segoe UI", 9F);
+      this.btnBack.Location = new System.Drawing.Point(622, 475);
       this.btnBack.Name = "btnBack";
       this.btnBack.Size = new System.Drawing.Size(75, 23);
       this.btnBack.TabIndex = 9;
@@ -78,7 +84,9 @@
       // 
       // btnNext
       // 
-      this.btnNext.Location = new System.Drawing.Point(677, 466);
+      this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnNext.Font = new System.Drawing.Font("Segoe UI", 9F);
+      this.btnNext.Location = new System.Drawing.Point(703, 475);
       this.btnNext.Name = "btnNext";
       this.btnNext.Size = new System.Drawing.Size(75, 23);
       this.btnNext.TabIndex = 8;
@@ -109,7 +117,7 @@
       // 
       // pictureBox1
       // 
-	  this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_project_wizard;
+      this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
       this.pictureBox1.Location = new System.Drawing.Point(19, 23);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(214, 88);
@@ -118,6 +126,7 @@
       // 
       // lblStep
       // 
+      this.lblStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblStep.AutoSize = true;
       this.lblStep.BackColor = System.Drawing.Color.White;
       this.lblStep.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

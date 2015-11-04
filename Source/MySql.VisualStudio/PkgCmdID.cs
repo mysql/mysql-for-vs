@@ -68,10 +68,6 @@ namespace MySql.Data.VisualStudio
 
     public const uint cmdidAddConnection = 0x301;
     public const uint cmdidMRUList = 0x0401;
-
-    public const uint cmdProjectTypeMvcProject = 0x103;
-    public const uint cmdProjectTypeWinFormsProject = 0x104;
-
   };
 
   static class SharedCommands

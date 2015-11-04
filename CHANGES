@@ -1,6 +1,12 @@
+1.2.6
+- Fixed the bug where the "MySQL Workbench" and "MySQL Utilities" buttons were disabled (Oracle Bug #21495692).
+- Fix a bug which prevent to the user to create a non MySql connection in the Server Explorer pane in VisualStudio after the user create a MySql Connection checking the option "Always use this selection" when selecting the Data Source and Data Provider (MySql Bug #77441, Oracle bug #22122881)
+
+
 2.0.1
 - Added a new Editor to handle MySQL Phyton script files.
 - Added a new option to create new MySQL Phyton script directly from Server Explorer.
+
 
 2.0.0
 - Fixed problem with font colors that made them difficult to read when using the Visual Studio's Dark theme.
@@ -14,15 +20,33 @@
 - Fix controls color to match default provided VS Themes (Dark, Blue and Light).
 - Support added for MySQLX protocol, included in MySQL Server 5.7.8.
 
+1.2.5
+- Fixed the bug with the M4VS installer where having any plugin version installed on any Visual Studio
+  version, and then uninstall Visual Studio first, the M4VS plugin couldn't be uninstalled or upgraded
+  (MySQL Bug #71226, Oracle Bug #21953055).
+- Remove the "Project Templates" option from the plugin toolbar button and from the "File -> New -> Project" menu, 
+  in order to add the "Item Templates" feature with two options: MySQL MVC Item and MySQL Windows Forms Item, 
+  available as a context menu for existing projects, which will add a new windows forms or MVC controllers/views 
+  connected to MySQL. There is a known issue with item templates not working correctly with MySQL Server 5.7.x,
+  avoiding the user to create the entity framework model.
+- Added the "Entity Framework" option to the MySQL Website Configuration Dialog, for web projects, so Entity Framework
+  version 5 or 6 can be used with a MySQL database provider, automatically adding the configuration/references needed
+  to the web.config file and the project itself.
+- Fixed the bug where the dataset designer wizard was not showing the stored procedure parameters when creating a 
+  "TableAdapter" using existing stored procedures for the "Select" command. Also, fixed the bug where the stored procedure
+  command having an "error" command was avoiding the dataset to be created (MySQL Bug #74195, Oracle Bug #20233133).
+  
+
 1.2.4
-- Removed support for VS2008 (JIRA Bug #MYSQLFORVS-331).
+- Removed support for VS2008.
 - Added support for VS2015 so the plugin can be installed properly (MySQL Bug #77708, Oracle Bug #21438524).
 - Fix for MySQL parser does not support new syntax in 'explain' for grammar 5.7 (Oracle Bug #19431740).
 
 
 1.2.3
 - Add the support to handle the Simple Membership Web Provider configuration in the Web Configuration Tool.
-- Fix for web configuration tool doesn't use the web.config from the startup project by default when using the Web Configuration Tool (Oracle Bug #19166855).
+- Fix for web configuration tool doesn't use the web.config from the startup project by default when using the 
+  Web Configuration Tool (Oracle Bug #19166855).
 
 
 1.2.2

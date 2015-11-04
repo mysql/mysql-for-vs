@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WebConfigDlg));
       this.connectionString = new System.Windows.Forms.TextBox();
       this.label2 = new System.Windows.Forms.Label();
       this.writeExToLog = new System.Windows.Forms.CheckBox();
@@ -57,14 +58,23 @@
       this.controlPanel = new System.Windows.Forms.Panel();
       this.enableExpCallback = new System.Windows.Forms.CheckBox();
       this.advancedBtn = new System.Windows.Forms.Button();
+      this.entityFrameworkPanel = new System.Windows.Forms.Panel();
+      this.radioBtnEF5 = new System.Windows.Forms.RadioButton();
+      this.radioBtnEF6 = new System.Windows.Forms.RadioButton();
+      this.label4 = new System.Windows.Forms.Label();
       this.pageLabel = new System.Windows.Forms.Label();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.pageDesc = new System.Windows.Forms.Label();
       this.backButton = new System.Windows.Forms.Button();
+      this.pnlSteps = new System.Windows.Forms.Panel();
+      this.pictureBox2 = new System.Windows.Forms.PictureBox();
       this.configPanel.SuspendLayout();
       this.pnlSimpleMembership.SuspendLayout();
       this.controlPanel.SuspendLayout();
+      this.entityFrameworkPanel.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+      this.pnlSteps.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
       this.SuspendLayout();
       // 
       // connectionString
@@ -149,18 +159,18 @@
       // cancelButton
       // 
       this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.cancelButton.Location = new System.Drawing.Point(400, 293);
+      this.cancelButton.Location = new System.Drawing.Point(586, 303);
       this.cancelButton.Name = "cancelButton";
-      this.cancelButton.Size = new System.Drawing.Size(81, 25);
+      this.cancelButton.Size = new System.Drawing.Size(75, 23);
       this.cancelButton.TabIndex = 2;
       this.cancelButton.Text = "Cancel";
       this.cancelButton.UseVisualStyleBackColor = true;
       // 
       // nextButton
       // 
-      this.nextButton.Location = new System.Drawing.Point(313, 293);
+      this.nextButton.Location = new System.Drawing.Point(499, 303);
       this.nextButton.Name = "nextButton";
-      this.nextButton.Size = new System.Drawing.Size(81, 25);
+      this.nextButton.Size = new System.Drawing.Size(75, 23);
       this.nextButton.TabIndex = 1;
       this.nextButton.Text = "Next";
       this.nextButton.UseVisualStyleBackColor = true;
@@ -169,9 +179,8 @@
       // configPanel
       // 
       this.configPanel.Controls.Add(this.useProvider);
-      this.configPanel.Controls.Add(this.controlPanel);
       this.configPanel.Controls.Add(this.pnlSimpleMembership);
-      this.configPanel.Location = new System.Drawing.Point(2, 58);
+      this.configPanel.Location = new System.Drawing.Point(188, 63);
       this.configPanel.Name = "configPanel";
       this.configPanel.Size = new System.Drawing.Size(492, 225);
       this.configPanel.TabIndex = 8;
@@ -329,7 +338,7 @@
       this.controlPanel.Controls.Add(this.editConnString);
       this.controlPanel.Controls.Add(this.writeExToLog);
       this.controlPanel.Controls.Add(this.label3);
-      this.controlPanel.Location = new System.Drawing.Point(3, 31);
+      this.controlPanel.Location = new System.Drawing.Point(191, 96);
       this.controlPanel.Name = "controlPanel";
       this.controlPanel.Size = new System.Drawing.Size(486, 186);
       this.controlPanel.TabIndex = 11;
@@ -354,12 +363,54 @@
       this.advancedBtn.UseVisualStyleBackColor = true;
       this.advancedBtn.Click += new System.EventHandler(this.advancedBtn_Click);
       // 
+      // entityFrameworkPanel
+      // 
+      this.entityFrameworkPanel.Controls.Add(this.radioBtnEF5);
+      this.entityFrameworkPanel.Controls.Add(this.radioBtnEF6);
+      this.entityFrameworkPanel.Controls.Add(this.label4);
+      this.entityFrameworkPanel.Location = new System.Drawing.Point(191, 99);
+      this.entityFrameworkPanel.Name = "entityFrameworkPanel";
+      this.entityFrameworkPanel.Size = new System.Drawing.Size(486, 186);
+      this.entityFrameworkPanel.TabIndex = 12;
+      // 
+      // radioBtnEF5
+      // 
+      this.radioBtnEF5.AutoSize = true;
+      this.radioBtnEF5.Location = new System.Drawing.Point(115, 58);
+      this.radioBtnEF5.Name = "radioBtnEF5";
+      this.radioBtnEF5.Size = new System.Drawing.Size(124, 17);
+      this.radioBtnEF5.TabIndex = 2;
+      this.radioBtnEF5.TabStop = true;
+      this.radioBtnEF5.Text = "Entity Framework 5.0";
+      this.radioBtnEF5.UseVisualStyleBackColor = true;
+      // 
+      // radioBtnEF6
+      // 
+      this.radioBtnEF6.AutoSize = true;
+      this.radioBtnEF6.Location = new System.Drawing.Point(115, 32);
+      this.radioBtnEF6.Name = "radioBtnEF6";
+      this.radioBtnEF6.Size = new System.Drawing.Size(123, 17);
+      this.radioBtnEF6.TabIndex = 1;
+      this.radioBtnEF6.TabStop = true;
+      this.radioBtnEF6.Text = "Entity Framework 6.x";
+      this.radioBtnEF6.UseVisualStyleBackColor = true;
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label4.Location = new System.Drawing.Point(112, 11);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(270, 13);
+      this.label4.TabIndex = 0;
+      this.label4.Text = "Which version of Entity Framework do you want to use?\r\n";
+      // 
       // pageLabel
       // 
       this.pageLabel.AutoSize = true;
       this.pageLabel.BackColor = System.Drawing.Color.White;
       this.pageLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.pageLabel.Location = new System.Drawing.Point(12, 9);
+      this.pageLabel.Location = new System.Drawing.Point(205, 10);
       this.pageLabel.Name = "pageLabel";
       this.pageLabel.Size = new System.Drawing.Size(124, 13);
       this.pageLabel.TabIndex = 9;
@@ -367,12 +418,11 @@
       // 
       // pictureBox1
       // 
-      this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
       this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.bannrbmp;
-      this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+      this.pictureBox1.Location = new System.Drawing.Point(187, 1);
       this.pictureBox1.Name = "pictureBox1";
-      this.pictureBox1.Size = new System.Drawing.Size(495, 58);
-      this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+      this.pictureBox1.Size = new System.Drawing.Size(493, 60);
+      this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
       this.pictureBox1.TabIndex = 10;
       this.pictureBox1.TabStop = false;
       // 
@@ -381,7 +431,7 @@
       this.pageDesc.AutoSize = true;
       this.pageDesc.BackColor = System.Drawing.Color.White;
       this.pageDesc.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.pageDesc.Location = new System.Drawing.Point(38, 31);
+      this.pageDesc.Location = new System.Drawing.Point(231, 32);
       this.pageDesc.Name = "pageDesc";
       this.pageDesc.Size = new System.Drawing.Size(140, 13);
       this.pageDesc.TabIndex = 11;
@@ -389,20 +439,42 @@
       // 
       // backButton
       // 
-      this.backButton.Location = new System.Drawing.Point(226, 293);
+      this.backButton.Location = new System.Drawing.Point(412, 303);
       this.backButton.Name = "backButton";
-      this.backButton.Size = new System.Drawing.Size(81, 25);
+      this.backButton.Size = new System.Drawing.Size(75, 23);
       this.backButton.TabIndex = 0;
       this.backButton.Text = "Back";
       this.backButton.UseVisualStyleBackColor = true;
       this.backButton.Click += new System.EventHandler(this.backButton_Click);
+      // 
+      // pnlSteps
+      // 
+      this.pnlSteps.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(41)))), ((int)(((byte)(41)))));
+      this.pnlSteps.Controls.Add(this.pictureBox2);
+      this.pnlSteps.Location = new System.Drawing.Point(0, 0);
+      this.pnlSteps.Name = "pnlSteps";
+      this.pnlSteps.Size = new System.Drawing.Size(187, 342);
+      this.pnlSteps.TabIndex = 13;
+      // 
+      // pictureBox2
+      // 
+      this.pictureBox2.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_WebsiteConfig;
+      this.pictureBox2.Location = new System.Drawing.Point(12, 12);
+      this.pictureBox2.Name = "pictureBox2";
+      this.pictureBox2.Size = new System.Drawing.Size(160, 52);
+      this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.pictureBox2.TabIndex = 1;
+      this.pictureBox2.TabStop = false;
       // 
       // WebConfigDlg
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.cancelButton;
-      this.ClientSize = new System.Drawing.Size(495, 329);
+      this.ClientSize = new System.Drawing.Size(679, 337);
+      this.Controls.Add(this.pnlSteps);
+      this.Controls.Add(this.entityFrameworkPanel);
+      this.Controls.Add(this.controlPanel);
       this.Controls.Add(this.backButton);
       this.Controls.Add(this.pageDesc);
       this.Controls.Add(this.pageLabel);
@@ -422,7 +494,11 @@
       this.pnlSimpleMembership.PerformLayout();
       this.controlPanel.ResumeLayout(false);
       this.controlPanel.PerformLayout();
+      this.entityFrameworkPanel.ResumeLayout(false);
+      this.entityFrameworkPanel.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+      this.pnlSteps.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -463,5 +539,11 @@
     private System.Windows.Forms.Label lblConnString;
     private System.Windows.Forms.TextBox txtConnStringName;
     private System.Windows.Forms.Label lblConnStringName;
+    private System.Windows.Forms.Panel entityFrameworkPanel;
+    private System.Windows.Forms.RadioButton radioBtnEF5;
+    private System.Windows.Forms.RadioButton radioBtnEF6;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.Panel pnlSteps;
+    private System.Windows.Forms.PictureBox pictureBox2;
   }
 }

@@ -313,7 +313,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);
         csb.Password = null;
         connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);
-        // connectionstringforaspnet
+        // connectionstringforaspnet                
         csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
         csb.Password = null;
         WizardForm.connectionStringForAspNetTables = csb.ConnectionString;

@@ -437,7 +437,7 @@
 	<When Condition="'$(Framework)' == '3.5'">
       <ItemGroup>
         <EmbeddedResource Include="Properties\Resources.3.5.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
+          <Generator>PublicResXFileCodeGenerator</Generator>
           <LastGenOutput>Resources.3.5.Designer.cs</LastGenOutput>
           <MergeWithCTO>true</MergeWithCTO>
           <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
@@ -469,6 +469,7 @@
     <Compile Include="DBExport\MySqlDbExportSaveOptions.cs" />
     <Compile Include="DBExport\MySqlDumpFacade.cs" />
     <Compile Include="DBExport\SchemaColumn.cs" />
+    <Compile Include="DDEX\DbCommandExtensions.cs" />
     <Compile Include="DDEX\DynamicItemMenuCommand.cs" />
     <Compile Include="DDEX\MySqlConnectionListMenu.cs" />
     <Compile Include="DDEX\MySqlNewPasswordDialog.cs">
@@ -778,6 +779,7 @@
     <Compile Include="WebConfig\ConnectionStringEditorDlg.Designer.cs">
       <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebConfig\EntityFrameworkConfig.cs" />
     <Compile Include="WebConfig\GenericConfig.cs">
     </Compile>
     <Compile Include="WebConfig\MembershipConfig.cs">
@@ -805,6 +807,7 @@
     <Compile Include="WebConfig\WebConfigDlg.Designer.cs">
       <DependentUpon>WebConfigDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebConfig\WebConfigTools.cs" />
     <Compile Include="Wizards\BaseWizard.cs" />
     <Compile Include="Wizards\BaseWizardForm.cs">
       <SubType>Form</SubType>
@@ -814,6 +817,37 @@
     </Compile>
     <Compile Include="Wizards\EntityFrameworkGenerator.cs" />
     <Compile Include="Wizards\ICodeGeneratorStrategy.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWebWizardCSharp.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWinFormsWizardCSharp.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesBaseWebWizard.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesBaseWinFormsWizard.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplateUtilities.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWebWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWebWizard.Designer.cs">
+      <DependentUpon>ItemTemplatesWebWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWinFormsWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWinFormsWizard.Designer.cs">
+      <DependentUpon>ItemTemplatesWinFormsWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ModelEntitySelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ModelEntitySelection.Designer.cs">
+      <DependentUpon>ModelEntitySelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ModelEntitySelection_WinForms.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ModelEntitySelection_WinForms.Designer.cs">
+      <DependentUpon>ModelEntitySelection_WinForms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWebWizardVisualBasic.cs" />
+    <Compile Include="Wizards\ItemTemplates\ItemTemplatesWinFormsWizardVisualBasic.cs" />
     <Compile Include="Wizards\ModelGenerator.cs" />
     <Compile Include="Wizards\TypedDataSetGenerator.cs" />
     <Compile Include="Wizards\Web\CSharpWebWizard.cs" />
@@ -884,6 +918,18 @@
     <Compile Include="Wizards\WindowsForms\DataAccessConfig.Designer.cs">
       <DependentUpon>DataAccessConfig.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Wizards\ItemTemplates\ItemTemplatesWebWizard.resx">
+      <DependentUpon>ItemTemplatesWebWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ItemTemplates\ItemTemplatesWinFormsWizard.resx">
+      <DependentUpon>ItemTemplatesWinFormsWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ItemTemplates\ModelEntitySelection.resx">
+      <DependentUpon>ModelEntitySelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ItemTemplates\ModelEntitySelection_WinForms.resx">
+      <DependentUpon>ModelEntitySelection_WinForms.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\DetailedResultsetView.resx">
       <DependentUpon>DetailedResultsetView.cs</DependentUpon>
     </EmbeddedResource>
@@ -923,6 +969,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\AdvancedWizard\AdvancedWizardForm.resx">
       <DependentUpon>AdvancedWizardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\WindowsForms\TablesSelectionWinForms.resx">
+      <DependentUpon>TablesSelectionWinForms.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\WindowsForms\Templates\CS\MyDateTimePickerColumn.cs">
       <SubType>Component</SubType>
@@ -1139,6 +1188,8 @@
     <None Include="Resources\genericIcon.png" />
     <Content Include="Resources\MySQL.png" />
     <None Include="Resources\mysql_project_wizard.png" />
+    <None Include="Resources\mysql_ItemTemplate_wizard.png" />
+    <None Include="Resources\mysql_WebsiteConfig.png" />
     <Content Include="Resources\output_type-executionplan.png" />
     <Content Include="Resources\output_type-fieldtypes.png" />
     <Content Include="Resources\output_type-querystats.png" />
@@ -1236,6 +1287,7 @@
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Management" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
