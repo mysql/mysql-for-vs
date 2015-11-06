@@ -418,7 +418,7 @@
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.3.5.resx</DependentUpon>
-		  <MergeWithCTO>true</MergeWithCTO>
+          <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
     </When>
@@ -428,13 +428,13 @@
           <AutoGen>True</AutoGen>
           <DesignTime>True</DesignTime>
           <DependentUpon>Resources.resx</DependentUpon>
-		  <MergeWithCTO>true</MergeWithCTO>
+          <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <Choose>
-	<When Condition="'$(Framework)' == '3.5'">
+    <When Condition="'$(Framework)' == '3.5'">
       <ItemGroup>
         <EmbeddedResource Include="Properties\Resources.3.5.resx">
           <Generator>PublicResXFileCodeGenerator</Generator>
@@ -621,9 +621,6 @@
     </Compile>
     <Compile Include="Editors\VerticalMenu.Designer.cs">
       <DependentUpon>VerticalMenu.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\GenericEditor.cs">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editors\MySqlHybridScriptEditor.cs">
       <SubType>UserControl</SubType>

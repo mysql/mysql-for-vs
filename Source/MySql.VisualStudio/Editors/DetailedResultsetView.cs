@@ -29,6 +29,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Markup.Localizer;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -67,7 +68,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// Stores the Server version used in the current MySqlConnection
     /// </summary>
     private int _currentServerVersion;
-    
+
     /// <summary>
     /// Key used to set and get the performance schema configuration query in a queries dictionary
     /// </summary>
@@ -268,7 +269,7 @@ namespace MySql.Data.VisualStudio.Editors
         return "";
       }
 
-      query = query.ToLower().Replace("`","");
+      query = query.ToLower().Replace("`", "");
       var result = new StringBuilder();
 
       string tablesSubstr = "";
@@ -371,25 +372,25 @@ namespace MySql.Data.VisualStudio.Editors
                                     Name = "btnResultGrid",
                                     ToolTip = "Query Result",
                                     ImageToLoad = ImageType.Resultset,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.ResultSet); } },
+                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlResultSet); } },
         new VerticalMenuButton() {
                                     ButtonText = "Field\nTypes",
                                     Name = "btnFieldTypes",
                                     ToolTip = "Field Types",
                                     ImageToLoad = ImageType.FieldType,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.FieldTypes); } },
+                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlFieldtypes); } },
         new VerticalMenuButton() {
                                     ButtonText = "Execution\nPlan",
                                     Name = "btnExecPlan",
                                     ToolTip = "Text Execution Plan",
                                     ImageToLoad = ImageType.ExecutionPlan,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.ExecutionPlan); } },
+                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlExecPlan); } },
         new VerticalMenuButton() {
                                     ButtonText = "Query\nStats",
                                     Name = "btnQueryStats",
                                     ToolTip = "Query Stats",
                                     ImageToLoad = ImageType.QueryStats,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.Querystats); } }
+                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlQueryStats); } }
       };
 
       ctrlMenu.ConfigureControl(buttons);
@@ -399,12 +400,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// Choose wich information view will be shown to the user basis in the enum option given
     /// </summary>
     /// <param name="controlToShow">Pane that will be displayed</param>
-    private void ShowControl(DataViewOption controlToShow)
+    private void ShowControl(UserControl controlToShow)
     {
-      ctrlResultSet.Visible = (controlToShow == DataViewOption.ResultSet);
-      ctrlFieldtypes.Visible = (controlToShow == DataViewOption.FieldTypes);
-      ctrlExecPlan.Visible = (controlToShow == DataViewOption.ExecutionPlan);
-      ctrlQueryStats.Visible = (controlToShow == DataViewOption.Querystats);
+      ctrlFieldtypes.Visible = (controlToShow is FieldTypesGrid);
+      ctrlExecPlan.Visible = (controlToShow is ExecutionPlanView);
+      ctrlQueryStats.Visible = (controlToShow is QueryStatsView);
+      ctrlResultSet.Visible = (controlToShow is GridResultSet);
     }
 
     private void DetailedResultsetView_Load(object sender, EventArgs e)

@@ -28,19 +28,19 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 namespace MySql.Data.VisualStudio.Editors
 {
   /// <summary>
-  /// VSCodeEditorUserControl class serves as a bridge between the GenericEditor object and the VSCodeEditorWindow.
+  /// VSCodeEditorUserControl class serves as a bridge between the BaseEditorControl object and the VSCodeEditorWindow.
   /// </summary>
   internal class VSCodeEditorUserControl : UserControl
   {
     private VSCodeEditorWindow nativeWindow;
-    internal GenericEditor Editor;
+    internal BaseEditorControl Editor;
 
     /// <summary>
     /// Initializes the specified service provider.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
     /// <param name="editor">The generic editor.</param>
-    public void Init(ServiceProvider serviceProvider, GenericEditor editor)
+    public void Init(ServiceProvider serviceProvider, BaseEditorControl editor)
     {
       Editor = editor;
       ServiceBroker sb = new ServiceBroker(serviceProvider);

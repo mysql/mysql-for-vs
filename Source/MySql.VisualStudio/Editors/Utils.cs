@@ -841,37 +841,6 @@ namespace MySql.Data.VisualStudio.Editors
   }
 
   /// <summary>
-  /// Enum used to know which information view will be shown to the user
-  /// </summary>
-  internal enum DataViewOption
-  {
-    /// <summary>
-    /// Result Set pane for Sql Editor
-    /// </summary>
-    ResultSet,
-    /// <summary>
-    /// Field Types pane for Sql Editor
-    /// </summary>
-    FieldTypes,
-    /// <summary>
-    /// Execution Plan pane for Sql Editor
-    /// </summary>
-    ExecutionPlan,
-    /// <summary>
-    /// Query Stats Pane for Sql Editor
-    /// </summary>
-    Querystats,
-    /// <summary>
-    /// Text view Pane for JS Editor
-    /// </summary>
-    TextView,
-    /// <summary>
-    /// Tree view Pane for JS Editor
-    /// </summary>
-    TreeView
-  }
-
-  /// <summary>
   /// Enum used to know which server version is in use
   /// </summary>
   internal enum ServerVersion : int

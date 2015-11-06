@@ -67,19 +67,19 @@ namespace MySql.Data.VisualStudio.Editors
                                     Name = "btnGridView",
                                     ToolTip = "Grid View",
                                     ImageToLoad = ImageType.Resultset,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.ResultSet); } },
+                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlGridView); } },
         new VerticalMenuButton() {
                                     ButtonText = "Tree\nView",
                                     Name = "btnTreeView",
                                     ToolTip = "Tree View",
                                     ImageToLoad = ImageType.TreeView,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.TreeView); } },
+                                    ClickEvent = delegate(object sender, EventArgs e) {ShowControl(ctrlTreeView); } },
         new VerticalMenuButton() {
                                     ButtonText = "Text\nView",
                                     Name = "btnTextView",
                                     ToolTip = "Text View",
                                     ImageToLoad = ImageType.TextView,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(DataViewOption.TextView); } }
+                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlTextView); } },
       };
 
       ctrlMenu.ConfigureControl(buttons);
@@ -89,11 +89,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// Choose wich information view will be shown to the user basis in the enum option given
     /// </summary>
     /// <param name="controlToShow">Pane that will be displayed</param>
-    private void ShowControl(DataViewOption controlToShow)
+    private void ShowControl(UserControl controlToShow)
     {
-      ctrlGridView.Visible = (controlToShow == DataViewOption.ResultSet);
-      ctrlTextView.Visible = (controlToShow == DataViewOption.TextView);
-      ctrlTreeView.Visible = (controlToShow == DataViewOption.TreeView);
+      ctrlTextView.Visible = (controlToShow is TextViewPane);
+      ctrlTreeView.Visible = (controlToShow is TreeViewResult);
+      ctrlGridView.Visible = (controlToShow is GridViewResult);
     }
 
     /// <summary>

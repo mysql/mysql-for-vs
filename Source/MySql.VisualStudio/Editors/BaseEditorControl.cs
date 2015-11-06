@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -34,6 +35,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.IO;
 using System.Globalization;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -43,6 +45,13 @@ namespace MySql.Data.VisualStudio.Editors
     private bool loadingFile;
     protected ServiceProvider serviceProvider;
     protected string fileName;
+
+    protected DbConnection connection;
+    internal DbConnection Connection { get { return connection; } }
+    protected DbProviderFactory factory;
+
+    protected bool[] _isColBlob = null;
+    internal string CurrentDatabase = null;
 
     #region IVsPersistDocData Members
 
@@ -285,7 +294,19 @@ namespace MySql.Data.VisualStudio.Editors
 
     #region Virtuals
 
+    /// <summary>
+    /// Gets the file format list for the 'Save File' Dialog.
+    /// </summary>
+    /// <returns>Imlementing Editor's file extensions</returns>
     protected virtual string GetFileFormatList() { return null; }
+
+    /// <summary>
+    /// Intended to be overwriten at inheriting child, this method should provide access to the
+    /// DocumentPath of the Pane property from a given Editor class, without requiring Editor's
+    /// consumers to cast the object to a given type.
+    /// </summary>
+    public virtual string GetDocumentPath() { return null; }
+
     protected virtual void SaveFile(string newFileName) { }
     protected virtual void LoadFile(string newFileName) { }
     protected virtual bool IsDirty { get; set; }

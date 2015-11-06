@@ -36,7 +36,7 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// This class will handle the logic for the MySQL Files Editor.
   /// </summary>
-  internal partial class SqlEditor : GenericEditor
+  internal partial class SqlEditor : BaseEditorControl
   {
     /// <summary>
     /// Gets the pane for the current editor. In this case, the pane is from type SqlEditorPane.

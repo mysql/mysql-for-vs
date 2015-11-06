@@ -37,7 +37,7 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// This class will handle the logic for the Script Files Editor.
   /// </summary>
-  internal partial class MySqlHybridScriptEditor : GenericEditor
+  internal partial class MySqlHybridScriptEditor : BaseEditorControl
   {
     /// <summary>
     /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
