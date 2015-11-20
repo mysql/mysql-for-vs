@@ -26,8 +26,8 @@
               Source='..\Dependencies\xShell\python27_d.dll'/>
         <File Id='shell_client_lib' Name='shell_client_lib.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='simple_shell_client_managed' Name='simple_shell_client_managed.dll' DiskId='1'
-              Source='..\Dependencies\xShell\simple_shell_client_managed.dll'/>
+        <File Id='ShellClient' Name='ShellClient.dll' DiskId='1'
+              Source='..\Dependencies\xShell\ShellClient.dll'/>
         <File Id='v8' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
       </Component>
@@ -132,8 +132,8 @@
               Source='..\Dependencies\xShell\python27_d.dll'/>
         <File Id='shell_client_lib_2012' Name='shell_client_lib.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='simple_shell_client_managed_2012' Name='simple_shell_client_managed.dll' DiskId='1'
-              Source='..\Dependencies\xShell\simple_shell_client_managed.dll'/>
+        <File Id='ShellClient_2012' Name='ShellClient.dll' DiskId='1'
+              Source='..\Dependencies\xShell\ShellClient.dll'/>
         <File Id='v8_2012' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
       </Component>
@@ -238,8 +238,8 @@
               Source='..\Dependencies\xShell\python27_d.dll'/>
         <File Id='shell_client_lib_2013' Name='shell_client_lib.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='simple_shell_client_managed_2013' Name='simple_shell_client_managed.dll' DiskId='1'
-              Source='..\Dependencies\xShell\simple_shell_client_managed.dll'/>
+        <File Id='ShellClient_2013' Name='ShellClient.dll' DiskId='1'
+              Source='..\Dependencies\xShell\ShellClient.dll'/>
         <File Id='v8_2013' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
       </Component>
@@ -345,8 +345,8 @@
               Source='..\Dependencies\xShell\python27_d.dll'/>
         <File Id='shell_client_lib_2015' Name='shell_client_lib.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='simple_shell_client_managed_2015' Name='simple_shell_client_managed.dll' DiskId='1'
-              Source='..\Dependencies\xShell\simple_shell_client_managed.dll'/>
+        <File Id='ShellClient_2015' Name='ShellClient.dll' DiskId='1'
+              Source='..\Dependencies\xShell\ShellClient.dll'/>
         <File Id='v8_2015' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
       </Component>
