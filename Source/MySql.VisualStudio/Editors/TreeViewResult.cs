@@ -30,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
+using MySqlX;
 using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -56,10 +57,19 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Load data to the tree view
     /// </summary>
-    /// <param name="document">Data to load</param>
-    public void SetData(DocumentResultSet document)
+    /// <param name="data">Data to load</param>
+    public void SetData(List<Dictionary<string, object>> data)
     {
-      GenerateTreeView(document.GetData());
+      GenerateTreeView(data);
+    }
+
+    /// <summary>
+    /// Load data to the tree view
+    /// </summary>
+    /// <param name="document">Data to load</param>
+    public void SetData(DocResult document)
+    {
+      SetData(document.FetchAll());
     }
 
     /// <summary>

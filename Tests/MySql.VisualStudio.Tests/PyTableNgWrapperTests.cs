@@ -21,11 +21,13 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using MySqlX.Shell;
 using Xunit;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
+using MySqlX;
 using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
@@ -63,7 +65,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Table test name
     /// </summary>
-    private const string _testTableName = "_simpleClienttest";
+    private const string _testTableName = "_simpleClientTest";
     /// <summary>
     /// Statement to create the test table
     /// </summary>
@@ -79,7 +81,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Get and set the test table
     /// </summary>
-    private const string _setTableVar = "table = schema.getTable('_simpleClienttest')";
+    private const string _setTableVar = "table = schema.getTable('" + _testTableName + "')";
     /// <summary>
     /// Statement to insert two records at the same time to the test table
     /// </summary>
@@ -93,11 +95,11 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _insertRecordJson2 = "res = table.insert({'name' : 'jacky', 'age' : 17, 'gender' : 'male'}).execute()";
     /// <summary>
-    /// Statement to get all the records from the test table as DocumentResultSet
+    /// Statement to get all the records from the test table as DocResult
     /// </summary>
-    private const string _selectTestTable = "table.select().execute().all()";
+    private const string _selectTestTable = "table.select().execute()";
     /// <summary>
-    /// Statement to get all the records from the test table as TableResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
     private const string _selectForTableResult = "table.select().execute()";
     /// <summary>
@@ -119,7 +121,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to select the update record from the test table
     /// </summary>
-    private const string _selectUpdatedRecord = "table.select().where(\"name = 'jacky' and gender='female'\").execute().all();";
+    private const string _selectUpdatedRecord = "table.select().where(\"name = 'jacky' and gender='female'\").execute();";
     /// <summary>
     /// Statement to delete a record in the test table in a single command
     /// </summary>
@@ -231,9 +233,9 @@ namespace MySql.VisualStudio.Tests
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
-        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         //Create Schema
         _ngShell.ExecuteScript(_dropTestDatabase, ScriptType.Python);
@@ -266,21 +268,21 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
         _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         //Update Rows
         _ngShell.ExecuteScript(_updateRecordSingleLine, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         //Delete Rows
         _ngShell.ExecuteScript(_deleteRecordSingleLine, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         //Delete Table
         _ngShell.ExecuteScript(_deleteTestTable, ScriptType.Python);
@@ -348,9 +350,9 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -473,22 +475,22 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
         _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
-        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         _ngShell.ExecuteScript(_updateRecordSingleLine, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         _ngShell.ExecuteScript(_deleteRecordSingleLine, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -530,24 +532,24 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
         _ngShell.ExecuteScript(_insertRecordJson1, ScriptType.Python);
         _ngShell.ExecuteScript(_insertRecordJson2, ScriptType.Python);
-        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         _ngShell.ExecuteScript(_updateRecordCmd1, ScriptType.Python);
         _ngShell.ExecuteScript(_updateRecordCmd2, ScriptType.Python);
         _ngShell.ExecuteScript(_updateRecordCmd3, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         _ngShell.ExecuteScript(_deleteRecordCmd1, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -591,9 +593,9 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -641,9 +643,9 @@ namespace MySql.VisualStudio.Tests
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(_tableNotFound, _testTableName));
 
-        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectTestTable, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -657,7 +659,7 @@ namespace MySql.VisualStudio.Tests
     }
 
     /// <summary>
-    /// Parse a TableResultSet to a DocumentResultSet data returned from the server when a statment that returns a result set is executed
+    /// Parse a RowResult to a DocResult data returned from the server when a statment that returns a result set is executed
     /// </summary>
     //[Fact]
     public void ParseTableResultToDocumentResult_Custom_simpleClient()
@@ -684,10 +686,10 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_setSchemaVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setTableVar, ScriptType.Python);
         _ngShell.ExecuteScript(_insertTwoRecords, ScriptType.Python);
-        var selectResult = _ngShell.ExecuteScript(_selectForTableResult, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectForTableResult, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {

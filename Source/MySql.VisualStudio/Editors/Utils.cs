@@ -32,6 +32,7 @@ using System.Data;
 using System.Drawing;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.Win32;
+using MySqlX;
 using Color = System.Drawing.Color;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -299,14 +300,14 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Parse a DocumentResultSet object to string with JSON format
+    /// Parse a DocResult object to string with JSON format
     /// </summary>
     /// <param name="document">The document to parse</param>
     /// <returns>String with JSON format</returns>
-    public static string ToJson(this DocumentResultSet document)
+    public static string ToJson(this List<Dictionary<string, object>> list)
     {
       StringBuilder sbData = new StringBuilder();
-      Dictionary<string, object>[] data = document.GetData().ToArray();
+      Dictionary<string, object>[] data = list.ToArray();
       sbData.AppendLine("{");
       for (int idx = 0; idx < data.Length; idx++)
       {
@@ -324,19 +325,29 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Parse a TableResultSet to a DataTable object
+    /// Parse a DocResult object to string with JSON format
     /// </summary>
-    /// <param name="resultSet">TableResultSet to parse</param>
+    /// <param name="document">The document to parse</param>
+    /// <returns>String with JSON format</returns>
+    public static string ToJson(this DocResult document)
+    {
+      return document.FetchAll().ToJson();
+    }
+
+    /// <summary>
+    /// Parse a RowResult to a DataTable object
+    /// </summary>
+    /// <param name="resultSet">RowResult to parse</param>
     /// <returns>Object parse to DataTable object</returns>
-    public static System.Data.DataTable ToDataTable(this TableResultSet resultSet)
+    public static System.Data.DataTable ToDataTable(this RowResult resultSet)
     {
       DataTable result = new DataTable("Result");
-      foreach (MySqlX.Shell.ResultSetMetadata column in resultSet.GetMetadata())
+      foreach (var column in resultSet.GetColumnNames())
       {
-        result.Columns.Add(column.GetName());
+        result.Columns.Add(column);
       }
 
-      foreach (object[] row in resultSet.GetData())
+      foreach (object[] row in resultSet.FetchAll())
       {
         result.Rows.Add(row);
       }

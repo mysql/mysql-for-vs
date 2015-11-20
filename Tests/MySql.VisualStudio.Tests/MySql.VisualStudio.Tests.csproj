@@ -166,8 +166,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
     </Reference>
-    <Reference Include="simple_shell_client_managed">
-      <HintPath>..\..\Dependencies\xShell\simple_shell_client_managed.dll</HintPath>
+    <Reference Include="ShellClient, Version=1.0.1.0, Culture=neutral, PublicKeyToken=14f1973afef7c130, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\xShell\ShellClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Windows.Forms" />

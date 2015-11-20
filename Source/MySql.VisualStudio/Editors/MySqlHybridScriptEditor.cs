@@ -30,6 +30,7 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Collections.Generic;
+using MySqlX;
 using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -285,37 +286,57 @@ Check that the server is running, the database exist and the user credentials ar
             break;
         }
 
-        List<ResultSet> results = _ngWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+        List<object> results = _ngWrapper.ExecuteScript(statements.ToArray(), ScriptType);
         if (results == null)
         {
           return;
         }
 
         int tabCounter = 1;
-        foreach (ResultSet result in results)
+        foreach (object result in results)
         {
-          DocumentResultSet data = result as DocumentResultSet;
-          if (data != null)
+          bool resultIsNotEmptyDocument = false;
+          if (result is BaseResult)
           {
-            CreateResultPane(data, tabCounter);
-          }
-          else
-          {
-            TableResultSet tableResult = result as TableResultSet;
-            if (tableResult != null)
+            DocResult data = result as DocResult;
+            if (data != null)
             {
-              CreateResultPane(_ngWrapper.TableResultToDocumentResult(tableResult), tabCounter);
+              resultIsNotEmptyDocument = data.FetchAll().Count > 0;
+              if (resultIsNotEmptyDocument)
+              {
+                CreateResultPane(data, tabCounter);
+              }
             }
             else
             {
-              Utils.WriteToOutputWindow(string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount()), Messagetype.Information);
+              RowResult tableResult = result as RowResult;
+              if (tableResult != null)
+              {
+                var doc = _ngWrapper.RowResultToDictionaryList(tableResult);
+                resultIsNotEmptyDocument = doc.Count > 0;
+
+                if (resultIsNotEmptyDocument)
+                  CreateResultPane(doc, tabCounter);
+                Utils.WriteToOutputWindow(
+                  string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.",
+                    tableResult.GetExecutionTime(),
+                    tableResult.FetchAll().Count,
+                    tableResult.GetWarningCount()), Messagetype.Information);
+              }
+            }
+
+            if (resultIsNotEmptyDocument)
+            {
+              tabCounter++;
             }
           }
+          else if (result is string)
+          {
+            Utils.WriteToOutputWindow((string)result, Messagetype.Information);
+          }
 
-          tabCounter++;
+          tabControl1.Visible = tabControl1.TabPages.Count > 0;
         }
-
-        tabControl1.Visible = tabControl1.TabPages.Count > 0;
       }
       catch (Exception ex)
       {
@@ -328,7 +349,27 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     /// <param name="data">Data to load</param>
     /// <param name="resultNumber">Result counter</param>
-    private void CreateResultPane(DocumentResultSet data, int resultNumber)
+    private void CreateResultPane(List<Dictionary<string, object>> data, int resultNumber)
+    {
+      if (data == null)
+      {
+        return;
+      }
+
+      TabPage newResPage = Utils.CreateResultPage(resultNumber);
+      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
+      resultViews.Dock = DockStyle.Fill;
+      resultViews.LoadData(data);
+      newResPage.Controls.Add(resultViews);
+      tabControl1.TabPages.Add(newResPage);
+    }
+
+    /// <summary>
+    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
+    /// </summary>
+    /// <param name="data">Data to load</param>
+    /// <param name="resultNumber">Result counter</param>
+    private void CreateResultPane(DocResult data, int resultNumber)
     {
       if (data == null)
       {

@@ -26,6 +26,7 @@ using MySqlX.Shell;
 using Xunit;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
+using MySqlX;
 using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
@@ -93,11 +94,11 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _insertRecordJson2 = "var res = table.insert({name: 'jacky', age: 17, gender: 'male'}).execute();";
     /// <summary>
-    /// Statement to get all the records from the test table as DocumentResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
-    private const string _selectTestTable = "table.select().execute().all();";
+    private const string _selectTestTable = "table.select().execute();";
     /// <summary>
-    /// Statement to get all the records from the test table as TableResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
     private const string _selectForTableResult = "table.select().execute();";
     /// <summary>
@@ -119,7 +120,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to select the update record from the test table
     /// </summary>
-    private const string _selectUpdatedRecord = "table.select().where(\"name = 'jacky' and gender='female'\").execute().all();";
+    private const string _selectUpdatedRecord = "table.select().where(\"name = 'jacky' and gender='female'\").execute();";
     /// <summary>
     /// Statement to delete a record in the test table in a single command
     /// </summary>
@@ -311,22 +312,22 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_setSchemaVar);
         _ngShell.Execute(_setTableVar);
         _ngShell.Execute(_insertTwoRecords);
-        var selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
+        var selectResult = _ngShell.Execute(_selectTestTable) as RowResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         _ngShell.Execute(_updateRecordSingleLine);
-        selectResult = _ngShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_selectUpdatedRecord) as RowResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         _ngShell.Execute(_deleteRecordSingleLine);
-        selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_selectTestTable) as RowResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -365,26 +366,26 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_setTableVar);
         _ngShell.Execute(_insertRecordJson1);
         _ngShell.Execute(_insertRecordJson2);
-        var selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
+        var selectResult = _ngShell.Execute(_selectTestTable) as RowResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         _ngShell.Execute(_updateRecordCmd1);
         _ngShell.Execute(_updateRecordCmd2);
         _ngShell.Execute(_updateRecordCmd3);
-        selectResult = _ngShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_selectUpdatedRecord) as RowResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         _ngShell.Execute(_deleteRecordCmd1);
         _ngShell.Execute(_deleteRecordCmd2);
         _ngShell.Execute(_deleteRecordCmd3);
-        selectResult = _ngShell.Execute(_selectTestTable) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_selectTestTable) as RowResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -506,19 +507,19 @@ namespace MySql.VisualStudio.Tests
         var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         xshell.ExecuteScript(_updateRecordSingleLine, ScriptType.JavaScript);
         selectResult = xshell.ExecuteScript(_selectUpdatedRecord, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         xshell.ExecuteScript(_deleteRecordSingleLine, ScriptType.JavaScript);
         selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -562,7 +563,7 @@ namespace MySql.VisualStudio.Tests
         var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         xshell.ExecuteScript(_updateRecordCmd1, ScriptType.JavaScript);
         xshell.ExecuteScript(_updateRecordCmd2, ScriptType.JavaScript);
@@ -570,7 +571,7 @@ namespace MySql.VisualStudio.Tests
         selectResult = xshell.ExecuteScript(_selectUpdatedRecord, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         xshell.ExecuteScript(_deleteRecordCmd1, ScriptType.JavaScript);
         xshell.ExecuteScript(_deleteRecordCmd2, ScriptType.JavaScript);
@@ -578,7 +579,7 @@ namespace MySql.VisualStudio.Tests
         selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -628,7 +629,7 @@ namespace MySql.VisualStudio.Tests
 
         var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -683,7 +684,7 @@ namespace MySql.VisualStudio.Tests
 
         var selectResult = xshell.ExecuteScript(_selectTestTable, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -697,7 +698,7 @@ namespace MySql.VisualStudio.Tests
     }
 
     /// <summary>
-    /// Parse a TableResultSet to a DocumentResultSet data returned from the server when a statment that returns a result set is executed
+    /// Parse a RowResult to a RowResult data returned from the server when a statment that returns a result set is executed
     /// </summary>
     [Fact]
     public void ParseTableResultToDocumentResult_CustomXShell()
@@ -726,7 +727,7 @@ namespace MySql.VisualStudio.Tests
         var selectResult = xshell.ExecuteScript(_selectForTableResult, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {

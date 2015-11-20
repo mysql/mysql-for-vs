@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using MySqlX;
 using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -44,12 +45,21 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Load data to the tree view
     /// </summary>
-    /// <param name="document">Data to load</param>
-    public void SetData(DocumentResultSet document)
+    /// <param name="data">Data to load</param>
+    public void SetData(List<Dictionary<string, object>> data)
     {
-      GenerateItem(document.GetData());
+      GenerateItem(data);
       SetDataGridStyle();
       Utils.SanitizeBlobs(ref gvData);
+    }
+
+    /// <summary>
+    /// Load data to the tree view
+    /// </summary>
+    /// <param name="document">Data to load</param>
+    public void SetData(DocResult document)
+    {
+      SetData(document.FetchAll());
     }
 
     /// <summary>

@@ -27,6 +27,7 @@ using MySql.Data.VisualStudio.Editors;
 using MySqlX.Shell;
 using Xunit;
 using System.Text;
+using MySqlX;
 using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
@@ -142,7 +143,7 @@ namespace MySql.VisualStudio.Tests
     private const string _addJsonDocument2 = "result = coll.add({'name' : 'my second', 'passed' : 'again', 'count' : 2}).execute()";
 
     /// <summary>
-    /// Statement to get all the records from the test table as TableResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
     private const string _findAllDocumentsInCollection = "coll.find().execute()";
 
@@ -276,40 +277,40 @@ namespace MySql.VisualStudio.Tests
         _simpleShell.Execute(_setCollectionVar);
         _simpleShell.Execute(_addJsonDocument1);
         _simpleShell.Execute(_addJsonDocument2);
-        var selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        var selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         //Test multiple documents add statement
         _simpleShell.Execute(_addMultipleDocumentsSingleAddStatement);
-        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 5, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 5, _dataNotMatch);
 
         //Test multiple add statements with single documents
         _simpleShell.Execute(_addMultipleDocumentsMultipleAddStatements);
-        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 7, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 7, _dataNotMatch);
 
         //Find Test
-        selectResult = _simpleShell.Execute(_findSpecificDocumentTest) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findSpecificDocumentTest) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         //Update record test
         _simpleShell.Execute(_modifyDocument1);
         _simpleShell.Execute(_modifyDocument2);
         _simpleShell.Execute(_modifyDocument3);
-        selectResult = _simpleShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_selectUpdatedRecord) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         //Delete Documents test
         _simpleShell.Execute(_removeDocument);
-        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 6, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 6, _dataNotMatch);
 
         //Delete Collection test
         _command = new MySqlCommand(string.Format(_searchTable, _testCollectionName), _connection);
@@ -448,31 +449,31 @@ namespace MySql.VisualStudio.Tests
 
         //Test single add
         _simpleShell.Execute(_addJsonDocument1);
-        var selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        var selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         //Test single add again
         _simpleShell.Execute(_addJsonDocument2);
-        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         //Test multiple documents add statement
         _simpleShell.Execute(_addMultipleDocumentsSingleAddStatement);
-        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 5, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 5, _dataNotMatch);
 
         //Test multiple add statements with single documents
         _simpleShell.Execute(_addMultipleDocumentsMultipleAddStatements);
-        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 7, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 7, _dataNotMatch);
 
-        selectResult = _simpleShell.Execute(_findSpecificDocumentTest) as DocumentResultSet;
+        selectResult = _simpleShell.Execute(_findSpecificDocumentTest) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -510,9 +511,9 @@ namespace MySql.VisualStudio.Tests
         _simpleShell.Execute(_setCollectionVar);
         _simpleShell.Execute(_addMultipleDocumentsSingleAddStatement);
         _simpleShell.Execute(_removeDocument);
-        var selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        var selectResult = _simpleShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -552,9 +553,9 @@ namespace MySql.VisualStudio.Tests
         _simpleShell.Execute(_modifyDocument1);
         _simpleShell.Execute(_modifyDocument2);
         _simpleShell.Execute(_modifyDocument3);
-        var selectResult = _simpleShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        var selectResult = _simpleShell.Execute(_selectUpdatedRecord) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {

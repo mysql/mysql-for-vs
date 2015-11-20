@@ -26,6 +26,7 @@ using MySqlX.Shell;
 using Xunit;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
+using MySqlX;
 using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
@@ -67,11 +68,11 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to create the test table
     /// </summary>
-    private const string _createTestTable = "session.sql('create table xshelltest (name varchar(50), age integer, gender varchar(20));').execute()";
+    private const string _createTestTable = "session.sql('create table " + _testTableName + " (name varchar(50), age integer, gender varchar(20));').execute()";
     /// <summary>
     /// Statement to delete the test table
     /// </summary>
-    private const string _deleteTestTable = "session.sql('drop table xshelltest;').execute()";
+    private const string _deleteTestTable = "session.sql('drop table " + _testTableName + ";').execute()";
     /// <summary>
     /// Get and set the test database
     /// </summary>
@@ -79,7 +80,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Get and set the test table
     /// </summary>
-    private const string _setTableVar = "table = schema.getTable('xshelltest')";
+    private const string _setTableVar = "table = schema.getTable('" + _testTableName + "')";
     /// <summary>
     /// Statement to insert two records at the same time to the test table
     /// </summary>
@@ -93,11 +94,11 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _insertRecordJson2 = "res = table.insert({'name' : 'jacky', 'age' : 17, 'gender' : 'male'}).execute()";
     /// <summary>
-    /// Statement to get all the records from the test table as DocumentResultSet
+    /// Statement to get all the records from the test table as DocResult
     /// </summary>
-    private const string _selectTestTable = "table.select().execute().all()";
+    private const string _selectTestTable = "table.select().execute()";
     /// <summary>
-    /// Statement to get all the records from the test table as TableResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
     private const string _selectForTableResult = "table.select().execute()";
     /// <summary>
@@ -119,7 +120,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Statement to select the update record from the test table
     /// </summary>
-    private const string _selectUpdatedRecord = "table.select().where(\"name = 'jacky' and gender='female'\").execute().all();";
+    private const string _selectUpdatedRecord = "table.select().where(\"name = 'jacky' and gender='female'\").execute();";
     /// <summary>
     /// Statement to delete a record in the test table in a single command
     /// </summary>
@@ -244,21 +245,21 @@ namespace MySql.VisualStudio.Tests
         _simpleClient.Execute(_setSchemaVar);
         _simpleClient.Execute(_setTableVar);
         _simpleClient.Execute(_insertTwoRecords);
-        var selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        var selectResult = _simpleClient.Execute(_selectTestTable) as RowResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         //Update Rows
         _simpleClient.Execute(_updateRecordSingleLine);
-        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as RowResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         //Delete Rows
         _simpleClient.Execute(_deleteRecordSingleLine);
-        selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        selectResult = _simpleClient.Execute(_selectTestTable) as RowResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         //Delete Table
         _simpleClient.Execute(_deleteTestTable);
@@ -397,22 +398,22 @@ namespace MySql.VisualStudio.Tests
         _simpleClient.Execute(_setSchemaVar);
         _simpleClient.Execute(_setTableVar);
         _simpleClient.Execute(_insertTwoRecords);
-        var selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        var selectResult = _simpleClient.Execute(_selectTestTable) as DocResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         _simpleClient.Execute(_updateRecordSingleLine);
-        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         _simpleClient.Execute(_deleteRecordSingleLine);
-        selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        selectResult = _simpleClient.Execute(_selectTestTable) as DocResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -451,24 +452,24 @@ namespace MySql.VisualStudio.Tests
         _simpleClient.Execute(_setTableVar);
         _simpleClient.Execute(_insertRecordJson1);
         _simpleClient.Execute(_insertRecordJson2);
-        var selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        var selectResult = _simpleClient.Execute(_selectTestTable) as DocResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         _simpleClient.Execute(_updateRecordCmd1);
         _simpleClient.Execute(_updateRecordCmd2);
         _simpleClient.Execute(_updateRecordCmd3);
-        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        selectResult = _simpleClient.Execute(_selectUpdatedRecord) as DocResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         _simpleClient.Execute(_deleteRecordCmd1);
-        selectResult = _simpleClient.Execute(_selectTestTable) as DocumentResultSet;
+        selectResult = _simpleClient.Execute(_selectTestTable) as DocResult;
 
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {

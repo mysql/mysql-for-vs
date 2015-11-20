@@ -20,46 +20,32 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MySqlX;
+using MySql.Data.VisualStudio.Editors;
 using MySqlX.Shell;
 
-namespace MySql.Data.VisualStudio.Editors
+namespace MySql.Data.VisualStudio
 {
-  public partial class TextViewPane : UserControl
+  /// <summary>
+  /// Class that inherits from the ShellClient to override some methods with custom actions
+  /// </summary>
+  class MyShellClient : ShellClient
   {
     /// <summary>
-    /// Creates a new instance of TextViewPane
+    /// Write the message received to the output window
     /// </summary>
-    public TextViewPane()
+    /// <param name="text">Text to write</param>
+    public override void Print(string text)
     {
-      InitializeComponent();
+      Utils.WriteToOutputWindow(text, Messagetype.Information);
     }
 
     /// <summary>
-    /// Set the data received to the text area with a json format
+    /// Write the error received to the output window
     /// </summary>
-    /// <param name="dictionaryList">List of dictionaries that returned the query.</param>
-    public void SetData(List<Dictionary<string, object>> dictionaryList)
+    /// <param name="text">Test to write</param>
+    public override void PrintError(string text)
     {
-      txtJsondata.AppendText(dictionaryList.ToJson());
-    }
-
-    /// <summary>
-    /// Set the data received to the text area with a json format
-    /// </summary>
-    /// <param name="document"></param>
-    public void SetData(DocResult document)
-    {
-      txtJsondata.AppendText(document.ToJson());
+      Utils.WriteToOutputWindow(text, Messagetype.Error);
     }
   }
 }

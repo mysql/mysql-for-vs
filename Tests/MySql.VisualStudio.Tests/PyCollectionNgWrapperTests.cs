@@ -21,12 +21,14 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySqlX.Shell;
 using Xunit;
 using System.Text;
+using MySqlX;
 using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
@@ -137,7 +139,7 @@ namespace MySql.VisualStudio.Tests
     private const string _addJsonDocument2 = "result = coll.add({'name' : 'my second', 'passed' : 'again', 'count' : 2}).execute()";
 
     /// <summary>
-    /// Statement to get all the records from the test table as TableResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
     private const string _findAllDocumentsInCollection = "coll.find().execute()";
 
@@ -276,40 +278,40 @@ namespace MySql.VisualStudio.Tests
         var tokenizer = new MyPythonTokenizer(script.ToString());
         _ngShell.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.Python);
 
-        var selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
+        List<Dictionary<string, object>> selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         //Test multiple documents add statement
         _ngShell.ExecuteScript(_addMultipleDocumentsSingleAddStatement, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 5, _dataNotMatch);
+        Assert.True(selectResult.Count == 5, _dataNotMatch);
 
         //Test multiple add statements with single documents
         _ngShell.ExecuteScript(_addMultipleDocumentsMultipleAddStatements, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 7, _dataNotMatch);
+        Assert.True(selectResult.Count == 7, _dataNotMatch);
 
         //Find Test
-        selectResult = _ngShell.ExecuteScript(_findSpecificDocumentTest, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findSpecificDocumentTest, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         //Update record test
         _ngShell.ExecuteScript(_modifyDocument1, ScriptType.Python);
         _ngShell.ExecuteScript(_modifyDocument2, ScriptType.Python);
         _ngShell.ExecuteScript(_modifyDocument3, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         //Remove Documents test
         _ngShell.ExecuteScript(_removeDocument, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 6, _dataNotMatch);
+        Assert.True(selectResult.Count == 6, _dataNotMatch);
 
         //Drop Collection test
         _ngShell.ExecuteScript(_deleteCollectionTest, ScriptType.Python);
@@ -348,7 +350,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Insert, Update and Delete record from a table using our custom implementation of the NgWrapper, executing the commands in multiple lines and in a single script
     /// </summary>
-    //[Fact]
+    // [Fact]
     public void Insert_JsonFormat_SingleScript_CustomXShell()
     {
       OpenConnection();
@@ -381,7 +383,7 @@ namespace MySql.VisualStudio.Tests
 
         var selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -397,7 +399,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to create a Database using our custom implementation of the NgWrapper
     /// </summary>
-    //[Fact]
+    // [Fact]
     public void CreateSchema_CustomXShell()
     {
       OpenConnection();
@@ -437,7 +439,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to create a Table using our custom implementation of the NgWrapper
     /// </summary>
-    //[Fact]
+    // [Fact]
     public void CreateCollection_CustomXShell()
     {
       OpenConnection();
@@ -476,7 +478,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Add, Modify, Delete and Find a record from a collection using our custom implementation of the NgWrapper, executing the commands in a single line
     /// </summary>
-    //[Fact]
+    // [Fact]
     public void AddFind_CustomXShell()
     {
       OpenConnection();
@@ -501,31 +503,31 @@ namespace MySql.VisualStudio.Tests
 
         //Test single add
         _ngShell.ExecuteScript(_addJsonDocument1, ScriptType.Python);
-        var selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        List<Dictionary<string, object>> selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         //Test single add again
         _ngShell.ExecuteScript(_addJsonDocument2, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         //Test multiple documents add statement
         _ngShell.ExecuteScript(_addMultipleDocumentsSingleAddStatement, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 5, _dataNotMatch);
+        Assert.True(selectResult.Count == 5, _dataNotMatch);
 
         //Test multiple add statements with single documents
         _ngShell.ExecuteScript(_addMultipleDocumentsMultipleAddStatements, ScriptType.Python);
-        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 7, _dataNotMatch);
+        Assert.True(selectResult.Count == 7, _dataNotMatch);
 
-        selectResult = _ngShell.ExecuteScript(_findSpecificDocumentTest, ScriptType.Python) as DocumentResultSet;
+        selectResult = _ngShell.ExecuteScript(_findSpecificDocumentTest, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -541,7 +543,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Add and Find data from a collection using the NgWrapper.
     /// </summary>
-    //[Fact]
+    // [Fact]
     public void Remove_CustomXShell()
     {
       OpenConnection();
@@ -565,9 +567,9 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_setCollectionVar, ScriptType.Python);
         _ngShell.ExecuteScript(_addMultipleDocumentsSingleAddStatement, ScriptType.Python);
         _ngShell.ExecuteScript(_removeDocument, ScriptType.Python);
-        var selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -583,7 +585,7 @@ namespace MySql.VisualStudio.Tests
     /// <summary>
     /// Test to Modify data from a collection using the NgWrapper.
     /// </summary>
-    //[Fact]
+    // [Fact]
     public void Modify_CustomXShell()
     {
       OpenConnection();
@@ -609,9 +611,9 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_modifyDocument1, ScriptType.Python);
         _ngShell.ExecuteScript(_modifyDocument2, ScriptType.Python);
         _ngShell.ExecuteScript(_modifyDocument3, ScriptType.Python);
-        var selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python) as DocumentResultSet;
+        var selectResult = _ngShell.ExecuteScript(_selectUpdatedRecord, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {

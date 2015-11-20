@@ -21,9 +21,11 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
+using MySqlX;
 using MySqlX.Shell;
 using Xunit;
 
@@ -125,7 +127,7 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _addJsonDocument2 = "var result = coll.add({ name: 'my second', passed: 'again', count: 2}).execute();";
     /// <summary>
-    /// Statement to get all the records from the test table as TableResultSet
+    /// Statement to get all the records from the test table as RowResult
     /// </summary>
     private const string _findAllDocumentsInCollection = "coll.find().execute();";
     /// <summary>
@@ -300,31 +302,31 @@ namespace MySql.VisualStudio.Tests
 
         //Test single add
         _ngShell.Execute(_addJsonDocument1);
-        var selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        var selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
 
         //Test single add again
         _ngShell.Execute(_addJsonDocument2);
-        selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
 
         //Test multiple documents add statement
         _ngShell.Execute(_addMultipleDocumentsSingleAddStatement);
-        selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 5, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 5, _dataNotMatch);
 
         //Test multiple add statements with single documents
         _ngShell.Execute(_addMultipleDocumentsMultipleAddStatements);
-        selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 7, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 7, _dataNotMatch);
 
-        selectResult = _ngShell.Execute(_findSpecificDocumentTest) as DocumentResultSet;
+        selectResult = _ngShell.Execute(_findSpecificDocumentTest) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -363,9 +365,9 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_setCollectionVar);
         _ngShell.Execute(_addMultipleDocumentsSingleAddStatement);
         _ngShell.Execute(_removeDocument);
-        var selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocumentResultSet;
+        var selectResult = _ngShell.Execute(_findAllDocumentsInCollection) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -404,9 +406,9 @@ namespace MySql.VisualStudio.Tests
         _ngShell.Execute(_setCollectionVar);
         _ngShell.Execute(_addMultipleDocumentsSingleAddStatement);
         _ngShell.Execute(_modifyDocument);
-        var selectResult = _ngShell.Execute(_selectUpdatedRecord) as DocumentResultSet;
+        var selectResult = _ngShell.Execute(_selectUpdatedRecord) as DocResult;
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.FetchAll().Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -527,31 +529,31 @@ namespace MySql.VisualStudio.Tests
 
         //Test single add
         xshell.ExecuteScript(_addJsonDocument1, ScriptType.JavaScript);
-        var selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript) as DocumentResultSet;
+        var selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
 
         //Test single add again
         xshell.ExecuteScript(_addJsonDocument2, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript) as DocumentResultSet;
+        selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
 
         //Test multiple documents add statement
         xshell.ExecuteScript(_addMultipleDocumentsSingleAddStatement, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript) as DocumentResultSet;
+        selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 5, _dataNotMatch);
+        Assert.True(selectResult.Count == 5, _dataNotMatch);
 
         //Test multiple add statements with single documents
         xshell.ExecuteScript(_addMultipleDocumentsMultipleAddStatements, ScriptType.JavaScript);
-        selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript) as DocumentResultSet;
+        selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 7, _dataNotMatch);
+        Assert.True(selectResult.Count == 7, _dataNotMatch);
 
-        selectResult = xshell.ExecuteScript(_findSpecificDocumentTest, ScriptType.JavaScript) as DocumentResultSet;
+        selectResult = xshell.ExecuteScript(_findSpecificDocumentTest, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -592,9 +594,9 @@ namespace MySql.VisualStudio.Tests
         xshell.ExecuteScript(_setCollectionVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_addMultipleDocumentsSingleAddStatement, ScriptType.JavaScript);
         xshell.ExecuteScript(_removeDocument, ScriptType.JavaScript);
-        var selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript) as DocumentResultSet;
+        var selectResult = xshell.ExecuteScript(_findAllDocumentsInCollection, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 2, _dataNotMatch);
+        Assert.True(selectResult.Count == 2, _dataNotMatch);
       }
       catch (Exception ex)
       {
@@ -635,9 +637,9 @@ namespace MySql.VisualStudio.Tests
         xshell.ExecuteScript(_setCollectionVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_addMultipleDocumentsSingleAddStatement, ScriptType.JavaScript);
         xshell.ExecuteScript(_modifyDocument, ScriptType.JavaScript);
-        var selectResult = xshell.ExecuteScript(_selectUpdatedRecord, ScriptType.JavaScript) as DocumentResultSet;
+        var selectResult = xshell.ExecuteScript(_selectUpdatedRecord, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(_nullObject, "selectResult"));
-        Assert.True(selectResult.GetData().Count == 1, _dataNotMatch);
+        Assert.True(selectResult.Count == 1, _dataNotMatch);
       }
       catch (Exception ex)
       {

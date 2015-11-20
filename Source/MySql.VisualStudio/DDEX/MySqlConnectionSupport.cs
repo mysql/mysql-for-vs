@@ -138,7 +138,7 @@ namespace MySql.Data.VisualStudio
 
       // TODO: check server version compatibility
 
-      // Rreturn true if everything is ok
+      // Return true if everything is ok
       if (sourceInformation != null)
         sourceInformation.Refresh();
       return true;

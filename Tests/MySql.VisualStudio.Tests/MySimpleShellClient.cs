@@ -28,7 +28,7 @@ namespace MySql.VisualStudio.Tests
   /// <summary>
   /// Custom direct NgWrapper Implementation for the current tests
   /// </summary>
-  public class MySimpleClientShell : SimpleClientShell
+  public class MySimpleClientShell : ShellClient
   {
     /// <summary>
     /// Overrides the Print Method to write data in a custom way

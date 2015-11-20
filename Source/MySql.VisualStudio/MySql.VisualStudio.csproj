@@ -729,6 +729,7 @@
     <Compile Include="MyInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MyShellClient.cs" />
     <Compile Include="MySqlForVisualStudioSettings.cs" />
     <Compile Include="MySqlProviderObjectFactory.cs" />
     <Compile Include="Nodes\BaseNode.cs">
@@ -1276,9 +1277,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v2.0\Release\MySql.Web.dll</HintPath>
     </Reference>
-    <Reference Include="simple_shell_client_managed, Version=0.0.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\xShell\simple_shell_client_managed.dll</HintPath>
+    <Reference Include="ShellClient">
+      <HintPath>..\..\Dependencies\xShell\ShellClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />

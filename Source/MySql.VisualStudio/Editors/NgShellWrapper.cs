@@ -20,10 +20,12 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using MySqlX;
 using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -38,7 +40,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Shell object used to execute the queries through the shell
     /// </summary>
-    ShellClient _shellClient;
+    MyShellClient _shellClient;
 
     /// <summary>
     /// Variable to store the connection string for the wrapper.
@@ -61,7 +63,7 @@ namespace MySql.Data.VisualStudio.Editors
       _keepSession = keepNgSession;
       if (keepNgSession)
       {
-        _shellClient = new ShellClient();
+        _shellClient = new MyShellClient();
         _shellClient.MakeConnection(_connString);
       }
     }
@@ -75,9 +77,10 @@ namespace MySql.Data.VisualStudio.Editors
     {
       _connString = ((MySqlConnection)connection).ToNgFormat();
       _keepSession = keepNgSession;
+
       if (keepNgSession)
       {
-        _shellClient = new ShellClient();
+        _shellClient = new MyShellClient();
         _shellClient.MakeConnection(_connString);
       }
     }
@@ -87,38 +90,50 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="script">The script to execute</param>
     /// <param name="scriptType"></param>
-    /// <returns>Null if a string empty query is received, otherwise a document resultset returned from the server</returns>
-    public DocumentResultSet ExecuteScript(string script, ScriptType scriptType)
+    /// <returns>Returns an empty list of dictionary objects if the result returned from the server doesnt belong to the BaseResult hierarchy</returns>
+    public List<Dictionary<string, object>> ExecuteScript(string script, ScriptType scriptType)
     {
       if (string.IsNullOrEmpty(script))
       {
         return null;
       }
 
-      var result = ExecuteScript(new string[] { script }, scriptType).First();
-      return ResultSetToDocumentResult(result);
+      object result = ExecuteScript(new string[] { script }, scriptType).First();
+      if (result is BaseResult)
+      {
+        BaseResult br = (BaseResult)result;
+        return BaseResultToDictionaryList(br);
+      }
+
+      return new List<Dictionary<string, object>>();
     }
 
     /// <summary>
-    /// Forces the convertion of the the result object to a document result.
+    /// Forces the convertion of the the inputResult object to a document inputResult.
     /// </summary>
-    /// <param name="result">The result object.</param>
-    /// <returns></returns>
-    private DocumentResultSet ResultSetToDocumentResult(ResultSet result)
+    /// <param name="inputResult">The inputResult object.</param>
+    /// <returns>A list of dictionary objects.</returns>
+    private List<Dictionary<string, object>> BaseResultToDictionaryList(BaseResult inputResult)
     {
-      TableResultSet tableResult = result as TableResultSet;
-
-      if (tableResult != null)
+      if (inputResult is Result)
       {
-        return TableResultToDocumentResult(tableResult);
+        var result = inputResult as Result;
+        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedItemCount(), result.GetWarningCount());
+      }
+      else if (inputResult is RowResult)
+      {
+        var rowResult = inputResult as RowResult;
+        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", rowResult.GetExecutionTime(), rowResult.FetchAll().Count, rowResult.GetWarningCount());
+        return RowResultToDictionaryList(rowResult);
+      }
+      else if (inputResult is DocResult)
+      {
+        var docResult = inputResult as DocResult;
+        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", docResult.GetExecutionTime(), docResult.FetchAll().Count, docResult.GetWarningCount());
+        return docResult.FetchAll();
       }
 
-      if ((result as DocumentResultSet) == null)
-      {
-        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount());
-      }
-
-      return result as DocumentResultSet;
+      return new List<Dictionary<string, object>>();
     }
 
     /// <summary>
@@ -126,8 +141,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="script">The script to execute.</param>
     /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
-    /// <returns>A list of ResultSet returned by each of the command executed.</returns>
-    public List<ResultSet> ExecuteScript(string[] script, ScriptType scriptType)
+    /// <returns>A list of objects returned by each of the command executed.</returns>
+    public List<object> ExecuteScript(string[] script, ScriptType scriptType)
     {
       if (script == null || script.Length <= 0)
       {
@@ -150,22 +165,21 @@ namespace MySql.Data.VisualStudio.Editors
     /// Execute a sql command using the NG Shell
     /// </summary>
     /// <param name="script">Script to execute</param>
-    /// <returns>Null if a string empty query is received, otherwise a table resultset returned from the server</returns>
-    public TableResultSet ExecuteSqlQuery(string script)
+    /// <returns>RowResult returned from the server</returns>
+    public RowResult ExecuteSqlQuery(string script)
     {
       if (string.IsNullOrEmpty(script))
       {
         return null;
       }
 
-      ResultSet result = ExecuteQuery(Mode.SQL, script).First();
+      Object result = ExecuteQuery(Mode.SQL, script).First();
+      ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.",
+        ((BaseResult)result).GetExecutionTime(),
+        result is RowResult ? ((RowResult)result).FetchAll().Count : 0,
+        ((BaseResult)result).GetWarningCount());
 
-      if ((result as TableResultSet) == null)
-      {
-        ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.", result.GetExecutionTime(), result.GetAffectedRows(), result.GetWarningCount());
-      }
-
-      return result as TableResultSet;
+      return result as RowResult;
     }
 
     /// <summary>
@@ -173,15 +187,15 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="mode">Mode that will be used to execute the script received</param>
     /// <param name="script">Script to execute</param>
-    /// <returns>A list of resultset with the data returned from the server</returns>
-    private List<ResultSet> ExecuteQuery(Mode mode, params string[] statements)
+    /// <returns>A list of objects returned from the server for each query executed.</returns>
+    private List<object> ExecuteQuery(Mode mode, params string[] statements)
     {
       ExecutionResult = "";
-      List<ResultSet> result = new List<ResultSet>();
+      List<object> result = new List<object>();
 
       if (!_keepSession)
       {
-        _shellClient = new ShellClient();
+        _shellClient = new MyShellClient();
         _shellClient.MakeConnection(_connString);
       }
 
@@ -214,32 +228,32 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Parse a TableResultSet object to a DocumentResultSet object
+    /// Parse a RowResult object to a Dictionary list
     /// </summary>
-    /// <param name="tableResult">Object to parse</param>
+    /// <param name="rowResult">Object to parse</param>
     /// <returns>Null if invalid data given otherwise parsed data</returns>
-    public DocumentResultSet TableResultToDocumentResult(TableResultSet tableResult)
+    public List<Dictionary<string, object>> RowResultToDictionaryList(RowResult rowResult)
     {
-      if (tableResult == null)
+      if (rowResult == null)
       {
         return null;
       }
 
       List<Dictionary<string, object>> parsedData = new List<Dictionary<string, object>>();
-      ResultSetMetadata[] metaData = tableResult.GetMetadata().ToArray();
-      object[][] data = tableResult.GetData().ToArray();
+      List<string> metaData = rowResult.GetColumnNames();
+      object[][] data = rowResult.FetchAll().ToArray();
 
       for (int row = 0; row < data.Length; row++)
       {
         Dictionary<string, object> rowData = new Dictionary<string, object>();
-        for (int column = 0; column < metaData.Length; column++)
+        for (int column = 0; column < metaData.Count; column++)
         {
-          rowData.Add(metaData[column].GetName(), data[row][column]);
+          rowData.Add(metaData[column], data[row][column]);
         }
         parsedData.Add(rowData);
       }
 
-      return new DocumentResultSet(parsedData, tableResult.GetAffectedRows(), tableResult.GetWarningCount(), tableResult.GetExecutionTime());
+      return parsedData;
     }
 
     /// <summary>
@@ -255,30 +269,6 @@ namespace MySql.Data.VisualStudio.Editors
       _shellClient.Execute(_cleanSession);
       _shellClient.Dispose();
       _shellClient = null;
-    }
-  }
-
-  /// <summary>
-  /// Class that inherits from the SimpleClientShell to override some methods with custom actions
-  /// </summary>
-  class ShellClient : SimpleClientShell
-  {
-    /// <summary>
-    /// Write the message received to the output window
-    /// </summary>
-    /// <param name="text">Text to write</param>
-    public override void Print(string text)
-    {
-      Utils.WriteToOutputWindow(text, Messagetype.Information);
-    }
-
-    /// <summary>
-    /// Write the error received to the output window
-    /// </summary>
-    /// <param name="text">Test to write</param>
-    public override void PrintError(string text)
-    {
-      Utils.WriteToOutputWindow(text, Messagetype.Error);
     }
   }
 }

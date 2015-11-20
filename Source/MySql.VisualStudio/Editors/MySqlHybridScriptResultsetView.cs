@@ -26,6 +26,7 @@ using MySqlX.Shell;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using MySqlX;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -100,7 +101,23 @@ namespace MySql.Data.VisualStudio.Editors
     /// Load the data received into the views if it is valid
     /// </summary>
     /// <param name="data">Data to be loaded</param>
-    public void LoadData(DocumentResultSet data)
+    public void LoadData(List<Dictionary<string, object>> data)
+    {
+      if (data == null)
+      {
+        return;
+      }
+
+      ctrlGridView.SetData(data);
+      ctrlTreeView.SetData(data);
+      ctrlTextView.SetData(data);
+    }
+
+    /// <summary>
+    /// Load the data received into the views if it is valid
+    /// </summary>
+    /// <param name="data">Data to be loaded</param>
+    public void LoadData(DocResult data)
     {
       if (data == null)
       {
