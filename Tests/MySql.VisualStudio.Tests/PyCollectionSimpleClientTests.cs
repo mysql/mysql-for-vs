@@ -78,12 +78,15 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _testSchemaName = "py_schema_test";
 
-    //TODO: [MYSQLFORVS-413] Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
-    //private const string _dropTestDatabase = "session.dropSchema('" + _testSchemaName + "')";
     /// <summary>
     /// Statement to drop the test database
     /// </summary>
-    private const string _dropSchemaTest = "session.sql('drop schema if exists " + _testSchemaName + ";').execute()";
+    private const string _dropSchemaTest = "session.dropSchema('" + _testSchemaName + "')";
+
+    /// <summary>
+    /// Statement to drop the test database
+    /// </summary>
+    private const string _dropSchemaIfExists = "session.sql('drop schema if exists " + _testSchemaName + ";').execute()";
 
     /// <summary>
     /// Statement to create the test database
@@ -245,7 +248,7 @@ namespace MySql.VisualStudio.Tests
         //Create Schema test
         _simpleShell.Execute(_setMysqlxVar);
         _simpleShell.Execute(_setSessionVar);
-        _simpleShell.Execute(_dropSchemaTest);
+        _simpleShell.Execute(_dropSchemaIfExists);
         _simpleShell.Execute(_createSchemaTest);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
@@ -357,7 +360,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitSimpleShell();
-        _simpleShell.Execute(_dropSchemaTest);
+        _simpleShell.Execute(_dropSchemaIfExists);
         _simpleShell.Execute(_createSchemaTest);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
@@ -368,6 +371,20 @@ namespace MySql.VisualStudio.Tests
           if (reader.GetString(0) == _testSchemaName)
           {
             success = true;
+            reader.Close();
+            break;
+          }
+        }
+
+        Assert.True(success, string.Format(_schemaNotFound, _testSchemaName));
+        _simpleShell.Execute(_dropSchemaTest);
+        _command = new MySqlCommand(_showDbs, _connection);
+        reader = _command.ExecuteReader();
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testSchemaName)
+          {
+            success = false;
             reader.Close();
             break;
           }
@@ -397,7 +414,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitSimpleShell();
-        _simpleShell.Execute(_dropSchemaTest);
+        _simpleShell.Execute(_dropSchemaIfExists);
         _simpleShell.Execute(_createSchemaTest);
         _simpleShell.Execute(_useSchemaTest);
         _simpleShell.Execute(_createCollectionTest);
@@ -434,7 +451,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitSimpleShell();
-        _simpleShell.Execute(_dropSchemaTest);
+        _simpleShell.Execute(_dropSchemaIfExists);
         _simpleShell.Execute(_createSchemaTest);
         _simpleShell.Execute(_useSchemaTest);
         _simpleShell.Execute(_createCollectionTest);
@@ -497,7 +514,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitSimpleShell();
-        _simpleShell.Execute(_dropSchemaTest);
+        _simpleShell.Execute(_dropSchemaIfExists);
         _simpleShell.Execute(_createSchemaTest);
         _simpleShell.Execute(_useSchemaTest);
         _simpleShell.Execute(_createCollectionTest);
@@ -537,7 +554,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitSimpleShell();
-        _simpleShell.Execute(_dropSchemaTest);
+        _simpleShell.Execute(_dropSchemaIfExists);
         _simpleShell.Execute(_createSchemaTest);
         _simpleShell.Execute(_useSchemaTest);
         _simpleShell.Execute(_createCollectionTest);

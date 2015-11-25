@@ -74,12 +74,15 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _testSchemaName = "py_schema_test";
 
-    //TODO: [MYSQLFORVS-413] Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
-    //private const string _dropTestDatabase = "session.dropSchema('" + _testSchemaName + "')";
     /// <summary>
     /// Statement to drop the test database
     /// </summary>
-    private const string _dropSchemaTest = "session.sql('drop schema if exists " + _testSchemaName + ";').execute()";
+    private const string _dropSchemaTest = "session.dropSchema('" + _testSchemaName + "')";
+
+    /// <summary>
+    /// Statement to drop the test database
+    /// </summary>
+    private const string _dropSchemaIfExists = "session.sql('drop schema if exists " + _testSchemaName + ";').execute()";
 
     /// <summary>
     /// Statement to create the test database
@@ -243,7 +246,7 @@ namespace MySql.VisualStudio.Tests
         //Create Schema test
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
-        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropSchemaIfExists, ScriptType.Python);
         _ngShell.ExecuteScript(_createSchemaTest, ScriptType.Python);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
@@ -361,7 +364,7 @@ namespace MySql.VisualStudio.Tests
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
         var script = new StringBuilder();
-        script.AppendLine(_dropSchemaTest);
+        script.AppendLine(_dropSchemaIfExists);
         script.AppendLine(_createSchemaTest);
         script.AppendLine(_useSchemaTest);
         script.AppendLine(_createCollectionTest);
@@ -409,7 +412,7 @@ namespace MySql.VisualStudio.Tests
         InitNgShell();
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
-        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropSchemaIfExists, ScriptType.Python);
         _ngShell.ExecuteScript(_createSchemaTest, ScriptType.Python);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
@@ -423,6 +426,20 @@ namespace MySql.VisualStudio.Tests
             break;
           }
         }
+        Assert.True(success, string.Format(_schemaNotFound, _testSchemaName));
+        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _command = new MySqlCommand(_showDbs, _connection);
+        reader = _command.ExecuteReader();
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testSchemaName)
+          {
+            success = false;
+            reader.Close();
+            break;
+          }
+        }
+
         Assert.True(success, string.Format(_schemaNotFound, _testSchemaName));
       }
       catch (Exception ex)
@@ -449,7 +466,7 @@ namespace MySql.VisualStudio.Tests
         InitNgShell();
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
-        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropSchemaIfExists, ScriptType.Python);
         _ngShell.ExecuteScript(_createSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_useSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_createCollectionTest, ScriptType.Python);
@@ -488,7 +505,7 @@ namespace MySql.VisualStudio.Tests
         InitNgShell();
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
-        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropSchemaIfExists, ScriptType.Python);
         _ngShell.ExecuteScript(_createSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_useSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_createCollectionTest, ScriptType.Python);
@@ -553,7 +570,7 @@ namespace MySql.VisualStudio.Tests
         InitNgShell();
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
-        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropSchemaIfExists, ScriptType.Python);
         _ngShell.ExecuteScript(_createSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_useSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_createCollectionTest, ScriptType.Python);
@@ -595,7 +612,7 @@ namespace MySql.VisualStudio.Tests
         InitNgShell();
         _ngShell.ExecuteScript(_setMysqlxVar, ScriptType.Python);
         _ngShell.ExecuteScript(_setSessionVar, ScriptType.Python);
-        _ngShell.ExecuteScript(_dropSchemaTest, ScriptType.Python);
+        _ngShell.ExecuteScript(_dropSchemaIfExists, ScriptType.Python);
         _ngShell.ExecuteScript(_createSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_useSchemaTest, ScriptType.Python);
         _ngShell.ExecuteScript(_createCollectionTest, ScriptType.Python);

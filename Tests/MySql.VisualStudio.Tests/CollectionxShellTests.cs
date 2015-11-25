@@ -70,12 +70,15 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     private const string _testSchemaName = "js_schema_test";
 
-    //TODO: [MYSQLFORVS-413] Adjust this test for when this method is implemented in x-Shell for the JS sintaxis. It should look like:
-    //private const string _dropTestDatabase = "session.dropSchema('" + _testSchemaName + "')";
     /// <summary>
     /// Statement to drop the test database
     /// </summary>
-    private const string _dropSchemaTest = "session.sql('drop schema if exists " + _testSchemaName + ";').execute();";
+    private const string _dropSchemaTest = "session.dropSchema('" + _testSchemaName + "')";
+
+    /// <summary>
+    /// Statement to drop the test database if it already exists.
+    /// </summary>
+    private const string _dropSchemaIfExists = "session.sql('drop schema if exists " + _testSchemaName + ";').execute();";
 
     /// <summary>
     /// Statement to create the test database
@@ -209,7 +212,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropSchemaTest);
+        _ngShell.Execute(_dropSchemaIfExists);
         _ngShell.Execute(_createSchemaTest);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
@@ -220,6 +223,20 @@ namespace MySql.VisualStudio.Tests
           if (reader.GetString(0) == _testSchemaName)
           {
             success = true;
+            reader.Close();
+            break;
+          }
+        }
+
+        Assert.True(success, string.Format(_schemaNotFound, _testSchemaName));
+        _ngShell.Execute(_dropSchemaTest);
+        _command = new MySqlCommand(_showDbs, _connection);
+        reader = _command.ExecuteReader();
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testSchemaName)
+          {
+            success = false;
             reader.Close();
             break;
           }
@@ -249,7 +266,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropSchemaTest);
+        _ngShell.Execute(_dropSchemaIfExists);
         _ngShell.Execute(_createSchemaTest);
         _ngShell.Execute(_useSchemaTest);
         _ngShell.Execute(_createCollectionTest);
@@ -286,7 +303,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropSchemaTest);
+        _ngShell.Execute(_dropSchemaIfExists);
         _ngShell.Execute(_createSchemaTest);
         _ngShell.Execute(_useSchemaTest);
         _ngShell.Execute(_createCollectionTest);
@@ -350,7 +367,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropSchemaTest);
+        _ngShell.Execute(_dropSchemaIfExists);
         _ngShell.Execute(_createSchemaTest);
         _ngShell.Execute(_useSchemaTest);
         _ngShell.Execute(_createCollectionTest);
@@ -391,7 +408,7 @@ namespace MySql.VisualStudio.Tests
       try
       {
         InitNgShell();
-        _ngShell.Execute(_dropSchemaTest);
+        _ngShell.Execute(_dropSchemaIfExists);
         _ngShell.Execute(_createSchemaTest);
         _ngShell.Execute(_useSchemaTest);
         _ngShell.Execute(_createCollectionTest);
@@ -434,7 +451,7 @@ namespace MySql.VisualStudio.Tests
         var xshell = new NgShellWrapper(_ngConnString, true);
         xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropSchemaTest, ScriptType.JavaScript);
+        xshell.ExecuteScript(_dropSchemaIfExists, ScriptType.JavaScript);
         xshell.ExecuteScript(_createSchemaTest, ScriptType.JavaScript);
         _command = new MySqlCommand(_showDbs, _connection);
         var reader = _command.ExecuteReader();
@@ -448,6 +465,21 @@ namespace MySql.VisualStudio.Tests
             break;
           }
         }
+
+        Assert.True(success, string.Format(_schemaNotFound, _testSchemaName));
+        xshell.ExecuteScript(_dropSchemaTest, ScriptType.JavaScript);
+        _command = new MySqlCommand(_showDbs, _connection);
+        reader = _command.ExecuteReader();
+        while (reader.Read())
+        {
+          if (reader.GetString(0) == _testSchemaName)
+          {
+            success = false;
+            reader.Close();
+            break;
+          }
+        }
+
         Assert.True(success, string.Format(_schemaNotFound, _testSchemaName));
       }
       catch (Exception ex)
@@ -474,7 +506,7 @@ namespace MySql.VisualStudio.Tests
         var xshell = new NgShellWrapper(_ngConnString, true);
         xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropSchemaTest, ScriptType.JavaScript);
+        xshell.ExecuteScript(_dropSchemaIfExists, ScriptType.JavaScript);
         xshell.ExecuteScript(_createSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_useSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_createCollectionTest, ScriptType.JavaScript);
@@ -513,7 +545,7 @@ namespace MySql.VisualStudio.Tests
         var xshell = new NgShellWrapper(_ngConnString, true);
         xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropSchemaTest, ScriptType.JavaScript);
+        xshell.ExecuteScript(_dropSchemaIfExists, ScriptType.JavaScript);
         xshell.ExecuteScript(_createSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_useSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_createCollectionTest, ScriptType.JavaScript);
@@ -579,7 +611,7 @@ namespace MySql.VisualStudio.Tests
         var xshell = new NgShellWrapper(_ngConnString, true);
         xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropSchemaTest, ScriptType.JavaScript);
+        xshell.ExecuteScript(_dropSchemaIfExists, ScriptType.JavaScript);
         xshell.ExecuteScript(_createSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_useSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_createCollectionTest, ScriptType.JavaScript);
@@ -622,7 +654,7 @@ namespace MySql.VisualStudio.Tests
         var xshell = new NgShellWrapper(_ngConnString, true);
         xshell.ExecuteScript(_setMysqlxVar, ScriptType.JavaScript);
         xshell.ExecuteScript(_setSessionVar, ScriptType.JavaScript);
-        xshell.ExecuteScript(_dropSchemaTest, ScriptType.JavaScript);
+        xshell.ExecuteScript(_dropSchemaIfExists, ScriptType.JavaScript);
         xshell.ExecuteScript(_createSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_useSchemaTest, ScriptType.JavaScript);
         xshell.ExecuteScript(_createCollectionTest, ScriptType.JavaScript);
@@ -695,5 +727,4 @@ namespace MySql.VisualStudio.Tests
       _setUp.Dispose();
     }
   }
-
 }
