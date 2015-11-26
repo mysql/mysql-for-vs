@@ -17,7 +17,7 @@
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\EntityFramework.dll"#>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\EntityFramework.SqlServer.dll" #>
 <#@ assembly name="%VS120COMNTOOLS%..\IDE\EntityFramework.SqlServerCompact.dll" #>
-<#@ assembly name="%VS120COMNTOOLS%..\IDE\PrivateAssemblies\MySql.Data.Entity.EF6.dll" #>
+<#@ assembly name="%MYSQLCONNECTOR_ASSEMBLIESPATH%\MySql.Data.Entity.EF6.dll" #>
 <#@ assembly name="EnvDTE" #>
 <#@ assembly name="System.Configuration.dll" #>
 <#@ import namespace="System.Linq" #>

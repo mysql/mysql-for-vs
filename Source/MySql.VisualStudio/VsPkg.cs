@@ -1,23 +1,23 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
@@ -107,14 +107,13 @@ namespace MySql.Data.VisualStudio
   {
     public static MySqlDataProviderPackage Instance;
     public MySqlConnection MysqlConnectionSelected;
-    private const string MVC4_64_Path = "C:\\Program Files (x86)\\Microsoft ASP.NET\\ASP.NET MVC 4";
-    private const string MVC4_32_Path = "C:\\Program Files\\Microsoft ASP.NET\\ASP.NET MVC 4";
+    private const string _mySqlConnectorEnvironmentVariable = "MYSQLCONNECTOR_ASSEMBLIESPATH";
 
     /// <summary>
     /// Default constructor of the package.
-    /// Inside this method you can place any initialization code that does not require 
-    /// any Visual Studio service because at this point the package object is created but 
-    /// not sited yet inside Visual Studio environment. The place to do all the other 
+    /// Inside this method you can place any initialization code that does not require
+    /// any Visual Studio service because at this point the package object is created but
+    /// not sited yet inside Visual Studio environment. The place to do all the other
     /// initialization is the Initialize method.
     /// </summary>
     public MySqlDataProviderPackage()
@@ -195,8 +194,42 @@ namespace MySql.Data.VisualStudio
       MySqlLanguageService languageService = new MySqlLanguageService();
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
+
+      // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
+#if NET_45_OR_GREATER
+      string mySqlConnectorAssembliesVersion = "v4.5";
+#else
+      string mySqlConnectorAssembliesVersion = "v4.0";
+#endif
+      string mySqlConnectorPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      mySqlConnectorPath = !string.IsNullOrEmpty(mySqlConnectorPath)
+                            ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
+                            : string.Empty;
+      // If the environment variable doesn't exist, create it.
+      string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, EnvironmentVariableTarget.Machine);
+      if (mySqlConnectorEnvironmentVariableValue == null)
+      {
+        if (!string.IsNullOrEmpty(mySqlConnectorPath))
+        {
+          SetEnvironmentVariableValues(mySqlConnectorPath);
+        }
+      }
+      else
+      {
+        // If already exists, check if its original value has changed
+        if (!mySqlConnectorEnvironmentVariableValue.Contains(mySqlConnectorPath, StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(mySqlConnectorPath))
+        {
+          SetEnvironmentVariableValues(mySqlConnectorPath);
+        }
+      }
     }
     #endregion
+
+    private void SetEnvironmentVariableValues(string mySqlConnectorPath)
+    {
+      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.Machine);
+      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.Process);
+    }
 
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
     {
