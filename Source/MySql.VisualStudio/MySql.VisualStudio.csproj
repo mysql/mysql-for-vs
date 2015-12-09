@@ -103,7 +103,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DeployExtension>False</DeployExtension>
-	<PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
+    <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
   </PropertyGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
@@ -1280,24 +1280,24 @@
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
       <PropertyGroup>
-        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
-        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
     <When Condition="'$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
-        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL Tools for Visual Studio" /S /Q</PreBuildEvent>
+        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
   </Choose>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<Exec Command="$(PowerShellExe) -NonInteractive -executionpolicy bypass -Command &quot;&amp; { If(Test-Path -Path Scripts\Update_Version.ps1) { Scripts\Update_Version.ps1 } }&quot; " />
+    <Exec Command="$(PowerShellExe) -NonInteractive -executionpolicy bypass -Command &quot;&amp; { If(Test-Path -Path Scripts\Update_Version.ps1) { Scripts\Update_Version.ps1 } }&quot; " />
   </Target>
   <!--<Target Name="AfterBuild">
   </Target>-->
