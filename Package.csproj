@@ -260,7 +260,7 @@
 	  <CommercialOnlyFiles Include="**/Readme-Commercial;**/License.MYSQL" />
 	</ItemGroup>
     <ItemGroup>
-      <SourceCodeFiles Include="**/**" Exclude="**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/cnet.snk;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;**/installer/**;**/PackageLoadKey.txt;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/*.SourceAnalysis;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;**/.bzr-mysql/**;**/UpgradeLog*.*;**/*.bzrignore;**/*.~??;@(CommercialOnlyFiles)" />
+      <SourceCodeFiles Include="**/**" Exclude="**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/cnet.snk;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;**/installer/**;**/PackageLoadKey.txt;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/*.SourceAnalysis;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;**/.bzr-mysql/**;**/UpgradeLog*.*;**/*.bzrignore;**/*.~??;@(CommercialOnlyFiles);**/Scripts/**" />
     </ItemGroup>
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="tmp/%(RecursiveDir)" />
   </Target>

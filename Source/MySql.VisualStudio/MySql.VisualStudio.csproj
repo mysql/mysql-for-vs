@@ -103,6 +103,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DeployExtension>False</DeployExtension>
+	<PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
   </PropertyGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
@@ -1293,11 +1294,11 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets. -->
+  <Target Name="BeforeBuild" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<Exec Command="$(PowerShellExe) -NonInteractive -executionpolicy bypass -Command &quot;&amp; { If(Test-Path -Path Scripts\Update_Version.ps1) { Scripts\Update_Version.ps1 } }&quot; " />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-    -->
+  <!--<Target Name="AfterBuild">
+  </Target>-->
 </Project>
