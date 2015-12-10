@@ -206,7 +206,7 @@ namespace MySql.Data.VisualStudio
                             ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
                             : string.Empty;
       // If the environment variable doesn't exist, create it.
-      string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, EnvironmentVariableTarget.Machine);
+      string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, EnvironmentVariableTarget.User);
       if (mySqlConnectorEnvironmentVariableValue == null)
       {
         if (!string.IsNullOrEmpty(mySqlConnectorPath))
@@ -227,7 +227,7 @@ namespace MySql.Data.VisualStudio
 
     private void SetEnvironmentVariableValues(string mySqlConnectorPath)
     {
-      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.Machine);
+      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.User);
       Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.Process);
     }
 
