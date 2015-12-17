@@ -52,22 +52,22 @@ UpdateFile -filePath "..\..\Source\MySql.VisualStudio\source.extension.vsixmanif
 
 UpdateFile -filePath "..\..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_Web.zip\MySQL_Web_ItemTemplate.vstemplate" `
 	-regEx "Version=[0-9\.]+" `
-	-regExReplacement ("Version=" + $version) `
+	-regExReplacement ("Version=" + $version + ".0") `
 	-version $version
 
 UpdateFile -filePath "..\..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\MySQL_WinForm_ItemTemplate.vstemplate" `
 	-regEx "Version=[0-9\.]+" `
-	-regExReplacement ("Version=" + $version) `
+	-regExReplacement ("Version=" + $version + ".0") `
 	-version $version
 
 UpdateFile -filePath "..\..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_Web.zip\MySQL_Web_VB_ItemTemplate.vstemplate" `
 	-regEx "Version=[0-9\.]+" `
-	-regExReplacement ("Version=" + $version) `
+	-regExReplacement ("Version=" + $version + ".0") `
 	-version $version
 
 UpdateFile -filePath "..\..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\MySQL_WinForm_VB_ItemTemplate.vstemplate" `
 	-regEx "Version=[0-9\.]+" `
-	-regExReplacement ("Version=" + $version) `
+	-regExReplacement ("Version=" + $version + ".0") `
 	-version $version
 
 
