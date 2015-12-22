@@ -107,8 +107,7 @@ namespace MySql.Data.VisualStudio
   {
     public static MySqlDataProviderPackage Instance;
     public MySqlConnection MysqlConnectionSelected;
-    private const string MVC4_64_Path = "C:\\Program Files (x86)\\Microsoft ASP.NET\\ASP.NET MVC 4";
-    private const string MVC4_32_Path = "C:\\Program Files\\Microsoft ASP.NET\\ASP.NET MVC 4";
+    private const string _mySqlConnectorEnvironmentVariable = "MYSQLCONNECTOR_ASSEMBLIESPATH";
 
     /// <summary>
     /// The Sql extension
@@ -228,6 +227,34 @@ namespace MySql.Data.VisualStudio
       jslanguageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MyJsLanguageService), jslanguageService, true);
 
+
+      // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
+#if NET_45_OR_GREATER
+      string mySqlConnectorAssembliesVersion = "v4.5";
+#else
+      string mySqlConnectorAssembliesVersion = "v4.0";
+#endif
+      string mySqlConnectorPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      mySqlConnectorPath = !string.IsNullOrEmpty(mySqlConnectorPath)
+                            ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
+                            : string.Empty;
+      // If the environment variable doesn't exist, create it.
+      string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, EnvironmentVariableTarget.User);
+      if (mySqlConnectorEnvironmentVariableValue == null)
+      {
+        if (!string.IsNullOrEmpty(mySqlConnectorPath))
+        {
+          SetEnvironmentVariableValues(mySqlConnectorPath);
+        }
+      }
+      else
+      {
+        // If already exists, check if its original value has changed
+        if (!mySqlConnectorEnvironmentVariableValue.Contains(mySqlConnectorPath, StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(mySqlConnectorPath))
+        {
+          SetEnvironmentVariableValues(mySqlConnectorPath);
+        }
+      }
     }
     private void NewScriptCallback(object sender, EventArgs e)
     {
@@ -255,6 +282,12 @@ namespace MySql.Data.VisualStudio
       }
       else
         newScriptbtn.Visible = newScriptbtn.Enabled = false;
+    }
+
+    private void SetEnvironmentVariableValues(string mySqlConnectorPath)
+    {
+      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.User);
+      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.Process);
     }
 
     /// <summary>

@@ -1,8 +1,3 @@
-1.2.6
-- Fixed the bug where the "MySQL Workbench" and "MySQL Utilities" buttons were disabled (Oracle Bug #21495692).
-- Fix a bug which prevent to the user to create a non MySql connection in the Server Explorer pane in VisualStudio after the user create a MySql Connection checking the option "Always use this selection" when selecting the Data Source and Data Provider (MySql Bug #77441, Oracle bug #22122881)
-
-
 2.0.1
 - Added a new Editor to handle MySQL Phyton script files.
 - Added a new option to create new MySQL Phyton script directly from Server Explorer.
@@ -20,7 +15,25 @@
 - Fix controls color to match default provided VS Themes (Dark, Blue and Light).
 - Support added for MySQLX protocol, included in MySQL Server 5.7.8.
 
+1.2.6
+
+- Fix a bug which prevent users to create a non MySql connection in the Server Explorer pane in VisualStudio 
+  after the user create a MySql Connection checking the option "Always use this selection" when selecting 
+  the Data Source and Data Provider (MySql Bug #77441, Oracle bug #22122881)
+- Fixed the bug that was preventing to "Generate Database from Model" in an existing "edmx" model,
+  caused by an invalid path to the Connector/NET assembly in the MySQL T4 templates files 
+  (MySql Bug #74388, Oracle bug #20234532).
+- Fixed the error being thrown when working with an empty "edmx" model and attempt to generate a database
+  from model, due an invalid data in the MySQL "ttinclude" file (Oracle bug #18181649).
+- Create a powershell scripts to handle the uninstall/upgrade issue present in any M4VS plugin versions 
+  prior to 1.2.5, when having installed VS2012, or VS2013 or VS2015 and the M4VS plugin < 1.2.5, and then
+  uninstall VS first, so when trying to uninstall the M4VS the uninstall/upgrade process was being rolled-back.
+- Fixed the M4VS plugin version shown in the "Extensions and Updates" Visual Studio menu to reflect the latest
+  released version (Oracle bug #22114385).
+
+
 1.2.5
+- Fixed the bug where the "MySQL Workbench" and "MySQL Utilities" buttons were disabled (Oracle Bug #21495692).
 - Fixed the bug with the M4VS installer where having any plugin version installed on any Visual Studio
   version, and then uninstall Visual Studio first, the M4VS plugin couldn't be uninstalled or upgraded
   (MySQL Bug #71226, Oracle Bug #21953055).

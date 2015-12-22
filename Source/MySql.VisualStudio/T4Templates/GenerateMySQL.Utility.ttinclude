@@ -74,7 +74,7 @@ private static string WriteMySqlType(EdmProperty property)
             return "TEXT";
         } else if( ( len >= 65536  ) && ( len < 16777216 ) ) {
             return "MEDIUMTEXT";
-        } else if( ( len >= 16777216 ) && ( len < 4294967296 ) ) {
+        } else if( ( len >= 16777216 ) && ( len < int.MaxValue ) ) {
             return "LONGTEXT";
         }
 
@@ -84,7 +84,7 @@ private static string WriteMySqlType(EdmProperty property)
             return "BLOB";
         } else if( ( len >= 65536 ) && ( len < 16777216 ) ) {
             return "MEDIUMBLOB";
-        } else if( ( len >= 16777216 ) && ( len < 4294967296 ) ) {
+        } else if( ( len >= 16777216 ) && ( len < int.MaxValue ) ) {
             return "LONGBLOB";
         }
     } else if( property.TypeUsage.EdmType.Name == "decimal" ) {
