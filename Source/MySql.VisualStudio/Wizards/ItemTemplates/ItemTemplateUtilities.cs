@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -44,7 +44,6 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
   /// </summary>
   public class ItemTemplateUtilities
   {
-    private Cursor _cursor;
     private static string[] resourcesFiles = new string[] { "bindingNavigatorAddNewItem.Image.png", "bindingNavigatorDeleteItem.Image.png", "bindingNavigatorMoveFirstItem.Image.png"
                                                     , "bindingNavigatorMoveLastItem.Image.png", "bindingNavigatorMoveNextItem.Image.png", "bindingNavigatorMovePreviousItem.Image.png"
                                                     , "bindingNavigatorSaveItem.Image.png" };
@@ -678,7 +677,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <param name="language">The language generator (C# or VB.NET).</param>
     internal static void RemoveTemplateForm(VSProject proj, string projectPath, LanguageGenerator language)
     {
-      if (proj != null && language != null && !string.IsNullOrEmpty(projectPath))
+      if (proj != null && !string.IsNullOrEmpty(projectPath))
       {
         string formName = language == LanguageGenerator.CSharp ? "FormMySQL1.cs" : "FormMySQL1.vb";
         string formDesigner = language == LanguageGenerator.CSharp ? "FormMySQL1.Designer.cs" : "FormMySQL1.Designer.vb";
@@ -699,7 +698,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <param name="dataAccessTechnology">The data access technology (EF5 or EF6).</param>
     internal static void FixNamespaces(LanguageGenerator language, string projectPath, string projectNamespace, DataAccessTechnology dataAccessTechnology)
     {
-      if (language == null || language != LanguageGenerator.VBNET)
+      if (language != LanguageGenerator.VBNET)
       {
         return;
       }

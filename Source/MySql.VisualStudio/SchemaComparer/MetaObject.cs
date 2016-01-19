@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -443,7 +443,7 @@ where cu.referenced_table_name is  not null limit 10*/
   internal class View : MetaObject
   {
     internal string SchemaName { get; private set; }
-    internal string Name { get; private set; }
+    internal new string Name { get; private set; }
     internal string Body { get; private set; }
     internal string Definer { get; private set; }
     internal string SecurityType { get; private set; }
@@ -507,7 +507,7 @@ where cu.referenced_table_name is  not null limit 10*/
   internal abstract class RoutineWithArgs : MetaObject
   {
     protected internal List<Parameter> Parameters { get; set; }
-    protected internal string Name { get; protected set; }
+    protected internal new string Name { get; protected set; }
 
     protected internal RoutineWithArgs()
     {
@@ -724,7 +724,7 @@ where routine_type != 'PROCEDURE' */
   internal class Trigger : MetaObject
   {
     internal string TriggerSchema { get; private set; }
-    internal string Name { get; private set; }
+    internal new string Name { get; private set; }
     internal string EventManipulation { get; private set; }
     internal string EventObjectSchema { get; private set; }
     internal string EventObjectTable { get; private set; }

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -64,7 +64,7 @@ namespace MySql.Data.VisualStudio.WebConfig
   internal class EntityFrameworkConfig : GenericConfig
   {
     private new EntityFrameworkOptions defaults = new EntityFrameworkOptions();
-    private EntityFrameworkOptions values;
+    private new EntityFrameworkOptions values;
     private bool _entityFrameworkEnabled = false;
     private const string EF5Version = "5.0.0";
     private const string EF6Version = "6.1.3";
@@ -72,7 +72,6 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string mySQLEF = "MySql.Data.Entity";
     private const string mySQLEF5Version = "6.7.8";
     private string _mySQLEF6Version;
-    private static DbProviderFactory _mySqlFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EntityFrameworkConfig"/> class.

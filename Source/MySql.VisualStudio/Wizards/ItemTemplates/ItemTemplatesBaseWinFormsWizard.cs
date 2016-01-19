@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -317,6 +317,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <param name="language">The language generator (C# or VB .NET).</param>
     public ItemTemplatesBaseWinFormsWizard(LanguageGenerator language)
     {
+      _currentEntityFrameworkVersion = null;
       _language = language;
       _projectType = ItemTemplateUtilities.ProjectWizardType.WindowsForms;
       // get the general output window
