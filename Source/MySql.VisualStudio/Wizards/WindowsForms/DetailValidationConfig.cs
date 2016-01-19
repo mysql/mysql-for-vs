@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -211,7 +211,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       if (string.IsNullOrEmpty(_detailTable)) return;
       _detailColumns = BaseWizard<BaseWizardForm, WindowsFormsCodeGeneratorStrategy>.GetColumnsFromTable(_detailTable, wiz.Connection);
 
-      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wiz.DetailForeignKeys);
+      var wizardDetailForeignKeys = wiz.DetailForeignKeys;
+      wiz.Wizard.RetrieveAllFkInfo(wiz.Connection, _detailTable, out wizardDetailForeignKeys);
+      wiz.DetailForeignKeys = wizardDetailForeignKeys;
+
       _colValidationsDetail = ValidationsGrid.GetColumnValidationList(_detailTable, _detailColumns, wiz.DetailForeignKeys);
     }
 
