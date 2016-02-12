@@ -22,14 +22,17 @@
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh' Name='mysqlsh.dll' DiskId='1'
               Source='..\Dependencies\xShell\mysqlsh.dll'/>
-        <File Id='python27_d' Name='python27_d.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27_d.dll'/>
-        <File Id='shell_client_lib' Name='shell_client_lib.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='ShellClient' Name='ShellClient.dll' DiskId='1'
-              Source='..\Dependencies\xShell\ShellClient.dll'/>
+        <File Id='python27' Name='python27.dll' DiskId='1'
+              Source='..\Dependencies\xShell\python27.dll'/>
+        <File Id='shell_client' Name='shell_client.dll' DiskId='1'
+              Source='..\Dependencies\xShell\shell_client.dll'/>
+        <File Id='NGShellClientMgd' Name='NGShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
         <File Id='v8' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
+        <File Id='msvcp120' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
+        <File Id='msvcr120' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
+        <File Id='vccorlib120' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -128,14 +131,17 @@
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2012' Name='mysqlsh.dll' DiskId='1'
               Source='..\Dependencies\xShell\mysqlsh.dll'/>
-        <File Id='python27_d_2012' Name='python27_d.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27_d.dll'/>
-        <File Id='shell_client_lib_2012' Name='shell_client_lib.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='ShellClient_2012' Name='ShellClient.dll' DiskId='1'
-              Source='..\Dependencies\xShell\ShellClient.dll'/>
+        <File Id='python27_2012' Name='python27.dll' DiskId='1'
+              Source='..\Dependencies\xShell\python27.dll'/>
+        <File Id='shell_client_2012' Name='shell_client.dll' DiskId='1'
+              Source='..\Dependencies\xShell\shell_client.dll'/>
+        <File Id='NGShellClientMgd_2012' Name='NGShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
         <File Id='v8_2012' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
+        <File Id='msvcp120_2012' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
+        <File Id='msvcr120_2012' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2012' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -234,14 +240,17 @@
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2013' Name='mysqlsh.dll' DiskId='1'
               Source='..\Dependencies\xShell\mysqlsh.dll'/>
-        <File Id='python27_d_2013' Name='python27_d.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27_d.dll'/>
-        <File Id='shell_client_lib_2013' Name='shell_client_lib.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='ShellClient_2013' Name='ShellClient.dll' DiskId='1'
-              Source='..\Dependencies\xShell\ShellClient.dll'/>
+        <File Id='python27_2013' Name='python27.dll' DiskId='1'
+              Source='..\Dependencies\xShell\python27.dll'/>
+        <File Id='shell_client_2013' Name='shell_client.dll' DiskId='1'
+              Source='..\Dependencies\xShell\shell_client.dll'/>
+        <File Id='NGShellClientMgd_2013' Name='NGShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
         <File Id='v8_2013' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
+        <File Id='msvcp120_2013' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
+        <File Id='msvcr120_2013' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2013' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -341,14 +350,17 @@
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2015' Name='mysqlsh.dll' DiskId='1'
               Source='..\Dependencies\xShell\mysqlsh.dll'/>
-        <File Id='python27_d_2015' Name='python27_d.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27_d.dll'/>
-        <File Id='shell_client_lib_2015' Name='shell_client_lib.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client_lib.dll'/>
-        <File Id='ShellClient_2015' Name='ShellClient.dll' DiskId='1'
-              Source='..\Dependencies\xShell\ShellClient.dll'/>
+        <File Id='python27_2015' Name='python27.dll' DiskId='1'
+              Source='..\Dependencies\xShell\python27.dll'/>
+        <File Id='shell_client_2015' Name='shell_client.dll' DiskId='1'
+              Source='..\Dependencies\xShell\shell_client.dll'/>
+        <File Id='NGShellClientMgd_2015' Name='NGShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
         <File Id='v8_2015' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
+        <File Id='msvcp120_2015' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
+        <File Id='msvcr120_2015' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2015' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -673,5 +685,3 @@
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
-
-

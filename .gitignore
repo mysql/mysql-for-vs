@@ -25,3 +25,8 @@ VS.targets
 .bzrignore
 **/.bzr-mysql/**
 **/packages/**
+NGShellClient/Debug/
+NGShellClient/NGShellClientMgd/Release/
+NGShellClient/Release/
+*.sdf
+NGShellClient/ipch/

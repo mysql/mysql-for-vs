@@ -166,9 +166,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
     </Reference>
-    <Reference Include="ShellClient, Version=1.0.1.0, Culture=neutral, PublicKeyToken=14f1973afef7c130, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\xShell\ShellClient.dll</HintPath>
+    <Reference Include="NGShellClientMgd">
+      <HintPath>..\..\Dependencies\xShell\NGShellClientMgd.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Windows.Forms" />

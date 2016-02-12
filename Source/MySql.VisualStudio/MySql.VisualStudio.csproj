@@ -1278,8 +1278,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v2.0\Release\MySql.Web.dll</HintPath>
     </Reference>
-    <Reference Include="ShellClient">
-      <HintPath>..\..\Dependencies\xShell\ShellClient.dll</HintPath>
+    <Reference Include="NGShellClientMgd">
+      <HintPath>..\..\Dependencies\xShell\NGShellClientMgd.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
@@ -1427,21 +1427,21 @@
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
         <!-- UNCOMMENT FOR DEBUG -->
-        <!-- <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1"</PostBuildEvent> -->
+        <!-- <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1\" /S /Y /I</PostBuildEvent> -->
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
         <!-- UNCOMMENT FOR DEBUG -->
-        <!-- <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1"</PostBuildEvent> -->
+        <!-- <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1\" /S /Y /I</PostBuildEvent> -->
       </PropertyGroup>
     </When>
     <When Condition="'$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
         <!-- UNCOMMENT FOR DEBUG -->
-        <!-- <PostBuildEvent>copy /Y "$(SolutionDir)Dependencies\xShell\" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1"</PostBuildEvent> -->
+        <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1\" /S /Y /I</PostBuildEvent>
       </PropertyGroup>
     </When>
   </Choose>
