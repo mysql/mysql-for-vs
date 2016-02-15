@@ -37,6 +37,15 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <Choose>
+	<When Condition=" '$(VisualStudioVersion)' == '14.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.6</Framework>
+        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;NET_46_OR_GREATER</DefineConstants>
+      </PropertyGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
@@ -102,11 +111,109 @@
     <DefineConstants>$(DefineConstants);TRACE;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DeployExtension>False</DeployExtension>
     <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
   </PropertyGroup>
   <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
+      <ItemGroup>
+        <Reference Include="Antlr3.Runtime">
+          <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="Microsoft.Data.ConnectionUI, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Data, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Editor, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.Package.LanguageService.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <EmbedInteropTypes>False</EmbedInteropTypes>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <EmbedInteropTypes>False</EmbedInteropTypes>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <EmbedInteropTypes>False</EmbedInteropTypes>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <EmbedInteropTypes>True</EmbedInteropTypes>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>False</SpecificVersion>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Text.Data, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Text.UI, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <EmbedInteropTypes>False</EmbedInteropTypes>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+          <SpecificVersion>False</SpecificVersion>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="MySQL.Utility, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>True</SpecificVersion>
+          <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+        <Reference Include="Microsoft.VisualStudio.TextTemplating.VSHost.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <EmbedInteropTypes>False</EmbedInteropTypes>
+        </Reference>
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+        <Reference Include="System" />
+        <Reference Include="System.ComponentModel.Composition" />
+        <Reference Include="System.configuration" />
+        <Reference Include="System.Configuration.Install" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Design" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Web" />
+        <Reference Include="System.Web.ApplicationServices" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xaml" />
+        <Reference Include="System.Xml" />
+        <Reference Include="WindowsBase" />
+        <Reference Include="System.Linq" />
+        <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+          <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
+          <Name>MySql.Parser</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>
         <Reference Include="Antlr3.Runtime">
@@ -434,8 +541,27 @@
         </Compile>
       </ItemGroup>
     </When>
+	<When Condition="'$(Framework)' == '4.6'">
+      <ItemGroup>
+        <Compile Include="Properties\Resources.4.x.Designer.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>Resources.4.x.resx</DependentUpon>
+        </Compile>
+      </ItemGroup>
+    </When>
   </Choose>
   <Choose>
+	<When Condition="'$(Framework)' == '4.6'">
+      <ItemGroup>
+        <EmbeddedResource Include="Properties\Resources.4.x.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <LastGenOutput>Resources.4.x.Designer.cs</LastGenOutput>
+          <MergeWithCTO>true</MergeWithCTO>
+          <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+        </EmbeddedResource>
+      </ItemGroup>
+    </When>
     <When Condition="'$(Framework)' == '4.5.1'">
       <ItemGroup>
         <EmbeddedResource Include="Properties\Resources.4.x.resx">
@@ -1093,6 +1219,17 @@
     </None>
   </ItemGroup>
   <Choose>
+	<When Condition=" '$(VisualStudioVersion)' == '14.0'">
+      <ItemGroup>
+        <None Include="source.extension.vsixmanifest" />
+      </ItemGroup>
+      <ItemGroup>
+        <VSCTCompile Include="PkgCmd.vsct">
+          <ResourceName>1000</ResourceName>
+          <SubType>Designer</SubType>
+        </VSCTCompile>
+      </ItemGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>
         <None Include="source.extension.vsixmanifest" />
@@ -1152,6 +1289,39 @@
     </Reference>
   </ItemGroup>
   <Choose>
+	<When Condition=" '$(VisualStudioVersion)' == '14.0'">
+      <ItemGroup>
+        <Content Include="MySql.VisualStudio.pkgdef">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <IncludeInVSIX>true</IncludeInVSIX>
+        </Content>
+        <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+          <Visible>False</Visible>
+          <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+          <Install>false</Install>
+        </BootstrapperPackage>
+        <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+          <Visible>False</Visible>
+          <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+          <Install>true</Install>
+        </BootstrapperPackage>
+        <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+          <Visible>False</Visible>
+          <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+          <Install>false</Install>
+        </BootstrapperPackage>
+        <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+          <Visible>False</Visible>
+          <ProductName>.NET Framework 3.5</ProductName>
+          <Install>false</Install>
+        </BootstrapperPackage>
+        <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+          <Visible>False</Visible>
+          <ProductName>.NET Framework 3.5 SP1</ProductName>
+          <Install>false</Install>
+        </BootstrapperPackage>
+      </ItemGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <ItemGroup>
         <Content Include="MySql.VisualStudio.pkgdef">
@@ -1277,6 +1447,7 @@
     </When>
   </Choose>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="ImportProjects4.6.targets" Condition="'$(Framework)' == '4.6'" />
   <Import Project="ImportProjects4.5.1.targets" Condition="'$(Framework)' == '4.5.1'" />
   <Import Project="ImportProjects4.5.targets" Condition="'$(Framework)' == '4.5'" />
   <Import Project="ImportProjects4.0.targets" Condition="'$(Framework)' == '4.0'" />
@@ -1295,6 +1466,11 @@
     <When Condition="'$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
+      </PropertyGroup>
+    </When>
+	<When Condition="'$(VisualStudioVersion)' == '14.0'">
+      <PropertyGroup>
+        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
   </Choose>
