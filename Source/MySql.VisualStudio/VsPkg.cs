@@ -81,7 +81,7 @@ namespace MySql.Data.VisualStudio
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0Exp")]
   // This attribute is used to register the informations needed to show the this package
   // in the Help/About dialog of Visual Studio.
-  [InstalledProductRegistration(null, null, null)]
+  [InstalledProductRegistration(true, null, null, null)]
   [ProvideEditorFactory(typeof(SqlEditorFactory), 200,
       TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
   [ProvideEditorExtension(typeof(SqlEditorFactory), ".mysql", 32,
