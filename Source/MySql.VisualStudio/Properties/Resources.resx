@@ -395,7 +395,7 @@ Would you like to create it?</value>
   <data name="TableDataDirDesc" xml:space="preserve">
     <value>The directory used to store the data files for this table.</value>
   </data>
-  <data name="_100" xml:space="preserve">
+  <data name="100" xml:space="preserve">
     <value>H1PZDDC3CDP8CDKAH1HRAPE2ZQZECRQER1PEIKDCEKD9CMKPDKJZMKPZZIRHEIE2EQZHH9JTJED0ZDPTQ2I8RHJMCQRIZ1MDM9Q9Z1MZE8M2JQHTI1MCA2M3ZDRTEZAR</value>
   </data>
   <data name="Description_Table_DataDirectory_Option" xml:space="preserve">
@@ -511,7 +511,7 @@ Would you like to create it?</value>
     <value>The data length for the table.</value>
   </data>
   <data name="ProductDetails" xml:space="preserve">
-    <value>Data design and management tools for MySQL.  Copyright 2007-2015 Oracle, Inc.</value>
+    <value>Data design and management tools for MySQL.  Copyright © 2007-2016 Oracle, Inc.</value>
   </data>
   <data name="DisplayName_View_IsUpdatable" xml:space="preserve">
     <value>Is Updatable</value>
@@ -1065,19 +1065,19 @@ Would you like to create it?</value>
   <data name="WebConfigConnStrNoEmpty" xml:space="preserve">
     <value>The connection string must not be empty.</value>
   </data>
-  <data name="_105" xml:space="preserve">
+  <data name="105" xml:space="preserve">
     <value>MySQL</value>
   </data>
-  <data name="_106" xml:space="preserve">
+  <data name="106" xml:space="preserve">
     <value>MySQL Script</value>
   </data>
-  <data name="_107" xml:space="preserve">
+  <data name="107" xml:space="preserve">
     <value>MyJs Script</value>
   </data>
-  <data name="_109" xml:space="preserve">
+  <data name="109" xml:space="preserve">
     <value>A blank mysql file.</value>
   </data>
-  <data name="_110" xml:space="preserve">
+  <data name="110" xml:space="preserve">
     <value>A blank myjs file.</value>
   </data>
   <data name="sql_editor_banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -1201,28 +1201,28 @@ Check that the server is running, the database exists and the user Error establi
   <data name="__TemplateIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\__TemplateIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_401" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_4011" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="4011" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\401.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_402" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="402" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\402.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_4021" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="4021" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\402.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_403" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="403" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\403.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_4031" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="4031" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\403.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_114" xml:space="preserve">
+  <data name="114" xml:space="preserve">
     <value>MyJs</value>
   </data>
-  <data name="_115" xml:space="preserve">
+  <data name="115" xml:space="preserve">
     <value>MyPy</value>
   </data>
 </root>

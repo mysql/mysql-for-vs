@@ -75,7 +75,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static string _100 {
             get {
-                return ResourceManager.GetString("_100", resourceCulture);
+                return ResourceManager.GetString("100", resourceCulture);
             }
         }
         
@@ -84,7 +84,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static string _105 {
             get {
-                return ResourceManager.GetString("_105", resourceCulture);
+                return ResourceManager.GetString("105", resourceCulture);
             }
         }
         
@@ -93,7 +93,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static string _106 {
             get {
-                return ResourceManager.GetString("_106", resourceCulture);
+                return ResourceManager.GetString("106", resourceCulture);
             }
         }
         
@@ -102,7 +102,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static string _107 {
             get {
-                return ResourceManager.GetString("_107", resourceCulture);
+                return ResourceManager.GetString("107", resourceCulture);
             }
         }
         
@@ -111,7 +111,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static string _109 {
             get {
-                return ResourceManager.GetString("_109", resourceCulture);
+                return ResourceManager.GetString("109", resourceCulture);
             }
         }
         
@@ -120,7 +120,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static string _110 {
             get {
-                return ResourceManager.GetString("_110", resourceCulture);
+                return ResourceManager.GetString("110", resourceCulture);
             }
         }
         
@@ -129,7 +129,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static string _114 {
             get {
-                return ResourceManager.GetString("_114", resourceCulture);
+                return ResourceManager.GetString("114", resourceCulture);
             }
         }
         
@@ -138,7 +138,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static string _115 {
             get {
-                return ResourceManager.GetString("_115", resourceCulture);
+                return ResourceManager.GetString("115", resourceCulture);
             }
         }
         
@@ -147,7 +147,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static System.Drawing.Icon _400 {
             get {
-                object obj = ResourceManager.GetObject("_400", resourceCulture);
+                object obj = ResourceManager.GetObject("400", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -157,7 +157,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static System.Drawing.Icon _401 {
             get {
-                object obj = ResourceManager.GetObject("_401", resourceCulture);
+                object obj = ResourceManager.GetObject("401", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }        
@@ -167,7 +167,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap _4011 {
             get {
-                object obj = ResourceManager.GetObject("_4011", resourceCulture);
+                object obj = ResourceManager.GetObject("4011", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -177,7 +177,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         public static System.Drawing.Icon _402 {
             get {
-                object obj = ResourceManager.GetObject("_402", resourceCulture);
+                object obj = ResourceManager.GetObject("402", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -187,7 +187,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap _4021 {
             get {
-                object obj = ResourceManager.GetObject("_4021", resourceCulture);
+                object obj = ResourceManager.GetObject("4021", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -197,7 +197,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static System.Drawing.Icon _403 {
             get {
-                object obj = ResourceManager.GetObject("_403", resourceCulture);
+                object obj = ResourceManager.GetObject("403", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -207,7 +207,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap _4031 {
             get {
-                object obj = ResourceManager.GetObject("_4031", resourceCulture);
+                object obj = ResourceManager.GetObject("4031", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
