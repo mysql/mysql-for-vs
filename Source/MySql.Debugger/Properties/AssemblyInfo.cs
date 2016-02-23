@@ -44,4 +44,8 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("7e70569d-72d7-4653-bb20-df0e39f2f543")]
 
+// Disable warning for "Use command line option '/keycontainer' or appropriate project settings instead of 'AssemblyKeyName'",
+// since we need to sign the assembly
+#pragma warning disable 1699
 [assembly: AssemblyKeyName("ConnectorNet")]
+#pragma warning restore 1699

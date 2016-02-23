@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -33,7 +33,6 @@ namespace MySql.Data.VisualStudio.Editors
   [Guid(GuidStrings.SqlEditorFactory)]
   public sealed class SqlEditorFactory : IVsEditorFactory, IDisposable
   {
-    private MySqlDataProviderPackage package;
     private ServiceProvider serviceProvider;
 
     #region IVsEditorFactory Members

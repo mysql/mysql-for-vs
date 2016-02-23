@@ -1,4 +1,4 @@
-﻿// Copyright © 2004, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2004, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -44,4 +44,8 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("6faac58c-6a6e-4a32-bded-272bef72b5db")]
 
+// Disable warning for "Use command line option '/keycontainer' or appropriate project settings instead of 'AssemblyKeyName'",
+// since we need to sign the assembly
+#pragma warning disable 1699
 [assembly: AssemblyKeyName("ConnectorNet")]
+#pragma warning restore 1699

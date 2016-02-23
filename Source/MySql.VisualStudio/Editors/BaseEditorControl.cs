@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -42,7 +42,6 @@ namespace MySql.Data.VisualStudio.Editors
   public class BaseEditorControl : UserControl, IVsPersistDocData, IPersistFileFormat
   {
     private bool savingFile;
-    private bool loadingFile;
     protected ServiceProvider serviceProvider;
     protected string fileName;
 
@@ -206,7 +205,6 @@ namespace MySql.Data.VisualStudio.Editors
       if ((pszFilename == null) && ((fileName == null) || (fileName.Length == 0)))
         throw new ArgumentNullException("pszFilename");
 
-      loadingFile = true;
       int hr = VSConstants.S_OK;
       try
       {
@@ -229,7 +227,6 @@ namespace MySql.Data.VisualStudio.Editors
       }
       finally
       {
-        loadingFile = false;
       }
       return hr;
     }
