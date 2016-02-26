@@ -345,7 +345,7 @@
           <ButtonText>&amp;Launch MySQL Workbench</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" type="Button">
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySQLScript" type="Button" priority="0x210">
         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -354,7 +354,7 @@
           <ButtonText>&amp;SQL</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" type="Button">
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewJavascript" type="Button" priority="0x211">
         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -363,7 +363,7 @@
           <ButtonText>&amp;JavaScript</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewPythonscript" type="Button">
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidNewPythonscript" type="Button" priority="0x212">
         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>

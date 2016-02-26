@@ -100,7 +100,7 @@
     <DeployExtension>True</DeployExtension>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>618;</NoWarn>
@@ -119,6 +119,7 @@
     <DeployExtension>False</DeployExtension>
     <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
     <NoWarn>618;</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '14.0'">
@@ -345,7 +346,6 @@
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
-
           <EmbedInteropTypes>False</EmbedInteropTypes>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -546,7 +546,7 @@
           <MergeWithCTO>true</MergeWithCTO>
         </Compile>
       </ItemGroup>
-    </Otherwise>    
+    </Otherwise>
   </Choose>
   <Choose>
     <When Condition="'$(Framework)' == '4.6'">
@@ -1610,12 +1610,14 @@
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
         <!-- UNCOMMENT FOR DEBUG -->
-        <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1\" /S /Y /I</PostBuildEvent>
+        <!-- <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1\" /S /Y /I</PostBuildEvent> -->
       </PropertyGroup>
     </When>
     <When Condition="'$(VisualStudioVersion)' == '14.0'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
+        <!-- UNCOMMENT FOR DEBUG -->
+        <!-- <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.1\" /S /Y /I</PostBuildEvent> -->
       </PropertyGroup>
     </When>
   </Choose>
