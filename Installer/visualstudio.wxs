@@ -240,19 +240,19 @@
     <DirectoryRef Id='VS14_ExtVersionDir'>
       <Component Id='VS2015_Extension' Guid='D7EE5F2F-5F1D-48F0-B7E6-E6D731B599F0'>
         <File Id='MySQL.VisualStudio.2015' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySQL.VisualStudio.dll'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySQL.VisualStudio.dll'/>
         <File Id='MySql.Parser.2015' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll'/>
+          Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2015' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.5.1\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\v4.6\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2015' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\extension.vsixmanifest'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.6\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2015' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.VisualStudio.pkgdef'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2015' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.5.1\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\v4.6\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2015' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2015' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
       </Component>
