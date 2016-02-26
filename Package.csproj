@@ -104,21 +104,25 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Targets we care about -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
-    <CallTarget Targets="Build40;Build45;Build451;BuildInstaller;$(GetPackageVersion)$(PackageClean)$(PackageSigning)$(PackageInstall)$(PackageNoInstall)$(PackageSource)" />
+    <CallTarget Targets="Build40;Build45;Build451;Build46;BuildInstaller;$(GetPackageVersion)$(PackageClean)$(PackageSigning)$(PackageInstall)$(PackageNoInstall)$(PackageSource)" />
     <RemoveDir Directories="**/obj; **/bin" />
   </Target>
   <!-- Build Source Targets -->
-  <Target Name="Build40" Condition=" '$(VisualStudioVersion)' == '10.0' Or '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' ">
+  <Target Name="Build40" Condition=" '$(VisualStudioVersion)' == '10.0' Or '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=10.0" Importance="high" />
     <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=10.0" />
   </Target>
-  <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' ">
+  <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=11.0" Importance="high" />
     <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=11.0" />
   </Target>
-  <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' ">
+  <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=12.0" Importance="high" />
     <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=12.0" />
+  </Target>
+  <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' ">
+    <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=14.0" />
   </Target>
   <!-- Package Installer Build Targets -->
   <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
