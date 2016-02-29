@@ -49,5 +49,5 @@ using System.Security;
 // Disable warning for "Use command line option '/keycontainer' or appropriate project settings instead of 'AssemblyKeyName'",
 // since we need to sign the assembly
 #pragma warning disable 1699
-//[assembly: AssemblyKeyName("ConnectorNet")]
+[assembly: AssemblyKeyName("ConnectorNet")]
 #pragma warning restore 1699
