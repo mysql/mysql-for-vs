@@ -480,17 +480,17 @@
     </Property>
 
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
-    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS11_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
     <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2013 Custom Action (update packages file) -->
-    <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS12_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
     <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2015 Custom Action (update packages file) -->
-    <Binary Id="VS14_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS14_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2015_SetPathProp" Property="VS14_UpdatePackageFile" Value="VS2015_PathProp=[VS_2015_PATH]" Return="check" />
     <CustomAction Id="VS14_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2015" BinaryKey="VS14_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
@@ -500,7 +500,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\10.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>
@@ -511,7 +511,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\11.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>
@@ -522,7 +522,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\12.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>
@@ -533,7 +533,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\14.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>

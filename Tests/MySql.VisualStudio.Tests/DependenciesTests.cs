@@ -1,9 +1,9 @@
-﻿// Copyright © 2014 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2016 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
@@ -21,21 +21,16 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace MySql.VisualStudio.Tests
 {
   public static class Dependencies
   {
-    public const string CNetVersionv20 = "6.7.4.0";     
-    public const string CNetVersionv40 = "6.7.4.0";     
-    public const string CNetVersionv45= "6.8.3.0";     
+    public const string C_NET_VERSIONV40 = "6.7.4.0";
+    public const string C_NET_VERSIONV45= "6.8.3.0";
   }
 
   public class DependenciesTests
@@ -43,24 +38,14 @@ namespace MySql.VisualStudio.Tests
     [Fact]
     public void IsUsingCorrectVersion()
     {
-      var pathAssemblyv20 = Path.GetFullPath(@"..\..\..\..\..\Dependencies\v2.0\Release");
       var pathAssemblyv40 = Path.GetFullPath(@"..\..\..\..\..\Dependencies\v4.0\Release");
       var pathAssemblyv45 = Path.GetFullPath(@"..\..\..\..\..\Dependencies\v4.5\Release");
-
-      if (File.Exists(pathAssemblyv20 + @"\MySql.Data.Entity.dll"))
-      {
-        var efAssemblyVersion = FileVersionInfo.GetVersionInfo(pathAssemblyv20 + @"\MySql.Data.Entity.dll");
-        string version = efAssemblyVersion.FileVersion;
-        Assert.True(Dependencies.CNetVersionv20 == version);
-      }
-      else
-        Assert.True(false, "MySql.Data.Entity.dll for v2.0 was not found on the expected path");
 
       if (File.Exists(pathAssemblyv40 + @"\MySql.Data.Entity.dll"))
       {
         var efAssemblyVersion = FileVersionInfo.GetVersionInfo(pathAssemblyv40 + @"\MySql.Data.Entity.dll");
         string version = efAssemblyVersion.FileVersion;
-        Assert.True(Dependencies.CNetVersionv40 == version);
+        Assert.True(Dependencies.C_NET_VERSIONV40 == version);
       }
       else
         Assert.True(false, "MySql.Data.Entity.dll for v4.0 was not found on the expected path");
@@ -70,7 +55,7 @@ namespace MySql.VisualStudio.Tests
       {
         var efAssemblyVersion = FileVersionInfo.GetVersionInfo(pathAssemblyv45 + @"\MySql.Data.Entity.EF6.dll");
         string version = efAssemblyVersion.FileVersion;
-        Assert.True(Dependencies.CNetVersionv45 == version);
+        Assert.True(Dependencies.C_NET_VERSIONV45 == version);
       }
       else
         Assert.True(false, "MySql.Data.Entity.EF6.dll was not found on the expected path");
