@@ -1,23 +1,7 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='ProvidersFragment'>
-    
-    <DirectoryRef Id='assemblies_v2'>
-      <Directory Id="MySql.Web.DummyDir" Name="GAC">
-        <Component Id="C.Web.v2.GAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
-          <Condition>NETFRAMEWORK20</Condition>
-          <File Id="ProviderAssemblyGAC.v2" Name="MySql.Web.dll" ShortName="MW"
-                Source="..\Dependencies\v2.0\Release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
-        </Component>
-      </Directory>
-      <Component Id="C.Web.v2" Guid="8578813e-e123-45ad-9c92-565382a058b6">
-        <File Id="MySqlWeb.v2" Name="MySql.Web.dll" DiskId="1"
-              Source="..\Dependencies\v2.0\Release\mysql.web.dll"/>
-        <RemoveFile Id="RemoveWebStateFile.v2" Name="*.InstallState" On="uninstall"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='assemblies_v4'>
+    <DirectoryRef Id='AssembliesDir'>
       <Directory Id="MySql.Web.DummyDir.v4" Name="GAC">
         <Component Id="C.Web.v4.GAC" Guid="A30C8C85-C943-4976-8C9C-4ACFBBCD0764">
           <Condition>NETFRAMEWORK40FULL</Condition>
@@ -32,10 +16,7 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id='WebProviders' Display='hidden' Level='1' Title='Web Providers'
-             Description='ASP.Net Web Providers'>
-      <ComponentRef Id='C.Web.v2'/>
-      <ComponentRef Id='C.Web.v2.GAC'/>
+    <Feature Id='WebProviders' Display='hidden' Level='1' Title='Web Providers' Description='ASP.Net Web Providers'>
       <ComponentRef Id='C.Web.v4'/>
       <ComponentRef Id='C.Web.v4.GAC'/>
     </Feature>
@@ -48,9 +29,9 @@
     </InstallExecuteSequence>
 
     <CustomAction Id="ManagedWebInstallSetup" Property="ManagedWebInstall"
-                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile=  "[#MySqlWeb.v2]"'/>
+                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile=  "[#MySqlWeb.v4]"'/>
     <CustomAction Id='ManagedWebUnInstallSetup' Property="ManagedWebUnInstall"
-                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile= /u "[#MySqlWeb.v2]"'/>
+                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile= /u "[#MySqlWeb.v4]"'/>
     <CustomAction Id="ManagedWebInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="ManagedWebUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>

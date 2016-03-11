@@ -80,9 +80,6 @@
       </Component>
     </DirectoryRef>
 
-    <!-- Custom Action (updates machine.config after a repair) -->
-    <Binary Id="MySql.Data.DependencyFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
-
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
               ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
       <ComponentRef Id="BaseFiles"/>

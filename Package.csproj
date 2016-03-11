@@ -114,15 +114,15 @@
   </Target>
   <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=11.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=11.0" />
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=11.0" />
   </Target>
   <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=12.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=12.0" />
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=12.0" />
   </Target>
   <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=NoConnectorInstaller;Platform=Any CPU;VisualStudioVersion=14.0" />
+    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=14.0" />
   </Target>
   <!-- Package Installer Build Targets -->
   <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
@@ -264,7 +264,7 @@
 	  <CommercialOnlyFiles Include="**/Readme-Commercial;**/License.MYSQL" />
 	</ItemGroup>
     <ItemGroup>
-      <SourceCodeFiles Include="**/**" Exclude="@(CommercialOnlyFiles);**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/cnet.snk;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;**/installer/**;**/PackageLoadKey.txt;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/*.SourceAnalysis;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;**/.bzr-mysql/**;**/UpgradeLog*.*;**/*.bzrignore;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
+      <SourceCodeFiles Include="**/**" Exclude="@(CommercialOnlyFiles);**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;*-banner.txt;**/installer/**;**/Package.csproj;**/Package.sln;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/UpgradeLog*.*;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
     </ItemGroup>
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="tmp/%(RecursiveDir)" />
   </Target>

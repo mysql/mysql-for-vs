@@ -1375,10 +1375,10 @@
     <SetVsSDKEnvVars_VS11 ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
   <Target Name="SetVsSDKEnvVars_VS12" BeforeTargets="VSCTCompile">
-    <SetVsSDKEnvVars_VS11 ProjectDirectory="$(MSBuildProjectDirectory)" />
+    <SetVsSDKEnvVars_VS12 ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
   <Target Name="SetVsSDKEnvVars_VS14" BeforeTargets="VSCTCompile">
-    <SetVsSDKEnvVars_VS11 ProjectDirectory="$(MSBuildProjectDirectory)" />
+    <SetVsSDKEnvVars_VS14 ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
   <!--<Target Name="AfterBuild">
   </Target>-->
