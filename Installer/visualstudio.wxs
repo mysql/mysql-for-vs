@@ -9,13 +9,13 @@
         <File Id='MySqlParser.2010' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.0\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.0\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility' Name='MySql.Utility.dll' DiskId='1'
@@ -87,13 +87,13 @@
         <File Id='MySql.Parser.2012' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.0\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2012' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2012' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.0\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2012' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
@@ -165,13 +165,13 @@
         <File Id='MySql.Parser.2013' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2013' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.5.1\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2013' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2013' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2013' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.5.1\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2013' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2013' Name='MySql.Utility.dll' DiskId='1'
@@ -244,13 +244,13 @@
         <File Id='MySql.Parser.2015' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2015' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.6\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2015' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.6\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2015' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2015' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.6\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2015' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2015' Name='MySql.Utility.dll' DiskId='1'

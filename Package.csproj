@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+	  <MSBuildExe Condition=" '$(MSBuildExe)'=='' ">"$(MSBuildExtensionsPath)\..\MSBuild\14.0\Bin\msbuild.exe"</MSBuildExe>
+  </PropertyGroup>
   <Choose>
     <When Condition=" '$(NoPackage)' == 'y' ">
       <PropertyGroup>
@@ -110,19 +113,19 @@
   <!-- Build Source Targets -->
   <Target Name="Build40" Condition=" '$(VisualStudioVersion)' == '10.0' Or '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=10.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=10.0" />
+    <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=10.0 /t:Clean,Build" />
   </Target>
   <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=11.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=11.0" />
+    <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=11.0" />
   </Target>
   <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=12.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=12.0" />
+    <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=12.0" />
   </Target>
   <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' ">
     <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
-    <MSBuild Projects="MySqlForVisualStudio.sln" Properties="Configuration=Release;Platform=Any CPU;VisualStudioVersion=14.0" />
+    <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=14.0" />
   </Target>
   <!-- Package Installer Build Targets -->
   <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
