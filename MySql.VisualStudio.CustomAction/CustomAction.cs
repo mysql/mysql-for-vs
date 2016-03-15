@@ -212,7 +212,7 @@ namespace MySql.VisualStudio.CustomAction
         }
 
         SupportedVsVersions vsVersion;
-        if (Enum.TryParse(sVsVersion, out vsVersion))
+        if (Enum.TryParse(sVsVersion, true, out vsVersion))
         {
           string vsVersionNumber;
           string vsPath;
