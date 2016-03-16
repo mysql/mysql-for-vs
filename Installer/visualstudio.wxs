@@ -9,13 +9,13 @@
         <File Id='MySqlParser.2010' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.0\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.0\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility' Name='MySql.Utility.dll' DiskId='1'
@@ -118,13 +118,13 @@
         <File Id='MySql.Parser.2012' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.0\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2012' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2012' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.0\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2012' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
@@ -227,13 +227,13 @@
         <File Id='MySql.Parser.2013' Name='MySql.Parser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2013' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.5.1\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2013' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2013' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2013' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.5.1\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2013' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2013' Name='MySql.Utility.dll' DiskId='1'
@@ -333,19 +333,19 @@
     <DirectoryRef Id='VS14_ExtVersionDir'>
       <Component Id='VS2015_Extension' Guid='D7EE5F2F-5F1D-48F0-B7E6-E6D731B599F0'>
         <File Id='MySQL.VisualStudio.2015' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySQL.VisualStudio.dll'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySQL.VisualStudio.dll'/>
         <File Id='MySql.Parser.2015' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll'/>
+          Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2015' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\v4.5.1\Release\Antlr3.Runtime.dll'/>
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2015' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\extension.vsixmanifest'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.6\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2015' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.5.1\release\MySql.VisualStudio.pkgdef'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.6\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2015' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\v4.5.1\release\MySql.Debugger.dll'/>
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2015' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2015' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2015' Name='mysqlsh.dll' DiskId='1'
@@ -612,19 +612,19 @@
     </Property>
 
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
-    <Binary Id="VS11_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS11_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
-    <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2013 Custom Action (update packages file) -->
-    <Binary Id="VS12_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS12_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
-    <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2015 Custom Action (update packages file) -->
-    <Binary Id="VS14_PackagesFile" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="VS14_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2015_SetPathProp" Property="VS14_UpdatePackageFile" Value="VS2015_PathProp=[VS_2015_PATH]" Return="check" />
-    <CustomAction Id="VS14_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVS2015" BinaryKey="VS14_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="VS14_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2015" BinaryKey="VS14_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Adding AutoLoadPackage option so our connections are available -->
     <DirectoryRef Id="INSTALLDIR">
@@ -632,7 +632,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\10.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>
@@ -643,7 +643,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\11.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>
@@ -654,7 +654,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\12.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>
@@ -665,7 +665,7 @@
         <RegistryKey Root="HKLM"
                      Key="SOFTWARE\Microsoft\VisualStudio\14.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
                      ForceCreateOnInstall="yes"
-                     Action="createAndRemoveOnUninstall">
+                     ForceDeleteOnUninstall="yes">
           <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
         </RegistryKey>
       </Component>

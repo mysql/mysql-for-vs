@@ -71,10 +71,7 @@
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='CompanyDir' Name='MySQL'>
           <Directory Id='INSTALLDIR' Name='$(var.ProductName)'>
-            <Directory Id='AssembliesDir' Name='Assemblies'>
-              <Directory Id='assemblies_v2' Name='v2.0'/>
-              <Directory Id='assemblies_v4' Name='v4.0'/>
-            </Directory>
+            <Directory Id='AssembliesDir' Name='Assemblies' />
             <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
               <Directory Id='PFTemplatesDir' Name='Templates'/>
             </Directory>
@@ -392,7 +389,7 @@
     </Property>
 
     <!-- Custom Actions for Visual Studio registry key validations -->
-    <Binary Id="ValidateVSRegKey" SourceFile="..\Source\MySql.ConnectorInstaller\bin\v4.0\Release\MySql.ConnectorInstaller.CA.dll" />
+    <Binary Id="ValidateVSRegKey" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="SetSessionValue_VS2012" Property="CreateRegKeyAndExtensionsFile_VS2012" Value="VSVersion=VS2012" Return="check" />
     <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2012" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
     <CustomAction Id="SetRegKeyValuesCreated_VS2012" Property="VS2012_REGISTRYFIX_CREATED" Value="1" />

@@ -32,7 +32,7 @@ using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
 {
-  class PyCollectionSimpleClientTests : IUseFixture<SetUpXShell>, IDisposable
+  public class PyCollectionSimpleClientTests : IUseFixture<SetUpXShell>, IDisposable
   {
     #region Fields
     /// <summary>

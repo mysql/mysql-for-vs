@@ -33,7 +33,7 @@ using MySQL.Utility.Classes;
 
 namespace MySql.VisualStudio.Tests
 {
-  class PyCollectionNgWrapperTests : IUseFixture<SetUpXShell>, IDisposable
+  public class PyCollectionNgWrapperTests : IUseFixture<SetUpXShell>, IDisposable
   {
     #region Fields
     /// <summary>

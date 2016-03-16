@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -282,7 +282,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     }
 
 
-    public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, Microsoft.VisualStudio.TemplateWizard.WizardRunKind runKind, object[] customParams)
+    public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
     {
       Dte = automationObject as DTE;
 
@@ -300,9 +300,9 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       Version mysqlDataVersion = null;
 
 
-      if (!String.IsNullOrEmpty(path))
+      if (!string.IsNullOrEmpty(path))
       {
-        mysqlDataVersion = new Version(Utility.GetProductVersion(path + @"\Assemblies\v2.0\MySql.Data.dll"));
+        mysqlDataVersion = new Version(Utility.GetProductVersion(path + @"\Assemblies\v4.0\MySql.Data.dll"));
       }
 
       _fullconnectionstring = WizardForm.connectionStringForAspNetTables;

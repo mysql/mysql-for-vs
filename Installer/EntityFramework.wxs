@@ -1,19 +1,13 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='EntityFramework'>
-    <DirectoryRef Id='assemblies_v2'>
-      <Component Id="EF.v2" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">        
-        <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v2.0\Release\mysql.data.entity.dll" DiskId="1"/>        
-      </Component>     
-    </DirectoryRef>
 
     <!-- Entity framework 4.0 feature -->
-    <DirectoryRef Id='assemblies_v4'>
-      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">        
+    <DirectoryRef Id='AssembliesDir'>
+      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
         <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
               Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>   
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id='VS10_PublicAssemblies'>
@@ -116,7 +110,6 @@
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id="EF.T4.VS10"/>
       <ComponentRef Id="EF.PA.v4"/>
-      <ComponentRef Id="EF.v2"/>
       <ComponentRef Id="EF.v4"/>
       <ComponentRef Id="Remove.EF.PA.v4"/>
     </Feature>

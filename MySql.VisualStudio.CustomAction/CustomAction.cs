@@ -1,4 +1,4 @@
-﻿// Copyright © 2014 - 2015 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2016 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -21,70 +21,66 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Deployment.WindowsInstaller;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using MySQL.Utility.Classes;
 using Microsoft.Win32;
+using MySQL.Utility.Classes;
 
-namespace MySql.ConnectorInstaller
+namespace MySql.VisualStudio.CustomAction
 {
   public class CustomActions
   {
     /// <summary>
     /// Enum used to list the supported Visual Studio versions that execute the "UpdateFlagPackagesFile" methods.
     /// </summary>
-    enum SupportedVSVersions_UpdatePackageFile
+    enum SupportedVsVersions
     {
-      VS2012, VS2013, VS2015
+      Vs2012, Vs2013, Vs2015
     }
 
     #region [Constants]
-    private const string VS2012_VersionNumber = "11.0";
-    private const string VS2013_VersionNumber = "12.0";
-    private const string VS2015_VersionNumber = "14.0";
-    private const string VS2012_x64_ExtensionsFilePath = @"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\";
-    private const string VS2012_x86_ExtensionsFilePath = @"C:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE\";
-    private const string VS2013_x64_ExtensionsFilePath = @"C:\Program Files (x86)\Microsoft Visual Studio 12.0\";
-    private const string VS2013_x86_ExtensionsFilePath = @"C:\Program Files\Microsoft Visual Studio 12.0\";
-    private const string VS2015_x64_ExtensionsFilePath = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
-    private const string VS2015_x86_ExtensionsFilePath = @"C:\Program Files\Microsoft Visual Studio 14.0\";
-    private const string _extensionFileName = "extensions.configurationchanged";
+    private const string VS2012_VERSION_NUMBER = "11.0";
+    private const string VS2013_VERSION_NUMBER = "12.0";
+    private const string VS2015_VERSION_NUMBER = "14.0";
+    private const string VS2012_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\";
+    private const string VS2012_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE\";
+    private const string VS2013_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 12.0\";
+    private const string VS2013_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 12.0\";
+    private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
+    private const string VS2015_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 14.0\";
+    private const string EXTENSION_FILE_NAME = "extensions.configurationchanged";
     #endregion
 
     [CustomAction]
-    public static ActionResult UpdateFlagPackagesFileForVS2012(Session session)
+    public static ActionResult UpdateFlagPackagesFileForVs2012(Session session)
     {
-      string VSpath = System.IO.Path.Combine(session.CustomActionData["VS2012_PathProp"], @"Extensions\extensions.configurationchanged");
+      string vsPath = Path.Combine(session.CustomActionData["VS2012_PathProp"], @"Extensions\extensions.configurationchanged");
 
-      if (File.Exists(VSpath))
-        System.IO.File.WriteAllText(VSpath, string.Empty);
+      if (File.Exists(vsPath))
+        File.WriteAllText(vsPath, string.Empty);
 
       return ActionResult.Success;
     }
 
     [CustomAction]
-    public static ActionResult UpdateFlagPackagesFileForVS2013(Session session)
+    public static ActionResult UpdateFlagPackagesFileForVs2013(Session session)
     {
-      string VSpath = System.IO.Path.Combine(session.CustomActionData["VS2013_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
+      string vsPath = Path.Combine(session.CustomActionData["VS2013_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
-      if (File.Exists(VSpath))
-        System.IO.File.WriteAllText(VSpath, string.Empty);
+      if (File.Exists(vsPath))
+        File.WriteAllText(vsPath, string.Empty);
 
       return ActionResult.Success;
     }
 
     [CustomAction]
-    public static ActionResult UpdateFlagPackagesFileForVS2015(Session session)
+    public static ActionResult UpdateFlagPackagesFileForVs2015(Session session)
     {
-      string VSpath = System.IO.Path.Combine(session.CustomActionData["VS2015_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
+      string vsPath = Path.Combine(session.CustomActionData["VS2015_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
-      if (File.Exists(VSpath))
-        System.IO.File.WriteAllText(VSpath, string.Empty);
+      if (File.Exists(vsPath))
+        File.WriteAllText(vsPath, string.Empty);
 
       return ActionResult.Success;
     }
@@ -92,16 +88,15 @@ namespace MySql.ConnectorInstaller
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utility.GetInstallLocation("MySQL for Visual Studio");
+      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
 
-      if (String.IsNullOrEmpty(installedPath))
+      if (string.IsNullOrEmpty(installedPath))
       {
         session.Log("UpdateMachineConfig: not found installed file");
         return ActionResult.NotExecuted;
       }
 
-      installedPath = System.IO.Path.Combine(installedPath, @"Assemblies\v2.0\MySql.data.dll");
-
+      installedPath = Path.Combine(installedPath, @"Assemblies\MySql.data.dll");
       if (!File.Exists(installedPath))
       {
         session.Log("UpdateMachineConfig: MySql.data.dll does not exists.");
@@ -141,37 +136,34 @@ namespace MySql.ConnectorInstaller
     [CustomAction]
     public static ActionResult GetConnectorNetVersion(Session session)
     {
-      var installedPath = Utility.GetInstallLocation("MySQL Connector/Net");
+      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
 
       session["CNETINSTALLED"] = "0";
       session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
 
       try
       {
-        if (!String.IsNullOrEmpty(installedPath))
+        if (string.IsNullOrEmpty(installedPath))
+          return ActionResult.Success;
+
+        installedPath = Path.Combine(installedPath, @"Assemblies\v4.0\MySql.data.dll");
+        if (!File.Exists(installedPath))
+          return ActionResult.Success;
+
+        var a = Assembly.LoadFile(installedPath);
+        if (a != null)
         {
-
-          installedPath = System.IO.Path.Combine(installedPath, @"Assemblies\v2.0\MySql.data.dll");
-
-          if (!File.Exists(installedPath))
+          var version = a.GetName().Version;
+          if (version >= new Version(6, 7))
             return ActionResult.Success;
 
-          Assembly a = Assembly.LoadFile(installedPath);
-
-          if (a != null)
-          {
-
-            var version = a.GetName().Version;
-            if (version < new Version(6, 7))
-            {
-              session["CNETINSTALLED"] = "1";
-              session.Log("Cnet Installed is 1");
-              return ActionResult.Success;
-            }
-          }
-          else
-            session.Log("Error - Assembly of Connector Net not found");
+          session["CNETINSTALLED"] = "1";
+          session.Log("Cnet Installed is 1");
+          return ActionResult.Success;
         }
+        else
+          session.Log("Error - Assembly of Connector Net not found");
+
         return ActionResult.Success;
       }
       catch (Exception ex)
@@ -207,43 +199,44 @@ namespace MySql.ConnectorInstaller
     /// Method to handle the registry key and the extensions file deletion, for all the supported Visual Studio versions.
     /// </summary>
     /// <param name="session">The session object containing the parameters sent by Wix.</param>
+    /// <param name="isDeleting">Flag indicating whether the key is being deleted.</param>
     /// <returns>Will return false in case of any errors. True in case of success.</returns>
     private static bool CreateDeleteRegKeyAndExtensionsFile(Session session, bool isDeleting)
     {
       try
       {
-        string sVSVersion = session.CustomActionData["VSVersion"];
-        if (string.IsNullOrEmpty(sVSVersion))
+        string sVsVersion = session.CustomActionData["VSVersion"];
+        if (string.IsNullOrEmpty(sVsVersion))
         {
           return false;
         }
 
-        string vsPath = string.Empty, vsVersionNumber = string.Empty;
-        SupportedVSVersions_UpdatePackageFile vsVersion;
-        if (Enum.TryParse(sVSVersion, out vsVersion))
+        SupportedVsVersions vsVersion;
+        if (Enum.TryParse(sVsVersion, true, out vsVersion))
         {
+          string vsVersionNumber;
+          string vsPath;
           switch (vsVersion)
           {
-            case SupportedVSVersions_UpdatePackageFile.VS2012:
-              vsPath = Environment.Is64BitOperatingSystem ? VS2012_x64_ExtensionsFilePath : VS2012_x86_ExtensionsFilePath;
-              vsVersionNumber = VS2012_VersionNumber;
+            case SupportedVsVersions.Vs2012:
+              vsPath = Environment.Is64BitOperatingSystem ? VS2012_X64_EXTENSIONS_FILE_PATH : VS2012_X86_EXTENSIONS_FILE_PATH;
+              vsVersionNumber = VS2012_VERSION_NUMBER;
               break;
-            case SupportedVSVersions_UpdatePackageFile.VS2013:
-              vsPath = Environment.Is64BitOperatingSystem ? VS2013_x64_ExtensionsFilePath : VS2013_x86_ExtensionsFilePath;
-              vsVersionNumber = VS2013_VersionNumber;
+            case SupportedVsVersions.Vs2013:
+              vsPath = Environment.Is64BitOperatingSystem ? VS2013_X64_EXTENSIONS_FILE_PATH : VS2013_X86_EXTENSIONS_FILE_PATH;
+              vsVersionNumber = VS2013_VERSION_NUMBER;
               break;
-            case SupportedVSVersions_UpdatePackageFile.VS2015:
-              vsPath = Environment.Is64BitOperatingSystem ? VS2015_x64_ExtensionsFilePath : VS2015_x86_ExtensionsFilePath;
-              vsVersionNumber = VS2015_VersionNumber;
+            case SupportedVsVersions.Vs2015:
+              vsPath = Environment.Is64BitOperatingSystem ? VS2015_X64_EXTENSIONS_FILE_PATH : VS2015_X86_EXTENSIONS_FILE_PATH;
+              vsVersionNumber = VS2015_VERSION_NUMBER;
               break;
             default:
-              throw new Exception("Could not parse parameter VSVersion to a valid 'SupportedVSVersions_UpdatePackageFile' value.");
+              throw new Exception("Could not parse parameter VSVersion to a valid 'SupportedVSVersions' value.");
           }
 
-          string message = string.Empty;
           // Registry key handling
-          string keyPath = GetRegKeyPath(vsVersionNumber, vsVersion == SupportedVSVersions_UpdatePackageFile.VS2012);
-          string keyName = vsVersion == SupportedVSVersions_UpdatePackageFile.VS2012 ? "EnvironmentDirectory" : "ShellFolder";
+          string keyPath = GetRegKeyPath(vsVersionNumber, vsVersion == SupportedVsVersions.Vs2012);
+          string keyName = vsVersion == SupportedVsVersions.Vs2012 ? "EnvironmentDirectory" : "ShellFolder";
           var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
           if (!isDeleting)
           {
@@ -284,10 +277,12 @@ namespace MySql.ConnectorInstaller
           }
 
           // "extensions.configurationchanged" file handling
-          string extensionsDirectory = vsVersion == SupportedVSVersions_UpdatePackageFile.VS2012
-                                        ? string.Format(@"{0}{1}", vsPath, @"Extensions")
-                                        : string.Format(@"{0}{1}", vsPath, @"Common7\IDE\Extensions");
-          string extensionsFile = System.IO.Path.Combine(extensionsDirectory, _extensionFileName);
+          string extensionsDirectory = string.Format(@"{0}{1}",
+            vsPath,
+            vsVersion == SupportedVsVersions.Vs2012
+              ? @"Extensions"
+              : @"Common7\IDE\Extensions");
+          string extensionsFile = Path.Combine(extensionsDirectory, EXTENSION_FILE_NAME);
           if (!isDeleting)
           {
             if (!Directory.Exists(extensionsDirectory))
@@ -314,7 +309,7 @@ namespace MySql.ConnectorInstaller
         }
         else
         {
-          throw new Exception("Could not parse parameter VSVersion to a valid 'SupportedVSVersions_UpdatePackageFile' value.");
+          throw new Exception("Could not parse parameter VSVersion to a valid 'SupportedVSVersions' value.");
         }
       }
       catch (Exception ex)
@@ -327,22 +322,22 @@ namespace MySql.ConnectorInstaller
     /// <summary>
     /// Generates the reg key path for the specified Visual Studio version.
     /// </summary>
-    /// <param name="VSVersion">The Visual Studio version.</param>
-    /// <param name="isVS2012">Flag used to differentiate whether the registry key is for Visual Studio 2012, in which case should be handled differently.</param>
+    /// <param name="vsVersion">The Visual Studio version.</param>
+    /// <param name="isVs2012">Flag used to differentiate whether the registry key is for Visual Studio 2012, in which case should be handled differently.</param>
     /// <returns>The key path for the specified Visual Studio version</returns>
-    private static string GetRegKeyPath(string VSVersion, bool isVS2012)
+    private static string GetRegKeyPath(string vsVersion, bool isVs2012)
     {
       string keyPath;
       if (Environment.Is64BitOperatingSystem)
       {
-        keyPath = string.Format(@"Software\Wow6432Node\Microsoft\VisualStudio\{0}", VSVersion);
+        keyPath = string.Format(@"Software\Wow6432Node\Microsoft\VisualStudio\{0}", vsVersion);
       }
       else
       {
-        keyPath = string.Format(@"Software\Microsoft\VisualStudio\{0}", VSVersion);
+        keyPath = string.Format(@"Software\Microsoft\VisualStudio\{0}", vsVersion);
       }
 
-      if (isVS2012)
+      if (isVs2012)
       {
         keyPath += @"\Setup\VS";
       }
@@ -356,7 +351,7 @@ namespace MySql.ConnectorInstaller
     /// <param name="session">The session object to interact with the installer variables.</param>
     /// <param name="sessionName">The name of the session to set the value.</param>
     /// <param name="value">The value to be set.</param>
-    private static void SetSessionValue(Session session, string sessionName, string value)
+    public static void SetSessionValue(Session session, string sessionName, string value)
     {
       session.Log("Set session value. " + sessionName + " - value = " + value);
       session[sessionName] = value;

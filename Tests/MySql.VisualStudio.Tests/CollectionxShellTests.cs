@@ -31,7 +31,7 @@ using Xunit;
 
 namespace MySql.VisualStudio.Tests
 {
-  class CollectionxShellTests : IUseFixture<SetUpXShell>, IDisposable
+  public class CollectionxShellTests : IUseFixture<SetUpXShell>, IDisposable
   {
     #region Fields
     /// <summary>
