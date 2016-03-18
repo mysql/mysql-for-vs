@@ -80,6 +80,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.connectButton.Size = new System.Drawing.Size(23, 22);
       this.connectButton.Text = "connectButton";
       this.connectButton.ToolTipText = "Connect to...";
+      this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
       // 
       // disconnectButton
       // 
@@ -90,6 +91,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.disconnectButton.Name = "disconnectButton";
       this.disconnectButton.Size = new System.Drawing.Size(23, 22);
       this.disconnectButton.Text = "Disconnect";
+      this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
       // 
       // toolStripSeparator1
       // 
