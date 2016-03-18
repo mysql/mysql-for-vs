@@ -25,12 +25,13 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Editors;
 using MySqlX;
 using MySqlX.Shell;
 
-namespace MySql.Data.VisualStudio.Editors
+namespace MySql.Data.VisualStudio.MySqlX
 {
-  public class NgShellWrapper
+  public class MySqlXProxy
   {
     /// <summary>
     /// Stores the value that specifies if all the statements will be executed in the same session
@@ -40,7 +41,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Shell object used to execute the queries through the shell
     /// </summary>
-    MyShellClient _shellClient;
+    ShellClient _shellClient;
 
     /// <summary>
     /// Variable to store the connection string for the wrapper.
@@ -53,34 +54,34 @@ namespace MySql.Data.VisualStudio.Editors
     private const string _cleanSession = "session.close()";
 
     /// <summary>
-    /// Creates an instance of NgShellWrapper
+    /// Creates an instance of MySqlXProxy
     /// </summary>
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port"</param>
     /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
-    public NgShellWrapper(string connectionString, bool keepNgSession)
+    public MySqlXProxy(string connectionString, bool keepNgSession)
     {
       _connString = connectionString;
       _keepSession = keepNgSession;
       if (keepNgSession)
       {
-        _shellClient = new MyShellClient();
+        _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
       }
     }
 
     /// <summary>
-    /// Creates an instance of NgShellWrapper
+    /// Creates an instance of MySqlXProxy
     /// </summary>
     /// <param name="connection">Connection object that will be used to set the connection string. Format: "user:pass@server:port"</param>
     /// /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
-    public NgShellWrapper(DbConnection connection, bool keepNgSession)
+    public MySqlXProxy(DbConnection connection, bool keepNgSession)
     {
       _connString = ((MySqlConnection)connection).ToNgFormat();
       _keepSession = keepNgSession;
 
       if (keepNgSession)
       {
-        _shellClient = new MyShellClient();
+        _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
       }
     }
@@ -195,7 +196,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       if (!_keepSession)
       {
-        _shellClient = new MyShellClient();
+        _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
       }
 

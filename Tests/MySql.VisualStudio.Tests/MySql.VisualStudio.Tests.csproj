@@ -149,19 +149,26 @@
     <Compile Include="..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="CollectionxShellTests.cs" />
+    <Compile Include="MySqlX\Base\BaseTests.cs" />
+    <Compile Include="MySqlX\Base\JsCollectionTests.cs" />
+    <Compile Include="MySqlX\JsCollectionXShellTests.cs" />
     <Compile Include="DbExportTests.cs" />
     <Compile Include="DependenciesTests.cs" />
-    <Compile Include="MySimpleShellClient.cs" />
-    <Compile Include="PyCollectionSimpleClientTests.cs" />
-    <Compile Include="PyCollectionNgWrapperTests.cs" />
-    <Compile Include="PyTableSimpleClientTests.cs" />
-    <Compile Include="PyTableNgWrapperTests.cs" />
+    <Compile Include="MySqlX\JsCollectionXProxyTests.cs" />
+    <Compile Include="MySqlX\Base\JsTableTests.cs" />
+    <Compile Include="MySqlX\JsTableXProxyTests.cs" />
+    <Compile Include="MySqlX\Base\MySqlShellClient.cs" />
+    <Compile Include="MySqlX\Base\PyCollectionTests.cs" />
+    <Compile Include="MySqlX\PyCollectionXShellTests.cs" />
+    <Compile Include="MySqlX\PyCollectionXProxyTests.cs" />
+    <Compile Include="MySqlX\Base\PyTableTests.cs" />
+    <Compile Include="MySqlX\PyTableXShellTests.cs" />
+    <Compile Include="MySqlX\PyTableXProxyTests.cs" />
     <Compile Include="SchemaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUp.cs" />
-    <Compile Include="SetUpXShell.cs" />
-    <Compile Include="TablexShellTests.cs" />
+    <Compile Include="MySqlX\Base\SetUpXShell.cs" />
+    <Compile Include="MySqlX\JsTableXShellTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Setup.sql">

@@ -834,7 +834,7 @@
     <Compile Include="Editors\MySqlTreeView.Designer.cs">
       <DependentUpon>MySqlTreeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\NgShellWrapper.cs" />
+    <Compile Include="MySqlX\MySqlXProxy.cs" />
     <Compile Include="Editors\QueryStatsView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -975,7 +975,7 @@
     <Compile Include="MyInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MyShellClient.cs" />
+    <Compile Include="MySqlX\MySqlShellClient.cs" />
     <Compile Include="MySqlForVisualStudioSettings.cs" />
     <Compile Include="MySqlProviderObjectFactory.cs" />
     <Compile Include="Nodes\BaseNode.cs">

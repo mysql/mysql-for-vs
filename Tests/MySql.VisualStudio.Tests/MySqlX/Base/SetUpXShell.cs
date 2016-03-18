@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -20,32 +20,41 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace MySql.VisualStudio.Tests
+namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
   /// <summary>
-  /// Class to setup the environment used by the TablexShellTests test class
+  /// Class to setup the environment used by the JsTableXShellTests test class
   /// </summary>
-  public class SetUpXShell : SetUp, IDisposable
+  public class SetUpXShell : SetUp
   {
+    #region Constants
+
+    /// <summary>
+    /// The port used for X Protocol.
+    /// </summary>
+    internal const int DEFAULT_X_PORT = 33570;
+
     /// <summary>
     /// Name for the DB used by the tests
     /// </summary>
-    const string _dbName = "xshellTest";
+    internal const string DB_NAME = "x_shell_test";
+
+    #endregion Constants
+
+    public int XPort { get; protected set; }
 
     /// <summary>
     /// Initializes a new instance of SetUpXShell class
     /// </summary>
     public SetUpXShell()
-      : base()
     {
+      string xPortString = ConfigurationManager.AppSettings["x_port"];
+      XPort = string.IsNullOrEmpty(xPortString) ? DEFAULT_X_PORT : int.Parse(xPortString);
       CreateData();
     }
 
@@ -58,8 +67,8 @@ namespace MySql.VisualStudio.Tests
       StreamReader sr = new StreamReader(stream);
       StringBuilder sql = new StringBuilder(sr.ReadToEnd());
       sr.Close();
-      sql.Replace("{0}", _dbName);
-      ExecuteSQLAsRoot(sql.ToString());
+      sql.Replace("{0}", DataBase);
+      ExecuteSql(sql.ToString());
     }
 
     /// <summary>
@@ -67,8 +76,8 @@ namespace MySql.VisualStudio.Tests
     /// </summary>
     internal new void Dispose()
     {
-      var sql = string.Format("DROP DATABASE IF EXISTS {0};", _dbName);
-      ExecuteSQLAsRoot(sql);
+      var sql = string.Format("DROP DATABASE IF EXISTS {0};", DB_NAME);
+      ExecuteSql(sql);
     }
   }
 }

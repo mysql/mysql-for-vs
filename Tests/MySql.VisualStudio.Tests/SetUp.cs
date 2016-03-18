@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,8 +22,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 using System.Configuration;
@@ -34,19 +32,25 @@ namespace MySql.VisualStudio.Tests
 {
   public class SetUp : IDisposable
   {
-    internal protected int maxPacketSize;
-    internal protected MySqlConnection conn;
-    internal protected string host;
-    internal protected string user;
-    internal protected string password;
-    internal protected int port;
-    internal protected string pipeName;
-    internal protected string memoryName;
-    internal protected string rootUser;
-    internal protected string rootPassword;
-    internal protected string database;
-    internal protected string database1;
-    internal protected string database2;
+    internal const string DEFAULT_HOST = "localhost";
+    internal const string DEFAULT_USER = "test";
+    internal const string DEFAULT_PASSWORD = "test";
+    internal const int DEFAULT_PORT = 3357;
+    internal const string DEFAULT_PIPENAME = "MYSQL";
+    internal const string DEFAULT_MEMORYNAME = "MYSQL";
+    internal const string DEFAULT_DATABASE = "DumpTest";
+    internal const string DEFAULT_DATABASE1 = "SecondTest";
+    internal const string DEFAULT_DATABASE2 = "ThirdTest";
+
+    public string Host { get; protected set; }
+    public string User { get; protected set; }
+    public string Password { get; protected set; }
+    public int Port { get; protected set; }
+    public string PipeName { get; protected set; }
+    public string MemoryName { get; protected set; }
+    public string DataBase { get; protected set; }
+    public string DataBase1 { get; protected set; }
+    public string DataBase2 { get; protected set; }
 
     public SetUp()
     {
@@ -60,72 +64,59 @@ namespace MySql.VisualStudio.Tests
       StreamReader sr = new StreamReader(stream);
       StringBuilder sql = new StringBuilder(sr.ReadToEnd());
       sr.Close();
-      sql.Replace("{0}", database);
-      sql.Replace("{1}", database1);
-      sql.Replace("{2}", database2);
-      ExecuteSQLAsRoot(sql.ToString());
+      sql.Replace("{0}", DataBase);
+      sql.Replace("{1}", DataBase1);
+      sql.Replace("{2}", DataBase2);
+      ExecuteSql(sql.ToString());
     }
-
 
     private void LoadConfiguration()
     {
-      user = "test";
-      password = "test";
-      string portString = null;
+      var appHost = ConfigurationManager.AppSettings["host"];
+      var appUser = ConfigurationManager.AppSettings["user"];
+      var appPassword = ConfigurationManager.AppSettings["password"];
+      var appPort = ConfigurationManager.AppSettings["port"];
+      var appPipeName = ConfigurationManager.AppSettings["pipename"];
+      var appMemoryName = ConfigurationManager.AppSettings["memory_name"];
+      var appDataBase = ConfigurationManager.AppSettings["database"];
+      var appDataBase1 = ConfigurationManager.AppSettings["database1"];
+      var appDataBase2 = ConfigurationManager.AppSettings["database2"];
 
-      rootUser = ConfigurationManager.AppSettings["rootuser"];
-      rootPassword = ConfigurationManager.AppSettings["rootpassword"];
-      host = ConfigurationManager.AppSettings["host"];
-      portString = ConfigurationManager.AppSettings["port"];
-      pipeName = ConfigurationManager.AppSettings["pipename"];
-      memoryName = ConfigurationManager.AppSettings["memory_name"];
-      database = ConfigurationManager.AppSettings["database"];
-      if (string.IsNullOrEmpty(rootUser))
-        rootUser = "root";
-      if (string.IsNullOrEmpty(rootPassword))
-        rootPassword = string.Empty;
-      if (string.IsNullOrEmpty(host))
-        host = "localhost";
-      if (string.IsNullOrEmpty(portString))
-        port = 3305;
-      else
-        port = int.Parse(portString);
-      if (string.IsNullOrEmpty(pipeName))
-        pipeName = "MYSQL";
-      if (string.IsNullOrEmpty(memoryName))
-        memoryName = "MYSQL";
-      if (string.IsNullOrEmpty(database))
-        database = "DumpTest";
-      if (string.IsNullOrEmpty(database1))
-        database1 = "SecondTest";
-      if (string.IsNullOrEmpty(database2))
-        database2 = "ThirdTest";
-
+      Host = string.IsNullOrEmpty(appHost) ? DEFAULT_HOST : appHost;
+      User = string.IsNullOrEmpty(appUser) ? DEFAULT_USER : appUser;
+      Password = string.IsNullOrEmpty(appPassword) ? DEFAULT_PASSWORD : appPassword;
+      Port = string.IsNullOrEmpty(appPort) ? DEFAULT_PORT : int.Parse(appPort);
+      PipeName = string.IsNullOrEmpty(appPipeName) ? DEFAULT_PIPENAME : appPipeName;
+      MemoryName = string.IsNullOrEmpty(appMemoryName) ? DEFAULT_MEMORYNAME : appMemoryName;
+      DataBase = string.IsNullOrEmpty(appDataBase) ? DEFAULT_DATABASE : appDataBase;
+      DataBase1 = string.IsNullOrEmpty(appDataBase) ? DEFAULT_DATABASE1 : appDataBase1;
+      DataBase2 = string.IsNullOrEmpty(appDataBase) ? DEFAULT_DATABASE2 : appDataBase2;
     }
 
-
-    internal protected string GetConnectionString(string userId, string pw, bool persistSecurityInfo, bool includedb)
+    internal string GetConnectionString(string userId, string pw, bool persistSecurityInfo, bool includedb)
     {
-      string connStr = String.Format("server={0};user id={1};pooling=false;" +
-           "persist security info={2};connection reset=true;allow user variables=true;port={3};",
-           host, userId, persistSecurityInfo.ToString().ToLower(), port);
+      string connStr = string.Format("server={0};user id={1};pooling=false;persist security info={2};connection reset=true;allow user variables=true;port={3};",
+          Host,
+          userId,
+          persistSecurityInfo.ToString().ToLowerInvariant(),
+          Port);
       if (pw != null)
-        connStr += String.Format(";password={0};", pw);
+        connStr += string.Format(";password={0};", pw);
       if (includedb)
-        connStr += String.Format("database={0};", database);
+        connStr += string.Format("database={0};", DataBase);
       return connStr;
     }
 
 
     public virtual void Dispose()
     {
-      var sql = string.Format("DROP DATABASE IF EXISTS {0}; DROP DATABASE IF EXISTS {1}; DROP DATABASE IF EXISTS {2};", database, database1, database2);
-      ExecuteSQLAsRoot(sql);
+      var sql = string.Format("DROP DATABASE IF EXISTS {0}; DROP DATABASE IF EXISTS {1}; DROP DATABASE IF EXISTS {2};", DataBase, DataBase1, DataBase2);
+      ExecuteSql(sql);
     }
 
-    internal protected void ExecuteSQLAsRoot(string sql)
+    internal void ExecuteSql(string sql)
     {
-      MySqlScript s = new MySqlScript(new MySqlConnection(GetConnectionString("root", "", false, false)), sql);
+      var s = new MySqlScript(new MySqlConnection(GetConnectionString(User, Password, false, false)), sql);
       s.Execute();
     }
   }

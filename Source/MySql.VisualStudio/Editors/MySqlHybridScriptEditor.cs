@@ -30,6 +30,7 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Collections.Generic;
+using MySql.Data.VisualStudio.MySqlX;
 using MySqlX;
 using MySqlX.Shell;
 
@@ -53,7 +54,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Variable used to executes the script
     /// </summary>
-    private NgShellWrapper _ngWrapper;
+    private MySqlXProxy _ngWrapper;
 
     /// <summary>
     /// The script type.
@@ -267,11 +268,11 @@ Check that the server is running, the database exist and the user credentials ar
           case SessionOption.UseSameSession:
             if (_ngWrapper == null)
             {
-              _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), true);
+              _ngWrapper = new MySqlXProxy(((MySqlConnection)connection).ToNgFormat(), true);
             }
             break;
           case SessionOption.UseNewSession:
-            _ngWrapper = new NgShellWrapper(((MySqlConnection)connection).ToNgFormat(), false);
+            _ngWrapper = new MySqlXProxy(((MySqlConnection)connection).ToNgFormat(), false);
             break;
         }
 
