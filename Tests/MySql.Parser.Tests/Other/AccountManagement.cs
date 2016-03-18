@@ -1,23 +1,23 @@
-﻿// Copyright © 2013 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
@@ -30,7 +30,7 @@ using Xunit;
 
 namespace MySql.Parser.Tests
 {
-  
+
   public class AccountManagement
   {
     [Fact]
@@ -71,7 +71,24 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, false, out sb);
     }
-    
+
+    public void CreateUser_IfNotExists_5_6()
+    {
+      string sql = @"CREATE USER IF NOT EXISTS 'jeffrey'@'localhost';";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, true, out sb, new Version(5, 6));
+    }
+
+    [Fact]
+    public void CreateUser_IfNotExists_5_7()
+    {
+      string sql = @"CREATE USER IF NOT EXISTS 'jeffrey'@'localhost';";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, false, out sb, new Version(5, 7));
+    }
+
     [Fact]
     public void DropUser()
     {
@@ -88,6 +105,23 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, false, out sb);
+    }
+
+    public void DropUser_IfExists_5_6()
+    {
+      string sql = @"DROP USER IF EXISTS 'jeffrey'@'localhost';";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, true, out sb, new Version(5, 6));
+    }
+
+    [Fact]
+    public void DropUser_IfExists_5_7()
+    {
+      string sql = @"DROP USER IF EXISTS 'jeffrey'@'localhost';";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, false, out sb, new Version(5, 7));
     }
 
     [Fact]
@@ -291,7 +325,7 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       string sql = @"GRANT PROXY ON 'localuser'@'localhost' TO 'externaluser'@'somehost';";
       StringBuilder sb;
       MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, true, out sb, new Version( 5, 1 ));
+        Utility.ParseSql(sql, true, out sb, new Version(5, 1));
       Assert.True(sb.ToString().IndexOf("no viable alternative at input 'GRANT'") != -1);
     }
 
@@ -301,7 +335,7 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       string sql = @"GRANT PROXY ON 'localuser'@'localhost' TO 'externaluser'@'somehost';";
       StringBuilder sb;
       MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb, new Version( 5, 5 ));
+        Utility.ParseSql(sql, false, out sb, new Version(5, 5));
     }
 
     [Fact]
@@ -337,7 +371,7 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       string sql = "REVOKE PROXY ON 'jeffrey'@'localhost' FROM 'jeff'@'127.0.0.1', 'me'@'localhost'";
       StringBuilder sb;
       MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, true, out sb, new Version( 5, 1 ));
+        Utility.ParseSql(sql, true, out sb, new Version(5, 1));
       Assert.True(sb.ToString().IndexOf("no viable alternative at input 'REVOKE'") != -1);
     }
 
@@ -347,7 +381,7 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       string sql = "REVOKE PROXY ON 'jeffrey'@'localhost' FROM 'jeff'@'127.0.0.1', 'me'@'localhost'";
       StringBuilder sb;
       MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb, new Version( 5, 5 ));
+        Utility.ParseSql(sql, false, out sb, new Version(5, 5));
     }
 
     [Fact]
