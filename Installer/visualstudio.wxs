@@ -42,6 +42,8 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='VS2010_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
+        <File Id='VS2010_MyPyScriptTemplate' Name='MyPy Script.mypy' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MyPy Script.mypy'/>
         <File Id='VS2010_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
@@ -151,6 +153,8 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='VS2012_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
+        <File Id='VS2012_MyPyScriptTemplate' Name='MyPy Script.mypy' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MyPy Script.mypy'/>
         <File Id='VS2012_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
@@ -259,7 +263,9 @@
         <File Id='VS2013_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='VS2013_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
-      Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
+              Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
+        <File Id='VS2013_MyPyScriptTemplate' Name='MyPy Script.mypy' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MyPy Script.mypy'/>
         <File Id='VS2013_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
@@ -369,7 +375,9 @@
         <File Id='VS2015_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='VS2015_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
-      Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
+              Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
+        <File Id='VS2015_MyPyScriptTemplate' Name='MyPy Script.mypy' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MyPy Script.mypy'/>
         <File Id='VS2015_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>

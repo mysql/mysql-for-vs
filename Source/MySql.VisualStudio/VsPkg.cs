@@ -230,6 +230,9 @@ namespace MySql.Data.VisualStudio
       jslanguageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MyJsLanguageService), jslanguageService, true);
 
+      MyPyLanguageService pyLanguageService = new MyPyLanguageService();
+      pyLanguageService.SetSite(this);
+      ((IServiceContainer)this).AddService(typeof(MyPyLanguageService), pyLanguageService, true);
 
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
 #if NET_45_OR_GREATER

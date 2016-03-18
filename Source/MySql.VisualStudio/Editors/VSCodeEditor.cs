@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -177,6 +177,11 @@ namespace MySql.Data.VisualStudio.Editors
           langSvc = new Guid(MyJsLanguageService.IID);
         //else
         //TODO: [MYSQLFORVS-402] - CREATE A CLASSIFIER EXTENSION THAT COLORS THE APPROPRIATE TEXT (MYPY FILES).
+        else if (parent == null || typeof(MySqlHybridScriptEditor) == parent.Editor.GetType() && ((MySqlHybridScriptEditor)parent.Editor).ScriptType == ScriptType.Python)
+        {
+          langSvc = new Guid(MyPyLanguageService.IID);
+        }
+
       }
 
       int hr = textBuffer.SetLanguageServiceID(ref langSvc);

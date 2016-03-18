@@ -1,4 +1,4 @@
-﻿// Copyright © 2008 - 2015 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -211,6 +211,13 @@ namespace MySql.Data.VisualStudio
       keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MyJs", version);
       langKey = rootKey.CreateSubKey(keyPath);
       langKey.SetValue(null, "{cc93f80a-2457-4510-ac24-c926049e39df}");
+      langKey.SetValue("Package", "{79a115c9-b133-4891-9e7b-242509dad272}");
+      langKey.SetValue("LangResID", 102);
+      langKey.SetValue("RequestStockColors", 1);
+
+      keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MyPy", version);
+      langKey = rootKey.CreateSubKey(keyPath);
+      langKey.SetValue(null, "{8ec34659-592d-43e7-9eb2-98f487dcbbb7}");
       langKey.SetValue("Package", "{79a115c9-b133-4891-9e7b-242509dad272}");
       langKey.SetValue("LangResID", 102);
       langKey.SetValue("RequestStockColors", 1);

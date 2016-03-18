@@ -959,6 +959,7 @@
     <Compile Include="LanguageService\LanguageServiceUtil.cs">
     </Compile>
     <Compile Include="LanguageService\MyJsLanguageService.cs" />
+	<Compile Include="LanguageService\MyPyLanguageService.cs" />
     <Compile Include="LanguageService\MySqlLanguageService.cs">
     </Compile>
     <Compile Include="Editors\TableEditor.cs">
