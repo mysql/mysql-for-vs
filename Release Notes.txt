@@ -1,7 +1,7 @@
-﻿MySQL for Visual Studio 2.0.2 DMR Release Notes
+﻿MySQL for Visual Studio 2.0.2 Developer Preview Release Notes
 ------------------------------------
-Welcome to the release notes for MySQL for Visual Studio 2.0.2 DMR.
-This is the first DMR release in the 2.0 series released to the public.
+Welcome to the release notes for MySQL for Visual Studio 2.0.2 Developer Preview Release.
+This is the first preview release in the 2.0 series released to the public.
 
 * Fixed the MySQL X support for all Visual Studio versions supported by MySQL for Visual Studio (2010 and newer).
 * Added support for Visual Studio 2015 and .NET Framework 4.6.
@@ -16,9 +16,9 @@ Known Issues
 
 
 
-MySQL for Visual Studio 2.0.1 DMR Release Notes
+MySQL for Visual Studio 2.0.1 Developer Preview Release Notes
 ------------------------------------
-Welcome to the release notes for MySQL for Visual Studio 2.0.1 DMR.
+Welcome to the release notes for MySQL for Visual Studio 2.0.1 Developer Preview Release.
 This is an internal development release not released to the public.
 
 * Added support for Python scripts. Python code can now be executed and can interact with the X DevAPI introduced
@@ -37,9 +37,9 @@ Known Issues
 
 
 
-MySQL for Visual Studio 2.0.0 DMR Release Notes
+MySQL for Visual Studio 2.0.0 Developer Preview Release Notes
 ------------------------------------
-Welcome to the release notes for MySQL for Visual Studio 2.0.0 DMR.
+Welcome to the release notes for MySQL for Visual Studio 2.0.0 Developer Preview Release.
 This is an internal development release not released to the public.
 
 * Added an option to create MySQL scripts directly from a MySQL Server instance lying in the Server Explorer.
