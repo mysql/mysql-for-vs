@@ -56,12 +56,10 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     protected const string CREATE_SCHEMA_TEST = "session.createSchema('" + TEST_SCHEMA_NAME + "')";
 
-    //TODO: [MYSQLFORVS-414] Adjust this test for when this method is fully implemented in x-Shell for the JS sintaxis. It should look like:
-    //private const string _deleteCollectionTest = "session." + _testCollectionName + ".drop();";
     /// <summary>
     /// Statement to delete the test table
     /// </summary>
-    protected const string DELETE_COLLECTION_TEST = "session.sql('drop table " + TEST_SCHEMA_NAME + "." + TEST_COLLECTION_NAME + "').execute()";
+    protected const string DELETE_COLLECTION_TEST = "session.dropCollection('" + TEST_SCHEMA_NAME + "', '" + TEST_COLLECTION_NAME + "')";
 
     /// <summary>
     /// Statement to drop the test database
