@@ -27,6 +27,31 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     #region CommonShellQueries
 
     /// <summary>
+    /// Single line comment in hash format for a first line.
+    /// </summary>
+    protected const string COMMENT_SINGLE_LINE_1 = "// This is a test JavaScript comment in double-slash format...";
+
+    /// <summary>
+    /// Single line comment in hash format for a second line.
+    /// </summary>
+    protected const string COMMENT_SINGLE_LINE_2 = "//  which is continued in a second comment line.";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a first line.
+    /// </summary>
+    protected const string COMMENT_MULTI_LINE_1 = "/* This is a test JavaScript comment using the slash-star format;";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a second line.
+    /// </summary>
+    protected const string COMMENT_MULTI_LINE_2 = "  the intention is that this spans multiple lines...";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a third line.
+    /// </summary>
+    protected const string COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. */";
+
+    /// <summary>
     /// Statement to create the test database
     /// </summary>
     protected const string CREATE_TEST_DATABASE = "session.sql('create schema " + TEST_DATABASE_NAME + ";').execute();";

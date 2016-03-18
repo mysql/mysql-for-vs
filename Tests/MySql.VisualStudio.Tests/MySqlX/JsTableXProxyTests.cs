@@ -256,14 +256,18 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXProxy();
         var script = new StringBuilder();
+        script.AppendLine(COMMENT_SINGLE_LINE_1);
+        script.AppendLine(COMMENT_SINGLE_LINE_2);
         script.AppendLine(DROP_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_DATABASE);
         script.AppendLine(USE_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_TABLE);
-
         script.AppendLine(SET_SCHEMA_VAR);
         script.AppendLine(SET_TABLE_VAR);
         script.AppendLine(INSERT_TWO_RECORDS);
+        script.AppendLine(COMMENT_MULTI_LINE_1);
+        script.AppendLine(COMMENT_MULTI_LINE_2);
+        script.AppendLine(COMMENT_MULTI_LINE_3);
         script.AppendLine(UPDATE_RECORD_SINGLE_LINE);
         script.AppendLine(DELETE_RECORD_SINGLE_LINE);
 

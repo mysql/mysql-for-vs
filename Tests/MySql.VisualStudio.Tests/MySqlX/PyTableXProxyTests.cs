@@ -196,12 +196,17 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         //Tokenizer and batch script tests
         var script = new StringBuilder();
+        script.AppendLine(COMMENT_SINGLE_LINE_1);
+        script.AppendLine(COMMENT_SINGLE_LINE_2);
         script.AppendLine(DROP_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_DATABASE);
         script.AppendLine(USE_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_TABLE);
         script.AppendLine(SET_SCHEMA_VAR);
         script.AppendLine(SET_TABLE_VAR);
+        script.AppendLine(COMMENT_MULTI_LINE_1);
+        script.AppendLine(COMMENT_MULTI_LINE_2);
+        script.AppendLine(COMMENT_MULTI_LINE_3);
         script.AppendLine(INSERT_RECORD_JSON1);
         script.AppendLine(INSERT_RECORD_JSON2);
 
