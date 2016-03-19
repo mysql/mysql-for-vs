@@ -321,8 +321,8 @@ Check that the server is running, the database exist and the user credentials ar
                 Utils.WriteToOutputWindow(
                   string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.",
                     tableResult.GetExecutionTime(),
-                    tableResult.FetchAll().Count,
-                    tableResult.GetWarningCount()), Messagetype.Information);
+                    tableResult.FetchAll().Count < 0 ? 0 : tableResult.FetchAll().Count,
+                    tableResult.GetWarningCount() < 0 ? 0 : tableResult.GetWarningCount()), Messagetype.Information);
               }
             }
 
