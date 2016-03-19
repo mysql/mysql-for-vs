@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -27,11 +27,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using MySqlX.Shell;
 using System.Data;
 using System.Drawing;
-using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.Win32;
+using MySql.Data.MySqlClient;
 using MySqlX;
 using Color = System.Drawing.Color;
 
@@ -47,9 +46,17 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// True when updating controls to match _currentVsTheme and avoid modifying its value until the process has finished. 
     /// </summary>
-    private static bool _isUpdating = false;
+    private static bool _isUpdating;
 
+    /// <summary>
+    /// The current Visual Studio theme.
+    /// </summary>
     private static VsTheme? _currentVsTheme;
+
+    /// <summary>
+    /// Dictionary containing a key composed of host + classsicPort and its corresponding xPort.
+    /// </summary>
+    private static Dictionary<string, int> _xPortsDictionary;
 
     /// <summary>
     /// Exposes the current Visual Studio theme to the exterior of this class.
@@ -286,7 +293,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Separates multiple python statements into single ones
     /// </summary>
-    /// <param name="jsStatements">Python statements</param>
+    /// <param name="pythonStatements">Python statements</param>
     /// <returns>List of single statements</returns>
     public static List<string> BreakPythonStatements(this string pythonStatements)
     {
@@ -302,7 +309,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Parse a DocResult object to string with JSON format
     /// </summary>
-    /// <param name="document">The document to parse</param>
+    /// <param name="list">The document to parse</param>
     /// <returns>String with JSON format</returns>
     public static string ToJson(this List<Dictionary<string, object>> list)
     {
@@ -339,7 +346,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="resultSet">RowResult to parse</param>
     /// <returns>Object parse to DataTable object</returns>
-    public static System.Data.DataTable ToDataTable(this RowResult resultSet)
+    public static DataTable ToDataTable(this RowResult resultSet)
     {
       DataTable result = new DataTable("Result");
       foreach (var column in resultSet.GetColumnNames())
@@ -355,13 +362,96 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Extract the properties from a given <see cref="MySqlClient.MySqlConnection"/>.
+    /// </summary>
+    /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
+    /// <returns>The <see cref="MySqlConnectionProperties"/> related to the connection.</returns>
+    public static MySqlConnectionStringBuilder GetProperties(this MySqlClient.MySqlConnection connection)
+    {
+      if (connection == null)
+      {
+        return null;
+      }
+
+      var strb = new MySqlConnectionStringBuilder(connection.ConnectionString);
+      return strb;
+    }
+
+    /// <summary>
+    /// Assembles a key with the connected host and port.
+    /// </summary>
+    /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
+    /// <returns>A key with the connected host and port.</returns>
+    public static string GetHostAndPortKey(this MySqlClient.MySqlConnection connection)
+    {
+      var connProps = connection.GetProperties();
+      if (connProps == null)
+      {
+        return string.Empty;
+      }
+
+      return string.Format("{0}:{1}", connProps.Server, connProps.Port);
+    }
+
+    /// <summary>
+    /// Fetches from a connected server the port for the X Protocol.
+    /// </summary>
+    /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
+    /// <returns>The port for the X Protocol, or <c>-1</c> if it can't be fetched.</returns>
+    public static int FetchXProtocolPort(this MySqlClient.MySqlConnection connection)
+    {
+      string serverKey = connection.GetHostAndPortKey();
+      if (string.IsNullOrEmpty(serverKey))
+      {
+        return -1;
+      }
+
+      // If we already have the key in the dictionary, fetch it from there
+      if (_xPortsDictionary != null && _xPortsDictionary.ContainsKey(serverKey))
+      {
+        return _xPortsDictionary[serverKey];
+      }
+
+      // Fetch the key from the server
+      if (connection == null)
+      {
+        return -1;
+      }
+
+      try
+      {
+        const string sql = "SELECT @@mysqlx_port";
+        object xPortObj = MySqlHelper.ExecuteScalar(connection, sql);
+        if (xPortObj == null)
+        {
+          return -1;
+        }
+
+        var xPort = Convert.ToInt32(xPortObj);
+        if (_xPortsDictionary == null)
+        {
+          _xPortsDictionary = new Dictionary<string, int>();
+        }
+
+        _xPortsDictionary.Add(serverKey, xPort);
+        return xPort;
+      }
+      catch (Exception ex)
+      {
+        WriteToOutputWindow(string.Format("Can't fetch the X Protocol port from the server {0}. Error: {1}", serverKey, ex), Messagetype.Error);
+      }
+
+      return -1;
+    }
+
+    /// <summary>
     /// Parse a MySqlConnection object to a string format useb by the NgWrapper
     /// </summary>
     /// <param name="connection">Connection to parse</param>
     /// <returns>Connection string with the format "user:pass@server:port"</returns>
-    public static string ToNgFormat(this MySql.Data.MySqlClient.MySqlConnection connection)
+    public static string ToNgFormat(this MySqlClient.MySqlConnection connection)
     {
-      MySqlConnectionProperties connProp = new MySqlConnectionProperties();
+      var connProp = new MySqlConnectionProperties();
       connProp.ConnectionStringBuilder.ConnectionString = connection.ConnectionString;
       string user = connProp["User Id"] as string;
       string pass = connProp["Password"] as string;
@@ -369,7 +459,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       //TODO: currently the Shell gets connected to the server using the port 33060 and there is no way to specify other port
       //so we'll use the 33060 port by default until we have support to specify it
-      UInt32 port = 33060; //assign the default port
+      //UInt32 port = 33060; //assign the default port
       //verify if the user is not using the default port, if not then extract the value
       //object givenPort = connProp["Port"];
       //if (givenPort != null)
@@ -377,7 +467,13 @@ namespace MySql.Data.VisualStudio.Editors
       //  port = (UInt32)givenPort;
       //}
 
-      return string.Format("{0}:{1}@{2}:{3}", user, pass, server, port);
+      var xPort = connection.FetchXProtocolPort();
+      if (xPort == -1)
+      {
+        throw new Exception("Unable to extract the X Protocol port from connected Server.");
+      }
+
+      return string.Format("{0}:{1}@{2}:{3}", user, pass, server, xPort);
     }
 
     /// <summary>
