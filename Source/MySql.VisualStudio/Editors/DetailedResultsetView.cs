@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -29,7 +29,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Markup.Localizer;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -38,7 +37,37 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   public partial class DetailedResultsetView : UserControl
   {
-    #region PrivateFields
+    #region Constants
+
+    /// <summary>
+    /// Key used to set and get the execution plan query in a queries dictionary
+    /// </summary>
+    private const string EXECUTION_PLAN_KEY = "execPlan";
+
+    /// <summary>
+    /// Key used to set and get the field types query in a queries dictionary
+    /// </summary>
+    private const string FIELD_TYPE_KEY = "fieldTypes";
+
+    /// <summary>
+    /// Key used to set and get the performance schema configuration query in a queries dictionary
+    /// </summary>
+    private const string PERFORMANCE_SCHEMA_KEY = "perfSchemaConfig";
+
+    /// <summary>
+    /// Key used to set and get the original query given in a queries dictionary
+    /// </summary>
+    private const string QUERY_KEY = "baseQuery";
+
+    /// <summary>
+    /// Key used to set and get the query statistic query in a queries dictionary
+    /// </summary>
+    private const string QUERY_STATISTICS_KEY = "queryStats";
+
+    #endregion Constants
+
+    #region Fields
+
     /// <summary>
     /// This property stores the query used to configure the Performance_Schema database
     /// </summary>
@@ -70,35 +99,11 @@ namespace MySql.Data.VisualStudio.Editors
     private int _currentServerVersion;
 
     /// <summary>
-    /// Key used to set and get the performance schema configuration query in a queries dictionary
-    /// </summary>
-    private const string _performanceSchemaKey = "perfSchemaConfig";
-
-    /// <summary>
-    /// Key used to set and get the field types query in a queries dictionary
-    /// </summary>
-    private const string _fieldTypeKey = "fieldTypes";
-
-    /// <summary>
-    /// Key used to set and get the query statistic query in a queries dictionary
-    /// </summary>
-    private const string _queryStatisticsKey = "queryStats";
-
-    /// <summary>
-    /// Key used to set and get the execution plan query in a queries dictionary
-    /// </summary>
-    private const string _executionPlanKey = "execPlan";
-
-    /// <summary>
-    /// Key used to set and get the original query given in a queries dictionary
-    /// </summary>
-    private const string _queryKey = "baseQuery";
-
-    /// <summary>
     /// Dictionary used to store the queries that are executed in the database which are generated after a query is received
     /// </summary>
     private Dictionary<string, string> _queries;
-    #endregion
+    
+    #endregion Fields
 
     /// <summary>
     /// Initializes a new instance of the DetailedResultsetView class.
@@ -128,21 +133,24 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="query">Query that will be executed</param>
     public void SetQuery(MySqlConnection connection, string query)
     {
-      if (!string.IsNullOrEmpty(query))
+      if (string.IsNullOrEmpty(query))
       {
-        if (!query.Contains(";"))
-        {
-          query += ";";
-        }
-        Connection = connection;
-        ValidateServerVersion();
-        LoadResources();
-        GenerateQueryBatch(query);
+        return;
       }
+
+      if (!query.Contains(";"))
+      {
+        query += ";";
+      }
+
+      Connection = connection;
+      ValidateServerVersion();
+      LoadResources();
+      GenerateQueryBatch(query);
     }
 
     /// <summary>
-    /// <summary>    /// Generates the queries that will be executed in the database basis on the original query received
+    /// Generates the queries that will be executed in the database basis on the original query received
     /// </summary>
     /// <param name="baseQuery">Original query</param>
     private void GenerateQueryBatch(string baseQuery)
@@ -153,16 +161,24 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       _queries = new Dictionary<string, string>();
-
-      _queries.Add(_queryKey, baseQuery);
+      _queries.Add(QUERY_KEY, baseQuery);
       var columns = GetColumnsFromQuery(baseQuery);
-      _queries.Add(_fieldTypeKey, string.Format(_baseFieldTypeQuery, columns, string.IsNullOrEmpty(columns) ? string.Empty : " and ", GetTablesFromQuery(baseQuery)));
-      _queries.Add(_executionPlanKey, string.Format(_baseExecutionPlanQuery, baseQuery));
+      if (!string.IsNullOrEmpty(columns))
+      {
+        if (columns == "*")
+        {
+          columns = string.Empty;
+        }
+
+        var tables = GetTablesFromQuery(baseQuery);
+        _queries.Add(FIELD_TYPE_KEY, string.Format(_baseFieldTypeQuery, columns, string.IsNullOrEmpty(columns) ? string.Empty : " and ", tables));
+        _queries.Add(EXECUTION_PLAN_KEY, string.Format(_baseExecutionPlanQuery, baseQuery));
+      }
 
       if (_currentServerVersion > 55)
       {
-        _queries.Add(_performanceSchemaKey, _basePerformanceSchemaConfigurationQuery);
-        _queries.Add(_queryStatisticsKey, string.Format(_baseQueryStatisticsQuery, baseQuery.Substring(0, baseQuery.LastIndexOf(';')).Trim().Replace("'", "''")));
+        _queries.Add(PERFORMANCE_SCHEMA_KEY, _basePerformanceSchemaConfigurationQuery);
+        _queries.Add(QUERY_STATISTICS_KEY, string.Format(_baseQueryStatisticsQuery, baseQuery.Substring(0, baseQuery.LastIndexOf(';')).Trim().Replace("'", "''")));
       }
 
       LoadData();
@@ -194,36 +210,42 @@ namespace MySql.Data.VisualStudio.Editors
         cmd.Transaction = tran;
         try
         {
-          if (_queries.ContainsKey(_performanceSchemaKey))
+          if (_queries.ContainsKey(PERFORMANCE_SCHEMA_KEY) && !string.IsNullOrEmpty(_queries[PERFORMANCE_SCHEMA_KEY]))
           {
-            cmd.CommandText = _queries[_performanceSchemaKey];
+            cmd.CommandText = _queries[PERFORMANCE_SCHEMA_KEY];
             cmd.ExecuteNonQuery();
           }
 
-          cmd.CommandText = _queries[_queryKey];
+          cmd.CommandText = _queries[QUERY_KEY];
           resultDataTable.Load(cmd.ExecuteReader());
 
-          cmd.CommandText = _queries[_fieldTypeKey];
-          fieldTypesDataTable.Load(cmd.ExecuteReader());
-
-          if (_queries.ContainsKey(_queryStatisticsKey))
+          if (_queries.ContainsKey(FIELD_TYPE_KEY) && !string.IsNullOrEmpty(_queries[FIELD_TYPE_KEY]))
           {
-            cmd.CommandText = _queries[_queryStatisticsKey];
+            cmd.CommandText = _queries[FIELD_TYPE_KEY];
+            fieldTypesDataTable.Load(cmd.ExecuteReader());
+          }
+
+          if (_queries.ContainsKey(QUERY_STATISTICS_KEY) && !string.IsNullOrEmpty(_queries[QUERY_STATISTICS_KEY]))
+          {
+            cmd.CommandText = _queries[QUERY_STATISTICS_KEY];
             queryStatisticsDataTable.Load(cmd.ExecuteReader());
           }
 
-          if (_currentServerVersion > 55)
+          if (_queries.ContainsKey(EXECUTION_PLAN_KEY) && !string.IsNullOrEmpty(_queries[EXECUTION_PLAN_KEY]))
           {
-            cmd.CommandText = _queries[_executionPlanKey];
-            var reader = cmd.ExecuteReader();
-            reader.Read();
-            executionPlanJsonData = reader[0].ToString();
-            reader.Close();
-          }
-          else
-          {
-            cmd.CommandText = _queries[_executionPlanKey];
-            executionPlanDataTable.Load(cmd.ExecuteReader());
+            if (_currentServerVersion > 55)
+            {
+              cmd.CommandText = _queries[EXECUTION_PLAN_KEY];
+              var reader = cmd.ExecuteReader();
+              reader.Read();
+              executionPlanJsonData = reader[0].ToString();
+              reader.Close();
+            }
+            else
+            {
+              cmd.CommandText = _queries[EXECUTION_PLAN_KEY];
+              executionPlanDataTable.Load(cmd.ExecuteReader());
+            }
           }
 
           tran.Commit();
@@ -266,24 +288,16 @@ namespace MySql.Data.VisualStudio.Editors
     {
       if (string.IsNullOrEmpty(query))
       {
-        return "";
+        return string.Empty;
       }
 
-      query = query.ToLower().Replace("`", "");
+      query = query.ToLower().Replace("`", string.Empty);
       var result = new StringBuilder();
-
-      string tablesSubstr = "";
-      if (query.Contains(" where "))
-      {
-        tablesSubstr = query.Substring(query.IndexOf("from") + 4, query.IndexOf("where") - (query.IndexOf("from") + 4));
-      }
-      else
-      {
-        tablesSubstr = query.Substring(query.IndexOf("from") + 4, query.IndexOf(";") - (query.IndexOf("from") + 4)).Trim();
-      }
-
+      string whereOrSemicolon = query.Contains(" where ") ? "where" : ";";
+      int fromIndex = query.IndexOf("from", StringComparison.Ordinal);
+      var tablesSubstr = query.Substring(fromIndex + 4, query.IndexOf(whereOrSemicolon, StringComparison.Ordinal) - (fromIndex + 4));
       result.Append(" `table_name` in (");
-      var tables = tablesSubstr.Split(new string[] { "join" }, StringSplitOptions.None);
+      var tables = tablesSubstr.Split(new[] { "join" }, StringSplitOptions.None);
       for (int ctr = 0; ctr < tables.Count(); ctr++)
       {
         result.Append(string.Format("'{0}'", tables[ctr].TrimStart().Split(' ')[0].Trim()));
@@ -305,40 +319,36 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>Columns separated by comma</returns>
     private string GetColumnsFromQuery(string query)
     {
-      if (string.IsNullOrEmpty(query))
+      if (string.IsNullOrEmpty(query) || !query.Contains("select"))
       {
-        return "";
+        return string.Empty;
       }
 
-      query = query.ToLower().Replace("`", "");
+      var selectIndex = query.IndexOf("select", StringComparison.Ordinal);
+      query = query.ToLower().Replace("`", string.Empty);
       var result = new StringBuilder();
-      var colsSubstr = query.Substring(query.IndexOf("select") + 6, query.IndexOf("from") - (query.IndexOf("select") + 6));
-
-      if (!colsSubstr.Contains("*"))
+      var colsSubstr = query.Substring(selectIndex + 6, query.IndexOf("from", StringComparison.Ordinal) - (selectIndex + 6));
+      if (colsSubstr.Contains("*"))
       {
-        result.Append("column_name in (");
-
-        var columns = colsSubstr.Split(',');
-        for (int ctr = 0; ctr < columns.Length; ctr++)
-        {
-          var col = columns[ctr];
-          if (!col.Contains("."))
-          {
-            result.Append(string.Format("'{0}'", col.Trim()));
-          }
-          else
-          {
-            result.Append(string.Format("'{0}'", col.Substring(col.IndexOf(".") + 1).Trim()));
-          }
-          if (ctr + 1 < columns.Length)
-          {
-            result.Append(", ");
-          }
-        }
-        result.Append(")");
-        return result.ToString();
+        return "*";
       }
-      return string.Empty;
+
+      result.Append("column_name in (");
+      var columns = colsSubstr.Split(',');
+      for (int ctr = 0; ctr < columns.Length; ctr++)
+      {
+        var col = columns[ctr];
+        result.Append(!col.Contains(".")
+          ? string.Format("'{0}'", col.Trim())
+          : string.Format("'{0}'", col.Substring(col.IndexOf(".", StringComparison.Ordinal) + 1).Trim()));
+        if (ctr + 1 < columns.Length)
+        {
+          result.Append(", ");
+        }
+      }
+
+      result.Append(")");
+      return result.ToString();
     }
 
     /// <summary>
@@ -349,7 +359,7 @@ namespace MySql.Data.VisualStudio.Editors
       ComponentResourceManager resources = new ComponentResourceManager(typeof(DetailedResultsetView));
       _baseFieldTypeQuery = resources.GetString("baseFieldTypeQuery");
 
-      if ((int)_currentServerVersion < 56)
+      if (_currentServerVersion < 56)
       {
         _baseExecutionPlanQuery = resources.GetString("baseExecPlanQuery51_55");
       }
@@ -372,25 +382,25 @@ namespace MySql.Data.VisualStudio.Editors
                                     Name = "btnResultGrid",
                                     ToolTip = "Query Result",
                                     ImageToLoad = ImageType.Resultset,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlResultSet); } },
+                                    ClickEvent = delegate { ShowControl(ctrlResultSet); } },
         new VerticalMenuButton() {
                                     ButtonText = "Field\nTypes",
                                     Name = "btnFieldTypes",
                                     ToolTip = "Field Types",
                                     ImageToLoad = ImageType.FieldType,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlFieldtypes); } },
+                                    ClickEvent = delegate { ShowControl(ctrlFieldtypes); } },
         new VerticalMenuButton() {
                                     ButtonText = "Execution\nPlan",
                                     Name = "btnExecPlan",
                                     ToolTip = "Text Execution Plan",
                                     ImageToLoad = ImageType.ExecutionPlan,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlExecPlan); } },
+                                    ClickEvent = delegate { ShowControl(ctrlExecPlan); } },
         new VerticalMenuButton() {
                                     ButtonText = "Query\nStats",
                                     Name = "btnQueryStats",
                                     ToolTip = "Query Stats",
                                     ImageToLoad = ImageType.QueryStats,
-                                    ClickEvent = delegate(object sender, EventArgs e) { ShowControl(ctrlQueryStats); } }
+                                    ClickEvent = delegate { ShowControl(ctrlQueryStats); } }
       };
 
       ctrlMenu.ConfigureControl(buttons);
