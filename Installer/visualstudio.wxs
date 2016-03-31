@@ -20,8 +20,8 @@
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-        <File Id='mysqlsh' Name='mysqlsh.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlsh.dll'/>
+        <File Id='mysqlsh' Name='mysqlshcore.dll' DiskId='1'
+              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
         <File Id='python27' Name='python27.dll' DiskId='1'
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client' Name='shell_client.dll' DiskId='1'
@@ -131,8 +131,8 @@
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-        <File Id='mysqlsh_2012' Name='mysqlsh.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlsh.dll'/>
+        <File Id='mysqlsh_2012' Name='mysqlshcore.dll' DiskId='1'
+              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
         <File Id='python27_2012' Name='python27.dll' DiskId='1'
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2012' Name='shell_client.dll' DiskId='1'
@@ -242,8 +242,8 @@
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2013' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-        <File Id='mysqlsh_2013' Name='mysqlsh.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlsh.dll'/>
+        <File Id='mysqlsh_2013' Name='mysqlshcore.dll' DiskId='1'
+              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
         <File Id='python27_2013' Name='python27.dll' DiskId='1'
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2013' Name='shell_client.dll' DiskId='1'
@@ -354,8 +354,8 @@
               Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2015' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-        <File Id='mysqlsh_2015' Name='mysqlsh.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlsh.dll'/>
+        <File Id='mysqlsh_2015' Name='mysqlshcore.dll' DiskId='1'
+              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
         <File Id='python27_2015' Name='python27.dll' DiskId='1'
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2015' Name='shell_client.dll' DiskId='1'
