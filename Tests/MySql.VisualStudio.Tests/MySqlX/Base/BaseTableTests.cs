@@ -22,34 +22,9 @@
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
-  public abstract class PyTableTests : BaseTests
+  public class BaseTableTests : BaseTests
   {
-    #region CommonShellQueries
-
-    /// <summary>
-    /// Single line comment in hash format for a first line.
-    /// </summary>
-    protected const string COMMENT_SINGLE_LINE_1 = "# This is a test Python comment in hash format...";
-
-    /// <summary>
-    /// Single line comment in hash format for a second line.
-    /// </summary>
-    protected const string COMMENT_SINGLE_LINE_2 = "#  which is continued in a second comment line.";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a first line.
-    /// </summary>
-    protected const string COMMENT_MULTI_LINE_1 = "\"\"\" This is a test Python comment in triple double quote format;";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a second line.
-    /// </summary>
-    protected const string COMMENT_MULTI_LINE_2 = "  the intention is that this spans multiple lines...";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a third line.
-    /// </summary>
-    protected const string COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. \"\"\"";
+    #region CommonTableQueries
 
     /// <summary>
     /// Statement to create the test database
@@ -64,12 +39,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// First statement to delete a record in the test table in multiple commands
     /// </summary>
-    protected const string DELETE_RECORD_CMD1 = "table.delete().where(\"gender='male'\").execute()";
-
-    /// <summary>
-    /// Statement to delete a record in the test table in a single command
-    /// </summary>
-    protected const string DELETE_RECORD_SINGLE_LINE = "res = table.delete().where(\"gender='male'\").execute()";
+    protected const string DELETE_RECORD = "table.delete().where(\"gender='male'\").execute()";
 
     /// <summary>
     /// Statement to delete the test table
@@ -89,20 +59,15 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to insert a record to the test table
     /// </summary>
-    protected const string INSERT_RECORD_JSON2 = "res = table.insert({'name' : 'jacky', 'age' : 17, 'gender' : 'male'}).execute()";
+    protected const string INSERT_RECORD_JSON2 = "res = table.insert({'name' : 'jacky', 'age' : 17, 'gender' : 'female'}).execute()";
 
     /// <summary>
     /// Statement to insert two records at the same time to the test table
     /// </summary>
-    protected const string INSERT_TWO_RECORDS = "res = table.insert('name', 'age', 'gender').values('jack', 17,'male').values('jacky', 17,'male').execute()";
+    protected const string INSERT_TWO_RECORDS = "res = table.insert('name', 'age', 'gender').values('jack', 17,'male').values('jacky', 17,'female').execute()";
 
     /// <summary>
-    /// Statement to get all the records from the test table as RowResult
-    /// </summary>
-    protected const string SELECT_FOR_TABLE_RESULT = "table.select().execute()";
-
-    /// <summary>
-    /// Statement to get all the records from the test table as DocResult
+    /// Statement to get all the records from the test table
     /// </summary>
     protected const string SELECT_TEST_TABLE = "table.select().execute()";
 
@@ -129,7 +94,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Second statement to update a record in the test table in multiple commands
     /// </summary>
-    protected const string UPDATE_RECORD_CMD2 = "upd.set('gender', 'female').where(\"name = 'jacky'\");";
+    protected const string UPDATE_RECORD_CMD2 = "upd.set('age', 15).where(\"name = 'jacky'\");";
 
     /// <summary>
     /// Third statement to update a record in the test table in multiple commands
@@ -139,13 +104,13 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to update a record in the test table in a single command
     /// </summary>
-    protected const string UPDATE_RECORD_SINGLE_LINE = "res = table.update().set('gender', 'female').where(\"name = 'jacky'\").execute()";
+    protected const string UPDATE_RECORD_SINGLE_LINE = "res = table.update().set('age', 15).where(\"name = 'jacky'\").execute()";
 
     /// <summary>
     /// Statement to use the test database
     /// </summary>
     protected const string USE_TEST_DATABASE = "session.sql('use " + TEST_DATABASE_NAME + ";').execute()";
 
-    #endregion CommonShellQueries
+    #endregion CommonTableQueries
   }
 }

@@ -58,11 +58,16 @@ namespace MySql.VisualStudio.Tests
       CreateData();
     }
 
-    internal virtual void CreateData()
+    internal void CreateData()
     {
-      Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.VisualStudio.Tests.Properties.Setup.sql");
-      StreamReader sr = new StreamReader(stream);
-      StringBuilder sql = new StringBuilder(sr.ReadToEnd());
+      var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.VisualStudio.Tests.Properties.Setup.sql");
+      if (stream == null)
+      {
+        return;
+      }
+
+      var sr = new StreamReader(stream);
+      var sql = new StringBuilder(sr.ReadToEnd());
       sr.Close();
       sql.Replace("{0}", DataBase);
       sql.Replace("{1}", DataBase1);

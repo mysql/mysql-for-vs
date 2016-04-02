@@ -31,7 +31,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
   /// <summary>
   /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
   /// </summary>
-  public class PyTableXShellTests : PyTableTests, IUseFixture<SetUpXShell>
+  public class PyTableXShellTests : BaseTableTests, IUseFixture<SetUpXShell>
   {
     #region Fields
 
@@ -56,7 +56,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         InitXShell();
         _shellClient.Execute(DROP_TEST_DATABASE);
         _shellClient.Execute(CREATE_TEST_DATABASE);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
 
@@ -85,11 +85,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -111,7 +107,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(CREATE_TEST_DATABASE);
         _shellClient.Execute(USE_TEST_DATABASE);
         _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -124,11 +120,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -150,7 +142,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         //Create Schema
         _shellClient.Execute(DROP_TEST_DATABASE);
         _shellClient.Execute(CREATE_TEST_DATABASE);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
         while (reader.Read())
@@ -169,7 +161,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         //Create Table
         _shellClient.Execute(USE_TEST_DATABASE);
         _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -190,7 +182,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
 
         //Delete Rows
-        _shellClient.Execute(DELETE_RECORD_SINGLE_LINE);
+        _shellClient.Execute(DELETE_RECORD);
         selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
@@ -203,7 +195,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         //Delete Schema
         _shellClient.Execute(DROP_TEST_DATABASE);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         success = true;
         while (reader.Read())
@@ -231,11 +223,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -256,7 +244,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(CREATE_TEST_DATABASE);
         _shellClient.Execute(USE_TEST_DATABASE);
         _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -280,7 +268,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
 
-        _shellClient.Execute(DELETE_RECORD_CMD1);
+        _shellClient.Execute(DELETE_RECORD);
         selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as DocResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
@@ -288,11 +276,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -313,7 +297,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(CREATE_TEST_DATABASE);
         _shellClient.Execute(USE_TEST_DATABASE);
         _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -334,7 +318,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
 
-        _shellClient.Execute(DELETE_RECORD_SINGLE_LINE);
+        _shellClient.Execute(DELETE_RECORD);
         selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as DocResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
@@ -342,11 +326,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }

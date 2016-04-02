@@ -39,11 +39,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     internal const int DEFAULT_X_PORT = 33570;
 
-    /// <summary>
-    /// Name for the DB used by the tests
-    /// </summary>
-    internal const string DB_NAME = "x_shell_test";
-
     #endregion Constants
 
     public int XPort { get; protected set; }
@@ -63,11 +58,16 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     internal new void CreateData()
     {
-      Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.VisualStudio.Tests.Properties.SetupXShell.sql");
-      StreamReader sr = new StreamReader(stream);
-      StringBuilder sql = new StringBuilder(sr.ReadToEnd());
+      var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.VisualStudio.Tests.Properties.SetupXShell.sql");
+      if (stream == null)
+      {
+        return;
+      }
+
+      var sr = new StreamReader(stream);
+      var sql = new StringBuilder(sr.ReadToEnd());
+      sql.Replace("{0}", BaseTests.SAKILA_X_SCHEMA_NAME);
       sr.Close();
-      sql.Replace("{0}", DataBase);
       ExecuteSql(sql.ToString());
     }
 
@@ -76,8 +76,8 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     internal new void Dispose()
     {
-      var sql = string.Format("DROP DATABASE IF EXISTS {0};", DB_NAME);
-      ExecuteSql(sql);
+      //var sql = string.Format("DROP DATABASE IF EXISTS {0}; DROP DATABASE IF EXISTS {1}; DROP DATABASE IF EXISTS {2};", BaseTests.SAKILA_X_SCHEMA_NAME, BaseTests.TEST_DATABASE_NAME, BaseTests.TEST_SCHEMA_NAME);
+      //ExecuteSql(sql);
     }
   }
 }

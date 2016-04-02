@@ -21,6 +21,7 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using MySql.Data.VisualStudio.Editors;
 using MySqlX.Shell;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
@@ -31,21 +32,12 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
   public class MySqlShellClient : ShellClient
   {
     /// <summary>
-    /// Overrides the Print Method to write data in a custom way
+    /// Executes a base query converting it first to JavaScript format.
     /// </summary>
-    /// <param name="text">Text to write</param>
-    public override void Print(string text)
+    /// <param name="baseQuery"></param>
+    public object ExecuteToJavaScript(string baseQuery)
     {
-      Console.WriteLine(text);
-    }
-
-    /// <summary>
-    /// Overrides the PrintError Method to write data in a custom way
-    /// </summary>
-    /// <param name="text">Text to write</param>
-    public override void PrintError(string text)
-    {
-      Console.WriteLine(@"***ERROR***{0}", text);
+      return Execute(baseQuery.ToJavaScript());
     }
 
     /// <summary>
@@ -70,6 +62,24 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     public override bool Password(string text, ref string ret)
     {
       return Input(text, ref ret);
+    }
+
+    /// <summary>
+    /// Overrides the Print Method to write data in a custom way
+    /// </summary>
+    /// <param name="text">Text to write</param>
+    public override void Print(string text)
+    {
+      Console.WriteLine(text);
+    }
+
+    /// <summary>
+    /// Overrides the PrintError Method to write data in a custom way
+    /// </summary>
+    /// <param name="text">Text to write</param>
+    public override void PrintError(string text)
+    {
+      Console.WriteLine(@"***ERROR***{0}", text);
     }
   }
 }

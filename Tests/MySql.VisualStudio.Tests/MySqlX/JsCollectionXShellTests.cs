@@ -20,6 +20,9 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using MySql.Data.MySqlClient;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
@@ -28,7 +31,7 @@ using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX
 {
-  public class JsCollectionXShellTests : JsCollectionTests, IUseFixture<SetUpXShell>
+  public class JsCollectionXShellTests : BaseCollectionTests, IUseFixture<SetUpXShell>
   {
     #region Fields
 
@@ -38,6 +41,148 @@ namespace MySql.VisualStudio.Tests.MySqlX
     private MySqlShellClient _shellClient;
 
     #endregion Fields
+
+    /// <summary>
+    /// Test to Add and Find data from a collection using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    [Fact]
+    public void AddFind()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+
+        var result = Command.ExecuteScalar();
+        int count;
+        int usersCount = USERS_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+
+        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
+        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXUser);
+
+        // Test single add
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER1);
+        var selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        usersCount += 1;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
+
+        // Test single add again
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER2);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        usersCount += 1;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
+
+        // Test multiple documents add statement
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        usersCount += 3;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
+
+        // Test multiple add statements with single documents
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        usersCount += 3;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
+
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_SPECIFIC_USER_TEST) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+
+        // Remove back the added users and test
+        _shellClient.ExecuteToJavaScript(REVERT_ADDED_USERS);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == USERS_COUNT, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create a Collection using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    [Fact]
+    public void CreateCollection()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+        _shellClient.ExecuteToJavaScript(DropSchemaTestIfExists);
+        _shellClient.ExecuteToJavaScript(CreateSchemaTest);
+        _shellClient.ExecuteToJavaScript(CreateCollectionTest);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(COLLECTION_NOT_FOUND, TEST_COLLECTION_NAME));
+
+        _shellClient.ExecuteToJavaScript(DropCollectionTest);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(COLLECTION_NOT_DELETED, TEST_COLLECTION_NAME));
+      }
+      finally
+      {
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create unique and non-unique indexes using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    //[Fact]
+    // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
+    public void CreateIndex()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+
+        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
+        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXMovies);
+
+        // Add non-unique index
+        _shellClient.ExecuteToJavaScript(CREATE_NON_UNIQUE_INDEX_MOVIES);
+        // TODO: Add the asserts to check for the added index
+
+        // Add unique index
+        // TODO: Add statements to add unique index
+        // TODO: Add the asserts to check for the added index
+
+        // Run a find
+
+        // Drop non-unique index
+
+        // Drop unique index
+      }
+      finally
+      {
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
 
     /// <summary>
     /// Test to create a Schema using the <see cref="ShellClient"/> direclty.
@@ -51,36 +196,34 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_SCHEMA_IF_EXISTS);
-        _shellClient.Execute(CREATE_SCHEMA_TEST);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        _shellClient.ExecuteToJavaScript(DropSchemaTestIfExists);
+        _shellClient.ExecuteToJavaScript(CreateSchemaTest);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
 
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema == TEST_SCHEMA_NAME)
-          {
-            success = true;
-            reader.Close();
-            break;
-          }
+          if (retSchema != TEST_SCHEMA_NAME)
+            continue;
+          success = true;
+          reader.Close();
+          break;
         }
 
         Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
-        _shellClient.Execute(DROP_SCHEMA_TEST);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        _shellClient.ExecuteToJavaScript(DropSchemaTest);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema == TEST_SCHEMA_NAME)
-          {
-            success = false;
-            reader.Close();
-            break;
-          }
+          if (retSchema != TEST_SCHEMA_NAME)
+            continue;
+          success = false;
+          reader.Close();
+          break;
         }
 
         Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
@@ -97,157 +240,58 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
+        Command?.Dispose();
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to create a Collection using the <see cref="ShellClient"/> direclty.
+    /// Test to add data and use all of the features of Collection.find.
     /// </summary>
     [Fact]
-    public void CreateCollection()
+    public void FindComplete()
     {
       OpenConnection();
 
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_SCHEMA_IF_EXISTS);
-        _shellClient.Execute(CREATE_SCHEMA_TEST);
-        _shellClient.Execute(USE_SCHEMA_TEST);
-        _shellClient.Execute(CREATE_COLLECTION_TEST);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
-        var result = Command.ExecuteScalar();
-        int count;
-        int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(COLLECTION_NOT_FOUND, TEST_COLLECTION_NAME));
-
-        _shellClient.Execute(DELETE_COLLECTION_TEST);
-        result = Command.ExecuteScalar();
-        int.TryParse(result.ToString(), out count);
-        Assert.True(count == 0, string.Format(COLLECTION_NOT_DELETED, TEST_COLLECTION_NAME));
-      }
-      finally
-      {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
-        CloseConnection();
-      }
-    }
-
-    /// <summary>
-    /// Test to Add and Find data from a collection using the <see cref="ShellClient"/> direclty..
-    /// </summary>
-    [Fact]
-    public void AddFind()
-    {
-      OpenConnection();
-
-      try
-      {
-        InitXShell();
-        _shellClient.Execute(DROP_SCHEMA_IF_EXISTS);
-        _shellClient.Execute(CREATE_SCHEMA_TEST);
-        _shellClient.Execute(USE_SCHEMA_TEST);
-        _shellClient.Execute(CREATE_COLLECTION_TEST);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
 
-        _shellClient.Execute(SET_SCHEMA_VAR);
-        _shellClient.Execute(SET_COLLECTION_VAR);
+        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
+        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXMovies);
 
-        //Test single add
-        _shellClient.Execute(ADD_JSON_DOCUMENT1);
-        var selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        // Find complex
+        _shellClient.ExecuteToJavaScript(FIND_MOVIES_COMPLEX_QUERY1);
+        var selectResult = _shellClient.ExecuteToJavaScript(FIND_MOVIES_COMPLEX_QUERY3) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == MOVIES_RATING_R_COUNT, DATA_NOT_MATCH);
 
-        //Test single add again
-        _shellClient.Execute(ADD_JSON_DOCUMENT2);
-        selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        _shellClient.ExecuteToJavaScript(FIND_MOVIES_COMPLEX_QUERY2);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MOVIES_COMPLEX_QUERY4) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 10, DATA_NOT_MATCH);
 
-        //Test multiple documents add statement
-        _shellClient.Execute(ADD_MULTIPLE_DOCUMENTS_SINGLE_ADD_STATEMENT);
-        selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        // Find bound array
+        object foundTitle = null;
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MOVIES_BOUND_ARRAY) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 5, DATA_NOT_MATCH);
+        var docResult = selectResult?.FetchOne();
+        if (docResult != null)
+        {
+          docResult.TryGetValue("title", out foundTitle);
+        }
 
-        //Test multiple add statements with single documents
-        _shellClient.Execute(ADD_MULTIPLE_DOCUMENTS_MULTIPLE_ADD_STATEMENTS);
-        selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
-        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 7, DATA_NOT_MATCH);
-
-        selectResult = _shellClient.Execute(FIND_SPECIFIC_DOCUMENT_TEST) as DocResult;
-        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        Assert.True(foundTitle != null && foundTitle.ToString().Equals("ANNIE IDENTITY", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
-        CloseConnection();
-      }
-    }
-
-    /// <summary>
-    /// Test to Add and Find data from a collection using the <see cref="ShellClient"/> direclty.
-    /// </summary>
-    [Fact]
-    public void Remove()
-    {
-      OpenConnection();
-
-      try
-      {
-        InitXShell();
-        _shellClient.Execute(DROP_SCHEMA_IF_EXISTS);
-        _shellClient.Execute(CREATE_SCHEMA_TEST);
-        _shellClient.Execute(USE_SCHEMA_TEST);
-        _shellClient.Execute(CREATE_COLLECTION_TEST);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
-
-        var result = Command.ExecuteScalar();
-        int count;
-        int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
-
-        _shellClient.Execute(SET_SCHEMA_VAR);
-        _shellClient.Execute(SET_COLLECTION_VAR);
-        _shellClient.Execute(ADD_MULTIPLE_DOCUMENTS_SINGLE_ADD_STATEMENT);
-        _shellClient.Execute(REMOVE_DOCUMENT);
-        var selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
-        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
-      }
-      finally
-      {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
+        Command?.Dispose();
         CloseConnection();
       }
     }
@@ -263,33 +307,181 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_SCHEMA_IF_EXISTS);
-        _shellClient.Execute(CREATE_SCHEMA_TEST);
-        _shellClient.Execute(USE_SCHEMA_TEST);
-        _shellClient.Execute(CREATE_COLLECTION_TEST);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
+        object foundValue = null;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
 
-        _shellClient.Execute(SET_SCHEMA_VAR);
-        _shellClient.Execute(SET_COLLECTION_VAR);
-        _shellClient.Execute(ADD_MULTIPLE_DOCUMENTS_SINGLE_ADD_STATEMENT);
-        _shellClient.Execute(MODIFY_DOCUMENT);
-        var selectResult = _shellClient.Execute(SELECT_UPDATED_RECORD) as DocResult;
+        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
+        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXUser);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER1);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER2);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
+
+        // Modify Set
+        _shellClient.ExecuteToJavaScript(MODIFY_SET_USER);
+        var selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        var docResult = selectResult?.FetchOne();
+        if (docResult != null)
+        {
+
+          docResult.TryGetValue("status", out foundValue);
+        }
+
+        Assert.True(foundValue != null && foundValue.ToString().Equals("inactive", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Modify Set binding array
+        _shellClient.ExecuteToJavaScript(MODIFY_SET_BINDING_ARRAY_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        docResult = selectResult?.FetchOne();
+        List<object> foundRatingList = null;
+        if (docResult != null)
+        {
+          docResult.TryGetValue("ratings", out foundValue);
+          foundRatingList = foundValue as List<object>;
+        }
+
+        string cleanRatingArrayString = MOVIES_RATING_ARRAY_VALUE.Replace("'", string.Empty).Replace(" ", string.Empty).Trim('[', ']');
+        var clearRatingArray = cleanRatingArrayString.Split(',');
+        Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).SequenceEqual(clearRatingArray), DATA_NOT_MATCH);
+
+        // Modify unset single key
+        _shellClient.ExecuteToJavaScript(MODIFY_UNSET_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && !selectResult.FetchOne().ContainsKey("age"), DATA_NOT_MATCH);
+
+        // Modify unset list of keys
+        _shellClient.ExecuteToJavaScript(MODIFY_UNSET_LIST_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        docResult = selectResult?.FetchOne();
+        Assert.True(docResult != null && !docResult.ContainsKey("status") && !docResult.ContainsKey("ratings"), DATA_NOT_MATCH);
+
+        // Modify merge
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_MODIFY_MERGE_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        docResult = selectResult?.FetchOne();
+        if (docResult != null)
+        {
+          docResult.TryGetValue("status", out foundValue);
+          object foundValue2;
+          docResult.TryGetValue("ratings", out foundValue2);
+          foundRatingList = foundValue2 as List<object>;
+        }
+
+        Assert.True(foundValue != null && foundValue.ToString().Equals("inactive", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+        Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).SequenceEqual(clearRatingArray), DATA_NOT_MATCH);
+
+        // Modify array append
+        _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_APPEND_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        docResult = selectResult?.FetchOne();
+        if (docResult != null)
+        {
+          docResult.TryGetValue("ratings", out foundValue);
+          foundRatingList = foundValue as List<object>;
+        }
+
+        Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).Contains("PG-13"), DATA_NOT_MATCH);
+
+        // Modify array insert
+        _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_INSERT_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        docResult = selectResult?.FetchOne();
+        if (docResult != null)
+        {
+          docResult.TryGetValue("ratings", out foundValue);
+          foundRatingList = foundValue as List<object>;
+        }
+
+        Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).ToList()[2].Equals("G", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Modify array delete
+        _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_DELETE_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        docResult = selectResult?.FetchOne();
+        if (docResult != null)
+        {
+          docResult.TryGetValue("ratings", out foundValue);
+          foundRatingList = foundValue as List<object>;
+        }
+
+        Assert.True(foundRatingList != null && !foundRatingList.Select(o => o.ToString()).ToList()[2].Equals("G", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Modify sort
+        _shellClient.ExecuteToJavaScript(MODIFY_SORT_USER);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_J_USERS) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
+        _shellClient.ExecuteToJavaScript(REVERT_ADDED_USERS);
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
 
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
+    /// <summary>
+    /// Test to Add and Find data from a collection using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    [Fact]
+    public void Remove()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+
+        var result = Command.ExecuteScalar();
+        int count;
+        int usersCount = USERS_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+
+        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
+        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXUser);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER1);
+        usersCount++;
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER2);
+        usersCount++;
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD);
+        usersCount += 3;
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
+        usersCount += 3;
+
+        _shellClient.ExecuteToJavaScript(REMOVE_USER);
+        usersCount--;
+        var selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
+
+        _shellClient.ExecuteToJavaScript(REMOVE_SORT_USER);
+        usersCount -= 2;
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
+        selectResult = _shellClient.ExecuteToJavaScript(FIND_REMOVED_USERS) as DocResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 0, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        _shellClient.ExecuteToJavaScript(REVERT_ADDED_USERS);
+        Command?.Dispose();
         CloseConnection();
       }
     }

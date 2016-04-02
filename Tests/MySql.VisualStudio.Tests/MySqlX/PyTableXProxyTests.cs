@@ -33,7 +33,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
   /// <summary>
   /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
   /// </summary>
-  public class PyTableXProxyTests : PyTableTests, IUseFixture<SetUpXShell>
+  public class PyTableXProxyTests : BaseTableTests, IUseFixture<SetUpXShell>
   {
     #region Fields
 
@@ -59,7 +59,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         _xProxy.ExecuteScript(DROP_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.Python);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
         while (reader.Read())
@@ -86,11 +86,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -112,7 +108,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -125,11 +121,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -158,7 +150,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         script.AppendLine(INSERT_RECORD_JSON1);
         script.AppendLine(INSERT_RECORD_JSON2);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -171,11 +163,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -196,23 +184,23 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         //Tokenizer and batch script tests
         var script = new StringBuilder();
-        script.AppendLine(COMMENT_SINGLE_LINE_1);
-        script.AppendLine(COMMENT_SINGLE_LINE_2);
+        script.AppendLine(PYTHON_COMMENT_SINGLE_LINE_1);
+        script.AppendLine(PYTHON_COMMENT_SINGLE_LINE_2);
         script.AppendLine(DROP_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_DATABASE);
         script.AppendLine(USE_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_TABLE);
         script.AppendLine(SET_SCHEMA_VAR);
         script.AppendLine(SET_TABLE_VAR);
-        script.AppendLine(COMMENT_MULTI_LINE_1);
-        script.AppendLine(COMMENT_MULTI_LINE_2);
-        script.AppendLine(COMMENT_MULTI_LINE_3);
+        script.AppendLine(PYTHON_COMMENT_MULTI_LINE_1);
+        script.AppendLine(PYTHON_COMMENT_MULTI_LINE_2);
+        script.AppendLine(PYTHON_COMMENT_MULTI_LINE_3);
         script.AppendLine(INSERT_RECORD_JSON1);
         script.AppendLine(INSERT_RECORD_JSON2);
 
         var tokenizer = new MyPythonTokenizer(script.ToString());
         _xProxy.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -224,7 +212,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         //Create Schema
         _xProxy.ExecuteScript(DROP_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.Python);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
         while (reader.Read())
@@ -243,7 +231,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         //Create Table
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
@@ -263,7 +251,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
 
         //Delete Rows
-        _xProxy.ExecuteScript(DELETE_RECORD_SINGLE_LINE, ScriptType.Python);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.Python);
         selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
@@ -276,7 +264,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         //Delete Schema
         _xProxy.ExecuteScript(DROP_TEST_DATABASE, ScriptType.Python);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         success = true;
         while (reader.Read())
@@ -304,11 +292,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -330,7 +314,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -351,7 +335,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
 
-        _xProxy.ExecuteScript(DELETE_RECORD_SINGLE_LINE, ScriptType.Python);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.Python);
         selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
@@ -359,11 +343,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -385,7 +365,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -409,7 +389,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
 
-        _xProxy.ExecuteScript(DELETE_RECORD_CMD1, ScriptType.Python);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.Python);
         selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
@@ -417,11 +397,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -451,9 +427,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(UPDATE_RECORD_CMD1, ScriptType.Python);
         _xProxy.ExecuteScript(UPDATE_RECORD_CMD2, ScriptType.Python);
         _xProxy.ExecuteScript(UPDATE_RECORD_CMD3, ScriptType.Python);
-        _xProxy.ExecuteScript(DELETE_RECORD_CMD1, ScriptType.Python);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.Python);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -466,11 +442,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -496,9 +468,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(SET_TABLE_VAR, ScriptType.Python);
         _xProxy.ExecuteScript(INSERT_TWO_RECORDS, ScriptType.Python);
         _xProxy.ExecuteScript(UPDATE_RECORD_SINGLE_LINE, ScriptType.Python);
-        _xProxy.ExecuteScript(DELETE_RECORD_SINGLE_LINE, ScriptType.Python);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.Python);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -511,11 +483,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -537,7 +505,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.Python);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -547,18 +515,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(SET_SCHEMA_VAR, ScriptType.Python);
         _xProxy.ExecuteScript(SET_TABLE_VAR, ScriptType.Python);
         _xProxy.ExecuteScript(INSERT_TWO_RECORDS, ScriptType.Python);
-        var selectResult = _xProxy.ExecuteScript(SELECT_FOR_TABLE_RESULT, ScriptType.Python);
+        var selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.Python);
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }

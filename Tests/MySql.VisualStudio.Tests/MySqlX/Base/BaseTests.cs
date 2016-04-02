@@ -28,7 +28,46 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
   public abstract class BaseTests : IDisposable
   {
-    #region CommonAssertQueries
+    #region ConstantNames
+
+    /// <summary>
+    /// SakilaX schema name.
+    /// </summary>
+    public const string SAKILA_X_SCHEMA_NAME = "sakila_x";
+
+    /// <summary>
+    /// SakilaX movies collection name.
+    /// </summary>
+    public const string SAKILA_X_MOVIES_COLLECTION = "movies";
+
+    /// <summary>
+    /// SakilaX users collection name.
+    /// </summary>
+    public const string SAKILA_X_USERS_COLLECTION = "users";
+
+    /// <summary>
+    /// Table test name
+    /// </summary>
+    public const string TEST_COLLECTION_NAME = "collection_test";
+
+    /// <summary>
+    /// Database test name
+    /// </summary>
+    public const string TEST_DATABASE_NAME = "database_test";
+
+    /// <summary>
+    /// Test schema name
+    /// </summary>
+    public const string TEST_SCHEMA_NAME = "schema_test";
+
+    /// <summary>
+    /// Table test name
+    /// </summary>
+    public const string TEST_TABLE_NAME = "table_test";
+
+    #endregion ConstantNames
+
+    #region CommonSqlQueries
 
     /// <summary>
     /// Sql statement to drop the test database
@@ -36,36 +75,16 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string DROP_TEST_DB_SQL_SYNTAX = "drop schema if exists " + TEST_SCHEMA_NAME + ";";
 
     /// <summary>
-    /// Search for a table in the schema.tables information. Use: string.format(SEARCH_TABLE, "myTable", "myDatabase")
+    /// Search for a table in the schema.tables information. Use: string.format(SEARCH_TABLE_SQL_SYNTAX, "myTable", "myDatabase")
     /// </summary>
-    protected const string SEARCH_TABLE = "select count(*) from information_schema.TABLES where table_name='{0}' and table_schema='{1}';";
+    protected const string SEARCH_TABLE_SQL_SYNTAX = "select count(*) from information_schema.TABLES where table_name='{0}' and table_schema='{1}';";
 
     /// <summary>
     /// Sql statement to select the current databases in the server
     /// </summary>
-    protected const string SHOW_DBS = "show databases;";
+    protected const string SHOW_DBS_SQL_SYNTAX = "show databases;";
 
-    /// <summary>
-    /// Table test name
-    /// </summary>
-    protected const string TEST_COLLECTION_NAME = "collection_test";
-
-    /// <summary>
-    /// Database test name
-    /// </summary>
-    protected const string TEST_DATABASE_NAME = "database_test";
-
-    /// <summary>
-    /// Database test name
-    /// </summary>
-    protected const string TEST_SCHEMA_NAME = "schema_test";
-
-    /// <summary>
-    /// Table test name
-    /// </summary>
-    protected const string TEST_TABLE_NAME = "table_test";
-
-    #endregion CommonAssertQueries
+    #endregion CommonSqlQueries
 
     #region AssertFailMessages
 
@@ -110,6 +129,64 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string TABLE_NOT_FOUND = "Table {0} not found";
 
     #endregion AssertFailMessages
+
+    #region JavaScript specific
+
+    /// <summary>
+    /// Single line comment in hash format for a first line.
+    /// </summary>
+    protected const string JAVASCRIPT_COMMENT_SINGLE_LINE_1 = "// This is a test JavaScript comment in double-slash format...";
+
+    /// <summary>
+    /// Single line comment in hash format for a second line.
+    /// </summary>
+    protected const string JAVASCRIPT_COMMENT_SINGLE_LINE_2 = "//  which is continued in a second comment line.";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a first line.
+    /// </summary>
+    protected const string JAVASCRIPT_COMMENT_MULTI_LINE_1 = "/* This is a test JavaScript comment using the slash-star format;";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a second line.
+    /// </summary>
+    protected const string JAVASCRIPT_COMMENT_MULTI_LINE_2 = "  the intention is that this spans multiple lines...";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a third line.
+    /// </summary>
+    protected const string JAVASCRIPT_COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. */";
+
+    #endregion JavaScript specific
+
+    #region Python specific
+
+    /// <summary>
+    /// Single line comment in hash format for a first line.
+    /// </summary>
+    protected const string PYTHON_COMMENT_SINGLE_LINE_1 = "# This is a test Python comment in hash format...";
+
+    /// <summary>
+    /// Single line comment in hash format for a second line.
+    /// </summary>
+    protected const string PYTHON_COMMENT_SINGLE_LINE_2 = "#  which is continued in a second comment line.";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a first line.
+    /// </summary>
+    protected const string PYTHON_COMMENT_MULTI_LINE_1 = "\"\"\" This is a test Python comment in triple double quote format;";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a second line.
+    /// </summary>
+    protected const string PYTHON_COMMENT_MULTI_LINE_2 = "  the intention is that this spans multiple lines...";
+
+    /// <summary>
+    /// Multi-line comment in triple double quote format for a third line.
+    /// </summary>
+    protected const string PYTHON_COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. \"\"\"";
+
+    #endregion Python specific
 
     #region Fields
 

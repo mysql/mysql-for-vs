@@ -31,7 +31,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
   /// <summary>
   /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
   /// </summary>
-  public class JsTableXShellTests : JsTableTests, IUseFixture<SetUpXShell>
+  public class JsTableXShellTests : BaseTableTests, IUseFixture<SetUpXShell>
   {
     #region Fields
 
@@ -54,21 +54,20 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_DATABASE);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
 
         while (reader.Read())
         {
           var retDb = reader.GetString(0);
-          if (retDb == TEST_DATABASE_NAME)
-          {
-            success = true;
-            reader.Close();
-            break;
-          }
+          if (retDb != TEST_DATABASE_NAME)
+            continue;
+          success = true;
+          reader.Close();
+          break;
         }
 
         Assert.True(success, string.Format(DB_NOT_FOUND, TEST_DATABASE_NAME));
@@ -85,11 +84,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -106,28 +101,24 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_DATABASE);
-        _shellClient.Execute(USE_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(USE_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _shellClient.Execute(DELETE_TEST_TABLE);
+        _shellClient.ExecuteToJavaScript(DELETE_TEST_TABLE);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -144,44 +135,40 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_DATABASE);
-        _shellClient.Execute(USE_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(USE_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _shellClient.Execute(SET_SCHEMA_VAR);
-        _shellClient.Execute(SET_TABLE_VAR);
-        _shellClient.Execute(INSERT_TWO_RECORDS);
-        var selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as RowResult;
+        _shellClient.ExecuteToJavaScript(SET_SCHEMA_VAR);
+        _shellClient.ExecuteToJavaScript(SET_TABLE_VAR);
+        _shellClient.ExecuteToJavaScript(INSERT_TWO_RECORDS);
+        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
 
-        _shellClient.Execute(UPDATE_RECORD_SINGLE_LINE);
-        selectResult = _shellClient.Execute(SELECT_UPDATED_RECORD) as RowResult;
+        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_SINGLE_LINE);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_RECORD) as RowResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
 
-        _shellClient.Execute(DELETE_RECORD_SINGLE_LINE);
-        selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as RowResult;
+        _shellClient.ExecuteToJavaScript(DELETE_RECORD);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -198,49 +185,43 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DROP_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_DATABASE);
-        _shellClient.Execute(USE_TEST_DATABASE);
-        _shellClient.Execute(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(USE_TEST_DATABASE);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _shellClient.Execute(SET_SCHEMA_VAR);
-        _shellClient.Execute(SET_TABLE_VAR);
-        _shellClient.Execute(INSERT_RECORD_JSON1);
-        _shellClient.Execute(INSERT_RECORD_JSON2);
-        var selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as RowResult;
+        _shellClient.ExecuteToJavaScript(SET_SCHEMA_VAR);
+        _shellClient.ExecuteToJavaScript(SET_TABLE_VAR);
+        _shellClient.ExecuteToJavaScript(INSERT_RECORD_JSON1);
+        _shellClient.ExecuteToJavaScript(INSERT_RECORD_JSON2);
+        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
 
-        _shellClient.Execute(UPDATE_RECORD_CMD1);
-        _shellClient.Execute(UPDATE_RECORD_CMD2);
-        _shellClient.Execute(UPDATE_RECORD_CMD3);
-        selectResult = _shellClient.Execute(SELECT_UPDATED_RECORD) as RowResult;
+        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_CMD1);
+        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_CMD2);
+        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_CMD3);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_RECORD) as RowResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
 
-        _shellClient.Execute(DELETE_RECORD_CMD1);
-        _shellClient.Execute(DELETE_RECORD_CMD2);
-        _shellClient.Execute(DELETE_RECORD_CMD3);
-        selectResult = _shellClient.Execute(SELECT_TEST_TABLE) as RowResult;
+        _shellClient.ExecuteToJavaScript(DELETE_RECORD);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }

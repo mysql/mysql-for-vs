@@ -23,26 +23,25 @@
 using System.Text;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
-using MySql.Data.VisualStudio.MySqlX;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySQL.Utility.Classes;
 using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX
 {
-  public class JsTableXProxyTests : JsTableTests, IUseFixture<SetUpXShell>
+  public class JsTableXProxyTests : BaseTableTests, IUseFixture<SetUpXShell>
   {
     #region Fields
 
     /// <summary>
     /// Object to access and execute commands to the current database connection through the mysqlx protocol
     /// </summary>
-    private MySqlXProxy _xProxy;
+    private MyTestXProxy _xProxy;
 
     #endregion Fields
 
     /// <summary>
-    /// Test to create a Database using the <see cref="MySqlXProxy"/>.
+    /// Test to create a Database using the <see cref="MyTestXProxy"/>.
     /// </summary>
     [Fact]
     public void CreateDatabase()
@@ -55,7 +54,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         InitXProxy();
         _xProxy.ExecuteScript(DROP_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.JavaScript);
-        Command = new MySqlCommand(SHOW_DBS, Connection);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
         while (reader.Read())
@@ -83,18 +82,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to create a Table using the <see cref="MySqlXProxy"/>.
+    /// Test to create a Table using the <see cref="MyTestXProxy"/>.
     /// </summary>
     [Fact]
     public void CreateTable()
@@ -108,7 +103,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -121,18 +116,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete record from a table using the <see cref="MySqlXProxy"/>, executing the commands in a single line
+    /// Test to Insert, Update and Delete record from a table using the <see cref="MyTestXProxy"/>, executing the commands in a single line
     /// </summary>
     [Fact]
     public void InsertUpdateDelete()
@@ -146,7 +137,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -167,7 +158,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
 
-        _xProxy.ExecuteScript(DELETE_RECORD_SINGLE_LINE, ScriptType.JavaScript);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
@@ -175,18 +166,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete record from a table using the <see cref="MySqlXProxy"/>, executing the commands in multiple lines
+    /// Test to Insert, Update and Delete record from a table using the <see cref="MyTestXProxy"/>, executing the commands in multiple lines
     /// </summary>
     [Fact]
     public void InsertUpdateDelete_JsonFormat()
@@ -200,7 +187,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -224,9 +211,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
 
-        _xProxy.ExecuteScript(DELETE_RECORD_CMD1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(DELETE_RECORD_CMD2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(DELETE_RECORD_CMD3, ScriptType.JavaScript);
+        _xProxy.ExecuteScript(DELETE_RECORD, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
@@ -234,18 +219,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete record from a table using the <see cref="MySqlXProxy"/>, executing the commands in a single line and in a single script
+    /// Test to Insert, Update and Delete record from a table using the <see cref="MyTestXProxy"/>, executing the commands in a single line and in a single script
     /// </summary>
     [Fact]
     public void InsertUpdateDelete_SingleScript()
@@ -256,8 +237,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXProxy();
         var script = new StringBuilder();
-        script.AppendLine(COMMENT_SINGLE_LINE_1);
-        script.AppendLine(COMMENT_SINGLE_LINE_2);
+        script.AppendLine(JAVASCRIPT_COMMENT_SINGLE_LINE_1);
+        script.AppendLine(JAVASCRIPT_COMMENT_SINGLE_LINE_2);
         script.AppendLine(DROP_TEST_DATABASE);
         script.AppendLine(CREATE_TEST_DATABASE);
         script.AppendLine(USE_TEST_DATABASE);
@@ -265,16 +246,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
         script.AppendLine(SET_SCHEMA_VAR);
         script.AppendLine(SET_TABLE_VAR);
         script.AppendLine(INSERT_TWO_RECORDS);
-        script.AppendLine(COMMENT_MULTI_LINE_1);
-        script.AppendLine(COMMENT_MULTI_LINE_2);
-        script.AppendLine(COMMENT_MULTI_LINE_3);
+        script.AppendLine(JAVASCRIPT_COMMENT_MULTI_LINE_1);
+        script.AppendLine(JAVASCRIPT_COMMENT_MULTI_LINE_2);
+        script.AppendLine(JAVASCRIPT_COMMENT_MULTI_LINE_3);
         script.AppendLine(UPDATE_RECORD_SINGLE_LINE);
-        script.AppendLine(DELETE_RECORD_SINGLE_LINE);
+        script.AppendLine(DELETE_RECORD);
 
         var tokenizer = new MyJsTokenizer(script.ToString());
         _xProxy.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -287,18 +268,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete record from a table using the <see cref="MySqlXProxy"/>, executing the commands in multiple lines and in a single script
+    /// Test to Insert, Update and Delete record from a table using the <see cref="MyTestXProxy"/>, executing the commands in multiple lines and in a single script
     /// </summary>
     [Fact]
     public void InsertUpdateDelete_JsonFormat_SingleScript()
@@ -321,14 +298,12 @@ namespace MySql.VisualStudio.Tests.MySqlX
         script.AppendLine(UPDATE_RECORD_CMD1);
         script.AppendLine(UPDATE_RECORD_CMD2);
         script.AppendLine(UPDATE_RECORD_CMD3);
-        script.AppendLine(DELETE_RECORD_CMD1);
-        script.AppendLine(DELETE_RECORD_CMD2);
-        script.AppendLine(DELETE_RECORD_CMD3);
+        script.AppendLine(DELETE_RECORD);
 
         var tokenizer = new MyJsTokenizer(script.ToString());
         _xProxy.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -341,11 +316,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
@@ -366,7 +337,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(CREATE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(USE_TEST_DATABASE, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
@@ -376,25 +347,21 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(SET_SCHEMA_VAR, ScriptType.JavaScript);
         _xProxy.ExecuteScript(SET_TABLE_VAR, ScriptType.JavaScript);
         _xProxy.ExecuteScript(INSERT_TWO_RECORDS, ScriptType.JavaScript);
-        var selectResult = _xProxy.ExecuteScript(SELECT_FOR_TABLE_RESULT, ScriptType.JavaScript);
+        var selectResult = _xProxy.ExecuteScript(SELECT_TEST_TABLE, ScriptType.JavaScript);
 
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
       }
       finally
       {
-        if (Command != null)
-        {
-          Command.Dispose();
-        }
-
+        Command?.Dispose();
         SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Initializes the <see cref="MySqlXProxy"/> instance with common statements
+    /// Initializes the <see cref="MyTestXProxy"/> instance with common statements
     /// </summary>
     private void InitXProxy()
     {
@@ -403,7 +370,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         return;
       }
 
-      _xProxy = new MySqlXProxy(XConnString, true);
+      _xProxy = new MyTestXProxy(XConnString, true);
     }
   }
 }

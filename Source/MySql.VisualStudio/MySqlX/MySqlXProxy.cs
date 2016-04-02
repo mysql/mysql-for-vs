@@ -54,15 +54,15 @@ namespace MySql.Data.VisualStudio.MySqlX
     private const string _cleanSession = "session.close()";
 
     /// <summary>
-    /// Creates an instance of MySqlXProxy
+    /// Initializes a new instance of the <see cref="MySqlXProxy"/> class.
     /// </summary>
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port"</param>
-    /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
-    public MySqlXProxy(string connectionString, bool keepNgSession)
+    /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
+    public MySqlXProxy(string connectionString, bool keepXSession)
     {
       _connString = connectionString;
-      _keepSession = keepNgSession;
-      if (keepNgSession)
+      _keepSession = keepXSession;
+      if (keepXSession)
       {
         _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
@@ -70,16 +70,16 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
-    /// Creates an instance of MySqlXProxy
+    /// Initializes a new instance of the <see cref="MySqlXProxy"/> class.
     /// </summary>
-    /// <param name="connection">Connection object that will be used to set the connection string. Format: "user:pass@server:port"</param>
-    /// /// <param name="keepNgSession">Specifies if all the statements will be executed in the same session</param>
-    public MySqlXProxy(DbConnection connection, bool keepNgSession)
+    /// <param name="connection">Connection object that will be used."</param>
+    /// /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
+    public MySqlXProxy(DbConnection connection, bool keepXSession)
     {
       _connString = ((MySqlConnection)connection).ToNgFormat();
-      _keepSession = keepNgSession;
+      _keepSession = keepXSession;
 
-      if (keepNgSession)
+      if (keepXSession)
       {
         _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
@@ -87,10 +87,10 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
-    /// Execute a javascript command using the NG Shell
+    /// Executes a JavaScript or Python query using the X Shell
     /// </summary>
     /// <param name="script">The script to execute</param>
-    /// <param name="scriptType"></param>
+    /// <param name="scriptType">The type of language used.</param>
     /// <returns>Returns an empty list of dictionary objects if the result returned from the server doesnt belong to the BaseResult hierarchy</returns>
     public List<Dictionary<string, object>> ExecuteScript(string script, ScriptType scriptType)
     {
@@ -99,14 +99,11 @@ namespace MySql.Data.VisualStudio.MySqlX
         return null;
       }
 
-      object result = ExecuteScript(new string[] { script }, scriptType).First();
-      if (result is BaseResult)
-      {
-        BaseResult br = (BaseResult)result;
-        return BaseResultToDictionaryList(br);
-      }
-
-      return new List<Dictionary<string, object>>();
+      object result = ExecuteScript(new[] { script }, scriptType).First();
+      var baseResult = result as BaseResult;
+      return baseResult != null
+        ? BaseResultToDictionaryList(baseResult)
+        : new List<Dictionary<string, object>>();
     }
 
     /// <summary>
@@ -187,7 +184,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// Execute a command using the NG Shell
     /// </summary>
     /// <param name="mode">Mode that will be used to execute the script received</param>
-    /// <param name="script">Script to execute</param>
+    /// <param name="statements">Statements to execute</param>
     /// <returns>A list of objects returned from the server for each query executed.</returns>
     private List<object> ExecuteQuery(Mode mode, params string[] statements)
     {
