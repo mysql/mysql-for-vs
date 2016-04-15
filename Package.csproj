@@ -130,10 +130,10 @@
   <!-- Package Installer Build Targets -->
   <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
   <Target Name="BuildInstallerGPL">
-    <MSBuild Projects="Installer/installer.wixproj" Properties="Configuration=GPL;Platform=x86" />
+    <MSBuild Projects="Installer/PackageWix.wixproj" Properties="Configuration=GPL;Platform=x86" />
   </Target>
   <Target Name="BuildInstallerCommercial">
-    <MSBuild Projects="Installer/installer.wixproj" Properties="Configuration=Commercial;Platform=x86" />
+    <MSBuild Projects="Installer/PackageWix.wixproj" Properties="Configuration=Commercial;Platform=x86" />
   </Target>
   <!-- Get product version -->
   <Target Name="GetPackageVersion">

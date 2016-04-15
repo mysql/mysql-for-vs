@@ -1341,22 +1341,22 @@
   <Import Project="ImportProjects4.5.targets" Condition="'$(Framework)' == '4.5'" />
   <Import Project="ImportProjects4.0.targets" Condition="'$(Framework)' == '4.0'" />
   <Choose>
-    <When Condition=" '$(VisualStudioVersion)' == '10.0'">
+    <When Condition=" '$(VisualStudioVersion)' == '10.0' AND $(Configuration) == 'Debug'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\10.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
+    <When Condition=" '$(VisualStudioVersion)' == '11.0' AND $(Configuration) == 'Debug'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\11.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
-    <When Condition="'$(VisualStudioVersion)' == '12.0'">
+    <When Condition="'$(VisualStudioVersion)' == '12.0' AND $(Configuration) == 'Debug'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\12.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
     </When>
-    <When Condition="'$(VisualStudioVersion)' == '14.0'">
+    <When Condition="'$(VisualStudioVersion)' == '14.0' AND $(Configuration) == 'Debug'">
       <PropertyGroup>
         <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
       </PropertyGroup>
