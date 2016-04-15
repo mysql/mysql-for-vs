@@ -13,19 +13,13 @@
     <IntermediateOutputPath>obj\GPL\</IntermediateOutputPath>
     <OutputPath>bin\GPL\</OutputPath>
     <DefineConstants>IsGPL=1</DefineConstants>
-    <IncludeSearchPaths>
-    </IncludeSearchPaths>
     <Cultures>en-US</Cultures>
     <Pedantic>False</Pedantic>
     <ShowSourceTrace>False</ShowSourceTrace>
     <SuppressSchemaValidation>False</SuppressSchemaValidation>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
     <AllowIdenticalRows>False</AllowIdenticalRows>
-    <CabinetCachePath>
-    </CabinetCachePath>
     <CabinetCreationThreadCount>-1</CabinetCreationThreadCount>
     <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
     <LinkerPedantic>False</LinkerPedantic>
@@ -39,71 +33,44 @@
     <SuppressDroppingUnrealTables>False</SuppressDroppingUnrealTables>
     <SuppressFileHashAndInfo>False</SuppressFileHashAndInfo>
     <SuppressFiles>False</SuppressFiles>
-    <SuppressIces>
-    </SuppressIces>
     <LinkerSuppressIntermediateFileVersionMatching>False</LinkerSuppressIntermediateFileVersionMatching>
     <SuppressLayout>False</SuppressLayout>
     <SuppressMsiAssemblyTableProcessing>False</SuppressMsiAssemblyTableProcessing>
     <LinkerSuppressSchemaValidation>False</LinkerSuppressSchemaValidation>
-    <LinkerSuppressSpecificWarnings>
-    </LinkerSuppressSpecificWarnings>
     <SuppressValidation>True</SuppressValidation>
     <LinkerTreatWarningsAsErrors>False</LinkerTreatWarningsAsErrors>
     <LinkerVerboseOutput>False</LinkerVerboseOutput>
-    <WixVariables>
-    </WixVariables>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Commercial' ">
-    <IntermediateOutputPath>obj\Commercial\</IntermediateOutputPath>
-    <Cultures>en-US</Cultures>
-    <OutputPath>bin\Commercial\</OutputPath>
-    <DefineConstants>IsGPL=0</DefineConstants>
-    <IncludeSearchPaths>
-    </IncludeSearchPaths>
-    <Pedantic>False</Pedantic>
-    <ShowSourceTrace>False</ShowSourceTrace>
-    <SuppressSchemaValidation>False</SuppressSchemaValidation>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <VerboseOutput>False</VerboseOutput>
-    <AllowIdenticalRows>False</AllowIdenticalRows>
-    <CabinetCachePath>
-    </CabinetCachePath>
-    <CabinetCreationThreadCount>-1</CabinetCreationThreadCount>
-    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
-    <LinkerPedantic>False</LinkerPedantic>
-    <ReuseCabinetCache>False</ReuseCabinetCache>
-    <SetMsiAssemblyNameFileVersion>False</SetMsiAssemblyNameFileVersion>
-    <SuppressAclReset>False</SuppressAclReset>
-    <SuppressAssemblies>False</SuppressAssemblies>
-    <SuppressDefaultAdminSequenceActions>False</SuppressDefaultAdminSequenceActions>
-    <SuppressDefaultAdvSequenceActions>False</SuppressDefaultAdvSequenceActions>
-    <SuppressDefaultUISequenceActions>False</SuppressDefaultUISequenceActions>
-    <SuppressDroppingUnrealTables>False</SuppressDroppingUnrealTables>
-    <SuppressFileHashAndInfo>False</SuppressFileHashAndInfo>
-    <SuppressFiles>False</SuppressFiles>
-    <SuppressIces>
-    </SuppressIces>
-    <LinkerSuppressIntermediateFileVersionMatching>False</LinkerSuppressIntermediateFileVersionMatching>
-    <SuppressLayout>False</SuppressLayout>
-    <SuppressMsiAssemblyTableProcessing>False</SuppressMsiAssemblyTableProcessing>
-    <LinkerSuppressSchemaValidation>False</LinkerSuppressSchemaValidation>
-    <LinkerSuppressSpecificWarnings>
-    </LinkerSuppressSpecificWarnings>
-    <SuppressValidation>True</SuppressValidation>
-    <LinkerTreatWarningsAsErrors>False</LinkerTreatWarningsAsErrors>
-    <LinkerVerboseOutput>False</LinkerVerboseOutput>
-    <WixVariables>
-    </WixVariables>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GPL|x86' ">
-    <DefineConstants>IsGPL=1;PackageSuffix=</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Commercial|x86' ">
-    <DefineConstants>IsGPL=0;PackageSuffix=-com</DefineConstants>
-    <WixVariables>
-    </WixVariables>
+	<ConfigurationPath>Debug</ConfigurationPath>
+  </PropertyGroup>  
+  <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
+      <PropertyGroup>
+        <Framework>4.6</Framework>
+        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>        
+      </PropertyGroup>
+    </When>
+	<When Condition=" '$(VisualStudioVersion)' == '12.0'">
+      <PropertyGroup>
+        <Framework>4.5.1</Framework>
+        <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>        
+      </PropertyGroup>
+    </When>
+	<When Condition=" '$(VisualStudioVersion)' == '11.0'">
+      <PropertyGroup>
+        <Framework>4.5</Framework>
+        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>        
+      </PropertyGroup>
+    </When>
+	<When Condition=" '$(VisualStudioVersion)' == '10.0'">
+      <PropertyGroup>
+        <Framework>4.0</Framework>
+        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>        
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <PropertyGroup>
+	  <MSBuildExe Condition=" '$(MSBuildExe)'=='' AND Exists('$(MSBuildExtensionsPath)\..\MSBuild\12.0') ">"$(MSBuildExtensionsPath)\..\MSBuild\12.0\Bin\msbuild.exe"</MSBuildExe>
+	  <MSBuildExe Condition=" '$(MSBuildExe)'=='' AND Exists('$(MSBuildExtensionsPath)\..\MSBuild\14.0') ">"$(MSBuildExtensionsPath)\..\MSBuild\14.0\Bin\msbuild.exe"</MSBuildExe>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="core.wxs" />
@@ -130,7 +97,7 @@
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
-    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\v4.0\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\$(TargetFrameworkVersion)\Release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
     </GetVersion>
     <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">
@@ -161,13 +128,12 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <PropertyGroup>
-    <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
+    <BuildDependsOn>BeforeBuild;RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
   <PropertyGroup>
   </PropertyGroup>
-  <Target Name="BeforeBuild">
-    <RemoveDir Directories="..\ProjectTemplatesZipFolder" ContinueOnError="false" />
-    <MakeDir Directories="..\ProjectTemplatesZipFolder\VisualBasic" />
+  <Target Name="BeforeBuild">    
+	<CallTarget Targets="RemoveProjectTemplatesVBFolder;RemoveProjectTemplatesFolder;CreateProjectTemplatesFolder;CreateProjectTemplatesVBFolder;" />
     <ItemGroup>
       <Mvc3CsharpTemplateFiles Include="..\Source\MySql.VisualStudio\ProjectTemplates\CSharp\MySQL\MySQL MVC 3 Project.zip\**" />
     </ItemGroup>
@@ -200,5 +166,35 @@
     <Zip Files="@(WebCsharpItemTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_Web.zip" ZipFileName="..\ItemTemplatesZipFolder\MySQL_Web.zip" />
     <Zip Files="@(WinFormsVBItemTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip" ZipFileName="..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip" />
     <Zip Files="@(WebVBItemTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_Web.zip" ZipFileName="..\ItemTemplatesZipFolder\MySQL_VB_Web.zip" />
+	<CallTarget Targets="Build40;Build45;Build451;Build46;" />
+  </Target>
+  <Target Name="RemoveProjectTemplatesVBFolder">
+	<RemoveDir Condition="Exists('../ProjectTemplatesZipFolder/VisualBasic')" Directories="..\ProjectTemplatesZipFolder\VisualBasic" ContinueOnError="false" />	
+  </Target>
+  <Target Name="RemoveProjectTemplatesFolder" AfterTargets="RemoveProjectTemplatesVBFolder">
+	<RemoveDir Condition="Exists('../ProjectTemplatesZipFolder')" Directories="..\ProjectTemplatesZipFolder" ContinueOnError="false" />    
+  </Target>
+  <Target Name="CreateProjectTemplatesFolder" AfterTargets="RemoveProjectTemplatesFolder">
+	<MakeDir Condition="!Exists('../ProjectTemplatesZipFolder')" Directories="..\ProjectTemplatesZipFolder" />	
+  </Target>
+  <Target Name="CreateProjectTemplatesVBFolder" AfterTargets="CreateProjectTemplatesFolder">	
+	<MakeDir Condition="!Exists('../ProjectTemplatesZipFolder/VisualBasic')" Directories="..\ProjectTemplatesZipFolder\VisualBasic" />
+  </Target>
+  <!-- Build VS Source Targets -->
+  <Target Name="Build40" Condition=" '$(VisualStudioVersion)' == '10.0' Or '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
+    <Message Text="Building VisualStudioVersion=10.0" Importance="high" />
+    <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=10.0 /t:Clean,Build" />
+  </Target>
+  <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
+    <Message Text="Building VisualStudioVersion=11.0" Importance="high" />
+    <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=11.0" />
+  </Target>
+  <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
+    <Message Text="Building VisualStudioVersion=12.0" Importance="high" />
+    <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=12.0" />
+  </Target>
+  <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' ">
+    <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
+    <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=14.0" />
   </Target>
 </Project>

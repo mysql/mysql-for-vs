@@ -169,7 +169,13 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Gets the color of the background.
     /// </summary>
-    public static Color BackgroundColor => _backgroundColor;
+    public static Color BackgroundColor
+    {
+      get
+      {
+        return _backgroundColor;
+      }
+    }
 
     /// <summary>
     /// Exposes the current Visual Studio theme to the exterior of this class.
@@ -189,18 +195,35 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Gets the color of the data grid view cell style back.
     /// </summary>
-    public static Color DataGridViewCellStyleBackColor => _dataGridViewCellStyleBackColor;
+    public static Color DataGridViewCellStyleBackColor
+    {
+      get
+      {
+        return _dataGridViewCellStyleBackColor;
+      }
+    }
 
     /// <summary>
     /// Gets the color of the editor background.
     /// </summary>
-    public static Color EditorBackgroundColor => _editorBackgroundColor;
+    public static Color EditorBackgroundColor
+    {
+      get
+      {
+        return _editorBackgroundColor;
+      }
+    }
 
     /// <summary>
     /// Gets the color of the font.
     /// </summary>
-    public static Color FontColor => _fontColor;
-
+    public static Color FontColor
+    {
+      get
+      {
+        return _fontColor;
+      }
+    }
     /// <summary>
     /// Separates multiple javascript statements into single ones
     /// </summary>
