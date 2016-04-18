@@ -178,7 +178,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           break;
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
 
         // Single Inserts Test
         _shellClient.Execute(GetSchemaSakilaX);
@@ -444,6 +444,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+
         _shellClient.Execute(DropSchemaTest);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
@@ -458,7 +459,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           }
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
       }
       finally
       {

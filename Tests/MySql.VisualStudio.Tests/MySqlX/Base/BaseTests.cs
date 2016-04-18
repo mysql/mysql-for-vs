@@ -28,17 +28,22 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
   public abstract class BaseTests : IDisposable
   {
-    #region ConstantNames
+    #region Constant Names
 
     /// <summary>
-    /// SakilaX schema name.
+    /// SakilaX character table name.
     /// </summary>
-    public const string SAKILA_X_SCHEMA_NAME = "sakila_x";
+    public const string SAKILA_X_CHARACTER_TABLE = "character";
 
     /// <summary>
     /// SakilaX movies collection name.
     /// </summary>
     public const string SAKILA_X_MOVIES_COLLECTION = "movies";
+
+    /// <summary>
+    /// SakilaX schema name.
+    /// </summary>
+    public const string SAKILA_X_SCHEMA_NAME = "sakila_x";
 
     /// <summary>
     /// SakilaX users collection name.
@@ -65,41 +70,51 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     public const string TEST_TABLE_NAME = "table_test";
 
-    #endregion ConstantNames
+    #endregion Constant Names
 
-    #region CommonSqlQueries
+    #region Common SQL Queries
 
     /// <summary>
-    /// Sql statement to drop the test database
+    /// Statement to drop a given database if it exists.
     /// </summary>
-    protected const string DROP_TEST_DB_SQL_SYNTAX = "drop schema if exists " + TEST_SCHEMA_NAME + ";";
+    protected const string DROP_DATABASE_IF_EXISTS = "session.sql('DROP DATABASE IF EXISTS `{0}`;').execute()";
+
+    /// <summary>
+    /// Statement to drop a given schema if it exists.
+    /// </summary>
+    protected const string DROP_SCHEMA_IF_EXISTS = "session.sql('DROP SCHEMA IF EXISTS `{0}`;').execute()";
 
     /// <summary>
     /// Search for a table in the schema.tables information. Use: string.format(SEARCH_TABLE_SQL_SYNTAX, "myTable", "myDatabase")
     /// </summary>
-    protected const string SEARCH_TABLE_SQL_SYNTAX = "select count(*) from information_schema.TABLES where table_name='{0}' and table_schema='{1}';";
+    protected const string SEARCH_TABLE_SQL_SYNTAX = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name='{0}' AND table_schema='{1}';";
 
     /// <summary>
     /// Sql statement to select the current databases in the server
     /// </summary>
-    protected const string SHOW_DBS_SQL_SYNTAX = "show databases;";
+    protected const string SHOW_DBS_SQL_SYNTAX = "SHOW DATABASES;";
 
-    #endregion CommonSqlQueries
+    #endregion Common SQL Queries
 
-    #region AssertFailMessages
+    #region Assert Fail Messages
 
     /// <summary>
-    /// Message to display when a database is not found. Usage: string.format(_dbNotFound, "myDatabase").
+    /// Message to display when a database is not deleted. Usage: string.format(DB_NOT_DELETED, "myDatabase").
+    /// </summary>
+    protected const string DB_NOT_DELETED = "DB {0} was not deleted";
+
+    /// <summary>
+    /// Message to display when a database is not found. Usage: string.format(DB_NOT_FOUND, "myDatabase").
     /// </summary>
     protected const string DB_NOT_FOUND = "DB {0} not found";
 
     /// <summary>
-    /// Message to display when a collection is not deleted. Usage: string.format(_tableNotDeleted, "myTable")
+    /// Message to display when a collection is not deleted. Usage: string.format(COLLECTION_NOT_DELETED, "myTable")
     /// </summary>
     protected const string COLLECTION_NOT_DELETED = "Collection {0} was not deleted";
 
     /// <summary>
-    /// Message to display when a collection is not found. Usage: string.format(_tableNotFound, "myTable")
+    /// Message to display when a collection is not found. Usage: string.format(COLLECTION_NOT_FOUND, "myTable")
     /// </summary>
     protected const string COLLECTION_NOT_FOUND = "Collection {0} not found";
 
@@ -109,26 +124,31 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string DATA_NOT_MATCH = "Data doesn't match";
 
     /// <summary>
-    /// Message to display when an object is null. Usage: string.format(_nullObject, "myObject")
+    /// Message to display when an object is null. Usage: string.format(NULL_OBJECT, "myObject")
     /// </summary>
     protected const string NULL_OBJECT = "The object {0} is null";
 
     /// <summary>
-    /// Message to display when a schema is not found. Usage: string.format(_dbNotFound, "myDatabase")
+    /// Message to display when a schema is not found. Usage: string.format(SCHEMA_NOT_DELETED, "myDatabase")
+    /// </summary>
+    protected const string SCHEMA_NOT_DELETED = "Schema {0} was not deleted";
+
+    /// <summary>
+    /// Message to display when a schema is not found. Usage: string.format(SCHEMA_NOT_FOUND, "myDatabase")
     /// </summary>
     protected const string SCHEMA_NOT_FOUND = "Schema {0} not found";
 
     /// <summary>
-    /// Message to display when a table is not deleted. Usage: string.format(_tableNotDeleted, "myTable").
+    /// Message to display when a table is not deleted. Usage: string.format(TABLE_NOT_DELETED, "myTable").
     /// </summary>
     protected const string TABLE_NOT_DELETED = "Table {0} was not deleted";
 
     /// <summary>
-    /// Message to display when a table is not found. Usage: string.format(_tableNotFound, "myTable").
+    /// Message to display when a table is not found. Usage: string.format(TABLE_NOT_FOUND, "myTable").
     /// </summary>
     protected const string TABLE_NOT_FOUND = "Table {0} not found";
 
-    #endregion AssertFailMessages
+    #endregion Assert Fail Messages
 
     #region JavaScript specific
 
@@ -156,6 +176,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Multi-line comment in triple double quote format for a third line.
     /// </summary>
     protected const string JAVASCRIPT_COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. */";
+
+    /// <summary>
+    /// Statement to enable the use of mysqlx within script.
+    /// </summary>
+    protected const string JAVASCRIPT_INCLUDE_MYSQLX = "var mysqlx = require('mysqlx').mysqlx;";
 
     #endregion JavaScript specific
 
@@ -186,6 +211,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     protected const string PYTHON_COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. \"\"\"";
 
+    /// <summary>
+    /// Statement to enable the use of mysqlx within script.
+    /// </summary>
+    protected const string PYTHON_INCLUDE_MYSQLX = "import mysqlx";
+
     #endregion Python specific
 
     #region Fields
@@ -193,7 +223,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// The command to set the value of the session variable to assign the node session of the X Protocol.
     /// </summary>
-    protected string setSessionVar;
+    protected string SetSessionVar;
 
     #endregion Fields
 

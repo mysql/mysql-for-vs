@@ -792,9 +792,22 @@ namespace MySql.Data.VisualStudio.Editors
         return string.Empty;
       }
 
+      var queryBuilder = new StringBuilder(baseProtocolXQuery.Length + 10);
       var dotIndex = baseProtocolXQuery.IndexOf(".", StringComparison.InvariantCultureIgnoreCase);
       var equalsSignIndex = baseProtocolXQuery.IndexOf("=", StringComparison.InvariantCultureIgnoreCase);
-      return string.Format("{0}{1};", equalsSignIndex < 0 || equalsSignIndex > dotIndex ? string.Empty : VAR_KEYWORD, baseProtocolXQuery);
+
+      if (equalsSignIndex > 0 && equalsSignIndex < dotIndex && !baseProtocolXQuery.StartsWith(VAR_KEYWORD))
+      {
+        queryBuilder.Append(VAR_KEYWORD);
+      }
+
+      queryBuilder.Append(baseProtocolXQuery);
+      if (!baseProtocolXQuery.EndsWith(";", StringComparison.InvariantCultureIgnoreCase))
+      {
+        queryBuilder.Append(";");
+      }
+
+      return queryBuilder.ToString();
     }
 
     /// <summary>

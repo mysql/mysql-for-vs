@@ -53,8 +53,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
@@ -120,6 +120,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
+
         _shellClient.ExecuteToJavaScript(DropSchemaTestIfExists);
         _shellClient.ExecuteToJavaScript(CreateSchemaTest);
         _shellClient.ExecuteToJavaScript(CreateCollectionTest);
@@ -153,8 +154,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -226,7 +227,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           break;
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
       }
       finally
       {

@@ -20,6 +20,7 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
 using MySql.Data.MySqlClient;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
@@ -54,8 +55,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
+
+        _shellClient.ExecuteToJavaScript(DropTestDatabaseIfExists);
+        _shellClient.ExecuteToJavaScript(CreateTestDatabase);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
@@ -71,6 +73,21 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(success, string.Format(DB_NOT_FOUND, TEST_DATABASE_NAME));
+
+        _shellClient.ExecuteToJavaScript(DropTestDatabaseIfExists);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
+        reader = Command.ExecuteReader();
+        while (reader.Read())
+        {
+          var retSchema = reader.GetString(0);
+          if (retSchema != TEST_DATABASE_NAME)
+            continue;
+          success = false;
+          reader.Close();
+          break;
+        }
+
+        Assert.True(success, string.Format(DB_NOT_DELETED, TEST_DATABASE_NAME));
       }
       finally
       {
@@ -85,7 +102,6 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Command?.Dispose();
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
@@ -101,9 +117,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(USE_TEST_DATABASE);
+
+        _shellClient.ExecuteToJavaScript(DropTestDatabaseIfExists);
+        _shellClient.ExecuteToJavaScript(CreateTestDatabase);
+        _shellClient.ExecuteToJavaScript(UseTestDatabase);
+
         _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
@@ -111,7 +129,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _shellClient.ExecuteToJavaScript(DELETE_TEST_TABLE);
+        _shellClient.ExecuteToJavaScript(DropTestTableIfExists);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
@@ -119,110 +137,363 @@ namespace MySql.VisualStudio.Tests.MySqlX
       finally
       {
         Command?.Dispose();
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete data from a table using the <see cref="ShellClient"/> direclty, executing the commands in a single line
+    /// Test to Delete records in a table using the <see cref="ShellClient"/>.
     /// </summary>
     [Fact]
-    public void InsertUpdateDelete()
+    public void Delete()
     {
       OpenConnection();
 
       try
       {
         InitXShell();
-        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(USE_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+
+        // Create test table
+        _shellClient.ExecuteToJavaScript(DropTestDatabaseIfExists);
+        _shellClient.ExecuteToJavaScript(CreateTestDatabase);
+        _shellClient.ExecuteToJavaScript(UseTestDatabase);
+        _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _shellClient.ExecuteToJavaScript(SET_SCHEMA_VAR);
-        _shellClient.ExecuteToJavaScript(SET_TABLE_VAR);
-        _shellClient.ExecuteToJavaScript(INSERT_TWO_RECORDS);
-        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
+        // Insert test table data for delete all
+        _shellClient.ExecuteToJavaScript(GetDatabaseTest);
+        _shellClient.ExecuteToJavaScript(GetDatabaseTestTableTest);
+        _shellClient.ExecuteToJavaScript(INSERT_TEST_ROW1);
+        _shellClient.ExecuteToJavaScript(INSERT_TEST_ROW2);
+        _shellClient.ExecuteToJavaScript(INSERT_TEST_ROW3);
+        _shellClient.ExecuteToJavaScript(INSERT_TEST_ROW4);
+        _shellClient.ExecuteToJavaScript(INSERT_TEST_ROW5);
+        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == TEST_COUNT, DATA_NOT_MATCH);
 
+        // Delete full
+        _shellClient.ExecuteToJavaScript(DELETE_FULL);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 0, DATA_NOT_MATCH);
 
-        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_SINGLE_LINE);
-        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_RECORD) as RowResult;
-
+        // Insert test character rows
+        _shellClient.ExecuteToJavaScript(UseSakilaXDatabase);
+        _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
+        _shellClient.ExecuteToJavaScript(INSERT_NO_COLUMN_SPECIFICATION);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_LIST);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY1);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY2);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY3);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY4);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2);
+        charactersCount += 8;
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
 
-        _shellClient.ExecuteToJavaScript(DELETE_RECORD);
-        selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
-
+        // Delete simple, using parameter binding
+        _shellClient.ExecuteToJavaScript(DELETE_SIMPLE_WITH_BINDING);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 0, DATA_NOT_MATCH);
+
+        // Delete with limit
+        _shellClient.ExecuteToJavaScript(DELETE_WITH_LIMIT);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_NON_BASE_AGE_GREATER_THAN_30) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 2, DATA_NOT_MATCH);
+
+        // Delete with limit again
+        _shellClient.ExecuteToJavaScript(DELETE_WITH_LIMIT);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_NON_BASE_AGE_GREATER_THAN_30) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 4, DATA_NOT_MATCH);
+
+        // Delete inserted test rows
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+
+        // Drop test table
+        _shellClient.ExecuteToJavaScript(UseTestDatabase);
+        _shellClient.ExecuteToJavaScript(DropTestTableIfExists);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
       }
       finally
       {
         Command?.Dispose();
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to Insert, Update and Delete data from a table using the <see cref="ShellClient"/> direclty, executing the commands in multiple lines
+    /// Test to Insert records into a table using the <see cref="ShellClient"/>.
     /// </summary>
     [Fact]
-    public void InsertUpdateDelete_JsonFormat()
+    public void Insert()
     {
       OpenConnection();
 
       try
       {
         InitXShell();
-        _shellClient.ExecuteToJavaScript(DROP_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(CREATE_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(USE_TEST_DATABASE);
-        _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
 
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
 
-        _shellClient.ExecuteToJavaScript(SET_SCHEMA_VAR);
-        _shellClient.ExecuteToJavaScript(SET_TABLE_VAR);
-        _shellClient.ExecuteToJavaScript(INSERT_RECORD_JSON1);
-        _shellClient.ExecuteToJavaScript(INSERT_RECORD_JSON2);
-        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
-
+        // Insert without specifying any columns
+        _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
+        _shellClient.ExecuteToJavaScript(INSERT_NO_COLUMN_SPECIFICATION);
+        charactersCount += 2;
+        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
 
-        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_CMD1);
-        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_CMD2);
-        _shellClient.ExecuteToJavaScript(UPDATE_RECORD_CMD3);
-        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_RECORD) as RowResult;
-
+        // Insert specifying a comma delimited list of columns
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_LIST);
+        charactersCount += 2;
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
 
-        _shellClient.ExecuteToJavaScript(DELETE_RECORD);
-        selectResult = _shellClient.ExecuteToJavaScript(SELECT_TEST_TABLE) as RowResult;
-
+        // Insert specifying columns as an array, also in different lines
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY1);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY2);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY3);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY4);
+        charactersCount += 2;
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
+
+        // Insert JSON documents
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2);
+        charactersCount += 2;
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
+
+        // Delete inserted rows
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
       finally
       {
         Command?.Dispose();
-        SetUp.ExecuteSql(DROP_TEST_DB_SQL_SYNTAX);
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to Select records in a table using the <see cref="ShellClient"/>.
+    /// </summary>
+    [Fact]
+    public void Select()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+
+        // Insert test character rows
+        _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
+        _shellClient.ExecuteToJavaScript(INSERT_NO_COLUMN_SPECIFICATION);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_LIST);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY1);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY2);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY3);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY4);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2);
+        charactersCount += 8;
+
+        // Select all
+        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
+
+        // Select female
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_FEMALE_CHARACTERS) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_FEMALE_COUNT, DATA_NOT_MATCH);
+
+        // Select male
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_MALE_CHARACTERS) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_MALE_COUNT, DATA_NOT_MATCH);
+
+        // Select with field selection
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_WITH_FIELD_SELECTION) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        var allResults = selectResult?.FetchAll();
+        Assert.True(allResults != null && allResults.Count == charactersCount, DATA_NOT_MATCH);
+        Assert.True(allResults != null && allResults.Count > 0 && allResults[0].Length == 2, DATA_NOT_MATCH);
+
+        // Select with order by descending
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_WITH_ORDER_BY_DESC) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        var singleResult = selectResult?.FetchOne();
+        int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult[2]) : 0;
+        Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
+        singleResult = selectResult?.FetchOne();
+        fetchedAge = singleResult != null ? Convert.ToInt32(singleResult[2]) : 0;
+        Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
+
+        // Select by paging (limit + offset)
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_PAGING1) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_PAGING2) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount - CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
+
+        // Delete inserted test rows
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        Command?.Dispose();
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to Update records in a table using the <see cref="ShellClient"/>.
+    /// </summary>
+    [Fact]
+    public void Update()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count, foundAge = 0;
+        object foundValue1 = null;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+
+        // Insert test rows
+        _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
+        _shellClient.ExecuteToJavaScript(INSERT_NO_COLUMN_SPECIFICATION);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_LIST);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY1);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY2);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY3);
+        _shellClient.ExecuteToJavaScript(INSERT_COLUMNS_AS_ARRAY4);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1);
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2);
+        charactersCount += 8;
+        var selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
+
+        // Update simple, 1 record 1 value, using parameter binding
+        _shellClient.ExecuteToJavaScript(UPDATE_SIMPLE);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        var rowResult = selectResult?.FetchOne();
+        if (rowResult != null)
+        {
+          foundValue1 = rowResult[5];
+        }
+
+        Assert.True(foundValue1 != null && foundValue1.ToString().Equals("Mass Effect 3", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Update a singe value with statements in different lines, using parameter binding
+        _shellClient.ExecuteToJavaScript(UPDATE_IN_SEVERAL_LINES1);
+        _shellClient.ExecuteToJavaScript(UPDATE_IN_SEVERAL_LINES2);
+        _shellClient.ExecuteToJavaScript(UPDATE_IN_SEVERAL_LINES3);
+        _shellClient.ExecuteToJavaScript(UPDATE_IN_SEVERAL_LINES4);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        rowResult = selectResult?.FetchOne();
+        if (rowResult != null)
+        {
+          foundValue1 = rowResult[1];
+        }
+
+        Assert.True(foundValue1 != null && foundValue1.ToString().Equals(TALI_MASS_EFFECT_3, StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Update using an expression
+        _shellClient.Execute(JAVASCRIPT_INCLUDE_MYSQLX);
+        _shellClient.ExecuteToJavaScript(UPDATE_WITH_EXPRESSION);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        rowResult = selectResult?.FetchOne();
+        if (rowResult != null)
+        {
+          foundValue1 = rowResult[2];
+          if (foundValue1 != null)
+          {
+            int.TryParse(foundValue1.ToString(), out foundAge);
+          }
+        }
+
+        Assert.True(foundAge == 25, DATA_NOT_MATCH);
+
+        // Update with limit
+        _shellClient.ExecuteToJavaScript(UPDATE_WITH_LIMIT);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_OLD) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
+
+        // Update with limit
+        _shellClient.ExecuteToJavaScript(UPDATE_FULL);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_FROM_VIDEOGAMES) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == charactersCount, DATA_NOT_MATCH);
+
+        // Delete inserted test rows
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
+        selectResult = _shellClient.ExecuteToJavaScript(SELECT_ALL_TABLE) as RowResult;
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.FetchAll().Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        Command?.Dispose();
+        _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
         CloseConnection();
       }
     }

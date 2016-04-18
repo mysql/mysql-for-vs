@@ -16,6 +16,19 @@ CREATE TABLE `users` (
   `_id` varchar(32) GENERATED ALWAYS AS (json_unquote(json_extract(doc, '$._id'))) STORED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `character` (
+  `character_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `age` smallint(4) unsigned NOT NULL,
+  `gender` enum('male', 'female') NOT NULL,
+  `from` varchar(30) DEFAULT '' NOT NULL,
+  `universe` varchar(30) NOT NULL,
+  `base` bool DEFAULT false NOT NULL,
+  PRIMARY KEY (`character_id`),
+  UNIQUE KEY `idx_name` (`name`),
+  KEY `idx_base` (`base`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO `movies` (`doc`) VALUES('{ "_id" : "3fcb3707946943b6a68354effbf34a89", "title" : "ACADEMY DINOSAUR", "description" : "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies", "release_year" : "2006", "language" : "English", "duration" : "86 min", "rating" : "PG", "actors" : ["PENELOPE GUINESS", "CHRISTIAN GABLE", "LUCILLE TRACY", "SANDRA PECK", "JOHNNY CAGE", "MENA TEMPLE", "WARREN NOLTE", "OPRAH KILMER", "ROCK DUKAKIS", "MARY KEITEL"]}'),
 ('{ "_id" : "ddbeecd5760d443b9da594801d06fd08", "title" : "ACE GOLDFINGER", "description" : "A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China", "release_year" : "2006", "language" : "English", "duration" : "48 min", "rating" : "G", "actors" : ["BOB FAWCETT", "MINNIE ZELLWEGER", "SEAN GUINESS", "CHRIS DEPP"]}'),
 ('{ "_id" : "c30c983f24cb4ce1ac59e9262a8a42b6", "title" : "ADAPTATION HOLES", "description" : "A Astounding Reflection of a Lumberjack And a Car who must Sink a Lumberjack in A Baloon Factory", "release_year" : "2006", "language" : "English", "duration" : "50 min", "rating" : "NC-17", "actors" : ["NICK WAHLBERG", "BOB FAWCETT", "CAMERON STREEP", "RAY JOHANSSON", "JULIANNE DENCH"]}'),
@@ -1027,3 +1040,32 @@ INSERT INTO `users` (`doc`) VALUES('{"_id" : "6e2ff14eeeca4c55a201180e1928da18",
 ('{"_id" : "85951c3fb7aa428f8525db4053de21c1", "name" : "Elda Longshore", "email" : "elda1742@fakemail.com", "password" : "Longshore764" }'), 
 ('{"_id" : "b938884e4b9f45c1bff8cacddab807e9", "name" : "Jenine Moro", "email" : "jenine896@fakemail.com", "password" : "Moro1847" }'), 
 ('{"_id" : "5e6caab9417d46fbb6e9efad3f06585f", "name" : "Leida Aquirre", "email" : "leida136@fakemail.com", "password" : "Aquirre77" }');
+
+INSERT INTO `character` (`name`, `age`, `gender`, `universe`, `base`) VALUES
+('Sarah Palmer', 31, 'female', 'Halo 4', TRUE),
+('Avery Johnson', 78, 'male', 'Halo', TRUE),
+('Miranda Keys', 27, 'female', 'Halo 2', TRUE),
+('Catherine Halsey', 66, 'female', 'Halo: Reach', TRUE),
+('Catherine-B320', 22, 'female', 'Halo: Reach', TRUE),
+('Jun-A266', 34, 'male', 'Halo: Reach', TRUE),
+('Jorge-052', 41, 'male', 'Halo: Reach', TRUE),
+('Emile-A239', 29, 'male', 'Halo: Reach', TRUE),
+('Carter-A259', 32, 'male', 'Halo: Reach', TRUE),
+('John-117', 47, 'male', 'Halo', TRUE),
+('Linda-058', 47, 'female', 'Halo 5', TRUE),
+('Jameson Locke', 29, 'male', 'Halo 5', TRUE),
+('Kelly-087', 48, 'female', 'Halo 5', TRUE),
+('Frederic-104', 47, 'male', 'Halo 5', TRUE),
+('Edward Buck', 48, 'male', 'Halo 5', TRUE),
+('Holly Tanaka', 28, 'female', 'Halo 5', TRUE),
+('Olympia Vale', 22, 'female', 'Halo 5', TRUE),
+('Thane Krios 2', 39, 'male', 'Mass Effect 2', TRUE),
+('Jeff Moreau', 30, 'male', 'Mass Effect', TRUE),
+('Jacob Taylor', 28, 'male', 'Mass Effect 2', TRUE),
+('Kasumi Goto', 25, 'female', 'Mass Effect 2', TRUE),
+('Jacqueline Nought', 24, 'female', 'Mass Effect 2', TRUE),
+('Saren Arterius', 44, 'male', 'Mass Effect', TRUE),
+('Mordin Solus', 50, 'male', 'Mass Effect 2', TRUE),
+('David Anderson', 48, 'male', 'Mass Effect', TRUE),
+('Zaeed Massani', 55, 'male', 'Mass Effect 2', TRUE),
+('Kaidan Alenko', 35, 'male', 'Mass Effect', TRUE);

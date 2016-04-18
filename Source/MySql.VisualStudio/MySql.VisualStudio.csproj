@@ -959,7 +959,7 @@
     <Compile Include="LanguageService\LanguageServiceUtil.cs">
     </Compile>
     <Compile Include="LanguageService\MyJsLanguageService.cs" />
-	<Compile Include="LanguageService\MyPyLanguageService.cs" />
+    <Compile Include="LanguageService\MyPyLanguageService.cs" />
     <Compile Include="LanguageService\MySqlLanguageService.cs">
     </Compile>
     <Compile Include="Editors\TableEditor.cs">
@@ -1548,6 +1548,9 @@
   <Target Name="SetVsSDKEnvVars_VS14" BeforeTargets="VSCTCompile" Condition=" '$(VisualStudioVersion)' == '14.0'">
     <SetVsSDKEnvVars_VS14 ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Dependencies\xShell\*.*" "%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio\2.0.2\" /S /Y /I</PostBuildEvent>
+  </PropertyGroup>
   <!--<Target Name="AfterBuild">
   </Target>-->
 </Project>

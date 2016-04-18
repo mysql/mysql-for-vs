@@ -118,7 +118,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 
     #endregion Python specific
 
-    #region CommonCollectionQueries
+    #region Common Collection Queries
 
     /// <summary>
     /// Statement to create a collection.
@@ -134,13 +134,13 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Statement to create a non-unique index.
     /// </summary>
     // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    protected const string CREATE_NON_UNIQUE_INDEX_MOVIES = "coll.createIndex('rating_index').field(?????).execute()";
+    protected const string CREATE_NON_UNIQUE_INDEX_MOVIES = "coll.createIndex('rating_index').field('rating', 'varchar(30)', true).execute()";
 
     /// <summary>
     /// Statement to create a unique index.
     /// </summary>
     // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    protected const string CREATE_UNIQUE_INDEX_MOVIES = "coll.createIndex('title_index', '????').field(?????).execute()";
+    protected const string CREATE_UNIQUE_INDEX_MOVIES = "coll.createIndex('title_index', mysqlx.IndexUnique).field(?????).execute()";
 
     /// <summary>
     /// Statement to drop a collection.
@@ -163,11 +163,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Statement to drop the test database
     /// </summary>
     protected const string DROP_SCHEMA = "session.dropSchema('{0}')";
-
-    /// <summary>
-    /// Statement to drop the test database
-    /// </summary>
-    protected const string DROP_SCHEMA_IF_EXISTS = "session.sql('drop schema if exists {0};').execute()";
 
     /// <summary>
     /// Statement to get all the records from the test table as RowResult
@@ -220,12 +215,12 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string FIND_REMOVED_USERS = "coll.find('name like :param1 or name like :param2').bind('param1', 'Fr%').bind('param2', 'Ig%').execute()";
 
     /// <summary>
-    /// Get and set the test table
+    /// Get a specific colletion and assign it to a variable for persistence. 
     /// </summary>
     protected const string GET_COLLECTION = "coll = session.{0}.getCollection('{1}')";
 
     /// <summary>
-    /// Gets the test schema and assigns it to a variable for persistence.
+    /// Gets a schema and assign it to a variable for persistence.
     /// </summary>
     protected const string GET_SCHEMA = "schema = session.getSchema('{0}')";
 
@@ -290,12 +285,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     protected const string REVERT_ADDED_USERS = "coll.remove('test = :param1').bind('param1', 'yes').execute()";
 
-    /// <summary>
-    /// Statement to use a specific schema/database.
-    /// </summary>
-    protected const string USE_SCHEMA = "session.sql('use `{0}`;').execute()";
-
-    #endregion CommonCollectionQueries
+    #endregion Common Collection Queries
 
     #region Properties
 
@@ -339,11 +329,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     public string GetSchemaSakilaX { get; private set; }
 
-    /// <summary>
-    /// Statement to use the test database.
-    /// </summary>
-    public string UseSchemaTest { get; private set; }
-
     #endregion Properties
 
     /// <summary>
@@ -359,7 +344,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
       GetCollectionSakilaXMovies = string.Format(GET_COLLECTION, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION);
       GetCollectionSakilaXUser = string.Format(GET_COLLECTION, SAKILA_X_SCHEMA_NAME, SAKILA_X_USERS_COLLECTION);
       GetSchemaSakilaX = string.Format(GET_SCHEMA, SAKILA_X_SCHEMA_NAME);
-      UseSchemaTest = string.Format(USE_SCHEMA, TEST_SCHEMA_NAME);
     }
   }
 }
