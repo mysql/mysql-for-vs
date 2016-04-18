@@ -92,6 +92,11 @@
 
       <!-- VS2010 Extension folders -->
       <Directory Id="VS_2010_PATH" Name="VSPath">
+        <!-- xShell Modules Dir -->
+        <Directory Id='VS2010_NgModulesDir' Name='modules'>
+          <Directory Id='VS2010_NgJsDir' Name='js' />
+        </Directory>
+        <!--Extensions -->
         <Directory Id="VS10.T4.ExtensionDir" Name="Extensions">
           <Directory Id="VS10.T4.MicrosoftDir" Name="Microsoft">
             <Directory Id="VS10.T4.EFToolsDir" Name="Entity Framework Tools">
@@ -110,9 +115,10 @@
             </Directory>
           </Directory>
         </Directory>
+        <!--Private Assemblies -->
         <Directory Id="VS10_PrivateAssemblies" Name="PrivateAssemblies" />
+        <!--Public Assemblies -->
         <Directory Id="VS10_PublicAssemblies" Name="PublicAssemblies" />
-
         <!--Item Templates-->
         <Directory Id="VS10_ItemTemplates" Name="ItemTemplates" >
           <Directory Id="VS10_CSharpIT" Name="CSharp">
@@ -134,18 +140,19 @@
               <Directory Id="VS10_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
               <Directory Id="VS10_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
             </Directory>
-            <Directory Id='VS2010_NgModulesDir' Name='modules'>
-              <Directory Id='VS2010_NgJsDir' Name='js' />
-            </Directory>
           </Directory>
         </Directory>
-
       </Directory>
 
       <!-- VS2012 Extension folders -->
       <Directory Id="VS2012_ROOT_FOLDER">
         <Directory Id="VS11.Common7Folder" Name="Common7">
           <Directory Id="VS11.IDEFolder" Name="IDE">
+            <!-- xShell Modules Dir -->
+            <Directory Id='VS11_NgModulesDir' Name='modules'>
+              <Directory Id='VS11_NgJsDir' Name='js' />
+            </Directory>
+            <!--Extensions -->
             <Directory Id="VS11.T4.ExtensionDir" Name="Extensions">
               <Directory Id="VS11.T4.MicrosoftDir" Name="Microsoft">
                 <Directory Id="VS11.T4.EFToolsDir" Name="Entity Framework Tools">
@@ -164,9 +171,10 @@
                 </Directory>
               </Directory>
             </Directory>
+            <!--Private Assemblies -->
             <Directory Id="VS11_PrivateAssemblies" Name="PrivateAssemblies" />
+            <!--Public Assemblies -->
             <Directory Id="VS11_PublicAssemblies" Name="PublicAssemblies" />
-
             <!--Item Templates-->
             <Directory Id="VS11_ItemTemplates" Name="ItemTemplates" >
               <Directory Id="VS11_CSharpIT" Name="CSharp">
@@ -190,9 +198,6 @@
                 </Directory>
               </Directory>
             </Directory>
-            <Directory Id='VS11_NgModulesDir' Name='modules'>
-              <Directory Id='VS11_NgJsDir' Name='js' />
-            </Directory>
           </Directory>
         </Directory>
       </Directory>
@@ -201,6 +206,11 @@
       <Directory Id="VS_2013_PATH" Name="VSPath2013">
         <Directory Id="VS12.Common7Folder" Name="Common7">
           <Directory Id="VS12.IDEFolder" Name="IDE">
+            <!-- xShell Modules Dir -->
+            <Directory Id='VS12_NgModulesDir' Name='modules'>
+              <Directory Id='VS12_NgJsDir' Name='js' />
+            </Directory>
+            <!--Extensions -->
             <Directory Id="VS12.T4.ExtensionDir" Name="Extensions">
               <Directory Id="VS12.T4.MicrosoftDir" Name="Microsoft">
                 <Directory Id="VS12.T4.EFToolsDir" Name="Entity Framework Tools">
@@ -219,9 +229,10 @@
                 </Directory>
               </Directory>
             </Directory>
+            <!--Private Assemblies -->
             <Directory Id="VS12_PrivateAssemblies" Name="PrivateAssemblies" />
+            <!--Public Assemblies -->
             <Directory Id="VS12_PublicAssemblies" Name="PublicAssemblies" />
-
             <!--Item Templates-->
             <Directory Id="VS12_ItemTemplates" Name="ItemTemplates" >
               <Directory Id="VS12_CSharpIT" Name="CSharp">
@@ -245,9 +256,6 @@
                 </Directory>
               </Directory>
             </Directory>
-            <Directory Id='VS12_NgModulesDir' Name='modules'>
-              <Directory Id='VS12_NgJsDir' Name='js' />
-            </Directory>
           </Directory>
         </Directory>
       </Directory>
@@ -256,6 +264,11 @@
       <Directory Id="VS_2015_PATH" Name="VSPath2015">
         <Directory Id="VS14.Common7Folder" Name="Common7">
           <Directory Id="VS14.IDEFolder" Name="IDE">
+            <!-- xShell Modules Dir -->
+            <Directory Id='VS14_NgModulesDir' Name='modules'>
+              <Directory Id='VS14_NgJsDir' Name='js' />
+            </Directory>
+            <!--Extensions -->
             <Directory Id="VS14.T4.ExtensionDir" Name="Extensions">
               <Directory Id="VS14.T4.MicrosoftDir" Name="Microsoft">
                 <Directory Id="VS14.T4.EFToolsDir" Name="Entity Framework Tools">
@@ -274,9 +287,10 @@
                 </Directory>
               </Directory>
             </Directory>
+            <!--Private Assemblies -->
             <Directory Id="VS14_PrivateAssemblies" Name="PrivateAssemblies" />
+            <!--Public Assemblies -->
             <Directory Id="VS14_PublicAssemblies" Name="PublicAssemblies" />
-
             <!--Item Templates-->
             <Directory Id="VS14_ItemTemplates" Name="ItemTemplates" >
               <Directory Id="VS14_CSharpIT" Name="CSharp">
@@ -300,10 +314,6 @@
                 </Directory>
               </Directory>
             </Directory>
-
-          </Directory>
-          <Directory Id='VS14_NgModulesDir' Name='modules'>
-            <Directory Id='VS14_NgJsDir' Name='js' />
           </Directory>
         </Directory>
       </Directory>
