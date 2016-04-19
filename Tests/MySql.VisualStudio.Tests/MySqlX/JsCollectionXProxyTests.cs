@@ -109,10 +109,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Table using the <see cref="MyTestXProxy"/>.
+    /// Test to create and drop a Collection using the <see cref="MyTestXProxy"/>.
     /// </summary>
     [Fact]
-    public void CreateCollection()
+    public void CreateAndDropCollection()
     {
       OpenConnection();
 
@@ -141,10 +141,80 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Database using the <see cref="MyTestXProxy"/>.
+    /// Test to create and drop unique and non-unique indexes using the <see cref="MyTestXProxy"/>.
     /// </summary>
     [Fact]
-    public void CreateSchema()
+    public void CreateAndDropIndex()
+    {
+      OpenConnection();
+      int duplicateMovieCount = 0;
+
+      try
+      {
+        InitXProxy();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+
+        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.JavaScript);
+        _xProxy.ExecuteScript(GetCollectionSakilaXMovies, ScriptType.JavaScript);
+
+        // Add non-unique index
+        _xProxy.ExecuteScript(CREATE_NON_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Add unique index
+        _xProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptType.JavaScript);
+        _xProxy.ExecuteScript(CREATE_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        // Test data uniqueness
+        _xProxy.ExecuteScript(JAVASCRIPT_ADD_DUPLICATE_MOVIE, ScriptType.JavaScript);
+        var selectResult = _xProxy.ExecuteScript(FIND_DUPLICATE_MOVIE_TITLE, ScriptType.JavaScript);
+        duplicateMovieCount = selectResult?.Count ?? 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
+
+        // Drop non-unique index
+        _xProxy.ExecuteScript(DROP_NON_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Drop unique index
+        _xProxy.ExecuteScript(DROP_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+      }
+      finally
+      {
+        // Remove duplicate data in case test failed
+        if (duplicateMovieCount > 1)
+        {
+          _xProxy.ExecuteScript(REMOVE_DUPLICATE_MOVIE, ScriptType.JavaScript);
+        }
+
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create and drop a Schema using the <see cref="MyTestXProxy"/>.
+    /// </summary>
+    [Fact]
+    public void CreateAndDropSchema()
     {
       OpenConnection();
       MySqlDataReader reader = null;
@@ -279,6 +349,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.JavaScript);
 
         // Modify Set
+        _xProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptType.JavaScript);
         _xProxy.ExecuteScript(MODIFY_SET_USER, ScriptType.JavaScript);
         var selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));

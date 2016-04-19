@@ -110,10 +110,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Collection using the <see cref="ShellClient"/> direclty.
+    /// Test to create and drop a Collection using the <see cref="ShellClient"/> directly.
     /// </summary>
     [Fact]
-    public void CreateCollection()
+    public void CreateAndDropCollection()
     {
       OpenConnection();
 
@@ -143,13 +143,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create unique and non-unique indexes using the <see cref="ShellClient"/> direclty.
+    /// Test to create and drop unique and non-unique indexes using the <see cref="ShellClient"/> direclty.
     /// </summary>
-    //[Fact]
-    // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    public void CreateIndex()
+    [Fact]
+    public void CreateAndDropIndex()
     {
       OpenConnection();
+      int duplicateMovieCount = 0;
 
       try
       {
@@ -166,30 +166,57 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         // Add non-unique index
         _shellClient.ExecuteToJavaScript(CREATE_NON_UNIQUE_INDEX_MOVIES);
-        // TODO: Add the asserts to check for the added index
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
         // Add unique index
-        // TODO: Add statements to add unique index
-        // TODO: Add the asserts to check for the added index
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_INCLUDE_MYSQLX);
+        _shellClient.ExecuteToJavaScript(CREATE_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
 
-        // Run a find
+        // Test data uniqueness
+        _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_DUPLICATE_MOVIE);
+        var selectResult = _shellClient.ExecuteToJavaScript(FIND_DUPLICATE_MOVIE_TITLE) as DocResult;
+        duplicateMovieCount = selectResult?.FetchAll().Count ?? 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
 
         // Drop non-unique index
+        _shellClient.ExecuteToJavaScript(DROP_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
         // Drop unique index
+        _shellClient.ExecuteToJavaScript(DROP_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
       }
       finally
       {
+        // Remove duplicate data in case test failed
+        if (duplicateMovieCount > 1)
+        {
+          _shellClient.ExecuteToJavaScript(REMOVE_DUPLICATE_MOVIE);
+        }
+
         Command?.Dispose();
         CloseConnection();
       }
     }
 
     /// <summary>
-    /// Test to create a Schema using the <see cref="ShellClient"/> direclty.
+    /// Test to create and drop a Schema using the <see cref="ShellClient"/> direclty.
     /// </summary>
     [Fact]
-    public void CreateSchema()
+    public void CreateAndDropSchema()
     {
       OpenConnection();
       MySqlDataReader reader = null;
@@ -324,6 +351,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
 
         // Modify Set
+        _shellClient.Execute(JAVASCRIPT_INCLUDE_MYSQLX);
         _shellClient.ExecuteToJavaScript(MODIFY_SET_USER);
         var selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));

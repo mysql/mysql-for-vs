@@ -32,6 +32,21 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string MOVIES_ACTORS_ARRAY_VALUE = "['ADAM GRANT', 'CATE MCQUEEN', 'GRETA KEITEL']";
 
     /// <summary>
+    /// The duplicate title used for testing uniqueness in sakila_x.movies.
+    /// </summary>
+    protected const string MOVIES_DUPLICATE_TITLE = "BAKED CLEOPATRA";
+
+    /// <summary>
+    /// The name of the non-unique index created on the movies collection.
+    /// </summary>
+    protected const string MOVIES_NON_UNIQUE_INDEX_NAME = "rating_index";
+
+    /// <summary>
+    /// The name of the unique index created on the movies collection.
+    /// </summary>
+    protected const string MOVIES_UNIQUE_INDEX_NAME = "title_index";
+
+    /// <summary>
     /// Bound array value.
     /// </summary>
     protected const string MOVIES_RATING_ARRAY_VALUE = "['R', 'NC-17']";
@@ -49,6 +64,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     #endregion Constant Values
 
     #region JavaScript specific
+
+    /// <summary>
+    /// Statement to attempt to add a duplicate movie to the sakila_x.movies collection.
+    /// </summary>
+    protected const string JAVASCRIPT_ADD_DUPLICATE_MOVIE = "coll.add({ title: '" + MOVIES_DUPLICATE_TITLE + "', description: 'Trying to insert a duplicate title into the movies collection', release_year: 2006, language: 'English', duration: '182 min', rating: 'DEL', actors: ['MICHELLE MCCONAUGHEY'] }).execute()";
 
     /// <summary>
     /// Statement to add a single user to the sakila_x.users collection.
@@ -84,6 +104,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     #endregion JavaScript specific
 
     #region Python specific
+
+    /// <summary>
+    /// Statement to attempt to add a duplicate movie to the sakila_x.movies collection.
+    /// </summary>
+    protected const string PYTHON_ADD_DUPLICATE_MOVIE = "coll.add({ 'title': '" + MOVIES_DUPLICATE_TITLE + "', 'description': 'Trying to insert a duplicate title into the movies collection', 'release_year': 2006, 'language': 'English', 'duration': '182 min', 'rating': 'DEL', 'actors': ['MICHELLE MCCONAUGHEY'] }).execute()";
 
     /// <summary>
     /// Statement to add a single user to the sakila_x.users collection.
@@ -133,14 +158,12 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to create a non-unique index.
     /// </summary>
-    // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    protected const string CREATE_NON_UNIQUE_INDEX_MOVIES = "coll.createIndex('rating_index').field('rating', 'varchar(30)', true).execute()";
+    protected const string CREATE_NON_UNIQUE_INDEX_MOVIES = "coll.createIndex('" + MOVIES_NON_UNIQUE_INDEX_NAME + "').field('rating', 'text(5)', true).execute()";
 
     /// <summary>
     /// Statement to create a unique index.
     /// </summary>
-    // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    protected const string CREATE_UNIQUE_INDEX_MOVIES = "coll.createIndex('title_index', mysqlx.IndexUnique).field(?????).execute()";
+    protected const string CREATE_UNIQUE_INDEX_MOVIES = "coll.createIndex('" + MOVIES_UNIQUE_INDEX_NAME + "', mysqlx.IndexType.Unique).field('title', 'text(255)', true).execute()";
 
     /// <summary>
     /// Statement to drop a collection.
@@ -150,14 +173,12 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to drop non-unique index.
     /// </summary>
-    // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    protected const string DROP_NON_UNIQUE_INDEX_MOVIES = "coll.dropIndex('rating_index').execute()";
+    protected const string DROP_NON_UNIQUE_INDEX_MOVIES = "coll.dropIndex('" + MOVIES_NON_UNIQUE_INDEX_NAME + "').execute()";
 
     /// <summary>
-    /// Statement to drop non-unique index.
+    /// Statement to drop unique index.
     /// </summary>
-    // TODO: https://jira.oraclecorp.com/jira/browse/MYSQLFORVS-534
-    protected const string DROP_UNIQUE_INDEX_MOVIES = "coll.dropIndex('title_index').execute()";
+    protected const string DROP_UNIQUE_INDEX_MOVIES = "coll.dropIndex('" + MOVIES_UNIQUE_INDEX_NAME + "').execute()";
 
     /// <summary>
     /// Statement to drop the test database
@@ -168,6 +189,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Statement to get all the records from the test table as RowResult
     /// </summary>
     protected const string FIND_ALL_DOCUMENTS_IN_COLLECTION = "coll.find().execute()";
+
+    /// <summary>
+    /// Statement to get all the movies with a duplicate movie title of MOVIES_DUPLICATE_TITLE.
+    /// </summary>
+    protected const string FIND_DUPLICATE_MOVIE_TITLE = "coll.find('title = :param1').bind('param1', '" + MOVIES_DUPLICATE_TITLE + "').execute()";
 
     /// <summary>
     /// Statement to select the update record from the test table
@@ -242,8 +268,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Expression evaluation.
     /// </summary>
-    // TODO: Check with Shell team because this is not working with the current Shell Core.
-    protected const string MODIFY_SET_EXPRESSION = "38"; //"mysqlx.expr('60 / 2 + 8')";
+    protected const string MODIFY_SET_EXPRESSION = "mysqlx.expr('60 / 2 + 8')";
 
     /// <summary>
     /// Statement to modify a SakilaX.User value and set additional values.
@@ -274,6 +299,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Statement to delete a specific record in SakilaX.User
     /// </summary>
     protected const string REMOVE_USER = "coll.remove('name like :param').bind('param', 'Alfonso%').execute()";
+
+    /// <summary>
+    /// Statement to delete a test duplicate movie record.
+    /// </summary>
+    protected const string REMOVE_DUPLICATE_MOVIE = "coll.remove('title = :param1 and rating = :param2').bind('param1', '" + MOVIES_DUPLICATE_TITLE + "').bind('param2', 'DEL').execute()";
 
     /// <summary>
     /// Statement to delete the first x sorted records in SakilaX.User

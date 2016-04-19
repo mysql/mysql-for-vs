@@ -85,6 +85,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string DROP_SCHEMA_IF_EXISTS = "session.sql('DROP SCHEMA IF EXISTS `{0}`;').execute()";
 
     /// <summary>
+    /// Search for a created collection index in the information schema. Use: string.format(SEARCH_INDEX_SQL_SYNTAX, "schema", "collectionName", "indexName")
+    /// </summary>
+    protected const string SEARCH_INDEX_SQL_SYNTAX = "SELECT COUNT(*) FROM information_schema.INNODB_SYS_TABLES as `tables` join information_schema.INNODB_SYS_INDEXES as `indexes` where `tables`.TABLE_ID = `indexes`.TABLE_ID AND `tables`.NAME = '{0}/{1}' AND `indexes`.NAME = '{2}';";
+
+    /// <summary>
     /// Search for a table in the schema.tables information. Use: string.format(SEARCH_TABLE_SQL_SYNTAX, "myTable", "myDatabase")
     /// </summary>
     protected const string SEARCH_TABLE_SQL_SYNTAX = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name='{0}' AND table_schema='{1}';";
@@ -122,6 +127,16 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Message to display when the data received doesn't match the data expected
     /// </summary>
     protected const string DATA_NOT_MATCH = "Data doesn't match";
+
+    /// <summary>
+    /// Message to display when duplicate data could be inserted meaning a unique index is not working.
+    /// </summary>
+    protected const string DATA_NOT_UNIQUE = "Duplicate data found, unique index not working.";
+
+    /// <summary>
+    /// Message to display when a schema is not found. Usage: string.format(INDEX_NOT_FOUND, "indexName")
+    /// </summary>
+    protected const string INDEX_NOT_FOUND = "Index {0} not found";
 
     /// <summary>
     /// Message to display when an object is null. Usage: string.format(NULL_OBJECT, "myObject")

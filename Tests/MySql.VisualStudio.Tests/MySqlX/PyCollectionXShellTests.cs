@@ -125,6 +125,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
+        #region CreateAndDropSchema
+
         // Create Schema test
         _shellClient.Execute(DropSchemaTestIfExists);
         _shellClient.Execute(CreateSchemaTest);
@@ -142,6 +144,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+
+        #region CreateAndDropCollection
 
         // Create Collection test
         _shellClient.Execute(CreateCollectionTest);
@@ -163,6 +167,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(COLLECTION_NOT_DELETED, TEST_COLLECTION_NAME));
 
+        #endregion CreateAndDropCollection
+
         // Drop Schema test
         _shellClient.Execute(DropSchemaTest);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
@@ -180,6 +186,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
 
+        #endregion CreateAndDropSchema
+        #region AddFind
         // Single Inserts Test
         _shellClient.Execute(GetSchemaSakilaX);
         _shellClient.Execute(GetCollectionSakilaXUser);
@@ -216,6 +224,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         selectResult = _shellClient.Execute(FIND_SPECIFIC_USER_TEST) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 1, DATA_NOT_MATCH);
+
+        #endregion AddFind
+        #region Modify
 
         // Modify Set
         _shellClient.Execute(MODIFY_SET_USER);
@@ -320,6 +331,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == 2, DATA_NOT_MATCH);
 
+        #endregion Modify
+        #region Remove
+
         // Remove test
         _shellClient.Execute(REMOVE_USER);
         selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
@@ -342,6 +356,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == USERS_COUNT, DATA_NOT_MATCH);
+
+        #endregion Remove
+        #region FindComplete
 
         // Find complex
         _shellClient.Execute(GetCollectionSakilaXMovies);
@@ -366,6 +383,53 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(foundTitle != null && foundTitle.ToString().Equals("ANNIE IDENTITY", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        #endregion FindComplete
+        #region CreateAndDropIndex
+
+        _shellClient.Execute(GetSchemaSakilaX);
+        _shellClient.Execute(GetCollectionSakilaXMovies);
+
+        // Add non-unique index
+        _shellClient.Execute(CREATE_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Add unique index
+        _shellClient.Execute(PYTHON_INCLUDE_MYSQLX);
+        _shellClient.Execute(CREATE_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        // Test data uniqueness
+        _shellClient.Execute(PYTHON_ADD_DUPLICATE_MOVIE);
+        selectResult = _shellClient.Execute(FIND_DUPLICATE_MOVIE_TITLE) as DocResult;
+        int duplicateMovieCount = selectResult?.FetchAll().Count ?? 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
+        if (duplicateMovieCount > 1)
+        {
+          _shellClient.Execute(REMOVE_DUPLICATE_MOVIE);
+        }
+
+        // Drop non-unique index
+        _shellClient.Execute(DROP_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Drop unique index
+        _shellClient.Execute(DROP_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        #endregion CreateAndDropIndex
       }
       finally
       {
@@ -385,10 +449,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Collection using the <see cref="ShellClient"/> direclty.
+    /// Test to create and drop a Collection using the <see cref="ShellClient"/> direclty.
     /// </summary>
     //[Fact]
-    public void CreateCollection()
+    public void CreateAndDropCollection()
     {
       OpenConnection();
 
@@ -417,10 +481,80 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Schema using the <see cref="ShellClient"/> direclty.
+    /// Test to create and drop unique and non-unique indexes using the <see cref="ShellClient"/> direclty.
     /// </summary>
     //[Fact]
-    public void CreateSchema()
+    public void CreateAndDropIndex()
+    {
+      OpenConnection();
+      int duplicateMovieCount = 0;
+
+      try
+      {
+        InitXShell();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+
+        _shellClient.Execute(GetSchemaSakilaX);
+        _shellClient.Execute(GetCollectionSakilaXMovies);
+
+        // Add non-unique index
+        _shellClient.Execute(CREATE_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Add unique index
+        _shellClient.Execute(PYTHON_INCLUDE_MYSQLX);
+        _shellClient.Execute(CREATE_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        // Test data uniqueness
+        _shellClient.Execute(PYTHON_ADD_DUPLICATE_MOVIE);
+        var selectResult = _shellClient.Execute(FIND_DUPLICATE_MOVIE_TITLE) as DocResult;
+        duplicateMovieCount = selectResult?.FetchAll().Count ?? 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
+
+        // Drop non-unique index
+        _shellClient.Execute(DROP_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Drop unique index
+        _shellClient.Execute(DROP_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+      }
+      finally
+      {
+        // Remove duplicate data in case test failed
+        if (duplicateMovieCount > 1)
+        {
+          _shellClient.Execute(REMOVE_DUPLICATE_MOVIE);
+        }
+
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create and drop a Schema using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    //[Fact]
+    public void CreateAndDropSchema()
     {
       OpenConnection();
       MySqlDataReader reader = null;
@@ -696,12 +830,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
         usersCount += 3;
 
+        // Remove test
         _shellClient.Execute(REMOVE_USER);
         usersCount--;
         var selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.FetchAll().Count == usersCount, DATA_NOT_MATCH);
 
+        // Remove sort test
         _shellClient.Execute(REMOVE_SORT_USER);
         usersCount -= 2;
         selectResult = _shellClient.Execute(FIND_ALL_DOCUMENTS_IN_COLLECTION) as DocResult;

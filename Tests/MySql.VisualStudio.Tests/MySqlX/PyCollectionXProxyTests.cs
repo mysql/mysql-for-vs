@@ -124,6 +124,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXProxy();
 
+        #region CreateAndDropSchema
+
         // Create Schema test
         _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.Python);
         _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.Python);
@@ -142,6 +144,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+
+        #region CreateAndDropCollection
 
         // Create Collection test
         _xProxy.ExecuteScript(CreateCollectionTest, ScriptType.Python);
@@ -164,6 +168,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(COLLECTION_NOT_DELETED, TEST_COLLECTION_NAME));
 
+        #endregion CreateAndDropCollection
+
         // Drop Schema test
         _xProxy.ExecuteScript(DropSchemaTest, ScriptType.Python);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
@@ -180,6 +186,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
+
+        #endregion CreateAndDropSchema
+        #region AddFind
 
         // Single Inserts Test
         _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.Python);
@@ -213,10 +222,12 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
-        // Find Test
         selectResult = _xProxy.ExecuteScript(FIND_SPECIFIC_USER_TEST, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
+
+        #endregion AddFind
+        #region Comments Test
 
         // More comments test
         var script = new StringBuilder();
@@ -226,6 +237,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(script.ToString(), ScriptType.Python);
         var tokenizer = new MyPythonTokenizer(script.ToString());
         _xProxy.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.Python);
+
+        #endregion Comments Test
+        #region Modify
 
         // Modify Set
         _xProxy.ExecuteScript(MODIFY_SET_USER, ScriptType.Python);
@@ -331,6 +345,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
 
+        #endregion Modify
+        #region Remove
+
         // Remove test
         _xProxy.ExecuteScript(REMOVE_USER, ScriptType.Python);
         selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.Python);
@@ -352,6 +369,9 @@ namespace MySql.VisualStudio.Tests.MySqlX
         selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == USERS_COUNT, DATA_NOT_MATCH);
+
+        #endregion Remove
+        #region FindComplete
 
         // Find complex
         _xProxy.ExecuteScript(GetCollectionSakilaXMovies, ScriptType.Python);
@@ -375,6 +395,53 @@ namespace MySql.VisualStudio.Tests.MySqlX
         }
 
         Assert.True(foundTitle != null && foundTitle.ToString().Equals("ANNIE IDENTITY", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        #endregion FindComplete
+        #region CreateAndDropIndex
+
+        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.Python);
+        _xProxy.ExecuteScript(GetCollectionSakilaXMovies, ScriptType.Python);
+
+        // Add non-unique index
+        _xProxy.ExecuteScript(CREATE_NON_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Add unique index
+        _xProxy.ExecuteScript(PYTHON_INCLUDE_MYSQLX, ScriptType.Python);
+        _xProxy.ExecuteScript(CREATE_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        // Test data uniqueness
+        _xProxy.ExecuteScript(PYTHON_ADD_DUPLICATE_MOVIE, ScriptType.Python);
+        selectResult = _xProxy.ExecuteScript(FIND_DUPLICATE_MOVIE_TITLE, ScriptType.Python);
+        int duplicateMovieCount = selectResult?.Count ?? 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
+        if (duplicateMovieCount > 1)
+        {
+          _xProxy.ExecuteScript(REMOVE_DUPLICATE_MOVIE, ScriptType.Python);
+        }
+
+        // Drop non-unique index
+        _xProxy.ExecuteScript(DROP_NON_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Drop unique index
+        _xProxy.ExecuteScript(DROP_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        #endregion CreateAndDropIndex
       }
       finally
       {
@@ -394,10 +461,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Table using the <see cref="MySqlXProxy"/>.
+    /// Test to create and drop a Collection using the <see cref="MySqlXProxy"/>.
     /// </summary>
     // [Fact]
-    public void CreateCollection()
+    public void CreateAndDropCollection()
     {
       OpenConnection();
 
@@ -426,10 +493,80 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Test to create a Database using the <see cref="MySqlXProxy"/>.
+    /// Test to create and drop unique and non-unique indexes using the <see cref="MyTestXProxy"/>.
+    /// </summary>
+    //[Fact]
+    public void CreateAndDropIndex()
+    {
+      OpenConnection();
+      int duplicateMovieCount = 0;
+
+      try
+      {
+        InitXProxy();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+
+        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.Python);
+        _xProxy.ExecuteScript(GetCollectionSakilaXMovies, ScriptType.Python);
+
+        // Add non-unique index
+        _xProxy.ExecuteScript(CREATE_NON_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Add unique index
+        _xProxy.ExecuteScript(PYTHON_INCLUDE_MYSQLX, ScriptType.Python);
+        _xProxy.ExecuteScript(CREATE_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+
+        // Test data uniqueness
+        _xProxy.ExecuteScript(PYTHON_ADD_DUPLICATE_MOVIE, ScriptType.Python);
+        var selectResult = _xProxy.ExecuteScript(FIND_DUPLICATE_MOVIE_TITLE, ScriptType.Python);
+        duplicateMovieCount = selectResult?.Count ?? 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
+
+        // Drop non-unique index
+        _xProxy.ExecuteScript(DROP_NON_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+
+        // Drop unique index
+        _xProxy.ExecuteScript(DROP_UNIQUE_INDEX_MOVIES, ScriptType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+      }
+      finally
+      {
+        // Remove duplicate data in case test failed
+        if (duplicateMovieCount > 1)
+        {
+          _xProxy.ExecuteScript(REMOVE_DUPLICATE_MOVIE, ScriptType.Python);
+        }
+
+        Command?.Dispose();
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
+    /// Test to create and drop a Schema using the <see cref="MySqlXProxy"/>.
     /// </summary>
     // [Fact]
-    public void CreateSchema()
+    public void CreateAndDropSchema()
     {
       OpenConnection();
       MySqlDataReader reader = null;
@@ -747,12 +884,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.Python);
         usersCount += 3;
 
+        // Remove test
         _xProxy.ExecuteScript(REMOVE_USER, ScriptType.Python);
         usersCount--;
         var selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
+        // Remove sort test
         _xProxy.ExecuteScript(REMOVE_SORT_USER, ScriptType.Python);
         usersCount -= 2;
         selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.Python);
@@ -768,17 +907,6 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Command?.Dispose();
         CloseConnection();
       }
-    }
-
-    /// <summary>
-    /// Setup information about the current schema test
-    /// </summary>
-    /// <param name="data">Current test instance configuration</param>
-    public override void SetFixture(SetUpXShell data)
-    {
-      base.SetFixture(data);
-      _xProxy = new MySqlXProxy(XConnString, true);
-
     }
 
     /// <summary>
