@@ -101,7 +101,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -136,7 +140,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -236,7 +244,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
         CloseConnection();
       }
@@ -302,7 +314,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
         CloseConnection();
       }
@@ -357,17 +373,17 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Select with field selection
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_WITH_FIELD_SELECTION) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var allResults = selectResult?.FetchAll();
+        var allResults = selectResult != null ? selectResult.FetchAll() : null;
         Assert.True(allResults != null && allResults.Count == charactersCount, DATA_NOT_MATCH);
         Assert.True(allResults != null && allResults.Count > 0 && allResults[0].Length == 2, DATA_NOT_MATCH);
 
         // Select with order by descending
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_WITH_ORDER_BY_DESC) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult?.FetchOne();
+        var singleResult = selectResult != null ? selectResult.FetchOne() : null;
         int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult[2]) : 0;
         Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
-        singleResult = selectResult?.FetchOne();
+        singleResult = selectResult != null ? selectResult.FetchOne() : null;
         fetchedAge = singleResult != null ? Convert.ToInt32(singleResult[2]) : 0;
         Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
 
@@ -387,7 +403,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
         CloseConnection();
       }
@@ -432,7 +452,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UPDATE_SIMPLE);
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var rowResult = selectResult?.FetchOne();
+        var rowResult = selectResult != null ? selectResult.FetchOne() : null;
         if (rowResult != null)
         {
           foundValue1 = rowResult[5];
@@ -447,7 +467,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UPDATE_IN_SEVERAL_LINES4);
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        rowResult = selectResult?.FetchOne();
+        rowResult = selectResult != null ? selectResult.FetchOne() : null;
         if (rowResult != null)
         {
           foundValue1 = rowResult[1];
@@ -460,7 +480,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UPDATE_WITH_EXPRESSION);
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        rowResult = selectResult?.FetchOne();
+        rowResult = selectResult != null ? selectResult.FetchOne() : null;
         if (rowResult != null)
         {
           foundValue1 = rowResult[2];
@@ -492,7 +512,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _shellClient.ExecuteToJavaScript(REVERT_INSERTED_CHARACTERS);
         CloseConnection();
       }

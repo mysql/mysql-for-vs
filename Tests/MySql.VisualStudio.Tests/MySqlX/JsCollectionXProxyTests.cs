@@ -32,15 +32,6 @@ namespace MySql.VisualStudio.Tests.MySqlX
 {
   public class JsCollectionXProxyTests : BaseCollectionTests, IUseFixture<SetUpXShell>
   {
-    #region Fields
-
-    /// <summary>
-    /// Object to access and execute commands to the current database connection through the mysqlx protocol
-    /// </summary>
-    private MyTestXProxy _xProxy;
-
-    #endregion Fields
-
     /// <summary>
     /// Test to Add, Modify, Delete and Find a record from a collection using the <see cref="MyTestXProxy"/>, executing the commands in a single line
     /// </summary>
@@ -103,8 +94,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -135,8 +131,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -180,7 +181,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Test data uniqueness
         _xProxy.ExecuteScript(JAVASCRIPT_ADD_DUPLICATE_MOVIE, ScriptType.JavaScript);
         var selectResult = _xProxy.ExecuteScript(FIND_DUPLICATE_MOVIE_TITLE, ScriptType.JavaScript);
-        duplicateMovieCount = selectResult?.Count ?? 0;
+        duplicateMovieCount = selectResult != null ? selectResult.Count : 0;
         Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
 
         // Drop non-unique index
@@ -205,8 +206,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
           _xProxy.ExecuteScript(REMOVE_DUPLICATE_MOVIE, ScriptType.JavaScript);
         }
 
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -267,8 +273,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -317,8 +328,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -353,7 +369,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(MODIFY_SET_USER, ScriptType.JavaScript);
         var selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult?.FirstOrDefault();
+        var docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         if (docResult != null)
         {
 
@@ -366,7 +382,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(MODIFY_SET_BINDING_ARRAY_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         List<object> foundRatingList = null;
         if (docResult != null)
         {
@@ -381,7 +397,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Modify unset single key
         _xProxy.ExecuteScript(MODIFY_UNSET_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(docResult != null && !docResult.ContainsKey("age"), DATA_NOT_MATCH);
 
@@ -389,14 +405,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(MODIFY_UNSET_LIST_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         Assert.True(docResult != null && !docResult.ContainsKey("status") && !docResult.ContainsKey("ratings"), DATA_NOT_MATCH);
 
         // Modify merge
         _xProxy.ExecuteScript(JAVASCRIPT_MODIFY_MERGE_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("status", out foundValue);
@@ -412,7 +428,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(MODIFY_ARRAY_APPEND_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -425,7 +441,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(MODIFY_ARRAY_INSERT_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -438,7 +454,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(MODIFY_ARRAY_DELETE_USER, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FirstOrDefault();
+        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -456,8 +472,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
       finally
       {
         _xProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptType.JavaScript);
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -509,22 +530,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       finally
       {
         _xProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptType.JavaScript);
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
-    }
-
-    /// <summary>
-    /// Initializes the <see cref="MyTestXProxy"/> instance with common statements
-    /// </summary>
-    private void InitXProxy()
-    {
-      if (_xProxy != null)
-      {
-        return;
-      }
-
-      _xProxy = new MyTestXProxy(XConnString, true);
     }
   }
 }

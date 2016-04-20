@@ -31,15 +31,6 @@ namespace MySql.VisualStudio.Tests.MySqlX
 {
   public class JsTableXProxyTests : BaseTableTests, IUseFixture<SetUpXShell>
   {
-    #region Fields
-
-    /// <summary>
-    /// Object to access and execute commands to the current database connection through the mysqlx protocol
-    /// </summary>
-    private MyTestXProxy _xProxy;
-
-    #endregion Fields
-
     /// <summary>
     /// Test to create a Database using the <see cref="MyTestXProxy"/> direclty.
     /// </summary>
@@ -98,8 +89,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -133,8 +129,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -233,9 +234,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -299,9 +305,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -360,10 +371,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Select with order by descending
         selectResult = _xProxy.ExecuteScript(SELECT_WITH_ORDER_BY_DESC, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult?.FirstOrDefault();
+        var singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
         Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
-        singleResult = selectResult?.ElementAtOrDefault(1);
+        singleResult = selectResult != null ? selectResult.ElementAtOrDefault(1) : null;
         fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
         Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
 
@@ -383,9 +394,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
         CloseConnection();
+        DisposeProxy();
       }
     }
 
@@ -427,7 +443,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(UPDATE_SIMPLE, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult?.FirstOrDefault();
+        var singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         Assert.True(singleResult != null && singleResult["universe"].ToString().Equals("Mass Effect 3", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update a singe value with statements in different lines, using parameter binding
@@ -437,7 +453,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES4, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        singleResult = selectResult?.FirstOrDefault();
+        singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         Assert.True(singleResult != null && singleResult["name"].ToString().Equals(TALI_MASS_EFFECT_3, StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update using an expression
@@ -445,7 +461,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _xProxy.ExecuteScript(UPDATE_WITH_EXPRESSION, ScriptType.JavaScript);
         selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        singleResult = selectResult?.FirstOrDefault();
+        singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         Assert.True(singleResult != null && singleResult["age"].ToString().Equals("25", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update with limit
@@ -468,23 +484,15 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
         CloseConnection();
+        DisposeProxy();
       }
-    }
-
-    /// <summary>
-    /// Initializes the <see cref="MyTestXProxy"/> instance with common statements
-    /// </summary>
-    private void InitXProxy()
-    {
-      if (_xProxy != null)
-      {
-        return;
-      }
-
-      _xProxy = new MyTestXProxy(XConnString, true);
     }
   }
 }

@@ -23,6 +23,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.MySqlX;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
@@ -264,6 +265,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     public string XConnString { get; protected set; }
 
+    /// <summary>
+    /// Object to access and execute commands to the current database connection through the mysqlx protocol
+    /// </summary>
+    public MySqlXProxy _xProxy { get; protected set; }
+
     #endregion Properties
 
     /// <summary>
@@ -304,6 +310,22 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
       if (Connection.State != ConnectionState.Open)
       {
         Connection.Open();
+      }
+    }
+
+    /// <summary>
+    /// Initializes the <see cref="MySqlXProxy"/> instance with common statements
+    /// </summary>
+    protected virtual void InitXProxy()
+    {
+      _xProxy = new MySqlXProxy(XConnString, true);
+    }
+
+    protected virtual void DisposeProxy()
+    {
+      if (_xProxy != null)
+      {
+        _xProxy.CleanConnection();
       }
     }
   }

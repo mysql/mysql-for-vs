@@ -104,7 +104,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -137,7 +141,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -182,7 +190,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Test data uniqueness
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_DUPLICATE_MOVIE);
         var selectResult = _shellClient.ExecuteToJavaScript(FIND_DUPLICATE_MOVIE_TITLE) as DocResult;
-        duplicateMovieCount = selectResult?.FetchAll().Count ?? 0;
+        duplicateMovieCount = selectResult != null ? selectResult.FetchAll().Count : 0;
         Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
 
         // Drop non-unique index
@@ -207,7 +215,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
           _shellClient.ExecuteToJavaScript(REMOVE_DUPLICATE_MOVIE);
         }
 
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -268,7 +280,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
           reader.Dispose();
         }
 
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -309,7 +325,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         object foundTitle = null;
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MOVIES_BOUND_ARRAY) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult?.FetchOne();
+        var docResult = selectResult != null ? selectResult.FetchOne() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("title", out foundTitle);
@@ -319,7 +335,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       }
       finally
       {
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -355,7 +375,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_SET_USER);
         var selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult?.FetchOne();
+        var docResult = selectResult != null ? selectResult.FetchOne() : null;
         if (docResult != null)
         {
 
@@ -368,7 +388,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_SET_BINDING_ARRAY_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FetchOne();
+        docResult = selectResult != null ? selectResult.FetchOne() : null;
         List<object> foundRatingList = null;
         if (docResult != null)
         {
@@ -390,14 +410,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_UNSET_LIST_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FetchOne();
+        docResult = selectResult != null ? selectResult.FetchOne() : null;
         Assert.True(docResult != null && !docResult.ContainsKey("status") && !docResult.ContainsKey("ratings"), DATA_NOT_MATCH);
 
         // Modify merge
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_MODIFY_MERGE_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FetchOne();
+        docResult = selectResult != null ? selectResult.FetchOne() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("status", out foundValue);
@@ -413,7 +433,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_APPEND_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FetchOne();
+        docResult = selectResult != null ? selectResult.FetchOne() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -426,7 +446,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_INSERT_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FetchOne();
+        docResult = selectResult != null ? selectResult.FetchOne() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -439,7 +459,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_DELETE_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult?.FetchOne();
+        docResult = selectResult != null ? selectResult.FetchOne() : null;
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -457,7 +477,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       finally
       {
         _shellClient.ExecuteToJavaScript(REVERT_ADDED_USERS);
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
@@ -510,7 +534,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
       finally
       {
         _shellClient.ExecuteToJavaScript(REVERT_ADDED_USERS);
-        Command?.Dispose();
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
         CloseConnection();
       }
     }
