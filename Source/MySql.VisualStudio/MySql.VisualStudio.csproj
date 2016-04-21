@@ -1590,10 +1590,8 @@
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
     <Exec Command='rd "$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q' />
   </Target>
-  <Target Name="AfterBuild">
-    <Exec Command='start /MIN xcopy "$(SolutionDir)Dependencies\xShell\modules\*" "%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh\modules" /S /Y /I' />
-  </Target>
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Debug' ">
-	<Exec Command='start /MIN xcopy "$(SolutionDir)Dependencies\xShell\*.*" "$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\" /S /Y /I' />
+  <Target Name="AfterBuild" >
+	<Exec Condition=" '$(Configuration)' == 'Debug' " Command='start /MIN xcopy "$(SolutionDir)Dependencies\xShell\*.*" "$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\" /S /Y /I' />
+	<Exec Command='start /MIN xcopy "$(SolutionDir)Dependencies\xShell\modules\*" "%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh\modules" /S /Y /I' />
   </Target>
 </Project>
