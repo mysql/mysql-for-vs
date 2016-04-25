@@ -1,0 +1,69 @@
+/*
+   Copyright (c) 2015, 2016 Oracle and/or its affiliates. All rights reserved.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   The lines above are intentionally left blank
+*/
+
+#ifndef _NGS_ASIO_CONNECTION_DYNAMIC_TLS_H_
+#define _NGS_ASIO_CONNECTION_DYNAMIC_TLS_H_
+
+#include "myasio/connection.h"
+#include "ngs/memory.h"
+
+
+namespace ngs
+{
+
+class Page;
+
+class Connection_dynamic_tls : public IConnection
+{
+public:
+  Connection_dynamic_tls(IConnection_unique_ptr connection);
+  virtual ~Connection_dynamic_tls();
+
+  virtual Endpoint    get_remote_endpoint() const;
+  virtual int         get_socket_id();
+  virtual IOptions_session_ptr options();
+
+  virtual void post(const boost::function<void ()> &calee);
+  virtual bool thread_in_connection_strand();
+
+  // Read, write SDU (service data unit)
+  virtual void async_connect(const Endpoint &, const On_asio_status_callback &on_connect_callback, const On_asio_status_callback &on_ready_callback);
+  virtual void async_accept(boost::asio::ip::tcp::acceptor &, const On_asio_status_callback &on_accept_callback, const On_asio_status_callback &on_ready_callback);
+  virtual void async_write(const Const_buffer_sequence &data, const On_asio_data_callback &on_write_callback);
+  virtual void async_read(const Mutable_buffer_sequence &data, const On_asio_data_callback &on_read_callback);
+  virtual void async_activate_tls(const On_asio_status_callback on_status);
+
+  virtual IConnection_ptr get_lowest_layer();
+
+  virtual void shutdown(boost::asio::socket_base::shutdown_type how_to_shutdown, boost::system::error_code &ec);
+  virtual void cancel();
+  virtual void close();
+
+private:
+  class Options_dynamic;
+
+  Connection_dynamic_tls(const Connection_dynamic_tls &other);
+
+  IConnection_ptr m_connection;
+  IConnection_ptr m_operational_mode;
+};
+
+}  // namespace ngs
+
+#endif // _NGS_ASIO_CONNECTION_DYNAMIC_TLS_H_

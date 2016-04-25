@@ -30,7 +30,7 @@ using Xunit;
 namespace MySql.VisualStudio.Tests.MySqlX
 {
   /// <summary>
-  /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
+  /// Class to test the CRUD operations through the XShell Wrapper on Relational DB
   /// </summary>
   public class PyTableXShellTests : BaseTableTests, IUseFixture<SetUpXShell>
   {
@@ -536,7 +536,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
-    /// Initializes the NgShell instance with common statements
+    /// Initializes the XShell instance with common statements
     /// </summary>
     private void InitXShell()
     {

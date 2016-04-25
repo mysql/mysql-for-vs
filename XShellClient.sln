@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XShellClientMgd", "XShellClient\XShellClientMgd\XShellClientMgd.vcxproj", "{EF771370-ADC1-4C3C-A480-D71937748504}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XShellClient_Test", "XShellClient\XShellClient_Test\XShellClient_Test.csproj", "{CFB1A4A0-7D98-428D-94E5-9DA2C7C8A131}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF771370-ADC1-4C3C-A480-D71937748504}.Debug|x86.ActiveCfg = Debug|Win32
+		{EF771370-ADC1-4C3C-A480-D71937748504}.Debug|x86.Build.0 = Debug|Win32
+		{EF771370-ADC1-4C3C-A480-D71937748504}.Release|x86.ActiveCfg = Release|Win32
+		{EF771370-ADC1-4C3C-A480-D71937748504}.Release|x86.Build.0 = Release|Win32
+		{CFB1A4A0-7D98-428D-94E5-9DA2C7C8A131}.Debug|x86.ActiveCfg = Debug|x86
+		{CFB1A4A0-7D98-428D-94E5-9DA2C7C8A131}.Debug|x86.Build.0 = Debug|x86
+		{CFB1A4A0-7D98-428D-94E5-9DA2C7C8A131}.Release|x86.ActiveCfg = Release|x86
+		{CFB1A4A0-7D98-428D-94E5-9DA2C7C8A131}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

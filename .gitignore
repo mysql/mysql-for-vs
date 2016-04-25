@@ -29,8 +29,9 @@ VS.targets
 **/ItemTemplatesZipFolder/**
 **/.bzr-mysql/**
 **/packages/**
-NGShellClient/Debug/
-NGShellClient/NGShellClientMgd/Debug/
-NGShellClient/NGShellClientMgd/Release/
-NGShellClient/Release/
-NGShellClient/ipch/
+XShellClient/Debug/
+XShellClient/XShellClientMgd/Debug/
+XShellClient/XShellClientMgd/Release/
+XShellClient/Release/
+XShellClient/ipch/
+XShellClient.VC.db

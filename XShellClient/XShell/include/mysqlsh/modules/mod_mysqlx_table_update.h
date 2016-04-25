@@ -1,0 +1,73 @@
+/*
+   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   The lines above are intentionally left blank
+*/
+
+// MySQL DB access module, for use by plugins and others
+// For the module that implements interactive DB functionality see mod_db
+
+#ifndef _MOD_CRUD_TABLE_UPDATE_H_
+#define _MOD_CRUD_TABLE_UPDATE_H_
+
+#include "table_crud_definition.h"
+
+namespace mysh
+{
+  namespace mysqlx
+  {
+    class Table;
+
+    /**
+    * Handler for record update operations on a Table.
+    *
+    * This object provides the necessary functions to allow updating records on a table.
+    *
+    * This object should only be created by calling the update function on the table object on which the records will be updated.
+    *
+    * \sa Table
+    */
+    class TableUpdate : public Table_crud_definition, public boost::enable_shared_from_this<TableUpdate>
+    {
+    public:
+      TableUpdate(boost::shared_ptr<Table> owner);
+    public:
+      virtual std::string class_name() const { return "TableUpdate"; }
+      static boost::shared_ptr<shcore::Object_bridge> create(const shcore::Argument_list &args);
+      shcore::Value update(const shcore::Argument_list &args);
+      shcore::Value set(const shcore::Argument_list &args);
+      shcore::Value where(const shcore::Argument_list &args);
+      shcore::Value order_by(const shcore::Argument_list &args);
+      shcore::Value limit(const shcore::Argument_list &args);
+      shcore::Value bind(const shcore::Argument_list &args);
+
+      virtual shcore::Value execute(const shcore::Argument_list &args);
+#ifdef DOXYGEN
+      TableUpdate update();
+      TableUpdate set(String attribute, Value value);
+      TableUpdate where(String searchCondition);
+      TableUpdate orderBy(List sortExprStr);
+      TableUpdate limit(Integer numberOfRows);
+      TableUpdate bind(String name, Value value);
+      Result execute();
+#endif
+    private:
+      std::unique_ptr< ::mysqlx::UpdateStatement> _update_statement;
+    };
+  };
+};
+
+#endif

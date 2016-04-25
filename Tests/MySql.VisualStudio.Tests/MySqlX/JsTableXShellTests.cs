@@ -30,7 +30,7 @@ using Xunit;
 namespace MySql.VisualStudio.Tests.MySqlX
 {
   /// <summary>
-  /// Class to test the CRUD operations through the NgShell Wrapper on Relational DB
+  /// Class to test the CRUD operations through the XShell Wrapper on Relational DB
   /// </summary>
   public class JsTableXShellTests : BaseTableTests, IUseFixture<SetUpXShell>
   {

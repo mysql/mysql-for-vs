@@ -26,8 +26,8 @@
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client' Name='shell_client.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='NGShellClientMgd' Name='NGShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
+        <File Id='XShellClientMgd' Name='XShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
         <File Id='v8' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
         <File Id='msvcp120' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
@@ -49,7 +49,7 @@
       </Component>
     </DirectoryRef>
 
-    <!-- NgShell Dependencies -->
+    <!-- XShell Dependencies -->
     <DirectoryRef Id='VS2010_NgModulesDir'>
       <Component Id='VS2010_NgModules' Guid='D2562BBB-6D00-4D8A-A813-21B2D6CE6C0A'>
       </Component>
@@ -63,7 +63,7 @@
               Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
       </Component>
     </DirectoryRef>
-    <!-- NgShell Dependencies END -->
+    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS10_PrivateAssemblies'>
       <Component Id='VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250F'>
@@ -137,8 +137,8 @@
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2012' Name='shell_client.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='NGShellClientMgd_2012' Name='NGShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
+        <File Id='XShellClientMgd_2012' Name='XShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
         <File Id='v8_2012' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
         <File Id='msvcp120_2012' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
@@ -160,7 +160,7 @@
       </Component>
     </DirectoryRef>
 
-    <!-- NgShell Dependencies -->
+    <!-- XShell Dependencies -->
     <DirectoryRef Id='VS11_NgModulesDir'>
       <Component Id='VS2012_NgModules' Guid='46FCE23D-27C7-498A-B6D5-8C4AB5832377'>
       </Component>
@@ -174,7 +174,7 @@
               Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
       </Component>
     </DirectoryRef>
-    <!-- NgShell Dependencies END -->
+    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS11_PrivateAssemblies'>
       <Component Id='VS2012_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250E'>
@@ -248,8 +248,8 @@
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2013' Name='shell_client.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='NGShellClientMgd_2013' Name='NGShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
+        <File Id='XShellClientMgd_2013' Name='XShellClientMgd.dll' DiskId='1'
+              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
         <File Id='v8_2013' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
         <File Id='msvcp120_2013' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
@@ -271,7 +271,7 @@
       </Component>
     </DirectoryRef>
 
-    <!-- NgShell Dependencies -->
+    <!-- XShell Dependencies -->
     <DirectoryRef Id='VS12_NgModulesDir'>
       <Component Id='VS2013_NgModules' Guid='7484C2FD-759E-4006-9F3A-11052D3D0EB5'>
       </Component>
@@ -285,7 +285,7 @@
               Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
       </Component>
     </DirectoryRef>
-    <!-- NgShell Dependencies END -->
+    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS12_PrivateAssemblies'>
       <Component Id='VS2013_MD.Library' Guid='4D8A38C2-9750-4C35-B89D-FD7FA6789BAC'>
@@ -360,8 +360,8 @@
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2015' Name='shell_client.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='NGShellClientMgd_2015' Name='NGShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\NGShellClientMgd.dll'/>
+        <File Id='XShellClientMgd_2015' Name='Xdll' DiskId='1'
+              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
         <File Id='v8_2015' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
         <File Id='msvcp120_2015' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
@@ -383,7 +383,7 @@
       </Component>
     </DirectoryRef>
 
-    <!-- NgShell Dependencies -->
+    <!-- XShell Dependencies -->
     <DirectoryRef Id='VS14_NgModulesDir'>
       <Component Id='VS2015_NgModules' Guid='5712DB9C-6661-4289-B591-8B488A0AE964'>
       </Component>
@@ -397,7 +397,7 @@
               Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
       </Component>
     </DirectoryRef>
-    <!-- NgShell Dependencies END -->
+    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id='VS2015_MD.Library' Guid='3E76F0B9-B63E-4EEB-A7D1-C6CA28DB0CD2'>

@@ -203,8 +203,8 @@
   </PropertyGroup>
   <!-- References that applies for all VS versions -->
   <ItemGroup>
-    <Reference Include="NGShellClientMgd">
-      <HintPath>..\..\Dependencies\xShell\NGShellClientMgd.dll</HintPath>
+    <Reference Include="XShellClientMgd">
+      <HintPath>..\..\Dependencies\xShell\XShellClientMgd.dll</HintPath>
     </Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>

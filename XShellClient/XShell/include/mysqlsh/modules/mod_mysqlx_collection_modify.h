@@ -1,0 +1,83 @@
+/*
+   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   The lines above are intentionally left blank
+*/
+
+// MySQL DB access module, for use by plugins and others
+// For the module that implements interactive DB functionality see mod_db
+
+#ifndef _MOD_CRUD_COLLECTION_MODIFY_H_
+#define _MOD_CRUD_COLLECTION_MODIFY_H_
+
+#include "collection_crud_definition.h"
+
+namespace mysh
+{
+  namespace mysqlx
+  {
+    class Collection;
+
+    /**
+    * Handler for document update operations on a Collection.
+    *
+    * This object provides the necessary functions to allow updating documents on a collection.
+    *
+    * This object should only be created by calling the modify function on the collection object on which the documents will be updated.
+    *
+    * \sa Collection
+    */
+    class CollectionModify : public Collection_crud_definition, public boost::enable_shared_from_this<CollectionModify>
+    {
+    public:
+      CollectionModify(boost::shared_ptr<Collection> owner);
+    public:
+      virtual std::string class_name() const { return "CollectionModify"; }
+      static boost::shared_ptr<shcore::Object_bridge> create(const shcore::Argument_list &args);
+      shcore::Value modify(const shcore::Argument_list &args);
+      shcore::Value set(const shcore::Argument_list &args);
+      shcore::Value unset(const shcore::Argument_list &args);
+      shcore::Value merge(const shcore::Argument_list &args);
+      shcore::Value array_insert(const shcore::Argument_list &args);
+      shcore::Value array_append(const shcore::Argument_list &args);
+      shcore::Value array_delete(const shcore::Argument_list &args);
+      shcore::Value sort(const shcore::Argument_list &args);
+      shcore::Value limit(const shcore::Argument_list &args);
+      shcore::Value bind(const shcore::Argument_list &args);
+
+      virtual shcore::Value execute(const shcore::Argument_list &args);
+#ifdef DOXYGEN
+      CollectionModify modify(String searchCondition);
+      CollectionModify set(String attribute, Value value);
+      CollectionModify unset(String attribute);
+      CollectionModify unset(List attributes);
+      CollectionModify merge(Document document);
+      CollectionModify arrayAppend(String path, Value value);
+      CollectionModify arrayInsert(String path, Value value);
+      CollectionModify arrayDelete(String path);
+      CollectionModify sort(List sortExprStr);
+      CollectionModify limit(Integer numberOfRows);
+      CollectionModify skip(Integer limitOffset);
+      CollectionFind bind(String name, Value value);
+      Result execute(ExecuteOptions opt);
+#endif
+    private:
+      std::unique_ptr< ::mysqlx::ModifyStatement> _modify_statement;
+    };
+  };
+};
+
+#endif
