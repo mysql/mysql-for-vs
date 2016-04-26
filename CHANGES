@@ -1,3 +1,18 @@
+2.0.3
+- Fixed the error being thrown when executing xShell javascript queries that involves the use of the "mysqlx"
+  module, because the module "mysqlx" for javascript cannot be imported (MySql Bug #81052, Oracle bug #23091964).
+- Fixing the unit tests related to the X Protocol.
+- Improve the implementation of the XShell wrapper, adding a error handling mechanism that shows the error message
+  in the output window and displaying a more detailed information about the execution results
+  (rows returned affected, execution time, etc).
+
+
+2.0.2
+- Fixed the MySQL X support for all Visual Studio versions supported by MySQL for Visual Studio (2010 and newer).
+- Added support for Visual Studio 2015 with .NET Framework 4.6.
+- Updated the MySQL parser's grammar to include keywords introduced in MySQL 5.7.
+
+
 2.0.1
 - Added a new Editor to handle MySQL Phyton script files.
 - Added a new option to create new MySQL Phyton script directly from Server Explorer.
