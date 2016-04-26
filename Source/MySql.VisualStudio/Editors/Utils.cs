@@ -29,6 +29,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Drawing;
+using EnvDTE;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Properties;
@@ -893,6 +894,14 @@ namespace MySql.Data.VisualStudio.Editors
       IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       if (outWindow != null)
       {
+        // Activate the Output window
+        DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+        if (dte != null)
+        {
+          var win = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
+          win.Activate();
+        }
+
         Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
         IVsOutputWindowPane outputPane;
 
@@ -905,6 +914,7 @@ namespace MySql.Data.VisualStudio.Editors
         if (outputPane != null)
         {
           outputPane.OutputString(string.Format("[{0}] - {1}", type.ToString(), message) + Environment.NewLine);
+          outputPane.Activate();
         }
       }
     }
