@@ -31,6 +31,7 @@ using System.Data;
 using System.Drawing;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient.Properties;
 using MySqlX;
 using Color = System.Drawing.Color;
 
@@ -332,7 +333,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       catch (Exception ex)
       {
-        WriteToOutputWindow(string.Format("Can't fetch the X Protocol port from the server {0}. Error: {1}", serverKey, ex), MessageType.Error);
+        WriteToOutputWindow(string.Format(Properties.Resources.FetchXProtocolError, serverKey, ex), MessageType.Error);
       }
 
       return -1;
@@ -483,7 +484,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       // Adding this delegate to the CellFormating handler we can customize the format suitable for display blob values.
       // This format will be applied when the grid cells are being painted, that's why is added as a delegate.
-      gridView.CellFormatting += delegate(object sender, DataGridViewCellFormattingEventArgs e)
+      gridView.CellFormatting += delegate (object sender, DataGridViewCellFormattingEventArgs e)
       {
         if (e.ColumnIndex == -1) return;
         if (isColBlob[e.ColumnIndex])

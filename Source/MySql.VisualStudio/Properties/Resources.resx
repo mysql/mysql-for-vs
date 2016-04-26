@@ -1225,4 +1225,7 @@ Check that the server is running, the database exists and the user Error establi
   <data name="115" xml:space="preserve">
     <value>MyPy</value>
   </data>
+  <data name="FetchXProtocolError" xml:space="preserve">
+    <value>Can't fetch the X Protocol port from the server {0}. Error: {1}</value>
+  </data>
 </root>

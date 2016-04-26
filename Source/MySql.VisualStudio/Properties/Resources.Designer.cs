@@ -63,7 +63,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon @__TemplateIcon {
+        public static System.Drawing.Icon @__TemplateIcon {
             get {
                 object obj = ResourceManager.GetObject("__TemplateIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -118,7 +118,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A blank myjs file..
         /// </summary>
-        internal static string _110 {
+        public static string _110 {
             get {
                 return ResourceManager.GetString("110", resourceCulture);
             }
@@ -127,7 +127,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MyJs.
         /// </summary>
-        internal static string _114 {
+        public static string _114 {
             get {
                 return ResourceManager.GetString("114", resourceCulture);
             }
@@ -136,7 +136,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MyPy.
         /// </summary>
-        internal static string _115 {
+        public static string _115 {
             get {
                 return ResourceManager.GetString("115", resourceCulture);
             }
@@ -145,27 +145,17 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon _400 {
-            get {
-                object obj = ResourceManager.GetObject("400", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
         public static System.Drawing.Icon _401 {
             get {
                 object obj = ResourceManager.GetObject("401", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
-        }        
-
+        }
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _4011 {
+        public static System.Drawing.Bitmap _4011 {
             get {
                 object obj = ResourceManager.GetObject("4011", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -185,7 +175,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _4021 {
+        public static System.Drawing.Bitmap _4021 {
             get {
                 object obj = ResourceManager.GetObject("4021", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -195,7 +185,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon _403 {
+        public static System.Drawing.Icon _403 {
             get {
                 object obj = ResourceManager.GetObject("403", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -205,7 +195,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _4031 {
+        public static System.Drawing.Bitmap _4031 {
             get {
                 object obj = ResourceManager.GetObject("4031", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -2664,9 +2654,18 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t fetch the X Protocol port from the server {0}. Error: {1}.
+        /// </summary>
+        public static string FetchXProtocolError {
+            get {
+                return ResourceManager.GetString("FetchXProtocolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error creating the file.
         /// </summary>
-        internal static string FileCreationErrorCreatingFile {
+        public static string FileCreationErrorCreatingFile {
             get {
                 return ResourceManager.GetString("FileCreationErrorCreatingFile", resourceCulture);
             }
@@ -2675,7 +2674,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error accessing path. Check that you have permissions to write in the following folder: .
         /// </summary>
-        internal static string FileCreationErrorPermissions {
+        public static string FileCreationErrorPermissions {
             get {
                 return ResourceManager.GetString("FileCreationErrorPermissions", resourceCulture);
             }
@@ -2766,7 +2765,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error: .
         /// </summary>
-        internal static string MessageBoxErrorDetail {
+        public static string MessageBoxErrorDetail {
             get {
                 return ResourceManager.GetString("MessageBoxErrorDetail", resourceCulture);
             }
@@ -2775,7 +2774,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
-        internal static string MessageBoxErrorTitle {
+        public static string MessageBoxErrorTitle {
             get {
                 return ResourceManager.GetString("MessageBoxErrorTitle", resourceCulture);
             }
@@ -2949,7 +2948,7 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon package {
+        public static System.Drawing.Icon package {
             get {
                 object obj = ResourceManager.GetObject("package", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -2976,7 +2975,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright 2007-2015 Oracle, Inc..
+        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2007-2016 Oracle, Inc..
         /// </summary>
         public static string ProductDetails {
             get {
