@@ -29,59 +29,60 @@ using namespace System::Collections::Generic;
 
 namespace MySqlX
 {
-	namespace Shell
-	{
-		ref class ShellClient;
+  namespace Shell
+  {
+    ref class ShellClient;
 
-		class ManagedShellClient : public Shell_client
-		{
-		public:
-			ManagedShellClient(gcroot<ShellClient^> shell /* managed reference to  ShellClient */) : Shell_client(), _shell(shell) { }
-			virtual ~ManagedShellClient() { _shell = nullptr; }
+    class ManagedShellClient : public Shell_client
+    {
+    public:
+      ManagedShellClient(gcroot<ShellClient^> shell /* managed reference to  ShellClient */) : Shell_client(), _shell(shell) { }
+      virtual ~ManagedShellClient() { _shell = nullptr; }
 
-		protected:
-			virtual void print(const char *text);
-			virtual void print_error(const char *text);
-			virtual bool input(const char *text, std::string &ret);
-			virtual bool password(const char *text, std::string &ret);
-			virtual void source(const char* module);
+    protected:
+      virtual void print(const char *text);
+      virtual void print_error(const char *text);
+      virtual bool input(const char *text, std::string &ret);
+      virtual bool password(const char *text, std::string &ret);
+      virtual void source(const char* module);
 
-		private:
-			gcroot<ShellClient^> _shell;
-		};
+    private:
+      gcroot<ShellClient^> _shell;
+    };
 
-		public enum class Mode
-		{
-			None,
-			SQL,
-			JScript,
-			Python
-		};
+    public enum class Mode
+    {
+      None,
+      SQL,
+      JScript,
+      Python
+    };
 
-		ref class ResultSet;
-		ref class ResultSetMetadata;
+    ref class ResultSet;
+    ref class ResultSetMetadata;
 
-		public ref class ShellClient
-		{
-		public:
-			ShellClient();
+    public ref class ShellClient
+    {
+    public:
+      ShellClient();
 
-			void MakeConnection(String ^connstr);
-			void SwitchMode(Mode^ mode);
-			Object^ Execute(String^ query);
+      void MakeConnection(String ^connstr);
+      void SwitchMode(Mode^ mode);
+      Object^ Execute(String^ query);
 
-			!ShellClient();
-			~ShellClient();
+      !ShellClient();
+      ~ShellClient();
 
-			virtual void Print(String^ text);
-			virtual void PrintError(String^ text);
-			virtual bool Input(String^ text, String^% ret);
-			virtual bool Password(String^ text, String^% ret);
-			virtual void Source(String^ module);
+      virtual void Print(String^ text);
+      virtual void PrintError(String^ text);
+      virtual bool Input(String^ text, String^% ret);
+      virtual bool Password(String^ text, String^% ret);
+      virtual void Source(String^ module);
 
-		private:
-			bool _disposed;
-			ManagedShellClient* _obj;
-		};
-	};
+    private:
+      bool _disposed, _shellError;
+      String^ _errorMessage;
+      ManagedShellClient* _obj;
+    };
+  };
 };

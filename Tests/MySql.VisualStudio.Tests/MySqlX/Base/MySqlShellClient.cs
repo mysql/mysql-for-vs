@@ -27,7 +27,7 @@ using MySqlX.Shell;
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
   /// <summary>
-  /// Custom direct NgWrapper Implementation for the current tests
+  /// Custom direct XShellWrapper Implementation for the current tests
   /// </summary>
   public class MySqlShellClient : ShellClient
   {

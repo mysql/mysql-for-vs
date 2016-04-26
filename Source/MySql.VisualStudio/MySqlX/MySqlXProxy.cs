@@ -76,7 +76,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
     public MySqlXProxy(DbConnection connection, bool keepXSession)
     {
-      _connString = ((MySqlConnection)connection).ToNgFormat();
+      _connString = ((MySqlConnection)connection).ToXFormat();
       _keepSession = keepXSession;
 
       if (keepXSession)

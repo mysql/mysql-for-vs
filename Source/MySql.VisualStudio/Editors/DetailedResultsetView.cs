@@ -253,7 +253,7 @@ namespace MySql.Data.VisualStudio.Editors
         catch (Exception ex)
         {
           tran.Rollback();
-          Utils.WriteToOutputWindow(string.Format("Error trying to load the data: {0}", ex), Messagetype.Error);
+          Utils.WriteToOutputWindow(string.Format("Error trying to load the data: {0}", ex), MessageType.Error);
         }
         finally
         {

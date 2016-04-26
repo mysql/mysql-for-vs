@@ -16,20 +16,6 @@ namespace XShellClient_Test
 
       ShellClient xShellClient = new ShellClient();
 
-      //try
-      //{
-      //  xShellClient.MakeConnection(connString);
-      //  xShellClient.SwitchMode(Mode.JScript);
-      //  result = xShellClient.Execute(query);
-      //}
-      //catch (Exception ex)
-      //{
-      //  Console.WriteLine(ex.Message);
-      //}
-
-      //Console.WriteLine(result);
-      //Console.ReadLine();
-
       try
       {
         xShellClient.MakeConnection(connString);

@@ -49,7 +49,7 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// Enum used to know what kind of message will be written to the output window
   /// </summary>
-  internal enum Messagetype
+  internal enum MessageType
   {
     /// <summary>
     /// Use this option to clasify the message as Error
@@ -332,7 +332,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       catch (Exception ex)
       {
-        WriteToOutputWindow(string.Format("Can't fetch the X Protocol port from the server {0}. Error: {1}", serverKey, ex), Messagetype.Error);
+        WriteToOutputWindow(string.Format("Can't fetch the X Protocol port from the server {0}. Error: {1}", serverKey, ex), MessageType.Error);
       }
 
       return -1;
@@ -846,11 +846,11 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Parse a MySqlConnection object to a string format useb by the NgWrapper
+    /// Parse a MySqlConnection object to a string format useb by the XShellWrapper
     /// </summary>
     /// <param name="connection">Connection to parse</param>
     /// <returns>Connection string with the format "user:pass@server:port"</returns>
-    public static string ToNgFormat(this MySqlConnection connection)
+    public static string ToXFormat(this MySqlConnection connection)
     {
       var connProp = new MySqlConnectionProperties();
       connProp.ConnectionStringBuilder.ConnectionString = connection.ConnectionString;
@@ -882,7 +882,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="message">Message to write</param>
     /// <param name="type">Kind of meesage</param>
-    public static void WriteToOutputWindow(string message, Messagetype type)
+    public static void WriteToOutputWindow(string message, MessageType type)
     {
       if (string.IsNullOrEmpty(message))
       {

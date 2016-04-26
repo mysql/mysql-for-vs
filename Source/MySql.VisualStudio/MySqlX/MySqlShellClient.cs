@@ -36,7 +36,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// <param name="text">Text to write</param>
     public override void Print(string text)
     {
-      Utils.WriteToOutputWindow(text, Messagetype.Information);
+      Utils.WriteToOutputWindow(text, MessageType.Information);
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// <param name="text">Test to write</param>
     public override void PrintError(string text)
     {
-      Utils.WriteToOutputWindow(text, Messagetype.Error);
+      Utils.WriteToOutputWindow(text, MessageType.Error);
     }
   }
 }

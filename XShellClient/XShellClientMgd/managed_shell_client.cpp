@@ -37,102 +37,122 @@ using namespace System::Reflection;
 
 void ManagedShellClient::print(const char *text)
 {
-	_shell->Print(msclr::interop::marshal_as<String^>(text));
+  _shell->Print(msclr::interop::marshal_as<String^>(text));
 }
 
 void ManagedShellClient::print_error(const char *text)
 {
-	_shell->PrintError(msclr::interop::marshal_as<String^>(text));
+  _shell->PrintError(msclr::interop::marshal_as<String^>(text));
 }
 
 bool ManagedShellClient::input(const char *text, std::string &ret)
 {
-	String^ m_ret = gcnew String("");
-	bool result = _shell->Input(msclr::interop::marshal_as<String^>(text), m_ret);
-	ret = msclr::interop::marshal_as<std::string>(m_ret);
-	delete m_ret;
-	return result;
+  String^ m_ret = gcnew String("");
+  bool result = _shell->Input(msclr::interop::marshal_as<String^>(text), m_ret);
+  ret = msclr::interop::marshal_as<std::string>(m_ret);
+  delete m_ret;
+  return result;
 }
 
 bool ManagedShellClient::password(const char *text, std::string &ret)
 {
-	String^ m_ret = gcnew String("");
-	bool result = _shell->Password(msclr::interop::marshal_as<String^>(text), m_ret);
-	ret = msclr::interop::marshal_as<std::string>(m_ret);
-	delete m_ret;
-	return result;
+  String^ m_ret = gcnew String("");
+  bool result = _shell->Password(msclr::interop::marshal_as<String^>(text), m_ret);
+  ret = msclr::interop::marshal_as<std::string>(m_ret);
+  delete m_ret;
+  return result;
 }
 
 void ManagedShellClient::source(const char* module)
 {
-	_shell->Source(msclr::interop::marshal_as<String^>(module));
+  _shell->Source(msclr::interop::marshal_as<String^>(module));
 }
 
 ShellClient::ShellClient()
 {
-	gcroot< ShellClient^> _managed_obj(this);
-	_obj = new ManagedShellClient(_managed_obj);
+  gcroot< ShellClient^> _managed_obj(this);
+  _obj = new ManagedShellClient(_managed_obj);
 }
 
 void ShellClient::MakeConnection(String ^connstr)
 {
-	std::string n_connstr = msclr::interop::marshal_as<std::string>(connstr);
-	_obj->make_connection(n_connstr);
+  std::string n_connstr = msclr::interop::marshal_as<std::string>(connstr);
+  _obj->make_connection(n_connstr);
 }
 
 void ShellClient::SwitchMode(Mode^ mode)
 {
-	Int32^ p_mode = Convert::ToInt32(mode);
-	int p_mode2 = safe_cast<int>(p_mode);
-	shcore::IShell_core::Mode n_mode = static_cast<shcore::IShell_core::Mode>(p_mode2);
-	_obj->switch_mode(n_mode);
+  Int32^ p_mode = Convert::ToInt32(mode);
+  int p_mode2 = safe_cast<int>(p_mode);
+  shcore::IShell_core::Mode n_mode = static_cast<shcore::IShell_core::Mode>(p_mode2);
+  _obj->switch_mode(n_mode);
 }
 
 Object^ ShellClient::Execute(String^ query)
 {
-	Object^ ret_val;
-	std::string n_query = msclr::interop::marshal_as<std::string>(query);
-	shcore::Value n_result = _obj->execute(n_query);
+  Object^ ret_val;
+  std::string n_query = msclr::interop::marshal_as<std::string>(query);
+  _shellError = false;
+  _errorMessage = String::Empty;
+  shcore::Value n_result = _obj->execute(n_query);
 
-	if (n_result.type == shcore::Object)
-	{
-		std::string class_name = n_result.as_object()->class_name();
-		if (class_name == "Result")
-			ret_val = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(n_result.as_object()));
-		else if (class_name == "DocResult")
-			ret_val = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(n_result.as_object()));
-		else if (class_name == "RowResult")
-			ret_val = gcnew RowResult(boost::static_pointer_cast<mysh::mysqlx::RowResult>(n_result.as_object()));
-		else if (class_name == "SqlResult")
-			ret_val = gcnew SqlResult(boost::static_pointer_cast<mysh::mysqlx::SqlResult>(n_result.as_object()));
-		else
-			ret_val = msclr::interop::marshal_as<String^>(n_result.descr(true));
-	}
-	else
-		ret_val = msclr::interop::marshal_as<String^>(n_result.descr(true));
+  if (_shellError)
+  {
+    return String::Concat("\n", _errorMessage);
+  }
 
-	return ret_val;
+  if (n_result.type == shcore::Object)
+  {
+    std::string class_name = n_result.as_object()->class_name();
+    if (class_name == "Result")
+      ret_val = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(n_result.as_object()));
+    else if (class_name == "DocResult")
+      ret_val = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(n_result.as_object()));
+    else if (class_name == "RowResult")
+      ret_val = gcnew RowResult(boost::static_pointer_cast<mysh::mysqlx::RowResult>(n_result.as_object()));
+    else if (class_name == "SqlResult")
+      ret_val = gcnew SqlResult(boost::static_pointer_cast<mysh::mysqlx::SqlResult>(n_result.as_object()));
+    else
+      ret_val = msclr::interop::marshal_as<String^>(n_result.descr(true));
+  }
+  else
+  {
+    String^ result;
+    result = msclr::interop::marshal_as<String^>(n_result.descr(true));
+    // Some queries, like var initialization, are returning "undefined".
+    if (String::Compare(result, "undefined", true) == 0)
+    {
+      return "";
+    }
+
+    ret_val = result;
+  }
+
+  return ret_val;
 }
 
 ShellClient::!ShellClient()
 {
-	if (!_disposed)
-	{
-		// the Finalize method is invoked by the garbage collector, the standard pattern is for the Finalize to validate Dispose() has not be invoked and then invoke it.
-		_disposed = true;
-		this->~ShellClient();
-	}
+  if (!_disposed)
+  {
+    // the Finalize method is invoked by the garbage collector, the standard pattern is for the Finalize to validate Dispose() has not be invoked and then invoke it.
+    _disposed = true;
+    this->~ShellClient();
+  }
 }
 
 // The C++ CLI destructor becomes the IDisposable.Dispose method when this class is exposed to managed languages (C#).
-// The standard IDisposable implementation is to release here the native resources associated with this class instance (managed resource), that is as soon as possible, 
+// The standard IDisposable implementation is to release here the native resources associated with this class instance (managed resource), that is as soon as possible,
 // instead of waiting for it to be called by the GC thru the Finalize method.
 ShellClient::~ShellClient()
 {
-	if (_obj != nullptr)
-		delete _obj;
-	_obj = nullptr;
-	_disposed = true;
+  if (_obj != nullptr)
+  {
+    delete _obj;
+  }
+
+  _obj = nullptr;
+  _disposed = true;
 }
 
 void ShellClient::Print(String^ text)
@@ -141,16 +161,18 @@ void ShellClient::Print(String^ text)
 
 void ShellClient::PrintError(String^ text)
 {
+  _shellError = true;
+  _errorMessage = text;
 }
 
 bool ShellClient::Input(String^ text, String^% ret)
 {
-	return false;
+  return false;
 }
 
 bool ShellClient::Password(String^ text, String^% ret)
 {
-	return false;
+  return false;
 }
 
 void ShellClient::Source(String^ module)

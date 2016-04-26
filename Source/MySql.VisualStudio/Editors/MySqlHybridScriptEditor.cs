@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using MySql.Data.VisualStudio.MySqlX;
 using MySqlX;
 using MySqlX.Shell;
+using System.Text;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -54,12 +55,22 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Variable used to executes the script
     /// </summary>
-    private MySqlXProxy _ngWrapper;
+    private MySqlXProxy _xShellWrapper;
 
     /// <summary>
     /// The script type.
     /// </summary>
     public ScriptType ScriptType;
+
+    /// <summary>
+    /// Variable to verify if the query execution result is not an empty document
+    /// </summary>
+    private bool _resultIsNotEmptyDocument;
+
+    /// <summary>
+    /// Variable to hold the number of tabs created in the output pane
+    /// </summary>
+    private int _tabCounter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
@@ -266,13 +277,14 @@ Check that the server is running, the database exist and the user credentials ar
         switch (_sessionOption)
         {
           case SessionOption.UseSameSession:
-            if (_ngWrapper == null)
+            if (_xShellWrapper == null)
             {
-              _ngWrapper = new MySqlXProxy(((MySqlConnection)connection).ToNgFormat(), true);
+              _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), true);
             }
+
             break;
           case SessionOption.UseNewSession:
-            _ngWrapper = new MySqlXProxy(((MySqlConnection)connection).ToNgFormat(), false);
+            _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), false);
             break;
         }
 
@@ -287,61 +299,145 @@ Check that the server is running, the database exist and the user credentials ar
             break;
         }
 
-        List<object> results = _ngWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+        List<object> results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
         if (results == null)
         {
           return;
         }
 
-        int tabCounter = 1;
+        _tabCounter = 1;
+        _resultIsNotEmptyDocument = false;
         foreach (object result in results)
         {
-          bool resultIsNotEmptyDocument = false;
-          if (result is BaseResult)
-          {
-            DocResult data = result as DocResult;
-            if (data != null)
-            {
-              resultIsNotEmptyDocument = data.FetchAll().Count > 0;
-              if (resultIsNotEmptyDocument)
-              {
-                CreateResultPane(data, tabCounter);
-              }
-            }
-            else
-            {
-              RowResult tableResult = result as RowResult;
-              if (tableResult != null)
-              {
-                var doc = _ngWrapper.RowResultToDictionaryList(tableResult);
-                resultIsNotEmptyDocument = doc.Count > 0;
-
-                if (resultIsNotEmptyDocument)
-                  CreateResultPane(doc, tabCounter);
-                Utils.WriteToOutputWindow(
-                  string.Format("Statement executed in {0}. Affected Rows: {1} - Warnings: {2}.",
-                    tableResult.GetExecutionTime(),
-                    tableResult.FetchAll().Count < 0 ? 0 : tableResult.FetchAll().Count,
-                    tableResult.GetWarningCount() < 0 ? 0 : tableResult.GetWarningCount()), Messagetype.Information);
-              }
-            }
-
-            if (resultIsNotEmptyDocument)
-            {
-              tabCounter++;
-            }
-          }
-          else if (result is string)
-          {
-            Utils.WriteToOutputWindow((string)result, Messagetype.Information);
-          }
-
+          PrintResult(result);
           tabControl1.Visible = tabControl1.TabPages.Count > 0;
         }
       }
       catch (Exception ex)
       {
-        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
+        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
+      }
+    }
+
+    /// <summary>
+    /// Prints the proper query execution result in the output window, either DocResult, or RowResult, SqlResult or Result,
+    /// showing extended information about the execution result (items affected, execution time, etc.).
+    /// </summary>
+    /// <param name="executionResult">The xShell execution result.</param>
+    private void PrintResult(Object executionResult)
+    {
+      Result result = executionResult as Result;
+      DocResult document = executionResult as DocResult;
+      RowResult row = executionResult as RowResult;
+      SqlResult sql = executionResult as SqlResult;
+      if (result != null)
+      {
+        PrintResult(result);
+      }
+      else if (document != null)
+      {
+        PrintDocResult(document);
+      }
+      else if (row != null)
+      {
+        PrintRowResult(row);
+      }
+      else if (sql != null)
+      {
+        PrintSqlResult(sql);
+      }
+      else if (executionResult is string)
+      {
+        Utils.WriteToOutputWindow((string)executionResult, MessageType.Information);
+      }
+    }
+
+    /// <summary>
+    /// Prints the Result type query execution results in the output window
+    /// showing extended information about the execution result (items affected, execution time, etc.).
+    /// </summary>
+    /// <param name="result">The Result execution result.</param>
+    private void PrintResult(Result result)
+    {
+      StringBuilder resultMessage = new StringBuilder();
+      resultMessage.Append("Query OK");
+      if (result.GetAffectedItemCount() > 0)
+      {
+        resultMessage.AppendFormat(", {0} items affected", result.GetAffectedItemCount());
+      }
+
+      resultMessage.AppendFormat(" ({0}).", result.GetExecutionTime());
+      Utils.WriteToOutputWindow(resultMessage.ToString(), MessageType.Information);
+      PrintWarnings(result);
+    }
+
+    /// <summary>
+    /// Prints the warnings (if exists) of the query execution results, in the output window
+    /// </summary>
+    /// <param name="result">The BaseResult execution result.</param>
+    private void PrintWarnings(BaseResult result)
+    {
+      if (result.GetWarningCount() > 0)
+      {
+        StringBuilder warningsMessages = new StringBuilder();
+        warningsMessages.AppendFormat(" Warning Count: {0}\n", result.GetWarningCount());
+        List<Dictionary<String, Object>> warnings = result.GetWarnings();
+        foreach (Dictionary<String, Object> warning in warnings)
+        {
+          warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
+        }
+
+        Utils.WriteToOutputWindow(warningsMessages.ToString(), MessageType.Information);
+      }
+    }
+
+    /// <summary>
+    /// Prints the DocResult type query execution results in the output window
+    /// showing extended information about the execution result (documents returned, execution time, etc.).
+    /// </summary>
+    /// <param name="result">The DocResult execution result.</param>
+    private void PrintDocResult(DocResult result)
+    {
+      Utils.WriteToOutputWindow(string.Format("{0} documents in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
+      _resultIsNotEmptyDocument = result.FetchAll().Count > 0;
+      if (_resultIsNotEmptyDocument)
+      {
+        CreateResultPane(result, _tabCounter);
+        _tabCounter++;
+      }
+    }
+
+    /// <summary>
+    /// Prints the RowResult type query execution results in the output window
+    /// showing extended information about the execution result (rows returned, execution time, etc.).
+    /// </summary>
+    /// <param name="result">The RowResult execution result.</param>
+    private void PrintRowResult(RowResult result)
+    {
+      Utils.WriteToOutputWindow(string.Format("{0} rows in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
+      var doc = _xShellWrapper.RowResultToDictionaryList(result);
+      _resultIsNotEmptyDocument = doc.Count > 0;
+      if (_resultIsNotEmptyDocument)
+      {
+        CreateResultPane(doc, _tabCounter);
+        _tabCounter++;
+      }
+    }
+
+    /// <summary>
+    /// Prints the SqlResult type query execution results in the output window,
+    /// showing extended information about the execution result (rows returned, execution time, etc.).
+    /// </summary>
+    /// <param name="result">The RowResult execution result.</param>
+    private void PrintSqlResult(SqlResult result)
+    {
+      if ((bool)result.HasData())
+      {
+        PrintRowResult(result);
+      }
+      else
+      {
+        PrintWarnings(result);
       }
     }
 
@@ -425,10 +521,10 @@ Check that the server is running, the database exist and the user credentials ar
       ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
       _sessionOption = (SessionOption)clickedItem.Tag;
 
-      if (_ngWrapper != null)
+      if (_xShellWrapper != null)
       {
-        _ngWrapper.CleanConnection();
-        _ngWrapper = null;
+        _xShellWrapper.CleanConnection();
+        _xShellWrapper = null;
       }
 
       foreach (ToolStripMenuItem item in toolStripSplitButton.DropDownItems)
@@ -450,9 +546,9 @@ Check that the server is running, the database exist and the user credentials ar
           components.Dispose();
         }
 
-        if (_ngWrapper != null)
+        if (_xShellWrapper != null)
         {
-          _ngWrapper.CleanConnection();
+          _xShellWrapper.CleanConnection();
         }
 
         if (connection.State != ConnectionState.Closed)

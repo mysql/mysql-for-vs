@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -261,7 +261,7 @@ Check that the server is running, the database exist and the user credentials ar
       }
       catch (Exception ex)
       {
-        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
+        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
       }
     }
 
@@ -323,11 +323,11 @@ Check that the server is running, the database exist and the user credentials ar
       try
       {
         int rows = script.Execute();
-        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", rows), Messagetype.Information);
+        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", rows), MessageType.Information);
       }
       catch (Exception ex)
       {
-        Utils.WriteToOutputWindow(ex.Message, Messagetype.Error);
+        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
       }
     }
 
