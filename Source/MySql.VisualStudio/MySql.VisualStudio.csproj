@@ -47,7 +47,7 @@
     <ParameterGroup>
       <ProjectDirectory Required="false" />
     </ParameterGroup>
-	<Task>
+    <Task>
       <Code Type="Fragment" Language="cs">
 		if (string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("MYSQLX_HOME", System.EnvironmentVariableTarget.User)))
 		{
@@ -106,10 +106,10 @@
         <Framework>4.6</Framework>
         <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;NET_46_OR_GREATER</DefineConstants>
-		<StartAction>Program</StartAction>
-		<StartProgram>$(ProgramFiles)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
-		<StartArguments>/rootsuffix Exp</StartArguments>
-		<ProjectView>ProjectFiles</ProjectView>
+        <StartAction>Program</StartAction>
+        <StartProgram>$(ProgramFiles)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
+        <StartArguments>/rootsuffix Exp</StartArguments>
+        <ProjectView>ProjectFiles</ProjectView>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
@@ -124,10 +124,10 @@
         <Framework>4.5.1</Framework>
         <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;VS_SDK_2013;</DefineConstants>
-		<StartAction>Program</StartAction>
-		<StartProgram>$(ProgramFiles)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</StartProgram>
-		<StartArguments>/rootsuffix Exp</StartArguments>
-		<ProjectView>ProjectFiles</ProjectView>
+        <StartAction>Program</StartAction>
+        <StartProgram>$(ProgramFiles)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</StartProgram>
+        <StartArguments>/rootsuffix Exp</StartArguments>
+        <ProjectView>ProjectFiles</ProjectView>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
@@ -142,10 +142,10 @@
         <Framework>4.5</Framework>
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;VS_SDK_2012;</DefineConstants>
-		<StartAction>Program</StartAction>
-		<StartProgram>$(ProgramFiles)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
-		<StartArguments>/rootsuffix Exp</StartArguments>
-		<ProjectView>ProjectFiles</ProjectView>
+        <StartAction>Program</StartAction>
+        <StartProgram>$(ProgramFiles)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
+        <StartArguments>/rootsuffix Exp</StartArguments>
+        <ProjectView>ProjectFiles</ProjectView>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '10.0'">
@@ -161,10 +161,10 @@
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <DefineConstants>NET_40_OR_GREATER;VS_SDK_2010;</DefineConstants>
         <OldToolsVersion>4.0</OldToolsVersion>
-		<StartAction>Program</StartAction>
-		<StartProgram>$(ProgramFiles)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</StartProgram>
-		<StartArguments>/rootsuffix Exp</StartArguments>
-		<ProjectView>ProjectFiles</ProjectView>
+        <StartAction>Program</StartAction>
+        <StartProgram>$(ProgramFiles)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</StartProgram>
+        <StartArguments>/rootsuffix Exp</StartArguments>
+        <ProjectView>ProjectFiles</ProjectView>
       </PropertyGroup>
     </When>
   </Choose>
@@ -203,6 +203,10 @@
   </PropertyGroup>
   <!-- References that applies for all VS versions -->
   <ItemGroup>
+    <Reference Include="ConsoleTables.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ConsoleTables.1.1.0\lib\net40\ConsoleTables.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="XShellClientMgd">
       <HintPath>..\..\Dependencies\xShell\XShellClientMgd.dll</HintPath>
     </Reference>
@@ -718,6 +722,14 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="Editors\XShellConsoleCommandEnteringEventArgs.cs" />
+    <Compile Include="Editors\XShellConsoleCommandEventArgs.cs" />
+    <Compile Include="Editors\XShellConsoleEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\XShellConsoleEditor.designer.cs">
+      <DependentUpon>XShellConsoleEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -725,6 +737,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editors\MySqlHybridScriptEditor.resx">
+      <DependentUpon>MySqlHybridScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\XShellConsoleEditor.resx">
+      <DependentUpon>XShellConsoleEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -1419,6 +1437,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions.datasource" />
+    <None Include="packages.config" />
     <None Include="Resources\ArrowKey.bmp">
     </None>
     <None Include="Resources\Key.bmp">
@@ -1557,11 +1576,11 @@
     <SetMySQLXHomeVariable />
   </Target>
   <!-- Get M4VS version -->
-  <Target Name="GetM4VSVersion" BeforeTargets="AfterBuild" >
-    <GetVersion Assembly="bin\$(TargetFrameworkVersion)\$(Configuration)\MySql.VisualStudio.dll" Format="{0}.{1}.{2}" >
+  <Target Name="GetM4VSVersion" BeforeTargets="AfterBuild">
+    <GetVersion Assembly="bin\$(TargetFrameworkVersion)\$(Configuration)\MySql.VisualStudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="Version" />
     </GetVersion>
-    <Message Text="GetM4VSVersion = $(Version)"/>
+    <Message Text="GetM4VSVersion = $(Version)" />
   </Target>
   <!-- Set VS Expression instance path -->
   <Choose>
@@ -1588,10 +1607,10 @@
   </Choose>
   <!-- Targets when debugging VS (Clean the experimental instance folder and copy the xShell dependencies to it. Also copy the xShell modules to the path defined in the env. variable MYSQLX_HOME, created before) -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command='rd "$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q' />
+    <Exec Command="rd &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio&quot; /S /Q" />
   </Target>
-  <Target Name="AfterBuild" >
-	<Exec Condition=" '$(Configuration)' == 'Debug' " Command='start /MIN xcopy "$(SolutionDir)Dependencies\xShell\*.*" "$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\" /S /Y /I' />
-	<Exec Command='start /MIN xcopy "$(SolutionDir)Dependencies\xShell\modules\*" "%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh\modules" /S /Y /I' />
+  <Target Name="AfterBuild">
+    <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
+    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\modules\*&quot; &quot;%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh\modules&quot; /S /Y /I" />
   </Target>
 </Project>

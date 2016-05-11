@@ -30,10 +30,13 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
 using MySql.Data.VisualStudio.MySqlX;
 using MySqlX;
 using MySqlX.Shell;
 using System.Text;
+using ConsoleTables.Core;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -51,6 +54,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// Variable to store the value to know if the user wants to execute the statements in the same session or not
     /// </summary>
     private SessionOption _sessionOption = SessionOption.UseSameSession;
+
+    /// <summary>
+    /// Variable to store the value to know if the user wants to execute the statements in batch mode or in console mode
+    /// </summary>
+    private ExecutionModeOption _executionModeOption = ExecutionModeOption.BatchMode;
 
     /// <summary>
     /// Variable used to executes the script
@@ -80,12 +88,17 @@ namespace MySql.Data.VisualStudio.Editors
     {
       InitializeComponent();
       factory = MySqlClientFactory.Instance;
-      if (factory == null) throw new Exception("MySql Data Provider is not correctly registered");
+      if (factory == null)
+      {
+        throw new Exception("MySql Data Provider is not correctly registered");
+      }
 
       tabControl1.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       tabControl1.Visible = false;
       ScriptType = ScriptType.JavaScript;
+      SetXShellConsoleEditorPromptString();
+      ToggleEditors(ExecutionModeOption.BatchMode);
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -107,6 +120,10 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Controls.SetColors();
       BackColor = Utils.BackgroundColor;
+      xShellConsoleEditor1.Controls.SetColors();
+      xShellConsoleEditor1.BackColor = Utils.EditorBackgroundColor;
+      xShellConsoleEditor1.PromptColor = Utils.FontColor;
+      xShellConsoleEditor1.ForeColor = Utils.FontColor;
 #endif
     }
 
@@ -120,10 +137,10 @@ namespace MySql.Data.VisualStudio.Editors
       : this()
     {
       ScriptType = scriptType;
+      SetXShellConsoleEditorPromptString();
       Pane = pane;
       serviceProvider = sp;
       codeEditor.Init(sp, this);
-
       var package = MySqlDataProviderPackage.Instance;
       if (package != null)
       {
@@ -131,7 +148,10 @@ namespace MySql.Data.VisualStudio.Editors
         {
           connection = package.MysqlConnectionSelected;
           if (connection.State != ConnectionState.Open)
+          {
             connection.Open();
+          }
+
           UpdateButtons();
         }
       }
@@ -288,34 +308,74 @@ Check that the server is running, the database exist and the user credentials ar
             break;
         }
 
-        List<string> statements = new List<string>();
-        switch (ScriptType)
+        if (_executionModeOption == ExecutionModeOption.BatchMode)
         {
-          case Editors.ScriptType.JavaScript:
-            statements = script.BreakJavaScriptStatements();
-            break;
-          case Editors.ScriptType.Python:
-            statements = script.BreakPythonStatements();
-            break;
+          ExecuteBatchScript(script);
         }
-
-        List<object> results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
-        if (results == null)
+        if (_executionModeOption == ExecutionModeOption.ConsoleMode)
         {
-          return;
-        }
-
-        _tabCounter = 1;
-        _resultIsNotEmptyDocument = false;
-        foreach (object result in results)
-        {
-          PrintResult(result);
-          tabControl1.Visible = tabControl1.TabPages.Count > 0;
+          ExecuteConsoleScript(script);
         }
       }
       catch (Exception ex)
       {
-        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
+        WriteToSelectedOutput(ex.Message, MessageType.Error);
+      }
+    }
+
+    /// <summary>
+    /// Executes the script in batch mode.
+    /// </summary>
+    /// <param name="script">The script.</param>
+    private void ExecuteBatchScript(string script)
+    {
+      List<string> statements = new List<string>();
+      switch (ScriptType)
+      {
+        case ScriptType.JavaScript:
+          statements = script.BreakJavaScriptStatements();
+          break;
+        case ScriptType.Python:
+          statements = script.BreakPythonStatements();
+          break;
+      }
+
+      List<object> results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+      if (results == null)
+      {
+        return;
+      }
+
+      _tabCounter = 1;
+      _resultIsNotEmptyDocument = false;
+      foreach (object result in results)
+      {
+        PrintResult(result);
+        tabControl1.Visible = tabControl1.TabPages.Count > 0;
+        codeEditor.Focus();
+      }
+    }
+
+    /// <summary>
+    /// Executes the script in console mode.
+    /// </summary>
+    /// <param name="script">The script.</param>
+    private void ExecuteConsoleScript(string script)
+    {
+      object result = _xShellWrapper.ExecuteQuery(script, ScriptType);
+      PrintResult(result);
+      xShellConsoleEditor1.Focus();
+    }
+
+    private void WriteToSelectedOutput(string message, MessageType messageType)
+    {
+      if (_executionModeOption == ExecutionModeOption.BatchMode)
+      {
+        Utils.WriteToOutputWindow(message, messageType);
+      }
+      if (_executionModeOption == ExecutionModeOption.ConsoleMode)
+      {
+        xShellConsoleEditor1.AddMessage(message);
       }
     }
 
@@ -336,19 +396,19 @@ Check that the server is running, the database exist and the user credentials ar
       }
       else if (document != null)
       {
-        PrintDocResult(document);
+        PrintDocResult(document, _executionModeOption);
       }
       else if (row != null)
       {
-        PrintRowResult(row);
+        PrintRowResult(row, _executionModeOption);
       }
       else if (sql != null)
       {
-        PrintSqlResult(sql);
+        PrintSqlResult(sql, _executionModeOption);
       }
       else if (executionResult is string)
       {
-        Utils.WriteToOutputWindow((string)executionResult, MessageType.Information);
+        WriteToSelectedOutput((string)executionResult, MessageType.Information);
       }
     }
 
@@ -367,7 +427,7 @@ Check that the server is running, the database exist and the user credentials ar
       }
 
       resultMessage.AppendFormat(" ({0}).", result.GetExecutionTime());
-      Utils.WriteToOutputWindow(resultMessage.ToString(), MessageType.Information);
+      WriteToSelectedOutput(resultMessage.ToString(), MessageType.Information);
       PrintWarnings(result);
     }
 
@@ -387,7 +447,7 @@ Check that the server is running, the database exist and the user credentials ar
           warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
         }
 
-        Utils.WriteToOutputWindow(warningsMessages.ToString(), MessageType.Information);
+        WriteToSelectedOutput(warningsMessages.ToString(), MessageType.Information);
       }
     }
 
@@ -396,14 +456,39 @@ Check that the server is running, the database exist and the user credentials ar
     /// showing extended information about the execution result (documents returned, execution time, etc.).
     /// </summary>
     /// <param name="result">The DocResult execution result.</param>
-    private void PrintDocResult(DocResult result)
+    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
+    private void PrintDocResult(DocResult result, ExecutionModeOption executionMode)
     {
-      Utils.WriteToOutputWindow(string.Format("{0} documents in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
-      _resultIsNotEmptyDocument = result.FetchAll().Count > 0;
-      if (_resultIsNotEmptyDocument)
+      WriteToSelectedOutput(string.Format("{0} documents in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
+      switch (executionMode)
       {
-        CreateResultPane(result, _tabCounter);
-        _tabCounter++;
+        case ExecutionModeOption.BatchMode:
+          _resultIsNotEmptyDocument = result.FetchAll().Count > 0;
+          if (_resultIsNotEmptyDocument)
+          {
+            CreateResultPane(result, _tabCounter);
+            _tabCounter++;
+          }
+
+          break;
+        case ExecutionModeOption.ConsoleMode:
+          List<Dictionary<string, object>> data = result.FetchAll();
+          foreach (Dictionary<string, object> row in data)
+          {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("{");
+            int i = 0;
+            foreach (KeyValuePair<string, object> kvp in row)
+            {
+              sb.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (i == row.Count - 1) ? "" : ",");
+              i++;
+            }
+
+            sb.AppendLine("},");
+            xShellConsoleEditor1.AddMessage(sb.ToString());
+          }
+
+          break;
       }
     }
 
@@ -412,15 +497,56 @@ Check that the server is running, the database exist and the user credentials ar
     /// showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
     /// <param name="result">The RowResult execution result.</param>
-    private void PrintRowResult(RowResult result)
+    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
+    private void PrintRowResult(RowResult result, ExecutionModeOption executionMode)
     {
-      Utils.WriteToOutputWindow(string.Format("{0} rows in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
-      var doc = _xShellWrapper.RowResultToDictionaryList(result);
-      _resultIsNotEmptyDocument = doc.Count > 0;
-      if (_resultIsNotEmptyDocument)
+      WriteToSelectedOutput(string.Format("{0} rows in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
+      switch (executionMode)
       {
-        CreateResultPane(doc, _tabCounter);
-        _tabCounter++;
+        case ExecutionModeOption.BatchMode:
+          var doc = _xShellWrapper.RowResultToDictionaryList(result);
+          _resultIsNotEmptyDocument = doc.Count > 0;
+          if (_resultIsNotEmptyDocument)
+          {
+            CreateResultPane(doc, _tabCounter);
+            _tabCounter++;
+          }
+
+          break;
+        case ExecutionModeOption.ConsoleMode:
+          // Get columns names
+          string[] columns = new string[result.GetColumns().Count];
+          int i = 0;
+          foreach (Column col in result.GetColumns())
+          {
+            columns[i++] += col.GetColumnName();
+          }
+
+          // Create console table object for output format
+          var table = new ConsoleTable(columns);
+          object[] record = result.FetchOne();
+          while (record != null)
+          {
+            object[] columnValue = new object[result.GetColumns().Count];
+            i = 0;
+            foreach (object o in record)
+            {
+              if (o == null)
+              {
+                columnValue[i++] = "null";
+              }
+              else
+              {
+                columnValue[i++] = o.ToString();
+              }
+            }
+
+            table.AddRow(columnValue);
+            record = result.FetchOne();
+          }
+
+          xShellConsoleEditor1.AddMessage(table.ToStringAlternative());
+          break;
       }
     }
 
@@ -429,11 +555,12 @@ Check that the server is running, the database exist and the user credentials ar
     /// showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
     /// <param name="result">The RowResult execution result.</param>
-    private void PrintSqlResult(SqlResult result)
+    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
+    private void PrintSqlResult(SqlResult result, ExecutionModeOption executionMode)
     {
       if ((bool)result.HasData())
       {
-        PrintRowResult(result);
+        PrintRowResult(result, executionMode);
       }
       else
       {
@@ -520,7 +647,6 @@ Check that the server is running, the database exist and the user credentials ar
     {
       ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
       _sessionOption = (SessionOption)clickedItem.Tag;
-
       if (_xShellWrapper != null)
       {
         _xShellWrapper.CleanConnection();
@@ -530,6 +656,96 @@ Check that the server is running, the database exist and the user credentials ar
       foreach (ToolStripMenuItem item in toolStripSplitButton.DropDownItems)
       {
         item.Checked = item.Name == clickedItem.Name;
+      }
+    }
+
+    /// <summary>
+    /// Event fired when the execution Mode Option is changed
+    /// </summary>
+    /// <param name="sender">Sender that calls the event (item clicked)</param>
+    /// <param name="e">Event arguments</param>
+    private void ToolStripMenuItemExecutionMode_ClickHandler(object sender, EventArgs e)
+    {
+      ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+      _executionModeOption = (ExecutionModeOption)clickedItem.Tag;
+      ToggleEditors(_executionModeOption);
+      foreach (ToolStripMenuItem item in tssbExecutionModeButton.DropDownItems)
+      {
+        item.Checked = item.Name == clickedItem.Name;
+      }
+    }
+
+    /// <summary>
+    /// Toggles the editors between batch mode and console mode.
+    /// </summary>
+    /// <param name="executionMode">The execution mode.</param>
+    private void ToggleEditors(ExecutionModeOption executionMode)
+    {
+      try
+      {
+        panel1.SuspendLayout();
+        if (executionMode == ExecutionModeOption.BatchMode)
+        {
+          panel1.Controls.Remove(xShellConsoleEditor1);
+          panel1.Controls.Add(tabControl1);
+          // Register the code editor, to add back its handles and events
+          codeEditor.RegisterEditor();
+          panel1.Controls.Add(codeEditor);
+          runScriptButton.Enabled = true;
+          codeEditor.Focus();
+        }
+        else
+        {
+          panel1.Controls.Remove(tabControl1);
+          // Unregister the code editor, to remove its handles and events
+          codeEditor.UnregisterEditor();
+          panel1.Controls.Remove(codeEditor);
+          xShellConsoleEditor1.Dock = DockStyle.Top;
+          panel1.Controls.Add(xShellConsoleEditor1);
+          runScriptButton.Enabled = false;
+          xShellConsoleEditor1.Focus();
+        }
+      }
+      finally
+      {
+        panel1.ResumeLayout();
+      }
+    }
+
+    /// <summary>
+    /// Handles the Command event of the xShellConsoleEditor1 control, and execute the command received.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="XShellConsoleCommandEventArgs"/> instance containing the event data.</param>
+    private void xShellConsoleEditor1_Command(object sender, XShellConsoleCommandEventArgs e)
+    {
+      if (e.Command == "cls")
+      {
+        xShellConsoleEditor1.ClearMessages();
+        e.Cancel = true;
+        return;
+      }
+
+      ExecuteScript(e.Command);
+    }
+
+    /// <summary>
+    /// Set the XShellConsoleEditor prompt string according the ScriptType the file format list.
+    /// </summary>
+    private void SetXShellConsoleEditorPromptString()
+    {
+      switch (ScriptType)
+      {
+        case ScriptType.Sql:
+          xShellConsoleEditor1.PromptString = "mysql-slq>";
+          break;
+        case ScriptType.Python:
+          xShellConsoleEditor1.PromptString = "mysql-py>";
+          break;
+        case ScriptType.JavaScript:
+        default:
+          xShellConsoleEditor1.PromptString = "mysql-js>";
+          break;
       }
     }
 

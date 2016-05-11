@@ -2,7 +2,10 @@
 using MySqlX.Shell;
 using MySqlX;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+using ConsoleTables.Core;
 
 namespace XShellClient_Test
 {
@@ -95,30 +98,38 @@ namespace XShellClient_Test
 
     private static void PrintRowResult(RowResult res)
     {
+      // Get columns names
+      string[] columns = new string[res.GetColumns().Count];
+      int i = 0;
       foreach (Column col in res.GetColumns())
       {
-        Console.WriteLine("{0}\t", col.GetColumnName());
+        columns[i++] += col.GetColumnName();
       }
-      Console.WriteLine();
 
+      // Create console table object for output format
+      var table = new ConsoleTable(columns);
       object[] record = res.FetchOne();
-
       while (record != null)
       {
+        object[] columnValue = new object[res.GetColumns().Count];
+        i = 0;
         foreach (object o in record)
         {
-          string s = "";
           if (o == null)
-            s = "null";
+          {
+            columnValue[i++] = "null";
+          }
           else
-            s = o.ToString();
-
-          Console.WriteLine("{0}\t", s);
+          {
+            columnValue[i++] = o.ToString();
+          }
         }
-        Console.WriteLine();
 
+        table.AddRow(columnValue);
         record = res.FetchOne();
       }
+
+      table.Write(Format.Alternative);
     }
 
     private static void PrintDocResult(DocResult doc)

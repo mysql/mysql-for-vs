@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -135,7 +135,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
-    /// Execute a list of javascript commands using the NG Shell
+    /// Execute a list of javascript commands using the XShell
     /// </summary>
     /// <param name="script">The script to execute.</param>
     /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
@@ -160,7 +160,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
-    /// Execute a sql command using the NG Shell
+    /// Execute a sql command using the XShell
     /// </summary>
     /// <param name="script">Script to execute</param>
     /// <returns>RowResult returned from the server</returns>
@@ -181,7 +181,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
-    /// Execute a command using the NG Shell
+    /// Execute a command using the XShell
     /// </summary>
     /// <param name="mode">Mode that will be used to execute the script received</param>
     /// <param name="statements">Statements to execute</param>
@@ -207,6 +207,46 @@ namespace MySql.Data.VisualStudio.MySqlX
 
         result.Add(_shellClient.Execute(statement));
       }
+
+      if (!_keepSession)
+      {
+        CleanConnection();
+      }
+
+      return result;
+    }
+
+    /// <summary>
+    /// Execute a single command using the XShell
+    /// </summary>
+    /// <param name="statement">Single statement to execute</param>
+    /// /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
+    /// <returns>An object containing the results returned from the server for the query execution </returns>
+    public object ExecuteQuery(string statement, ScriptType scriptType)
+    {
+      if (!_keepSession)
+      {
+        _shellClient = new ShellClient();
+        _shellClient.MakeConnection(_connString);
+      }
+
+      Mode mode;
+      switch (scriptType)
+      {
+        case ScriptType.Sql:
+          mode = Mode.SQL;
+          break;
+        case ScriptType.Python:
+          mode = Mode.Python;
+          break;
+        case ScriptType.JavaScript:
+        default:
+          mode = Mode.JScript;
+          break;
+      }
+
+      _shellClient.SwitchMode(mode);
+      object result = _shellClient.Execute(statement);
 
       if (!_keepSession)
       {

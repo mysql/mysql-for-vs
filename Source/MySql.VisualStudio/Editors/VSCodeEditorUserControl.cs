@@ -32,8 +32,52 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   internal class VSCodeEditorUserControl : UserControl
   {
-    private VSCodeEditorWindow nativeWindow;
+    #region Fields
+    /// <summary>
+    /// The VSCodeEditorWindow native window
+    /// </summary>
+    private VSCodeEditorWindow _nativeWindow;
+
+    /// <summary>
+    /// The base editor
+    /// </summary>
     internal BaseEditorControl Editor;
+    #endregion
+
+    #region Properties
+    /// <summary>
+    /// Gets or sets the Text field of the core editor
+    /// </summary>
+    public override string Text
+    {
+      get { return _nativeWindow != null && _nativeWindow.CoreEditor != null ? _nativeWindow.CoreEditor.Text : string.Empty; }
+      set
+      {
+        if (_nativeWindow != null && _nativeWindow.CoreEditor != null)
+        {
+          _nativeWindow.CoreEditor.Text = value;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is dirty.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is dirty; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsDirty
+    {
+      get { return _nativeWindow != null && _nativeWindow.CoreEditor != null ? _nativeWindow.CoreEditor.Dirty : false; }
+      set
+      {
+        if (_nativeWindow != null && _nativeWindow.CoreEditor != null)
+        {
+          _nativeWindow.CoreEditor.Dirty = value;
+        }
+      }
+    }
+    #endregion
 
     /// <summary>
     /// Initializes the specified service provider.
@@ -44,16 +88,20 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Editor = editor;
       ServiceBroker sb = new ServiceBroker(serviceProvider);
-      nativeWindow = new VSCodeEditorWindow(sb, this);
+      _nativeWindow = new VSCodeEditorWindow(sb, this);
     }
 
+    /// <summary>
+    /// Dispose override to clean up the native window.
+    /// </summary>
+    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     protected override void Dispose(bool disposing)
     {
       try
       {
         if (!disposing) return;
-        if (nativeWindow == null) return;
-        nativeWindow.Dispose();
+        if (_nativeWindow == null) return;
+        _nativeWindow.Dispose();
       }
       finally
       {
@@ -61,34 +109,67 @@ namespace MySql.Data.VisualStudio.Editors
       }
     }
 
-    public override string Text
+    /// <summary>
+    /// Registers the editor to re-add handles and events to the window.
+    /// </summary>
+    public void RegisterEditor()
     {
-      get { return nativeWindow.CoreEditor.Text; }
-      set { nativeWindow.CoreEditor.Text = value; }
+      if (_nativeWindow != null)
+      {
+        EditorBroker.RegisterEditor(_nativeWindow);
+      }
     }
 
-    public bool IsDirty
+    /// <summary>
+    /// Unregister the editor to delete the handles and events to the window.
+    /// </summary>
+    public void UnregisterEditor()
     {
-      get { return nativeWindow.CoreEditor.Dirty; }
-      set { nativeWindow.CoreEditor.Dirty = value; }
+      if (_nativeWindow != null)
+      {
+        EditorBroker.UnregisterEditor(_nativeWindow);
+      }
     }
 
+    /// <summary>
+    /// Determines whether the specified key is a regular input key or a special key that requires preprocessing.
+    /// </summary>
+    /// <param name="keyData">One of the <see cref="T:System.Windows.Forms.Keys" /> values.</param>
+    /// <returns>
+    /// true if the specified key is a regular input key; otherwise, false.
+    /// </returns>
     protected override bool IsInputKey(Keys keyData)
     {
       // Since we process each pressed keystroke, the return value is always true.
       return true;
     }
 
+    /// <summary>
+    /// Raises the <see cref="E:System.Windows.Forms.Control.GotFocus" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnGotFocus(EventArgs e)
     {
-      if (nativeWindow == null) return;
-      nativeWindow.SetFocus();
+      if (_nativeWindow == null)
+      {
+        return;
+      }
+
+      _nativeWindow.SetFocus();
     }
 
+    /// <summary>
+    /// Raises the <see cref="E:System.Windows.Forms.Control.SizeChanged" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnSizeChanged(EventArgs e)
     {
-      if (nativeWindow == null) return;
-      nativeWindow.SetWindowPos(ClientRectangle);
+      if (_nativeWindow == null)
+      {
+        return;
+      }
+
+      _nativeWindow.SetWindowPos(ClientRectangle);
     }
   }
 }

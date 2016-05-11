@@ -107,6 +107,22 @@ namespace MySql.Data.VisualStudio.Editors
   }
 
   /// <summary>
+  /// Enum used to know whether the user wants to execute queries in batch mode or in console mode.
+  /// </summary>
+  internal enum ExecutionModeOption
+  {
+    /// <summary>
+    /// The queries will be executed in batch mode.
+    /// </summary>
+    BatchMode,
+
+    /// <summary>
+    /// The queries will be executed in console mode.
+    /// </summary>
+    ConsoleMode
+  }
+
+  /// <summary>
   /// This class contains reusable methods for the project
   /// </summary>
   internal static class Utils
@@ -437,23 +453,52 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       const string categoryName = "General";
-      const string themePropertyName = "CurrentTheme";
+      string themePropertyName = "CurrentTheme";
       string visualStudioVersion = "10.0";
 
       if (processpathfilename.Contains("11.0")) visualStudioVersion = "11.0";
       else if (processpathfilename.Contains("12.0")) visualStudioVersion = "12.0";
       else if (processpathfilename.Contains("14.0")) visualStudioVersion = "14.0";
 
-      string keyName = string.Format(@"Software\Microsoft\VisualStudio\{1}\{0}", categoryName, visualStudioVersion);
+      // For VS 2015, the registry hive for the current theme has changed
+      string keyName;
+      if (visualStudioVersion == "14.0")
+      {
+#if DEBUG
+        keyName = string.Format(@"Software\Microsoft\VisualStudio\{0}Exp\ApplicationPrivateSettings\Microsoft\VisualStudio", visualStudioVersion);
+#else
+        keyName = string.Format(@"Software\Microsoft\VisualStudio\{0}\ApplicationPrivateSettings\Microsoft\VisualStudio", visualStudioVersion);
+#endif
+        themePropertyName = "ColorTheme";
+      }
+      else
+      {
+#if DEBUG
+        keyName = string.Format(@"Software\Microsoft\VisualStudio\{1}\{0}", categoryName, visualStudioVersion);
+#else
+        keyName = string.Format(@"Software\Microsoft\VisualStudio\{1}\{0}", categoryName, visualStudioVersion);
+#endif
+      }
+
       using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName))
       {
-        if (key != null)
+        if (key == null)
+        {
+          return null;
+        }
+        if (visualStudioVersion != "14.0")
         {
           return (string)key.GetValue(themePropertyName, string.Empty);
         }
-      }
 
-      return null;
+        var keyTextValues = key.GetValue(themePropertyName, string.Empty).ToString().Split('*');
+        if (keyTextValues.Length > 2)
+        {
+          return keyTextValues[2];
+        }
+
+        return null;
+      }
     }
 
     /// <summary>
