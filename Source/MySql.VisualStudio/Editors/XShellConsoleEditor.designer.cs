@@ -51,52 +51,14 @@ namespace MySql.Data.VisualStudio.Editors
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      this.panelBottom = new System.Windows.Forms.Panel();
-      this.txtInput = new System.Windows.Forms.TextBox();
-      this.lblPrompt = new System.Windows.Forms.Label();
       this.rtbMessages = new System.Windows.Forms.RichTextBox();
       this.toolTipCommand = new System.Windows.Forms.ToolTip(this.components);
-      this.panelBottom.SuspendLayout();
+      this.lblPrompt = new System.Windows.Forms.Label();
+      this.txtInput = new System.Windows.Forms.TextBox();
       this.SuspendLayout();
-      //
-      // panelBottom
-      //
-      this.panelBottom.BackColor = System.Drawing.SystemColors.Window;
-      this.panelBottom.Controls.Add(this.txtInput);
-      this.panelBottom.Controls.Add(this.lblPrompt);
-      this.panelBottom.Dock = System.Windows.Forms.DockStyle.Top;
-      this.panelBottom.Location = new System.Drawing.Point(0, 78);
-      this.panelBottom.Margin = new System.Windows.Forms.Padding(0);
-      this.panelBottom.Name = "panelBottom";
-      this.panelBottom.Size = new System.Drawing.Size(200, 17);
-      this.panelBottom.TabIndex = 0;
-      //
-      // txtInput
-      //
-      this.txtInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-      this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.txtInput.Location = new System.Drawing.Point(14, 0);
-      this.txtInput.Name = "txtInput";
-      this.txtInput.Size = new System.Drawing.Size(186, 13);
-      this.txtInput.TabIndex = 1;
-      this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
-      this.txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
-      this.txtInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInput_KeyPress);
-      //
-      // lblPrompt
-      //
-      this.lblPrompt.AutoSize = true;
-      this.lblPrompt.BackColor = System.Drawing.SystemColors.Window;
-      this.lblPrompt.Dock = System.Windows.Forms.DockStyle.Left;
-      this.lblPrompt.Location = new System.Drawing.Point(0, 0);
-      this.lblPrompt.Margin = new System.Windows.Forms.Padding(0);
-      this.lblPrompt.Name = "lblPrompt";
-      this.lblPrompt.Size = new System.Drawing.Size(14, 14);
-      this.lblPrompt.TabIndex = 0;
-      this.lblPrompt.Text = ">";
-      //
+      // 
       // rtbMessages
-      //
+      // 
       this.rtbMessages.BackColor = System.Drawing.SystemColors.Window;
       this.rtbMessages.BorderStyle = System.Windows.Forms.BorderStyle.None;
       this.rtbMessages.Dock = System.Windows.Forms.DockStyle.Top;
@@ -110,40 +72,61 @@ namespace MySql.Data.VisualStudio.Editors
       this.rtbMessages.Text = "";
       this.rtbMessages.Click += new System.EventHandler(this.rtbMessages_Click);
       this.rtbMessages.TextChanged += new System.EventHandler(this.rtbMessages_TextChanged);
-      //
+      // 
       // toolTipCommand
-      //
+      // 
       this.toolTipCommand.AutoPopDelay = 5000;
       this.toolTipCommand.InitialDelay = 0;
       this.toolTipCommand.ReshowDelay = 100;
-      //
+      // 
+      // lblPrompt
+      // 
+      this.lblPrompt.AutoSize = true;
+      this.lblPrompt.BackColor = System.Drawing.SystemColors.Window;
+      this.lblPrompt.Dock = System.Windows.Forms.DockStyle.Left;
+      this.lblPrompt.Location = new System.Drawing.Point(0, 78);
+      this.lblPrompt.Margin = new System.Windows.Forms.Padding(0);
+      this.lblPrompt.Name = "lblPrompt";
+      this.lblPrompt.Size = new System.Drawing.Size(14, 14);
+      this.lblPrompt.TabIndex = 0;
+      this.lblPrompt.Text = ">";
+      // 
+      // txtInput
+      // 
+      this.txtInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+      this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.txtInput.Location = new System.Drawing.Point(14, 78);
+      this.txtInput.Name = "txtInput";
+      this.txtInput.Size = new System.Drawing.Size(186, 13);
+      this.txtInput.TabIndex = 1;
+      this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
+      this.txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
+      this.txtInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInput_KeyPress);
+      // 
       // XShellConsoleEditor
-      //
+      // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.panelBottom);
+      this.Controls.Add(this.txtInput);
+      this.Controls.Add(this.lblPrompt);
       this.Controls.Add(this.rtbMessages);
       this.Font = new System.Drawing.Font("Courier New", 8F);
       this.MinimumSize = new System.Drawing.Size(0, 17);
       this.Name = "XShellConsoleEditor";
       this.Size = new System.Drawing.Size(200, 95);
-      this.Load += new System.EventHandler(this.Prompt_Load);
       this.BackColorChanged += new System.EventHandler(this.Prompt_BackColorChanged);
       this.FontChanged += new System.EventHandler(this.Prompt_FontChanged);
       this.ForeColorChanged += new System.EventHandler(this.Prompt_ForeColorChanged);
       this.Resize += new System.EventHandler(this.CommandPrompt_Resize);
-      this.panelBottom.ResumeLayout(false);
-      this.panelBottom.PerformLayout();
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
     #endregion
-
-    private System.Windows.Forms.Panel panelBottom;
-    private System.Windows.Forms.Label lblPrompt;
-    private System.Windows.Forms.TextBox txtInput;
     private System.Windows.Forms.RichTextBox rtbMessages;
     private System.Windows.Forms.ToolTip toolTipCommand;
+    private System.Windows.Forms.TextBox txtInput;
+    private System.Windows.Forms.Label lblPrompt;
   }
 }

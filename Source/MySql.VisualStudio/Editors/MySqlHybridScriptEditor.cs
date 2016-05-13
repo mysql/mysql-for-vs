@@ -459,7 +459,6 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
     private void PrintDocResult(DocResult result, ExecutionModeOption executionMode)
     {
-      WriteToSelectedOutput(string.Format("{0} documents in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
       switch (executionMode)
       {
         case ExecutionModeOption.BatchMode:
@@ -490,6 +489,8 @@ Check that the server is running, the database exist and the user credentials ar
 
           break;
       }
+
+      WriteToSelectedOutput(string.Format("{0} documents in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
     }
 
     /// <summary>
@@ -500,7 +501,6 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
     private void PrintRowResult(RowResult result, ExecutionModeOption executionMode)
     {
-      WriteToSelectedOutput(string.Format("{0} rows in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
       switch (executionMode)
       {
         case ExecutionModeOption.BatchMode:
@@ -548,6 +548,8 @@ Check that the server is running, the database exist and the user credentials ar
           xShellConsoleEditor1.AddMessage(table.ToStringAlternative());
           break;
       }
+
+      WriteToSelectedOutput(string.Format("{0} rows in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
     }
 
     /// <summary>
@@ -688,6 +690,7 @@ Check that the server is running, the database exist and the user credentials ar
         {
           panel1.Controls.Remove(xShellConsoleEditor1);
           panel1.Controls.Add(tabControl1);
+          panel1.Controls.Add(splitter1);
           // Register the code editor, to add back its handles and events
           codeEditor.RegisterEditor();
           panel1.Controls.Add(codeEditor);
@@ -697,10 +700,11 @@ Check that the server is running, the database exist and the user credentials ar
         else
         {
           panel1.Controls.Remove(tabControl1);
+          panel1.Controls.Remove(splitter1);
           // Unregister the code editor, to remove its handles and events
           codeEditor.UnregisterEditor();
           panel1.Controls.Remove(codeEditor);
-          xShellConsoleEditor1.Dock = DockStyle.Top;
+          xShellConsoleEditor1.Dock = DockStyle.Fill;
           panel1.Controls.Add(xShellConsoleEditor1);
           runScriptButton.Enabled = false;
           xShellConsoleEditor1.Focus();

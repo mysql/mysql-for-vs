@@ -21,7 +21,6 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections;
@@ -41,11 +40,6 @@ namespace MySql.Data.VisualStudio.Editors
     private string _promptString = ">";
 
     /// <summary>
-    /// The border style used in the text input.
-    /// </summary>
-    private BorderStyle _borderInput = BorderStyle.None;
-
-    /// <summary>
     /// Variable to store the current line. Used while navigating the previous commands list.
     /// </summary>
     private int _currentLine;
@@ -54,14 +48,15 @@ namespace MySql.Data.VisualStudio.Editors
     /// Variable used to store the previous messages.
     /// </summary>
     private readonly ArrayList _prevMessages = new ArrayList();
-
-    /// <summary>
-    /// The preferred height for the textbox inputs.
-    /// </summary>
-    private const int PreferredHeight = 14;
     #endregion
 
     #region Properties
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is dirty.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is dirty; otherwise, <c>false</c>.
+    /// </value>
     public bool IsDirty { get; set; }
 
     /// <summary>
@@ -70,7 +65,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// <value>
     /// The prompt string.
     /// </value>
-    [DefaultValue(">")]
     public string PromptString
     {
       get { return _promptString; }
@@ -92,23 +86,6 @@ namespace MySql.Data.VisualStudio.Editors
       get { return lblPrompt.ForeColor; }
       set { lblPrompt.ForeColor = value; }
     }
-
-    /// <summary>
-    /// Gets or sets the border around the  input box.
-    /// </summary>
-    /// <value>
-    /// The border of the input box.
-    /// </value>
-    [DefaultValue(BorderStyle.None)]
-    public BorderStyle BorderInput
-    {
-      get { return _borderInput; }
-      set
-      {
-        _borderInput = value;
-        panelBottom.BorderStyle = _borderInput;
-      }
-    }
     #endregion
 
     #region Methods
@@ -125,21 +102,18 @@ namespace MySql.Data.VisualStudio.Editors
     /// Adds a message to the message RichTextBox.
     /// </summary>
     /// <param name="msg">The message.</param>
-    [Description("Adds a message to the message RichTextBox")]
     public void AddMessage(string msg)
     {
       int prevLength = rtbMessages.Text.Length;
       if (rtbMessages.Lines.Length > 0)
       {
-        rtbMessages.AppendText(string.Format("\n{0}", msg));
+        rtbMessages.AppendText(string.Format("{0}{1}", Environment.NewLine, msg));
       }
       else
       {
         rtbMessages.AppendText(msg);
       }
 
-      rtbMessages.SelectionStart = prevLength;
-      rtbMessages.SelectionLength = rtbMessages.Text.Length - prevLength;
       rtbMessages.SelectionStart = rtbMessages.Text.Length;
       rtbMessages.SelectionLength = 0;
       rtbMessages.SelectionColor = rtbMessages.ForeColor;
@@ -157,8 +131,6 @@ namespace MySql.Data.VisualStudio.Editors
     {
       int prevLength = rtbMessages.Text.Length;
       rtbMessages.AppendText(string.Format("{0} {1}", prompt, command));
-      rtbMessages.SelectionStart = prevLength;
-      rtbMessages.SelectionLength = prompt.Length;
       rtbMessages.SelectionColor = color;
       rtbMessages.SelectionLength = 0;
       rtbMessages.SelectionStart = rtbMessages.Text.Length;
@@ -185,23 +157,26 @@ namespace MySql.Data.VisualStudio.Editors
     {
       if (e.KeyCode == Keys.Return)
       {
-        if (txtInput.Text != "")
+        if (!string.IsNullOrEmpty(txtInput.Text))
         {
           SuspendLayout();
           string prevPrompt = lblPrompt.Text;
           Color prevPromptColor = PromptColor;
+
+          // Add the command first
+          if (rtbMessages.Lines.Length > 0)
+          {
+            rtbMessages.AppendText(Environment.NewLine);
+          }
+
+          AddCommand(prevPrompt, prevPromptColor, txtInput.Text);
+
           // Raise the command event
           XShellConsoleCommandEventArgs args = new XShellConsoleCommandEventArgs(txtInput.Text);
           OnCommand(args);
           if (args.Cancel == false)
           {
-            if (rtbMessages.Lines.Length > 0)
-            {
-              rtbMessages.AppendText("\r\n");
-            }
-
-            AddCommand(prevPrompt, prevPromptColor, txtInput.Text);
-            if (args.Message != "")
+            if (!string.IsNullOrEmpty(args.Message))
             {
               AddMessage(args.Message);
             }
@@ -211,7 +186,7 @@ namespace MySql.Data.VisualStudio.Editors
             _currentLine = _prevMessages.Count - 1;
           }
 
-          txtInput.Text = "";
+          txtInput.Text = string.Empty;
           ResumeLayout();
         }
 
@@ -221,6 +196,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       if (e.KeyCode == Keys.Up)
       {
+        // Shows the previous executed command
         if (_currentLine >= 0 && _prevMessages.Count > 0)
         {
           txtInput.Text = _prevMessages[_currentLine].ToString();
@@ -235,6 +211,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       if (e.KeyCode == Keys.Down)
       {
+        // Shows the next executed command
         if (_currentLine < _prevMessages.Count - 2)
         {
           _currentLine++;
@@ -249,16 +226,8 @@ namespace MySql.Data.VisualStudio.Editors
 
       if (e.KeyCode == Keys.Escape)
       {
-        if (txtInput.SelectionLength > 0 && txtInput.AutoCompleteMode != AutoCompleteMode.None)
-        {
-          txtInput.Text = txtInput.Text.Substring(0, txtInput.SelectionStart);
-          txtInput.SelectionStart = txtInput.Text.Length;
-        }
-        else
-        {
-          txtInput.Text = "";
-        }
-
+        // Clear the txtInput.
+        txtInput.Text = string.Empty;
         e.Handled = true;
       }
     }
@@ -325,16 +294,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Handles the Load event of the Prompt control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void Prompt_Load(object sender, EventArgs e)
-    {
-      txtInput.Height = PreferredHeight;
-    }
-
-    /// <summary>
     /// Handles the FontChanged event of the Prompt control.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
@@ -364,7 +323,6 @@ namespace MySql.Data.VisualStudio.Editors
     {
       rtbMessages.BackColor = BackColor;
       txtInput.BackColor = BackColor;
-      panelBottom.BackColor = BackColor;
       lblPrompt.BackColor = BackColor;
     }
 
@@ -375,22 +333,20 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void rtbMessages_TextChanged(object sender, EventArgs e)
     {
-      if (rtbMessages.Height < Height - panelBottom.Height)
+      if (!string.IsNullOrEmpty(rtbMessages.Text))
       {
-        rtbMessages.Height = rtbMessages.Lines.Length * PreferredHeight;
-      }
-      else
-      {
-        rtbMessages.ScrollBars = RichTextBoxScrollBars.Both;
-      }
+        // Set the height of the richTextBox, measuring the text contained in it
+        rtbMessages.Height = TextRenderer.MeasureText(rtbMessages.Text, rtbMessages.Font, new Size(rtbMessages.Width, 0), TextFormatFlags.WordBreak).Height;
+        if (rtbMessages.Height > Height - txtInput.Height)
+        {
+          rtbMessages.Height = Height - txtInput.Height;
+          rtbMessages.ScrollBars = RichTextBoxScrollBars.Both;
+        }
 
-      if (rtbMessages.Height > Height - panelBottom.Height)
-      {
-        rtbMessages.Height = Height - panelBottom.Height;
-        rtbMessages.ScrollBars = RichTextBoxScrollBars.Both;
+        // Move the caret (scroll) to the end of the text
+        rtbMessages.SelectionStart = rtbMessages.Text.Length;
+        rtbMessages.ScrollToCaret();
       }
-
-      rtbMessages.ScrollToCaret();
     }
 
     /// <summary>
@@ -413,10 +369,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void CommandPrompt_Resize(object sender, EventArgs e)
     {
-      if ((Height - panelBottom.Height) % PreferredHeight != 0)
-      {
-        Height = ((Height - panelBottom.Height) / PreferredHeight + 1) * PreferredHeight + panelBottom.Height;
-      }
+      // If the control resizes, resize the richTextBox as well
+      rtbMessages_TextChanged(sender, e);
     }
     #endregion
 
