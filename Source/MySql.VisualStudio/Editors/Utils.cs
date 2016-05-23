@@ -242,6 +242,12 @@ namespace MySql.Data.VisualStudio.Editors
         return _fontColor;
       }
     }
+
+    /// <summary>
+    /// Variable used to hold the current MySql Output Tool Window Pane.
+    /// </summary>
+    private static MySqlOutputWindowPane _mySqlOutputToolWindowPane;
+
     /// <summary>
     /// Separates multiple javascript statements into single ones
     /// </summary>
@@ -962,6 +968,52 @@ namespace MySql.Data.VisualStudio.Editors
           outputPane.Activate();
         }
       }
+    }
+
+    /// <summary>
+    /// Write a message to the special MySql Output window.
+    /// </summary>
+    /// <param name="action">The action (command) executed.</param>
+    /// <param name="message">The result message.</param>
+    /// <param name="duration">The duration of the command execution.</param>
+    /// <param name="type">The message type.</param>
+    public static void WriteToMySqlOutputWindow(string action, string message, string duration, MessageType type)
+    {
+      // Open and activate the MySql Output window
+      var package = MySqlDataProviderPackage.Instance;
+      if (package == null)
+      {
+        return;
+      }
+
+      _mySqlOutputToolWindowPane = package.GetMySqlOutputWindow();
+      if (_mySqlOutputToolWindowPane == null)
+      {
+        package.CreateMySqlOutputWindow();
+        _mySqlOutputToolWindowPane = package.GetMySqlOutputWindow();
+      }
+      else
+      {
+        IVsWindowFrame windowFrame = (IVsWindowFrame)_mySqlOutputToolWindowPane.Frame;
+        ErrorHandler.ThrowOnFailure(windowFrame.Show());
+      }
+
+      MySqlOutputPanel.IconType iconType = MySqlOutputPanel.IconType.Success;
+      switch (type)
+      {
+        case MessageType.Information:
+          iconType = MySqlOutputPanel.IconType.Success;
+          break;
+        case MessageType.Warning:
+          iconType = MySqlOutputPanel.IconType.Warning;
+          break;
+        case MessageType.Error:
+          iconType = MySqlOutputPanel.IconType.Error;
+          break;
+
+      }
+
+      _mySqlOutputToolWindowPane.MySqlOutputPanel.AddMySqlOutputGridRow(iconType, action, message, duration);
     }
 
     /// <summary>

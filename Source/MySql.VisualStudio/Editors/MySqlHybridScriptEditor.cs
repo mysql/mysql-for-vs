@@ -28,15 +28,15 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Text;
+using System.Diagnostics;
+using System.Linq;
+using MySQL.Utility.Classes;
 using MySql.Data.VisualStudio.MySqlX;
 using MySqlX;
-using MySqlX.Shell;
 using System.Text;
 using ConsoleTables.Core;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -79,6 +79,31 @@ namespace MySql.Data.VisualStudio.Editors
     /// Variable to hold the number of tabs created in the output pane
     /// </summary>
     private int _tabCounter;
+
+    /// <summary>
+    /// Constant to hold the MySqlX "Result" string type
+    /// </summary>
+    private const string MySqlXResultType = "mysqlx.result";
+
+    /// <summary>
+    /// Constant to hold the MySqlX "DocResult" string type
+    /// </summary>
+    private const string MySqlXDocResultType = "mysqlx.docresult";
+
+    /// <summary>
+    /// Constant to hold the MySqlX "RowResult" string type
+    /// </summary>
+    private const string MySqlXRowResultType = "mysqlx.rowresult";
+
+    /// <summary>
+    /// Constant to hold the MySqlX "SqlResult" string type
+    /// </summary>
+    private const string MySqlXSqlResultType = "mysqlx.sqlresult";
+
+    /// <summary>
+    /// Constant to hold the "System.String" string type
+    /// </summary>
+    private const string SystemStringType = "system.string";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
@@ -292,6 +317,8 @@ Check that the server is running, the database exist and the user credentials ar
         return;
       }
 
+      // Get elapsed time for xShell results in case an exception is thrown
+      Stopwatch sw = new Stopwatch();
       try
       {
         switch (_sessionOption)
@@ -308,18 +335,23 @@ Check that the server is running, the database exist and the user credentials ar
             break;
         }
 
+        sw = Stopwatch.StartNew();
         if (_executionModeOption == ExecutionModeOption.BatchMode)
         {
           ExecuteBatchScript(script);
         }
+
         if (_executionModeOption == ExecutionModeOption.ConsoleMode)
         {
           ExecuteConsoleScript(script);
         }
+
+        sw.Stop();
       }
       catch (Exception ex)
       {
-        WriteToSelectedOutput(ex.Message, MessageType.Error);
+        sw.Stop();
+        WriteToMySqlOutput(script, ex.Message, string.Format("{0} sec", TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).TotalSeconds), MessageType.Error);
       }
     }
 
@@ -340,7 +372,7 @@ Check that the server is running, the database exist and the user credentials ar
           break;
       }
 
-      List<object> results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+      List<MySqlXResult> results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
       if (results == null)
       {
         return;
@@ -348,9 +380,11 @@ Check that the server is running, the database exist and the user credentials ar
 
       _tabCounter = 1;
       _resultIsNotEmptyDocument = false;
-      foreach (object result in results)
+      int statementIndex = 0;
+      foreach (MySqlXResult result in results)
       {
-        PrintResult(result);
+        PrintResult(statements[statementIndex], result.Result, result.ExecutionTime);
+        statementIndex++;
         tabControl1.Visible = tabControl1.TabPages.Count > 0;
         codeEditor.Focus();
       }
@@ -362,17 +396,21 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="script">The script.</param>
     private void ExecuteConsoleScript(string script)
     {
-      object result = _xShellWrapper.ExecuteQuery(script, ScriptType);
-      PrintResult(result);
+      MySqlXResult result = _xShellWrapper.ExecuteQuery(script, ScriptType);
+      PrintResult(script, result.Result, result.ExecutionTime);
       xShellConsoleEditor1.Focus();
     }
 
-    private void WriteToSelectedOutput(string message, MessageType messageType)
+    /// <summary>
+    /// Writes to the My SQL Output Tool Window.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="messageType">Type of the message.</param>
+    private void WriteToMySqlOutput(string action, string message, string duration, MessageType messageType)
     {
-      if (_executionModeOption == ExecutionModeOption.BatchMode)
-      {
-        Utils.WriteToOutputWindow(message, messageType);
-      }
+      Utils.WriteToMySqlOutputWindow(action, message, duration, messageType);
       if (_executionModeOption == ExecutionModeOption.ConsoleMode)
       {
         xShellConsoleEditor1.AddMessage(message);
@@ -383,32 +421,40 @@ Check that the server is running, the database exist and the user credentials ar
     /// Prints the proper query execution result in the output window, either DocResult, or RowResult, SqlResult or Result,
     /// showing extended information about the execution result (items affected, execution time, etc.).
     /// </summary>
+    /// <param name="script">The executed command.</param>
     /// <param name="executionResult">The xShell execution result.</param>
-    private void PrintResult(Object executionResult)
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintResult(string script, Object executionResult, string duration)
     {
-      Result result = executionResult as Result;
-      DocResult document = executionResult as DocResult;
-      RowResult row = executionResult as RowResult;
-      SqlResult sql = executionResult as SqlResult;
-      if (result != null)
+      string type = executionResult.GetType().ToString().ToLowerInvariant();
+      switch (type)
       {
-        PrintResult(result);
-      }
-      else if (document != null)
-      {
-        PrintDocResult(document, _executionModeOption);
-      }
-      else if (row != null)
-      {
-        PrintRowResult(row, _executionModeOption);
-      }
-      else if (sql != null)
-      {
-        PrintSqlResult(sql, _executionModeOption);
-      }
-      else if (executionResult is string)
-      {
-        WriteToSelectedOutput((string)executionResult, MessageType.Information);
+        case MySqlXResultType:
+          PrintResult(script, (Result)executionResult, duration);
+          break;
+        case MySqlXDocResultType:
+          PrintDocResult(script, (DocResult)executionResult, _executionModeOption, duration);
+          break;
+        case MySqlXRowResultType:
+          PrintRowResult(script, (RowResult)executionResult, _executionModeOption, duration);
+          break;
+        case MySqlXSqlResultType:
+          PrintSqlResult(script, (SqlResult)executionResult, _executionModeOption, duration);
+          break;
+        case SystemStringType:
+          if (string.IsNullOrEmpty(executionResult.ToString()))
+          {
+            return;
+          }
+
+          MessageType messageType = MessageType.Information;
+          if (executionResult.ToString().Contains("error", StringComparison.InvariantCultureIgnoreCase))
+          {
+            messageType = MessageType.Error;
+          }
+
+          WriteToMySqlOutput(script, executionResult.ToString(), duration, messageType);
+          break;
       }
     }
 
@@ -416,26 +462,30 @@ Check that the server is running, the database exist and the user credentials ar
     /// Prints the Result type query execution results in the output window
     /// showing extended information about the execution result (items affected, execution time, etc.).
     /// </summary>
+    /// <param name="script">The executed command.</param>
     /// <param name="result">The Result execution result.</param>
-    private void PrintResult(Result result)
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintResult(string script, Result result, string duration)
     {
       StringBuilder resultMessage = new StringBuilder();
       resultMessage.Append("Query OK");
-      if (result.GetAffectedItemCount() > 0)
+      long affectedItems = result.GetAffectedItemCount();
+      if (affectedItems >= 0)
       {
-        resultMessage.AppendFormat(", {0} items affected", result.GetAffectedItemCount());
+        resultMessage.AppendFormat(", {0} items affected", affectedItems);
       }
 
-      resultMessage.AppendFormat(" ({0}).", result.GetExecutionTime());
-      WriteToSelectedOutput(resultMessage.ToString(), MessageType.Information);
-      PrintWarnings(result);
+      WriteToMySqlOutput(script, resultMessage.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
+      PrintWarnings(script, result, duration);
     }
 
     /// <summary>
     /// Prints the warnings (if exists) of the query execution results, in the output window
     /// </summary>
+    /// <param name="script">The executed command.</param>
     /// <param name="result">The BaseResult execution result.</param>
-    private void PrintWarnings(BaseResult result)
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintWarnings(string script, BaseResult result, string duration)
     {
       if (result.GetWarningCount() > 0)
       {
@@ -447,7 +497,7 @@ Check that the server is running, the database exist and the user credentials ar
           warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
         }
 
-        WriteToSelectedOutput(warningsMessages.ToString(), MessageType.Information);
+        WriteToMySqlOutput(script, warningsMessages.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Warning);
       }
     }
 
@@ -455,9 +505,11 @@ Check that the server is running, the database exist and the user credentials ar
     /// Prints the DocResult type query execution results in the output window
     /// showing extended information about the execution result (documents returned, execution time, etc.).
     /// </summary>
+    /// <param name="script">The executed command.</param>
     /// <param name="result">The DocResult execution result.</param>
     /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    private void PrintDocResult(DocResult result, ExecutionModeOption executionMode)
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintDocResult(string script, DocResult result, ExecutionModeOption executionMode, string duration)
     {
       switch (executionMode)
       {
@@ -490,16 +542,20 @@ Check that the server is running, the database exist and the user credentials ar
           break;
       }
 
-      WriteToSelectedOutput(string.Format("{0} documents in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
+      WriteToMySqlOutput(script, string.Format("{0} documents in set.", result.FetchAll().Count), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
+      PrintWarnings(script, result, duration);
     }
 
     /// <summary>
     /// Prints the RowResult type query execution results in the output window
     /// showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
+    /// <param name="script">The executed command.</param>
     /// <param name="result">The RowResult execution result.</param>
     /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    private void PrintRowResult(RowResult result, ExecutionModeOption executionMode)
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    /// <param name = "affectedItems" > The number of affected items on a DML script.</param>
+    private void PrintRowResult(string script, RowResult result, ExecutionModeOption executionMode, string duration, long affectedItems = 0)
     {
       switch (executionMode)
       {
@@ -545,28 +601,47 @@ Check that the server is running, the database exist and the user credentials ar
             record = result.FetchOne();
           }
 
-          xShellConsoleEditor1.AddMessage(table.ToStringAlternative());
+          if (table.Rows.Count > 0)
+          {
+            xShellConsoleEditor1.AddMessage(table.ToStringAlternative());
+          }
+
           break;
       }
 
-      WriteToSelectedOutput(string.Format("{0} rows in set ({1}).", result.FetchAll().Count, result.GetExecutionTime()), MessageType.Information);
+      StringBuilder resultMessage = new StringBuilder();
+      // If no items are returned, it is a DDL statement (Drop, Create, etc.)
+      int totalItems = result.FetchAll().Count;
+      if (totalItems == 0)
+      {
+        resultMessage.AppendFormat("Query OK, {0} rows affected, {1} warning(s)", affectedItems, result.GetWarningCount());
+      }
+      else
+      {
+        resultMessage.AppendFormat("{0} rows in set.", totalItems);
+      }
+
+      WriteToMySqlOutput(script, resultMessage.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
+      PrintWarnings(script, result, duration);
     }
 
     /// <summary>
     /// Prints the SqlResult type query execution results in the output window,
     /// showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
+    /// <param name="script">The executed command.</param>
     /// <param name="result">The RowResult execution result.</param>
     /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    private void PrintSqlResult(SqlResult result, ExecutionModeOption executionMode)
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintSqlResult(string script, SqlResult result, ExecutionModeOption executionMode, string duration)
     {
       if ((bool)result.HasData())
       {
-        PrintRowResult(result, executionMode);
+        PrintRowResult(script, result, executionMode, duration, result.GetAffectedRowCount());
       }
       else
       {
-        PrintWarnings(result);
+        PrintWarnings(script, result, duration);
       }
     }
 

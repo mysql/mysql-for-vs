@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -36,7 +36,7 @@ namespace MySql.Data.VisualStudio
     public const string DavinciCommandSet = "732ABE75-CD80-11D0-A2DB-00AA00A3EFFF";
     public const string StandardCommandSet = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}";
     public const string GuidIdeToolbarCmdSetString = "FD607F05-3661-4E12-A327-6D71AD2E269B";
-
+    public const string MySqlOutputWindowsCmdSet = "6ca7d57d-ae56-4844-a6d9-45d0da3767f4";
   }
 
   /// <summary>
@@ -51,5 +51,6 @@ namespace MySql.Data.VisualStudio
     public static readonly Guid DavinciCommandSet = new Guid(GuidStrings.DavinciCommandSet);
     public static readonly Guid StandardCommandSet = new Guid(GuidStrings.StandardCommandSet);
     public static readonly Guid guidIDEToolbarCmdSet = new Guid(GuidStrings.GuidIdeToolbarCmdSetString);
+    public static readonly Guid GuidMySqlOutputWindowsCmdSet = new Guid(GuidStrings.MySqlOutputWindowsCmdSet);
   };
 }

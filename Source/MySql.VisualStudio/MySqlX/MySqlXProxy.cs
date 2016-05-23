@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
@@ -99,7 +100,7 @@ namespace MySql.Data.VisualStudio.MySqlX
         return null;
       }
 
-      object result = ExecuteScript(new[] { script }, scriptType).First();
+      object result = ExecuteScript(new[] { script }, scriptType).First().Result;
       var baseResult = result as BaseResult;
       return baseResult != null
         ? BaseResultToDictionaryList(baseResult)
@@ -139,8 +140,8 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// </summary>
     /// <param name="script">The script to execute.</param>
     /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
-    /// <returns>A list of objects returned by each of the command executed.</returns>
-    public List<object> ExecuteScript(string[] script, ScriptType scriptType)
+    /// <returns>A List of MySqlXResult objects containing the returned objects from the server and the execution time for each query executed.</returns>
+    public List<MySqlXResult> ExecuteScript(string[] script, ScriptType scriptType)
     {
       if (script == null || script.Length <= 0)
       {
@@ -171,7 +172,7 @@ namespace MySql.Data.VisualStudio.MySqlX
         return null;
       }
 
-      Object result = ExecuteQuery(Mode.SQL, script).First();
+      Object result = ExecuteQuery(Mode.SQL, script).First().Result;
       ExecutionResult = string.Format("Script executed in {0}. Affected Rows: {1} - Warnings: {2}.",
         ((BaseResult)result).GetExecutionTime(),
         result is RowResult ? ((RowResult)result).FetchAll().Count : 0,
@@ -185,11 +186,11 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// </summary>
     /// <param name="mode">Mode that will be used to execute the script received</param>
     /// <param name="statements">Statements to execute</param>
-    /// <returns>A list of objects returned from the server for each query executed.</returns>
-    private List<object> ExecuteQuery(Mode mode, params string[] statements)
+    /// <returns>A List of MySqlXResult objects containing the results objects returned from the server and the execution time for each query executed.</returns>
+    private List<MySqlXResult> ExecuteQuery(Mode mode, params string[] statements)
     {
       ExecutionResult = "";
-      List<object> result = new List<object>();
+      List<MySqlXResult> result = new List<MySqlXResult>();
 
       if (!_keepSession)
       {
@@ -205,7 +206,11 @@ namespace MySql.Data.VisualStudio.MySqlX
           continue;
         }
 
-        result.Add(_shellClient.Execute(statement));
+        // Get overall elapsed execution time
+        Stopwatch sw = Stopwatch.StartNew();
+        object queryResult = _shellClient.Execute(statement);
+        sw.Stop();
+        result.Add(new MySqlXResult { Result = queryResult, ExecutionTime = string.Format("{0} sec", TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).TotalSeconds) });
       }
 
       if (!_keepSession)
@@ -221,9 +226,11 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// </summary>
     /// <param name="statement">Single statement to execute</param>
     /// /// <param name="scriptType">Indicates the script mode, default is JavaScript.</param>
-    /// <returns>An object containing the results returned from the server for the query execution </returns>
-    public object ExecuteQuery(string statement, ScriptType scriptType)
+    /// <returns>A MySqlXResult object containing the results and execution time returned from the server for the query execution </returns>
+    public MySqlXResult ExecuteQuery(string statement, ScriptType scriptType)
     {
+      MySqlXResult result = new MySqlXResult();
+
       if (!_keepSession)
       {
         _shellClient = new ShellClient();
@@ -246,8 +253,12 @@ namespace MySql.Data.VisualStudio.MySqlX
       }
 
       _shellClient.SwitchMode(mode);
-      object result = _shellClient.Execute(statement);
-
+      // Get overall elapsed execution time
+      Stopwatch sw = Stopwatch.StartNew();
+      object queryResult = _shellClient.Execute(statement);
+      sw.Stop();
+      result.Result = queryResult;
+      result.ExecutionTime = string.Format("{0} sec", TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).TotalSeconds);
       if (!_keepSession)
       {
         CleanConnection();

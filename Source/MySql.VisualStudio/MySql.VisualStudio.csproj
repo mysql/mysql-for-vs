@@ -722,6 +722,13 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="Editors\MySqlOutputPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\MySqlOutputPanel.Designer.cs">
+      <DependentUpon>MySqlOutputPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\MySqlOutputWindowPane.cs" />
     <Compile Include="Editors\XShellConsoleCommandEnteringEventArgs.cs" />
     <Compile Include="Editors\XShellConsoleCommandEventArgs.cs" />
     <Compile Include="Editors\XShellConsoleEditor.cs">
@@ -730,6 +737,7 @@
     <Compile Include="Editors\XShellConsoleEditor.designer.cs">
       <DependentUpon>XShellConsoleEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="MySqlX\MySqlXResult.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -740,6 +748,9 @@
     <EmbeddedResource Include="Editors\MySqlHybridScriptEditor.resx">
       <DependentUpon>MySqlHybridScriptEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editors\MySqlOutputPanel.resx">
+      <DependentUpon>MySqlOutputPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\XShellConsoleEditor.resx">
       <DependentUpon>XShellConsoleEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -748,6 +759,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <MergeWithCTO>true</MergeWithCTO>
       <LogicalName>MySql.Data.VisualStudio.Properties.Resources.resources</LogicalName>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1474,10 +1486,13 @@
     <None Include="Resources\JS_Datatype_ObjectId.png" />
     <None Include="Resources\JS_Datatype_String.png" />
     <None Include="Resources\genericIcon.png" />
+    <None Include="Resources\errorIcon.ico" />
     <Content Include="Resources\MySQL.png" />
     <None Include="Resources\mysql_project_wizard.png" />
     <None Include="Resources\mysql_ItemTemplate_wizard.png" />
     <None Include="Resources\mysql_WebsiteConfig.png" />
+    <None Include="Resources\MySQLOutputWindow_16.ico" />
+    <Content Include="Resources\MySQLOutputWindow_16.png" />
     <Content Include="Resources\output_type-executionplan.png" />
     <Content Include="Resources\output_type-fieldtypes.png" />
     <Content Include="Resources\output_type-querystats.png" />
@@ -1493,6 +1508,8 @@
     <Content Include="Resources\sql_editor_validatesql.png">
     </Content>
     <None Include="Resources\__TemplateIcon.ico" />
+    <None Include="Resources\successIcon.ico" />
+    <None Include="Resources\warningIcon.ico" />
     <Content Include="Templates\MySQL Script.mysql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

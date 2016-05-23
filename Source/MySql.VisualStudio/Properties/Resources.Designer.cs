@@ -2635,6 +2635,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon errorIcon {
+            get {
+                object obj = ResourceManager.GetObject("errorIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error establishing the database connection.
         ///Check that the server is running, the database exists and the user Error establishing the database connection. Check that the server is running, the database exists and the user credentials are valid..
         /// </summary>
@@ -2874,6 +2884,25 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MySQL Output.
+        /// </summary>
+        public static string MySqlOutputToolCaptionFrame {
+            get {
+                return ResourceManager.GetString("MySqlOutputToolCaptionFrame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon MySQLOutputWindow_16 {
+            get {
+                object obj = ResourceManager.GetObject("MySQLOutputWindow_16", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Passwords don&apos;t match.
         /// </summary>
         public static string NewPassword_PasswordNotMatch {
@@ -3076,6 +3105,16 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_validatesql", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon successIcon {
+            get {
+                object obj = ResourceManager.GetObject("successIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -3375,6 +3414,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Value_String {
             get {
                 return ResourceManager.GetString("Value_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon warningIcon {
+            get {
+                object obj = ResourceManager.GetObject("warningIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

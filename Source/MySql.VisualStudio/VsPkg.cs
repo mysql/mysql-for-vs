@@ -103,6 +103,7 @@ namespace MySql.Data.VisualStudio
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
   [ProvideToolWindow(typeof(DbExportWindowPane), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
+  [ProvideToolWindow(typeof(Editors.MySqlOutputWindowPane), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
   [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
   // This attribute registers a tool window exposed by this package.
   [Guid(GuidStrings.Package)]
@@ -111,6 +112,11 @@ namespace MySql.Data.VisualStudio
     public static MySqlDataProviderPackage Instance;
     public MySqlConnection MysqlConnectionSelected;
     private const string _mySqlConnectorEnvironmentVariable = "MYSQLCONNECTOR_ASSEMBLIESPATH";
+
+    /// <summary>
+    /// Variable used to hold how many MySqlOutputWindow objects have been created
+    /// </summary>
+    private int _mySqlOutputWindowCounter = 0;
 
     /// <summary>
     /// The Sql extension
@@ -219,6 +225,11 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
         mcs.AddCommand(cmdMenuAddConnection);
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
+
+        CommandID cmdMySqlOutputWindowTool = new CommandID(GuidList.GuidMySqlOutputWindowsCmdSet, (int)PkgCmdIDList.MySqlOutputWindowCommandId);
+        OleMenuCommand cmdMenuMySqlOutputWindow = new OleMenuCommand(MySqlOutputWindow_Callback, cmdMySqlOutputWindowTool);
+        cmdMenuMySqlOutputWindow.BeforeQueryStatus += new EventHandler(cmdMenuMySqlOutputWindow_BeforeQueryStatus);
+        mcs.AddCommand(cmdMenuMySqlOutputWindow);
       }
 
       // Register and initialize language services
@@ -262,6 +273,7 @@ namespace MySql.Data.VisualStudio
         }
       }
     }
+
     private void NewScriptCallback(object sender, EventArgs e)
     {
       var connection = GetCurrentConnection();
@@ -509,7 +521,6 @@ namespace MySql.Data.VisualStudio
       cmd.Visible = false;
     }
 
-
     void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand dbExportButton = sender as OleMenuCommand;
@@ -692,8 +703,6 @@ namespace MySql.Data.VisualStudio
       MysqlConnectionSelected = null;
     }
 
-
-
     public string GetCurrentConnectionName()
     {
       EnvDTE80.DTE2 _applicationObject = GetDTE2();
@@ -819,7 +828,6 @@ namespace MySql.Data.VisualStudio
       return null;
 
     }
-
 
     public ConnectionParameters ParseConnectionString(string connStr)
     {
@@ -957,6 +965,114 @@ namespace MySql.Data.VisualStudio
       public bool NamedPipesEnabled;
       public string UserId;
       public string DataBaseName;
+    }
+
+    /// <summary>
+    /// Handles the Callback event of the MySqlOutputWindow control, to show the MySQL Output window.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    /// <exception cref="System.Exception">Cannot create a new window for output panel.</exception>
+    private void MySqlOutputWindow_Callback(object sender, EventArgs e)
+    {
+      CreateMySqlOutputWindow();
+    }
+
+    /// <summary>
+    /// Handles the BeforeQueryStatus event of the cmdMenuMySqlOutputWindow control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    void cmdMenuMySqlOutputWindow_BeforeQueryStatus(object sender, EventArgs e)
+    {
+      OleMenuCommand mySqlOutputWindowMenu = sender as OleMenuCommand;
+      mySqlOutputWindowMenu.Visible = false;
+      // Check if any "MySqlHybridScriptEditor" editor window is visible, in order to show/hide the MySqlOutput menu item
+      if (CountMySqlHybridScriptEditorWindows() > 0)
+      {
+        mySqlOutputWindowMenu.Visible = true;
+        mySqlOutputWindowMenu.Enabled = true;
+      }
+    }
+
+    /// <summary>
+    /// Shows the MySQL Output window.
+    /// </summary>
+    /// <exception cref="System.Exception">Cannot create a new window for output panel.</exception>
+    public void CreateMySqlOutputWindow()
+    {
+      ToolWindowPane window = GetMySqlOutputWindow();
+      if (window == null)
+      {
+        window = (ToolWindowPane)this.CreateToolWindow(typeof(MySqlOutputWindowPane), _mySqlOutputWindowCounter);
+        if (window == null || window.Frame == null)
+        {
+          throw new Exception("Cannot create a new window for MySql output panel.");
+        }
+
+        window.Caption = Resources.MySqlOutputToolCaptionFrame;
+        _mySqlOutputWindowCounter++;
+      }
+
+      IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+      MySqlOutputWindowPane windowPanel = (MySqlOutputWindowPane)window;
+      windowPanel.WindowHandler = window;
+      GetDTE2().Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Visible = true;
+      object currentFrameMode;
+      windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, out currentFrameMode);
+      // switch to dock mode.
+      if ((VSFRAMEMODE)currentFrameMode == VSFRAMEMODE.VSFM_Float)
+      {
+        windowFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_Dock);
+      }
+
+      ErrorHandler.ThrowOnFailure(windowFrame.Show());
+    }
+
+    /// <summary>
+    /// Closes the MySQL Output window.
+    /// </summary>
+    public void CloseMySqlOutputWindow()
+    {
+      // If we don't have any MySqlHybridScriptEditor window opened, close the current MySqlOutput window (_mySqlOutputWindowCounter - 1)
+      if (CountMySqlHybridScriptEditorWindows() > 0)
+      {
+        return;
+      }
+
+      var existingMySqlOutputToolWindow = FindToolWindow(typeof(MySqlOutputWindowPane), _mySqlOutputWindowCounter - 1, false);
+      if (existingMySqlOutputToolWindow == null)
+      {
+        return;
+      }
+
+      IVsWindowFrame windowFrame = (IVsWindowFrame)existingMySqlOutputToolWindow.Frame;
+      if (windowFrame != null)
+      {
+        ErrorHandler.ThrowOnFailure(windowFrame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave));
+      }
+    }
+
+    /// <summary>
+    /// Get the current MySqlOutputWindowPane tool window pane.
+    /// </summary>
+    public MySqlOutputWindowPane GetMySqlOutputWindow()
+    {
+      var existingMySqlOutputToolWindow = FindToolWindow(typeof(MySqlOutputWindowPane), _mySqlOutputWindowCounter - 1, false);
+      return existingMySqlOutputToolWindow != null ? (MySqlOutputWindowPane)existingMySqlOutputToolWindow : null;
+    }
+
+    /// <summary>
+    /// Counts all the opened MySqlHybridScriptEditor editor windows.
+    /// </summary>
+    /// <returns></returns>
+    private int CountMySqlHybridScriptEditorWindows()
+    {
+      EnvDTE80.DTE2 applicationObject = GetDTE2();
+      Documents documents = applicationObject.Documents;
+      return documents.Cast<Document>().Count(document =>
+        document.FullName.Contains(JAVASCRIPT_EXTENSION, StringComparison.InvariantCultureIgnoreCase) ||
+        document.FullName.Contains(PYTHON_EXTENSION, StringComparison.InvariantCultureIgnoreCase));
     }
 
     #region IVsInstalledProduct Members

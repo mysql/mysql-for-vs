@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -42,6 +42,19 @@ namespace MySql.Data.VisualStudio.Editors
     public override IWin32Window Window
     {
       get { return _editor; }
+    }
+
+    /// <summary>
+    /// Overrides the Close event, to check whether the MySql Output should be closed as well.
+    /// </summary>
+    protected override void OnClose()
+    {
+      var package = MySqlDataProviderPackage.Instance;
+      if (package != null)
+      {
+        package.CloseMySqlOutputWindow();
+      }
+      base.OnClose();
     }
   }
 }

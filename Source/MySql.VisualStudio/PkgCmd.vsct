@@ -17,23 +17,20 @@
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
   <!--<Extern href="stdidcmd.h"/>-->
   <!--This header contains the command ids for the menus provided by the shell. -->
-  <!--<Extern href="vsshlids.h"/>-->
+  <Extern href="vsshlids.h"/>
 
   <!--Definition of some VSCT specific constants. In this sample we use it for the IDs inside the guidOfficeIcon group. -->
   <!--<Extern href="msobtnid.h"/>-->
 
-
-
-
   <!--The Commands section is where we the commands, menus and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
   <Commands package="guidMySqlProviderPkg">
-    <!-- Inside this section we have different sub-sections: one for the menus, another  
-    for the menu groups, one for the buttons (the actual commands), one for the combos 
-    and the last one for the bitmaps used. Each element is identified by a command id that  
-    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually  
-    called "command set" and is used to group different command inside a logically related  
-    group; your package should define its own command set in order to avoid collisions  
+    <!-- Inside this section we have different sub-sections: one for the menus, another
+    for the menu groups, one for the buttons (the actual commands), one for the combos
+    and the last one for the bitmaps used. Each element is identified by a command id that
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually
+    called "command set" and is used to group different command inside a logically related
+    group; your package should define its own command set in order to avoid collisions
     with command ids defined by other packages. -->
 
     <Menus>
@@ -102,9 +99,9 @@
         <Parent guid="guidIDEToolbarCmdSet" id="Toolbar"/>
       </Group>
 
-       <Group guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" priority="0x0000">
-         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenu"/>
-       </Group>
+      <Group guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" priority="0x0000">
+        <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenu"/>
+      </Group>
 
       <!-- New group for the items in the menu controller -->
       <Group guid="guidIDEToolbarCmdSet" id="VSCTControllerGroup" priority="0x0600">
@@ -135,6 +132,18 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" /> -->
     <Buttons>
+      <!-- Other windows menu items -->
+      <Button guid="guidMySqlOutputWindowCmdSet" id="MySqlOutputWindowCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidImagesOtherWindows" id="pic1" />
+        <Strings>
+          <CommandName>MySqlOutputWindowCommandId</CommandName>
+          <ButtonText>MySQL Output Window</ButtonText>
+        </Strings>
+      </Button>
+
       <!-- these are our global create commands -->
       <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateTable" type="Button" priority ="0x100">
         <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
@@ -449,10 +458,11 @@
     <Bitmaps>
       <!--  The bitmap id is defined in a way that is a little bit different from the others:
             the declaration starts with a guid for the bitmap strip, then there is the resource id of the
-            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
-            inside a button definition. An important aspect of this declaration is that the element id 
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
+            inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,bmpAddMySqlConnection, bmpNewMySqlProject"/>
+      <Bitmap guid="guidImagesOtherWindows" href="Resources\MySQLOutputWindow_16.ico" usedList="pic1"/>
     </Bitmaps>
   </Commands>
 
@@ -501,6 +511,12 @@
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidMySqlProviderPkg" value="{79A115C9-B133-4891-9E7B-242509DAD272}" />
+
+    <!-- Other windows menu items -->
+    <GuidSymbol name="guidMySqlOutputWindowCmdSet" value="{6ca7d57d-ae56-4844-a6d9-45d0da3767f4}">
+      <IDSymbol name="MySqlOutputWindowCommandId" value="514" />
+    </GuidSymbol>
+
     <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
       <IDSymbol name="IDG_DV_CONNECTION" value="0x4101" />
     </GuidSymbol>
@@ -522,7 +538,7 @@
       <IDSymbol name="VSProjectTypeMenuController" value="0x102" />
       <IDSymbol name="VSProjectTypeControllerGroup" value="0x0202" />
       <!--menu controller project type end-->
-      
+
       <!--end of the Project Type List-->
     </GuidSymbol>
     <!-- This is the guid used to group the menu commands together -->
@@ -606,6 +622,9 @@
       <IDSymbol name="bmpOpenUtilitiesPromptToolBar" value="6" />
       <IDSymbol name="bmpAddMySqlConnection" value="7" />
       <IDSymbol name="bmpNewMySqlProject" value="8" />
+    </GuidSymbol>
+    <GuidSymbol name="guidImagesOtherWindows" value="{e566830b-48c3-4040-83a7-9cb375e8854c}" >
+      <IDSymbol name="pic1" value="1" />
     </GuidSymbol>
   </Symbols>
 
