@@ -2,27 +2,32 @@
 using MySqlX.Shell;
 using MySqlX;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml.Serialization;
 using ConsoleTables.Core;
 
 namespace XShellClient_Test
 {
   class Program
   {
+    private const string MySqlXResultType = "mysqlx.result";
+    private const string MySqlXDocResultType = "mysqlx.docresult";
+    private const string MySqlXRowResultType = "mysqlx.rowresult";
+    private const string MySqlXSqlResultType = "mysqlx.sqlresult";
+    private const string SystemStringType = "system.string";
+
     static void Main(string[] args)
     {
       string connString = "root:@localhost:33570";
       object result = string.Empty;
       string query = "dir(session);";
-
+      Mode mode = Mode.JScript;
       ShellClient xShellClient = new ShellClient();
 
       try
       {
         xShellClient.MakeConnection(connString);
-        xShellClient.SwitchMode(Mode.JScript);
+        xShellClient.SwitchMode(mode);
       }
       catch (Exception ex)
       {
@@ -30,73 +35,107 @@ namespace XShellClient_Test
         return;
       }
 
-      Console.WriteLine("Enter javascript commands(s), or enter \"quit\" to exit.");
+      Console.WriteLine(Resources.InstructionsMessages);
       Console.WriteLine("");
 
       try
       {
         while (query != "quit")
         {
-          Console.Write("mysql-js> ");
+          if (mode == Mode.JScript)
+          {
+            Console.Write("mysql-js> ");
+          }
+          else
+          {
+            Console.Write("mysql-py> ");
+          }
           query = Console.ReadLine();
           if (!string.IsNullOrEmpty(query) && query.ToLower() != "quit")
           {
-            result = xShellClient.Execute(query);
-            PrintResult(result);
+            if (query == "\\py")
+            {
+              mode = Mode.Python;
+              xShellClient.SwitchMode(mode);
+            }
+            else if (query == "\\js")
+            {
+              mode = Mode.JScript;
+              xShellClient.SwitchMode(mode);
+            }
+            else
+            {
+              result = xShellClient.Execute(query);
+              PrintResult(result);
+            }
           }
         }
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex.Message);
-        return;
       }
     }
 
     private static void PrintResult(Object result)
     {
-      Result res = result as Result;
-      DocResult doc = result as DocResult;
-      RowResult row = result as RowResult;
-      SqlResult sql = result as SqlResult;
-      if (res != null)
-        PrintResult(res);
-      else if (doc != null)
-        PrintDocResult(doc);
-      else if (row != null)
-        PrintRowResult(row);
-      else if (sql != null)
-        PrintSqlResult(sql);
-      else if (result == null)
-        Console.WriteLine("null");
-      else
-        Console.WriteLine(result.ToString());
-    }
-
-    private static void PrintResult(Result res)
-    {
-      Console.WriteLine("Affected Items: {0}\n", res.GetAffectedItemCount());
-      Console.WriteLine("Last Insert Id: {0}\n", res.GetLastInsertId());
-      Console.WriteLine("Last Document Id: {0}\n", res.GetLastDocumentId());
-
-      PrintBaseResult(res);
-    }
-
-    private static void PrintBaseResult(BaseResult res)
-    {
-      Console.WriteLine("Execution Time: {0}\n", res.GetExecutionTime());
-      Console.WriteLine("Warning Count: {0}\n", res.GetWarningCount());
-
-      if (Convert.ToUInt64(res.GetWarningCount()) > 0)
+      string type = result.GetType().ToString().ToLowerInvariant();
+      switch (type)
       {
-        List<Dictionary<String, Object>> warnings = res.GetWarnings();
+        case MySqlXResultType:
+          PrintResult((Result)result);
+          break;
+        case MySqlXDocResultType:
+          PrintDocResult((DocResult)result);
+          break;
+        case MySqlXRowResultType:
+          PrintRowResult((RowResult)result);
+          break;
+        case MySqlXSqlResultType:
+          PrintSqlResult((SqlResult)result);
+          break;
+        case SystemStringType:
+          if (string.IsNullOrEmpty(result.ToString()))
+          {
+            return;
+          }
 
-        foreach (Dictionary<String, Object> warning in warnings)
-          Console.WriteLine("{0} ({1}): (2)\n", warning["Level"], warning["Code"], warning["Message"]);
+          Console.WriteLine(result.ToString());
+          break;
       }
     }
 
-    private static void PrintRowResult(RowResult res)
+    private static void PrintResult(Result result)
+    {
+      StringBuilder resultMessage = new StringBuilder();
+      resultMessage.Append("Query OK");
+      long affectedItems = result.GetAffectedItemCount();
+      if (affectedItems >= 0)
+      {
+        resultMessage.AppendFormat(", {0} items affected", affectedItems);
+      }
+
+      Console.WriteLine("{0} ({1})", resultMessage.ToString(), result.GetExecutionTime());
+      PrintWarnings(result);
+    }
+
+    private static void PrintWarnings(BaseResult result)
+    {
+      if (result.GetWarningCount() > 0)
+      {
+        StringBuilder warningsMessages = new StringBuilder();
+        warningsMessages.AppendFormat(" Warning Count: {0}\n", result.GetWarningCount());
+        List<Dictionary<String, Object>> warnings = result.GetWarnings();
+        foreach (Dictionary<String, Object> warning in warnings)
+        {
+          warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
+        }
+
+        Console.WriteLine("{0} ({1})", warningsMessages.ToString(), result.GetExecutionTime());
+      }
+    }
+
+    private static void PrintRowResult(RowResult res, long affectedItems = 0)
     {
       // Get columns names
       string[] columns = new string[res.GetColumns().Count];
@@ -129,7 +168,31 @@ namespace XShellClient_Test
         record = res.FetchOne();
       }
 
-      table.Write(Format.Alternative);
+      if (table.Rows.Count > 0)
+      {
+        Console.WriteLine(table.ToStringAlternative());
+      }
+
+      StringBuilder resultMessage = new StringBuilder();
+      // If no items are returned, it is a DDL statement (Drop, Create, etc.)
+      int totalItems = res.FetchAll().Count;
+      if (totalItems == 0)
+      {
+        resultMessage.Append("Query OK");
+        if (affectedItems >= 0)
+        {
+          resultMessage.AppendFormat(", {0} rows affected", affectedItems);
+        }
+
+        resultMessage.AppendFormat(", {0} warning(s)", res.GetWarningCount());
+      }
+      else
+      {
+        resultMessage.AppendFormat("{0} rows in set.", totalItems);
+      }
+
+      Console.WriteLine("{0} ({1})", resultMessage.ToString(), res.GetExecutionTime());
+      PrintWarnings(res);
     }
 
     private static void PrintDocResult(DocResult doc)
@@ -145,20 +208,25 @@ namespace XShellClient_Test
           sb.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (i == row.Count - 1) ? "" : ",");
           i++;
         }
+
         sb.AppendLine("},");
-        Console.WriteLine(sb);
+        Console.WriteLine(sb.ToString());
+
+        Console.WriteLine("{0} documents in set. ({1})", doc.FetchAll().Count, doc.GetExecutionTime());
+        PrintWarnings(doc);
       }
     }
 
     private static void PrintSqlResult(SqlResult res)
     {
       if ((bool)res.HasData())
-        PrintRowResult(res);
+      {
+        PrintRowResult(res, res.GetAffectedRowCount());
+      }
       else
-        PrintBaseResult(res);
-
-      Console.WriteLine("Affected Rows: {0}\n", res.GetAffectedRowCount());
-      Console.WriteLine("Last Insert Id: {0}\n", res.GetLastInsertId());
+      {
+        PrintWarnings(res);
+      }
     }
   }
 }

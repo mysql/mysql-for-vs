@@ -98,7 +98,7 @@ Object^ ShellClient::Execute(String^ query)
 
   if (_shellError)
   {
-    return String::Concat("\n", _errorMessage);
+    return String::Concat(String::Concat(Environment::NewLine, " Error. "), _errorMessage);
   }
 
   if (n_result.type == shcore::Object)
@@ -119,8 +119,8 @@ Object^ ShellClient::Execute(String^ query)
   {
     String^ result;
     result = msclr::interop::marshal_as<String^>(n_result.descr(true));
-    // Some queries, like var initialization, are returning "undefined".
-    if (String::Compare(result, "undefined", true) == 0)
+    // Some queries, like var initialization, are returning "undefined" or "null".
+    if (String::Compare(result, "undefined", true) == 0 || String::Compare(result, "null", true) == 0)
     {
       return "";
     }
@@ -162,7 +162,7 @@ void ShellClient::Print(String^ text)
 void ShellClient::PrintError(String^ text)
 {
   _shellError = true;
-  _errorMessage = text;
+  _errorMessage = String::Concat(_errorMessage, text);
 }
 
 bool ShellClient::Input(String^ text, String^% ret)
