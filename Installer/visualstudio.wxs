@@ -1,6 +1,21 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
+    <!-- XShell Dependencies for AppData folder -->
+    <DirectoryRef Id='xShellModules_AppDataFolder'>
+      <Component Id='xShellModules_AppDataFolder_Component' Guid='1d8ffb8b-f405-4800-bebf-fd2b410639de'>
+        <File Id='mysql.js.AppDataFolder' Name='mysql.js' DiskId='1'
+              Source='..\Dependencies\xShell\modules\js\mysql.js'/>
+        <File Id='mysqlx.js.AppDataFolder' Name='mysqlx.js' DiskId='1'
+              Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
+      </Component>
+      <Component Id="Set_MYSQLX_HOME_EnvVar" Guid="{16214687-5611-4982-8115-2a8f41c3a21a}" KeyPath="yes">
+        <Environment Action="set" Id="MYSQLX_HOME_EnvVar" Name="MYSQLX_HOME" System="no" Value="%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh"
+                     Permanent="no" Part="all" />
+      </Component>
+    </DirectoryRef>
+    <!-- XShell Dependencies END -->
+
     <!-- Visual Studio 2010 -->
     <DirectoryRef Id='VS10_ExtVersionDir'>
       <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
@@ -520,6 +535,10 @@
         <ComponentRef Id='VS10_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS10_T4TemplatesVBDir' />
       </Feature>
+      <!-- xShell Modules in AppData folder -->
+      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
+      <!-- Creates MYSQLX_HOME Environment variable -->
+      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -544,6 +563,10 @@
         <ComponentRef Id='VS2012_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2012_T4TemplatesVBDir' />
       </Feature>
+      <!-- xShell Modules in AppData folder -->
+      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
+      <!-- Creates MYSQLX_HOME Environment variable -->
+      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
@@ -568,6 +591,10 @@
         <ComponentRef Id='VS2013_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2013_T4TemplatesVBDir' />
       </Feature>
+      <!-- xShell Modules in AppData folder -->
+      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
+      <!-- Creates MYSQLX_HOME Environment variable -->
+      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
@@ -592,6 +619,10 @@
         <ComponentRef Id='VS2015_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2015_T4TemplatesVBDir' />
       </Feature>
+      <!-- xShell Modules in AppData folder -->
+      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
+      <!-- Creates MYSQLX_HOME Environment variable -->
+      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <!-- Visual Studio 2010 installation location -->

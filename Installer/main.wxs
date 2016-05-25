@@ -90,6 +90,17 @@
         </Directory>
       </Directory>
 
+      <!-- xShell Modules in AppData folder -->
+      <Directory Id="AppDataFolder">
+        <Directory Id="MySQL_AppDataFolder" Name='MySQL'>
+          <Directory Id="mysqlsh_AppDataFolder" Name='mysqlsh'>
+            <Directory Id='modules_AppDataFolder' Name='modules'>
+              <Directory Id='xShellModules_AppDataFolder' Name='js' />
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+
       <!-- VS2010 Extension folders -->
       <Directory Id="VS_2010_PATH" Name="VSPath">
         <!-- xShell Modules Dir -->
