@@ -27,30 +27,32 @@ namespace MySql.Data.VisualStudio
   /// <summary>
   /// Strings that will enable us to identify vs-package components with a unique id.
   /// </summary>
-  static class GuidStrings
+  internal static class GuidStrings
   {
-    public const string SqlEditorFactory = "CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581";
-    public const string Package = "79A115C9-B133-4891-9E7B-242509DAD272";
-    public const string CmdSet = "B87CB51F-8A01-4c5e-BF3E-5D0565D5397D";
-    public const string Provider = "C6882346-E592-4da5-80BA-D2EADCDA0359";
-    public const string DavinciCommandSet = "732ABE75-CD80-11D0-A2DB-00AA00A3EFFF";
-    public const string StandardCommandSet = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}";
-    public const string GuidIdeToolbarCmdSetString = "FD607F05-3661-4E12-A327-6D71AD2E269B";
+    public const string SQL_EDITOR_FACTORY = "CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581";
+    public const string PACKAGE = "79A115C9-B133-4891-9E7B-242509DAD272";
+    public const string CMD_SET = "B87CB51F-8A01-4c5e-BF3E-5D0565D5397D";
+    public const string PROVIDER = "C6882346-E592-4da5-80BA-D2EADCDA0359";
+    public const string DAVINCI_COMMAND_SET = "732ABE75-CD80-11D0-A2DB-00AA00A3EFFF";
+    public const string STANDARD_COMMAND_SET = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}";
+    public const string IDE_TOOLBAR_CMD_SET = "FD607F05-3661-4E12-A327-6D71AD2E269B";
     public const string MySqlOutputWindowsCmdSet = "6ca7d57d-ae56-4844-a6d9-45d0da3767f4";
+    public const string SERVER_EXPLORER_TOOLBAR_CMD_SET = "379E1B3D-A0E1-4D1D-97E9-CE04114BD345";
   }
 
   /// <summary>
   /// Guid objects created from the guid strings defined in this same file and linked to objects.
   /// </summary>
-  static class GuidList
+  internal static class GuidList
   {
-    public static readonly Guid Package = new Guid(GuidStrings.Package);
-    public static readonly Guid Provider = new Guid(GuidStrings.Provider);
-    public static readonly Guid CmdSet = new Guid(GuidStrings.CmdSet);
-    public static readonly Guid SqlEditorFactoryGuid = new Guid(GuidStrings.SqlEditorFactory);
-    public static readonly Guid DavinciCommandSet = new Guid(GuidStrings.DavinciCommandSet);
-    public static readonly Guid StandardCommandSet = new Guid(GuidStrings.StandardCommandSet);
-    public static readonly Guid guidIDEToolbarCmdSet = new Guid(GuidStrings.GuidIdeToolbarCmdSetString);
+    public static readonly Guid Package = new Guid(GuidStrings.PACKAGE);
+    public static readonly Guid Provider = new Guid(GuidStrings.PROVIDER);
+    public static readonly Guid CmdSet = new Guid(GuidStrings.CMD_SET);
+    public static readonly Guid SqlEditorFactoryGuid = new Guid(GuidStrings.SQL_EDITOR_FACTORY);
+    public static readonly Guid DavinciCommandSet = new Guid(GuidStrings.DAVINCI_COMMAND_SET);
+    public static readonly Guid StandardCommandSet = new Guid(GuidStrings.STANDARD_COMMAND_SET);
+    public static readonly Guid GuidIdeToolbarCmdSet = new Guid(GuidStrings.IDE_TOOLBAR_CMD_SET);
+    public static readonly  Guid ServerExplorerToolbarCmdSet = new Guid(GuidStrings.SERVER_EXPLORER_TOOLBAR_CMD_SET);
     public static readonly Guid GuidMySqlOutputWindowsCmdSet = new Guid(GuidStrings.MySqlOutputWindowsCmdSet);
   };
 }

@@ -30,7 +30,6 @@ using Microsoft.VisualStudio.TemplateWizard;
 using MySql.Data.MySqlClient;
 using VSLangProj;
 using MySql.Data.VisualStudio.WebConfig;
-using MySql.Data.VisualStudio.Wizards;
 using MySql.Web.Security;
 using System.Collections.Specialized;
 using System.Web.Security;
@@ -38,9 +37,6 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.IO;
 using System.Reflection;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using Microsoft.VisualStudio.Data.Services;
-using MySql.Data.VisualStudio.DBExport;
 using MySql.Data.VisualStudio.Properties;
 #if CLR4 || NET_40_OR_GREATER
 using Microsoft.VisualStudio.TextTemplating;
@@ -49,6 +45,7 @@ using Microsoft.VisualStudio.TextTemplating.VSHost;
 using Microsoft.VisualStudio.Shell;
 using MySQL.Utility.Classes;
 using System.Diagnostics;
+using MySql.Data.VisualStudio.ServerInstances;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -71,7 +68,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         VSProject vsProj = project.Object as VSProject;
         var tables = new List<string>();
 
-        Settings.Default.MVCWizardConnection = WizardForm.serverExplorerConnectionSelected;
+        Settings.Default.MVCWizardConnection = WizardForm.ServerExplorerConnectionSelected;
         Settings.Default.Save();
 
         if (_generalPane != null)
@@ -88,7 +85,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         {
           if (MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
                         + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
-                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", Resources.WarningText, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
           {
             ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
             System.Diagnostics.Process.Start(browserInfo);
@@ -133,25 +130,25 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         var packagesPath = Path.Combine(Path.GetDirectoryName(ProjectPath), @"Packages\jQuery." + JQUERY_VERSION + @"\Content\Scripts");
         CopyPackageToProject(vsProj, ProjectPath, packagesPath, "Scripts");
 
-        if (WizardForm.selectedTables != null && WizardForm.dEVersion != DataEntityVersion.None)
+        if (WizardForm.SelectedTables != null && WizardForm.DEVersion != DataEntityVersion.None)
         {
-          WizardForm.selectedTables.ForEach(t => tables.Add(t.Name));
+          WizardForm.SelectedTables.ForEach(t => tables.Add(t.Name));
 
           SendToGeneralOutputWindow("Generating Entity Framework model...");
           if (tables.Count > 0)
           {
 
-            if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
+            if (WizardForm.DEVersion == DataEntityVersion.EntityFramework5)
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
-            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
+            else if (WizardForm.DEVersion == DataEntityVersion.EntityFramework6)
               CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_6;
 
             AddNugetPackage(vsProj, ENTITY_FRAMEWORK_PCK_NAME, CurrentEntityFrameworkVersion, true);
             string modelPath = Path.Combine(ProjectPath, "Models");
-            GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(WizardForm.connectionStringForModel), WizardForm.modelName, tables, modelPath);
+            GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(WizardForm.ConnectionStringForModel), WizardForm.ModelName, tables, modelPath);
             GenerateMVCItems(vsProj);
 
-            if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
+            if (WizardForm.DEVersion == DataEntityVersion.EntityFramework6)
             {
               project.DTE.SuppressUI = true;
               project.Properties.Item("TargetFrameworkMoniker").Value = ".NETFramework,Version=v4.5";
@@ -179,7 +176,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           {
             string configPath = ProjectPath + @"\web.config";
 
-            if (WizardForm.createAdministratorUser)
+            if (WizardForm.CreateAdministratorUser)
             {
               SendToGeneralOutputWindow("Creating administrator user...");
               using (AppConfig.Load(configPath))
@@ -191,12 +188,12 @@ namespace MySql.Data.VisualStudio.Wizards.Web
                 System.Configuration.Configuration config = WebConfigurationManager.OpenMappedWebConfiguration(wcfm, "/");
                 try
                 {
-                  if (!WizardForm.includeSensitiveInformation)
+                  if (!WizardForm.IncludeSensitiveInformation)
                   {
                     ConnectionStringsSection connectionStringsection = config.GetSection("connectionStrings") as ConnectionStringsSection;
                     if (connectionStringsection != null)
                     {
-                      connectionStringsection.ConnectionStrings[WizardForm.connectionStringNameForAspNetTables].ConnectionString = _fullconnectionstring;
+                      connectionStringsection.ConnectionStrings[WizardForm.ConnectionStringNameForAspNetTables].ConnectionString = _fullconnectionstring;
                       config.Save();
                     }
                   }
@@ -213,19 +210,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
                 //create the user
                 MembershipCreateStatus status;
-                if (!WizardForm.requireQuestionAndAnswer)
+                if (!WizardForm.RequireQuestionAndAnswer)
                 {
-                  provider.CreateUser(WizardForm.adminName, WizardForm.adminPassword, "temporary@email.com", null, null, true, null, out status);
+                  provider.CreateUser(WizardForm.AdminName, WizardForm.AdminPassword, "temporary@email.com", null, null, true, null, out status);
                 }
                 else
                 {
-                  provider.CreateUser(WizardForm.adminName, WizardForm.adminPassword, "temporary@email.com", WizardForm.userQuestion, WizardForm.userAnswer, true, null, out status);
+                  provider.CreateUser(WizardForm.AdminName, WizardForm.AdminPassword, "temporary@email.com", WizardForm.UserQuestion, WizardForm.UserAnswer, true, null, out status);
                 }
               }
             }
 
             // add creation of providers tables
-            if (WizardForm.includeProfilesProvider)
+            if (WizardForm.IncludeProfilesProvider)
             {
               var profileConfig = new ProfileConfig();
               profileConfig.Initialize(webConfig);
@@ -235,17 +232,17 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               var options = new Options();
               options.AppName = @"\";
               options.AutoGenSchema = true;
-              options.ConnectionStringName = WizardForm.connectionStringNameForAspNetTables;
-              options.ConnectionString = WizardForm.connectionStringForAspNetTables;
+              options.ConnectionStringName = WizardForm.ConnectionStringNameForAspNetTables;
+              options.ConnectionString = WizardForm.ConnectionStringForAspNetTables;
               options.EnableExpireCallback = false;
               options.ProviderName = "MySQLProfileProvider";
-              options.WriteExceptionToLog = WizardForm.writeExceptionsToLog;
+              options.WriteExceptionToLog = WizardForm.WriteExceptionsToLog;
               profileConfig.GenericOptions = options;
               profileConfig.DefaultProvider = "MySQLProfileProvider";
               profileConfig.Save(webConfig);
             }
 
-            if (WizardForm.includeRoleProvider)
+            if (WizardForm.IncludeRoleProvider)
             {
               var roleConfig = new RoleConfig();
               roleConfig.Initialize(webConfig);
@@ -255,11 +252,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
               var options = new Options();
               options.AppName = @"\";
               options.AutoGenSchema = true;
-              options.ConnectionStringName = WizardForm.connectionStringNameForAspNetTables;
-              options.ConnectionString = WizardForm.connectionStringForAspNetTables;
+              options.ConnectionStringName = WizardForm.ConnectionStringNameForAspNetTables;
+              options.ConnectionString = WizardForm.ConnectionStringForAspNetTables;
               options.EnableExpireCallback = false;
               options.ProviderName = "MySQLRoleProvider";
-              options.WriteExceptionToLog = WizardForm.writeExceptionsToLog;
+              options.WriteExceptionToLog = WizardForm.WriteExceptionsToLog;
               roleConfig.GenericOptions = options;
               roleConfig.DefaultProvider = "MySQLRoleProvider";
               roleConfig.Save(webConfig);
@@ -305,36 +302,36 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         mysqlDataVersion = new Version(Utility.GetProductVersion(path + @"\Assemblies\v4.0\MySql.Data.dll"));
       }
 
-      _fullconnectionstring = WizardForm.connectionStringForAspNetTables;
+      _fullconnectionstring = WizardForm.ConnectionStringForAspNetTables;
 
-      if (!WizardForm.includeSensitiveInformation)
+      if (!WizardForm.IncludeSensitiveInformation)
       {
         // connectionstringformodel
-        var csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForModel);
+        var csb = new MySqlConnectionStringBuilder(WizardForm.ConnectionStringForModel);
         csb.Password = null;
-        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, csb.ConnectionString);
+        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.ConnectionStringNameForModel, csb.ConnectionString);
         // connectionstringforaspnet                
-        csb = new MySqlConnectionStringBuilder(WizardForm.connectionStringForAspNetTables);
+        csb = new MySqlConnectionStringBuilder(WizardForm.ConnectionStringForAspNetTables);
         csb.Password = null;
-        WizardForm.connectionStringForAspNetTables = csb.ConnectionString;
+        WizardForm.ConnectionStringForAspNetTables = csb.ConnectionString;
       }
       else
       {
-        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.connectionStringNameForModel, WizardForm.connectionStringForModel);
+        connectionstringForModel = string.Format(@"<add name=""{0}Entities"" connectionString=""metadata=res://*/Models.{0}.csdl|res://*/Models.{0}.ssdl|res://*/Models.{0}.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;{1}&quot;"" providerName=""System.Data.EntityClient"" />", WizardForm.ConnectionStringNameForModel, WizardForm.ConnectionStringForModel);
       }
 
-      replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.connectionStringForAspNetTables);
-      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.dEVersion != DataEntityVersion.None ? connectionstringForModel : string.Empty);
-      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.connectionStringNameForAspNetTables);
-      replacementsDictionary.Add("$EntityFrameworkReference$", WizardForm.dEVersion != DataEntityVersion.None ? @"<add assembly=""System.Data.Entity, Version=4.0.0.0, Culture=neutral,PublicKeyToken=b77a5c561934e089""/>" : string.Empty);
-      replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.requireQuestionAndAnswer ? "True" : "False");
-      replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.minimumPasswordLenght.ToString());
-      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.writeExceptionsToLog ? "True" : "False");
-      replacementsDictionary.Add("$providerReference$", WizardForm.dEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
+      replacementsDictionary.Add("$connectionstringforaspnettables$", WizardForm.ConnectionStringForAspNetTables);
+      replacementsDictionary.Add("$connectionstringnameformodel$", WizardForm.DEVersion != DataEntityVersion.None ? connectionstringForModel : string.Empty);
+      replacementsDictionary.Add("$connectionstringnameforaspnettables$", WizardForm.ConnectionStringNameForAspNetTables);
+      replacementsDictionary.Add("$EntityFrameworkReference$", WizardForm.DEVersion != DataEntityVersion.None ? @"<add assembly=""System.Data.Entity, Version=4.0.0.0, Culture=neutral,PublicKeyToken=b77a5c561934e089""/>" : string.Empty);
+      replacementsDictionary.Add("$requirequestionandanswer$", WizardForm.RequireQuestionAndAnswer ? "True" : "False");
+      replacementsDictionary.Add("$minimumrequiredlength$", WizardForm.MinimumPasswordLenght.ToString());
+      replacementsDictionary.Add("$writeExceptionstoeventlog$", WizardForm.WriteExceptionsToLog ? "True" : "False");
+      replacementsDictionary.Add("$providerReference$", WizardForm.DEVersion == DataEntityVersion.EntityFramework6 ? @"<entityFramework> <providers> <provider invariantName=""MySql.Data.MySqlClient"" type=""MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6"" /></providers> </entityFramework>" : string.Empty);
       replacementsDictionary.Add("$mySqlProviderVersion$", mysqlDataVersion != null ? string.Format("{0}.{1}.{2}.{3}", mysqlDataVersion.Major, mysqlDataVersion.Minor, mysqlDataVersion.Build, "0") : "6.8.3.0");
       replacementsDictionary.Add("$jqueryversion$", JQUERY_VERSION);
 
-      switch (WizardForm.dEVersion)
+      switch (WizardForm.DEVersion)
       {
         case DataEntityVersion.None:
           replacementsDictionary.Add("$EntityFrameworkVersion$", string.Empty);
@@ -360,17 +357,17 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       replacementsDictionary.Add("$mvcbindingRedirect$", version >= 12.0 ? "4.0.0.0" : "3.0.0.0");
 
       var requiredquestionandanswer = string.Empty;
-      if (WizardForm.requireQuestionAndAnswer)
+      if (WizardForm.RequireQuestionAndAnswer)
         requiredquestionandanswer = WizardForm.Wizard.Language == LanguageGenerator.CSharp ? "[Required]" : "<Required()> _";
       replacementsDictionary.Add("$requiredquestionandanswer$", requiredquestionandanswer);
     }
 
     private void GenerateMVCItems(VSProject vsProj)
     {
-      if (string.IsNullOrEmpty(WizardForm.connectionStringForModel))
+      if (string.IsNullOrEmpty(WizardForm.ConnectionStringForModel))
         return;
 
-      if (WizardForm.selectedTables == null || WizardForm.selectedTables.Count == 0)
+      if (WizardForm.SelectedTables == null || WizardForm.SelectedTables.Count == 0)
         return;
 
 #if CLR4 || NET_40_OR_GREATER
@@ -427,14 +424,14 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", ProjectNamespace);
           sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", ProjectNamespace);
           sessionHost.Session["controllerClassParameter"] = string.Format("{0}Controller", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1));
-          if ((WizardForm.dEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
+          if ((WizardForm.DEVersion == DataEntityVersion.EntityFramework6 && Language == LanguageGenerator.VBNET) ||
             Language == LanguageGenerator.CSharp)
           {
-            sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.connectionStringNameForModel);
+            sessionHost.Session["modelNameParameter"] = string.Format("{0}Entities", WizardForm.ConnectionStringNameForModel);
           }
-          else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
+          else if (WizardForm.DEVersion == DataEntityVersion.EntityFramework5 && Language == LanguageGenerator.VBNET)
           {
-            sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.connectionStringNameForModel, ProjectNamespace);
+            sessionHost.Session["modelNameParameter"] = string.Format("{1}.{0}Entities", WizardForm.ConnectionStringNameForModel, ProjectNamespace);
           }
           sessionHost.Session["classNameParameter"] = table.Key;
           sessionHost.Session["entityNameParameter"] = table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1);
@@ -447,11 +444,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           }
           else if (Language == LanguageGenerator.VBNET && visualStudioVersion >= 12.0)
           {
-            if (WizardForm.dEVersion == DataEntityVersion.EntityFramework5)
+            if (WizardForm.DEVersion == DataEntityVersion.EntityFramework5)
             {
               sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{0}.{1}", ProjectNamespace, table.Key);
             }
-            else if (WizardForm.dEVersion == DataEntityVersion.EntityFramework6)
+            else if (WizardForm.DEVersion == DataEntityVersion.EntityFramework6)
             {
               sessionHost.Session["entityClassNameParameterWithNamespace"] = string.Format("{0}.{1}", ProjectNamespace, table.Key);
             }

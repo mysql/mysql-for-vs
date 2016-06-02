@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,22 +22,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.TemplateWizard;
-using EnvDTE;
-using System.Windows.Forms;
-using VSLangProj;
-using MySql.Data.VisualStudio.SchemaComparer;
-using MySql.Data.MySqlClient;
 using System.Reflection;
-using MySql.Data.VisualStudio.Wizards;
+using System.Windows.Forms;
+using EnvDTE;
+using Microsoft.VisualStudio.TemplateWizard;
+using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Properties;
-using System.Diagnostics;
-using System.Collections;
-
+using MySql.Data.VisualStudio.SchemaComparer;
+using MySql.Data.VisualStudio.ServerInstances;
+using VSLangProj;
+using Process = System.Diagnostics.Process;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
@@ -45,13 +42,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
   ///  Wizard for generation of a Windows Forms based project.
   /// </summary>
   public class WindowsFormsWizard : BaseWizard<WindowsFormsWizardForm, WindowsFormsCodeGeneratorStrategy>
-  {    
-
+  {
     internal MySqlConnection Connection { get; set; }
 
     private bool _hasDataGridDateColumn;
-    public WindowsFormsWizard(LanguageGenerator Language)
-      : base(Language)
+
+    private IdentedStreamWriter _sw;
+
+    public WindowsFormsWizard(LanguageGenerator language)
+      : base(language)
     {
       WizardForm = new WindowsFormsWizardForm(this);
       projectType = ProjectWizardType.WindowsForms;
@@ -61,29 +60,27 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// If there is a DateTimePicker column and a grid layout, add the support code for custom DateTimePicker for Grids.
     /// </summary>
     /// <param name="vsProj"></param>
-    private void EnsureCodeForDateTimeGridColumn(
-      VSProject vsProj,
-      Dictionary<string,Column> Columns,
-      Dictionary<string,Column> DetailColumns )
+    /// <param name="columns"></param>
+    /// <param name="detailColumns"></param>
+    private void EnsureCodeForDateTimeGridColumn(VSProject vsProj, Dictionary<string,Column> columns, Dictionary<string,Column> detailColumns)
     {
       bool hasDateColumn = false;
-
-      foreach( KeyValuePair<string, Column> kvp in Columns )
+      foreach(KeyValuePair<string, Column> kvp in columns)
       {
-        if( kvp.Value.IsDateType() ) {
-          hasDateColumn = true;
-          break;
-        }
-      }
-      if( !hasDateColumn && DetailColumns != null )
-      {
-        foreach (KeyValuePair<string, Column> kvp in DetailColumns)
+        if (!kvp.Value.IsDateType())
         {
-          if (kvp.Value.IsDateType())
-          {
-            hasDateColumn = true;
-            break;
-          }
+          continue;
+        }
+
+        hasDateColumn = true;
+        break;
+      }
+
+      if (!hasDateColumn && detailColumns != null)
+      {
+        if (detailColumns.Any(kvp => kvp.Value.IsDateType()))
+        {
+          hasDateColumn = true;
         }
       }
 
@@ -92,32 +89,45 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         string outFilePath = "";
         Stream stream = null;
-        if( Language == LanguageGenerator.CSharp )
+        switch (Language)
         {
-          stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.CS.MyDateTimePickerColumn.cs");
-          outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.cs");
+          case LanguageGenerator.CSharp:
+            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.CS.MyDateTimePickerColumn.cs");
+            outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.cs");
+            break;
+          case LanguageGenerator.VBNET:
+            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.VB.MyDateTimePickerColumn.vb");
+            outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.vb");
+            break;
         }
-        else if (Language == LanguageGenerator.VBNET)
+
+        if (stream == null)
         {
-          stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.VB.MyDateTimePickerColumn.vb");
-          outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.vb");
+          return;
         }
-        StreamReader sr = new StreamReader(stream);
-        string contents = sr.ReadToEnd();
-        File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", ProjectNamespace));
-        vsProj.Project.ProjectItems.AddFromFile( outFilePath );
+
+        using (var sr = new StreamReader(stream))
+        {
+          string contents = sr.ReadToEnd();
+          File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", ProjectNamespace));
+        }
+        
+        vsProj.Project.ProjectItems.AddFromFile(outFilePath);
       }
+
       _hasDataGridDateColumn = hasDateColumn;
     }
 
     public override void ProjectFinishedGenerating(Project project)
     {
 #if NET_40_OR_GREATER
-      //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
-      
-      VSProject vsProj = project.Object as VSProject;
-      SortedSet<string> tables = new SortedSet<string>();
-      Dictionary<string, WindowsFormsCodeGeneratorStrategy> strategies = new Dictionary<string, WindowsFormsCodeGeneratorStrategy>();
+      var vsProj = project.Object as VSProject;
+      var tables = new SortedSet<string>();
+      var strategies = new Dictionary<string, WindowsFormsCodeGeneratorStrategy>();
+      if (vsProj == null)
+      {
+        return;
+      }
 
       vsProj.References.Add("MySql.Data");
       project.DTE.SuppressUI = true;
@@ -126,37 +136,36 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       bool found = false;
       foreach (Reference reference in vsProj.References)
       {
-        if (((Reference)reference).Name.IndexOf("MySql.Data",StringComparison.CurrentCultureIgnoreCase) >=0 && !String.IsNullOrEmpty(reference.Path))
+        if (reference.Name.IndexOf("MySql.Data",StringComparison.CurrentCultureIgnoreCase) >=0 && !String.IsNullOrEmpty(reference.Path))
         {
           found = true;
           break;
         }
       }
 
-      if (!found && MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
-                       + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
-                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
-       {
-           ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
-           System.Diagnostics.Process.Start(browserInfo);
-       }
+      if (!found && MessageBox.Show(@"The MySQL .NET driver could not be found." + Environment.NewLine
+                                    + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
+                                    Environment.NewLine + @"Click OK to go to the page or Cancel to continue", Resources.WarningText, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+      {
+        ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
+        Process.Start(browserInfo);
+      }
        
       try
       {
-
-        for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
+        foreach (DbTables t in WizardForm.SelectedTables)
         {
-          AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
+          AdvancedWizardForm crud = WizardForm.CrudConfiguration[t.Name];
           // Ensure all model exists, even if user didn't went through validation pages.
           // So metadata for table used in FKs is already loaded.
           crud.GenerateModels();
           string detailTableName = crud.DetailTableName;
-          string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+          string canonicalTableName = GetCanonicalIdentifier(crud.TableName);
           string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
           // Gather all the tables
           tables.Add(crud.TableName);
           if (!string.IsNullOrEmpty(detailTableName))
-              tables.Add(detailTableName);
+            tables.Add(detailTableName);
           foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp2 in crud.ForeignKeys)
           {
             tables.Add(kvp2.Value.ReferencedTableName);
@@ -166,7 +175,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             tables.Add(kvp2.Value.ReferencedTableName);
           }
 
-          AddColumnMappings(_canonicalTableName, crud.ValidationColumns);
+          AddColumnMappings(canonicalTableName, crud.ValidationColumns);
           if (!string.IsNullOrEmpty(detailTableName))
           {
             AddColumnMappings(canonicalDetailTableName, crud.ValidationColumnsDetail);
@@ -178,7 +187,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
         // Generate the model using the proper technology
         if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5 ||
-          WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
+            WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework6)
         {
           if (WizardForm.DataAccessTechnology == DataAccessTechnology.EntityFramework5)
             CurrentEntityFrameworkVersion = ENTITY_FRAMEWORK_VERSION_5;
@@ -201,11 +210,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
           {
             AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
-            Dictionary<string, Column> Columns = crud.Columns;
-            Dictionary<string, Column> DetailColumns = crud.DetailColumns;
-            string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+            Dictionary<string, Column> columns = crud.Columns;
+            Dictionary<string, Column> detailColumns = crud.DetailColumns;
+            string canonicalTableName = GetCanonicalIdentifier(crud.TableName);
             string detailTableName = crud.DetailTableName;
-            string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
+            //string canonicalDetailTableName = GetCanonicalIdentifier(detailTableName);
 
             if (!TablesIncludedInModel.ContainsKey(crud.TableName))
             {
@@ -223,23 +232,23 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             }
 
             // Create the strategy
-            StrategyConfig config = new StrategyConfig(sw, _canonicalTableName, Columns, DetailColumns,
+            StrategyConfig config = new StrategyConfig(_sw, canonicalTableName, columns, detailColumns,
               WizardForm.DataAccessTechnology, crud.GuiType, Language,
               crud.ValidationsEnabled, crud.ValidationColumns, crud.ValidationColumnsDetail,
               WizardForm.ConnectionStringWithIncludedPassword, WizardForm.ConnectionString, crud.TableName,
               detailTableName, crud.ConstraintName, crud.ForeignKeys, crud.DetailForeignKeys);
-            WindowsFormsCodeGeneratorStrategy Strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
-            strategies.Add(WizardForm.SelectedTables[i].Name, Strategy);
+            WindowsFormsCodeGeneratorStrategy strategy = WindowsFormsCodeGeneratorStrategy.GetInstance(config);
+            strategies.Add(WizardForm.SelectedTables[i].Name, strategy);
 
             if (!_hasDataGridDateColumn)
             {
-              EnsureCodeForDateTimeGridColumn(vsProj, Columns, DetailColumns);
+              EnsureCodeForDateTimeGridColumn(vsProj, columns, detailColumns);
             }
 
-            string frmName = string.Format("frm{0}", _canonicalTableName);
-            string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
+            string frmName = string.Format("frm{0}", canonicalTableName);
+            //string frmDesignerName = string.Format("frm{0}.designer", canonicalTableName);
             // Add new form to project.
-            AddNewForm(project, frmName, Strategy);
+            AddNewForm(project, frmName, strategy);
           }
         }
         catch (WizardException e)
@@ -253,14 +262,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         for (int i = 0; i < WizardForm.SelectedTables.Count; i++)
         {
           AdvancedWizardForm crud = WizardForm.CrudConfiguration[WizardForm.SelectedTables[i].Name];
-          string _canonicalTableName = GetCanonicalIdentifier(crud.TableName);
+          string canonicalTableName = GetCanonicalIdentifier(crud.TableName);
           if (!TablesIncludedInModel.ContainsKey(crud.TableName))
-              continue;
+            continue;
 
-          string frmName = string.Format("frm{0}", _canonicalTableName);
+          string frmName = string.Format("frm{0}", canonicalTableName);
           formNames.Add(frmName);
           tableNames.Add(crud.TableName);
-          string frmDesignerName = string.Format("frm{0}.designer", _canonicalTableName);
+          string frmDesignerName = string.Format("frm{0}.designer", canonicalTableName);
           WindowsFormsCodeGeneratorStrategy strategy = strategies[WizardForm.SelectedTables[i].Name];
           AddBindings(vsProj, strategy, frmName, frmDesignerName);
         }
@@ -290,7 +299,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
         if (project.DTE.Solution.SolutionBuild.LastBuildInfo > 0)
         {
-          MessageBox.Show("Solution build failed. Please check that all project references have been resolved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(Resources.WindowsFormsWizard_SolutionBuildFailed, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         WizardForm.Dispose();
@@ -319,15 +328,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// </summary>
     /// <param name="project"></param>
     /// <param name="formName"></param>
-    private void AddNewForm( Project project, string formName, WindowsFormsCodeGeneratorStrategy strategy )
+    /// <param name="strategy"></param>
+    private void AddNewForm(Project project, string formName, WindowsFormsCodeGeneratorStrategy strategy)
     {
       //project.ProjectItems.Item(1).Remove();
       string formFile = Path.Combine( ProjectPath, strategy.GetFormFileName().Replace("Form1", formName) );
       string formFileDesigner = Path.Combine( ProjectPath,  strategy.GetFormDesignerFileName().Replace("Form1", formName));
       string formFileResx = Path.Combine( ProjectPath, strategy.GetFormResxFileName().Replace("Form1", formName));
-      string contents = "";
-      
-      contents = File.ReadAllText(Path.Combine(ProjectPath, strategy.GetFormFileName()));
+
+      var contents = File.ReadAllText(Path.Combine(ProjectPath, strategy.GetFormFileName()));
       contents = contents.Replace("Form1", formName);
       File.WriteAllText(formFile, contents);
 
@@ -341,7 +350,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
       // Now add the form
       ProjectItem pi = project.ProjectItems.AddFromFile(formFile);
-      ProjectItem pi2 = pi.ProjectItems.AddFromFile(formFileDesigner);
+      //ProjectItem pi2 = pi.ProjectItems.AddFromFile(formFileDesigner);
       ProjectItem pi3 = pi.ProjectItems.AddFromFile(formFileResx);
       pi3.Properties.Item("ItemType").Value = "EmbeddedResource";
       //pi.Properties.Item("ItemType").Value = "Compile";
@@ -364,7 +373,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// <summary>
     /// Fixes namespaces for issue in VB.NET with some VS versions like 2013.
     /// </summary>
-    /// <param name="outputPath"></param>
     private void FixNamespaces()
     {
       if (Language != LanguageGenerator.VBNET) return;
@@ -382,12 +390,12 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       File.WriteAllText(outputPath, contents);
     }
 
-    public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, Microsoft.VisualStudio.TemplateWizard.WizardRunKind runKind, object[] customParams)
+    public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
     {
       Dte = automationObject as DTE;
 
       connections = MySqlServerExplorerConnections.LoadMySqlConnectionsFromServerExplorer(Dte);
-      WizardForm.connections = this.connections;
+      WizardForm.connections = connections;
       WizardForm.dte = Dte;
       base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
     }
@@ -440,7 +448,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         using (  StreamWriter sw = new StreamWriter(fs))
         {
-          string line = null;
+          string line;
           while ((line = sr.ReadLine()) != null)
           {
             if (line.Trim() == MenuEventHandlerMarker)
@@ -468,7 +476,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       {
         using (StreamWriter sw = new StreamWriter(fs))
         {
-          string line = null;
+          string line;
           while ((line = sr.ReadLine()) != null)
           {
             if (line.Trim() == MenuDesignerBeforeSuspendLayout)
@@ -517,35 +525,32 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    private void AddBindings(VSProject vsProj, WindowsFormsCodeGeneratorStrategy Strategy, 
-      string frmName, string frmDesignerName )
+    private void AddBindings(VSProject vsProj, WindowsFormsCodeGeneratorStrategy strategy, string frmName, string frmDesignerName )
     {
-      string ext = Strategy.GetExtension();
-      SendToGeneralOutputWindow( string.Format( "Customizing Form {0} Code...", frmName ));
+      string ext = strategy.GetExtension();
+      SendToGeneralOutputWindow(string.Format( "Customizing Form {0} Code...", frmName));
       // Get Form.cs
-      ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, frmName + ext );
+      ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, frmName + ext);
       // Get Form.Designer.cs
-      ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, frmDesignerName + ext );
+      ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, frmDesignerName + ext);
       
-      AddBindings((string)(item.Properties.Item("FullPath").Value), Strategy);
-      AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value), Strategy);
+      AddBindings((string)(item.Properties.Item("FullPath").Value), strategy);
+      AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value), strategy);
     }
-    
-    private IdentedStreamWriter sw;
 
-    private void AddBindings(string FormPath, WindowsFormsCodeGeneratorStrategy Strategy)
+    private void AddBindings(string formPath, WindowsFormsCodeGeneratorStrategy strategy)
     {
-      string originalContents = File.ReadAllText(FormPath);
-      FileStream fs = new FileStream(FormPath, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
-      using( StringReader sr = new StringReader(originalContents) )
+      string originalContents = File.ReadAllText(formPath);
+      FileStream fs = new FileStream(formPath, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
+      using(StringReader sr = new StringReader(originalContents))
       {
-        using( sw = new IdentedStreamWriter( fs ) )
+        using(_sw = new IdentedStreamWriter(fs))
         {
-          Strategy.Writer = sw;
-          string line = null;
+          strategy.Writer = _sw;
+          string line;
           while ((line = sr.ReadLine()) != null)
           {
-            Strategy.Execute(line);
+            strategy.Execute(line);
           }
         } // using StreamWriter
       } // using StreamReader

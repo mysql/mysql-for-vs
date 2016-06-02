@@ -16,6 +16,7 @@
 
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
   <!--<Extern href="stdidcmd.h"/>-->
+  
   <!--This header contains the command ids for the menus provided by the shell. -->
   <Extern href="vsshlids.h"/>
 
@@ -117,8 +118,12 @@
       <Group guid="guidIDEToolbarCmdSet" id="MRUListGroup" priority="0x100">
         <Parent guid="guidIDEToolbarCmdSet" id="VSCTMenuController"/>
       </Group>
-      <!-- end of the dynamic list group-->
-
+      
+      <!-- New group for Server Explorer items -->
+      <Group guid="guidServerExplorerToolbarCmdSet" id="ServerExplorerToolbarGroup" priority="0xF000">
+        <!--<Parent guid="guidServerExplorerToolbarCmdSet" id="ServerExplorerToolbar" />-->
+        <Parent guid="guid_SE_MenuGroup" id="IDM_SE_TOOLBAR_SERVEREXPLORER" />
+      </Group>
     </Groups>
 
     <!--Buttons section. -->
@@ -149,7 +154,6 @@
         <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>&amp;Table</ButtonText>
         </Strings>
@@ -158,7 +162,6 @@
         <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>&amp;View</ButtonText>
         </Strings>
@@ -167,7 +170,6 @@
         <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Stored &amp;Procedure</ButtonText>
         </Strings>
@@ -176,7 +178,6 @@
         <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Stored &amp;Function</ButtonText>
         </Strings>
@@ -185,7 +186,6 @@
         <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>&amp;UDF</ButtonText>
         </Strings>
@@ -196,7 +196,6 @@
         <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Create Table</ButtonText>
         </Strings>
@@ -205,7 +204,6 @@
         <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Create View</ButtonText>
         </Strings>
@@ -214,7 +212,6 @@
         <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Create Stored Procedure</ButtonText>
         </Strings>
@@ -223,7 +220,6 @@
         <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Create Stored Function</ButtonText>
         </Strings>
@@ -232,7 +228,6 @@
         <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Create UDF</ButtonText>
         </Strings>
@@ -243,7 +238,6 @@
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Create Trigger</ButtonText>
         </Strings>
@@ -252,7 +246,6 @@
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Alter View</ButtonText>
         </Strings>
@@ -261,7 +254,6 @@
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Alter Routine</ButtonText>
         </Strings>
@@ -270,7 +262,6 @@
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Alter Trigger</ButtonText>
         </Strings>
@@ -326,6 +317,7 @@
         </Strings>
       </Button>
 
+      <!-- Server Explorer commands -->
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -395,12 +387,20 @@
         <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
         <Strings>
           <ButtonText>Generate Table Script</ButtonText>
         </Strings>
       </Button>
-
+      <Button guid="guidServerExplorerToolbarCmdSet" id="cmdOpenConnectionsManager" priority="0x0100" type="Button" >
+        <Parent guid="guidServerExplorerToolbarCmdSet" id="ServerExplorerToolbarGroup"/>
+        <Icon guid="connectionsManagerIcon" id="connectionsManagerIcon1" />
+        <Strings>
+          <CommandName>cmdOpenConnectionsManager</CommandName>
+          <ButtonText>Open MySQL Connections Manager...</ButtonText>
+        </Strings>
+      </Button>
+      <!-- end Server Explorer commands -->
+      
       <Button guid="guidMySqlProviderCmdSet" id="cmdidGenerateDatabaseScript" type="Button">
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -454,6 +454,7 @@
       </Button>
       <!-- End Menu Controller buttons-->
     </Buttons>
+    
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
       <!--  The bitmap id is defined in a way that is a little bit different from the others:
@@ -461,11 +462,13 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\icon.bmp" usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar, bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,bmpAddMySqlConnection, bmpNewMySqlProject"/>
+      <Bitmap guid="guidImages"
+              href="Resources\icon.bmp"
+              usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar,bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,bmpAddMySqlConnection,bmpNewMySqlProject"/>
+      <Bitmap guid="connectionsManagerIcon" href="Resources\ConnectionsManager_16x16.bmp" usedList="connectionsManagerIcon1"/>
       <Bitmap guid="guidImagesOtherWindows" href="Resources\MySQLOutputWindow_16.ico" usedList="pic1"/>
     </Bitmaps>
   </Commands>
-
 
   <CommandPlacements>
     <!-- we have to place our group under each of our two menus -->
@@ -506,8 +509,6 @@
     </CommandPlacement>
   </CommandPlacements>
 
-
-
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidMySqlProviderPkg" value="{79A115C9-B133-4891-9E7B-242509DAD272}" />
@@ -534,14 +535,21 @@
       <IDSymbol name="MRUListGroup" value="0x0400" />
       <IDSymbol name="cmdidMRUList" value="0x0401" />
       <!--end of the Dynamic List-->
-      <!-- Menu Controller Commands for project type list-->
+      <!-- Menu Controller Commands for project type list -->
       <IDSymbol name="VSProjectTypeMenuController" value="0x102" />
       <IDSymbol name="VSProjectTypeControllerGroup" value="0x0202" />
-      <!--menu controller project type end-->
-
-      <!--end of the Project Type List-->
+      <!-- end Menu Controller Commands for project type list -->
     </GuidSymbol>
-    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidServerExplorerToolbarCmdSet" value="{379E1B3D-A0E1-4D1D-97E9-CE04114BD345}">
+      <!-- Server Explorer commands -->
+      <IDSymbol name="ServerExplorerToolbar" value="0x0700"/>
+      <IDSymbol name="ServerExplorerToolbarGroup" value="0x0701" />
+      <IDSymbol name="cmdOpenConnectionsManager" value="0x0702" />
+      <!-- This is the guid used to group the menu commands together -->
+    </GuidSymbol>
+    <GuidSymbol name="connectionsManagerIcon" value="{F1231944-8E3C-421D-81A8-78C180B680CF}">
+      <IDSymbol name="connectionsManagerIcon1" value="1"/>
+    </GuidSymbol>
     <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
       <IDSymbol name="menuGlobal" value="0x1000"/>
       <IDSymbol name="menuGlobal2005" value="0x1001"/>

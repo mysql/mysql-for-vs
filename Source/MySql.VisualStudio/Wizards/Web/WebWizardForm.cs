@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -23,37 +23,28 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.Data.Services;
-using EnvDTE;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public partial class WebWizardForm : BaseWizardForm
-  {    
-
+  {
     #region "Properties exposed"
 
     string _connectionStringSafeForAspNet = string.Empty;
      
-     internal string serverExplorerConnectionSelected
+     internal string ServerExplorerConnectionSelected
      {
        get {
-          return dataSourceConfiguration1.selectedConnection;
+          return dataSourceConfiguration1.SelectedConnection;
         }
       }
 
-    internal string connectionStringForAspNetTables
+    internal string ConnectionStringForAspNetTables
     {
       get
       {
         if (string.IsNullOrEmpty(_connectionStringSafeForAspNet))        
-          _connectionStringSafeForAspNet = dataSourceConfiguration1.connectionString;
+          _connectionStringSafeForAspNet = dataSourceConfiguration1.ConnectionString;
           return _connectionStringSafeForAspNet;        
       }
       set
@@ -62,72 +53,71 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal string connectionStringNameForAspNetTables
+    internal string ConnectionStringNameForAspNetTables
     {
       get
       {
-        return dataSourceConfiguration1.connectionStringName;
+        return dataSourceConfiguration1.ConnectionStringName;
       }    
     }
     
     
-    internal string connectionStringForModel
+    internal string ConnectionStringForModel
     {
       get
       {
-        return modelConfiguration1.connectionString;
+        return modelConfiguration1.ConnectionString;
       }
     }
 
     internal override string ConnectionString
     {
-      get { return connectionStringForModel; }
+      get { return ConnectionStringForModel; }
     }
 
-    internal string connectionStringNameForModel
+    internal string ConnectionStringNameForModel
     {
       get
       {
 
-        return modelConfiguration1.connectionStringName;
+        return modelConfiguration1.ConnectionStringName;
       }
     }
 
-    internal bool includeProfilesProvider
+    internal bool IncludeProfilesProvider
     {
       get
       {
-        return dataSourceConfiguration1.includeProfileProvider;
+        return dataSourceConfiguration1.IncludeProfileProvider;
       }
     }
 
-    internal bool includeRoleProvider
+    internal bool IncludeRoleProvider
     {
       get
       {
-        return dataSourceConfiguration1.includeRoleProvider;
+        return dataSourceConfiguration1.IncludeRoleProvider;
       }
     }
 
-
-    internal string modelName
+    internal string ModelName
     {
       get
       {
-        return modelConfiguration1.modelName;
+        return modelConfiguration1.ModelName;
       }
 
     }
 
-    internal DataEntityVersion dEVersion
+    internal DataEntityVersion DEVersion
     {
       get
       {
-        return modelConfiguration1.dEVersion;
+        return modelConfiguration1.DEVersion;
       }
     }
 
-    internal List<DbTables> selectedTables
+    internal List<DbTables> SelectedTables
     {
       get
       {
@@ -135,15 +125,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal bool includeSensitiveInformation
+    internal bool IncludeSensitiveInformation
     {
       get
       {
-        return dataSourceConfiguration1.includeSensitiveInformation;
+        return dataSourceConfiguration1.IncludeSensitiveInformation;
       }
     }
 
-    internal bool writeExceptionsToLog
+    internal bool WriteExceptionsToLog
     {
       get
       {
@@ -151,7 +141,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal int minimumPasswordLenght
+    internal int MinimumPasswordLenght
     {
       get
       {
@@ -159,7 +149,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal bool requireQuestionAndAnswer
+    internal bool RequireQuestionAndAnswer
     {
       get
       {
@@ -167,7 +157,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal bool createAdministratorUser
+    internal bool CreateAdministratorUser
     {
       get
       {
@@ -175,7 +165,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal string adminName
+    internal string AdminName
     {
       get 
       {
@@ -183,7 +173,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal string adminPassword
+    internal string AdminPassword
     {
       get
       {
@@ -191,33 +181,29 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal string userQuestion
+    internal string UserQuestion
     {
       get {
         return providerConfiguration1.userQuestion;
       }    
     }
 
-    internal string userAnswer
+    internal string UserAnswer
     {
       get {
         return providerConfiguration1.userAnswer;
       }
     }
 
-
     #endregion
 
-    internal protected WebWizard Wizard = null;
+    protected internal WebWizard Wizard;
 
-
-    public WebWizardForm(WebWizard Wizard)
-      : base()
+    public WebWizardForm(WebWizard wizard)
     {
-      this.Wizard = Wizard;
+      Wizard = wizard;
       InitializeComponent();
     }
-
 
     private void WebWizardForm_Load(object sender, EventArgs e)
     {

@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -23,11 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.DDEX;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {

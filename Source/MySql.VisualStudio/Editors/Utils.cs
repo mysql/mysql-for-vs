@@ -32,9 +32,11 @@ using System.Drawing;
 using EnvDTE;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
-using MySql.Data.MySqlClient.Properties;
+using MySql.Data.VisualStudio.DDEX;
 using MySqlX;
+using MySQL.Utility.Classes.Tokenizers;
 using Color = System.Drawing.Color;
+using MySqlTokenizer = MySQL.Utility.Classes.Tokenizers.MySqlTokenizer;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -260,7 +262,7 @@ namespace MySql.Data.VisualStudio.Editors
         return null;
       }
 
-      MySQL.Utility.Classes.MyJsTokenizer tokenizer = new MySQL.Utility.Classes.MyJsTokenizer(jsStatements.Trim());
+      var tokenizer = new MyJsTokenizer(jsStatements.Trim());
       return tokenizer.BreakIntoStatements();
     }
 
@@ -276,7 +278,7 @@ namespace MySql.Data.VisualStudio.Editors
         return null;
       }
 
-      MySQL.Utility.Classes.MyPythonTokenizer tokenizer = new MySQL.Utility.Classes.MyPythonTokenizer(pythonStatements.Trim());
+      var tokenizer = new MyPythonTokenizer(pythonStatements.Trim());
       return tokenizer.BreakIntoStatements();
     }
 
@@ -292,7 +294,7 @@ namespace MySql.Data.VisualStudio.Editors
         return new List<string>();
       }
 
-      MySQL.Utility.Classes.MySqlTokenizer tokenizer = new MySQL.Utility.Classes.MySqlTokenizer(sqlStatements.Trim());
+      var tokenizer = new MySqlTokenizer(sqlStatements.Trim());
       return tokenizer.BreakIntoStatements();
     }
 

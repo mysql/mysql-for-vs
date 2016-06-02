@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -23,33 +23,27 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using EnvDTE;
 using MySql.Data.VisualStudio.DBExport;
-
+using MySql.Data.VisualStudio.ServerInstances;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public partial class DataSourceConfiguration : WizardPage
   {
-    private BaseWizardForm baseWizardForm;
+    private BaseWizardForm _baseWizardForm;
     private DTE _dte; 
 
-    internal bool includeSensitiveInformation
+    internal bool IncludeSensitiveInformation
     {
       get
       {
          return includeSensitiveInformationCheck.Checked;
        }
     }
-  
     
-    internal string connectionStringName
+    internal string ConnectionStringName
     {
       get
       {
@@ -57,16 +51,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal string connectionString
+    internal string ConnectionString
     {
       get
       {        
         return ConnectionStringTextBox.Tag.ToString();
       }
-    }   
-   
+    }
 
-    internal bool includeRoleProvider
+    internal bool IncludeRoleProvider
     {
       get
       {
@@ -74,8 +67,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-
-    internal bool includeProfileProvider
+    internal bool IncludeProfileProvider
     {
       get
       {
@@ -83,7 +75,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }    
     }
 
-    internal string selectedConnection
+    internal string SelectedConnection
     {
       get {
         return cmbConnections.Text;      
@@ -94,13 +86,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       InitializeComponent();
       /* Loading defaults */      
-      ConnectionStringNameTextBox.Text = "LocalMySqlServer";
+      ConnectionStringNameTextBox.Text = @"LocalMySqlServer";
       includeRoleProviderCheck.Checked = true;
       includeProfileProviderCheck.Checked = true;      
      
       /* assign events */
-      ConnectionStringTextBox.TextChanged += new EventHandler(ConnectionStringTextBox_TextChanged);     
-      cmbConnections.SelectionChangeCommitted += new EventHandler(cmbConnections_SelectionChangeCommitted);      
+      ConnectionStringTextBox.TextChanged += ConnectionStringTextBox_TextChanged;     
+      cmbConnections.SelectionChangeCommitted += cmbConnections_SelectionChangeCommitted;      
     }
    
 
@@ -111,19 +103,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     private void ConnectionStringTextBox_TextChanged(object sender, EventArgs e)
     {
-      if (!String.IsNullOrEmpty(ConnectionStringTextBox.Text))
+      if (!string.IsNullOrEmpty(ConnectionStringTextBox.Text))
         errorProvider1.SetError(ConnectionStringTextBox, "");
     }
 
 
-    private void ShowConnectionDialog(bool addSEConnection)
+    private void ShowConnectionDialog(bool addSeConnection)
     {
-      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSEConnection);
+      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSeConnection);
       var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
 
-      if (addSEConnection)
+      if (addSeConnection)
       {          
-          baseWizardForm.connections.DataSource = connections;
+          _baseWizardForm.connections.DataSource = connections;
       }
       else
       {       
@@ -132,13 +124,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }      
     }
 
-
     internal override bool IsValid()
     {
       CancelEventArgs args = new CancelEventArgs();
       ProviderConfiguration_Validating(this, args);
-      if (args.Cancel) return false;
-      else return true;
+      return !args.Cancel;
     }
 
     private void ProviderConfiguration_Validating(object sender, CancelEventArgs e)
@@ -151,19 +141,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
       else
       {
-        errorProvider1.SetError(cmbConnections, "");
+        errorProvider1.SetError(cmbConnections, string.Empty);
       }     
     }
 
     private bool IsConnectionValid(string connectionString)
     {
-      if (String.IsNullOrEmpty(connectionString))
+      if (string.IsNullOrEmpty(connectionString))
         return false;
 
-      if (String.IsNullOrEmpty(cmbConnections.Text))
+      if (string.IsNullOrEmpty(cmbConnections.Text))
         return false;
 
-      if (String.IsNullOrEmpty(ConnectionStringTextBox.Text))
+      if (string.IsNullOrEmpty(ConnectionStringTextBox.Text))
         return false;
 
       var cnn = new MySqlConnection(connectionString);
@@ -176,8 +166,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       return true;
     }
-
-
 
     void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
     {
@@ -198,7 +186,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     /// <param name="wizard"></param>
     internal override void OnStarting(BaseWizardForm wizard)    
     {
-       baseWizardForm = wizard;
+       _baseWizardForm = wizard;
        _dte = ((WebWizardForm)wizard).dte;
 
       MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox, "CSharpMVC");

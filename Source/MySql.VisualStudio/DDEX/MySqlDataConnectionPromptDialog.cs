@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -23,12 +23,13 @@
 /*
  * This file contains an implemetation of prompt dialog.
  */
+
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using Microsoft.VisualStudio.Data;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DDEX
 {
   /// <summary>
   /// Prompt dialog for user information retrieving in case of connection failure.

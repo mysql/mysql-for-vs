@@ -30,10 +30,10 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  [Guid(GuidStrings.SqlEditorFactory)]
+  [Guid(GuidStrings.SQL_EDITOR_FACTORY)]
   public sealed class SqlEditorFactory : IVsEditorFactory, IDisposable
   {
-    private ServiceProvider serviceProvider;
+    private ServiceProvider _serviceProvider;
 
     #region IVsEditorFactory Members
 
@@ -47,13 +47,13 @@ namespace MySql.Data.VisualStudio.Editors
     int IVsEditorFactory.CreateEditorInstance(uint grfCreateDoc, string pszMkDocument,
         string pszPhysicalView, IVsHierarchy pvHier, uint itemid,
         IntPtr punkDocDataExisting, out IntPtr ppunkDocView, out IntPtr ppunkDocData,
-        out string pbstrEditorCaption, out Guid pguidCmdUI, out int pgrfCDW)
+        out string pbstrEditorCaption, out Guid pguidCmdUi, out int pgrfCdw)
     {
       string s;
       pvHier.GetCanonicalName(itemid, out s);
-      pgrfCDW = 0;
+      pgrfCdw = 0;
       LastDocumentPath = pszMkDocument;
-      pguidCmdUI = VSConstants.GUID_TextEditorFactory;
+      pguidCmdUi = VSConstants.GUID_TextEditorFactory;
 
       ppunkDocData = IntPtr.Zero;
       ppunkDocView = IntPtr.Zero;
@@ -62,7 +62,7 @@ namespace MySql.Data.VisualStudio.Editors
       FileInfo fileInfo = new FileInfo(LastDocumentPath);
       if (fileInfo.Extension.ToLower().Equals(".mysql"))
       {
-        editor = new SqlEditorPane(serviceProvider, this);
+        editor = new SqlEditorPane(_serviceProvider, this);
       }
       else
       {
@@ -73,7 +73,7 @@ namespace MySql.Data.VisualStudio.Editors
         }
 
 
-        editor = new MySqlHybridScriptEditorPane(serviceProvider, this, scriptType);
+        editor = new MySqlHybridScriptEditorPane(_serviceProvider, this, scriptType);
       }
       if (editor.Window != null)
       {
@@ -102,7 +102,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     int IVsEditorFactory.SetSite(IOleServiceProvider psp)
     {
-      serviceProvider = new ServiceProvider(psp);
+      _serviceProvider = new ServiceProvider(psp);
       return VSConstants.S_OK;
     }
 
@@ -120,10 +120,10 @@ namespace MySql.Data.VisualStudio.Editors
       if (disposing)
       {
         // --- Here we dispose all managed and unmanaged resources
-        if (serviceProvider != null)
+        if (_serviceProvider != null)
         {
-          serviceProvider.Dispose();
-          serviceProvider = null;
+          _serviceProvider.Dispose();
+          _serviceProvider = null;
         }
       }
     }

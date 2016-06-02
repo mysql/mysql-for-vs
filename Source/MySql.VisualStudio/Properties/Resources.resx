@@ -1243,4 +1243,79 @@ Check that the server is running, the database exists and the user Error establi
   <data name="warningIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\warningIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MySqlDataProviderPackage_MySqlUtilitiesNotFoundError" xml:space="preserve">
+    <value>The command line MySQL Utilities could not be found.</value>
+  </data>
+  <data name="MySqlDataProviderPackage_ClickOkOrCancel" xml:space="preserve">
+    <value>Click OK to go to the page or Cancel to continue</value>
+  </data>
+  <data name="MySqlDataProviderPackage_Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="MySqlDataProviderPackage_CreateNewScriptError" xml:space="preserve">
+    <value>An error ocurred when trying to launch a MySql Script window: </value>
+  </data>
+  <data name="MySqlScriptWindowLaunchError" xml:space="preserve">
+    <value>An error ocurred when trying to launch a MySql Script window: </value>
+  </data>
+  <data name="ConnectionsManager" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ConnectionsManager_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Connection_Fabric" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection-Fabric.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Connection_Socket_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection-Socket-32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Connection_SSH" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection-SSH.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Connection_TCP_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection-TCP-32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Connection_X_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Connection-X-32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="list_view" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\list-view.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tile_view" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tile-view.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialogViewAsDetails" xml:space="preserve">
+    <value>View as Details</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialogViewAsTiles" xml:space="preserve">
+    <value>View as Tiles</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialogExistingConnectionDetail" xml:space="preserve">
+    <value>A MySQL connection for {0} already exists in the Server Explorer.</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialogExistingConnectionSubDetail" xml:space="preserve">
+    <value>Do you want to replace the existing connection with the selected one?</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialogExistingConnectionTitle" xml:space="preserve">
+    <value>MySQL Connection already exists</value>
+  </data>
+  <data name="ConnectDialog_AdvancedButtonText" xml:space="preserve">
+    <value>Advanced &gt;&gt;</value>
+  </data>
+  <data name="ConnectDialog_SimpleButtonText" xml:space="preserve">
+    <value>Simple &lt;&lt;</value>
+  </data>
+  <data name="WarningText" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="WindowsFormsWizard_SolutionBuildFailed" xml:space="preserve">
+    <value>Solution build failed. Please check that all project references have been resolved.</value>
+  </data>
 </root>

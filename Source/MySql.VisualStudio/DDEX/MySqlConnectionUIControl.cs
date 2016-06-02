@@ -1,4 +1,4 @@
-// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -23,25 +23,29 @@
 /*
  * This file contains implementation of custom connection dialog. 
  */
-using System;
-using System.Windows.Forms;
-using System.Diagnostics;
-using Microsoft.VisualStudio.Data.AdoDotNet;
-using MySql.Data.VisualStudio.Properties;
-using System.Data.Common;
-using Microsoft.VisualStudio.Data;
 
-namespace MySql.Data.VisualStudio
+using System;
+using System.Data.Common;
+using System.Windows.Forms;
+using Microsoft.VisualStudio.Data;
+using MySql.Data.VisualStudio.Properties;
+
+namespace MySql.Data.VisualStudio.DDEX
 {
   /// <summary>
   /// Represents a custom data connection UI control for entering
   /// connection information.
   /// </summary>
-  internal partial class MySqlDataConnectionUI : DataConnectionUIControl //Stub
+  internal partial class MySqlDataConnectionUIControl : DataConnectionUIControl
   {
-    private bool dbListPopulated;
+    private bool _dbListPopulated;
 
-    public MySqlDataConnectionUI()
+    /// <summary>
+    /// Used to prevent OnChange event handling during initialization.
+    /// </summary>
+    private bool _loadingInProcess;
+
+    public MySqlDataConnectionUIControl()
     {
       InitializeComponent();
     }
@@ -57,14 +61,24 @@ namespace MySql.Data.VisualStudio
         throw new Exception(Resources.ConnectionPropertiesNull);
       }
 
-      Button okButton = this.ParentForm.AcceptButton as Button;
-      okButton.Click += new EventHandler(okButton_Click);
+      var parentForm = ParentForm;
+      if (parentForm != null)
+      {
+        var okButton = parentForm.AcceptButton as Button;
+        if (okButton != null)
+        {
+          okButton.Click += okButton_Click;
+        }
+      }
 
-      MySqlConnectionProperties prop =
-                (ConnectionProperties as MySqlConnectionProperties);
-      DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
+      var prop = ConnectionProperties as MySqlConnectionProperties;
+      if (prop == null)
+      {
+        return;
+      }
 
-      loadingInProcess = true;
+      var cb = prop.ConnectionStringBuilder;
+      _loadingInProcess = true;
       try
       {
         serverNameTextBox.Text = (string)cb["Server"];
@@ -75,17 +89,132 @@ namespace MySql.Data.VisualStudio
       }
       finally
       {
-        loadingInProcess = false;
+        _loadingInProcess = false;
+      }
+    }
+
+    private bool AttemptToCreateDatabase()
+    {
+      var prop = ConnectionProperties as MySqlConnectionProperties;
+      if (prop == null)
+      {
+        return false;
+      }
+
+      var cb = prop.ConnectionStringBuilder;
+      string olddb = (string)cb["Database"];
+      cb["Database"] = "";
+      try
+      {
+        using (var conn = new MySqlConnectionSupport())
+        {
+          conn.Initialize(null);
+          conn.ConnectionString = cb.ConnectionString;
+          conn.Open(false);
+          conn.ExecuteWithoutResults("CREATE DATABASE `" + dbList.Text + "`", 1, null, 0);
+        }
+        return true;
+      }
+      catch (Exception)
+      {
+        MessageBox.Show(string.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
+        return false;
+      }
+      finally
+      {
+        cb["Database"] = olddb;
+      }
+    }
+
+    private bool DatabaseExists()
+    {
+      var prop = ConnectionProperties as MySqlConnectionProperties;
+      if (prop == null)
+      {
+        return false;
+      }
+
+      var cb = prop.ConnectionStringBuilder;
+      try
+      {
+        using (var conn = new MySqlConnectionSupport())
+        {
+          conn.Initialize(null);
+          conn.ConnectionString = cb.ConnectionString;
+          conn.Open(false);
+        }
+
+        return true;
+      }
+      catch (DbException ex)
+      {
+        string msg = ex.Message.ToLowerInvariant();
+        if (msg.ToLower().Contains("unknown database"))
+        {
+          return false;
+        }
+
+        throw;
+      }
+    }
+
+    private void dbList_DropDown(object sender, EventArgs e)
+    {
+      if (_dbListPopulated)
+      {
+        return;
+      }
+
+      var prop = ConnectionProperties as MySqlConnectionProperties;
+      if (prop == null)
+      {
+        return;
+      }
+
+      var cb = prop.ConnectionStringBuilder;
+      try
+      {
+        using (var conn = new MySqlConnectionSupport())
+        {
+          conn.Initialize(null);
+          conn.ConnectionString = cb.ConnectionString;
+          conn.Open(false);
+          dbList.Items.Clear();
+          using (var reader = conn.Execute("SHOW DATABASES", 1, null, 0))
+          {
+            while (reader.Read())
+            {
+              string dbName = reader.GetItem(0).ToString().ToLowerInvariant();
+              if (dbName == "information_schema") continue;
+              if (dbName == "mysql") continue;
+              dbList.Items.Add(reader.GetItem(0));
+            }
+            _dbListPopulated = true;
+          }
+        }
+      }
+      catch (Exception)
+      {
+        MessageBox.Show(Resources.UnableToRetrieveDatabaseList, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
     /// <summary>
-    /// We hook the ok button of our parent form so we can implement our 
-    /// 'create database' functionality
+    /// Verify if the stored connection properties can be parsed to a MySql connection properties type
+    /// </summary>
+    /// <returns>True for MySql connection properties or false for other types</returns>
+    private bool IsMySqlConnection()
+    {
+      var prop = ConnectionProperties as MySqlConnectionProperties;
+      return prop != null && !string.IsNullOrEmpty(prop.ConnectionStringBuilder.ConnectionString);
+    }
+
+    /// <summary>
+    /// We hook the ok button of our parent form so we can implement our 'create database' functionality
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    void okButton_Click(object sender, EventArgs e)
+    private void okButton_Click(object sender, EventArgs e)
     {
       //verify if the connection is a MySql connection
       if (!IsMySqlConnection())
@@ -96,27 +225,40 @@ namespace MySql.Data.VisualStudio
       bool exists = DatabaseExists();
       if (exists) return;
 
-      String prompt = String.Format(Resources.UnknownDbPromptCreate, dbList.Text);
+      var prompt = string.Format(Resources.UnknownDbPromptCreate, dbList.Text);
       prompt = prompt.Replace(@"\n", @"\n");
       DialogResult result = MessageBox.Show(prompt, null, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-      this.ParentForm.DialogResult = DialogResult.None;
-      if (result == DialogResult.Yes)
+      var parentForm = ParentForm;
+      if (parentForm == null)
       {
-        if (!AttemptToCreateDatabase())
-          MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
-        else
-          this.ParentForm.DialogResult = DialogResult.OK;
+        return;
       }
+
+      parentForm.DialogResult = DialogResult.None;
+      if (result != DialogResult.Yes)
+      {
+        return;
+      }
+
+      if (!AttemptToCreateDatabase())
+        MessageBox.Show(string.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
+      else
+        parentForm.DialogResult = DialogResult.OK;
     }
 
-    /// <summary>
-    /// Verify if the stored connection properties can be parsed to a MySql connection properties type
-    /// </summary>
-    /// <returns>True for MySql connection properties or false for other types</returns>
-    private bool IsMySqlConnection()
+    private void SavePasswordChanged(object sender, EventArgs e)
     {
-      MySqlConnectionProperties prop = (ConnectionProperties as MySqlConnectionProperties);
-      return !string.IsNullOrEmpty(prop.ConnectionStringBuilder.ConnectionString);
+      if (ConnectionProperties == null)
+      {
+        return;
+      }
+
+      // Only set properties if we are not currently loading them
+      var stringTag = savePasswordCheckBox.Tag as string;
+      if (!_loadingInProcess && stringTag != null)
+      {
+        ConnectionProperties[stringTag] = savePasswordCheckBox.Checked;
+      }
     }
 
     /// <summary>
@@ -129,24 +271,35 @@ namespace MySql.Data.VisualStudio
       try
       {
         // Only set properties if we are not currently loading them
-        if (!loadingInProcess)
+        if (!_loadingInProcess)
         {
-          Control source = sender as Control;
+          var source = sender as Control;
+          if (source == null)
+          {
+            return;
+          }
 
           // if the user changes the host or user id then
           // we need to repopulate our db list
-          if (source.Tag.Equals("Server") ||
-              source.Tag.Equals("User id"))
-            dbListPopulated = false;
+          if (source.Tag.Equals("Server") || source.Tag.Equals("User id"))
+          {
+            _dbListPopulated = false;
+          }
 
           // Tag is used to determine property name
-          if (source != null && source.Tag is string)
-            ConnectionProperties[source.Tag as string] = source.Text;
+          var stringTag = source.Tag as string;
+          if (stringTag != null)
+          {
+            ConnectionProperties[stringTag] = source.Text;
+          }
         }
-        dbList.Enabled = serverNameTextBox.Text.Trim().Length > 0 &&
-            userNameTextBox.Text.Trim().Length > 0;
+
+        dbList.Enabled = serverNameTextBox.Text.Trim().Length > 0 && userNameTextBox.Text.Trim().Length > 0;
       }
-      catch { }
+      catch
+      {
+        // ignored
+      }
     }
 
     /// <summary>
@@ -156,110 +309,10 @@ namespace MySql.Data.VisualStudio
     /// <param name="e">Additional event data. Not used.</param>
     private void TrimControlText(object sender, EventArgs e)
     {
-      Control c = sender as Control;
-      c.Text = c.Text.Trim();
-    }
-
-    /// <summary>
-    /// Used to prevent OnChange event handling during initialization.
-    /// </summary>
-    private bool loadingInProcess = false;
-
-    private void SavePasswordChanged(object sender, EventArgs e)
-    {
-      if (ConnectionProperties == null) return;
-      // Only set properties if we are not currently loading them
-      if (!loadingInProcess)
-        ConnectionProperties[savePasswordCheckBox.Tag as string]
-            = savePasswordCheckBox.Checked;
-    }
-
-    private void dbList_DropDown(object sender, EventArgs e)
-    {
-      if (dbListPopulated) return;
-
-      MySqlConnectionProperties prop =
-          (ConnectionProperties as MySqlConnectionProperties);
-      DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
-
-      try
+      var c = sender as Control;
+      if (c != null)
       {
-        using (MySqlConnectionSupport conn = new MySqlConnectionSupport())
-        {
-          conn.Initialize(null);
-          conn.ConnectionString = cb.ConnectionString;
-          conn.Open(false);
-          dbList.Items.Clear();
-          using (DataReader reader = conn.Execute("SHOW DATABASES", 1, null, 0))
-          {
-            while (reader.Read())
-            {
-              string dbName = reader.GetItem(0).ToString().ToLowerInvariant();
-              if (dbName == "information_schema") continue;
-              if (dbName == "mysql") continue;
-              dbList.Items.Add(reader.GetItem(0));
-            }
-            dbListPopulated = true;
-          }
-        }
-      }
-      catch (Exception)
-      {
-        MessageBox.Show(Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-    }
-
-    private bool DatabaseExists()
-    {
-      MySqlConnectionProperties prop =
-          (ConnectionProperties as MySqlConnectionProperties);
-      DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
-
-      try
-      {
-        using (MySqlConnectionSupport conn = new MySqlConnectionSupport())
-        {
-          conn.Initialize(null);
-          conn.ConnectionString = cb.ConnectionString;
-          conn.Open(false);
-        }
-        return true;
-      }
-      catch (DbException ex)
-      {
-        string msg = ex.Message.ToLowerInvariant();
-        if (msg.ToLower().Contains("unknown database")) return false;
-        throw;
-      }
-    }
-
-    private bool AttemptToCreateDatabase()
-    {
-      MySqlConnectionProperties prop =
-          (ConnectionProperties as MySqlConnectionProperties);
-      DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
-
-      string olddb = (string)cb["Database"];
-      cb["Database"] = "";
-      try
-      {
-        using (MySqlConnectionSupport conn = new MySqlConnectionSupport())
-        {
-          conn.Initialize(null);
-          conn.ConnectionString = cb.ConnectionString;
-          conn.Open(false);
-          conn.ExecuteWithoutResults("CREATE DATABASE `" + dbList.Text + "`", 1, null, 0);
-        }
-        return true;
-      }
-      catch (Exception)
-      {
-        MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
-        return false;
-      }
-      finally
-      {
-        cb["Database"] = olddb;
+        c.Text = c.Text.Trim();
       }
     }
   }

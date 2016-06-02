@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -24,38 +24,29 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using MySql.Data.VisualStudio;
 using MySql.Data.MySqlClient;
 using EnvDTE;
 using MySql.Data.VisualStudio.DBExport;
-
+using MySql.Data.VisualStudio.ServerInstances;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class DataAccessConfig : WizardPage
   {
-    private BaseWizardForm baseWizardForm;
+    private BaseWizardForm _baseWizardForm;
     private DTE _dte;    
 
-    internal MySqlConnection _con
+    internal MySqlConnection Con
     {        
         get
         {
-           if (!string.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString()))
-                return new MySqlConnection(ConnectionStringTextBox.Tag.ToString());
-            else
-                return null;
-       }
+          return !string.IsNullOrEmpty(ConnectionStringTextBox.Tag.ToString())
+            ? new MySqlConnection(ConnectionStringTextBox.Tag.ToString())
+            : null;
+        }
     }
-    
-    List<MyListItem> _constraints = new List<MyListItem>();
 
-    internal string connectionString
+    internal string ConnectionString
     {
       get
       {
@@ -63,7 +54,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       }
     }
 
-    internal string connectionName
+    internal string ConnectionName
     {
       get {
         return cmbConnections.Text;
@@ -94,8 +85,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       InitializeComponent();
 
       /* assign events */
-      ConnectionStringTextBox.TextChanged += new EventHandler(ConnectionStringTextBox_TextChanged);
-      cmbConnections.SelectionChangeCommitted += new EventHandler(cmbConnections_SelectionChangeCommitted);            
+      ConnectionStringTextBox.TextChanged += ConnectionStringTextBox_TextChanged;
+      cmbConnections.SelectionChangeCommitted += cmbConnections_SelectionChangeCommitted;            
     }
     
     private void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
@@ -113,7 +104,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     private void ConnectionStringTextBox_TextChanged(object sender, EventArgs e)
     {
-      if (!String.IsNullOrEmpty(ConnectionStringTextBox.Text))
+      if (!string.IsNullOrEmpty(ConnectionStringTextBox.Text))
         errorProvider1.SetError(ConnectionStringTextBox, "");
     }
 
@@ -121,7 +112,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       ShowConnectionDialog(true);
     }
-  
 
     private void DataAccessConfig_Validating(object sender, CancelEventArgs e)
     {
@@ -141,13 +131,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     private bool IsConnectionStringValid(string connectionString)
     {
-      if (String.IsNullOrEmpty(connectionString))
+      if (string.IsNullOrEmpty(connectionString))
         return false;
 
-      if (String.IsNullOrEmpty(cmbConnections.Text))
+      if (string.IsNullOrEmpty(cmbConnections.Text))
         return false;
 
-      if (String.IsNullOrEmpty(ConnectionStringTextBox.Text))
+      if (string.IsNullOrEmpty(ConnectionStringTextBox.Text))
         return false;
 
       var cnn = new MySqlConnection(connectionString);
@@ -169,14 +159,14 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       else return true;
     }
 
-    private void ShowConnectionDialog(bool addSEConnection)
+    private void ShowConnectionDialog(bool addSeConnection)
     {
-      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSEConnection);
+      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSeConnection);
       var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
 
-      if (addSEConnection)
+      if (addSeConnection)
       {
-        baseWizardForm.connections.DataSource = connections;
+        _baseWizardForm.connections.DataSource = connections;
       }
       else
       {
@@ -188,7 +178,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     internal override void OnStarting(BaseWizardForm wizard)
     {
-      baseWizardForm = wizard;
+      _baseWizardForm = wizard;
       WindowsFormsWizardForm wizardForm = (WindowsFormsWizardForm)wizard;
       _dte = ((WindowsFormsWizardForm)wizard).dte;
 

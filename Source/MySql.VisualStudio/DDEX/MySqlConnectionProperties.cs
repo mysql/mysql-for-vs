@@ -1,4 +1,4 @@
-// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -23,21 +23,22 @@
 /*
  * This file contains implementation of customized connection properties. 
  */
+
 using System;
-using Microsoft.VisualStudio.Data.AdoDotNet;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Common;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.MySqlClient;
-using System.Collections;
-using System.ComponentModel;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DDEX
 {
   /// <summary>
   /// This class customize standard connection properties for 
   /// MySql data base connection.
   /// </summary>
-  public class MySqlConnectionProperties : DataConnectionProperties, IDictionary, ICustomTypeDescriptor, ICollection, IEnumerable
+  public class MySqlConnectionProperties : DataConnectionProperties, IDictionary
   {
     public static string InvariantName = "MySql.Data.MySqlClient";
 
@@ -49,59 +50,74 @@ namespace MySql.Data.VisualStudio
       ConnectionStringBuilder = new MySqlConnectionStringBuilder();
     }
 
-    public DbConnectionStringBuilder ConnectionStringBuilder
-    {
-      get;
-      private set;
-    }
+    public DbConnectionStringBuilder ConnectionStringBuilder { get; }
 
     public override object this[string propertyName]
     {
       get
       {
-        if (propertyName == null)  throw new ArgumentNullException("propertyName");
-        object obj = (object)null;
+        if (propertyName == null)
+        {
+          throw new ArgumentNullException("propertyName");
+        }
+
+        object obj;
         if (!ConnectionStringBuilder.TryGetValue(propertyName, out obj))
-          return (object)null;
+        {
+          return null;
+        }
+
         if (ConnectionStringBuilder.ShouldSerialize(propertyName))
+        {
           return ConnectionStringBuilder[propertyName];
-        else
-          return ConnectionStringBuilder[propertyName] ?? (object)DBNull.Value;
+        }
+
+        return ConnectionStringBuilder[propertyName] ?? DBNull.Value;
       }
+
       set
       {
-        if (propertyName == null)  throw new ArgumentNullException("propertyName");
+        if (propertyName == null)
+        {
+          throw new ArgumentNullException("propertyName");
+        }
+
         ConnectionStringBuilder.Remove(propertyName);
         if (value == DBNull.Value)
         {
-          this.OnPropertyChanged(new DataConnectionPropertyChangedEventArgs(propertyName));
+          OnPropertyChanged(new DataConnectionPropertyChangedEventArgs(propertyName));
         }
         else
         {
-          object objA = (object)null;
+          object objA;
           ConnectionStringBuilder.TryGetValue(propertyName, out objA);
           ConnectionStringBuilder[propertyName] = value;
-          if (object.Equals(objA, value))
+          if (Equals(objA, value))
+          {
             ConnectionStringBuilder.Remove(propertyName);
-          this.OnPropertyChanged(new DataConnectionPropertyChangedEventArgs(propertyName));
+          }
+
+          OnPropertyChanged(new DataConnectionPropertyChangedEventArgs(propertyName));
         }
       }
     }
 
     protected override void InitializeProperties()
     {
-      PropertyDescriptorCollection props = TypeDescriptor.GetProperties(ConnectionStringBuilder, true);
+      var props = TypeDescriptor.GetProperties(ConnectionStringBuilder, true);
       foreach (PropertyDescriptor prop in props)
       {
-        NameAttribute nameAttribute = prop.Attributes[typeof(NameAttribute)] as NameAttribute;
+        var nameAttribute = prop.Attributes[typeof(NameAttribute)] as NameAttribute;
         if (nameAttribute != null)
         {
-          Attribute[] attributeArray = new Attribute[prop.Attributes.Count];
-          prop.Attributes.CopyTo((Array)attributeArray, 0);
-          this.AddProperty(nameAttribute.Name, prop.PropertyType, attributeArray);
+          var attributeArray = new Attribute[prop.Attributes.Count];
+          prop.Attributes.CopyTo(attributeArray, 0);
+          AddProperty(nameAttribute.Name, prop.PropertyType, attributeArray);
         }
         else
-          this.AddProperty(prop, new Attribute[0]);
+        {
+          AddProperty(prop, new Attribute[0]);
+        }
       }
     }
 
@@ -126,8 +142,7 @@ namespace MySql.Data.VisualStudio
       finally
       {
         // In any case dispose connection support
-        if (conn != null)
-          conn.Dispose();
+        conn.Dispose();
       }
     }
 
@@ -138,26 +153,26 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
-        DbConnectionStringBuilder cb = this.ConnectionStringBuilder;
-        return !String.IsNullOrEmpty((string)cb["Server"])
-               && !String.IsNullOrEmpty((string)cb["Database"]);
+        DbConnectionStringBuilder cb = ConnectionStringBuilder;
+        return !string.IsNullOrEmpty((string)cb["Server"]) && !string.IsNullOrEmpty((string)cb["Database"]);
       }
     }
-
 
     public override string ToDisplayString()
     {
       string str2;
-      PropertyDescriptorCollection properties = ((ICustomTypeDescriptor)this).GetProperties(new System.Attribute[] { PasswordPropertyTextAttribute.Yes });
-      System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>> list = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>>();
+      var properties = ((ICustomTypeDescriptor)this).GetProperties(new Attribute[] { PasswordPropertyTextAttribute.Yes });
+      var list = new List<KeyValuePair<string, object>>();
       foreach (PropertyDescriptor descriptor in properties)
       {
         string str = descriptor.DisplayName;
-        if (ConnectionStringBuilder.ShouldSerialize(str))
+        if (!ConnectionStringBuilder.ShouldSerialize(str))
         {
-          list.Add(new System.Collections.Generic.KeyValuePair<string, object>(str, ConnectionStringBuilder[str]));
-          ConnectionStringBuilder.Remove(str);
+          continue;
         }
+
+        list.Add(new KeyValuePair<string, object>(str, ConnectionStringBuilder[str]));
+        ConnectionStringBuilder.Remove(str);
       }
       try
       {
@@ -165,7 +180,7 @@ namespace MySql.Data.VisualStudio
       }
       finally
       {
-        foreach (System.Collections.Generic.KeyValuePair<string, object> pair in list)
+        foreach (KeyValuePair<string, object> pair in list)
         {
           if (pair.Value != null)
           {
@@ -173,65 +188,64 @@ namespace MySql.Data.VisualStudio
           }
         }
       }
+
       return str2;
     }
 
     public override string ToFullString()
     {
-      return this.ConnectionStringBuilder.ConnectionString;
+      return ToString();
     }
         
     public override string ToString()
     {
-        return this.ToFullString();
+      return ConnectionStringBuilder.ConnectionString;
     }
 
     public override bool EquivalentTo(DataConnectionProperties connectionProperties)
     {
-      return this.ToFullString().Equals(((MySqlConnectionProperties)connectionProperties).ToFullString());
+      return ToString().Equals(((MySqlConnectionProperties)connectionProperties).ToString());
     }
-
 
     object this[object key]
     {
       get
       {
         object valueKey;
-        this.ConnectionStringBuilder.TryGetValue(key.ToString(), out valueKey);
+        ConnectionStringBuilder.TryGetValue(key.ToString(), out valueKey);
         return valueKey;
       }
       set
       {
-        this.ConnectionStringBuilder[key.ToString()] = value;
-        this.OnPropertyChanged(new DataConnectionPropertyChangedEventArgs(key.ToString()));
+        ConnectionStringBuilder[key.ToString()] = value;
+        OnPropertyChanged(new DataConnectionPropertyChangedEventArgs(key.ToString()));
       }
     }
 
-    System.Collections.ICollection Keys
+    ICollection Keys
     {
       get
       {
-        return this.ConnectionStringBuilder.Keys;
+        return ConnectionStringBuilder.Keys;
       }
     }
 
-    System.Collections.ICollection Values
+    ICollection Values
     {
       get
       {
-        return this.ConnectionStringBuilder.Values;
+        return ConnectionStringBuilder.Values;
       }
     }
 
     public override IEnumerator GetEnumerator()
     {
-      return this.ConnectionStringBuilder.Values.GetEnumerator();
+      return ConnectionStringBuilder.Values.GetEnumerator();
     }
 
-    IDictionaryEnumerator System.Collections.IDictionary.GetEnumerator()
+    IDictionaryEnumerator IDictionary.GetEnumerator()
     {
-      return ((System.Collections.IDictionary)this.ConnectionStringBuilder).GetEnumerator();
+      return ((IDictionary)ConnectionStringBuilder).GetEnumerator();
     }
-
   }
 }

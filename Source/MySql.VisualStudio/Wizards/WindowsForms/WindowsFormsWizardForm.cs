@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -24,20 +24,18 @@ using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
   public partial class WindowsFormsWizardForm : BaseWizardForm
   {
-
     #region "Properties exposed"
 
     internal MySqlConnection Connection {
       get
       {
-        return string.IsNullOrEmpty(dataAccessConfig1.connectionString)
+        return string.IsNullOrEmpty(dataAccessConfig1.ConnectionString)
           ? null
-          : new MySqlConnection(dataAccessConfig1.connectionString);
+          : new MySqlConnection(dataAccessConfig1.ConnectionString);
       }
     }
 
@@ -45,7 +43,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     { 
       get
       {
-        return dataAccessConfig1.connectionName;
+        return dataAccessConfig1.ConnectionName;
       }
     }
 
@@ -110,7 +108,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal const int VALIDATION_CONFIG_PAGE_IDX = 1;
     internal const int DETAIL_VALIDATION_CONFIG_PAGE_IDX = 2;
 
-    internal protected WindowsFormsWizard Wizard = null;
+    protected internal WindowsFormsWizard Wizard;
 
     public WindowsFormsWizardForm(WindowsFormsWizard wizard)
     {

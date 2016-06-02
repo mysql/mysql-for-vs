@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -25,16 +25,14 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using Microsoft.VisualStudio.Data;
 using System.Data.Common;
-using Microsoft.Win32;
-using MySQL.Utility;
 using System.Reflection;
 using System.IO;
-
+using MySql.Data.VisualStudio.DDEX;
 
 namespace MySql.Data.VisualStudio
 {
-  [Guid(GuidStrings.SqlEditorFactory)]
-  class MySqlProviderObjectFactory : AdoDotNetProviderObjectFactory
+  [Guid(GuidStrings.SQL_EDITOR_FACTORY)]
+  internal class MySqlProviderObjectFactory : AdoDotNetProviderObjectFactory
   {
     private static DbProviderFactory _factory;
     private static Assembly _connectorAssembly;
@@ -50,14 +48,9 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
-        if (_connectorAssembly == null)
-        {
-          _connectorAssembly = File.Exists(ConnectorAssemblyPath)
-            ? Assembly.LoadFrom(ConnectorAssemblyPath)
-            : null;
-        }
-
-        return _connectorAssembly;
+        return _connectorAssembly ?? (_connectorAssembly = File.Exists(ConnectorAssemblyPath)
+          ? Assembly.LoadFrom(ConnectorAssemblyPath)
+          : null);
       }
     }
 
@@ -111,14 +104,14 @@ namespace MySql.Data.VisualStudio
     public override object CreateObject(Type objType)
     {
       if (objType == typeof(DataConnectionUIControl))
-        return new MySqlDataConnectionUI();
-      else if (objType == typeof(DataConnectionProperties))
+        return new MySqlDataConnectionUIControl();
+      if (objType == typeof(DataConnectionProperties))
         return new MySqlConnectionProperties();
-      else if (objType == typeof(DataConnectionSupport))
+      if (objType == typeof(DataConnectionSupport))
         return new MySqlConnectionSupport();
       if (objType == typeof(DataSourceSpecializer))
         return new MySqlDataSourceSpecializer();
-      else if (objType == typeof(DataConnectionPromptDialog))
+      if (objType == typeof(DataConnectionPromptDialog))
         return new MySqlDataConnectionPromptDialog();
       else
         return base.CreateObject(objType);
@@ -138,6 +131,11 @@ namespace MySql.Data.VisualStudio
       }
 
       var fieldInfo = dbProviderInstance.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
+      if (fieldInfo == null)
+      {
+        return null;
+      }
+
       _factory = (DbProviderFactory)fieldInfo.GetValue(dbProviderInstance);
       return _factory;
     }

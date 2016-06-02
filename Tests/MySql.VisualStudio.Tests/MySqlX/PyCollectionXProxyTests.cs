@@ -28,7 +28,7 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.MySqlX;
 using MySql.VisualStudio.Tests.MySqlX.Base;
-using MySQL.Utility.Classes;
+using MySQL.Utility.Classes.Tokenizers;
 using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX

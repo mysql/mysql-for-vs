@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,43 +21,36 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Linq;
-using System.Text;
-using System.Collections;
-using Microsoft.VisualStudio.Shell;
-using System.ComponentModel.Design;
-using System.Windows;
-using Microsoft.VisualStudio.Data.Services;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel.Design;
+using Microsoft.VisualStudio.Data.Services;
+using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
-using System.Windows.Forms;
+using MySql.Data.VisualStudio.Properties;
 
-
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DDEX
 {  
   internal class MySqlConnectionListMenu
   {
     private int _baselistID = (int)PkgCmdIDList.cmdidMRUList;    
     private List<IVsDataExplorerConnection> _connectionsList;
 
-
     public MySqlConnectionListMenu(ref OleMenuCommandService mcs, List<IVsDataExplorerConnection> connList)
     {
       _connectionsList = connList;            
-      InitMRUMenu(ref mcs);
+      InitMruMenu(ref mcs);
     }    
 
-    internal void InitMRUMenu(ref OleMenuCommandService mcs)
-    {            
-      if (mcs != null)
-      {                
-            CommandID dynamicItemRootId = new CommandID(GuidList.guidIDEToolbarCmdSet, _baselistID);
-            DynamicItemMenuCommand dynamicMenuCommand = new DynamicItemMenuCommand(dynamicItemRootId, IsValidDynamicItem,
-                                                         OnInvokedDynamicItem,                                                         
-                                                         OnBeforeQueryStatusDynamicItem);
-              mcs.AddCommand(dynamicMenuCommand);                  
+    internal void InitMruMenu(ref OleMenuCommandService mcs)
+    {
+      if (mcs == null)
+      {
+        return;
       }
+
+      var dynamicItemRootId = new CommandID(GuidList.GuidIdeToolbarCmdSet, _baselistID);
+      var dynamicMenuCommand = new DynamicItemMenuCommand(dynamicItemRootId, IsValidDynamicItem, OnInvokedDynamicItem, OnBeforeQueryStatusDynamicItem);
+      mcs.AddCommand(dynamicMenuCommand);
     }
 
     private bool IsValidDynamicItem(int commandId)    
@@ -67,59 +60,60 @@ namespace MySql.Data.VisualStudio
       {
         connectionsCount = MySqlDataProviderPackage.Instance.GetMySqlConnections().Count;
       }
+
       return ((commandId - _baselistID) < connectionsCount && (commandId - _baselistID) >= 0);           
     }
 
-
     private void OnInvokedDynamicItem(object sender, EventArgs args)
     {
-      DynamicItemMenuCommand invokedCommand = (DynamicItemMenuCommand)sender;      
-      
-      if (null != invokedCommand)
+      var invokedCommand = sender as DynamicItemMenuCommand;
+      if (invokedCommand == null)
       {
-        bool isRootItem = (invokedCommand.MatchedCommandId == 0);
-        int indexForDisplay = (isRootItem ? 0 : (invokedCommand.MatchedCommandId - _baselistID));
-        
-        if (MySqlDataProviderPackage.Instance == null)
-          return;
-        try
+        return;
+      }
+
+      bool isRootItem = invokedCommand.MatchedCommandId == 0;
+      int indexForDisplay = isRootItem ? 0 : invokedCommand.MatchedCommandId - _baselistID;
+      if (MySqlDataProviderPackage.Instance == null)
+      {
+        return;
+      }
+
+      try
+      {
+        if (indexForDisplay < _connectionsList.Count)
         {
-          if (indexForDisplay < _connectionsList.Count)
+          var connection = (MySqlConnection)_connectionsList[indexForDisplay].Connection.GetLockedProviderObject();
+          try
           {
-            MySqlConnection connection = (MySqlConnection)_connectionsList[indexForDisplay].Connection
-                                        .GetLockedProviderObject();
-            try
+            if (connection != null)
             {
-              if (connection != null)
-              {
-                MySqlDataProviderPackage.Instance.MysqlConnectionSelected = connection;
-              }
-              var ItemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
-              ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
+              MySqlDataProviderPackage.Instance.MysqlConnectionSelected = connection;
             }
-            finally
-            {
-              _connectionsList[indexForDisplay].Connection.UnlockProviderObject();
-            }
-            return;
+
+            var itemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
+            itemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
           }
-          else
+          finally
           {
-            var ItemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
-            ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");           
+            _connectionsList[indexForDisplay].Connection.UnlockProviderObject();
           }
         }
-        catch (Exception ex)
+        else
         {
-          System.Windows.Forms.MessageBox.Show("An error ocurred when trying to launch a MySql Script window: " + ex.Message);
+          var itemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;
+          itemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");           
         }
+      }
+      catch (Exception ex)
+      {
+        System.Windows.Forms.MessageBox.Show(Resources.MySqlScriptWindowLaunchError + ex.Message);
       }
     }
 
     private void OnBeforeQueryStatusDynamicItem(object sender, EventArgs args)
     {
-      DynamicItemMenuCommand matchedCommand = (DynamicItemMenuCommand)sender;      
-
+      DynamicItemMenuCommand matchedCommand = (DynamicItemMenuCommand)sender;
       if (MySqlDataProviderPackage.Instance != null)
       {
        _connectionsList = MySqlDataProviderPackage.Instance.GetMySqlConnections();
@@ -137,6 +131,7 @@ namespace MySql.Data.VisualStudio
         int indexForDisplay = (isRootItem ? 0 : (matchedCommand.MatchedCommandId - _baselistID));
         matchedCommand.Text = _connectionsList[indexForDisplay].DisplayName;
       }
+
       matchedCommand.MatchedCommandId = 0;
     }  
   }

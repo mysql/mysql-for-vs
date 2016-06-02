@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -466,7 +466,7 @@
     <value>300, 124</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>MySqlDataConnectionUI</value>
+    <value>MySqlDataConnectionUIControl</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>Microsoft.VisualStudio.Data.DataConnectionUIControl, Microsoft.VisualStudio.Data, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

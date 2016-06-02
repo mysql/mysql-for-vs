@@ -340,11 +340,89 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced &gt;&gt;.
+        /// </summary>
+        public static string ConnectDialog_AdvancedButtonText {
+            get {
+                return ResourceManager.GetString("ConnectDialog_AdvancedButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple &lt;&lt;.
+        /// </summary>
+        public static string ConnectDialog_SimpleButtonText {
+            get {
+                return ResourceManager.GetString("ConnectDialog_SimpleButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Connection_Fabric {
+            get {
+                object obj = ResourceManager.GetObject("Connection_Fabric", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Connection_Socket_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Connection_Socket_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Connection_SSH {
+            get {
+                object obj = ResourceManager.GetObject("Connection_SSH", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Connection_TCP_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Connection_TCP_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Connection_X_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Connection_X_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred that is normally caused by not having for Visual Studio properly installed..
         /// </summary>
         public static string ConnectionPropertiesNull {
             get {
                 return ResourceManager.GetString("ConnectionPropertiesNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap ConnectionsManager {
+            get {
+                object obj = ResourceManager.GetObject("ConnectionsManager", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -399,6 +477,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string DelayKeyWriteDesc {
             get {
                 return ResourceManager.GetString("DelayKeyWriteDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap delete {
+            get {
+                object obj = ResourceManager.GetObject("delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -2599,6 +2687,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap edit {
+            get {
+                object obj = ResourceManager.GetObject("edit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There was an error attempting to create the database &apos;{0}&apos;.
         /// </summary>
         public static string ErrorAttemptingToCreateDB {
@@ -2773,6 +2871,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap list_view {
+            get {
+                object obj = ResourceManager.GetObject("list_view", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error: .
         /// </summary>
         public static string MessageBoxErrorDetail {
@@ -2839,6 +2947,87 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A MySQL connection for {0} already exists in the Server Explorer..
+        /// </summary>
+        public static string MySqlConnectionsManagerDialogExistingConnectionDetail {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialogExistingConnectionDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to replace the existing connection with the selected one?.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialogExistingConnectionSubDetail {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialogExistingConnectionSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MySQL Connection already exists.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialogExistingConnectionTitle {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialogExistingConnectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View as Details.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialogViewAsDetails {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialogViewAsDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View as Tiles.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialogViewAsTiles {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialogViewAsTiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click OK to go to the page or Cancel to continue.
+        /// </summary>
+        public static string MySqlDataProviderPackage_ClickOkOrCancel {
+            get {
+                return ResourceManager.GetString("MySqlDataProviderPackage_ClickOkOrCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window: .
+        /// </summary>
+        public static string MySqlDataProviderPackage_CreateNewScriptError {
+            get {
+                return ResourceManager.GetString("MySqlDataProviderPackage_CreateNewScriptError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        public static string MySqlDataProviderPackage_Information {
+            get {
+                return ResourceManager.GetString("MySqlDataProviderPackage_Information", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The command line MySQL Utilities could not be found..
+        /// </summary>
+        public static string MySqlDataProviderPackage_MySqlUtilitiesNotFoundError {
+            get {
+                return ResourceManager.GetString("MySqlDataProviderPackage_MySqlUtilitiesNotFoundError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Export of database {1} has finished..
         /// </summary>
         public static string MySqlDumpEndingInfoLog {
@@ -2899,6 +3088,15 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("MySQLOutputWindow_16", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window: .
+        /// </summary>
+        public static string MySqlScriptWindowLaunchError {
+            get {
+                return ResourceManager.GetString("MySqlScriptWindowLaunchError", resourceCulture);
             }
         }
         
@@ -3045,6 +3243,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Provider_ShortDisplayName {
             get {
                 return ResourceManager.GetString("Provider_ShortDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap refresh {
+            get {
+                object obj = ResourceManager.GetObject("refresh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -3263,6 +3471,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap tile_view {
+            get {
+                object obj = ResourceManager.GetObject("tile_view", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Column.
         /// </summary>
         public static string Type_Column {
@@ -3428,11 +3646,29 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string WarningText {
+            get {
+                return ResourceManager.GetString("WarningText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The connection string must not be empty..
         /// </summary>
         public static string WebConfigConnStrNoEmpty {
             get {
                 return ResourceManager.GetString("WebConfigConnStrNoEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution build failed. Please check that all project references have been resolved..
+        /// </summary>
+        public static string WindowsFormsWizard_SolutionBuildFailed {
+            get {
+                return ResourceManager.GetString("WindowsFormsWizard_SolutionBuildFailed", resourceCulture);
             }
         }
         

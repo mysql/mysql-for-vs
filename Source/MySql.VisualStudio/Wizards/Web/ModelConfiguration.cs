@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,41 +21,36 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using EnvDTE;
 using MySql.Data.VisualStudio.DBExport;
+using MySql.Data.VisualStudio.ServerInstances;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
 
-  internal enum DataEntityVersion : int
+  internal enum DataEntityVersion
   {    
-    None= 0,
+    None = 0,
     EntityFramework5 = 1,
     EntityFramework6 = 2
   }
 
   public partial class ModelConfiguration : WizardPage
   {
-
-    private BaseWizardForm baseWizardForm;
+    private BaseWizardForm _baseWizardForm;
     private DTE _dte; 
 
-    internal string modelName
+    internal string ModelName
     {
       get {
         return ModelNameTextBox.Text;
       }    
     }
 
-    internal string connectionStringName
+    internal string ConnectionStringName
     {
       get
       {
@@ -63,7 +58,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    internal string connectionString
+    internal string ConnectionString
     {
       get
       {
@@ -71,30 +66,28 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }   
 
-    internal DataEntityVersion dEVersion
+    internal DataEntityVersion DEVersion
     {
       get {
-        if (this.Ef5.Checked)
+        if (Ef5.Checked)
           return DataEntityVersion.EntityFramework5;
-        if (this.Ef6.Checked)
+        if (Ef6.Checked)
           return DataEntityVersion.EntityFramework6;
-        else
-        {
-          baseWizardForm.SetSkipNextPageFromCurrent(this, true);
-          return DataEntityVersion.None;
-        }
+
+        _baseWizardForm.SetSkipNextPageFromCurrent(this, true);
+        return DataEntityVersion.None;
       }    
     }
    
     public ModelConfiguration()
     {
       InitializeComponent();
-      ModelNameTextBox.Text = "Model1";            
+      ModelNameTextBox.Text = @"Model1";            
       rdbNoModel.CheckedChanged += rdbNoModel_CheckedChanged;
       cmbConnections.SelectionChangeCommitted += cmbConnections_SelectionChangeCommitted;
     }
 
-    void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
+    private void cmbConnections_SelectionChangeCommitted(object sender, EventArgs e)
     {
       if ((cmbConnections.SelectedItem as MySqlServerExplorerConnection) == null) return;
 
@@ -109,7 +102,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-    void rdbNoModel_CheckedChanged(object sender, EventArgs e)
+    private void rdbNoModel_CheckedChanged(object sender, EventArgs e)
     {
       RadioButton control = (RadioButton)sender;      
      
@@ -121,8 +114,8 @@ namespace MySql.Data.VisualStudio.Wizards.Web
        chkUseSameConnection.Enabled = !control.Checked;
        newConnString.Enabled = !control.Checked;
        ConnectionStringTextBox.Enabled = !control.Checked;
-       baseWizardForm.btnFinish.Enabled = control.Checked;
-       baseWizardForm.SetSkipNextPageFromCurrent(this, control.Checked);
+       _baseWizardForm.btnFinish.Enabled = control.Checked;
+       _baseWizardForm.SetSkipNextPageFromCurrent(this, control.Checked);
     }
  
 
@@ -130,15 +123,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       WebWizardForm wiz = (WebWizardForm)wizard;
 
-      baseWizardForm = wizard;
+      _baseWizardForm = wizard;
       _dte = ((WebWizardForm)wizard).dte;
 
       MySqlServerExplorerConnections.LoadConnectionsForWizard(wizard.connections, cmbConnections, ConnectionStringTextBox,"CSharpMVC");
 
       chkUseSameConnection.Checked = true;
-      cmbConnections.SelectedValue = wiz.connectionStringForAspNetTables;
-      ConnectionStringTextBox.Text = MySqlServerExplorerConnections.MaskPassword(wiz.connectionStringForAspNetTables);
-      ConnectionStringTextBox.Tag = wiz.connectionStringForAspNetTables;
+      cmbConnections.SelectedValue = wiz.ConnectionStringForAspNetTables;
+      ConnectionStringTextBox.Text = MySqlServerExplorerConnections.MaskPassword(wiz.ConnectionStringForAspNetTables);
+      ConnectionStringTextBox.Tag = wiz.ConnectionStringForAspNetTables;
       
       double version = double.Parse(wiz.Wizard.GetVisualStudioVersion());
       if (version >= 12.0)
@@ -160,7 +153,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       else return true;
     }
 
-    void ModelConfiguration_Validating(object sender, CancelEventArgs e)
+    private void ModelConfiguration_Validating(object sender, CancelEventArgs e)
     {
       e.Cancel = false;
       if (Ef5.Checked || Ef6.Checked)
@@ -174,7 +167,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
          {
            errorProvider1.SetError(cmbConnections, "");
           }
-         if (String.IsNullOrEmpty(ModelNameTextBox.Text))
+         if (string.IsNullOrEmpty(ModelNameTextBox.Text))
          {
            e.Cancel = true;
            errorProvider1.SetError(ModelNameTextBox, "Model name cannot be empty.");
@@ -207,11 +200,11 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       ShowConnectionDialog(true);
     }
 
-    private void ShowConnectionDialog(bool addSEConnection)
+    private void ShowConnectionDialog(bool addSeConnection)
     {
 
-      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSEConnection);     
-      baseWizardForm.connections = cmbConnections.DataSource as BindingSource;
+      MySqlServerExplorerConnections.ShowNewConnectionDialog(ConnectionStringTextBox, _dte, cmbConnections, addSeConnection);     
+      _baseWizardForm.connections = cmbConnections.DataSource as BindingSource;
        
     }
 
