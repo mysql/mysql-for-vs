@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 #ifndef _TYPES_H_
 #define _TYPES_H_
@@ -175,6 +175,9 @@ namespace shcore {
     explicit Value(Array_type_ref n);
 
     static Value wrap(Object_bridge *o) { return Value(boost::shared_ptr<Object_bridge>(o)); }
+
+    template<class T>
+    static Value wrap(T *o) { return Value(boost::static_pointer_cast<Object_bridge>(boost::shared_ptr<T>(o))); }
 
     static Value new_array() { return Value(boost::shared_ptr<Array_type>(new Array_type())); }
     static Value new_map() { return Value(boost::shared_ptr<Map_type>(new Map_type())); }

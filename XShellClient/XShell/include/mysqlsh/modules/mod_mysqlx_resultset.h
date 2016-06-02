@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015 Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, 2016 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 // MySQL DB access module, for use by plugins and others
 // For the module that implements interactive DB functionality see mod_db
@@ -46,6 +46,7 @@ namespace mysh
 
       virtual std::vector<std::string> get_members() const;
       virtual shcore::Value get_member(const std::string &prop) const;
+      virtual bool has_member(const std::string &prop) const;
       virtual void append_json(shcore::JSON_dumper& dumper) const;
 
       // The execution time is not available at the moment of creating the resultset
@@ -97,28 +98,24 @@ namespace mysh
       virtual std::string class_name() const { return "Result"; }
       virtual std::vector<std::string> get_members() const;
       virtual shcore::Value get_member(const std::string &prop) const;
+      virtual bool has_member(const std::string &prop) const;
       virtual void append_json(shcore::JSON_dumper& dumper) const;
-
-      // The document ID is generated on client side, we need this function to
-      // Properly set the value
-      void set_last_document_id(const std::string& id){ _last_document_id = id; }
 
       // C++ Interface
       int64_t get_affected_item_count() const;
-      int64_t get_last_insert_id() const;
+      int64_t get_auto_increment_value() const;
       std::string get_last_document_id() const;
+      const std::vector<std::string> get_last_document_ids() const;
 
 #ifdef DOXYGEN
       Integer affectedItemCount; //!< Same as getAffectedItemCount()
-      Integer lastInsertId; //!< Same as getLastInsertId()
+      Integer autoIncrementValue; //!< Same as getAutoIncrementValue()
       Integer lastDocumentId; //!< Same as getLastDocumentId()
 
       Integer getAffectedItemCount();
-      Integer getLastInsertId();
+      Integer getAutoIncrementValue();
       String getLastDocumentId();
 #endif
-    private:
-      std::string _last_document_id;
     };
 
     /**
@@ -137,10 +134,15 @@ namespace mysh
       virtual std::string class_name() const { return "DocResult"; }
       virtual void append_json(shcore::JSON_dumper& dumper) const;
 
+      shcore::Value get_metadata() const;
+
 #ifdef DOXYGEN
       Document fetchOne();
       List fetchAll();
 #endif
+
+    private:
+      mutable shcore::Value _metadata;
     };
 
     /**
@@ -158,6 +160,7 @@ namespace mysh
 
       virtual std::vector<std::string> get_members() const;
       virtual shcore::Value get_member(const std::string &prop) const;
+      virtual bool has_member(const std::string &prop) const;
 
       virtual std::string class_name() const { return "RowResult"; }
       virtual void append_json(shcore::JSON_dumper& dumper) const;
@@ -198,6 +201,7 @@ namespace mysh
       virtual std::string class_name() const { return "SqlResult"; }
       virtual std::vector<std::string> get_members() const;
       virtual shcore::Value get_member(const std::string &prop) const;
+      virtual bool has_member(const std::string &prop) const;
 
       shcore::Value has_data(const shcore::Argument_list &args) const;
       virtual shcore::Value next_data_set(const shcore::Argument_list &args);
@@ -205,17 +209,17 @@ namespace mysh
 
       // C++ Interface
       int64_t get_affected_row_count() const;
-      int64_t get_last_insert_id() const;
+      int64_t get_auto_increment_value() const;
       bool hasData();
 
       // TODO: Enable it once the way to have a reference to the unmanaged object is found
       //bool nextDataSet() const;
 
 #ifdef DOXYGEN
-      Integer lastInsertId; //!< Same as getLastInsertId()
+      Integer autoIncrementValue; //!< Same as getAutoIncrementValue()
       Integer affectedRowCount; //!< Same as getAffectedRowCount()
 
-      Integer getLastInsertId();
+      Integer getAutoIncrementValue();
       Integer getAffectedRowCount();
       Bool hasData();
       Bool nextDataSet();

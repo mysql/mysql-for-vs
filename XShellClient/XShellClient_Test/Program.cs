@@ -2,6 +2,7 @@
 using MySqlX.Shell;
 using MySqlX;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using ConsoleTables.Core;
@@ -18,20 +19,27 @@ namespace XShellClient_Test
 
     static void Main(string[] args)
     {
-      string connString = "root:@localhost:33570";
+      StringBuilder connString = new StringBuilder("root:guidev!@localhost:33570");
+
+      // With SSL
+      connString.Append("?ssl_ca=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\ca.pem&");
+      connString.Append("ssl_cert=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\server-cert.pem&");
+      connString.Append("ssl_key=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\server-key.pem");
+
       object result = string.Empty;
-      string query = "dir(session);";
+      string query = string.Empty;
       Mode mode = Mode.JScript;
       ShellClient xShellClient = new ShellClient();
 
       try
       {
-        xShellClient.MakeConnection(connString);
+        xShellClient.MakeConnection(connString.ToString());
         xShellClient.SwitchMode(mode);
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex.Message);
+        Console.ReadLine();
         return;
       }
 
@@ -50,23 +58,28 @@ namespace XShellClient_Test
           {
             Console.Write("mysql-py> ");
           }
-          query = Console.ReadLine();
-          if (!string.IsNullOrEmpty(query) && query.ToLower() != "quit")
+
+          using (var r = new StreamReader(Console.OpenStandardInput(2048)))
           {
-            if (query == "\\py")
+            query = r.ReadLine();
+
+            if (!string.IsNullOrEmpty(query) && query.ToLower() != "quit")
             {
-              mode = Mode.Python;
-              xShellClient.SwitchMode(mode);
-            }
-            else if (query == "\\js")
-            {
-              mode = Mode.JScript;
-              xShellClient.SwitchMode(mode);
-            }
-            else
-            {
-              result = xShellClient.Execute(query);
-              PrintResult(result);
+              if (query == "\\py")
+              {
+                mode = Mode.Python;
+                xShellClient.SwitchMode(mode);
+              }
+              else if (query == "\\js")
+              {
+                mode = Mode.JScript;
+                xShellClient.SwitchMode(mode);
+              }
+              else
+              {
+                result = xShellClient.Execute(query);
+                PrintResult(result);
+              }
             }
           }
         }

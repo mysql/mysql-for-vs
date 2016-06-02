@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 // MySQL DB access module, for use by plugins and others
 // For the module that implements interactive DB functionality see mod_db
@@ -28,7 +28,7 @@
 #include <map>
 #include <set>
 
-#include "xdatetime.h"
+#include "ngs_common/xdatetime.h"
 #include "mysqlx_common.h"
 
 #include <boost/enable_shared_from_this.hpp>
@@ -350,6 +350,8 @@ namespace mysqlx
 
     boost::shared_ptr<std::vector<ColumnMetadata> > columnMetadata();
     int64_t lastInsertId() const { return m_last_insert_id; }
+    std::string lastDocumentId();
+    const std::vector<std::string>& lastDocumentIds();
     int64_t affectedRows() const { return m_affected_rows; }
     std::string infoMessage() const { return m_info_message; }
 
@@ -378,10 +380,11 @@ namespace mysqlx
       bool is_note;
     };
     const std::vector<Warning> &getWarnings() const { return m_warnings; }
+    void setLastDocumentIDs(const std::vector<std::string>& document_ids);
   private:
     Result();
     Result(const Result &o);
-    Result(boost::shared_ptr<Connection>owner, bool expect_data);
+    Result(boost::shared_ptr<Connection>owner, bool expect_data, bool expect_ok = true);
 
     void read_metadata();
     boost::shared_ptr<Row> read_row();
@@ -399,6 +402,7 @@ namespace mysqlx
     boost::weak_ptr<Connection>m_owner;
     boost::shared_ptr<std::vector<ColumnMetadata> > m_columns;
     int64_t m_last_insert_id;
+    std::vector<std::string> m_last_document_ids;
     int64_t m_affected_rows;
     std::string m_info_message;
 
@@ -420,6 +424,7 @@ namespace mysqlx
 
     bool m_buffered;
     bool m_buffering;
+    bool m_has_doc_ids;
   };
 };
 

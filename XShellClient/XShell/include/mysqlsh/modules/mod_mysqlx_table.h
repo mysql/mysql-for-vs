@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 // Interactive Table access module
 // (the one exposed as the table members of the db object in the shell)
@@ -45,11 +45,15 @@ namespace mysh
     class Table : public DatabaseObject, public boost::enable_shared_from_this<Table>
     {
     public:
-      Table(boost::shared_ptr<Schema> owner, const std::string &name);
-      Table(boost::shared_ptr<const Schema> owner, const std::string &name);
+      Table(boost::shared_ptr<Schema> owner, const std::string &name, bool is_view = false);
+      Table(boost::shared_ptr<const Schema> owner, const std::string &name, bool is_view = false);
       virtual ~Table();
 
       virtual std::string class_name() const { return "Table"; }
+
+      virtual std::string get_object_type() { return _is_view ? "View" : "Table"; }
+
+      bool is_view() const { return _is_view; }
 #ifdef DOXYGEN
       TableInsert insert();
       TableInsert insert(List columns);
@@ -58,17 +62,20 @@ namespace mysh
       TableSelect select(List columns);
       TableUpdate update();
       TableDelete delete();
+      Bool isView();
 #endif
     private:
       shcore::Value insert_(const shcore::Argument_list &args);
       shcore::Value select_(const shcore::Argument_list &args);
       shcore::Value update_(const shcore::Argument_list &args);
       shcore::Value delete_(const shcore::Argument_list &args);
+      shcore::Value is_view(const shcore::Argument_list &args);
 
       void init();
 
     private:
       boost::shared_ptr< ::mysqlx::Table> _table_impl;
+      bool _is_view;
 
       // Allows initial functions on the CRUD operations
       friend shcore::Value TableInsert::insert(const shcore::Argument_list &args);

@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015 Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 // MySQL DB access module, for use by plugins and others
 // For the module that implements interactive DB functionality see mod_db
@@ -46,6 +46,7 @@ namespace mysh
       virtual std::string class_name() const { return "ClassicResult"; }
       virtual std::vector<std::string> get_members() const;
       virtual shcore::Value get_member(const std::string &prop) const;
+      virtual bool has_member(const std::string &prop) const;
       virtual void append_json(shcore::JSON_dumper& dumper) const;
 
       shcore::Value has_data(const shcore::Argument_list &args) const;
@@ -63,7 +64,7 @@ namespace mysh
       List columns; //!< Same as getColumns()
       String executionTime; //!< Same as getExecutionTime()
       String info; //!< Same as getInfo()
-      Integer lastInsertId; //!< Same as getLastInsertId()
+      Integer autoIncrementValue; //!< Same as getAutoIncrementValue()
       List warnings; //!< Same as getWarnings()
       Integer warningCount; //!< Same as getWarningCount()
 
@@ -76,7 +77,7 @@ namespace mysh
       String getExecutionTime();
       Bool hasData();
       String getInfo();
-      Integer getLastInsertId();
+      Integer getAutoIncrementValue();
       Integer getWarningCount();
       List getWarnings();
       Bool nextDataSet();

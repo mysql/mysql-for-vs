@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 #ifndef _SHELLCORE_OPTIONS_H_
 #define _SHELLCORE_OPTIONS_H_
@@ -26,6 +26,7 @@
 #define SHCORE_INTERACTIVE "interactive"
 #define SHCORE_SHOW_WARNINGS "showWarnings"
 #define SHCORE_BATCH_CONTINUE_ON_ERROR "batchContinueOnError"
+#define SHCORE_USE_WIZARDS "useWizards"
 // This option controls the management of globals/locals namespace when running python scripts
 // ie. if several runs of Python scripts inside shell must be considered part of the same instance.
 #define SHCORE_MULTIPLE_INSTANCES "multipleInstances"

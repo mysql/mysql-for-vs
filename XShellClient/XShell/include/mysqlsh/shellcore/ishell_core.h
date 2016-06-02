@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 #ifndef _ISHELL_CORE_
 #define _ISHELL_CORE_
@@ -24,8 +24,21 @@
 #include "shellcore/types_common.h"
 #include "shellcore/types.h"
 #include "shellcore/lang_base.h"
+#include <boost/shared_ptr.hpp>
 
 #include <iostream>
+
+namespace mysh
+{
+  // The session types that can be produced by connect_session
+  enum SessionType
+  {
+    Application,
+    Node,
+    Classic
+  };
+  class ShellDevelopmentSession;
+};
 
 namespace shcore
 {
@@ -62,6 +75,14 @@ namespace shcore
     virtual bool handle_shell_command(const std::string &code) = 0;
     virtual std::string get_handled_input() = 0;
     virtual int process_stream(std::istream& stream, const std::string& source, boost::function<void(shcore::Value)> result_processor) = 0;
+
+    // Development Session Handling
+    virtual boost::shared_ptr<mysh::ShellDevelopmentSession> connect_dev_session(const Argument_list &args, mysh::SessionType session_type) = 0;
+    virtual boost::shared_ptr<mysh::ShellDevelopmentSession> set_dev_session(boost::shared_ptr<mysh::ShellDevelopmentSession> session) = 0;
+    virtual boost::shared_ptr<mysh::ShellDevelopmentSession> get_dev_session() = 0;
+
+    // Global Schema
+    virtual shcore::Value set_current_schema(const std::string& name) = 0;
 
     virtual std::string prompt() = 0;
 

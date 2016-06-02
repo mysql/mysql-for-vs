@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 // Interactive DB access module
 // (the one exposed as the db variable in the shell)
@@ -62,6 +62,8 @@ namespace mysh
 
     shcore::Value existsInDatabase(const shcore::Argument_list &args);
 
+    virtual std::string get_object_type() { return class_name(); }
+
 #ifdef DOXYGEN
 
     String name; //!< Same as getName()
@@ -78,6 +80,16 @@ namespace mysh
     boost::weak_ptr<ShellBaseSession> _session;
     boost::weak_ptr<DatabaseObject> _schema;
     std::string _name;
+
+  private:
+    void init();
+    // Handling of database object caches
+  public:
+    typedef boost::shared_ptr<shcore::Value::Map_type> Cache;
+    static void update_cache(const std::vector<std::string>& names, const std::function<shcore::Value(const std::string &name)>& generator, Cache target_cache);
+    static void update_cache(const std::string& name, const std::function<shcore::Value(const std::string &name)>& generator, bool exists, Cache target_cache);
+    static void get_object_list(Cache target_cache, shcore::Value::Array_type_ref list);
+    static shcore::Value find_in_cache(const std::string& name, Cache target_cache);
   };
 };
 

@@ -1,9 +1,9 @@
 #include <winresrc.h>
 
-#define VER_FILEVERSION          1, 0, 3, 0
-#define VER_FILEVERSION_STR      "1.0.3"
-#define VER_PRODUCTVERSION       1, 0, 3, 0
-#define VER_PRODUCTVERSION_STR   "1.0.3"
+#define VER_FILEVERSION          1, 0, 4, 0
+#define VER_FILEVERSION_STR      "1.0.4"
+#define VER_PRODUCTVERSION       1, 0, 4, 0
+#define VER_PRODUCTVERSION_STR   "1.0.4"
 
 VS_VERSION_INFO        VERSIONINFO
 FILEVERSION            VER_FILEVERSION
@@ -20,8 +20,8 @@ BEGIN
       VALUE "FileDescription",    "XShellClient Managed Wrapper"
       VALUE "LegalCopyright",     "Copyright © 2016, Oracle and/or its affiliates. All rights reserved."
       VALUE "ProductName",        "XShellClientMgd"
-      VALUE "ProductVersion",     "1.0.3"
-      VALUE "FileVersion",        "1.0.3"
+      VALUE "ProductVersion",     "1.0.4"
+      VALUE "FileVersion",        "1.0.4"
     END
   END
 

@@ -1,21 +1,21 @@
 /*
-   Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   The lines above are intentionally left blank
-*/
+ * Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; version 2 of the
+ * License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301  USA
+ */
 
 // Interactive session access module
 // Exposed as "session" in the shell
@@ -37,6 +37,7 @@ namespace mysh
 
     // Helper method to retrieve properties using a method
     shcore::Value get_member_method(const shcore::Argument_list &args, const std::string& method, const std::string& prop);
+    virtual bool has_member(const std::string &prop) const;
 
     // Doing nothing by default to avoid impacting the classic result
     virtual void buffer(){};
@@ -74,6 +75,7 @@ namespace mysh
 
     virtual std::vector<std::string> get_members() const;
     virtual shcore::Value get_member(const std::string &prop) const;
+    virtual bool has_member(const std::string &prop) const;
 
     // Shell Specific for internal use
     bool is_numeric(){ return _numeric; }
@@ -97,8 +99,8 @@ namespace mysh
     schemaName; //!< Same as getSchemaName()
     tableName; //!< Same as getTableName()
     tableLabel; //!< Same as getTableLabel()
-    columnName; //!< Same as getColumnLabel()
-    columnLabel; //!< Same as getLastInsertId()
+    columnName; //!< Same as getColumnName()
+    columnLabel; //!< Same as getColumnLabel()
     type; //!< Same as getType()
     length; //!< Same as getLength()
     fractionalDigits; //!< Same as getFractionalDigits()

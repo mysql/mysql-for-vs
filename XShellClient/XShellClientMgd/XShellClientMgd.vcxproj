@@ -126,7 +126,7 @@
     <Copy SourceFiles="@(VCRedist)" DestinationFolder="$(OutputPath)">
     </Copy>
   </Target>
-  <ItemDefinitionGroup>    
+  <ItemDefinitionGroup>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)XShellClient\XShell\share\mysqlsh\modules\*.*" "$(OutputPath)modules" /S /Y /I
 Copy /Y "$(SolutionDir)XShellClient\XShell\lib\*.dll" "$(OutputPath)" 
