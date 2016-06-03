@@ -189,10 +189,6 @@
   </PropertyGroup>
   <!-- References that applies for all VS versions -->
   <ItemGroup>
-    <Reference Include="ConsoleTables.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ConsoleTables.1.1.0\lib\net40\ConsoleTables.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="XShellClientMgd">
       <HintPath>..\..\Dependencies\xShell\XShellClientMgd.dll</HintPath>
     </Reference>
@@ -1070,6 +1066,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ConsoleTables\ConsoleTable.cs" />
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
@@ -1444,7 +1441,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="MySql.Data.VisualStudio.DBExport.MySqlDbExportOptions.datasource" />
-    <None Include="packages.config" />
     <None Include="Resources\ArrowKey.bmp">
     </None>
     <None Include="Resources\Key.bmp">
