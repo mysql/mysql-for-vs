@@ -1,4 +1,4 @@
-﻿// Copyright © 2011-2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2011, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -26,7 +26,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.LanguageService
 {
   /// <summary>
   /// Represents the provider that causes the MySQL classifier to be added to the set of classifiers.
@@ -42,7 +42,7 @@ namespace MySql.Data.VisualStudio
     [Export]
     [Name("MySql")]
     [BaseDefinition("code")]
-    internal static ContentTypeDefinition MySqlContentType = null;
+    internal static ContentTypeDefinition MySqlContentType;
 
     /// <summary>
     /// The MySQL file type.
@@ -50,13 +50,13 @@ namespace MySql.Data.VisualStudio
     [Export]
     [FileExtension(".mysql")]
     [ContentType("MySql")]
-    internal static FileExtensionToContentTypeDefinition MySqlFileType = null;
+    internal static FileExtensionToContentTypeDefinition MySqlFileType;
 
     /// <summary>
     /// The <see cref="IClassificationTypeRegistryService"/>.
     /// </summary>
     [Import]
-    internal IClassificationTypeRegistryService ClassificationTypeRegistry = null;
+    internal IClassificationTypeRegistryService ClassificationTypeRegistry;
 
     #region IClassifier
 

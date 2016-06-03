@@ -25,17 +25,17 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.EntityClient;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using MySql.Data.VisualStudio.Properties;
 using VSLangProj;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 {
@@ -385,7 +385,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// Gets the metadata information for a specific sql command query.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="conectionn">The MySql connection.</param>
+    /// <param name="connection"></param>
     /// <param name="sqlFilter">The SQL filter command.</param>
     /// <param name="sqlData">The SQL data.</param>
     /// <returns>A dictionary with the metadata information.</returns>
@@ -457,22 +457,22 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <param name="currentEntityFrameworkVersion">The current entity framework version.</param>
     /// <param name="language">The language generator (C# or VB.NET).</param>
     /// <param name="columnMappings">The column mappings.</param>
-    /// <param name="TablesIncludedInModel">The tables included in model.</param>
+    /// <param name="tablesIncludedInModel">The tables included in model.</param>
     internal static void GenerateEntityFrameworkModel(Project project, VSProject vsProj, MySqlConnection connection, string modelName, List<string> tables, string modelPath,
-      string currentEntityFrameworkVersion, LanguageGenerator language, Dictionary<string, Dictionary<string, ColumnValidation>> columnMappings, ref Dictionary<string, string> TablesIncludedInModel)
+      string currentEntityFrameworkVersion, LanguageGenerator language, Dictionary<string, Dictionary<string, ColumnValidation>> columnMappings, ref Dictionary<string, string> tablesIncludedInModel)
     {
       if (project != null)
       {
         string projectNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
-        string ns = ItemTemplateUtilities.GetCanonicalIdentifier(projectNamespace);
+        string ns = GetCanonicalIdentifier(projectNamespace);
         EntityFrameworkGenerator gen = new EntityFrameworkGenerator(connection, modelName, tables, modelPath, ns, currentEntityFrameworkVersion, language, vsProj, columnMappings);
         vsProj = project.Object as VSProject;
         project.DTE.Solution.SolutionBuild.Build(true);
-        string projectPath = System.IO.Path.GetDirectoryName(project.FullName);
+        string projectPath = Path.GetDirectoryName(project.FullName);
         gen.GenerateItemTemplates(projectPath, modelName);
         if (gen.TablesInModel.Count() > 0)
         {
-          TablesIncludedInModel = gen.TablesInModel.ToDictionary<string, string>(p => p);
+          tablesIncludedInModel = gen.TablesInModel.ToDictionary<string, string>(p => p);
         }
 
         TryErrorsEntityFrameworkGenerator(gen);
@@ -504,19 +504,19 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// Ensures the code is generated for a date time grid column.
     /// </summary>
     /// <param name="vsProj">The vs proj.</param>
-    /// <param name="Columns">The columns.</param>
-    /// <param name="DetailColumns">The detail columns.</param>
+    /// <param name="columns">The columns.</param>
+    /// <param name="detailColumns">The detail columns.</param>
     /// <param name="language">The language generator (C# or VB.NET).</param>
     /// <param name="projectPath">The project path.</param>
     /// <param name="projectNamespace">The project namespace.</param>
     /// <returns></returns>
-    internal static bool EnsureCodeForDateTimeGridColumn(VSProject vsProj, Dictionary<string, Column> Columns, Dictionary<string, Column> DetailColumns, LanguageGenerator language,
+    internal static bool EnsureCodeForDateTimeGridColumn(VSProject vsProj, Dictionary<string, Column> columns, Dictionary<string, Column> detailColumns, LanguageGenerator language,
       string projectPath, string projectNamespace)
     {
       bool hasDateColumn = false;
-      if (Columns != null)
+      if (columns != null)
       {
-        foreach (KeyValuePair<string, Column> kvp in Columns)
+        foreach (KeyValuePair<string, Column> kvp in columns)
         {
           if (kvp.Value.IsDateType())
           {
@@ -526,9 +526,9 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         }
       }
 
-      if (!hasDateColumn && DetailColumns != null)
+      if (!hasDateColumn && detailColumns != null)
       {
-        foreach (KeyValuePair<string, Column> kvp in DetailColumns)
+        foreach (KeyValuePair<string, Column> kvp in detailColumns)
         {
           if (kvp.Value.IsDateType())
           {
@@ -543,20 +543,27 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       {
         string outFilePath = "";
         Stream stream = null;
-        if (language == LanguageGenerator.CSharp)
+        switch (language)
         {
-          stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.CS.MyDateTimePickerColumn.cs");
-          outFilePath = Path.Combine(projectPath, "MyDateTimePickerColumn.cs");
-        }
-        else if (language == LanguageGenerator.VBNET)
-        {
-          stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.VB.MyDateTimePickerColumn.vb");
-          outFilePath = Path.Combine(projectPath, "MyDateTimePickerColumn.vb");
+          case LanguageGenerator.CSharp:
+            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.CS.MyDateTimePickerColumn.cs");
+            outFilePath = Path.Combine(projectPath, "MyDateTimePickerColumn.cs");
+            break;
+          case LanguageGenerator.VBNET:
+            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.VB.MyDateTimePickerColumn.vb");
+            outFilePath = Path.Combine(projectPath, "MyDateTimePickerColumn.vb");
+            break;
         }
 
-        StreamReader sr = new StreamReader(stream);
-        string contents = sr.ReadToEnd();
-        File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", projectNamespace));
+        if (stream != null)
+        {
+          using (var sr = new StreamReader(stream))
+          {
+            string contents = sr.ReadToEnd();
+            File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", projectNamespace));
+          }
+        }
+
         vsProj.Project.ProjectItems.AddFromFile(outFilePath);
       }
 
@@ -594,7 +601,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "An error occured obtaining the connection string settings.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(ex.Message, Resources.ItemTemplateUtilities_SettingsRetrievalError, MessageBoxButtons.OK, MessageBoxIcon.Error);
         return null;
       }
     }
@@ -611,7 +618,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     {
       if (string.IsNullOrEmpty(projectPath))
       {
-        projectPath = System.IO.Path.GetDirectoryName(project.FullName);
+        projectPath = Path.GetDirectoryName(project.FullName);
       }
 
       if (string.IsNullOrEmpty(projectNamespace))
@@ -650,20 +657,22 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <summary>
     /// Finds an specific item in the peoject.
     /// </summary>
-    /// <param name="Items">The project items.</param>
-    /// <param name="Name">The name of the item to find.</param>
+    /// <param name="items">The project items.</param>
+    /// <param name="name">The name of the item to find.</param>
     /// <returns></returns>
-    internal static ProjectItem FindProjectItem(ProjectItems Items, string Name)
+    internal static ProjectItem FindProjectItem(ProjectItems items, string name)
     {
       ProjectItem item = null;
-      for (int i = 1; i <= Items.Count; i++)
+      for (int i = 1; i <= items.Count; i++)
       {
-        ProjectItem item2 = Items.Item(i);
-        if (item2.Name == Name)
+        ProjectItem item2 = items.Item(i);
+        if (item2.Name != name)
         {
-          item = item2;
-          break;
+          continue;
         }
+
+        item = item2;
+        break;
       }
 
       return item;
@@ -732,7 +741,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     {
       if (string.IsNullOrEmpty(projectPath))
       {
-        projectPath = System.IO.Path.GetDirectoryName(project.FullName);
+        projectPath = Path.GetDirectoryName(project.FullName);
       }
 
       if (string.IsNullOrEmpty(projectNamespace))
@@ -754,31 +763,34 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <param name="itemTemplateTempPath">The item template temporary path.</param>
     internal static void CopyResourcesToProject(Project vsProj, string itemTemplateTempPath)
     {
-      if (vsProj != null && !string.IsNullOrEmpty(itemTemplateTempPath))
+      if (vsProj == null || string.IsNullOrEmpty(itemTemplateTempPath))
       {
-        ProjectItem resourcesFolder = null;
-        string resourcesOriginDirPath = Path.Combine(itemTemplateTempPath, "Resources");
-        string resourcesDestinationDirPath = Path.Combine(System.IO.Path.GetDirectoryName(vsProj.FullName), "Resources");
-        if (!Directory.Exists(resourcesDestinationDirPath))
+        return;
+      }
+
+      ProjectItem resourcesFolder;
+      string resourcesOriginDirPath = Path.Combine(itemTemplateTempPath, "Resources");
+      string resourcesDestinationDirPath = Path.Combine(Path.GetDirectoryName(vsProj.FullName), "Resources");
+      if (!Directory.Exists(resourcesDestinationDirPath))
+      {
+        resourcesFolder = vsProj.ProjectItems.AddFolder("Resources");
+      }
+      else
+      {
+        resourcesFolder = vsProj.ProjectItems.Item("Resources");
+      }
+
+      foreach (string resourceFile in resourcesFiles)
+      {
+        var resourcesFilesOriginPath = Path.Combine(resourcesOriginDirPath, resourceFile);
+        var resourcesFilesDestinationPath = Path.Combine(resourcesDestinationDirPath, resourceFile);
+        if (File.Exists(resourcesFilesDestinationPath))
         {
-          resourcesFolder = vsProj.ProjectItems.AddFolder("Resources", EnvDTE.Constants.vsProjectItemKindPhysicalFolder);
-        }
-        else
-        {
-          resourcesFolder = vsProj.ProjectItems.Item("Resources");
+          continue;
         }
 
-        string resourcesFilesOriginPath, resourcesFilesDestinationPath;
-        foreach (string resourceFile in resourcesFiles)
-        {
-          resourcesFilesOriginPath = Path.Combine(resourcesOriginDirPath, resourceFile);
-          resourcesFilesDestinationPath = Path.Combine(resourcesDestinationDirPath, resourceFile);
-          if (!File.Exists(resourcesFilesDestinationPath))
-          {
-            System.IO.File.Copy(resourcesFilesOriginPath, resourcesFilesDestinationPath, true);
-            resourcesFolder.ProjectItems.AddFromFile(resourcesFilesOriginPath);
-          }
-        }
+        File.Copy(resourcesFilesOriginPath, resourcesFilesDestinationPath, true);
+        resourcesFolder.ProjectItems.AddFromFile(resourcesFilesOriginPath);
       }
     }
 
@@ -787,17 +799,10 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// </summary>
     /// <param name="_dte">The DTE object.</param>
     /// <returns></returns>
-    internal protected static string GetVisualStudioVersion(DTE _dte)
+    protected internal static string GetVisualStudioVersion(DTE _dte)
     {
 #if NET_40_OR_GREATER
-      if (_dte != null)
-      {
-        return _dte.Version;
-      }
-      else
-      {
-        return null;
-      }
+      return _dte != null ? _dte.Version : null;
 #else
       return "9.0";
 #endif

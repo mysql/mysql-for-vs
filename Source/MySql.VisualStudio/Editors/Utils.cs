@@ -37,6 +37,7 @@ using MySqlX;
 using MySQL.Utility.Classes.Tokenizers;
 using Color = System.Drawing.Color;
 using MySqlTokenizer = MySQL.Utility.Classes.Tokenizers.MySqlTokenizer;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Editors
 {

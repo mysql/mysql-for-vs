@@ -454,6 +454,105 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection was not found on available connections.
+        /// </summary>
+        public static string DbExportPanel_ConnectionNotFoundError {
+            get {
+                return ResourceManager.GetString("DbExportPanel_ConnectionNotFoundError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The saved connection string was not correctly set. No Database objects are loaded.
+        /// </summary>
+        public static string DbExportPanel_ConnStringNotCorrectlySetError {
+            get {
+                return ResourceManager.GetString("DbExportPanel_ConnStringNotCorrectlySetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured when creating a new file for the Export operation. File is locked..
+        /// </summary>
+        public static string DbExportPanel_ExportFileCreationError {
+            get {
+                return ResourceManager.GetString("DbExportPanel_ExportFileCreationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File was not found. Please check the path..
+        /// </summary>
+        public static string DbExportPanel_FileNotFoundError {
+            get {
+                return ResourceManager.GetString("DbExportPanel_FileNotFoundError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: Cannot find any MySQL connection. Please review your settings..
+        /// </summary>
+        public static string dbExportPanel_LoadConnectionsError {
+            get {
+                return ResourceManager.GetString("dbExportPanel_LoadConnectionsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No connection is selected. Please select one to continue..
+        /// </summary>
+        public static string DbExportPanel_NoConnectionSelected {
+            get {
+                return ResourceManager.GetString("DbExportPanel_NoConnectionSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No database or objects are selected.
+        /// </summary>
+        public static string DbExportPanel_NoDbSelectedError {
+            get {
+                return ResourceManager.GetString("DbExportPanel_NoDbSelectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured when saving the settings file: .
+        /// </summary>
+        public static string DbExportPanel_SaveSettingsError {
+            get {
+                return ResourceManager.GetString("DbExportPanel_SaveSettingsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All selected settings were saved correctly..
+        /// </summary>
+        public static string DbExportPanel_SaveSettingSuccess {
+            get {
+                return ResourceManager.GetString("DbExportPanel_SaveSettingSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot retrieve the list of schemas of the selected connection. Verify parameter&apos;s connection..
+        /// </summary>
+        public static string dbExportPanel_SchemasLoadError {
+            get {
+                return ResourceManager.GetString("dbExportPanel_SchemasLoadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The saved settings were loaded correctly.
+        /// </summary>
+        public static string DbExportPanel_SettingsLoadSuccess {
+            get {
+                return ResourceManager.GetString("DbExportPanel_SettingsLoadSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A path to a file was not provided..
         /// </summary>
         public static string DbExportPathNotProvided {
@@ -2669,6 +2768,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to save object with error: .
+        /// </summary>
+        public static string DocumentNode_UnableToSaveObjectError {
+            get {
+                return ResourceManager.GetString("DocumentNode_UnableToSaveObjectError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to drop the {0} &apos;{1}&apos;?.
         /// </summary>
         public static string DropConfirmation {
@@ -2857,6 +2965,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string InvalidValueFieldsMessage {
             get {
                 return ResourceManager.GetString("InvalidValueFieldsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured obtaining the connection string settings..
+        /// </summary>
+        public static string ItemTemplateUtilities_SettingsRetrievalError {
+            get {
+                return ResourceManager.GetString("ItemTemplateUtilities_SettingsRetrievalError", resourceCulture);
             }
         }
         
@@ -3247,6 +3364,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to save the selected settings?.
+        /// </summary>
+        public static string SaveSelectedSettingsText {
+            get {
+                return ResourceManager.GetString("SaveSelectedSettingsText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap sql_editor_banner {
@@ -3303,6 +3429,15 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_validatesql", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to load the stored procedure for editing.
+        /// </summary>
+        public static string StoredProcedureNode_StoredProcedureLoadError {
+            get {
+                return ResourceManager.GetString("StoredProcedureNode_StoredProcedureLoadError", resourceCulture);
             }
         }
         
@@ -3471,6 +3606,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to load object with error: .
+        /// </summary>
+        public static string TriggerNode_UnableToLoadObjectError {
+            get {
+                return ResourceManager.GetString("TriggerNode_UnableToLoadObjectError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Column.
         /// </summary>
         public static string Type_Column {
@@ -3622,6 +3766,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Value_String {
             get {
                 return ResourceManager.GetString("Value_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to load view with error: .
+        /// </summary>
+        public static string ViewNode_LoadViewError {
+            get {
+                return ResourceManager.GetString("ViewNode_LoadViewError", resourceCulture);
             }
         }
         

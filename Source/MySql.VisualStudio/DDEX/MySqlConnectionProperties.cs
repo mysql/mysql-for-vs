@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using Microsoft.VisualStudio.Data;
-using MySql.Data.MySqlClient;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.DDEX
 {

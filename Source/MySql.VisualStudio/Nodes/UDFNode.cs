@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,33 +21,30 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Data.Common;
-using System.Data;
-using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.Editors;
-using System.Windows.Forms;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
-  class UDFNode : BaseNode
+  internal class UdfNode : BaseNode
   {
 
-    public UDFNode(DataViewHierarchyAccessor hierarchyAccessor, int itemId) :
+    public UdfNode(DataViewHierarchyAccessor hierarchyAccessor, int itemId) :
       base(hierarchyAccessor, itemId)
     {
       NodeId = "UDF";
       DocumentNode.RegisterNode(this);
     }
 
-    public override string GetDropSQL()
+    public override string GetDropSql()
     {
       return String.Format("DROP FUNCTION `{0}`.`{1}`", Database, Name);
     }
 
-    public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
+    public static void CreateNew(DataViewHierarchyAccessor hierarchyAccessor)
     {
-      UDFNode node = new UDFNode(HierarchyAccessor, 0);
+      UdfNode node = new UdfNode(hierarchyAccessor, 0);
       node.Edit();
     }
 
@@ -62,7 +59,7 @@ namespace MySql.Data.VisualStudio
           editor.FunctionName, editor.ReturnTypeByName, editor.LibraryName);
 
       Name = editor.FunctionName;
-      ExecuteSQL(sql);
+      ExecuteSql(sql);
       SaveNode();
     }
   }

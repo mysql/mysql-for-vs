@@ -22,14 +22,12 @@
 
 using System;
 using System.Collections.Generic;
+using Antlr.Runtime;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Text.Tagging;
-using Antlr.Runtime;
 using MySql.Parser;
 
-
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.LanguageService
 {
   /// <summary>
   /// Represents a classifier that classifies text as bein part of the MySQL language.
@@ -50,20 +48,16 @@ namespace MySql.Data.VisualStudio
     /// This method scans the given SnapshotSpan for potential matches for this classification.
     /// In this instance, it classifies everything and returns each span as a new ClassificationSpan.
     /// </summary>
-    /// <param name="trackingSpan">The span currently being classified</param>
     /// <returns>A list of ClassificationSpans that represent spans identified to be of this classification</returns>
     public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
     {
       //create a list to hold the results
       List<ClassificationSpan> result = new List<ClassificationSpan>();
-      int startIndex;
-      ITextSnapshotLine containingLine = null;
-      SnapshotSpan snapshotSpan;
       Version version = LanguageServiceUtil.GetVersion();
 
       foreach (var line in span.Snapshot.Lines)
       {
-        containingLine = line.Start.GetContainingLine();
+        var containingLine = line.Start.GetContainingLine();
         string sql = containingLine.GetText();
         CommonTokenStream tokenStream = LanguageServiceUtil.GetTokenStream(sql, version);
         tokenStream.Fill();
@@ -73,9 +67,9 @@ namespace MySql.Data.VisualStudio
           IToken tok = tokens[i];
           if (tok.Type == MySQL51Lexer.EOF) continue;
 
-          startIndex = containingLine.Start + tok.StartIndex;
+          int startIndex = containingLine.Start + tok.StartIndex;
 
-          snapshotSpan = new SnapshotSpan(span.Snapshot, new Span(startIndex, tok.Text.Length));
+          var snapshotSpan = new SnapshotSpan(span.Snapshot, new Span(startIndex, tok.Text.Length));
           if (snapshotSpan.IntersectsWith(span))
           {
             result.Add(new ClassificationSpan(snapshotSpan, mySqlTypes[GetTokenType(tok)]));

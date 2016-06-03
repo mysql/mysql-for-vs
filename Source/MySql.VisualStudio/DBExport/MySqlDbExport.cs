@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,48 +22,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Reflection;
-
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
   public class MySqlDbExport
   {
-    private string _outputFilePath;
-    private MySqlDbExportOptions _options;
     private string _fileName;
     private IsolatedStorageFile _isoStore;
-    private MySqlDumpFacade mysqlDumpFacade;
+    private MySqlDumpFacade _mysqlDumpFacade;
     private bool _appendToFile;
-    private static Random rnd = new Random();
+    private static Random _rnd = new Random();
 
-    public string OutputFilePath
-    {
-      get { return _outputFilePath; }
-      set { _outputFilePath = value; }
-    }
+    public string OutputFilePath { get; set; }
 
-    public StringBuilder ErrorsOutput
-    {
-      get;
-      private set;
-    }
+    public StringBuilder ErrorsOutput { get; private set; }
 
-    public MySqlDbExportOptions ExportOptions
-    {
-      get { return _options; }
-    }
+    public MySqlDbExportOptions ExportOptions { get; }
 
-    public StringBuilder MySqlDumpLog
-    {
-      get;
-      private set;
-    }
+    public StringBuilder MySqlDumpLog { get; private set; }
 
     public bool OverwriteFile
     {
@@ -73,10 +55,9 @@ namespace MySql.Data.VisualStudio.DBExport
       }
     }
 
-    private List<String> _tables { get; set; }
+    private List<string> _tables;
 
-
-    public MySqlDbExport(MySqlDbExportOptions options, string outputFilePath, MySqlConnection conn, List<String> tables, bool overwriteFile)
+    public MySqlDbExport(MySqlDbExportOptions options, string outputFilePath, MySqlConnection conn, List<string> tables, bool overwriteFile)
     {
       if (options == null)
         throw new Exception("Export options are not valid");
@@ -84,7 +65,7 @@ namespace MySql.Data.VisualStudio.DBExport
       if (conn == null)
         throw new Exception("Connection is not valid for the Export operation");
 
-      if (String.IsNullOrEmpty(outputFilePath))
+      if (string.IsNullOrEmpty(outputFilePath))
         throw new Exception("Path to save dump file is not set.");
 
       if (tables != null)
@@ -92,24 +73,22 @@ namespace MySql.Data.VisualStudio.DBExport
         _tables = tables;
       }
 
-      _options = options;
-      _outputFilePath = outputFilePath;
+      ExportOptions = options;
+      OutputFilePath = outputFilePath;
 
       var connBuilder = new MySqlConnectionStringBuilder(conn.ConnectionString);
 
-      _options.host = connBuilder.Server;
-      _options.port = (int)connBuilder.Port;
-      _options.database = connBuilder.Database;
+      ExportOptions.host = connBuilder.Server;
+      ExportOptions.port = (int)connBuilder.Port;
+      ExportOptions.database = connBuilder.Database;
 
       if (connBuilder.SslMode != MySqlSslMode.Required)
-        _options.ssl_cert = connBuilder.CertificateFile;
+        ExportOptions.ssl_cert = connBuilder.CertificateFile;
 
       _fileName = string.Empty;
       _appendToFile = !overwriteFile;
       CreateIsolatedFile(conn);
     }
-
-
 
     private void CreateIsolatedFile(MySqlConnection conn)
     {
@@ -118,13 +97,13 @@ namespace MySql.Data.VisualStudio.DBExport
       var userId = connBuilder.UserID;
       var pwd = connBuilder.Password;
 
-      _fileName = string.Format("{0}{1}.cnf", userId, rnd.Next(999, 10000));
+      _fileName = string.Format("{0}{1}.cnf", userId, _rnd.Next(999, 10000));
 
       _isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
-      using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(_fileName, FileMode.CreateNew, _isoStore))
+      using (var isoStream = new IsolatedStorageFileStream(_fileName, FileMode.CreateNew, _isoStore))
       {
-        using (StreamWriter writer = new StreamWriter(isoStream))
+        using (var writer = new StreamWriter(isoStream))
         {
           writer.WriteLine("[mysqld]");
           writer.WriteLine("wait_timeout=1000000");
@@ -132,47 +111,32 @@ namespace MySql.Data.VisualStudio.DBExport
           writer.WriteLine("user=" + userId);
           writer.WriteLine("password=" + pwd);
         }
+
         _fileName = isoStream.GetType().GetField("m_FullPath", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(isoStream).ToString();
       }
     }
 
     public void CancelExport()
     {
-      if (mysqlDumpFacade != null)
-        mysqlDumpFacade.CancelRequest();
+      if (_mysqlDumpFacade != null)
+        _mysqlDumpFacade.CancelRequest();
     }
 
     public bool Export()
     {
-
-      try
+      _mysqlDumpFacade = _tables != null
+        ? new MySqlDumpFacade(ExportOptions, OutputFilePath, _fileName, _tables)
+        : new MySqlDumpFacade(ExportOptions, OutputFilePath, _fileName);
+      _mysqlDumpFacade.ProcessRequest(OutputFilePath);
+      _isoStore.DeleteFile(Path.GetFileName(_fileName));
+      _isoStore.Close();
+      if (_mysqlDumpFacade.ErrorsOutput == null || string.IsNullOrEmpty(_mysqlDumpFacade.ErrorsOutput.ToString()))
       {
-        if (_tables != null)
-        {
-          mysqlDumpFacade = new MySqlDumpFacade(_options, OutputFilePath, _fileName, _tables);
-        }
-        else
-        {
-          mysqlDumpFacade = new MySqlDumpFacade(_options, OutputFilePath, _fileName);
-        }
+        return true;
+      }
 
-        mysqlDumpFacade.ProcessRequest(OutputFilePath);
-        _isoStore.DeleteFile(Path.GetFileName(_fileName));
-        _isoStore.Close();
-        if (mysqlDumpFacade.ErrorsOutput != null && !String.IsNullOrEmpty(mysqlDumpFacade.ErrorsOutput.ToString()))
-        {
-          ErrorsOutput = mysqlDumpFacade.ErrorsOutput;
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-      }
-      catch (Exception)
-      {
-        throw;
-      }
+      ErrorsOutput = _mysqlDumpFacade.ErrorsOutput;
+      return false;
     }
   }
 }

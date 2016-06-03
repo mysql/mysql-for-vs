@@ -21,41 +21,36 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using MySql.Data.VisualStudio.Properties;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Data;
-using System.Diagnostics;
-using Microsoft.VisualStudio;
-using System.Data.Common;
-using System.Resources;
-using System.Globalization;
 using System.Data;
-using Microsoft.VisualStudio.Data.AdoDotNet;
-using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
-using MySql.Data.VisualStudio.Editors;
+using System.Data.Common;
+using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Editors;
+using MySql.Data.VisualStudio.Properties;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
   abstract class BaseNode
   {
     protected Guid editorGuid;
     protected Guid commandGroupGuid;
     protected string name;
-    private static string defaultStorageEngine;
+    private static string _defaultStorageEngine;
     public DataViewHierarchyAccessor HierarchyAccessor;
     public bool IsNew;
     protected const string SEPARATOR = "/* separator */";
 
     protected string OldObjectDefinition { get; set; }
 
-    public BaseNode(DataViewHierarchyAccessor hierarchyAccessor, int id)
+    protected BaseNode(DataViewHierarchyAccessor hierarchyAccessor, int id)
     {
       HierarchyAccessor = hierarchyAccessor;
       ItemId = id;
@@ -80,7 +75,7 @@ namespace MySql.Data.VisualStudio
     protected DbConnection AcquireHierarchyAccessorConnection()
     {
       DbConnection con = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
-      var connStringBuilder = ((MySqlConnectionStringBuilder)con.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(con, null));
+      var connStringBuilder = (MySqlConnectionStringBuilder)con.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(con, null);
       connStringBuilder.AllowUserVariables = true;
       _con = new MySqlConnection(connStringBuilder.ConnectionString);     
       _con.Open();
@@ -111,19 +106,9 @@ namespace MySql.Data.VisualStudio
       }
     }
 
-    private int _itemId;
-    public int ItemId
-    {
-      get { return _itemId; }
-      protected set { _itemId = value; }
-    }
+    public int ItemId { get; protected set; }
 
-    private string _nodeId;
-    public string NodeId
-    {
-      get { return _nodeId; }
-      protected set { _nodeId = value; }
-    }
+    public string NodeId { get; protected set; }
 
     private string _server;
     public string Server
@@ -132,31 +117,16 @@ namespace MySql.Data.VisualStudio
       private set { _server = value; }
     }
 
-    private string _database;
-    public string Database
-    {
-      get { return _database; }
-      private set { _database = value; }
-    }
+    public string Database { get; private set; }
 
-    private bool _dirty;
-    public virtual bool Dirty
-    {
-      get { return _dirty; }
-      protected set { _dirty = value; }
-    }
+    public virtual bool Dirty { get; protected set; }
 
     protected internal string Moniker
     {
-      get { return String.Format("mysql://{0}/{1}/{2}", Server, Database, Name); }
+      get { return string.Format("mysql://{0}/{1}/{2}", Server, Database, Name); }
     }
 
-    private int _nameIndex;
-    public int NameIndex
-    {
-      get { return _nameIndex; }
-      protected set { _nameIndex = value; }
-    }
+    public int NameIndex { get; protected set; }
 
     public virtual string SchemaCollection
     {
@@ -175,14 +145,19 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
-        if (defaultStorageEngine == null)
+        if (_defaultStorageEngine != null)
         {
-          DataTable dt = GetDataTable("SHOW VARIABLES LIKE 'storage_engine'");
-          defaultStorageEngine = "MyISAM";
-          if (dt != null && dt.Rows.Count == 1)
-            defaultStorageEngine = (string)dt.Rows[0][1];
+          return _defaultStorageEngine;
         }
-        return defaultStorageEngine;
+
+        DataTable dt = GetDataTable("SHOW VARIABLES LIKE 'storage_engine'");
+        _defaultStorageEngine = "MyISAM";
+        if (dt != null && dt.Rows.Count == 1)
+        {
+          _defaultStorageEngine = (string)dt.Rows[0][1];
+        }
+
+        return _defaultStorageEngine;
       }
     }
 
@@ -243,27 +218,28 @@ namespace MySql.Data.VisualStudio
       throw new NotImplementedException();
     }
 
-    public virtual string GetDropSQL()
+    public virtual string GetDropSql()
     {
-      return String.Format("DROP {0} `{1}`.`{2}`", NodeId, Database, Name);
+      return string.Format("DROP {0} `{1}`.`{2}`", NodeId, Database, Name);
     }
 
     private void Drop()
     {
       string typeString = LocalizedTypeString.ToLower(CultureInfo.CurrentCulture);
-
-      DialogResult result = MessageBox.Show(String.Format(
+      DialogResult result = MessageBox.Show(string.Format(
           Resources.DropConfirmation, typeString, Name),
-          String.Format(Resources.DropConfirmationCaption, typeString),
+          string.Format(Resources.DropConfirmationCaption, typeString),
           MessageBoxButtons.YesNo,
           MessageBoxIcon.Question);
       if (result == DialogResult.No)
+      {
         throw new OperationCanceledException();
+      }
 
-      string sql = GetDropSQL();
+      string sql = GetDropSql();
       try
       {
-        ExecuteSQL(sql);
+        ExecuteSql(sql);
 
         // now we drop the node from the hierarchy
         HierarchyAccessor.DropObjectNode(ItemId);
@@ -271,7 +247,7 @@ namespace MySql.Data.VisualStudio
       catch (Exception ex)
       {
         MessageBox.Show(
-            String.Format(Resources.ErrorAttemptingToDrop,
+            string.Format(Resources.ErrorAttemptingToDrop,
             LocalizedTypeString, Name, ex.Message), Resources.ErrorTitle,
             MessageBoxButtons.OK, MessageBoxIcon.Error);
         throw new OperationCanceledException();
@@ -285,17 +261,18 @@ namespace MySql.Data.VisualStudio
       try
       {
         DataTable dt = conn.GetSchema(SchemaCollection, restrictions);
-
         int uniqueIndex = 1;
-        string objectName = String.Empty;
-
+        string objectName = string.Empty;
         foreach (DataRow row in dt.Rows)
         {
-          objectName = String.Format("{0}{1}", NodeId, uniqueIndex).Replace(" ", "");
+          objectName = string.Format("{0}{1}", NodeId, uniqueIndex).Replace(" ", "");
           if (row[NameIndex].ToString().ToLowerInvariant() == objectName.ToLowerInvariant())
+          {
             uniqueIndex++;
+          }
         }
-        Name = String.Format("{0}{1}", NodeId, uniqueIndex).Replace(" ", "");
+
+        Name = string.Format("{0}{1}", NodeId, uniqueIndex).Replace(" ", "");
         HierarchyAccessor.SetProperty(ItemId, (int)__VSHPROPID.VSHPROPID_Name, Name);
         return Name;
       }
@@ -311,47 +288,49 @@ namespace MySql.Data.VisualStudio
 
     private void OpenEditor()
     {
-      IVsUIShellOpenDocument shell =
-        MySqlDataProviderPackage.GetGlobalService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
-
       IVsWindowFrame winFrame = null;
+      var shell = Package.GetGlobalService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument;
+      if (shell != null)
+      {
+        object editor = GetEditor();
+        object coreEditor = editor;
+        editorGuid = editor.GetType().GUID;
+        if (editor is VSCodeEditor)
+          coreEditor = (editor as VSCodeEditor).CodeWindow;
 
-      object editor = GetEditor();
-      object coreEditor = editor;
-      editorGuid = editor.GetType().GUID;
-      if (editor is VSCodeEditor)
-        coreEditor = (editor as VSCodeEditor).CodeWindow;
+        IntPtr viewPunk = Marshal.GetIUnknownForObject(coreEditor);
+        IntPtr dataPunk = Marshal.GetIUnknownForObject(this);
+        Guid viewGuid = VSConstants.LOGVIEWID_TextView;
 
-      IntPtr viewPunk = Marshal.GetIUnknownForObject(coreEditor);
-      IntPtr dataPunk = Marshal.GetIUnknownForObject(this);
-      Guid viewGuid = VSConstants.LOGVIEWID_TextView;
+        // Initialize IDE editor infrastracture
+        int result = shell.InitializeEditorInstance(
+          (uint) 0, // Initialization flags. We need default behavior here
+          viewPunk, // View object reference (should implement IVsWindowPane)
+          dataPunk, // Docuemnt object reference (should implement IVsPersistDocData)
+          Moniker, // Document moniker
+          ref editorGuid, // GUID of the editor type
+          null, // Name of the physical view. We use default
+          ref viewGuid, // GUID identifying the logical view.
+          null, // Initial caption defined by the document owner. Will be initialized by the editor later
+          null, // Initial caption defined by the document editor. Will be initialized by the editor later
+          // Pointer to the IVsUIHierarchy interface of the project that contains the document
+          HierarchyAccessor.Hierarchy,
+          (uint) ItemId, // UI hierarchy item identifier of the document in the project system
+          IntPtr.Zero,
+          // Pointer to the IUnknown interface of the document data object if the document data object already exists in the running document table
+          // Project-specific service provider.
+          HierarchyAccessor.ServiceProvider as Microsoft.VisualStudio.OLE.Interop.IServiceProvider,
+          ref commandGroupGuid, // Command UI GUID of the commands to display for this editor.
+          out winFrame // The window frame that contains the editor
+          );
 
-      // Initialize IDE editor infrastracture
-      int result = shell.InitializeEditorInstance(
-        (uint)0,                // Initialization flags. We need default behavior here
-        viewPunk,               // View object reference (should implement IVsWindowPane)
-        dataPunk,               // Docuemnt object reference (should implement IVsPersistDocData)
-        Moniker,                // Document moniker
-        ref editorGuid,         // GUID of the editor type
-        null,                   // Name of the physical view. We use default
-        ref viewGuid,           // GUID identifying the logical view.
-        null,                   // Initial caption defined by the document owner. Will be initialized by the editor later
-        null,                   // Initial caption defined by the document editor. Will be initialized by the editor later
-        // Pointer to the IVsUIHierarchy interface of the project that contains the document
-        HierarchyAccessor.Hierarchy,
-        (uint)ItemId,           // UI hierarchy item identifier of the document in the project system
-        IntPtr.Zero,            // Pointer to the IUnknown interface of the document data object if the document data object already exists in the running document table
-        // Project-specific service provider.
-        HierarchyAccessor.ServiceProvider as Microsoft.VisualStudio.OLE.Interop.IServiceProvider,
-        ref commandGroupGuid,   // Command UI GUID of the commands to display for this editor.
-        out winFrame            // The window frame that contains the editor
-        );
-
-      Debug.Assert(winFrame != null &&
-             ErrorHandler.Succeeded(result), "Failed to initialize editor");
+        Debug.Assert(winFrame != null && ErrorHandler.Succeeded(result), "Failed to initialize editor");
+      }
 
       if (winFrame == null)
+      {
         throw new Exception("Cannot create a design window for the selected object");
+      }
 
       // if our editor is a text buffer then hook up our language service
       //if (editor is TextBufferEditor)
@@ -366,11 +345,11 @@ namespace MySql.Data.VisualStudio
 
     protected void SaveNode()
     {
-      string nodePath = String.Format("/Connection/{0}s/{1}", NodeId, Name);
+      string nodePath = string.Format("/Connection/{0}s/{1}", NodeId, Name);
       HierarchyAccessor.SetNodePath(ItemId, nodePath);
     }
 
-    protected void ExecuteSQL(string sql)
+    protected void ExecuteSql(string sql)
     {
       DbConnection conn = AcquireHierarchyAccessorConnection();
       try
@@ -378,7 +357,7 @@ namespace MySql.Data.VisualStudio
         DbCommand cmd = conn.CreateCommand();
         if (!string.IsNullOrEmpty(OldObjectDefinition))
         {
-          int idx = sql.IndexOf( SEPARATOR );
+          int idx = sql.IndexOf(SEPARATOR, StringComparison.Ordinal);
           if (idx != -1)
           {
             cmd.CommandText = sql.Substring(0, idx);

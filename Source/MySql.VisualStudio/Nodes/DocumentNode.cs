@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,26 +22,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.Diagnostics;
-using Microsoft.VisualStudio;
 using System.Data.Common;
-using System.Data;
-using Microsoft.VisualStudio.Data;
-using Microsoft.VisualStudio.TextManager.Interop;
+using System.Diagnostics;
 using System.Windows.Forms;
-using MySql.Data.VisualStudio.Properties;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Package;
-using MySql.Data.VisualStudio.Editors;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using MySql.Data.VisualStudio.Properties;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
   abstract class DocumentNode : BaseNode, IVsPersistDocData
   {
-    public DocumentNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
+    protected DocumentNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
       base(hierarchyAccessor, id)
     {
     }
@@ -56,7 +50,7 @@ namespace MySql.Data.VisualStudio
 
     #region "Gathering Connection Logic"
 
-    protected static EnvDTE.DTE Dte = null;
+    protected static EnvDTE.DTE Dte;
     private static Dictionary<string, BaseNode> dic = new Dictionary<string, BaseNode>();
 
     internal static void RegisterNode(BaseNode node)
@@ -94,7 +88,7 @@ namespace MySql.Data.VisualStudio
     {
       if ((Dte == null ) || ( Dte.ActiveDocument == null)) return null;
       string curDoc = Dte.ActiveDocument.FullName;
-      BaseNode node = null;
+      BaseNode node;
       if (dic.TryGetValue(curDoc, out node))
       {
         try
@@ -121,7 +115,7 @@ namespace MySql.Data.VisualStudio
     protected virtual bool Save()
     {
       OnSaving();
-      ExecuteSQL(GetSaveSql());
+      ExecuteSql(GetSaveSql());
       return true;
     }
 
@@ -133,7 +127,7 @@ namespace MySql.Data.VisualStudio
       return VSConstants.S_OK;
     }
 
-    public int GetGuidEditorType(out Guid pClassID)
+    public int GetGuidEditorType(out Guid pClassId)
     {
       throw new Exception("The method or operation is not implemented.");
     }
@@ -187,7 +181,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show("Unable to save object with error: " + ex.Message);
+        MessageBox.Show(Resources.DocumentNode_UnableToSaveObjectError + ex.Message);
         return VSConstants.S_OK;
       }
 
@@ -201,8 +195,8 @@ namespace MySql.Data.VisualStudio
         OnDataSaved();
 
         Name = GetCurrentName();
-        DocumentNode.UpdateRegisteredNode(oldMoniker, Moniker);
-        pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
+        UpdateRegisteredNode(oldMoniker, Moniker);
+        pbstrMkDocumentNew = string.Format("/Connection/{0}s/{1}", NodeId, Name);
         VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
 
         // update server explorer

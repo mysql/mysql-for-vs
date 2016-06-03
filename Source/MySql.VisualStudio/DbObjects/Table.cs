@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -25,11 +25,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.ComponentModel;
-using MySql.Data.VisualStudio.Properties;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.OLE.Interop;
 using MySql.Data.VisualStudio.Editors;
-using System.Windows.Forms;
+using MySql.Data.VisualStudio.Nodes;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
@@ -45,9 +42,9 @@ namespace MySql.Data.VisualStudio.DbObjects
 
   internal class Table : ICustomTypeDescriptor
   {
-    private TableNode owningNode;
+    private TableNode _owningNode;
     internal Table OldTable;
-    private string characterSet;
+    private string _characterSet;
 
     private Table()
     {
@@ -55,7 +52,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     public Table(TableNode node, DataRow row, DataTable columns)
     {
-      owningNode = node;
+      _owningNode = node;
       IsNew = row == null;
 
       Columns = new TablePartCollection<Column>();
@@ -80,7 +77,7 @@ namespace MySql.Data.VisualStudio.DbObjects
       // now save our current values as old
       OldTable = new Table();
       ObjectHelper.Copy(this, OldTable);
-      node.DataSaved += new EventHandler(node_DataSaved);
+      node.DataSaved += node_DataSaved;
     }
 
     void node_DataSaved(object sender, EventArgs e)
@@ -125,10 +122,10 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     internal TableNode OwningNode
     {
-      get { return owningNode; }
+      get { return _owningNode; }
     }
 
-    internal bool SupportsFK
+    internal bool SupportsFk
     {
       get
       {
@@ -172,12 +169,12 @@ namespace MySql.Data.VisualStudio.DbObjects
     [MyDescription("TableCharSetDesc")]
     public string CharacterSet
     {
-      get { return characterSet; }
+      get { return _characterSet; }
       set
       {
-        if (value != characterSet)
-          Collation = String.Empty;
-        characterSet = value;
+        if (value != _characterSet)
+          Collation = string.Empty;
+        _characterSet = value;
       }
     }
 
@@ -286,12 +283,12 @@ namespace MySql.Data.VisualStudio.DbObjects
       set { _minRows = value; }
     }
 
-    private UInt64 _maxRows;
+    private ulong _maxRows;
     [Category("Row")]
     [DisplayName("Maximum Rows")]
     [MyDescription("TableMaxRowsDesc")]
     [TypeConverter(typeof(NumericTypeConverter))]
-    public UInt64 MaxRows
+    public ulong MaxRows
     {
       get { return _maxRows; }
       set { _maxRows = value; }
@@ -374,12 +371,12 @@ namespace MySql.Data.VisualStudio.DbObjects
     {
       Index newIndex = new Index(this, null);
       newIndex.IsPrimary = primary;
-      string baseName = String.Format("{0}_{1}", primary ? "PK" : "IX",
+      string baseName = string.Format("{0}_{1}", primary ? "PK" : "IX",
           Name);
       string name = baseName;
       int uniqueIndex = 0;
       while (KeyExists(name))
-        name = String.Format("{0}_{1}", baseName, ++uniqueIndex);
+        name = string.Format("{0}_{1}", baseName, ++uniqueIndex);
       newIndex.Name = name;
       return newIndex;
     }
@@ -388,7 +385,7 @@ namespace MySql.Data.VisualStudio.DbObjects
     {
       string sql = @"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE 
                 TABLE_SCHEMA='{0}' AND TABLE_NAME='{1}'";
-      DataTable dt = owningNode.GetDataTable(String.Format(sql, owningNode.Database, Name));
+      DataTable dt = _owningNode.GetDataTable(string.Format(sql, _owningNode.Database, Name));
       List<string> cols = new List<string>();
       foreach (DataRow row in dt.Rows)
         cols.Add(row[0].ToString());
@@ -410,7 +407,7 @@ namespace MySql.Data.VisualStudio.DbObjects
       string delimiter = "";
       foreach (string s in parts)
       {
-        if (!String.IsNullOrEmpty(s))
+        if (!string.IsNullOrEmpty(s))
         {
           sql.AppendFormat("{0}{1}", delimiter, s);
           delimiter = ", ";
@@ -438,7 +435,7 @@ namespace MySql.Data.VisualStudio.DbObjects
     private bool KeyExists(string keyName)
     {
       foreach (Index i in Indexes)
-        if (String.Compare(i.Name, keyName, true) == 0) return true;
+        if (string.Compare(i.Name, keyName, true) == 0) return true;
       return false;
     }
 
@@ -460,7 +457,7 @@ namespace MySql.Data.VisualStudio.DbObjects
       }
 
       string createOpt = (string)tableRow["CREATE_OPTIONS"];
-      if (String.IsNullOrEmpty(createOpt))
+      if (string.IsNullOrEmpty(createOpt))
         ParseCreateOptions(createOpt.ToLowerInvariant());
     }
 
@@ -474,13 +471,13 @@ namespace MySql.Data.VisualStudio.DbObjects
         switch (parts[0])
         {
           case "min_rows":
-            MinRows = UInt64.Parse(parts[1]);
+            MinRows = ulong.Parse(parts[1]);
             break;
           case "max_rows":
-            MaxRows = UInt64.Parse(parts[1]);
+            MaxRows = ulong.Parse(parts[1]);
             break;
           case "checksum":
-            CheckSum = Boolean.Parse(parts[1]);
+            CheckSum = bool.Parse(parts[1]);
             break;
           case "pack_keys":
             PackKeys = parts[1] == "1" ? PackKeysMethod.Full : PackKeysMethod.None;
@@ -507,8 +504,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     private void LoadIndexes()
     {
-      string[] restrictions = new string[4] { null, owningNode.Database, Name, null };
-      DataTable dt = owningNode.GetSchema("Indexes", restrictions);
+      string[] restrictions = new string[4] { null, _owningNode.Database, Name, null };
+      DataTable dt = _owningNode.GetSchema("Indexes", restrictions);
       foreach (DataRow row in dt.Rows)
       {
         Index i = new Index(this, row);
@@ -518,8 +515,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     private void LoadForeignKeys()
     {
-      string[] restrictions = new string[4] { null, owningNode.Database, Name, null };
-      DataTable dt = owningNode.GetSchema("Foreign Keys", restrictions);
+      string[] restrictions = new string[4] { null, _owningNode.Database, Name, null };
+      DataTable dt = _owningNode.GetSchema("Foreign Keys", restrictions);
       foreach (DataRow row in dt.Rows)
       {
         ForeignKey key = new ForeignKey(this, row);
@@ -535,38 +532,38 @@ namespace MySql.Data.VisualStudio.DbObjects
       if (!newTable)
       {
         if (Name != OldTable.Name)
-          options.Add(String.Format("RENAME TO `{0}` ", Name));
+          options.Add(string.Format("RENAME TO `{0}` ", Name));
       }
       if (AutoInc != OldTable.AutoInc)
-        options.Add(String.Format("AUTO_INCREMENT={0}", AutoInc));
+        options.Add(string.Format("AUTO_INCREMENT={0}", AutoInc));
       if (AvgRowLength != OldTable.AvgRowLength)
-        options.Add(String.Format("AVG_ROW_LENGTH={0}", AvgRowLength));
+        options.Add(string.Format("AVG_ROW_LENGTH={0}", AvgRowLength));
       if (CheckSum != OldTable.CheckSum)
-        options.Add(String.Format("CHECKSUM={0}", CheckSum ? 1 : 0));
+        options.Add(string.Format("CHECKSUM={0}", CheckSum ? 1 : 0));
       if (Engine != OldTable.Engine)
-        options.Add(String.Format("ENGINE={0}", Engine));
+        options.Add(string.Format("ENGINE={0}", Engine));
       if (InsertMethod != OldTable.InsertMethod)
-        options.Add(String.Format("INSERT_METHOD={0}", InsertMethod.ToString()));
+        options.Add(string.Format("INSERT_METHOD={0}", InsertMethod.ToString()));
       if (MaxRows != OldTable.MaxRows)
-        options.Add(String.Format("MAX_ROWS={0}", MaxRows));
+        options.Add(string.Format("MAX_ROWS={0}", MaxRows));
       if (MinRows != OldTable.MinRows)
-        options.Add(String.Format("MIN_ROWS={0}", MinRows));
+        options.Add(string.Format("MIN_ROWS={0}", MinRows));
       if (PackKeys != OldTable.PackKeys)
-        options.Add(String.Format("PACK_KEYS={0}", PackKeys.ToString()));
+        options.Add(string.Format("PACK_KEYS={0}", PackKeys.ToString()));
       if (RowFormat != OldTable.RowFormat)
-        options.Add(String.Format("ROW_FORMAT={0}", RowFormat.ToString()));
+        options.Add(string.Format("ROW_FORMAT={0}", RowFormat.ToString()));
       if (StringPropertyHasChanged(Comment, OldTable.Comment))
-        options.Add(String.Format("COMMENT='{0}'", Comment));
+        options.Add(string.Format("COMMENT='{0}'", Comment));
       if (StringPropertyHasChanged(CharacterSet, OldTable.CharacterSet))
-        options.Add(String.IsNullOrEmpty(CharacterSet) ? "DEFAULT CHARACTER SET" :
-            String.Format("CHARACTER SET='{0}'", CharacterSet));
+        options.Add(string.IsNullOrEmpty(CharacterSet) ? "DEFAULT CHARACTER SET" :
+            string.Format("CHARACTER SET='{0}'", CharacterSet));
       if (StringPropertyHasChanged(Collation, OldTable.Collation))
-        options.Add(String.IsNullOrEmpty(Collation) ? "DEFAULT COLLATE" :
-            String.Format("COLLATE='{0}'", Collation));
+        options.Add(string.IsNullOrEmpty(Collation) ? "DEFAULT COLLATE" :
+            string.Format("COLLATE='{0}'", Collation));
       if (StringPropertyHasChanged(DataDirectory, OldTable.DataDirectory))
-        options.Add(String.Format("DATA DIRECTORY='{0}' ", DataDirectory));
+        options.Add(string.Format("DATA DIRECTORY='{0}' ", DataDirectory));
       if (StringPropertyHasChanged(IndexDirectory, OldTable.IndexDirectory))
-        options.Add(String.Format("INDEX DIRECTORY='{0}' ", IndexDirectory));
+        options.Add(string.Format("INDEX DIRECTORY='{0}' ", IndexDirectory));
 
       string delimiter = "";
       foreach (string option in options)

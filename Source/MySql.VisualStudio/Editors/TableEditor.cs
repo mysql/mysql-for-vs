@@ -1,4 +1,4 @@
-// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,24 +22,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using MySql.Data.VisualStudio.Editors;
-using System.Drawing;
-using System.Collections;
-using MySql.Data.VisualStudio.Properties;
 using System.ComponentModel;
-using Microsoft.VisualStudio.OLE.Interop;
-using MySql.Data.VisualStudio.DbObjects;
-using System.Runtime.InteropServices;
 using System.Reflection;
-using System.ComponentModel.Design;
-using Microsoft.VisualStudio.Shell;
+using System.Windows.Forms;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using MySql.Data.VisualStudio.DbObjects;
+using MySql.Data.VisualStudio.Nodes;
+using MySql.Data.VisualStudio.Properties;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Editors
 {
-  class TableEditor : UserControl
+  internal class TableEditor : UserControl
   {
     private TableNode tableNode;
     private System.ComponentModel.IContainer components;
@@ -379,7 +373,7 @@ namespace MySql.Data.VisualStudio
     private void OnQueryForeignKeys(object sender, EventArgs e)
     {
       OleMenuCommand foreignKey = sender as OleMenuCommand;
-      foreignKey.Enabled = tableNode.Table.SupportsFK;
+      foreignKey.Enabled = tableNode.Table.SupportsFk;
     }
 
     private void OnForeignKeys(object sender, EventArgs e)

@@ -21,56 +21,53 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Data.Common;
 using System.Data;
-using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics;
+using System.Windows.Forms;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.DbObjects;
-using System.Text;
-using System.Windows.Forms;
 using MySql.Data.VisualStudio.Editors;
-using System.Diagnostics;
-using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.VisualStudio.Properties;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
   class TableNode : DocumentNode
   {
-    private Table table;
+    private Table _table;
 
     public TableNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
       base(hierarchyAccessor, id)
     {
       NodeId = "Table";
       //commandGroupGuid = GuidList.DavinciCommandSet;
-      DocumentNode.RegisterNode(this);
-      Saving += new EventHandler(TableNode_Saving);
+      RegisterNode(this);
+      Saving += TableNode_Saving;
     }
 
     void TableNode_Saving(object sender, EventArgs e)
     {
       // Some useful validations
       bool hasAutoIncr = false;
-      bool hasPK = false;
-      for (int i = 0; i < table.Columns.Count; i++)
+      bool hasPk = false;
+      for (int i = 0; i < _table.Columns.Count; i++)
       {
-        if (table.Columns[i].AutoIncrement)
+        if (_table.Columns[i].AutoIncrement)
         {
           hasAutoIncr = true;
           break;
         }
       }
 
-      for (int i = 0; i < table.Indexes.Count; i++)
+      for (int i = 0; i < _table.Indexes.Count; i++)
       {
-        if (table.Indexes[i].IsPrimary)
+        if (_table.Indexes[i].IsPrimary)
         {
-          hasPK = true;
+          hasPk = true;
           break;
         }
       }
-      if (hasAutoIncr && !hasPK)
+      if (hasAutoIncr && !hasPk)
         throw new ArgumentException( Resources.AutoIncrementPrimaryKey );
     }
 
@@ -78,17 +75,17 @@ namespace MySql.Data.VisualStudio
 
     public Table Table
     {
-      get { return table; }
+      get { return _table; }
     }
 
     public override bool Dirty
     {
       get
       {
-        if (table == null)
+        if (_table == null)
           return false;
 
-        return table.HasChanges();
+        return _table.HasChanges();
       }
     }
 
@@ -96,7 +93,7 @@ namespace MySql.Data.VisualStudio
 
     protected override string GetCurrentName()
     {
-      return table.Name;
+      return _table.Name;
     }
 
     /// <summary>
@@ -106,29 +103,29 @@ namespace MySql.Data.VisualStudio
     /// <returns></returns>
     protected override bool Save()
     {
-      if (table.IsNew && table.Name == Name)
+      if (_table.IsNew && _table.Name == Name)
       {
         TableNamePromptDialog dlg = new TableNamePromptDialog();
-        dlg.TableName = table.Name;
+        dlg.TableName = _table.Name;
         if (DialogResult.Cancel == dlg.ShowDialog()) return false;
-        table.Name = dlg.TableName;
+        _table.Name = dlg.TableName;
       }
       try
       {
         return base.Save();
       }
-      catch ( MySql.Data.MySqlClient.MySqlException ex)
+      catch (MySqlClient.MySqlException ex)
       {
         // Undo name edited
         Debug.WriteLine(ex.Message);
-        table.Name = Name;
+        _table.Name = Name;
         throw;
       }
     }
 
-    public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
+    public static void CreateNew(DataViewHierarchyAccessor hierarchyAccessor)
     {
-      TableNode node = new TableNode(HierarchyAccessor, 0);
+      TableNode node = new TableNode(hierarchyAccessor, 0);
       node.Edit();
     }
 
@@ -136,19 +133,19 @@ namespace MySql.Data.VisualStudio
     {
       if (IsNew)
       {
-        table = new Table(this, null, null);
-        table.Name = Name;
+        _table = new Table(this, null, null);
+        _table.Name = Name;
       }
       else
       {
         DbConnection connection = AcquireHierarchyAccessorConnection();
         try
         {
-          string[] restrictions = new string[4] { null, connection.Database, Name, null };
+          string[] restrictions = new string[] { null, connection.Database, Name, null };
           DataTable columnsTable = connection.GetSchema("Columns", restrictions);
 
           DataTable dt = connection.GetSchema("Tables", restrictions);
-          table = new Table(this, dt.Rows[0], columnsTable);
+          _table = new Table(this, dt.Rows[0], columnsTable);
         }
         finally
         {
@@ -186,7 +183,7 @@ namespace MySql.Data.VisualStudio
       try
       {
         DbCommand cmd = conn.CreateCommand();
-        cmd.CommandText = string.Format("show create table `{0}`", base.Name );
+        cmd.CommandText = string.Format("show create table `{0}`", Name );
         using (DbDataReader r = cmd.ExecuteReader())
         {
           r.Read();

@@ -210,7 +210,7 @@ namespace MySql.Data.VisualStudio.MySqlX
             this.RefreshConnectionsToolStripMenuItem,
             this.ViewAsToolStripMenuItem});
       this.ConnectionsContextMenuStrip.Name = "ConnectionsContextMenuStrip";
-      this.ConnectionsContextMenuStrip.Size = new System.Drawing.Size(184, 120);
+      this.ConnectionsContextMenuStrip.Size = new System.Drawing.Size(184, 98);
       this.ConnectionsContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.ConnectionsContextMenuStrip_Opening);
       // 
       // DeleteConnectionToolStripMenuItem

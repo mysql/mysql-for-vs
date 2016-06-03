@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,18 +21,18 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
-using System.ComponentModel.Design;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using System.Collections.Generic;
+using MySql.Data.VisualStudio.Nodes;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Editors
 {
   [Guid("7363513B-298D-49eb-B9D9-264CE6C47540")]
-  class TableEditorPane : WindowPane
+  internal class TableEditorPane : WindowPane
   {
     TableEditor tableEditor;
     List<object> objectsForInspection = new List<object>();

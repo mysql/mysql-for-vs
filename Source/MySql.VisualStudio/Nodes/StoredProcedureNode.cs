@@ -21,45 +21,40 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data.Common;
-using Microsoft.VisualStudio.Data;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.TextManager.Interop;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Package;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.Diagnostics;
-using OleInterop = Microsoft.VisualStudio.OLE.Interop;
-using System.Data;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Data;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.TextManager.Interop;
+using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
+using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using Microsoft.Win32;
-using MySql.Data.MySqlClient;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
-
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
   class StoredProcedureNode : DocumentNode, IVsTextBufferProvider
   {
-    private string sql_mode;
-    private bool isFunction;
-    private VSCodeEditor editor;
+    private string _sqlMode;
+    private bool _isFunction;
+    private VSCodeEditor _editor;
 
     public StoredProcedureNode(DataViewHierarchyAccessor hierarchyAccessor, int id, bool isFunc) :
       base(hierarchyAccessor, id)
     {
       NodeId = isFunc ? "StoredFunction" : "StoredProcedure";
-      isFunction = isFunc;
+      _isFunction = isFunc;
       NameIndex = 3;
-      editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
+      _editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
       if( Dte == null )
         Dte = (EnvDTE.DTE)hierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
-      DocumentNode.RegisterNode(this);
+      RegisterNode(this);
     }
 
     #region Properties
@@ -71,8 +66,8 @@ namespace MySql.Data.VisualStudio
 
     public override bool Dirty
     {
-      get { return editor.Dirty; }
-      protected set { editor.Dirty = value; }
+      get { return _editor.Dirty; }
+      protected set { _editor.Dirty = value; }
     }
 
     private bool IsFunction
@@ -82,53 +77,53 @@ namespace MySql.Data.VisualStudio
 
     #endregion
 
-    public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, bool isFunc)
+    public static void CreateNew(DataViewHierarchyAccessor hierarchyAccessor, bool isFunc)
     {
-      StoredProcedureNode node = new StoredProcedureNode(HierarchyAccessor, 0, isFunc);
+      StoredProcedureNode node = new StoredProcedureNode(hierarchyAccessor, 0, isFunc);
       RegisterNode( node );
       node.Edit();
     }
 
     public override object GetEditor()
     {
-      return editor;
+      return _editor;
     }
 
-    public override string GetDropSQL()
+    public override string GetDropSql()
     {
-      return GetDropSQL(Name);
+      return GetDropSql(Name);
     }
 
     public override string GetSaveSql()
     {
       if (IsNew)
       {
-        return editor.Text;
+        return _editor.Text;
       }
       else
       {
-        return string.Format("{0}{1}{2};", GetDropSQL(), BaseNode.SEPARATOR, editor.Text);
+        return string.Format("{0}{1}{2};", GetDropSql(), SEPARATOR, _editor.Text);
       }
     }
 
-    private string GetDropSQL(string procName)
+    private string GetDropSql(string procName)
     {
       procName = procName.Trim('`');
-      return String.Format("DROP {0} `{1}`.`{2}`",
+      return string.Format("DROP {0} `{1}`.`{2}`",
           IsFunction ? "FUNCTION" : "PROCEDURE", Database, procName);
     }
 
     private string GetNewRoutineText()
     {
       StringBuilder sb = new StringBuilder("CREATE ");
-      sb.AppendFormat("{0} {1}()\r\n", isFunction ? "FUNCTION" : "PROCEDURE", Name);
+      sb.AppendFormat("{0} {1}()\r\n", _isFunction ? "FUNCTION" : "PROCEDURE", Name);
       sb.Append("/*\r\n(\r\n");
       sb.Append("parameter1 INT\r\nOUT parameter2 datatype\r\n");
       sb.Append(")\r\n*/\r\n");
-      if (isFunction)
+      if (_isFunction)
         sb.Append("RETURNS /* datatype */\r\n");
       sb.Append("BEGIN\r\n");
-      if (isFunction)
+      if (_isFunction)
         sb.Append("RETURN /* return value */\r\n");
       sb.Append("END");
       return sb.ToString();
@@ -137,10 +132,10 @@ namespace MySql.Data.VisualStudio
     protected override void Load()
     {
       if (IsNew)
-        editor.Text = GetNewRoutineText();
+        _editor.Text = GetNewRoutineText();
       else
       {
-        editor.Text = OldObjectDefinition = GetRoutineBody();
+        _editor.Text = OldObjectDefinition = GetRoutineBody();
         Dirty = false;
       }
     }
@@ -150,13 +145,13 @@ namespace MySql.Data.VisualStudio
       string sql = "";
       try
       {
-        sql = GetStoredProcedureBody(String.Format(
+        sql = GetStoredProcedureBody(string.Format(
             "SHOW CREATE {0} `{1}`.`{2}`",
-            IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out sql_mode);
+            IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out _sqlMode);
       }
       catch (Exception ex)
       {
-        MessageBox.Show("Unable to load the stored procedure for editing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(Resources.StoredProcedureNode_StoredProcedureLoadError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
         Debug.WriteLine(ex.Message);
       }
       return sql;
@@ -167,22 +162,22 @@ namespace MySql.Data.VisualStudio
       LaunchDebugTarget();
     }
 
-    private string GetStoredProcedureBody(string sql, out string sql_mode)
+    private string GetStoredProcedureBody(string sql, out string sqlMode)
     {
-      string body = null;
-
       DbConnection conn = AcquireHierarchyAccessorConnection();
       try
       {
         DbCommand cmd = MySqlProviderObjectFactory.Factory.CreateCommand();
         cmd.Connection = conn;
         cmd.CommandText = sql;
+        string body;
         using (DbDataReader reader = cmd.ExecuteReader())
         {
           reader.Read();
-          sql_mode = reader.GetString(1);
+          sqlMode = reader.GetString(1);
           body = reader.GetString(2);
         }
+
         return body;
       }
       finally
@@ -203,19 +198,18 @@ namespace MySql.Data.VisualStudio
 
       try
       {
-        string sql = editor.Text.Trim();
         if (!IsNew)
         {
           // first we need to check the syntax of our changes.  THis will throw
           // an exception if the syntax is bad
           CheckSyntax();
         }
-        ExecuteSQL(GetSaveSql());
+        ExecuteSql(GetSaveSql());
         return true;
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
         return false;
       }
     }
@@ -223,11 +217,11 @@ namespace MySql.Data.VisualStudio
     private void CheckSyntax()
     {
       MySqlConnection con = ( MySqlConnection )GetCurrentConnection();
-      string sql = editor.Text.Trim();
+      string sql = _editor.Text.Trim();
       StringBuilder sb;
       LanguageServiceUtil.ParseSql(sql, false, out sb, con.ServerVersion);
       if (sb.Length != 0)
-        throw new Exception(string.Format("Syntax Error: {0}", sb.ToString()));
+        throw new Exception(string.Format("Syntax Error: {0}", sb));
     }
 
     private string ChangeSqlTypeTo(string sql, string type)
@@ -241,24 +235,25 @@ namespace MySql.Data.VisualStudio
 
     protected override string GetCurrentName()
     {
-      return LanguageServiceUtil.GetRoutineName(editor.Text);
+      return LanguageServiceUtil.GetRoutineName(_editor.Text);
     }
 
     #region IVsTextBufferProvider Members
 
-    private IVsTextLines buffer;
+    private IVsTextLines _buffer;
 
     int IVsTextBufferProvider.GetTextBuffer(out IVsTextLines ppTextBuffer)
     {
-      if (buffer == null)
+      if (_buffer == null)
       {
         Type bufferType = typeof(IVsTextLines);
         Guid riid = bufferType.GUID;
         Guid clsid = typeof(VsTextBufferClass).GUID;
-        buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
+        _buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
                              ref clsid, ref riid, typeof(object));
       }
-      ppTextBuffer = buffer;
+
+      ppTextBuffer = _buffer;
       return VSConstants.S_OK;
     }
 
@@ -277,24 +272,24 @@ namespace MySql.Data.VisualStudio
     protected void LaunchDebugTarget()
     {
       Microsoft.VisualStudio.Shell.ServiceProvider sp =
-           new Microsoft.VisualStudio.Shell.ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)Dte);
+           new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)Dte);
 
       IVsDebugger dbg = (IVsDebugger)sp.GetService(typeof(SVsShellDebugger));
 
       VsDebugTargetInfo info = new VsDebugTargetInfo();     
       
 
-      info.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(info);
-      info.dlo = Microsoft.VisualStudio.Shell.Interop.DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
+      info.cbSize = (uint)Marshal.SizeOf(info);
+      info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
       info.bstrExe = Moniker;
       info.bstrCurDir = @"C:\";
       string connectionString = HierarchyAccessor.Connection.ConnectionSupport.ConnectionString + ";Allow User Variables=true;Allow Zero DateTime=true;";
       if (connectionString.IndexOf("password", StringComparison.OrdinalIgnoreCase) == -1)
       {
-        MySql.Data.MySqlClient.MySqlConnection connection = ((MySql.Data.MySqlClient.MySqlConnection)HierarchyAccessor.Connection.GetLockedProviderObject());
+        var connection = (MySqlConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
         try
         {
-          MySql.Data.MySqlClient.MySqlConnectionStringBuilder settings = (MySql.Data.MySqlClient.MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
+          var settings = (MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
           connectionString += "password=" + settings.Password + ";Persist Security Info=true;";
         }
         finally
@@ -308,14 +303,16 @@ namespace MySql.Data.VisualStudio
       info.clsidCustom = new Guid("{EEEE0740-10F7-4e5f-8BC4-1CC0AC9ED5B0}"); // Set the launching engine the sample engine guid
       info.grfLaunch = 0;
 
-      IntPtr pInfo = System.Runtime.InteropServices.Marshal.AllocCoTaskMem((int)info.cbSize);
-      System.Runtime.InteropServices.Marshal.StructureToPtr(info, pInfo, false);
+      IntPtr pInfo = Marshal.AllocCoTaskMem((int)info.cbSize);
+      Marshal.StructureToPtr(info, pInfo, false);
 
       try
       {
         int result = dbg.LaunchDebugTargets(1, pInfo);
         if (result != 0 && result != VSConstants.E_ABORT)
+        {
           throw new ApplicationException("COM error " + result);
+        }
       }
       catch (Exception ex)
       {
@@ -325,7 +322,7 @@ namespace MySql.Data.VisualStudio
       {
         if (pInfo != IntPtr.Zero)
         {
-          System.Runtime.InteropServices.Marshal.FreeCoTaskMem(pInfo);
+          Marshal.FreeCoTaskMem(pInfo);
         }
       }
     }

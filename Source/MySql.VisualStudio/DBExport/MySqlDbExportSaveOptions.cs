@@ -27,19 +27,15 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using MySql.Data.MySqlClient;
-
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
   
   public class MySqlDbExportSaveOptions
   {
-
     private string _connectionString;
     private List<DictionaryDbObjects> _dictionary = new List<DictionaryDbObjects>();
-    private string _pathToMySqlFile;
-    private MySqlDbExportOptions _dumpOptions;
 
     /// <summary>
     /// Gets or sets the connection to be used 
@@ -52,6 +48,7 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         return _connectionString;      
       }
+
       set
       {
         if (value != null)
@@ -72,6 +69,7 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         return _dictionary;
       }
+
       set
       {
         if (value != null)
@@ -79,7 +77,9 @@ namespace MySql.Data.VisualStudio.DBExport
           _dictionary = value;
         }
         else
+        {
           throw new ArgumentNullException("Dictionary");
+        }
       }
     }
 
@@ -88,16 +88,7 @@ namespace MySql.Data.VisualStudio.DBExport
     /// Gets or sets the path to the mysqldump script
     /// </summary>
     [XmlAttribute(AttributeName = "PathToMySQLFile")]
-    public string PathToMySqlFile
-    {
-      get {
-        return _pathToMySqlFile;      
-      }
-
-      set {
-        _pathToMySqlFile = value;
-      }   
-    }
+    public string PathToMySqlFile { get; set; }
 
 
     /// <summary>
@@ -105,36 +96,27 @@ namespace MySql.Data.VisualStudio.DBExport
     /// to be sent to mysqldump tool
     /// </summary>
     [XmlAttribute(AttributeName = "DumpOptions")]
-    public MySqlDbExportOptions DumpOptions
-    {
-      get {
-        return _dumpOptions;        
-      }
-
-      set {
-        _dumpOptions = value;
-      }
-    }
+    public MySqlDbExportOptions DumpOptions { get; set; }
 
 
     public MySqlDbExportSaveOptions()
     {
-      _dumpOptions = new MySqlDbExportOptions();
-      _pathToMySqlFile = "";
+      DumpOptions = new MySqlDbExportOptions();
+      PathToMySqlFile = "";
       _dictionary = new List<DictionaryDbObjects>();
       _connectionString = new MySqlConnectionStringBuilder().ConnectionString;
     }
 
     public MySqlDbExportSaveOptions(MySqlDbExportOptions optionsForDump, 
                                     string completePathToMySqlFile, 
-                                    Dictionary<string, BindingList<DbSelectedObjects>> dictionaryToDBObjects,
+                                    Dictionary<string, BindingList<DbSelectedObjects>> dictionaryToDbObjects,
                                     string connectionStringToUse)
     {
-      _dumpOptions = optionsForDump;
-      _pathToMySqlFile = completePathToMySqlFile;
+      DumpOptions = optionsForDump;
+      PathToMySqlFile = completePathToMySqlFile;
       _connectionString = connectionStringToUse;
 
-      foreach (var items in dictionaryToDBObjects)
+      foreach (var items in dictionaryToDbObjects)
       {
         foreach (var item in items.Value)
 	        {
@@ -161,21 +143,21 @@ namespace MySql.Data.VisualStudio.DBExport
 
           //Connection
           xml.WriteStartElement("ConnectionString");
-          xml.WriteValue(this.Connection);
+          xml.WriteValue(Connection);
           xml.WriteEndElement();
           
           //PathToMySqlFile
           xml.WriteStartElement("PathToMySQLFile");
-          xml.WriteValue(this.PathToMySqlFile);
+          xml.WriteValue(PathToMySqlFile);
           xml.WriteEndElement();
 
           //DumpOptions                              
-          var result = ObjectToXmlViaStringBuilder(this.DumpOptions);          
+          var result = ObjectToXmlViaStringBuilder(DumpOptions);          
           xml.WriteRaw(result);                    
           
           //Dictionary
 
-          result = ObjectToXmlViaStringBuilder(this.Dictionary);
+          result = ObjectToXmlViaStringBuilder(Dictionary);
           xml.WriteRaw(result);
           
           xml.WriteEndElement();
@@ -195,62 +177,62 @@ namespace MySql.Data.VisualStudio.DBExport
 
       var savedSettings = new MySqlDbExportSaveOptions();
 
-      try
+      //load objects
+      XmlDocument doc = new XmlDocument();
+      doc.Load(completeFilePath);
+      foreach (XmlNode node in doc)
       {
-        //load objects
-        XmlDocument doc = new XmlDocument();
-        doc.Load(completeFilePath);
-        foreach (XmlNode node in doc)
-	      {
-          foreach (XmlNode childNode in node.ChildNodes)
+        foreach (XmlNode childNode in node.ChildNodes)
+        {
+          if (childNode.Name == "PathToMySQLFile")
           {
-            if (childNode.Name == "PathToMySQLFile")
-            {
-              savedSettings.PathToMySqlFile = childNode.InnerText;                        
-            }
-            if (childNode.Name == "ConnectionString")
-            {
-              savedSettings.Connection = childNode.InnerText;            
-            }            
-            if (childNode.Name == "MySqlDbExportOptions")
-            {
-              savedSettings.DumpOptions = (MySqlDbExportOptions)DeSerializeXmlNodeToObject(childNode.OuterXml, savedSettings.DumpOptions.GetType());             
-            }
-            if (childNode.Name == "ArrayOfDictionaryDbObjects")
-            {
-              savedSettings.Dictionary = (List<DictionaryDbObjects>)DeSerializeXmlNodeToObject(childNode.OuterXml, savedSettings.Dictionary.GetType());
-            }   
-          }         
-	      }
-        return savedSettings;       
+            savedSettings.PathToMySqlFile = childNode.InnerText;                        
+          }
+
+          if (childNode.Name == "ConnectionString")
+          {
+            savedSettings.Connection = childNode.InnerText;            
+          }
+
+          if (childNode.Name == "MySqlDbExportOptions")
+          {
+            savedSettings.DumpOptions = (MySqlDbExportOptions)DeSerializeXmlNodeToObject(childNode.OuterXml, savedSettings.DumpOptions.GetType());             
+          }
+
+          if (childNode.Name == "ArrayOfDictionaryDbObjects")
+          {
+            savedSettings.Dictionary = (List<DictionaryDbObjects>)DeSerializeXmlNodeToObject(childNode.OuterXml, savedSettings.Dictionary.GetType());
+          }
+        }
       }
-      catch (Exception)
-      {        
-        throw;
-      }
+
+      return savedSettings;
     }
 
-
-    public static string ObjectToXmlViaStringBuilder(Object obj)
+    public static string ObjectToXmlViaStringBuilder(object obj)
     {
       var output = new StringBuilder();
-      var settings = new XmlWriterSettings { Indent = true };
-      settings.OmitXmlDeclaration = true;
+      var settings = new XmlWriterSettings
+      {
+        Indent = true,
+        OmitXmlDeclaration = true
+      };
       using (var xmlWriter = XmlWriter.Create(output, settings))
       {
-        var serializer = new XmlSerializer(obj.GetType());               
+        var serializer = new XmlSerializer(obj.GetType());
         serializer.Serialize(xmlWriter, obj);
       }
 
       return output.ToString();
     }
 
-    public static Object DeSerializeXmlNodeToObject(string node, Type objectType)
+    public static object DeSerializeXmlNodeToObject(string node, Type objectType)
     {
       if (node == null)
-        throw new ArgumentNullException("Argument cannot be null");
+      {
+        throw new ArgumentNullException("node");
+      }
 
-      XmlSerializer xmlSerializer = new XmlSerializer(objectType);
       try
       {
         var reader = new StringReader(node);

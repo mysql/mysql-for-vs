@@ -22,13 +22,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using System.Reflection;
-
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {
@@ -60,7 +59,6 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     /// Returns the script to apply in this database when this object is not in the other database
     /// (usually a drop statement).
     /// </summary>
-    /// <param name="type"></param>
     /// <returns></returns>
     internal abstract string GetExtraScript();
 
@@ -144,7 +142,7 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     {
       Type t = typeof(MySqlConnection);
       PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
-      MySqlConnectionStringBuilder msb = ( MySqlConnectionStringBuilder )p.GetValue(Connection, null);
+      var msb = (MySqlConnectionStringBuilder)p.GetValue(Connection, null);
       _treatAsBoolean = msb.TreatTinyAsBoolean && (columnType == "tinyint(1)");
     }
 

@@ -34,13 +34,11 @@ using EnvDTE;
 using VSLangProj;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
-using MySQL.Utility.Classes;
-using System.CodeDom;
 using System.CodeDom.Compiler;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
-
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Wizards
 {
@@ -164,7 +162,6 @@ namespace MySql.Data.VisualStudio.Wizards
     /// <summary>
     /// This method needs to be overriden in derived classes to implement the project customization.
     /// </summary>
-    /// <param name="projectItem"></param>
     public virtual void ProjectFinishedGenerating(Project project)
     {
       return;
@@ -392,9 +389,12 @@ namespace MySql.Data.VisualStudio.Wizards
     /// Downloads from Nuget the package version required and adds the assembly reference to the project.
     /// </summary>
     /// <param name="vsProj"></param>
-    protected void AddNugetPackage(VSProject VsProj, string PackageName, string Version, bool addReference)
+    /// <param name="packageName"></param>
+    /// <param name="version"></param>
+    /// <param name="addReference"></param>
+    protected void AddNugetPackage(VSProject vsProj, string packageName, string version, bool addReference)
     {
-      SendToGeneralOutputWindow(string.Format("Getting Nuget Package for {0}-{1}...", PackageName, Version));     
+      SendToGeneralOutputWindow(string.Format("Getting Nuget Package for {0}-{1}...", packageName, version));     
       try
       {
         Assembly nugetAssembly = Assembly.Load("nuget.core");
@@ -410,17 +410,17 @@ namespace MySql.Data.VisualStudio.Wizards
         object packageManager = ciPackageManger.Invoke(new object[] { repo, installPath });
         MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage",
           new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
-        string packageID = PackageName;
+        string packageID = packageName;
         MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
-        object semanticVersion = miParse.Invoke(null, new object[] { Version });
+        object semanticVersion = miParse.Invoke(null, new object[] { version });
         miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
         
         if (addReference)
-          AddPackageReference(VsProj, solPath, PackageName, Version);
+          AddPackageReference(vsProj, solPath, packageName, version);
       }
       catch(Exception ex)
       { 
-        SendToGeneralOutputWindow(string.Format("{0} installation package failure." + Environment.NewLine + "Please check that you have the latest Nuget version and that you have an internet connection." + Environment.NewLine + "{1}", PackageName, ex.Message));
+        SendToGeneralOutputWindow(string.Format("{0} installation package failure." + Environment.NewLine + "Please check that you have the latest Nuget version and that you have an internet connection." + Environment.NewLine + "{1}", packageName, ex.Message));
         return;
       }      
     }
@@ -429,13 +429,14 @@ namespace MySql.Data.VisualStudio.Wizards
     /// Adds the reference for a nuget package (already installed from Nuget) to the project, taking into account 
     /// the target .NET version and nuget package version.
     /// </summary>
-    /// <param name="VsProj"></param>
-    /// <param name="BasePath"></param>
-    /// <param name="Version"></param>
-    protected void AddPackageReference(VSProject VsProj, string BasePath, string PackageName, string Version)
+    /// <param name="vsProj"></param>
+    /// <param name="basePath"></param>
+    /// <param name="packageName"></param>
+    /// <param name="version"></param>
+    protected void AddPackageReference(VSProject vsProj, string basePath, string packageName, string version)
     {
-      string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", PackageName, Version));
-      string packagePath = Path.Combine(BasePath, efPath);
+      string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", packageName, version));
+      string packagePath = Path.Combine(basePath, efPath);
 
       if (NetFxVersion.StartsWith("4.5"))
       {
@@ -450,8 +451,8 @@ namespace MySql.Data.VisualStudio.Wizards
         throw new WizardException(string.Format("Only .NET versions 4.0/4.5/4.5.1 are supported (received version {0})", 
           NetFxVersion));
       }
-      packagePath = Path.Combine(packagePath, PackageName + ".dll");
-      VsProj.References.Add(packagePath);
+      packagePath = Path.Combine(packagePath, packageName + ".dll");
+      vsProj.References.Add(packagePath);
     }
 
     protected void GenerateTypedDataSetModel(VSProject VsProj, MySqlConnection con, List<string> tables)
@@ -499,7 +500,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       Type t = typeof(MySqlConnection);
       PropertyInfo p = t.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance);
-      return ( MySqlConnectionStringBuilder )p.GetValue(con, null);
+      return (MySqlConnectionStringBuilder)p.GetValue(con, null);
     }
 
     protected Dictionary<string, object> GetAllProperties(EnvDTE.Properties props)
@@ -555,9 +556,10 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
     /// Gets a list of table columns for a given database.
     /// </summary>
     /// <param name="con"></param>
+    /// <param name="sqlFilter"></param>
+    /// <param name="sqlData"></param>
     /// <returns></returns>
-    private static Dictionary<string, T> GetMetadata<T>(
-      MySqlConnection con, string sqlFilter, string sqlData) where T : MetaObject, new()
+    private static Dictionary<string, T> GetMetadata<T>(MySqlConnection con, string sqlFilter, string sqlData) where T : MetaObject, new()
     {
       Dictionary<string, T> dic = new Dictionary<string, T>();
       if ((con.State & ConnectionState.Open) == 0)
@@ -601,10 +603,11 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
       {
         //con.Close();
       }
+
       return dic;
     }
 
-    internal protected string GetVisualStudioVersion()
+    protected internal string GetVisualStudioVersion()
     {
 #if NET_40_OR_GREATER
       return Dte.Version;
@@ -613,7 +616,7 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
 #endif
     }
 
-    internal void RetrieveAllFkInfo(MySqlConnection con, string tableName, out Dictionary<string,ForeignKeyColumnInfo> MyFKs)
+    internal void RetrieveAllFkInfo(MySqlConnection con, string tableName, out Dictionary<string,ForeignKeyColumnInfo> myFKs)
     {
       string sql = string.Format(
 @"select `constraint_name`, `table_name`, `column_name`, `referenced_table_name`, `referenced_column_name`  
@@ -623,7 +626,7 @@ select `constraint_name` from information_schema.referential_constraints where `
 con.Database, tableName );
       if ((con.State & ConnectionState.Open) == 0)
         con.Open();
-      Dictionary<string,ForeignKeyColumnInfo> FKs = new Dictionary<string,ForeignKeyColumnInfo>();
+      Dictionary<string,ForeignKeyColumnInfo> fKs = new Dictionary<string,ForeignKeyColumnInfo>();
       // Gather FK info per column pair
       MySqlCommand cmd = new MySqlCommand(sql, con);
       using (MySqlDataReader r = cmd.ExecuteReader())
@@ -638,15 +641,15 @@ con.Database, tableName );
             ReferencedTableName = r.GetString(3),
             ReferencedColumnName = r.GetString(4)
           };
-          FKs.Add(fk.ColumnName, fk);
+          fKs.Add(fk.ColumnName, fk);
         }
       }
       // Gather referenceable columns
-      foreach (ForeignKeyColumnInfo fk in FKs.Values)
+      foreach (ForeignKeyColumnInfo fk in fKs.Values)
       {
         fk.ReferenceableColumns = GetColumnsFromTableVanilla(fk.ReferencedTableName, con);
       }
-      MyFKs = FKs;
+      myFKs = fKs;
     }
 
     internal static string CapitalizeString(string s)

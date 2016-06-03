@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -25,12 +25,11 @@
  */
 
 using System;
-using Microsoft.VisualStudio.Data;
 using System.Diagnostics;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.Windows.Forms;
+using Microsoft.VisualStudio.Data;
+using MySql.Data.VisualStudio.Nodes;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DDEX
 {
   /// <summary>
   /// Represents a custom data view command handler. 
@@ -189,7 +188,7 @@ namespace MySql.Data.VisualStudio
           return true;
         case PkgCmdIDList.cmdCreateUDF:
         case PkgCmdIDList.cmdidGlobalCreateUDF:
-          UDFNode.CreateNew(DataViewHierarchyAccessor);
+          UdfNode.CreateNew(DataViewHierarchyAccessor);
           return true;
       }
       return false;
@@ -220,7 +219,7 @@ namespace MySql.Data.VisualStudio
     /// </returns>
     public override object ExecuteCommand(int itemId, OleCommand command, OleCommandExecutionOption executionOption, object arguments)
     {
-      return ExecuteCommand(new int[] { itemId }, command, executionOption, arguments);
+      return ExecuteCommand(new[] { itemId }, command, executionOption, arguments);
     }
 
     private BaseNode MakeNewNode(int id)
@@ -228,7 +227,7 @@ namespace MySql.Data.VisualStudio
       string nodeId = DataViewHierarchyAccessor.GetNodeId(id);
       nodeId = nodeId.ToLowerInvariant();
 
-      BaseNode newNode = null;
+      BaseNode newNode;
       switch (nodeId)
       {
         case "table":
@@ -244,7 +243,7 @@ namespace MySql.Data.VisualStudio
           newNode = new ViewNode(DataViewHierarchyAccessor, id);
           break;
         case "udf":
-          newNode = new UDFNode(DataViewHierarchyAccessor, id);
+          newNode = new UdfNode(DataViewHierarchyAccessor, id);
           break;
         case "trigger":
           newNode = new TriggerNode(DataViewHierarchyAccessor, id);

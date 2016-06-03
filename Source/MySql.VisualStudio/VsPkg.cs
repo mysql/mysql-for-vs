@@ -44,7 +44,9 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MySQL.Utility.Classes.MySQL;
 using MySQL.Utility.Forms;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio
 {
@@ -877,24 +879,9 @@ namespace MySql.Data.VisualStudio
     private MySqlConnection GetCurrentConnection()
     {
       IVsDataExplorerConnection con = GetConnection(GetCurrentConnectionName());
-      try
-      {
-        MySqlConnection connection = (MySqlConnection)con.Connection.GetLockedProviderObject();
-        try
-        {
-          if (connection != null)
-            return new MySqlConnection(connection.ConnectionString);
-          return null;
-        }
-        finally
-        {
-          con.Connection.UnlockProviderObject();
-        }
-      }
-      catch
-      {
-        return null;
-      }
+      var connection = con.Connection.GetLockedProviderObject() as MySqlConnection;
+      con.Connection.UnlockProviderObject();
+      return connection;
     }
 
     internal EnvDTE80.DTE2 GetDTE2()

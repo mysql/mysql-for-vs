@@ -1,4 +1,4 @@
-﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,40 +22,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
+using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Text.RegularExpressions;
+using Antlr.Runtime;
+using Antlr.Runtime.Tree;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
-using MySql.Data.MySqlClient;
-using System.Data;
-using System.Data.Common;
 using MySql.Parser;
-using System.IO;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.LanguageService
 {
   internal class MySqlCompletionSource : ICompletionSource
   {
-    private MySqlCompletionSourceProvider m_sourceProvider;
-    private ITextBuffer m_textBuffer;
-    private List<Completion> m_compList;    
+    private MySqlCompletionSourceProvider _mSourceProvider;
+    private ITextBuffer _mTextBuffer;
+    private List<Completion> _mCompList;    
 
     public MySqlCompletionSource(MySqlCompletionSourceProvider sourceProvider, ITextBuffer textBuffer)
     {
-      m_sourceProvider = sourceProvider;
-      m_textBuffer = textBuffer;      
+      _mSourceProvider = sourceProvider;
+      _mTextBuffer = textBuffer;      
     }
 
     /// <summary>
     /// Removes a token using the enhanced token stream class.
     /// </summary>
     /// <param name="sql"></param>
-    /// <param name="position"></param>
+    /// <param name="snapPos"></param>
     /// <returns></returns>
     private CommonTokenStream RemoveToken(string sql, SnapshotPoint snapPos)
     {
@@ -98,9 +94,9 @@ namespace MySql.Data.VisualStudio
           }
         } else {
           if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) continue;
-          if ((position >= tokens.Get(child.TokenStartIndex).StartIndex) &&
-              ((position <= tokens.Get(child.TokenStopIndex).StopIndex) || 
-               (( position - 1 ) <= tokens.Get(child.TokenStopIndex).StopIndex) ) )
+          if ((_position >= _tokens.Get(child.TokenStartIndex).StartIndex) &&
+              ((_position <= _tokens.Get(child.TokenStopIndex).StopIndex) || 
+               (( _position - 1 ) <= _tokens.Get(child.TokenStopIndex).StopIndex) ) )
           {
             treeStmt = child;
             break;
@@ -114,8 +110,8 @@ namespace MySql.Data.VisualStudio
       return treeStmt;
     }
 
-    private int position;
-    private CommonTokenStream tokens;
+    private int _position;
+    private CommonTokenStream _tokens;
 
     private void GetCompleteStatement(
       ITextSnapshot snapshot, SnapshotPoint snapPos, out StringBuilder sbErrors, out ITree treeStmt)
@@ -123,11 +119,11 @@ namespace MySql.Data.VisualStudio
       string sql = snapshot.GetText();
       treeStmt = null;
       sbErrors = new StringBuilder();
-      position = snapPos.Position;
-      tokens = RemoveToken(sql, snapPos);
-      if (tokens.Count == 1 && tokens.Get(0).Type == MySQL51Lexer.EOF) return;
+      _position = snapPos.Position;
+      _tokens = RemoveToken(sql, snapPos);
+      if (_tokens.Count == 1 && _tokens.Get(0).Type == MySQL51Lexer.EOF) return;
       MySQL51Parser.program_return r =
-        LanguageServiceUtil.ParseSql(sql, false, out sbErrors, tokens);
+        LanguageServiceUtil.ParseSql(sql, false, out sbErrors, _tokens);
       if (r == null) return;
       ITree t = r.Tree as ITree;
       treeStmt = t;
@@ -149,7 +145,7 @@ namespace MySql.Data.VisualStudio
         if (string.IsNullOrEmpty(database)) database = "mysql";
         if (session.TextView.Caret.Position.BufferPosition.Position == 0) return;
         SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) - 1;
-        ITextStructureNavigator navigator = m_sourceProvider.NavigatorService.GetTextStructureNavigator(m_textBuffer);
+        ITextStructureNavigator navigator = _mSourceProvider.NavigatorService.GetTextStructureNavigator(_mTextBuffer);
         TextExtent extent = navigator.GetExtentOfWord(currentPoint);
         ITrackingSpan span = currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
         
@@ -173,7 +169,7 @@ namespace MySql.Data.VisualStudio
           expectedToken == "simple_table_ref_no_alias_existing")
         {
 
-          m_compList = new List<Completion>();
+          _mCompList = new List<Completion>();
           DataTable schema = connection.GetSchema("Tables", new string[] { null, database });
           schema.Merge(connection.GetSchema("Views", new string[] { null, database }));
           string completionItem = null, completionItemUnq = null;
@@ -182,19 +178,19 @@ namespace MySql.Data.VisualStudio
           {
             completionItemUnq = row["TABLE_NAME"].ToString();
             completionItem = string.Format("`{0}`", row["TABLE_NAME"].ToString());
-            m_compList.Add(new Completion(completionItemUnq, completionItem, completionItem, null, null));
+            _mCompList.Add(new Completion(completionItemUnq, completionItem, completionItem, null, null));
           }
 
           completionSets.Add(new CompletionSet(
             "MySqlTokens",    //the non-localized title of the tab
             "MySQL Tokens",    //the display title of the tab
-            FindTokenSpanAtPosition(session.GetTriggerPoint(m_textBuffer), session),
-            m_compList,
+            FindTokenSpanAtPosition(session.GetTriggerPoint(_mTextBuffer), session),
+            _mCompList,
             null));
         }
         if (expectedToken == "proc_name")        
         {          
-          m_compList = new List<Completion>();
+          _mCompList = new List<Completion>();
           DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS", new string[] { null, database });
           DataView vi = schema.DefaultView;
           vi.Sort = "specific_name asc";
@@ -207,7 +203,7 @@ namespace MySql.Data.VisualStudio
               completionItem = row["specific_name"].ToString();
               description = string.Format("procedure {0}.{1}({2})",
                 row["routine_schema"], row["specific_name"], row["ParameterList"]);
-              m_compList.Add(new Completion(completionItem, completionItem,
+              _mCompList.Add(new Completion(completionItem, completionItem,
                 description, null, null));
             }
           }
@@ -215,8 +211,8 @@ namespace MySql.Data.VisualStudio
           completionSets.Add(new CompletionSet(
             "MySqlTokens",    //the non-localized title of the tab
             "MySQL Tokens",    //the display title of the tab
-            FindTokenSpanAtPosition(session.GetTriggerPoint(m_textBuffer), session),
-            m_compList,
+            FindTokenSpanAtPosition(session.GetTriggerPoint(_mTextBuffer), session),
+            _mCompList,
             null));
         }
         else if (expectedToken == "column_name")
@@ -241,16 +237,16 @@ namespace MySql.Data.VisualStudio
     private void CreateCompletionList(
       List<string> l, ICompletionSession session, IList<CompletionSet> completionSets)
     {
-      m_compList = new List<Completion>();
+      _mCompList = new List<Completion>();
       foreach (string c in l)
       {
-        m_compList.Add(new Completion(c.Replace( "`", "" ), c, c, null, null));
+        _mCompList.Add(new Completion(c.Replace( "`", "" ), c, c, null, null));
       }
       completionSets.Add(new CompletionSet(
           "MySqlTokens",    //the non-localized title of the tab
           "MySQL Tokens",    //the display title of the tab
-          FindTokenSpanAtPosition(session.GetTriggerPoint(m_textBuffer), session),
-          m_compList,
+          FindTokenSpanAtPosition(session.GetTriggerPoint(_mTextBuffer), session),
+          _mCompList,
           null));
     }
 
@@ -372,7 +368,7 @@ namespace MySql.Data.VisualStudio
 
     private ITrackingSpan FindTokenSpanAtPosition(ITrackingPoint point, ICompletionSession session)
     {
-      SnapshotPoint? triggerPoint = session.GetTriggerPoint(m_textBuffer.CurrentSnapshot);
+      SnapshotPoint? triggerPoint = session.GetTriggerPoint(_mTextBuffer.CurrentSnapshot);
 
       ITextSnapshotLine line = triggerPoint.Value.GetContainingLine();
       SnapshotPoint start = triggerPoint.Value;
@@ -381,7 +377,7 @@ namespace MySql.Data.VisualStudio
       {
         start -= 1;
       }
-      ITextSnapshot snapshot = m_textBuffer.CurrentSnapshot;
+      ITextSnapshot snapshot = _mTextBuffer.CurrentSnapshot;
       ITrackingSpan applicableTo = snapshot.CreateTrackingSpan( new SnapshotSpan(start, triggerPoint.Value), SpanTrackingMode.EdgeInclusive);
       return applicableTo;
     }

@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,40 +21,34 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Common;
-using Microsoft.VisualStudio.Data;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.TextManager.Interop;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Package;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.Diagnostics;
-using OleInterop = Microsoft.VisualStudio.OLE.Interop;
 using System.Data;
-using MySql.Data.VisualStudio.Editors;
-using MySql.Data.VisualStudio.Properties;
+using System.Text;
+using System.Windows.Forms;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Data;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.TextManager.Interop;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Editors;
+using MySql.Data.VisualStudio.LanguageService;
+using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
-  class TriggerNode : DocumentNode, IVsTextBufferProvider
+  internal class TriggerNode : DocumentNode, IVsTextBufferProvider
   {
-    private string sql_mode;
-    private VSCodeEditor editor;
-    string table;
+    private string _sqlMode;
+    private VSCodeEditor _editor;
+    string _table;
 
     public TriggerNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
       base(hierarchyAccessor, id)
     {
       NodeId = "Trigger";
       NameIndex = 2;
-      editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
-      DocumentNode.RegisterNode(this);
+      _editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
+      RegisterNode(this);
     }
 
     #region Properties
@@ -68,51 +62,51 @@ namespace MySql.Data.VisualStudio
 
     public override bool Dirty
     {
-      get { return editor.Dirty; }
-      protected set { editor.Dirty = value; }
+      get { return _editor.Dirty; }
+      protected set { _editor.Dirty = value; }
     }
 
     #endregion
 
-    public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, TableNode parent)
+    public static void CreateNew(DataViewHierarchyAccessor hierarchyAccessor, TableNode parent)
     {
-      TriggerNode node = new TriggerNode(HierarchyAccessor, 0);
+      TriggerNode node = new TriggerNode(hierarchyAccessor, 0);
       node.ParentTable = parent;
       node.Edit();
     }
 
     public override object GetEditor()
     {
-      return editor;
+      return _editor;
     }
 
-    public override string GetDropSQL()
+    public override string GetDropSql()
     {
-      return GetDropSQL(Name);
+      return GetDropSql(Name);
     }
 
     public override string GetSaveSql()
     {
-      string sql = ChangeSqlTypeTo(editor.Text, "CREATE").Trim();
+      string sql = ChangeSqlTypeTo(_editor.Text, "CREATE").Trim();
       if (IsNew)
       {
         return sql;
       }
       else
       {
-        return string.Format("{0}{1}{2};", GetDropSQL(), BaseNode.SEPARATOR, sql);
+        return string.Format("{0}{1}{2};", GetDropSql(), SEPARATOR, sql);
       }
     }
 
-    private string GetDropSQL(string triggerName)
+    private string GetDropSql(string triggerName)
     {
       triggerName = triggerName.Trim('`');
-      return String.Format("DROP TRIGGER `{0}`.`{1}`", Database, triggerName);
+      return string.Format("DROP TRIGGER `{0}`.`{1}`", Database, triggerName);
     }
 
     private string GetNewTriggerText()
     {
-      StringBuilder sb = new StringBuilder("CREATE TRIGGER ");
+      var sb = new StringBuilder("CREATE TRIGGER ");
       sb.AppendFormat("{0}\r\n", Name);
       sb.AppendFormat("/* [BEFORE|AFTER] [INSERT|UPDATE|DELETE] */\r\n");
       sb.AppendFormat("ON {0}\r\n", ParentTable.Name);
@@ -127,30 +121,29 @@ namespace MySql.Data.VisualStudio
     {
       if (IsNew)
       {
-        editor.Text = GetNewTriggerText();
-        sql_mode = string.Empty;
+        _editor.Text = GetNewTriggerText();
+        _sqlMode = string.Empty;
       }
       else
       {
         try
         {
-          DataTable dt = GetDataTable(String.Format("SHOW CREATE TRIGGER `{0}`.`{1}`",
+          DataTable dt = GetDataTable(string.Format("SHOW CREATE TRIGGER `{0}`.`{1}`",
                   Database, Name));
 
-          sql_mode = dt.Rows[0][1] as string;
-          string sql = dt.Rows[0][2] as string;
-		  OldObjectDefinition = sql;
-          byte[] bytes = UTF8Encoding.UTF8.GetBytes(sql);
-          editor.Text = sql;
+          _sqlMode = dt.Rows[0][1].ToString();
+          string sql = dt.Rows[0][2].ToString();
+		      OldObjectDefinition = sql;
+          _editor.Text = sql;
           Dirty = false;
           OnDataLoaded();
         }
         catch (Exception ex)
         {
-          MessageBox.Show("Unable to load object with error: " + ex.Message);
+          MessageBox.Show(Resources.TriggerNode_UnableToLoadObjectError + ex.Message);
         }
       }
-      table = GetTargetedTable(editor.Text);
+      _table = GetTargetedTable(_editor.Text);
     }
 
     /// <summary>
@@ -162,18 +155,18 @@ namespace MySql.Data.VisualStudio
     {
       try
       {
-        string sql = editor.Text.Trim();
+        string sql = _editor.Text.Trim();
         if (!IsNew)
         {
           MakeSureWeAreNotChangingTables(sql);
           CheckSyntax();
         }
-        ExecuteSQL(GetSaveSql());
+        ExecuteSql(GetSaveSql());
         return true;
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
         return false;
       }
     }
@@ -187,18 +180,18 @@ namespace MySql.Data.VisualStudio
     private void MakeSureWeAreNotChangingTables(string sql)
     {
       string newTable = GetTargetedTable(sql);
-      if (table != null && newTable != null &&
-          newTable.ToLowerInvariant() != table.ToLowerInvariant())
+      if (_table != null && newTable != null &&
+          newTable.ToLowerInvariant() != _table.ToLowerInvariant())
         throw new InvalidOperationException(
-            String.Format(Resources.AlterTriggerOnWrongTable, Name, newTable));
+            string.Format(Resources.AlterTriggerOnWrongTable, Name, newTable));
     }
 
     private string GetTargetedTable(string sql)
     {
       MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
       tokenizer.ReturnComments = false;
-      tokenizer.AnsiQuotes = sql_mode.ToLowerInvariant().Contains("ansi_quotes");
-      tokenizer.BackslashEscapes = !sql_mode.ToLowerInvariant().Contains("no_backslash_escapes");
+      tokenizer.AnsiQuotes = _sqlMode.ToLowerInvariant().Contains("ansi_quotes");
+      tokenizer.BackslashEscapes = !_sqlMode.ToLowerInvariant().Contains("no_backslash_escapes");
 
       string token = null;
       while (token != "ON" || tokenizer.Quoted)
@@ -217,11 +210,11 @@ namespace MySql.Data.VisualStudio
     private void CheckSyntax()
     {
       MySqlConnection con = ( MySqlConnection )GetCurrentConnection();
-      string sql = editor.Text.Trim();
+      string sql = _editor.Text.Trim();
       StringBuilder sb;
       LanguageServiceUtil.ParseSql(sql, false, out sb, con.ServerVersion);
       if (sb.Length != 0)
-        throw new Exception(string.Format("Syntax Error: {0}", sb.ToString()));
+        throw new Exception(string.Format("Syntax Error: {0}", sb));
     }
 
     private string ChangeSqlTypeTo(string sql, string type)
@@ -235,24 +228,24 @@ namespace MySql.Data.VisualStudio
 
     protected override string GetCurrentName()
     {
-      return LanguageServiceUtil.GetRoutineName(editor.Text);
+      return LanguageServiceUtil.GetRoutineName(_editor.Text);
     }
 
     #region IVsTextBufferProvider Members
 
-    private IVsTextLines buffer;
+    private IVsTextLines _buffer;
 
     int IVsTextBufferProvider.GetTextBuffer(out IVsTextLines ppTextBuffer)
     {
-      if (buffer == null)
+      if (_buffer == null)
       {
         Type bufferType = typeof(IVsTextLines);
         Guid riid = bufferType.GUID;
         Guid clsid = typeof(VsTextBufferClass).GUID;
-        buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
+        _buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
                              ref clsid, ref riid, typeof(object));
       }
-      ppTextBuffer = buffer;
+      ppTextBuffer = _buffer;
       return VSConstants.S_OK;
     }
 

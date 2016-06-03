@@ -1,4 +1,4 @@
-// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,34 +21,35 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.Data;
-using MySql.Data.VisualStudio.Editors;
 using System.Data;
+using System.Text;
 using System.Windows.Forms;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio;
+using MySql.Data.VisualStudio.Editors;
+using MySql.Data.VisualStudio.LanguageService;
+using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.Nodes
 {
   class ViewNode : DocumentNode, IVsTextBufferProvider
   {
-    private VSCodeEditor editor = null;
+    private VSCodeEditor _editor;
 
     public ViewNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
       base(hierarchyAccessor, id)
     {
       NodeId = "View";
-      editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
-      DocumentNode.RegisterNode(this);
+      _editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
+      RegisterNode(this);
     }
 
-    public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
+    public static void CreateNew(DataViewHierarchyAccessor hierarchyAccessor)
     {
-      ViewNode node = new ViewNode(HierarchyAccessor, 0);
+      var node = new ViewNode(hierarchyAccessor, 0);
       node.Edit();
     }
 
@@ -61,15 +62,15 @@ namespace MySql.Data.VisualStudio
 
     public override bool Dirty
     {
-      get { return editor.Dirty; }
-      protected set { editor.Dirty = value; }
+      get { return _editor.Dirty; }
+      protected set { _editor.Dirty = value; }
     }
 
     #endregion
 
     public override object GetEditor()
     {
-      return editor;
+      return _editor;
     }
 
     private string GetNewViewText()
@@ -83,13 +84,13 @@ namespace MySql.Data.VisualStudio
 
     protected override string GetCurrentName()
     {
-      return LanguageServiceUtil.GetRoutineName(editor.Text);
+      return LanguageServiceUtil.GetRoutineName(_editor.Text);
     }
 
     protected override void Load()
     {
       if (IsNew)
-        editor.Text = GetNewViewText();
+        _editor.Text = GetNewViewText();
       else
       {
         try
@@ -97,19 +98,19 @@ namespace MySql.Data.VisualStudio
           string[] restrictions = new string[3];
           restrictions[1] = Database;
           restrictions[2] = Name;
-          DataTable views = this.GetSchema("Views", restrictions);
+          DataTable views = GetSchema("Views", restrictions);
           if (views.Rows.Count != 1)
-            throw new Exception(String.Format("There is no view with the name '{0}'", Name));
-          editor.Text = String.Format("CREATE VIEW `{0}` AS \r\n{1}",
-              Name, views.Rows[0]["VIEW_DEFINITION"].ToString());
-          OldObjectDefinition = String.Format("CREATE VIEW `{0}` AS \r\n{1}",
-              Name, views.Rows[0]["VIEW_DEFINITION"].ToString());
+            throw new Exception(string.Format("There is no view with the name '{0}'", Name));
+          _editor.Text = string.Format("CREATE VIEW `{0}` AS \r\n{1}",
+              Name, views.Rows[0]["VIEW_DEFINITION"]);
+          OldObjectDefinition = string.Format("CREATE VIEW `{0}` AS \r\n{1}",
+              Name, views.Rows[0]["VIEW_DEFINITION"]);
           Dirty = false;
           OnDataLoaded();
         }
         catch (Exception ex)
         {
-          MessageBox.Show("Unable to load view with error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(Resources.ViewNode_LoadViewError + ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
     }
@@ -118,29 +119,29 @@ namespace MySql.Data.VisualStudio
     {
       if (IsNew)
       {
-        return editor.Text;
+        return _editor.Text;
       }
       else
       {
-        return string.Format("{0}{1}{2};", GetDropSQL(), BaseNode.SEPARATOR, editor.Text);
+        return string.Format("{0}{1}{2};", GetDropSql(), SEPARATOR, _editor.Text);
       }
     }
 
     #region IVsTextBufferProvider Members
 
-    private IVsTextLines buffer;
+    private IVsTextLines _buffer;
 
     int IVsTextBufferProvider.GetTextBuffer(out IVsTextLines ppTextBuffer)
     {
-      if (buffer == null)
+      if (_buffer == null)
       {
         Type bufferType = typeof(IVsTextLines);
         Guid riid = bufferType.GUID;
         Guid clsid = typeof(VsTextBufferClass).GUID;
-        buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
+        _buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
                              ref clsid, ref riid, typeof(object));
       }
-      ppTextBuffer = buffer;
+      ppTextBuffer = _buffer;
       return VSConstants.S_OK;
     }
 

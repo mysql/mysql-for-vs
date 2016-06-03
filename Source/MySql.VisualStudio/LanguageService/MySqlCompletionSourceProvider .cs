@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2012, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -20,17 +20,13 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Utilities;
 using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Utilities;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.LanguageService
 {
   [Export(typeof(ICompletionSourceProvider))]
   [ContentType("MySql")]

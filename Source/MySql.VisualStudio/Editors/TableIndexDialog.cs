@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,33 +21,29 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.DbObjects;
+using MySql.Data.VisualStudio.Nodes;
 
 namespace MySql.Data.VisualStudio.Editors
 {
   partial class TableIndexDialog : Form
   {
-    private TableNode tableNode;
-    private Table table;
+    private TableNode _tableNode;
+    private Table _table;
 
     public TableIndexDialog(TableNode node)
     {
-      tableNode = node;
-      table = tableNode.Table;
+      _tableNode = node;
+      _table = _tableNode.Table;
       InitializeComponent();
 
-      foreach (Index i in tableNode.Table.Indexes)
+      foreach (Index i in _tableNode.Table.Indexes)
         indexList.Items.Add(i.Name);
 
-      bool isOk = tableNode.Table.Columns.Count > 0 &&
-                  !String.IsNullOrEmpty(tableNode.Table.Columns[0].ColumnName) &&
-                  !String.IsNullOrEmpty(tableNode.Table.Columns[0].DataType);
+      bool isOk = _tableNode.Table.Columns.Count > 0 &&
+                  !String.IsNullOrEmpty(_tableNode.Table.Columns[0].ColumnName) &&
+                  !String.IsNullOrEmpty(_tableNode.Table.Columns[0].DataType);
       addButton.Enabled = isOk;
       deleteButton.Enabled = false;
       indexList.Enabled = isOk;
@@ -58,7 +54,7 @@ namespace MySql.Data.VisualStudio.Editors
       if (indexList.SelectedIndex == -1)
         indexProps.SelectedObject = null;
       else
-        indexProps.SelectedObject = tableNode.Table.Indexes[indexList.SelectedIndex];
+        indexProps.SelectedObject = _tableNode.Table.Indexes[indexList.SelectedIndex];
       deleteButton.Enabled = indexList.SelectedIndex != -1;
     }
 
@@ -69,20 +65,20 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void addButton_Click(object sender, EventArgs e)
     {
-      Index index = table.CreateIndexWithUniqueName(false);
+      Index index = _table.CreateIndexWithUniqueName(false);
       IndexColumn ic = new IndexColumn();
       ic.OwningIndex = index;
-      ic.ColumnName = table.Columns[0].ColumnName;
+      ic.ColumnName = _table.Columns[0].ColumnName;
       ic.SortOrder = IndexSortOrder.Ascending;
       index.Columns.Add(ic);
-      table.Indexes.Add(index);
+      _table.Indexes.Add(index);
       indexList.SelectedIndex = indexList.Items.Add(index.Name);
     }
 
     private void deleteButton_Click(object sender, EventArgs e)
     {
       int index = indexList.SelectedIndex;
-      table.Indexes.Delete(index);
+      _table.Indexes.Delete(index);
       indexList.Items.RemoveAt(index);
       index--;
       if (index == -1 && indexList.Items.Count > 0)
@@ -92,7 +88,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void indexProps_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
-      if (e.ChangedItem.PropertyDescriptor.Name == "Name")
+      if (e.ChangedItem.PropertyDescriptor != null && e.ChangedItem.PropertyDescriptor.Name == "Name")
         indexList.Items[indexList.SelectedIndex] = e.ChangedItem.Value;
     }
   }

@@ -23,17 +23,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
+using System.Text;
+using Antlr.Runtime;
+using Antlr.Runtime.Tree;
+using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Nodes;
+using MySql.Parser;
 #if CLR4
 using System.Linq;
 #endif
-using System.IO;
-using System.Text;
-using MySql.Data.MySqlClient;
-using MySql.Parser;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.LanguageService
 {
   internal static class LanguageServiceUtil
   {
@@ -62,10 +63,10 @@ namespace MySql.Data.VisualStudio
 
     public static TokenStreamRemovable GetTokenStream(string sql, Version version)
     {
-      Dictionary<Version, TokenStreamRemovable> lines = null;
+      Dictionary<Version, TokenStreamRemovable> lines;
       if (_parserCache.TryGetValue(sql, out lines))
       {
-        TokenStreamRemovable tsr = null;
+        TokenStreamRemovable tsr;
         if( lines.TryGetValue( version, out tsr ) )
           return tsr;
       }
@@ -215,7 +216,7 @@ namespace MySql.Data.VisualStudio
       DbConnection connection = DocumentNode.GetCurrentConnection();
       if (connection == null)
       {
-        Editors.EditorBroker broker = MySql.Data.VisualStudio.Editors.EditorBroker.Broker;
+        Editors.EditorBroker broker = Editors.EditorBroker.Broker;
         if (broker != null)
         {
           connection = broker.GetCurrentConnection();
@@ -226,7 +227,7 @@ namespace MySql.Data.VisualStudio
 
     public static string GetCurrentDatabase()
     {
-      Editors.EditorBroker broker = MySql.Data.VisualStudio.Editors.EditorBroker.Broker;
+      Editors.EditorBroker broker = Editors.EditorBroker.Broker;
       if (broker != null)
       {
         return broker.GetCurrentDatabase();
@@ -237,10 +238,10 @@ namespace MySql.Data.VisualStudio
     public static string GetRoutineName(string sql)
     {
       StringBuilder sb;
-      MySQL51Parser.program_return pr = LanguageServiceUtil.ParseSql(sql, false, out sb);
+      MySQL51Parser.program_return pr = ParseSql(sql, false, out sb);
       if (sb.Length != 0)
       {
-        throw new ApplicationException(string.Format("Syntactic error in stored routine: {0}", sb.ToString()));
+        throw new ApplicationException(string.Format("Syntactic error in stored routine: {0}", sb));
       }
       else
       {
@@ -265,14 +266,15 @@ namespace MySql.Data.VisualStudio
     /// <returns></returns>
     public static bool DoesStmtReturnResults( string sql, MySqlConnection con )
     {
-      StringBuilder sb = new StringBuilder();
-      MySQL51Parser.program_return t = LanguageServiceUtil.ParseSql( sql, false, out sb, con.ServerVersion );
+      StringBuilder sb;
+      MySQL51Parser.program_return t = ParseSql( sql, false, out sb, con.ServerVersion );
       ITree tree = t.Tree as ITree;
-      if (tree.IsNil)
+      if (tree != null && tree.IsNil)
       {
         tree = tree.GetChild(0);
       }
-      return _keywords4ResultSets.ContainsKey( tree.Text );
+
+      return tree != null && _keywords4ResultSets.ContainsKey(tree.Text);
     }
   }
 }

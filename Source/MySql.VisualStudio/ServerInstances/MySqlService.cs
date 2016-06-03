@@ -20,7 +20,6 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +35,7 @@ using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using MySQL.Utility.Classes;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.ServerInstances
 {
@@ -119,19 +119,16 @@ namespace MySql.Data.VisualStudio.ServerInstances
     public bool NamedPipesEnabled;
   }
 
-
   public static class MySqlServiceInstances
   {
     public static List<MySqlService> GetMySqlInstalledInstances()
     {
-      var foundMySqlServices = new List<MySqlService>();
       var services = Service.GetInstances(".*mysqld.*");
-
-      foreach (var item in services)
-        foundMySqlServices.Add(new MySqlService(item.Properties["DisplayName"].Value.ToString()));
-
+      var foundMySqlServices = services.Select(item => new MySqlService(item.Properties["DisplayName"].Value.ToString())).ToList();
       if (foundMySqlServices.Count > 0)
+      {
         foundMySqlServices = foundMySqlServices.Where(t => t.RealMySqlService).ToList();
+      }
 
       return foundMySqlServices;
     }
@@ -141,8 +138,6 @@ namespace MySql.Data.VisualStudio.ServerInstances
   {
     internal static void ShowNewConnectionDialog(TextBox connectionStringTextBox, DTE dte, ComboBox cmbConnections, bool addSeConnection)
     {
-      ConnectDialog dlg;
-
       if (dte == null)
       {
         throw new ArgumentNullException("dte");
@@ -150,50 +145,57 @@ namespace MySql.Data.VisualStudio.ServerInstances
 
       try
       {
+        var settings = connectionStringTextBox.Tag != null
+          ? new MySqlConnectionStringBuilder(connectionStringTextBox.Tag.ToString())
+          : new MySqlConnectionStringBuilder();
 
-        MySqlConnectionStringBuilder settings = connectionStringTextBox.Tag != null ? new MySqlConnectionStringBuilder(connectionStringTextBox.Tag.ToString()) : new MySqlConnectionStringBuilder();
-
-        dlg = connectionStringTextBox.Tag == null ? new ConnectDialog() : new ConnectDialog(settings);
+        var dlg = connectionStringTextBox.Tag == null ? new ConnectDialog() : new ConnectDialog(settings);
 
         DialogResult res = dlg.ShowDialog();
-        if (res == DialogResult.OK)
+        if (res != DialogResult.OK)
         {
-
-          if ((MySqlConnection)dlg.Connection == null) return;
-
-          var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
-          if (csb == null) return;
-
-          //make sure we don't have already the same connection
-          if (cmbConnections.FindString(string.Format("{0}({1})", csb.Server, csb.Database)) < 0)
-          {
-            connectionStringTextBox.Tag = csb.ConnectionString;
-            if (!string.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) && addSeConnection)
-            {
-              // adding connection to server explorer connections
-              Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)dte);
-              IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
-              seConnectionsMgr.AddConnection(string.Format("{0}({1})", csb.Server, csb.Database), GuidList.Provider, connectionStringTextBox.Tag.ToString(), false);
-
-              var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
-              connections.Add(new MySqlServerExplorerConnection { DisplayName = string.Format("{0}({1})", csb.Server, csb.Database), ConnectionString = csb.ConnectionString });
-              cmbConnections.DataSource = null;
-              cmbConnections.DataSource = connections;
-              cmbConnections.ValueMember = "ConnectionString";
-              cmbConnections.DisplayMember = "DisplayName";
-            }
-          }
-          cmbConnections.Text = string.Format("{0}({1})", csb.Server, csb.Database);
-          connectionStringTextBox.Text = MaskPassword(csb.ConnectionString);
-          connectionStringTextBox.Tag = csb.ConnectionString;
+          return;
         }
+
+        if ((MySqlConnection) dlg.Connection == null)
+        {
+          return;
+        }
+
+        var csb = (MySqlConnectionStringBuilder)((MySqlConnection)dlg.Connection).GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(((MySqlConnection)dlg.Connection), null);
+        if (csb == null)
+        {
+          return;
+        }
+
+        //make sure we don't have already the same connection
+        if (cmbConnections.FindString(string.Format("{0}({1})", csb.Server, csb.Database)) < 0)
+        {
+          connectionStringTextBox.Tag = csb.ConnectionString;
+          if (!string.IsNullOrEmpty(connectionStringTextBox.Tag.ToString()) && addSeConnection)
+          {
+            // adding connection to server explorer connections
+            Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)dte);
+            IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
+            seConnectionsMgr.AddConnection(string.Format("{0}({1})", csb.Server, csb.Database), GuidList.Provider, connectionStringTextBox.Tag.ToString(), false);
+
+            var connections = (List<MySqlServerExplorerConnection>)cmbConnections.DataSource;
+            connections.Add(new MySqlServerExplorerConnection { DisplayName = string.Format("{0}({1})", csb.Server, csb.Database), ConnectionString = csb.ConnectionString });
+            cmbConnections.DataSource = null;
+            cmbConnections.DataSource = connections;
+            cmbConnections.ValueMember = "ConnectionString";
+            cmbConnections.DisplayMember = "DisplayName";
+          }
+        }
+        cmbConnections.Text = string.Format("{0}({1})", csb.Server, csb.Database);
+        connectionStringTextBox.Text = MaskPassword(csb.ConnectionString);
+        connectionStringTextBox.Tag = csb.ConnectionString;
       }
       catch (Exception ex)
       {
         MessageBox.Show(string.Format("The connection string is not valid: {0}", ex.Message));
       }
     }
-
 
     internal static BindingSource LoadMySqlConnectionsFromServerExplorer(DTE dte)
     {
@@ -242,7 +244,6 @@ namespace MySql.Data.VisualStudio.ServerInstances
       return connections;
     }
 
-
     internal static void LoadConnectionsForWizard(BindingSource mySqlConnections, ComboBox cmbConnections, TextBox connectionStringTextBox, string wizardName)
     {
 
@@ -277,11 +278,13 @@ namespace MySql.Data.VisualStudio.ServerInstances
           {
             var mysqlConnection = new MySqlServerExplorerConnection();
             mysqlConnection.DisplayName = instance.ServiceName;
-            var csb = new MySqlConnectionStringBuilder();
-            csb.Server = instance.Parameters.HostName;
-            csb.Port = (uint)instance.Parameters.Port;
-            csb.UserID = "root";
-            csb.Password = "";
+            var csb = new MySqlConnectionStringBuilder
+            {
+              Server = instance.Parameters.HostName,
+              Port = (uint) instance.Parameters.Port,
+              UserID = "root",
+              Password = ""
+            };
             mysqlConnection.ConnectionString = csb.ConnectionString;
             connections.Add(mysqlConnection);
           }

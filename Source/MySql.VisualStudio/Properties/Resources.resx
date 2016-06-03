@@ -1315,4 +1315,55 @@ Check that the server is running, the database exists and the user Error establi
   <data name="WindowsFormsWizard_SolutionBuildFailed" xml:space="preserve">
     <value>Solution build failed. Please check that all project references have been resolved.</value>
   </data>
+  <data name="dbExportPanel_SchemasLoadError" xml:space="preserve">
+    <value>Cannot retrieve the list of schemas of the selected connection. Verify parameter's connection.</value>
+  </data>
+  <data name="dbExportPanel_LoadConnectionsError" xml:space="preserve">
+    <value>Error: Cannot find any MySQL connection. Please review your settings.</value>
+  </data>
+  <data name="DbExportPanel_ExportFileCreationError" xml:space="preserve">
+    <value>An error occured when creating a new file for the Export operation. File is locked.</value>
+  </data>
+  <data name="DbExportPanel_ConnStringNotCorrectlySetError" xml:space="preserve">
+    <value>The saved connection string was not correctly set. No Database objects are loaded</value>
+  </data>
+  <data name="DbExportPanel_ConnectionNotFoundError" xml:space="preserve">
+    <value>Connection was not found on available connections</value>
+  </data>
+  <data name="DbExportPanel_SettingsLoadSuccess" xml:space="preserve">
+    <value>The saved settings were loaded correctly</value>
+  </data>
+  <data name="DbExportPanel_FileNotFoundError" xml:space="preserve">
+    <value>File was not found. Please check the path.</value>
+  </data>
+  <data name="DbExportPanel_NoConnectionSelected" xml:space="preserve">
+    <value>No connection is selected. Please select one to continue.</value>
+  </data>
+  <data name="DbExportPanel_SaveSettingSuccess" xml:space="preserve">
+    <value>All selected settings were saved correctly.</value>
+  </data>
+  <data name="DbExportPanel_SaveSettingsError" xml:space="preserve">
+    <value>An error occured when saving the settings file: </value>
+  </data>
+  <data name="DbExportPanel_NoDbSelectedError" xml:space="preserve">
+    <value>No database or objects are selected</value>
+  </data>
+  <data name="SaveSelectedSettingsText" xml:space="preserve">
+    <value>Do you want to save the selected settings?</value>
+  </data>
+  <data name="StoredProcedureNode_StoredProcedureLoadError" xml:space="preserve">
+    <value>Unable to load the stored procedure for editing</value>
+  </data>
+  <data name="DocumentNode_UnableToSaveObjectError" xml:space="preserve">
+    <value>Unable to save object with error: </value>
+  </data>
+  <data name="TriggerNode_UnableToLoadObjectError" xml:space="preserve">
+    <value>Unable to load object with error: </value>
+  </data>
+  <data name="ViewNode_LoadViewError" xml:space="preserve">
+    <value>Unable to load view with error: </value>
+  </data>
+  <data name="ItemTemplateUtilities_SettingsRetrievalError" xml:space="preserve">
+    <value>An error occured obtaining the connection string settings.</value>
+  </data>
 </root>

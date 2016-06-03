@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,13 +21,9 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using MySql.Data.VisualStudio.Nodes;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -44,17 +40,20 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void yesButton_Click(object sender, EventArgs e)
     {
-      SaveFileDialog dlg = new SaveFileDialog();
-      dlg.DefaultExt = ".sql";
-      dlg.CheckPathExists = true;
-      dlg.Filter = "SQL Files|*.sql|All Files|*.*";
-      dlg.OverwritePrompt = true;
-      dlg.Title = "Save Change Script";
-      dlg.AutoUpgradeEnabled = false;
-      dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-      DialogResult result = dlg.ShowDialog();
-      if (DialogResult.OK == result)
-        WriteOutChangeScript(dlg.FileName);
+      using (SaveFileDialog dlg = new SaveFileDialog())
+      {
+        dlg.DefaultExt = ".sql";
+        dlg.CheckPathExists = true;
+        dlg.Filter = @"SQL Files|*.sql|All Files|*.*";
+        dlg.OverwritePrompt = true;
+        dlg.Title = @"Save Change Script";
+        dlg.AutoUpgradeEnabled = false;
+        dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        DialogResult result = dlg.ShowDialog();
+        if (DialogResult.OK == result)
+          WriteOutChangeScript(dlg.FileName);
+      }
+
       Close();
     }
 
