@@ -45,7 +45,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
@@ -117,7 +117,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.Python);
         _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.Python);
         _xProxy.ExecuteScript(CreateCollectionTest, ScriptType.Python);
@@ -155,7 +155,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
 
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
@@ -230,7 +230,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.Python);
         _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.Python);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
@@ -295,7 +295,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
@@ -351,7 +351,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         var script = new StringBuilder();
         script.AppendLine(DropSchemaTestIfExists);
         script.AppendLine(CreateSchemaTest);
@@ -398,7 +398,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
@@ -541,7 +541,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.Python);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();

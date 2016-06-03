@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Editors;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
 using MySqlX.Shell;
@@ -560,7 +561,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
     {
       // For now we always create a new instance of the shell client, to avoid the error thrown by Python when handling multiple "sessions"
       // ToDo: Research how to fix the shell to avoid the error thrown by Python when running multiple tests sessions
-      _shellClient = new MySqlShellClient();
+      _shellClient = new MySqlShellClient(ScriptType.Python);
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.Python);
     }

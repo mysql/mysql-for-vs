@@ -23,6 +23,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.MySqlX;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
@@ -316,9 +317,9 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Initializes the <see cref="MySqlXProxy"/> instance with common statements
     /// </summary>
-    protected virtual void InitXProxy()
+    protected virtual void InitXProxy(ScriptType scriptType)
     {
-      _xProxy = new MySqlXProxy(XConnString, true);
+      _xProxy = new MySqlXProxy(XConnString, true, scriptType);
     }
 
     protected virtual void DisposeProxy()

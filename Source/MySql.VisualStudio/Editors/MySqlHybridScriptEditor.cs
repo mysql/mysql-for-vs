@@ -326,12 +326,12 @@ Check that the server is running, the database exist and the user credentials ar
           case SessionOption.UseSameSession:
             if (_xShellWrapper == null)
             {
-              _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), true);
+              _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), true, ScriptType);
             }
 
             break;
           case SessionOption.UseNewSession:
-            _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), false);
+            _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), false, ScriptType);
             break;
         }
 
@@ -361,7 +361,7 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="script">The script.</param>
     private void ExecuteBatchScript(string script)
     {
-      List<string> statements = new List<string>();
+      var statements = new List<string>();
       switch (ScriptType)
       {
         case ScriptType.JavaScript:
@@ -372,8 +372,8 @@ Check that the server is running, the database exist and the user credentials ar
           break;
       }
 
-      List<MySqlXResult> results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
-      if (results == null)
+      var results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+      if (!results.Any())
       {
         return;
       }
@@ -396,7 +396,7 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="script">The script.</param>
     private void ExecuteConsoleScript(string script)
     {
-      MySqlXResult result = _xShellWrapper.ExecuteQuery(script, ScriptType);
+      var result = _xShellWrapper.ExecuteQuery(script, ScriptType);
       PrintResult(script, result.Result, result.ExecutionTime);
       xShellConsoleEditor1.Focus();
     }
@@ -851,6 +851,7 @@ Check that the server is running, the database exist and the user credentials ar
           connection.Close();
         }
       }
+
       base.Dispose(disposing);
     }
   }

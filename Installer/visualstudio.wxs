@@ -9,10 +9,6 @@
         <File Id='mysqlx.js.AppDataFolder' Name='mysqlx.js' DiskId='1'
               Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
       </Component>
-      <Component Id="Set_MYSQLX_HOME_EnvVar" Guid="{16214687-5611-4982-8115-2a8f41c3a21a}" KeyPath="yes">
-        <Environment Action="set" Id="MYSQLX_HOME_EnvVar" Name="MYSQLX_HOME" System="no" Value="%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh"
-                     Permanent="no" Part="all" />
-      </Component>
     </DirectoryRef>
     <!-- XShell Dependencies END -->
 
@@ -375,7 +371,7 @@
               Source='..\Dependencies\xShell\python27.dll'/>
         <File Id='shell_client_2015' Name='shell_client.dll' DiskId='1'
               Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2015' Name='Xdll' DiskId='1'
+        <File Id='XShellClientMgd_2015' Name='XShellClientMgd.dll' DiskId='1'
               Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
         <File Id='v8_2015' Name='v8.dll' DiskId='1'
               Source='..\Dependencies\xShell\v8.dll'/>
@@ -537,8 +533,6 @@
       </Feature>
       <!-- xShell Modules in AppData folder -->
       <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
-      <!-- Creates MYSQLX_HOME Environment variable -->
-      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
@@ -565,8 +559,6 @@
       </Feature>
       <!-- xShell Modules in AppData folder -->
       <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
-      <!-- Creates MYSQLX_HOME Environment variable -->
-      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
@@ -593,8 +585,6 @@
       </Feature>
       <!-- xShell Modules in AppData folder -->
       <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
-      <!-- Creates MYSQLX_HOME Environment variable -->
-      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
@@ -621,8 +611,6 @@
       </Feature>
       <!-- xShell Modules in AppData folder -->
       <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
-      <!-- Creates MYSQLX_HOME Environment variable -->
-      <ComponentRef Id='Set_MYSQLX_HOME_EnvVar'/>
     </Feature>
 
     <!-- Visual Studio 2010 installation location -->

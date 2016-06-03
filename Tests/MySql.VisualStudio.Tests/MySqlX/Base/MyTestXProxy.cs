@@ -34,7 +34,8 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port".</param>
     /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
-    public MyTestXProxy(string connectionString, bool keepXSession) : base(connectionString, keepXSession)
+    /// <param name="scriptType">The language type used.</param>
+    public MyTestXProxy(string connectionString, bool keepXSession, ScriptType scriptType) : base(connectionString, keepXSession, scriptType)
     {
     }
 
@@ -43,7 +44,8 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     /// <param name="connection">Connection object that will be used."</param>
     /// /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
-    public MyTestXProxy(DbConnection connection, bool keepXSession) : base(connection, keepXSession)
+    /// <param name="scriptType">The language type used.</param>
+    public MyTestXProxy(DbConnection connection, bool keepXSession, ScriptType scriptType) : base(connection, keepXSession, scriptType)
     {
     }
 

@@ -22,6 +22,7 @@
 
 using System;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Editors;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
 using MySqlX.Shell;
@@ -530,7 +531,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       if (_shellClient != null)
         return;
 
-      _shellClient = new MySqlShellClient();
+      _shellClient = new MySqlShellClient(ScriptType.JavaScript);
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.JScript);
     }

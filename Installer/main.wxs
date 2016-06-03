@@ -92,8 +92,8 @@
 
       <!-- xShell Modules in AppData folder -->
       <Directory Id="AppDataFolder">
-        <Directory Id="MySQL_AppDataFolder" Name='MySQL'>
-          <Directory Id="mysqlsh_AppDataFolder" Name='mysqlsh'>
+        <Directory Id="Oracle_AppDataFolder" Name='Oracle'>
+          <Directory Id="mysqlvs_AppDataFolder" Name='MySQL For Visual Studio'>
             <Directory Id='modules_AppDataFolder' Name='modules'>
               <Directory Id='xShellModules_AppDataFolder' Name='js' />
             </Directory>

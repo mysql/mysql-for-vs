@@ -42,7 +42,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
@@ -114,7 +114,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
         _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CreateCollectionTest, ScriptType.JavaScript);
@@ -152,7 +152,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
 
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
@@ -227,7 +227,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
         _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.JavaScript);
         _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.JavaScript);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
@@ -293,7 +293,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
@@ -348,7 +348,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
@@ -492,7 +492,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy();
+        InitXProxy(ScriptType.JavaScript);
         Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();

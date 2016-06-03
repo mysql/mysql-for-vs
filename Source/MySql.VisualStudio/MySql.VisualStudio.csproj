@@ -42,20 +42,6 @@
       </Code>
     </Task>
   </UsingTask>
-  <!-- Setup the MYSQLX_HOME environmnent variable -->
-  <UsingTask TaskName="SetMySQLXHomeVariable" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-    <ParameterGroup>
-      <ProjectDirectory Required="false" />
-    </ParameterGroup>
-    <Task>
-      <Code Type="Fragment" Language="cs">
-		if (string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("MYSQLX_HOME", System.EnvironmentVariableTarget.User)))
-		{
-			System.Environment.SetEnvironmentVariable("MYSQLX_HOME", @"%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh", System.EnvironmentVariableTarget.User);
-		}
-      </Code>
-    </Task>
-  </UsingTask>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -1610,9 +1596,6 @@
   <Target Name="SetVsSDKEnvVars_VS14" BeforeTargets="VSCTCompile" Condition=" '$(VisualStudioVersion)' == '14.0'">
     <SetVsSDKEnvVars_VS14 ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>
-  <Target Name="SetMySQLXHomeVariable" BeforeTargets="VSCTCompile">
-    <SetMySQLXHomeVariable />
-  </Target>
   <!-- Get M4VS version -->
   <Target Name="GetM4VSVersion" BeforeTargets="AfterBuild">
     <GetVersion Assembly="bin\$(TargetFrameworkVersion)\$(Configuration)\MySql.VisualStudio.dll" Format="{0}.{1}.{2}">
@@ -1643,12 +1626,12 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <!-- Targets when debugging VS (Clean the experimental instance folder and copy the xShell dependencies to it. Also copy the xShell modules to the path defined in the env. variable MYSQLX_HOME, created before) -->
+  <!-- Targets when debugging VS (Clean the experimental instance folder and copy the xShell dependencies to it. Also copy the xShell modules to the path "%APPDATA%\Oracle\MySQL for Visual Studio") -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
     <Exec Command="rd &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio&quot; /S /Q" />
   </Target>
   <Target Name="AfterBuild">
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
-    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\modules\*&quot; &quot;%USERPROFILE%\AppData\Roaming\MySQL\mysqlsh\modules&quot; /S /Y /I" />
+    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\modules\*&quot; &quot;%APPDATA%\Oracle\MySQL for Visual Studio\modules&quot; /S /Y /I" />
   </Target>
 </Project>

@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using Microsoft.VisualStudio.PlatformUI;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySqlX;
@@ -59,7 +61,8 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// </summary>
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port"</param>
     /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
-    public MySqlXProxy(string connectionString, bool keepXSession)
+    /// <param name="scriptType">The language type used.</param>
+    public MySqlXProxy(string connectionString, bool keepXSession, ScriptType scriptType)
     {
       _connString = connectionString;
       _keepSession = keepXSession;
@@ -68,14 +71,17 @@ namespace MySql.Data.VisualStudio.MySqlX
         _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
       }
+
+      AppendAdditionalModulePaths(scriptType);
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MySqlXProxy"/> class.
     /// </summary>
     /// <param name="connection">Connection object that will be used."</param>
-    /// /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
-    public MySqlXProxy(DbConnection connection, bool keepXSession)
+    /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
+    /// <param name="scriptType">The language type used.</param>
+    public MySqlXProxy(DbConnection connection, bool keepXSession, ScriptType scriptType)
     {
       _connString = ((MySqlConnection)connection).ToXFormat();
       _keepSession = keepXSession;
@@ -85,6 +91,8 @@ namespace MySql.Data.VisualStudio.MySqlX
         _shellClient = new ShellClient();
         _shellClient.MakeConnection(_connString);
       }
+
+      AppendAdditionalModulePaths(scriptType);
     }
 
     /// <summary>
@@ -318,6 +326,36 @@ namespace MySql.Data.VisualStudio.MySqlX
       _shellClient.Execute(_cleanSession);
       _shellClient.Dispose();
       _shellClient = null;
+    }
+
+    /// <summary>
+    /// Set the additional modules paths.
+    /// </summary>
+    /// <param name="scriptType">Type of the script.</param>
+    private void AppendAdditionalModulePaths(ScriptType scriptType)
+    {
+      string modulesPath = string.Format("{0}{1}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"\Oracle\MySQL For Visual Studio\modules").Replace(@"\", "/");
+      StringBuilder script = new StringBuilder();
+      List<string> statements = new List<string>();
+
+      switch (scriptType)
+      {
+        case ScriptType.Python:
+          // Add modules for Python
+          script.Append("import sys");
+          script.AppendFormat("sys.path.append('{0}/python') ", modulesPath);
+          script.AppendFormat("sys.path.append('{0}') ", modulesPath);
+          statements = script.ToString().BreakPythonStatements();
+          ExecuteScript(statements.ToArray(), scriptType);
+          break;
+        case ScriptType.JavaScript:
+          // Add modules for Javascript
+          script.AppendFormat("shell.js.module_paths[shell.js.module_paths.length] = '{0}/js';", modulesPath);
+          script.AppendFormat("shell.js.module_paths[shell.js.module_paths.length] = '{0}'; ", modulesPath);
+          statements = script.ToString().BreakJavaScriptStatements();
+          ExecuteScript(statements.ToArray(), ScriptType.JavaScript);
+          break;
+      }
     }
   }
 }
