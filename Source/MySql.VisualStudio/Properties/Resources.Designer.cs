@@ -3082,16 +3082,6 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        public static System.Drawing.Icon MySQLOutputWindow_16 {
-            get {
-                object obj = ResourceManager.GetObject("MySQLOutputWindow_16", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window: .
         /// </summary>
         public static string MySqlScriptWindowLaunchError {

@@ -1234,9 +1234,6 @@ Check that the server is running, the database exists and the user Error establi
   <data name="errorIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\errorIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="MySQLOutputWindow_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MySQLOutputWindow_16.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="successIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\successIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
