@@ -27,7 +27,6 @@ using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using System.Reflection;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {

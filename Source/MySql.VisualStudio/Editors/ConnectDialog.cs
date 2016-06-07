@@ -27,7 +27,6 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.DDEX;
 using MySql.Data.VisualStudio.Properties;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Editors
 {

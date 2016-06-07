@@ -27,7 +27,6 @@ using MySql.Data.MySqlClient;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Reflection;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.DBExport
 {

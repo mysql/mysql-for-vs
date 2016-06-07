@@ -27,7 +27,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio.DBExport
 {

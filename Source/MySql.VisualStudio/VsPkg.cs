@@ -46,7 +46,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MySQL.Utility.Classes.MySQL;
 using MySQL.Utility.Forms;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
+using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio
 {
@@ -99,7 +99,7 @@ namespace MySql.Data.VisualStudio
   // This attribute is needed to let the shell know that this package exposes some menus.
   [ProvideMenuResource(1000, 1)]
   [ProvideToolWindow(typeof(DbExportWindowPane), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
-  [ProvideToolWindow(typeof(Editors.MySqlOutputWindowPane), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
+  [ProvideToolWindow(typeof(MySqlOutputWindowPane), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindMainWindow)]
   [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
   // This attribute registers a tool window exposed by this package.
   [Guid(GuidStrings.PACKAGE)]
@@ -1204,7 +1204,7 @@ namespace MySql.Data.VisualStudio
       ToolWindowPane window = GetMySqlOutputWindow();
       if (window == null)
       {
-        window = (ToolWindowPane)this.CreateToolWindow(typeof(MySqlOutputWindowPane), _mySqlOutputWindowCounter);
+        window = (ToolWindowPane)CreateToolWindow(typeof(MySqlOutputWindowPane), _mySqlOutputWindowCounter);
         if (window == null || window.Frame == null)
         {
           throw new Exception("Cannot create a new window for MySql output panel.");

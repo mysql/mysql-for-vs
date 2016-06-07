@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {

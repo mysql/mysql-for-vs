@@ -25,7 +25,6 @@ using System.Text;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.DDEX;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {

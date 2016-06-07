@@ -35,7 +35,6 @@ using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using MySQL.Utility.Classes;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.ServerInstances
 {

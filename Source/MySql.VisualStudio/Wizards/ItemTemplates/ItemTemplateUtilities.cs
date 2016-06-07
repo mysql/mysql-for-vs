@@ -35,7 +35,6 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using MySql.Data.VisualStudio.Properties;
 using VSLangProj;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 {

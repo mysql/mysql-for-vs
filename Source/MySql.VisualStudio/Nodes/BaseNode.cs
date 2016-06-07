@@ -34,7 +34,6 @@ using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Nodes
 {

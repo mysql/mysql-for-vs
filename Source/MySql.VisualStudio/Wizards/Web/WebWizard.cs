@@ -46,7 +46,6 @@ using Microsoft.VisualStudio.Shell;
 using MySQL.Utility.Classes;
 using System.Diagnostics;
 using MySql.Data.VisualStudio.ServerInstances;
-using MySqlConnectionStringBuilder = MySQL.Utility.Classes.MySQL.MySqlConnectionStringBuilder;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
