@@ -55,11 +55,13 @@ namespace MySqlX
     Int64 GetAffectedItemCount() { return (Int64)_affectedItemCount; }
     Int64 GetLastInsertId() { return (Int64)_lastInsertId; }
     String^ GetLastDocumentId() { return _lastDocumentId; }
+    array<String^>^ GetLastDocumentIds() { return _lastDocumentIds; }
 
   private:
     Int64^ _affectedItemCount;
     Int64^ _lastInsertId;
     String^ _lastDocumentId;
+    array<String^>^ _lastDocumentIds;
   };
 
   public ref class DocResult : public BaseResult

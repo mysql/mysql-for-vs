@@ -40,7 +40,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <param name="scriptType">Type of the script.</param>
     public MySqlShellClient(ScriptType scriptType)
     {
-      AppendAdditionalModulePaths(scriptType);
     }
 
     /// <summary>
@@ -98,8 +97,9 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Set the additional modules paths.
     /// </summary>
     /// <param name="scriptType">Type of the script.</param>
-    private void AppendAdditionalModulePaths(ScriptType scriptType)
+    public void AppendAdditionalModulePaths(ScriptType scriptType)
     {
+
       string modulesPath = string.Format("{0}{1}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"\Oracle\MySQL For Visual Studio\modules").Replace(@"\", "/");
 
       switch (scriptType)

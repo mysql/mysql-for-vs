@@ -104,6 +104,8 @@ Object^ ShellClient::Execute(String^ query)
   if (n_result.type == shcore::Object)
   {
     std::string class_name = n_result.as_object()->class_name();
+    String^ className;
+    className = msclr::interop::marshal_as<String^>(class_name);
     if (class_name == "Result")
       ret_val = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(n_result.as_object()));
     else if (class_name == "DocResult")

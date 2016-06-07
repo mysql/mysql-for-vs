@@ -342,9 +342,9 @@ namespace MySql.Data.VisualStudio.MySqlX
       {
         case ScriptType.Python:
           // Add modules for Python
-          script.Append("import sys");
-          script.AppendFormat("sys.path.append('{0}/python') ", modulesPath);
-          script.AppendFormat("sys.path.append('{0}') ", modulesPath);
+          script.AppendFormat("import sys{0}", Environment.NewLine);
+          script.AppendFormat("sys.path.append('{0}/python'){1}", modulesPath, Environment.NewLine);
+          script.AppendFormat("sys.path.append('{0}'){1}", modulesPath, Environment.NewLine);
           statements = script.ToString().BreakPythonStatements();
           ExecuteScript(statements.ToArray(), scriptType);
           break;

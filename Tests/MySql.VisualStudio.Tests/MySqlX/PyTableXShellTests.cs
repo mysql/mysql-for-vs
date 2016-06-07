@@ -546,6 +546,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       _shellClient = new MySqlShellClient(ScriptType.Python);
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.Python);
+      _shellClient.AppendAdditionalModulePaths(ScriptType.Python);
     }
 
     /// <summary>

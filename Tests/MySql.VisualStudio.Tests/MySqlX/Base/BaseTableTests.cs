@@ -210,7 +210,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Get a specific table and assign it to a variable for persistence. 
     /// </summary>
-    protected const string GET_TABLE = "table = session.{0}.getTable('{1}')";
+    protected const string GET_TABLE = "table = session.getSchema('{0}').getTable('{1}')";
 
     /// <summary>
     /// Get a specific table and assign it to a variable for persistence. 

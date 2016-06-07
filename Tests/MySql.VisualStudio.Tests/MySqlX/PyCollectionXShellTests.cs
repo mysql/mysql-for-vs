@@ -373,11 +373,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         _shellClient.Execute(GetSchemaSakilaX);
         _shellClient.Execute(GetCollectionSakilaXUser);
-        _shellClient.Execute(JAVASCRIPT_ADD_SINGLE_USER1);
-        _shellClient.Execute(JAVASCRIPT_ADD_SINGLE_USER2);
-        _shellClient.Execute(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD);
-        _shellClient.Execute(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
-
+        _shellClient.Execute(PYTHON_ADD_SINGLE_USER1);
+        _shellClient.Execute(PYTHON_ADD_SINGLE_USER2);
+        _shellClient.Execute(PYTHON_ADD_MULTIPLE_USERS_SINGLE_ADD);
+        _shellClient.Execute(PYTHON_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
+        _shellClient.Execute(PYTHON_INCLUDE_MYSQLX);
         // Modify Set
         _shellClient.Execute(MODIFY_SET_USER);
         var selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
@@ -515,13 +515,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         _shellClient.Execute(GetSchemaSakilaX);
         _shellClient.Execute(GetCollectionSakilaXUser);
-        _shellClient.Execute(JAVASCRIPT_ADD_SINGLE_USER1);
+        _shellClient.Execute(PYTHON_ADD_SINGLE_USER1);
         usersCount++;
-        _shellClient.Execute(JAVASCRIPT_ADD_SINGLE_USER2);
+        _shellClient.Execute(PYTHON_ADD_SINGLE_USER2);
         usersCount++;
-        _shellClient.Execute(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD);
+        _shellClient.Execute(PYTHON_ADD_MULTIPLE_USERS_SINGLE_ADD);
         usersCount += 3;
-        _shellClient.Execute(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
+        _shellClient.Execute(PYTHON_ADD_MULTIPLE_USERS_MULTIPLE_ADD);
         usersCount += 3;
 
         // Remove test
@@ -555,6 +555,39 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
+    /// Test to validate whether the active session is active and can be parsed,  using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    [Fact]
+    public void TestSessions()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+
+        // Validate session is open
+        var sessionIsOpen = _shellClient.Execute(IS_SESSION_OPEN);
+        bool result = false;
+        Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
+
+        // Parse Uri of active session
+        var shellParseSessionResult = _shellClient.Execute(SHELL_PARSE_URI_FROM_SESSION_URI);
+        Assert.True(shellParseSessionResult != null && shellParseSessionResult.ToString().Contains("dbUser"));
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+        DisposeShellClient();
+      }
+    }
+
+    /// <summary>
     /// Initializes the <see cref="MySqlShellClient"/> instance with common statements.
     /// </summary>
     private void InitXShell()
@@ -564,6 +597,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       _shellClient = new MySqlShellClient(ScriptType.Python);
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.Python);
+      _shellClient.AppendAdditionalModulePaths(ScriptType.Python);
     }
 
     /// <summary>

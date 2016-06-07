@@ -32,207 +32,237 @@ using namespace System::Reflection;
 
 Object^ wrap_value(const shcore::Value& val)
 {
-	Object^ o;
-	Dictionary<String^, Object^>^ document;
-	std::string class_name;
-	switch (val.type)
-	{
-	case shcore::Object:
-		class_name = val.as_object()->class_name();
-		if (class_name == "Result")
-			o = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(val.as_object()));
-		else if (class_name == "DocResult")
-			o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
-		else if (class_name == "RowResult")
-			o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
-		else if (class_name == "SqlResult")
-			o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
-		break;
-	case shcore::Integer:
-		o = gcnew Int32(val.as_int());
-		break;
-	case shcore::String:
-		o = msclr::interop::marshal_as<String^>(val.as_string());
-		break;
-	case shcore::Bool:
-		o = gcnew Boolean(val.as_bool());
-		break;
-	case shcore::Float:
-		o = gcnew Double(val.as_double());
-		break;
-	case shcore::Map:
-	{
-		shcore::Value::Map_type_ref map = val.as_map();
-		shcore::Value::Map_type::const_iterator index, end = map->end();
+  Object^ o;
+  Dictionary<String^, Object^>^ document;
+  std::string class_name;
+  switch (val.type)
+  {
+  case shcore::Object:
+    class_name = val.as_object()->class_name();
+    if (class_name == "Result")
+      o = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(val.as_object()));
+    else if (class_name == "DocResult")
+      o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+    else if (class_name == "RowResult")
+      o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+    else if (class_name == "SqlResult")
+      o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+    break;
+  case shcore::Integer:
+    o = gcnew Int32(val.as_int());
+    break;
+  case shcore::String:
+    o = msclr::interop::marshal_as<String^>(val.as_string());
+    break;
+  case shcore::Bool:
+    o = gcnew Boolean(val.as_bool());
+    break;
+  case shcore::Float:
+    o = gcnew Double(val.as_double());
+    break;
+  case shcore::Map:
+  {
+    shcore::Value::Map_type_ref map = val.as_map();
+    shcore::Value::Map_type::const_iterator index, end = map->end();
 
-		Dictionary<String^, Object^>^ document = gcnew Dictionary<String^, Object^>();
-		for (index = map->begin(); index != end; index++)
-			document->Add(msclr::interop::marshal_as<String^>(index->first.c_str()), wrap_value(index->second));
+    Dictionary<String^, Object^>^ document = gcnew Dictionary<String^, Object^>();
+    for (index = map->begin(); index != end; index++)
+      document->Add(msclr::interop::marshal_as<String^>(index->first.c_str()), wrap_value(index->second));
 
-		o = document;
-	}
-	break;
-	case shcore::Array:
-	{
-		shcore::Value::Array_type_ref array = val.as_array();
-		shcore::Value::Array_type::const_iterator index, end = array->end();
+    o = document;
+  }
+  break;
+  case shcore::Array:
+  {
+    shcore::Value::Array_type_ref array = val.as_array();
+    shcore::Value::Array_type::const_iterator index, end = array->end();
 
-		List<Object^>^ list = gcnew List<Object^>();
-		for (index = array->begin(); index != end; index++)
-			list->Add(wrap_value(*index));
+    List<Object^>^ list = gcnew List<Object^>();
+    for (index = array->begin(); index != end; index++)
+      list->Add(wrap_value(*index));
 
-		o = list;
-	}
-	break;
-	default:
-		o = msclr::interop::marshal_as<String^>(val.descr());
-	}
-	return o;
+    o = list;
+  }
+  break;
+  default:
+    o = msclr::interop::marshal_as<String^>(val.descr());
+  }
+  return o;
 }
 
 BaseResult::BaseResult(boost::shared_ptr<mysh::mysqlx::BaseResult> result)
 {
-	_warningCount = gcnew UInt64(result->get_warning_count());
-	_executionTime = msclr::interop::marshal_as<String^>(result->get_execution_time());
+  _warningCount = gcnew UInt64(result->get_warning_count());
+  _executionTime = msclr::interop::marshal_as<String^>(result->get_execution_time());
 
-	// Fills the warnings
-	_warnings = gcnew List<Dictionary<String^, Object^>^>();
+  // Fills the warnings
+  _warnings = gcnew List<Dictionary<String^, Object^>^>();
 
-	shcore::Value::Array_type_ref warnings = result->get_member("warnings").as_array();
+  shcore::Value::Array_type_ref warnings = result->get_member("warnings").as_array();
 
-	for (size_t index = 0; index < warnings->size(); index++)
-	{
-		boost::shared_ptr<mysh::Row> row = boost::static_pointer_cast<mysh::Row>(warnings->at(index).as_object());
+  for (size_t index = 0; index < warnings->size(); index++)
+  {
+    boost::shared_ptr<mysh::Row> row = boost::static_pointer_cast<mysh::Row>(warnings->at(index).as_object());
 
-		Dictionary<String^, Object^>^ warning = gcnew Dictionary<String^, Object^>();
+    Dictionary<String^, Object^>^ warning = gcnew Dictionary<String^, Object^>();
 
-		warning->Add(gcnew String("Level"), wrap_value(row->get_member("Level")));
-		warning->Add(gcnew String("Code"), wrap_value(row->get_member("Code")));
-		warning->Add(gcnew String("Message"), wrap_value(row->get_member("Message")));
+    warning->Add(gcnew String("Level"), wrap_value(row->get_member("Level")));
+    warning->Add(gcnew String("Code"), wrap_value(row->get_member("Code")));
+    warning->Add(gcnew String("Message"), wrap_value(row->get_member("Message")));
 
-		_warnings->Add(warning);
-	}
+    _warnings->Add(warning);
+  }
 }
 
 Result::Result(boost::shared_ptr<mysh::mysqlx::Result> result) :
-	BaseResult(result)
+  BaseResult(result)
 {
-	_affectedItemCount = gcnew Int64(result->get_affected_item_count());
-	_lastInsertId = gcnew Int64(result->get_auto_increment_value());
-	_lastDocumentId = msclr::interop::marshal_as<String^>(result->get_last_document_id());
+  _affectedItemCount = gcnew Int64(result->get_affected_item_count());
+  _lastInsertId = gcnew Int64(result->get_auto_increment_value());
+  if (result->get_affected_item_count() == 0)
+  {
+    return;
+  }
+  if (result->get_affected_item_count() > 1)
+  {
+    try
+    {
+      std::vector<std::string> documentsIds = result->get_last_document_ids();
+      _lastDocumentIds = gcnew array<String^>(documentsIds.size());
+      for (size_t index = 0; index < documentsIds.size(); index++)
+      {
+        _lastDocumentIds[index] = msclr::interop::marshal_as<String^>(documentsIds[index]);
+      }
+    }
+    catch (Exception^)
+    {
+      // get_last_document_ids not available. Just ignore.
+    }
+  }
+  else
+  {
+    try
+    {
+      _lastDocumentId = msclr::interop::marshal_as<String^>(result->get_last_document_id());
+    }
+    catch (Exception^)
+    {
+      // get_last_document_id not available. Just ignore.
+    }
+  }
 }
 
-DocResult::DocResult(boost::shared_ptr<mysh::mysqlx::DocResult> result) :
-	BaseResult(result)
-{
-	shcore::Argument_list args;
-	shcore::Value raw_doc;
+  DocResult::DocResult(boost::shared_ptr<mysh::mysqlx::DocResult> result) :
+    BaseResult(result)
+  {
+    shcore::Argument_list args;
+    shcore::Value raw_doc;
 
-	_documents = gcnew List<Dictionary<String^, Object^>^>();
-	while (raw_doc = result->fetch_one(args))
-	{
-		Object^ obj = wrap_value(raw_doc);
-		Dictionary<String^, Object^>^ document = (Dictionary<String^, Object^>^)obj;
+    _documents = gcnew List<Dictionary<String^, Object^>^>();
+    while (raw_doc = result->fetch_one(args))
+    {
+      Object^ obj = wrap_value(raw_doc);
+      Dictionary<String^, Object^>^ document = (Dictionary<String^, Object^>^)obj;
 
-		_documents->Add(document);
-	}
-}
+      _documents->Add(document);
+    }
+  }
 
-Dictionary<String^, Object^>^ DocResult::FetchOne()
-{
-	Dictionary<String^, Object^>^ ret_val;
+  Dictionary<String^, Object^>^ DocResult::FetchOne()
+  {
+    Dictionary<String^, Object^>^ ret_val;
 
-	if (_index < _documents->Count)
-		ret_val = _documents[_index++];
+    if (_index < _documents->Count)
+      ret_val = _documents[_index++];
 
-	return ret_val;
-}
+    return ret_val;
+  }
 
-List<Dictionary<String^, Object^>^>^ DocResult::FetchAll()
-{
-	return _documents;
-}
+  List<Dictionary<String^, Object^>^>^ DocResult::FetchAll()
+  {
+    return _documents;
+  }
 
-RowResult::RowResult(boost::shared_ptr<mysh::mysqlx::RowResult> result) :
-	BaseResult(result)
-{
-	_columnCount = gcnew Int64(result->get_column_count());
+  RowResult::RowResult(boost::shared_ptr<mysh::mysqlx::RowResult> result) :
+    BaseResult(result)
+  {
+    _columnCount = gcnew Int64(result->get_column_count());
 
-	shcore::Value::Array_type_ref columns = result->get_columns();
+    shcore::Value::Array_type_ref columns = result->get_columns();
 
-	_columns = gcnew List<Column^>();
-	_columnNames = gcnew List<String^>();
+    _columns = gcnew List<Column^>();
+    _columnNames = gcnew List<String^>();
 
-	for (size_t index = 0; index < columns->size(); index++)
-	{
-		boost::shared_ptr<mysh::Column> column = boost::static_pointer_cast<mysh::Column>(columns->at(index).as_object());
+    for (size_t index = 0; index < columns->size(); index++)
+    {
+      boost::shared_ptr<mysh::Column> column = boost::static_pointer_cast<mysh::Column>(columns->at(index).as_object());
 
-		_columnNames->Add(msclr::interop::marshal_as<String^>(column->get_column_label()));
+      _columnNames->Add(msclr::interop::marshal_as<String^>(column->get_column_label()));
 
-		_columns->Add(gcnew Column(msclr::interop::marshal_as<String^>(column->get_schema_name()),
-			msclr::interop::marshal_as<String^>(column->get_table_label()),
-			msclr::interop::marshal_as<String^>(column->get_table_name()),
-			msclr::interop::marshal_as<String^>(column->get_column_label()),
-			msclr::interop::marshal_as<String^>(column->get_column_name()),
-			gcnew UInt64(column->get_length()),
-			msclr::interop::marshal_as<String^>(column->get_type().descr()),
-			gcnew UInt64(column->get_fractional_digits()),
-			gcnew Boolean(column->is_number_signed()),
-			msclr::interop::marshal_as<String^>(column->get_collation_name()),
-			msclr::interop::marshal_as<String^>(column->get_character_set_name()),
-			gcnew Boolean(column->is_padded())));
-	}
+      _columns->Add(gcnew Column(msclr::interop::marshal_as<String^>(column->get_schema_name()),
+        msclr::interop::marshal_as<String^>(column->get_table_label()),
+        msclr::interop::marshal_as<String^>(column->get_table_name()),
+        msclr::interop::marshal_as<String^>(column->get_column_label()),
+        msclr::interop::marshal_as<String^>(column->get_column_name()),
+        gcnew UInt64(column->get_length()),
+        msclr::interop::marshal_as<String^>(column->get_type().descr()),
+        gcnew UInt64(column->get_fractional_digits()),
+        gcnew Boolean(column->is_number_signed()),
+        msclr::interop::marshal_as<String^>(column->get_collation_name()),
+        msclr::interop::marshal_as<String^>(column->get_character_set_name()),
+        gcnew Boolean(column->is_padded())));
+    }
 
-	_records = gcnew List<array<Object^>^>();
+    _records = gcnew List<array<Object^>^>();
 
-	shcore::Value raw_record;
-	shcore::Argument_list args;
-	while (raw_record = result->fetch_one(args))
-	{
-		boost::shared_ptr<mysh::Row> row = boost::static_pointer_cast<mysh::Row>(raw_record.as_object());
+    shcore::Value raw_record;
+    shcore::Argument_list args;
+    while (raw_record = result->fetch_one(args))
+    {
+      boost::shared_ptr<mysh::Row> row = boost::static_pointer_cast<mysh::Row>(raw_record.as_object());
 
-		if (row)
-		{
-			array<Object^>^ fields;
+      if (row)
+      {
+        array<Object^>^ fields;
 
-			size_t length = row->get_length();
+        size_t length = row->get_length();
 
-			fields = gcnew array<Object^>(length);
+        fields = gcnew array<Object^>(length);
 
-			for (size_t index = 0; index < length; index++)
-				fields->SetValue(wrap_value(row->get_member(index)), int(index));
+        for (size_t index = 0; index < length; index++)
+          fields->SetValue(wrap_value(row->get_member(index)), int(index));
 
-			_records->Add(fields);
-		}
-	}
-}
+        _records->Add(fields);
+      }
+    }
+  }
 
-array<Object^>^ RowResult::FetchOne()
-{
-	array<Object^>^ ret_val;
+  array<Object^>^ RowResult::FetchOne()
+  {
+    array<Object^>^ ret_val;
 
-	if (_index < _records->Count)
-		ret_val = _records[_index++];
+    if (_index < _records->Count)
+      ret_val = _records[_index++];
 
-	return ret_val;
-}
+    return ret_val;
+  }
 
-List<array<Object^>^>^ RowResult::FetchAll()
-{
-	return _records;
-}
+  List<array<Object^>^>^ RowResult::FetchAll()
+  {
+    return _records;
+  }
 
-SqlResult::SqlResult(boost::shared_ptr<mysh::mysqlx::SqlResult> result) :
-	RowResult(result)
-{
-	_affectedRowCount = gcnew Int64(result->get_affected_row_count());
-	_lastInsertId = gcnew Int64(result->get_auto_increment_value());
-	_hasData = gcnew Boolean(result->has_data(shcore::Argument_list()));
-}
+  SqlResult::SqlResult(boost::shared_ptr<mysh::mysqlx::SqlResult> result) :
+    RowResult(result)
+  {
+    _affectedRowCount = gcnew Int64(result->get_affected_row_count());
+    _lastInsertId = gcnew Int64(result->get_auto_increment_value());
+    _hasData = gcnew Boolean(result->has_data(shcore::Argument_list()));
+  }
 
-//Boolean^ SqlResult::NextDataSet()
-//{
-//  boost::shared_ptr<mysh::mysqlx::SqlResult> result = boost::static_pointer_cast<mysh::mysqlx::SqlResult>(_inner);
-//
-//  return gcnew Boolean(result->next_data_set());
-//}
+  //Boolean^ SqlResult::NextDataSet()
+  //{
+  //  boost::shared_ptr<mysh::mysqlx::SqlResult> result = boost::static_pointer_cast<mysh::mysqlx::SqlResult>(_inner);
+  //
+  //  return gcnew Boolean(result->next_data_set());
+  //}

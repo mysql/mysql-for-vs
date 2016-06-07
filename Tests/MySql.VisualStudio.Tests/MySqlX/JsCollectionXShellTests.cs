@@ -545,6 +545,38 @@ namespace MySql.VisualStudio.Tests.MySqlX
     }
 
     /// <summary>
+    /// Test to validate whether the active session is active and can be parsed,  using the <see cref="ShellClient"/> direclty.
+    /// </summary>
+    [Fact]
+    public void TestSessions()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXShell();
+
+        // Validate session is open
+        var sessionIsOpen = _shellClient.Execute(IS_SESSION_OPEN);
+        bool result = false;
+        Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
+
+        // Parse Uri of active session
+        var shellParseSessionResult = _shellClient.Execute(SHELL_PARSE_URI_FROM_SESSION_URI);
+        Assert.True(shellParseSessionResult != null && shellParseSessionResult.ToString().Contains("dbUser"));
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+      }
+    }
+
+    /// <summary>
     /// Initializes the <see cref="MySqlShellClient"/> instance with common statements.
     /// </summary>
     private void InitXShell()
@@ -555,6 +587,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
       _shellClient = new MySqlShellClient(ScriptType.JavaScript);
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.JScript);
+      _shellClient.AppendAdditionalModulePaths(ScriptType.JavaScript);
     }
   }
 }

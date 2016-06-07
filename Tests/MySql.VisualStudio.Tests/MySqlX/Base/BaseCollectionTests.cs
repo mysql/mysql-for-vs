@@ -100,7 +100,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string JAVASCRIPT_MODIFY_MERGE_USER = "coll.modify('name like :param1').merge({ status: 'inactive', ratings: "
       + MOVIES_RATING_ARRAY_VALUE
       + " }).bind('param1', 'Iggy%').execute()";
-
     #endregion JavaScript specific
 
     #region Python specific
@@ -148,7 +147,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to create a collection.
     /// </summary>
-    protected const string CREATE_COLLECTION = "session.{0}.createCollection('{1}')";
+    protected const string CREATE_COLLECTION = "session.getSchema('{0}').createCollection('{1}')";
 
     /// <summary>
     /// Statement to create a schema.
@@ -243,7 +242,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Get a specific colletion and assign it to a variable for persistence. 
     /// </summary>
-    protected const string GET_COLLECTION = "coll = session.{0}.getCollection('{1}')";
+    protected const string GET_COLLECTION = "coll = session.getSchema('{0}').getCollection('{1}')";
 
     /// <summary>
     /// Gets a schema and assign it to a variable for persistence.
@@ -317,6 +316,18 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 
     #endregion Common Collection Queries
 
+    #region Common Session Queries
+    /// <summary>
+    /// Statement to validate whether the active session is open.
+    /// </summary>
+    protected const string IS_SESSION_OPEN = "session.isOpen()";
+
+    /// <summary>
+    /// Statement to get the parsed Uri of the active session Uri.
+    /// </summary>
+    protected const string SHELL_PARSE_URI_FROM_SESSION_URI = "shell.parseUri(session.getUri())";
+    #endregion
+
     #region Properties
 
     /// <summary>
@@ -359,6 +370,16 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     public string GetSchemaSakilaX { get; private set; }
 
+    /// <summary>
+    /// Statement to get the Test schema.
+    /// </summary>
+    public string GetSchemaTest { get; private set; }
+
+    /// <summary>
+    /// Statement to get the collection_test collection from the Test schema.
+    /// </summary>
+    public string GetCollectionTestSchemaTest { get; private set; }
+
     #endregion Properties
 
     /// <summary>
@@ -374,6 +395,8 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
       GetCollectionSakilaXMovies = string.Format(GET_COLLECTION, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION);
       GetCollectionSakilaXUser = string.Format(GET_COLLECTION, SAKILA_X_SCHEMA_NAME, SAKILA_X_USERS_COLLECTION);
       GetSchemaSakilaX = string.Format(GET_SCHEMA, SAKILA_X_SCHEMA_NAME);
+      GetSchemaTest = string.Format(GET_SCHEMA, TEST_SCHEMA_NAME);
+      GetCollectionTestSchemaTest = string.Format(GET_COLLECTION, TEST_SCHEMA_NAME, TEST_COLLECTION_NAME);
     }
   }
 }

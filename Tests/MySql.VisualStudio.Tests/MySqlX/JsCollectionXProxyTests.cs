@@ -539,5 +539,38 @@ namespace MySql.VisualStudio.Tests.MySqlX
         DisposeProxy();
       }
     }
+
+    /// <summary>
+    /// Test to validate whether the active session is active and can be parsed, using the <see cref="MyTestXProxy"/>
+    /// </summary>
+    [Fact]
+    public void TestSessions()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXProxy(ScriptType.JavaScript);
+
+        // Validate session is open
+        var sessionIsOpen = _xProxy.ExecuteQuery(IS_SESSION_OPEN, ScriptType.JavaScript).Result;
+        bool result = false;
+        Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
+
+        // Parse Uri of active session
+        var shellParseSessionResult = _xProxy.ExecuteQuery(SHELL_PARSE_URI_FROM_SESSION_URI, ScriptType.JavaScript).Result;
+        Assert.True(shellParseSessionResult != null && shellParseSessionResult.ToString().Contains("dbUser"));
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+        DisposeProxy();
+      }
+    }
   }
 }

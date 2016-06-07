@@ -357,10 +357,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
         script.AppendLine(CreateSchemaTest);
         script.AppendLine(CreateCollectionTest);
 
-        script.AppendLine(GetSchemaSakilaX);
-        script.AppendLine(GetCollectionSakilaXUser);
-        script.AppendLine(JAVASCRIPT_ADD_SINGLE_USER1);
-        script.AppendLine(JAVASCRIPT_ADD_SINGLE_USER2);
+        script.AppendLine(GetSchemaTest);
+        script.AppendLine(GetCollectionTestSchemaTest);
+        script.AppendLine(PYTHON_ADD_SINGLE_USER1);
+        script.AppendLine(PYTHON_ADD_SINGLE_USER2);
 
         var tokenizer = new MyPythonTokenizer(script.ToString());
         _xProxy.ExecuteScript(tokenizer.BreakIntoStatements().ToArray(), ScriptType.Python);
@@ -409,11 +409,11 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.Python);
         _xProxy.ExecuteScript(GetCollectionSakilaXUser, ScriptType.Python);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptType.Python);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptType.Python);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.Python);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.Python);
-
+        _xProxy.ExecuteScript(PYTHON_ADD_SINGLE_USER1, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_SINGLE_USER2, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_INCLUDE_MYSQLX, ScriptType.Python);
         // Modify Set
         _xProxy.ExecuteScript(MODIFY_SET_USER, ScriptType.Python);
         var selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.Python);
@@ -552,13 +552,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.Python);
         _xProxy.ExecuteScript(GetCollectionSakilaXUser, ScriptType.Python);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_SINGLE_USER1, ScriptType.Python);
         usersCount++;
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_SINGLE_USER2, ScriptType.Python);
         usersCount++;
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.Python);
         usersCount += 3;
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.Python);
+        _xProxy.ExecuteScript(PYTHON_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.Python);
         usersCount += 3;
 
         // Remove test
@@ -581,6 +581,39 @@ namespace MySql.VisualStudio.Tests.MySqlX
       finally
       {
         _xProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptType.Python);
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+        DisposeProxy();
+      }
+    }
+
+    /// <summary>
+    /// Test to validate whether the active session is active and can be parsed,  using the <see cref="MyTestXProxy"/>
+    /// </summary>
+    [Fact]
+    public void TestSessions()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXProxy(ScriptType.Python);
+
+        // Validate session is open
+        var sessionIsOpen = _xProxy.ExecuteQuery(IS_SESSION_OPEN, ScriptType.Python).Result;
+        bool result = false;
+        Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
+
+        // Parse Uri of active session
+        var shellParseSessionResult = _xProxy.ExecuteQuery(SHELL_PARSE_URI_FROM_SESSION_URI, ScriptType.Python).Result;
+        Assert.True(shellParseSessionResult != null && shellParseSessionResult.ToString().Contains("dbUser"));
+      }
+      finally
+      {
         if (Command != null)
         {
           Command.Dispose();
