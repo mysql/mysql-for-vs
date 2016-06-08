@@ -40,37 +40,38 @@ namespace MySql.Data.VisualStudio.Editors
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MySqlHybridScriptEditor));
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-      this.connectButton = new System.Windows.Forms.ToolStripButton();
-      this.disconnectButton = new System.Windows.Forms.ToolStripButton();
+      this.ConnectToolStripButton = new System.Windows.Forms.ToolStripButton();
+      this.DisconnectToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.runScriptButton = new System.Windows.Forms.ToolStripButton();
+      this.RunScriptToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-      this.serverLabel = new System.Windows.Forms.ToolStripLabel();
+      this.ConnectionInfoToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      this.ConnectionMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.HostIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.ServerVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.UserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.SchemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-      this.userLabel = new System.Windows.Forms.ToolStripLabel();
+      this.ExecutionModeToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      this.BatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.ConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-      this.dbLabel = new System.Windows.Forms.ToolStripLabel();
-      this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-      this.toolStripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
-      this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-      this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-      this.tssbExecutionModeButton = new System.Windows.Forms.ToolStripSplitButton();
-      this.tsmiBatchExecutionModeButton = new System.Windows.Forms.ToolStripMenuItem();
-      this.tsmiConsoleExecutionModeButton = new System.Windows.Forms.ToolStripMenuItem();
+      this.SessionOptionsToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      this.PreserveVariablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.splitter1 = new System.Windows.Forms.Splitter();
-      this.tabControl1 = new System.Windows.Forms.TabControl();
+      this.ResultsTabControl = new System.Windows.Forms.TabControl();
       this.resultsPage = new System.Windows.Forms.TabPage();
       this.resultsGrid = new System.Windows.Forms.DataGridView();
       this.messagesPage = new System.Windows.Forms.TabPage();
       this.messages = new System.Windows.Forms.Label();
       this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-      this.codeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
+      this.CodeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
       this.panel1 = new System.Windows.Forms.Panel();
       this.xShellConsoleEditor1 = new MySql.Data.VisualStudio.Editors.XShellConsoleEditor();
       this.toolStrip1.SuspendLayout();
-      this.tabControl1.SuspendLayout();
+      this.ResultsTabControl.SuspendLayout();
       this.resultsPage.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.resultsGrid)).BeginInit();
       this.messagesPage.SuspendLayout();
@@ -81,20 +82,16 @@ namespace MySql.Data.VisualStudio.Editors
       // 
       this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectButton,
-            this.disconnectButton,
+            this.ConnectToolStripButton,
+            this.DisconnectToolStripButton,
             this.toolStripSeparator1,
-            this.runScriptButton,
+            this.RunScriptToolStripButton,
             this.toolStripSeparator2,
-            this.serverLabel,
+            this.ConnectionInfoToolStripDropDownButton,
             this.toolStripSeparator3,
-            this.userLabel,
+            this.ExecutionModeToolStripDropDownButton,
             this.toolStripSeparator4,
-            this.dbLabel,
-            this.toolStripSeparator5,
-            this.toolStripSplitButton,
-            this.toolStripSeparator6,
-            this.tssbExecutionModeButton});
+            this.SessionOptionsToolStripDropDownButton});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -102,155 +99,164 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStrip1.TabIndex = 1;
       this.toolStrip1.Text = "toolStrip1";
       // 
-      // connectButton
+      // ConnectToolStripButton
       // 
-      this.connectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.connectButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_connect;
-      this.connectButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.connectButton.Name = "connectButton";
-      this.connectButton.Size = new System.Drawing.Size(23, 22);
-      this.connectButton.Text = "connectButton";
-      this.connectButton.ToolTipText = "Connect to...";
-      this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
+      this.ConnectToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.ConnectToolStripButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_connect;
+      this.ConnectToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.ConnectToolStripButton.Name = "ConnectToolStripButton";
+      this.ConnectToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.ConnectToolStripButton.Text = "connectButton";
+      this.ConnectToolStripButton.ToolTipText = "Connect to...";
+      this.ConnectToolStripButton.Click += new System.EventHandler(this.connectButton_Click);
       // 
-      // disconnectButton
+      // DisconnectToolStripButton
       // 
-      this.disconnectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.disconnectButton.Enabled = false;
-      this.disconnectButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_disconnect;
-      this.disconnectButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.disconnectButton.Name = "disconnectButton";
-      this.disconnectButton.Size = new System.Drawing.Size(23, 22);
-      this.disconnectButton.Text = "Disconnect";
-      this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
+      this.DisconnectToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.DisconnectToolStripButton.Enabled = false;
+      this.DisconnectToolStripButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_disconnect;
+      this.DisconnectToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.DisconnectToolStripButton.Name = "DisconnectToolStripButton";
+      this.DisconnectToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.DisconnectToolStripButton.Text = "Disconnect";
+      this.DisconnectToolStripButton.Click += new System.EventHandler(this.disconnectButton_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
       this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
       // 
-      // runScriptButton
+      // RunScriptToolStripButton
       // 
-      this.runScriptButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.runScriptButton.Enabled = false;
-      this.runScriptButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
-      this.runScriptButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.runScriptButton.Name = "runScriptButton";
-      this.runScriptButton.Size = new System.Drawing.Size(23, 22);
-      this.runScriptButton.Text = "runScriptButton";
-      this.runScriptButton.ToolTipText = "Run Js";
-      this.runScriptButton.Click += new System.EventHandler(this.runScriptButton_Click);
+      this.RunScriptToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.RunScriptToolStripButton.Enabled = false;
+      this.RunScriptToolStripButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
+      this.RunScriptToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.RunScriptToolStripButton.Name = "RunScriptToolStripButton";
+      this.RunScriptToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.RunScriptToolStripButton.Text = "runScriptButton";
+      this.RunScriptToolStripButton.ToolTipText = "Run Js";
+      this.RunScriptToolStripButton.Click += new System.EventHandler(this.runScriptButton_Click);
       // 
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
       this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
       // 
-      // serverLabel
+      // ConnectionInfoToolStripDropDownButton
       // 
-      this.serverLabel.Name = "serverLabel";
-      this.serverLabel.Size = new System.Drawing.Size(88, 22);
-      this.serverLabel.Text = "Server: <none>";
+      this.ConnectionInfoToolStripDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ConnectionInfoToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ConnectionMethodToolStripMenuItem,
+            this.HostIdToolStripMenuItem,
+            this.ServerVersionToolStripMenuItem,
+            this.UserToolStripMenuItem,
+            this.SchemaToolStripMenuItem});
+      this.ConnectionInfoToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ConnectionInfoToolStripDropDownButton.Image")));
+      this.ConnectionInfoToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.ConnectionInfoToolStripDropDownButton.Name = "ConnectionInfoToolStripDropDownButton";
+      this.ConnectionInfoToolStripDropDownButton.Size = new System.Drawing.Size(91, 22);
+      this.ConnectionInfoToolStripDropDownButton.Text = "Connection...";
+      // 
+      // ConnectionMethodToolStripMenuItem
+      // 
+      this.ConnectionMethodToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ConnectionMethodToolStripMenuItem.Name = "ConnectionMethodToolStripMenuItem";
+      this.ConnectionMethodToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.ConnectionMethodToolStripMenuItem.Text = "Connection Method: <none>";
+      // 
+      // HostIdToolStripMenuItem
+      // 
+      this.HostIdToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.HostIdToolStripMenuItem.Name = "HostIdToolStripMenuItem";
+      this.HostIdToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.HostIdToolStripMenuItem.Text = "Host ID: <none>";
+      // 
+      // ServerVersionToolStripMenuItem
+      // 
+      this.ServerVersionToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ServerVersionToolStripMenuItem.Name = "ServerVersionToolStripMenuItem";
+      this.ServerVersionToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.ServerVersionToolStripMenuItem.Text = "Server Version: <none>";
+      // 
+      // UserToolStripMenuItem
+      // 
+      this.UserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.UserToolStripMenuItem.Name = "UserToolStripMenuItem";
+      this.UserToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.UserToolStripMenuItem.Text = "User: <none>";
+      // 
+      // SchemaToolStripMenuItem
+      // 
+      this.SchemaToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.SchemaToolStripMenuItem.Name = "SchemaToolStripMenuItem";
+      this.SchemaToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.SchemaToolStripMenuItem.Text = "Schema: <none>";
       // 
       // toolStripSeparator3
       // 
       this.toolStripSeparator3.Name = "toolStripSeparator3";
       this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
       // 
-      // userLabel
+      // ExecutionModeToolStripDropDownButton
       // 
-      this.userLabel.Name = "userLabel";
-      this.userLabel.Size = new System.Drawing.Size(79, 22);
-      this.userLabel.Text = "User: <none>";
+      this.ExecutionModeToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.BatchToolStripMenuItem,
+            this.ConsoleToolStripMenuItem});
+      this.ExecutionModeToolStripDropDownButton.Name = "ExecutionModeToolStripDropDownButton";
+      this.ExecutionModeToolStripDropDownButton.Size = new System.Drawing.Size(84, 22);
+      this.ExecutionModeToolStripDropDownButton.Text = "Batch Mode";
+      // 
+      // BatchToolStripMenuItem
+      // 
+      this.BatchToolStripMenuItem.AutoToolTip = true;
+      this.BatchToolStripMenuItem.Checked = true;
+      this.BatchToolStripMenuItem.CheckOnClick = true;
+      this.BatchToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.BatchToolStripMenuItem.Name = "BatchToolStripMenuItem";
+      this.BatchToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+      this.BatchToolStripMenuItem.Tag = MySql.Data.VisualStudio.Editors.SessionOption.UseSameSession;
+      this.BatchToolStripMenuItem.Text = "Batch Mode";
+      this.BatchToolStripMenuItem.ToolTipText = "Use this option to always run scripts in batch mode.";
+      this.BatchToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItemExecutionMode_ClickHandler);
+      // 
+      // ConsoleToolStripMenuItem
+      // 
+      this.ConsoleToolStripMenuItem.AutoToolTip = true;
+      this.ConsoleToolStripMenuItem.CheckOnClick = true;
+      this.ConsoleToolStripMenuItem.Name = "ConsoleToolStripMenuItem";
+      this.ConsoleToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+      this.ConsoleToolStripMenuItem.Tag = MySql.Data.VisualStudio.Editors.SessionOption.UseNewSession;
+      this.ConsoleToolStripMenuItem.Text = "Console Mode";
+      this.ConsoleToolStripMenuItem.ToolTipText = "Use this option to always run scripts in console session.";
+      this.ConsoleToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItemExecutionMode_ClickHandler);
       // 
       // toolStripSeparator4
       // 
       this.toolStripSeparator4.Name = "toolStripSeparator4";
       this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
       // 
-      // dbLabel
+      // SessionOptionsToolStripDropDownButton
       // 
-      this.dbLabel.Name = "dbLabel";
-      this.dbLabel.Size = new System.Drawing.Size(104, 22);
-      this.dbLabel.Text = "Database: <none>";
+      this.SessionOptionsToolStripDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.SessionOptionsToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PreserveVariablesToolStripMenuItem});
+      this.SessionOptionsToolStripDropDownButton.Name = "SessionOptionsToolStripDropDownButton";
+      this.SessionOptionsToolStripDropDownButton.Size = new System.Drawing.Size(104, 22);
+      this.SessionOptionsToolStripDropDownButton.Text = "Session Options";
       // 
-      // toolStripSeparator5
+      // PreserveVariablesToolStripMenuItem
       // 
-      this.toolStripSeparator5.Name = "toolStripSeparator5";
-      this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-      // 
-      // toolStripSplitButton
-      // 
-      this.toolStripSplitButton.DefaultItem = this.toolStripMenuItem1;
-      this.toolStripSplitButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem2});
-      this.toolStripSplitButton.Name = "toolStripSplitButton";
-      this.toolStripSplitButton.Size = new System.Drawing.Size(102, 22);
-      this.toolStripSplitButton.Text = "Session Option";
-      // 
-      // toolStripMenuItem1
-      // 
-      this.toolStripMenuItem1.AutoToolTip = true;
-      this.toolStripMenuItem1.Checked = true;
-      this.toolStripMenuItem1.CheckOnClick = true;
-      this.toolStripMenuItem1.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-      this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 22);
-      this.toolStripMenuItem1.Tag = MySql.Data.VisualStudio.Editors.SessionOption.UseSameSession;
-      this.toolStripMenuItem1.Text = "Preserve JS Variables";
-      this.toolStripMenuItem1.ToolTipText = "Use this option to always run scripts in the same session.";
-      this.toolStripMenuItem1.Click += new System.EventHandler(this.ToolStripMenuItemClickHandler);
-      // 
-      // toolStripMenuItem2
-      // 
-      this.toolStripMenuItem2.AutoToolTip = true;
-      this.toolStripMenuItem2.CheckOnClick = true;
-      this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-      this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 22);
-      this.toolStripMenuItem2.Tag = MySql.Data.VisualStudio.Editors.SessionOption.UseNewSession;
-      this.toolStripMenuItem2.Text = "Not Preserve JS Variables";
-      this.toolStripMenuItem2.ToolTipText = "Use this option to always run scripts in a new session.";
-      this.toolStripMenuItem2.Click += new System.EventHandler(this.ToolStripMenuItemClickHandler);
-      // 
-      // toolStripSeparator6
-      // 
-      this.toolStripSeparator6.Name = "toolStripSeparator6";
-      this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
-      // 
-      // tssbExecutionModeButton
-      // 
-      this.tssbExecutionModeButton.DefaultItem = this.toolStripMenuItem1;
-      this.tssbExecutionModeButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiBatchExecutionModeButton,
-            this.tsmiConsoleExecutionModeButton});
-      this.tssbExecutionModeButton.Name = "tssbExecutionModeButton";
-      this.tssbExecutionModeButton.Size = new System.Drawing.Size(54, 22);
-      this.tssbExecutionModeButton.Text = "Mode";
-      // 
-      // tsmiBatchExecutionModeButton
-      // 
-      this.tsmiBatchExecutionModeButton.AutoToolTip = true;
-      this.tsmiBatchExecutionModeButton.Checked = true;
-      this.tsmiBatchExecutionModeButton.CheckOnClick = true;
-      this.tsmiBatchExecutionModeButton.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.tsmiBatchExecutionModeButton.Name = "tsmiBatchExecutionModeButton";
-      this.tsmiBatchExecutionModeButton.Size = new System.Drawing.Size(151, 22);
-      this.tsmiBatchExecutionModeButton.Tag = MySql.Data.VisualStudio.Editors.SessionOption.UseSameSession;
-      this.tsmiBatchExecutionModeButton.Text = "Batch Mode";
-      this.tsmiBatchExecutionModeButton.ToolTipText = "Use this option to always run scripts in batch mode.";
-      this.tsmiBatchExecutionModeButton.Click += new System.EventHandler(this.ToolStripMenuItemExecutionMode_ClickHandler);
-      // 
-      // tsmiConsoleExecutionModeButton
-      // 
-      this.tsmiConsoleExecutionModeButton.AutoToolTip = true;
-      this.tsmiConsoleExecutionModeButton.CheckOnClick = true;
-      this.tsmiConsoleExecutionModeButton.Name = "tsmiConsoleExecutionModeButton";
-      this.tsmiConsoleExecutionModeButton.Size = new System.Drawing.Size(151, 22);
-      this.tsmiConsoleExecutionModeButton.Tag = MySql.Data.VisualStudio.Editors.SessionOption.UseNewSession;
-      this.tsmiConsoleExecutionModeButton.Text = "Console mode";
-      this.tsmiConsoleExecutionModeButton.ToolTipText = "Use this option to always run scripts in console session.";
-      this.tsmiConsoleExecutionModeButton.Click += new System.EventHandler(this.ToolStripMenuItemExecutionMode_ClickHandler);
+      this.PreserveVariablesToolStripMenuItem.AutoToolTip = true;
+      this.PreserveVariablesToolStripMenuItem.Checked = true;
+      this.PreserveVariablesToolStripMenuItem.CheckOnClick = true;
+      this.PreserveVariablesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.PreserveVariablesToolStripMenuItem.Name = "PreserveVariablesToolStripMenuItem";
+      this.PreserveVariablesToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+      this.PreserveVariablesToolStripMenuItem.Tag = "";
+      this.PreserveVariablesToolStripMenuItem.Text = "Preserve Variables";
+      this.PreserveVariablesToolStripMenuItem.ToolTipText = "Use this option to always run scripts in the same session.";
+      this.PreserveVariablesToolStripMenuItem.Click += new System.EventHandler(this.PreserveVariablesToolStripMenuItem_Click);
       // 
       // splitter1
       // 
@@ -261,17 +267,17 @@ namespace MySql.Data.VisualStudio.Editors
       this.splitter1.TabIndex = 3;
       this.splitter1.TabStop = false;
       // 
-      // tabControl1
+      // ResultsTabControl
       // 
-      this.tabControl1.Controls.Add(this.resultsPage);
-      this.tabControl1.Controls.Add(this.messagesPage);
-      this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tabControl1.ImageList = this.imageList1;
-      this.tabControl1.Location = new System.Drawing.Point(0, 294);
-      this.tabControl1.Name = "tabControl1";
-      this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(604, 147);
-      this.tabControl1.TabIndex = 4;
+      this.ResultsTabControl.Controls.Add(this.resultsPage);
+      this.ResultsTabControl.Controls.Add(this.messagesPage);
+      this.ResultsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ResultsTabControl.ImageList = this.imageList1;
+      this.ResultsTabControl.Location = new System.Drawing.Point(0, 294);
+      this.ResultsTabControl.Name = "ResultsTabControl";
+      this.ResultsTabControl.SelectedIndex = 0;
+      this.ResultsTabControl.Size = new System.Drawing.Size(604, 147);
+      this.ResultsTabControl.TabIndex = 4;
       // 
       // resultsPage
       // 
@@ -304,7 +310,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.messagesPage.Location = new System.Drawing.Point(4, 23);
       this.messagesPage.Name = "messagesPage";
       this.messagesPage.Padding = new System.Windows.Forms.Padding(3);
-      this.messagesPage.Size = new System.Drawing.Size(596, 140);
+      this.messagesPage.Size = new System.Drawing.Size(596, 120);
       this.messagesPage.TabIndex = 1;
       this.messagesPage.Text = "Messages";
       this.messagesPage.UseVisualStyleBackColor = true;
@@ -314,7 +320,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.messages.Dock = System.Windows.Forms.DockStyle.Fill;
       this.messages.Location = new System.Drawing.Point(3, 3);
       this.messages.Name = "messages";
-      this.messages.Size = new System.Drawing.Size(590, 134);
+      this.messages.Size = new System.Drawing.Size(590, 114);
       this.messages.TabIndex = 0;
       // 
       // imageList1
@@ -323,21 +329,21 @@ namespace MySql.Data.VisualStudio.Editors
       this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
       this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
       // 
-      // codeEditor
+      // CodeEditor
       // 
-      this.codeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.codeEditor.Dock = System.Windows.Forms.DockStyle.Top;
-      this.codeEditor.IsDirty = false;
-      this.codeEditor.Location = new System.Drawing.Point(0, 0);
-      this.codeEditor.Name = "codeEditor";
-      this.codeEditor.Size = new System.Drawing.Size(604, 291);
-      this.codeEditor.TabIndex = 2;
+      this.CodeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.CodeEditor.Dock = System.Windows.Forms.DockStyle.Top;
+      this.CodeEditor.IsDirty = false;
+      this.CodeEditor.Location = new System.Drawing.Point(0, 0);
+      this.CodeEditor.Name = "CodeEditor";
+      this.CodeEditor.Size = new System.Drawing.Size(604, 291);
+      this.CodeEditor.TabIndex = 2;
       // 
       // panel1
       // 
-      this.panel1.Controls.Add(this.tabControl1);
+      this.panel1.Controls.Add(this.ResultsTabControl);
       this.panel1.Controls.Add(this.splitter1);
-      this.panel1.Controls.Add(this.codeEditor);
+      this.panel1.Controls.Add(this.CodeEditor);
       this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.panel1.Location = new System.Drawing.Point(0, 25);
       this.panel1.Name = "panel1";
@@ -353,6 +359,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.xShellConsoleEditor1.MinimumSize = new System.Drawing.Size(0, 17);
       this.xShellConsoleEditor1.Name = "xShellConsoleEditor1";
       this.xShellConsoleEditor1.PromptColor = System.Drawing.SystemColors.ControlText;
+      this.xShellConsoleEditor1.PromptString = ">";
       this.xShellConsoleEditor1.Size = new System.Drawing.Size(604, 437);
       this.xShellConsoleEditor1.TabIndex = 0;
       this.xShellConsoleEditor1.Command += new MySql.Data.VisualStudio.Editors.XShellConsoleEditor.CommandEventHandler(this.xShellConsoleEditor1_Command);
@@ -367,7 +374,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.Size = new System.Drawing.Size(604, 466);
       this.toolStrip1.ResumeLayout(false);
       this.toolStrip1.PerformLayout();
-      this.tabControl1.ResumeLayout(false);
+      this.ResultsTabControl.ResumeLayout(false);
       this.resultsPage.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.resultsGrid)).EndInit();
       this.messagesPage.ResumeLayout(false);
@@ -380,33 +387,33 @@ namespace MySql.Data.VisualStudio.Editors
     #endregion
 
     private System.Windows.Forms.ToolStrip toolStrip1;
-    private VSCodeEditorUserControl codeEditor;
+    private VSCodeEditorUserControl CodeEditor;
     private System.Windows.Forms.Splitter splitter1;
-    private System.Windows.Forms.TabControl tabControl1;
+    private System.Windows.Forms.TabControl ResultsTabControl;
     private System.Windows.Forms.TabPage resultsPage;
     private System.Windows.Forms.TabPage messagesPage;
-    private System.Windows.Forms.ToolStripButton connectButton;
-    private System.Windows.Forms.ToolStripLabel serverLabel;
-    private System.Windows.Forms.ToolStripButton runScriptButton;
+    private System.Windows.Forms.ToolStripButton ConnectToolStripButton;
+    private System.Windows.Forms.ToolStripButton RunScriptToolStripButton;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    private System.Windows.Forms.ToolStripButton disconnectButton;
+    private System.Windows.Forms.ToolStripButton DisconnectToolStripButton;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-    private System.Windows.Forms.ToolStripLabel userLabel;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-    private System.Windows.Forms.ToolStripLabel dbLabel;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-    private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton;
-    private System.Windows.Forms.ToolStripSplitButton tssbExecutionModeButton;
     private System.Windows.Forms.DataGridView resultsGrid;
     private System.Windows.Forms.Label messages;
     private System.Windows.Forms.ImageList imageList1;
-    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-    private System.Windows.Forms.ToolStripMenuItem tsmiBatchExecutionModeButton;
-    private System.Windows.Forms.ToolStripMenuItem tsmiConsoleExecutionModeButton;
     private Panel panel1;
     private XShellConsoleEditor xShellConsoleEditor1;
+    private ToolStripSeparator toolStripSeparator4;
+    private ToolStripDropDownButton ConnectionInfoToolStripDropDownButton;
+    private ToolStripMenuItem ConnectionMethodToolStripMenuItem;
+    private ToolStripMenuItem HostIdToolStripMenuItem;
+    private ToolStripMenuItem ServerVersionToolStripMenuItem;
+    private ToolStripMenuItem UserToolStripMenuItem;
+    private ToolStripMenuItem SchemaToolStripMenuItem;
+    private ToolStripDropDownButton ExecutionModeToolStripDropDownButton;
+    private ToolStripMenuItem BatchToolStripMenuItem;
+    private ToolStripMenuItem ConsoleToolStripMenuItem;
+    private ToolStripDropDownButton SessionOptionsToolStripDropDownButton;
+    private ToolStripMenuItem PreserveVariablesToolStripMenuItem;
   }
 }

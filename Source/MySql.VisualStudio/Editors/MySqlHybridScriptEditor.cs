@@ -22,7 +22,6 @@
 
 using System;
 using System.Data;
-using System.Data.Common;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.PlatformUI;
@@ -36,6 +35,7 @@ using MySql.Data.VisualStudio.MySqlX;
 using MySqlX;
 using System.Text;
 using ConsoleTables.Core;
+using MySql.Data.VisualStudio.Properties;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -46,9 +46,29 @@ namespace MySql.Data.VisualStudio.Editors
   internal partial class MySqlHybridScriptEditor : BaseEditorControl
   {
     /// <summary>
-    /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
+    /// Constant to hold the MySqlX "Result" string type
     /// </summary>
-    internal MySqlHybridScriptEditorPane Pane { get; private set; }
+    private const string MYSQL_X_RESULT_TYPE = "mysqlx.result";
+
+    /// <summary>
+    /// Constant to hold the MySqlX "DocResult" string type
+    /// </summary>
+    private const string MYSQL_X_DOC_RESULT_TYPE = "mysqlx.docresult";
+
+    /// <summary>
+    /// Constant to hold the MySqlX "RowResult" string type
+    /// </summary>
+    private const string MYSQL_X_ROW_RESULT_TYPE = "mysqlx.rowresult";
+
+    /// <summary>
+    /// Constant to hold the MySqlX "SqlResult" string type
+    /// </summary>
+    private const string MYSQL_X_SQL_RESULT_TYPE = "mysqlx.sqlresult";
+
+    /// <summary>
+    /// Constant to hold the "System.String" string type
+    /// </summary>
+    private const string SYSTEM_STRING_TYPE = "system.string";
 
     /// <summary>
     /// Variable to store the value to know if the user wants to execute the statements in the same session or not
@@ -81,29 +101,9 @@ namespace MySql.Data.VisualStudio.Editors
     private int _tabCounter;
 
     /// <summary>
-    /// Constant to hold the MySqlX "Result" string type
+    /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
     /// </summary>
-    private const string MySqlXResultType = "mysqlx.result";
-
-    /// <summary>
-    /// Constant to hold the MySqlX "DocResult" string type
-    /// </summary>
-    private const string MySqlXDocResultType = "mysqlx.docresult";
-
-    /// <summary>
-    /// Constant to hold the MySqlX "RowResult" string type
-    /// </summary>
-    private const string MySqlXRowResultType = "mysqlx.rowresult";
-
-    /// <summary>
-    /// Constant to hold the MySqlX "SqlResult" string type
-    /// </summary>
-    private const string MySqlXSqlResultType = "mysqlx.sqlresult";
-
-    /// <summary>
-    /// Constant to hold the "System.String" string type
-    /// </summary>
-    private const string SystemStringType = "system.string";
+    internal MySqlHybridScriptEditorPane Pane { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
@@ -112,15 +112,15 @@ namespace MySql.Data.VisualStudio.Editors
     public MySqlHybridScriptEditor()
     {
       InitializeComponent();
-      factory = MySqlClientFactory.Instance;
-      if (factory == null)
+      Factory = MySqlClientFactory.Instance;
+      if (Factory == null)
       {
         throw new Exception("MySql Data Provider is not correctly registered");
       }
 
-      tabControl1.TabPages.Clear();
+      ResultsTabControl.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      tabControl1.Visible = false;
+      ResultsTabControl.Visible = false;
       ScriptType = ScriptType.JavaScript;
       SetXShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
@@ -164,22 +164,22 @@ namespace MySql.Data.VisualStudio.Editors
       ScriptType = scriptType;
       SetXShellConsoleEditorPromptString();
       Pane = pane;
-      serviceProvider = sp;
-      codeEditor.Init(sp, this);
+      ServiceProvider = sp;
+      CodeEditor.Init(sp, this);
       var package = MySqlDataProviderPackage.Instance;
-      if (package != null)
+      if (package == null || package.SelectedMySqlConnection == null)
       {
-        if (package.MysqlConnectionSelected != null)
-        {
-          connection = package.MysqlConnectionSelected;
-          if (connection.State != ConnectionState.Open)
-          {
-            connection.Open();
-          }
-
-          UpdateButtons();
-        }
+        return;
       }
+
+      Connection = package.SelectedMySqlConnection;
+      ConnectionChanged = false;
+      if (Connection.State != ConnectionState.Open)
+      {
+        Connection.Open();
+      }
+
+      UpdateButtons();
     }
 
     #region Overrides
@@ -193,14 +193,14 @@ namespace MySql.Data.VisualStudio.Editors
       switch (ScriptType)
       {
         case ScriptType.Sql:
-          return "MySql Script Files (*.mysql)\n*.mysql\n\n";
+          return "MySQL SQL Files (*.mysql)\n*.mysql\n\n";
         case ScriptType.JavaScript:
-          return "MyJs Script Files (*.myjs)\n*.myjs\n\n";
+          return "MySQL JavaScript Files (*.myjs)\n*.myjs\n\n";
         case ScriptType.Python:
-          return "MyPy Script Files (*.mypy)\n*.mypy\n\n";
-        default:
-          return "MyJs Script Files (*.myjs)\n*.myjs\n\n";
+          return "MySQL Python Files (*.mypy)\n*.mypy\n\n";
       }
+
+      return string.Empty;
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       using (StreamWriter writer = new StreamWriter(newFileName, false))
       {
-        writer.Write(codeEditor.Text);
+        writer.Write(CodeEditor.Text);
       }
     }
 
@@ -234,7 +234,7 @@ namespace MySql.Data.VisualStudio.Editors
       using (StreamReader reader = new StreamReader(newFileName))
       {
         string sql = reader.ReadToEnd();
-        codeEditor.Text = sql;
+        CodeEditor.Text = sql;
       }
     }
 
@@ -243,8 +243,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     protected override bool IsDirty
     {
-      get { return codeEditor.IsDirty; }
-      set { codeEditor.IsDirty = value; }
+      get { return CodeEditor.IsDirty; }
+      set { CodeEditor.IsDirty = value; }
     }
 
     #endregion
@@ -257,24 +257,24 @@ namespace MySql.Data.VisualStudio.Editors
     private void connectButton_Click(object sender, EventArgs e)
     {
       resultsPage.Hide();
-      ConnectDialog d = new ConnectDialog();
-      d.Connection = Connection;
-      DialogResult r = d.ShowDialog();
-      if (r == DialogResult.Cancel) return;
       try
       {
-        connection = d.Connection;
-        UpdateButtons();
+        using (var connectDialog = new ConnectDialog())
+        {
+          connectDialog.Connection = Connection;
+          DialogResult r = connectDialog.ShowDialog();
+          if (r == DialogResult.Cancel)
+          {
+            return;
+          }
+        
+          Connection = connectDialog.Connection;
+          UpdateButtons();
+        }
       }
       catch (MySqlException)
       {
-        MessageBox.Show(
-@"Error establishing the database Connection.
-Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
-      }
-      finally
-      {
-        d.Dispose();
+        MessageBox.Show(Resources.MySqlHybridScriptEditor_NewConnectionError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
       }
     }
 
@@ -285,10 +285,10 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void runScriptButton_Click(object sender, EventArgs e)
     {
-      string script = codeEditor.Text.Trim();
-      tabControl1.TabPages.Clear();
+      string script = CodeEditor.Text.Trim();
+      ResultsTabControl.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      tabControl1.Visible = false;
+      ResultsTabControl.Visible = false;
       ExecuteScript(script);
       StoreCurrentDatabase();
     }
@@ -326,12 +326,12 @@ Check that the server is running, the database exist and the user credentials ar
           case SessionOption.UseSameSession:
             if (_xShellWrapper == null)
             {
-              _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), true, ScriptType);
+              _xShellWrapper = new MySqlXProxy(((MySqlConnection)Connection).ToXFormat(), true, ScriptType);
             }
 
             break;
           case SessionOption.UseNewSession:
-            _xShellWrapper = new MySqlXProxy(((MySqlConnection)connection).ToXFormat(), false, ScriptType);
+            _xShellWrapper = new MySqlXProxy(((MySqlConnection)Connection).ToXFormat(), false, ScriptType);
             break;
         }
 
@@ -385,8 +385,8 @@ Check that the server is running, the database exist and the user credentials ar
       {
         PrintResult(statements[statementIndex], result.Result, result.ExecutionTime);
         statementIndex++;
-        tabControl1.Visible = tabControl1.TabPages.Count > 0;
-        codeEditor.Focus();
+        ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
+        CodeEditor.Focus();
       }
     }
 
@@ -429,19 +429,19 @@ Check that the server is running, the database exist and the user credentials ar
       string type = executionResult.GetType().ToString().ToLowerInvariant();
       switch (type)
       {
-        case MySqlXResultType:
+        case MYSQL_X_RESULT_TYPE:
           PrintResult(script, (Result)executionResult, duration);
           break;
-        case MySqlXDocResultType:
+        case MYSQL_X_DOC_RESULT_TYPE:
           PrintDocResult(script, (DocResult)executionResult, _executionModeOption, duration);
           break;
-        case MySqlXRowResultType:
+        case MYSQL_X_ROW_RESULT_TYPE:
           PrintRowResult(script, (RowResult)executionResult, _executionModeOption, duration);
           break;
-        case MySqlXSqlResultType:
+        case MYSQL_X_SQL_RESULT_TYPE:
           PrintSqlResult(script, (SqlResult)executionResult, _executionModeOption, duration);
           break;
-        case SystemStringType:
+        case SYSTEM_STRING_TYPE:
           if (string.IsNullOrEmpty(executionResult.ToString()))
           {
             return;
@@ -635,7 +635,7 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
     private void PrintSqlResult(string script, SqlResult result, ExecutionModeOption executionMode, string duration)
     {
-      if ((bool)result.HasData())
+      if (result.HasData())
       {
         PrintRowResult(script, result, executionMode, duration, result.GetAffectedRowCount());
       }
@@ -662,7 +662,7 @@ Check that the server is running, the database exist and the user credentials ar
       resultViews.Dock = DockStyle.Fill;
       resultViews.LoadData(data);
       newResPage.Controls.Add(resultViews);
-      tabControl1.TabPages.Add(newResPage);
+      ResultsTabControl.TabPages.Add(newResPage);
     }
 
     /// <summary>
@@ -682,7 +682,7 @@ Check that the server is running, the database exist and the user credentials ar
       resultViews.Dock = DockStyle.Fill;
       resultViews.LoadData(data);
       newResPage.Controls.Add(resultViews);
-      tabControl1.TabPages.Add(newResPage);
+      ResultsTabControl.TabPages.Add(newResPage);
     }
 
     /// <summary>
@@ -697,22 +697,36 @@ Check that the server is running, the database exist and the user credentials ar
     }
 
     /// <summary>
-    /// Updates the buttons.
+    /// Updates the toolbar buttons.
     /// </summary>
     private void UpdateButtons()
     {
       bool connected = Connection.State == ConnectionState.Open;
-      runScriptButton.Enabled = connected;
-      disconnectButton.Enabled = connected;
-      connectButton.Enabled = !connected;
-      serverLabel.Text = String.Format("Server: {0}",
-          connected ? Connection.ServerVersion : "<none>");
-      DbConnectionStringBuilder builder = factory.CreateConnectionStringBuilder();
-      builder.ConnectionString = Connection.ConnectionString;
-      userLabel.Text = String.Format("User: {0}",
-          connected ? builder["userid"] as string : "<none>");
-      dbLabel.Text = String.Format("Database: {0}",
-          connected ? Connection.Database : "<none>");
+      RunScriptToolStripButton.Enabled = connected;
+      DisconnectToolStripButton.Enabled = connected;
+      ConnectToolStripButton.Enabled = !connected;
+      var relatedWbConnection = MySqlDataProviderPackage.Instance.SelectedMySqlWorkbenchConnection;
+      var connectionStringBuilder = new MySqlConnectionStringBuilder(Connection.ConnectionString);
+      ConnectionInfoToolStripDropDownButton.Text = connected
+        ? (!ConnectionChanged ? MySqlDataProviderPackage.Instance.SelectedMySqlConnectionName : UNTITLED_CONNECTION)
+        : NONE_TEXT;
+      ConnectionMethodToolStripMenuItem.Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
+        connected 
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
+          : NONE_TEXT);
+      HostIdToolStripMenuItem.Text = string.Format(HOST_ID_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.HostIdentifier : connectionStringBuilder.GetHostIdentifier())
+          : NONE_TEXT);
+      ServerVersionToolStripMenuItem.Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
+      UserToolStripMenuItem.Text = string.Format(USER_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged &&  relatedWbConnection != null ? relatedWbConnection.UserName : connectionStringBuilder.UserID)
+          : NONE_TEXT);
+      SchemaToolStripMenuItem.Text = string.Format(SCHEMA_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.Schema : connectionStringBuilder.Database)
+          : NONE_TEXT);
     }
 
     /// <summary>
@@ -720,19 +734,19 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     /// <param name="sender">Sender that calls the event (item clicked)</param>
     /// <param name="e">Event arguments</param>
-    private void ToolStripMenuItemClickHandler(object sender, EventArgs e)
+    private void PreserveVariablesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
-      _sessionOption = (SessionOption)clickedItem.Tag;
+      var clickedItem = sender as ToolStripMenuItem;
+      if (clickedItem == null)
+      {
+        return;
+      }
+
+      _sessionOption = clickedItem.Checked ? SessionOption.UseSameSession : SessionOption.UseNewSession;
       if (_xShellWrapper != null)
       {
         _xShellWrapper.CleanConnection();
         _xShellWrapper = null;
-      }
-
-      foreach (ToolStripMenuItem item in toolStripSplitButton.DropDownItems)
-      {
-        item.Checked = item.Name == clickedItem.Name;
       }
     }
 
@@ -743,10 +757,16 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="e">Event arguments</param>
     private void ToolStripMenuItemExecutionMode_ClickHandler(object sender, EventArgs e)
     {
-      ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+      var clickedItem = sender as ToolStripMenuItem;
+      if (clickedItem == null)
+      {
+        return;
+      }
+
+      ExecutionModeToolStripDropDownButton.Text = clickedItem.Text;
       _executionModeOption = (ExecutionModeOption)clickedItem.Tag;
       ToggleEditors(_executionModeOption);
-      foreach (ToolStripMenuItem item in tssbExecutionModeButton.DropDownItems)
+      foreach (ToolStripMenuItem item in ExecutionModeToolStripDropDownButton.DropDownItems)
       {
         item.Checked = item.Name == clickedItem.Name;
       }
@@ -764,24 +784,24 @@ Check that the server is running, the database exist and the user credentials ar
         if (executionMode == ExecutionModeOption.BatchMode)
         {
           panel1.Controls.Remove(xShellConsoleEditor1);
-          panel1.Controls.Add(tabControl1);
+          panel1.Controls.Add(ResultsTabControl);
           panel1.Controls.Add(splitter1);
           // Register the code editor, to add back its handles and events
-          codeEditor.RegisterEditor();
-          panel1.Controls.Add(codeEditor);
-          runScriptButton.Enabled = true;
-          codeEditor.Focus();
+          CodeEditor.RegisterEditor();
+          panel1.Controls.Add(CodeEditor);
+          RunScriptToolStripButton.Enabled = true;
+          CodeEditor.Focus();
         }
         else
         {
-          panel1.Controls.Remove(tabControl1);
+          panel1.Controls.Remove(ResultsTabControl);
           panel1.Controls.Remove(splitter1);
           // Unregister the code editor, to remove its handles and events
-          codeEditor.UnregisterEditor();
-          panel1.Controls.Remove(codeEditor);
+          CodeEditor.UnregisterEditor();
+          panel1.Controls.Remove(CodeEditor);
           xShellConsoleEditor1.Dock = DockStyle.Fill;
           panel1.Controls.Add(xShellConsoleEditor1);
-          runScriptButton.Enabled = false;
+          RunScriptToolStripButton.Enabled = false;
           xShellConsoleEditor1.Focus();
         }
       }
@@ -822,7 +842,6 @@ Check that the server is running, the database exist and the user credentials ar
           xShellConsoleEditor1.PromptString = "mysql-py>";
           break;
         case ScriptType.JavaScript:
-        default:
           xShellConsoleEditor1.PromptString = "mysql-js>";
           break;
       }
@@ -846,9 +865,9 @@ Check that the server is running, the database exist and the user credentials ar
           _xShellWrapper.CleanConnection();
         }
 
-        if (connection.State != ConnectionState.Closed)
+        if (Connection.State != ConnectionState.Closed)
         {
-          connection.Close();
+          Connection.Close();
         }
       }
 

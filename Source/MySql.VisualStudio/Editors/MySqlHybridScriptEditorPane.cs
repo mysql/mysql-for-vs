@@ -54,6 +54,7 @@ namespace MySql.Data.VisualStudio.Editors
       {
         package.CloseMySqlOutputWindow();
       }
+
       base.OnClose();
     }
   }

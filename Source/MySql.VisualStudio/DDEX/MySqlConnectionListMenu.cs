@@ -88,7 +88,7 @@ namespace MySql.Data.VisualStudio.DDEX
           {
             if (connection != null)
             {
-              MySqlDataProviderPackage.Instance.MysqlConnectionSelected = connection;
+              MySqlDataProviderPackage.Instance.SelectedMySqlConnection = connection;
             }
 
             var itemOp = MySqlDataProviderPackage.Instance.GetDTE2().ItemOperations;

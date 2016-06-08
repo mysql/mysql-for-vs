@@ -22,12 +22,7 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
@@ -41,15 +36,75 @@ namespace MySql.Data.VisualStudio.Editors
 {
   public class BaseEditorControl : UserControl, IVsPersistDocData, IPersistFileFormat
   {
-    private bool savingFile;
-    protected ServiceProvider serviceProvider;
-    protected string fileName;
+    /// <summary>
+    /// Text for inexisting values.
+    /// </summary>
+    public const string NONE_TEXT = "<none>";
 
-    protected DbConnection connection;
-    internal DbConnection Connection { get { return connection; } }
-    protected DbProviderFactory factory;
+    /// <summary>
+    /// Text for untitled connections.
+    /// </summary>
+    public const string UNTITLED_CONNECTION = "Untitled Connection";
 
-    protected bool[] _isColBlob = null;
+    /// <summary>
+    /// Text for displaying the connection's method/protocol.
+    /// </summary>
+    public const string CONNECTION_METHOD_FORMAT_TEXT = "Connection Method: {0}";
+
+    /// <summary>
+    /// Text for displaying the connection's host identifier.
+    /// </summary>
+    public const string HOST_ID_FORMAT_TEXT = "Host ID: {0}";
+
+    /// <summary>
+    /// Text for displaying the connected server version.
+    /// </summary>
+    public const string SERVER_VERSION_FORMAT_TEXT = "Server Version: {0}";
+
+    /// <summary>
+    /// Text for displaying the user name used in the connection.
+    /// </summary>
+    public const string USER_FORMAT_TEXT = "User: {0}";
+
+    /// <summary>
+    /// Text for displaying the connected schema.
+    /// </summary>
+    public const string SCHEMA_FORMAT_TEXT = "Schema: {0}";
+
+    /// <summary>
+    /// The connection used for the editor.
+    /// </summary>
+    private DbConnection _connection;
+
+    private bool _savingFile;
+    protected ServiceProvider ServiceProvider;
+    protected string FileName;
+
+    /// <summary>
+    /// Gets a value indicating whether the connection has changed.
+    /// </summary>
+    public bool ConnectionChanged { get; protected set; }
+
+    /// <summary>
+    /// Gets the connection used for the editor.
+    /// </summary>
+    public DbConnection Connection
+    {
+      get
+      {
+        return _connection;
+      }
+
+      protected set
+      {
+        _connection = value;
+        ConnectionChanged = true;
+      }
+    }
+
+    protected DbProviderFactory Factory;
+
+    protected bool[] IsColBlob = null;
     internal string CurrentDatabase = null;
 
     #region IVsPersistDocData Members
@@ -92,7 +147,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     int IVsPersistDocData.RenameDocData(uint grfAttribs, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
     {
-      fileName = pszMkDocumentNew;
+      FileName = pszMkDocumentNew;
       return VSConstants.S_OK;
     }
 
@@ -100,8 +155,8 @@ namespace MySql.Data.VisualStudio.Editors
     {
       uint result;
       IVsQueryEditQuerySave2 querySave =
-        (IVsQueryEditQuerySave2)serviceProvider.GetService(typeof(SVsQueryEditQuerySave));
-      int hr = querySave.QuerySaveFile(fileName, 0, null, out result);
+        (IVsQueryEditQuerySave2)ServiceProvider.GetService(typeof(SVsQueryEditQuerySave));
+      int hr = querySave.QuerySaveFile(FileName, 0, null, out result);
       qsResult = (tagVSQuerySaveResult)result;
       return hr;
     }
@@ -112,7 +167,7 @@ namespace MySql.Data.VisualStudio.Editors
       pfSaveCanceled = 0;
       int hr;
 
-      IVsUIShell uiShell = (IVsUIShell)serviceProvider.GetService(typeof(IVsUIShell));
+      IVsUIShell uiShell = (IVsUIShell)ServiceProvider.GetService(typeof(IVsUIShell));
 
       switch (dwSave)
       {
@@ -127,13 +182,13 @@ namespace MySql.Data.VisualStudio.Editors
               pfSaveCanceled = ~0;
             else if (qsResult == tagVSQuerySaveResult.QSR_SaveOK)
             {
-              hr = uiShell.SaveDocDataToFile(dwSave, this, fileName,
+              hr = uiShell.SaveDocDataToFile(dwSave, this, FileName,
                   out pbstrMkDocumentNew, out pfSaveCanceled);
               if (ErrorHandler.Failed(hr)) return hr;
             }
             else if (qsResult == tagVSQuerySaveResult.QSR_ForceSaveAs)
             {
-              hr = uiShell.SaveDocDataToFile(VSSAVEFLAGS.VSSAVE_SaveAs, this, fileName,
+              hr = uiShell.SaveDocDataToFile(VSSAVEFLAGS.VSSAVE_SaveAs, this, FileName,
                   out pbstrMkDocumentNew, out pfSaveCanceled);
               if (ErrorHandler.Failed(hr)) return hr;
             }
@@ -144,12 +199,12 @@ namespace MySql.Data.VisualStudio.Editors
         case VSSAVEFLAGS.VSSAVE_SaveCopyAs:
           {
             // --- Make sure the file name as the right extension
-            if (String.Compare(".mysql", Path.GetExtension(fileName), true,
+            if (String.Compare(".mysql", Path.GetExtension(FileName), true,
               CultureInfo.CurrentCulture) != 0)
-              fileName += ".mysql";
+              FileName += ".mysql";
 
             // --- Call the shell to do the save for us
-            hr = uiShell.SaveDocDataToFile(dwSave, this, fileName,
+            hr = uiShell.SaveDocDataToFile(dwSave, this, FileName,
               out pbstrMkDocumentNew, out pfSaveCanceled);
             if (ErrorHandler.Failed(hr)) return hr;
             break;
@@ -162,7 +217,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     int IVsPersistDocData.SetUntitledDocPath(string pszDocDataPath)
     {
-      fileName = pszDocDataPath;
+      FileName = pszDocDataPath;
       return VSConstants.S_OK;
     }
 
@@ -177,7 +232,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     int IPersistFileFormat.GetCurFile(out string ppszFilename, out uint pnFormatIndex)
     {
-      ppszFilename = fileName;
+      ppszFilename = FileName;
       pnFormatIndex = 0;
       return VSConstants.S_OK;
     }
@@ -202,7 +257,7 @@ namespace MySql.Data.VisualStudio.Editors
     int IPersistFileFormat.Load(string pszFilename, uint grfMode, int fReadOnly)
     {
       // --- A valid file name is required.
-      if ((pszFilename == null) && ((fileName == null) || (fileName.Length == 0)))
+      if ((pszFilename == null) && ((FileName == null) || (FileName.Length == 0)))
         throw new ArgumentNullException("pszFilename");
 
       int hr = VSConstants.S_OK;
@@ -217,10 +272,10 @@ namespace MySql.Data.VisualStudio.Editors
         // --- Set the new file name
         if (!isReload)
         {
-          fileName = pszFilename;
+          FileName = pszFilename;
         }
         // --- Load the file
-        LoadFile(fileName);
+        LoadFile(FileName);
         IsDirty = false;
         // --- Notify the load or reload
         //NotifyDocChanged();
@@ -234,13 +289,13 @@ namespace MySql.Data.VisualStudio.Editors
     int IPersistFileFormat.Save(string pszFilename, int fRemember, uint nFormatIndex)
     {
       // --- switch into the NoScribble mode
-      savingFile = true;
+      _savingFile = true;
       try
       {
         // --- If file is null or same --> SAVE
-        if (pszFilename == null || pszFilename == fileName)
+        if (pszFilename == null || pszFilename == FileName)
         {
-          SaveFile(fileName);
+          SaveFile(FileName);
           IsDirty = false;
         }
         else
@@ -248,8 +303,8 @@ namespace MySql.Data.VisualStudio.Editors
           // --- If remember --> SaveAs
           if (fRemember != 0)
           {
-            fileName = pszFilename;
-            SaveFile(fileName);
+            FileName = pszFilename;
+            SaveFile(FileName);
             IsDirty = false;
           }
           else // --- Else, Save a Copy As
@@ -261,14 +316,14 @@ namespace MySql.Data.VisualStudio.Editors
       finally
       {
         // --- Switch into the Normal mode
-        savingFile = false;
+        _savingFile = false;
       }
       return VSConstants.S_OK;
     }
 
     int IPersistFileFormat.SaveCompleted(string pszFilename)
     {
-      if (savingFile)
+      if (_savingFile)
         return VSConstants.S_FALSE;
       return VSConstants.S_OK;
     }
@@ -283,11 +338,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     #endregion
-
-    protected override void Dispose(bool disposing)
-    {
-      base.Dispose(disposing);
-    }
 
     #region Virtuals
 

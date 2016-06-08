@@ -22,7 +22,6 @@
 
 using System;
 using System.Data;
-using System.Data.Common;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.PlatformUI;
@@ -30,6 +29,7 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Properties;
+using MySQL.Utility.Classes;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -51,14 +51,14 @@ namespace MySql.Data.VisualStudio.Editors
     public SqlEditor()
     {
       InitializeComponent();
-      factory = MySqlClientFactory.Instance;
-      if (factory == null)
+      Factory = MySqlClientFactory.Instance;
+      if (Factory == null)
       {
         throw new Exception("MySql Data Provider is not correctly registered");
       }
-      tabControl1.TabPages.Clear();
+      ResultsTabControl.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      tabControl1.Visible = false;
+      ResultsTabControl.Visible = false;
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -92,20 +92,23 @@ namespace MySql.Data.VisualStudio.Editors
       : this()
     {
       Pane = pane;
-      serviceProvider = sp;
-      codeEditor.Init(sp, this);
+      ServiceProvider = sp;
+      CodeEditor.Init(sp, this);
 
       var package = MySqlDataProviderPackage.Instance;
-      if (package != null)
+      if (package == null || package.SelectedMySqlConnection != null)
       {
-        if (package.MysqlConnectionSelected != null)
-        {
-          connection = package.MysqlConnectionSelected;
-          if (connection.State != ConnectionState.Open)
-            connection.Open();
-          UpdateButtons();
-        }
+        return;
       }
+
+      Connection = package.SelectedMySqlConnection;
+      ConnectionChanged = false;
+      if (Connection != null && Connection.State != ConnectionState.Open)
+      {
+        Connection.Open();
+      }
+
+      UpdateButtons();
     }
 
     #region Overrides
@@ -135,7 +138,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       using (StreamWriter writer = new StreamWriter(newFileName, false))
       {
-        writer.Write(codeEditor.Text);
+        writer.Write(CodeEditor.Text);
       }
     }
 
@@ -149,7 +152,7 @@ namespace MySql.Data.VisualStudio.Editors
       using (StreamReader reader = new StreamReader(newFileName))
       {
         string sql = reader.ReadToEnd();
-        codeEditor.Text = sql;
+        CodeEditor.Text = sql;
       }
     }
 
@@ -161,8 +164,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// </value>
     protected override bool IsDirty
     {
-      get { return codeEditor.IsDirty; }
-      set { codeEditor.IsDirty = value; }
+      get { return CodeEditor.IsDirty; }
+      set { CodeEditor.IsDirty = value; }
     }
 
     #endregion
@@ -175,24 +178,20 @@ namespace MySql.Data.VisualStudio.Editors
     private void connectButton_Click(object sender, EventArgs e)
     {
       resultsPage.Hide();
-      ConnectDialog d = new ConnectDialog();
-      d.Connection = connection;
-      DialogResult r = d.ShowDialog();
-      if (r == DialogResult.Cancel) return;
-      try
+      using (var d = new ConnectDialog())
       {
-        connection = d.Connection;
-        UpdateButtons();
-      }
-      catch (MySqlException)
-      {
-        MessageBox.Show(
-@"Error establishing the database connection.
-Check that the server is running, the database exist and the user credentials are valid.", Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-      }
-      finally
-      {
-        d.Dispose();
+        d.Connection = Connection;
+        DialogResult r = d.ShowDialog();
+        if (r == DialogResult.Cancel) return;
+        try
+        {
+          Connection = d.Connection;
+          UpdateButtons();
+        }
+        catch (MySqlException)
+        {
+          MessageBox.Show(Resources.MySqlHybridScriptEditor_NewConnectionError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+        }
       }
     }
 
@@ -203,15 +202,15 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void runSqlButton_Click(object sender, EventArgs e)
     {
-      string sql = codeEditor.Text.Trim();
-      tabControl1.TabPages.Clear();
+      string sql = CodeEditor.Text.Trim();
+      ResultsTabControl.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      tabControl1.Visible = false;
+      ResultsTabControl.Visible = false;
       string[] sqlStmt = sql.BreakSqlStatements().ToArray();
       int ctr = 1;
       for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
       {
-        bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)connection);
+        bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)Connection);
         if (isResultSet)
         {
           ExecuteSelect(sqlStmt[sqlIdx], ctr);
@@ -231,7 +230,7 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     private void StoreCurrentDatabase()
     {
-      MySqlConnection con = (MySqlConnection)connection;
+      MySqlConnection con = (MySqlConnection)Connection;
       MySqlCommand cmd = new MySqlCommand("select database();", con);
       object val = cmd.ExecuteScalar();
       if (val is DBNull) CurrentDatabase = "";
@@ -255,10 +254,10 @@ Check that the server is running, the database exist and the user credentials ar
         TabPage newResPage = Utils.CreateResultPage(counter);
         DetailedResultsetView detailedData = new DetailedResultsetView();
         detailedData.Dock = DockStyle.Fill;
-        detailedData.SetQuery((MySqlConnection)connection, sql);
+        detailedData.SetQuery((MySqlConnection)Connection, sql);
         newResPage.Controls.Add(detailedData);
-        tabControl1.TabPages.Add(newResPage);
-        tabControl1.Visible = true;
+        ResultsTabControl.TabPages.Add(newResPage);
+        ResultsTabControl.Visible = true;
       }
       catch (Exception ex)
       {
@@ -274,8 +273,8 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     private void SanitizeBlobs()
     {
-      DataGridViewColumnCollection coll = resultsGrid.Columns;
-      _isColBlob = new bool[coll.Count];
+      DataGridViewColumnCollection coll = ResultsDataGridView.Columns;
+      IsColBlob = new bool[coll.Count];
       for (int i = 0; i < coll.Count; i++)
       {
         DataGridViewColumn col = coll[i];
@@ -288,7 +287,7 @@ Check that the server is running, the database exist and the user credentials ar
           ReadOnly = true
         });
         coll.Remove(col);
-        _isColBlob[i] = true;
+        IsColBlob[i] = true;
       }
     }
 
@@ -300,7 +299,7 @@ Check that the server is running, the database exist and the user credentials ar
     private void resultsGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
       if (e.ColumnIndex == -1) return;
-      if (_isColBlob[e.ColumnIndex])
+      if (IsColBlob[e.ColumnIndex])
       {
         if (e.Value == null || e.Value is DBNull)
           e.Value = "<NULL>";
@@ -320,7 +319,7 @@ Check that the server is running, the database exist and the user credentials ar
         return;
       }
 
-      MySqlScript script = new MySqlScript((MySqlConnection)connection, sql);
+      MySqlScript script = new MySqlScript((MySqlConnection)Connection, sql);
       try
       {
         int rows = script.Execute();
@@ -339,7 +338,7 @@ Check that the server is running, the database exist and the user credentials ar
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void disconnectButton_Click(object sender, EventArgs e)
     {
-      connection.Close();
+      Connection.Close();
       UpdateButtons();
     }
 
@@ -348,18 +347,32 @@ Check that the server is running, the database exist and the user credentials ar
     /// </summary>
     private void UpdateButtons()
     {
-      bool connected = connection.State == ConnectionState.Open;
-      runSqlButton.Enabled = connected;
-      disconnectButton.Enabled = connected;
-      connectButton.Enabled = !connected;
-      serverLabel.Text = String.Format("Server: {0}",
-          connected ? connection.ServerVersion : "<none>");
-      DbConnectionStringBuilder builder = factory.CreateConnectionStringBuilder();
-      builder.ConnectionString = connection.ConnectionString;
-      userLabel.Text = String.Format("User: {0}",
-          connected ? builder["userid"] as string : "<none>");
-      dbLabel.Text = String.Format("Database: {0}",
-          connected ? connection.Database : "<none>");
+      bool connected = Connection.State == ConnectionState.Open;
+      RunSqlToolStripButton.Enabled = connected;
+      DisconnectToolStripButton.Enabled = connected;
+      ConnectToolStripButton.Enabled = !connected;
+      var relatedWbConnection = MySqlDataProviderPackage.Instance.SelectedMySqlWorkbenchConnection;
+      var connectionStringBuilder = new MySqlConnectionStringBuilder(Connection.ConnectionString);
+      ConnectionInfoToolStripDropDownButton.Text = connected
+        ? (!ConnectionChanged ? MySqlDataProviderPackage.Instance.SelectedMySqlConnectionName : UNTITLED_CONNECTION)
+        : NONE_TEXT;
+      ConnectionMethodToolStripMenuItem.Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
+          : NONE_TEXT);
+      HostIdToolStripMenuItem.Text = string.Format(HOST_ID_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.HostIdentifier : connectionStringBuilder.GetHostIdentifier())
+          : NONE_TEXT);
+      ServerVersionToolStripMenuItem.Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
+      UserToolStripMenuItem.Text = string.Format(USER_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.UserName : connectionStringBuilder.UserID)
+          : NONE_TEXT);
+      SchemaToolStripMenuItem.Text = string.Format(SCHEMA_FORMAT_TEXT,
+        connected
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.Schema : connectionStringBuilder.Database)
+          : NONE_TEXT);
     }
   }
 }

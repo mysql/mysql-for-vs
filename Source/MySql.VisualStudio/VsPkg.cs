@@ -44,9 +44,11 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.Data;
 using MySQL.Utility.Classes.MySQL;
 using MySQL.Utility.Forms;
 using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
+using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
 
 namespace MySql.Data.VisualStudio
 {
@@ -74,17 +76,17 @@ namespace MySql.Data.VisualStudio
   [InstalledProductRegistration(true, null, null, null)]
   [ProvideEditorFactory(typeof(SqlEditorFactory), 200,
       TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
-  [ProvideEditorExtension(typeof(SqlEditorFactory), ".mysql", 32,
+  [ProvideEditorExtension(typeof(SqlEditorFactory), SQL_EXTENSION, 32,
       ProjectGuid = "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}",
       TemplateDir = @"..\..\Templates",
       NameResourceID = 105,
       DefaultName = "MySQL SQL Editor")]
-  [ProvideEditorExtension(typeof(SqlEditorFactory), ".myjs", 32,
+  [ProvideEditorExtension(typeof(SqlEditorFactory), JAVASCRIPT_EXTENSION, 32,
       ProjectGuid = "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}",
       TemplateDir = @"..\..\Templates",
       NameResourceID = 114,
-      DefaultName = "MySQL Javascript Editor")]
-  [ProvideEditorExtension(typeof(SqlEditorFactory), ".mypy", 32,
+      DefaultName = "MySQL JavaScript Editor")]
+  [ProvideEditorExtension(typeof(SqlEditorFactory), PYTHON_EXTENSION, 32,
       ProjectGuid = "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}",
       TemplateDir = @"..\..\Templates",
       NameResourceID = 115,
@@ -105,10 +107,48 @@ namespace MySql.Data.VisualStudio
   [Guid(GuidStrings.PACKAGE)]
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
   {
-    private string _appDataPath;
-    public static MySqlDataProviderPackage Instance;
-    public MySqlConnection MysqlConnectionSelected;
     private const string MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE = "MYSQLCONNECTOR_ASSEMBLIESPATH";
+
+    private string _appDataPath;
+    private MySqlConnection _selectedMySqlConnection;
+    private MySqlWorkbenchConnection _selectedMySqlWorkbenchConnection;
+    public static MySqlDataProviderPackage Instance;
+
+    public MySqlConnection SelectedMySqlConnection
+    {
+      get
+      {
+        return _selectedMySqlConnection;
+      }
+
+      set
+      {
+        _selectedMySqlConnection = value;
+        _selectedMySqlWorkbenchConnection = null;
+      }
+    }
+
+    public MySqlWorkbenchConnection SelectedMySqlWorkbenchConnection
+    {
+      get
+      {
+        // Try first to retrieve a related Workbench connection using the connection name
+        if (_selectedMySqlWorkbenchConnection == null)
+        {
+          _selectedMySqlWorkbenchConnection = MySqlWorkbench.Connections.GetConnectionForName(SelectedMySqlConnectionName);
+        }
+
+        // In case connection names do not match, try to retrieve a related Workbench connection by its exact connection string, for example if a user renamed the connection
+        if (_selectedMySqlWorkbenchConnection == null)
+        {
+          _selectedMySqlWorkbenchConnection = MySqlWorkbench.Connections.GetConnectionFromMySqlConnection(SelectedMySqlConnection, true);
+        }
+
+        return _selectedMySqlWorkbenchConnection;
+      }
+    }
+
+    public string SelectedMySqlConnectionName { get; private set; }
 
     /// <summary>
     /// Variable used to hold how many MySqlOutputWindow objects have been created
@@ -119,10 +159,12 @@ namespace MySql.Data.VisualStudio
     /// The Sql extension
     /// </summary>
     public const string SQL_EXTENSION = ".mysql";
+
     /// <summary>
     /// The JavaScrip extension
     /// </summary>
     public const string JAVASCRIPT_EXTENSION = ".myjs";
+
     /// <summary>
     /// The Python extension
     /// </summary>
@@ -247,7 +289,7 @@ namespace MySql.Data.VisualStudio
 
         CommandID cmdMySqlOutputWindowTool = new CommandID(GuidList.GuidMySqlOutputWindowsCmdSet, (int)PkgCmdIDList.MySqlOutputWindowCommandId);
         OleMenuCommand cmdMenuMySqlOutputWindow = new OleMenuCommand(MySqlOutputWindow_Callback, cmdMySqlOutputWindowTool);
-        cmdMenuMySqlOutputWindow.BeforeQueryStatus += new EventHandler(cmdMenuMySqlOutputWindow_BeforeQueryStatus);
+        cmdMenuMySqlOutputWindow.BeforeQueryStatus += cmdMenuMySqlOutputWindow_BeforeQueryStatus;
         mcs.AddCommand(cmdMenuMySqlOutputWindow);
       }
 
@@ -295,11 +337,8 @@ namespace MySql.Data.VisualStudio
 
     private void NewScriptCallback(object sender, EventArgs e)
     {
-      var connection = GetCurrentConnection();
-      if (connection == null) return;
-
-      //Set the selected connection so when the editor window is open it can work with.
-      MysqlConnectionSelected = connection;
+      // Set the selected connection so when the editor window is open it can work with.
+      GetCurrentConnection();
     }
 
     private void cmdMenuNewScript_BeforeQueryStatus(object sender, EventArgs e)
@@ -388,13 +427,14 @@ namespace MySql.Data.VisualStudio
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void NewJavascriptCallback(object sender, EventArgs e)
     {
+      // Set the selected connection so when the editor window is open it can work with.
       var connection = GetCurrentConnection();
-      if (connection == null) return;
+      if (connection == null)
+      {
+        return;
+      }
 
-      //Set the selected connection so when the editor window is open it can work with.
-      MysqlConnectionSelected = connection;
-
-      //Create New JavaScript file and open the editor with it.
+      // Create New JavaScript file and open the editor with it.
       CreateNewScript(ScriptType.JavaScript);
     }
 
@@ -477,16 +517,14 @@ namespace MySql.Data.VisualStudio
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void NewPythonScriptCallback(object sender, EventArgs e)
     {
+      // Set the selected connection so when the editor window is open it can work with.
       var connection = GetCurrentConnection();
       if (connection == null)
       {
         return;
       }
 
-      //Set the selected connection so when the editor window is open it can work with.
-      MysqlConnectionSelected = connection;
-
-      //Create New PythonScript file and open the editor with it.
+      // Create New PythonScript file and open the editor with it.
       CreateNewScript(ScriptType.Python);
     }
 
@@ -776,13 +814,14 @@ namespace MySql.Data.VisualStudio
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void NewMySqlScriptCallback(object sender, EventArgs e)
     {
+      // Set the selected connection so when the editor window is open it can work with.
       var connection = GetCurrentConnection();
-      if (connection == null) return;
+      if (connection == null)
+      {
+        return;
+      }
 
-      //Set the selected connection so when the editor window is open it can work with.
-      MysqlConnectionSelected = connection;
-
-      //Create New SQL Script file and open the editor with it.
+      // Create New SQL Script file and open the editor with it.
       CreateNewScript(ScriptType.Sql);
     }
 
@@ -851,11 +890,11 @@ namespace MySql.Data.VisualStudio
       if (r == DialogResult.Cancel) return;
       try
       {
-        MysqlConnectionSelected = (MySqlConnection)d.Connection;
+        SelectedMySqlConnection = (MySqlConnection)d.Connection;
         DTE env = (DTE)GetService(typeof(DTE));
         var sp = new ServiceProvider((IOleServiceProvider)env);
         IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
-        seConnectionsMgr.AddConnection(string.Format("{0}({1})", MysqlConnectionSelected.DataSource, MysqlConnectionSelected.Database), GuidList.Provider, MysqlConnectionSelected.ConnectionString, false);
+        seConnectionsMgr.AddConnection(string.Format("{0}({1})", SelectedMySqlConnection.DataSource, SelectedMySqlConnection.Database), GuidList.Provider, SelectedMySqlConnection.ConnectionString, false);
         ItemOperations itemOp = env.ItemOperations;
         itemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
       }
@@ -865,7 +904,7 @@ namespace MySql.Data.VisualStudio
         return;
       }
 
-      MysqlConnectionSelected = null;
+      SelectedMySqlConnection = null;
     }
 
     public string GetCurrentConnectionName()
@@ -873,7 +912,10 @@ namespace MySql.Data.VisualStudio
       EnvDTE80.DTE2 applicationObject = GetDTE2();
       UIHierarchy uih = applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
       var selectedItems = uih != null ? uih.SelectedItems as Array : null;
-      return selectedItems != null ? ((UIHierarchyItem)selectedItems.GetValue(0)).Name : string.Empty;
+      SelectedMySqlConnectionName = selectedItems != null
+        ? ((UIHierarchyItem)selectedItems.GetValue(0)).Name
+        : string.Empty;
+      return SelectedMySqlConnectionName;
     }
 
     private MySqlConnection GetCurrentConnection()
@@ -881,7 +923,8 @@ namespace MySql.Data.VisualStudio
       IVsDataExplorerConnection con = GetConnection(GetCurrentConnectionName());
       var connection = con.Connection.GetLockedProviderObject() as MySqlConnection;
       con.Connection.UnlockProviderObject();
-      return connection;
+      SelectedMySqlConnection = connection;
+      return SelectedMySqlConnection;
     }
 
     internal EnvDTE80.DTE2 GetDTE2()

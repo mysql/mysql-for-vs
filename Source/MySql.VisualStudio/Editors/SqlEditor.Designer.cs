@@ -33,28 +33,29 @@ namespace MySql.Data.VisualStudio.Editors
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SqlEditor));
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-      this.connectButton = new System.Windows.Forms.ToolStripButton();
-      this.disconnectButton = new System.Windows.Forms.ToolStripButton();
+      this.ConnectToolStripButton = new System.Windows.Forms.ToolStripButton();
+      this.DisconnectToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-      this.runSqlButton = new System.Windows.Forms.ToolStripButton();
+      this.RunSqlToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-      this.serverLabel = new System.Windows.Forms.ToolStripLabel();
-      this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-      this.userLabel = new System.Windows.Forms.ToolStripLabel();
-      this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-      this.dbLabel = new System.Windows.Forms.ToolStripLabel();
       this.splitter1 = new System.Windows.Forms.Splitter();
-      this.tabControl1 = new System.Windows.Forms.TabControl();
+      this.ResultsTabControl = new System.Windows.Forms.TabControl();
       this.resultsPage = new System.Windows.Forms.TabPage();
-      this.resultsGrid = new System.Windows.Forms.DataGridView();
+      this.ResultsDataGridView = new System.Windows.Forms.DataGridView();
       this.messagesPage = new System.Windows.Forms.TabPage();
       this.messages = new System.Windows.Forms.Label();
       this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-      this.codeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
+      this.CodeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
+      this.ConnectionInfoToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      this.ConnectionMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.HostIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.ServerVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.UserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.SchemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStrip1.SuspendLayout();
-      this.tabControl1.SuspendLayout();
+      this.ResultsTabControl.SuspendLayout();
       this.resultsPage.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.resultsGrid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.ResultsDataGridView)).BeginInit();
       this.messagesPage.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -62,16 +63,12 @@ namespace MySql.Data.VisualStudio.Editors
       // 
       this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectButton,
-            this.disconnectButton,
+            this.ConnectToolStripButton,
+            this.DisconnectToolStripButton,
             this.toolStripSeparator1,
-            this.runSqlButton,
+            this.RunSqlToolStripButton,
             this.toolStripSeparator2,
-            this.serverLabel,
-            this.toolStripSeparator3,
-            this.userLabel,
-            this.toolStripSeparator4,
-            this.dbLabel});
+            this.ConnectionInfoToolStripDropDownButton});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -79,77 +76,49 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStrip1.TabIndex = 1;
       this.toolStrip1.Text = "toolStrip1";
       // 
-      // connectButton
+      // ConnectToolStripButton
       // 
-      this.connectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.connectButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_connect;
-      this.connectButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.connectButton.Name = "connectButton";
-      this.connectButton.Size = new System.Drawing.Size(23, 22);
-      this.connectButton.Text = "connectButton";
-      this.connectButton.ToolTipText = "Connect to MySQL...";
-      this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
+      this.ConnectToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.ConnectToolStripButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_connect;
+      this.ConnectToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.ConnectToolStripButton.Name = "ConnectToolStripButton";
+      this.ConnectToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.ConnectToolStripButton.Text = "connectButton";
+      this.ConnectToolStripButton.ToolTipText = "Connect to MySQL...";
+      this.ConnectToolStripButton.Click += new System.EventHandler(this.connectButton_Click);
       // 
-      // disconnectButton
+      // DisconnectToolStripButton
       // 
-      this.disconnectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.disconnectButton.Enabled = false;
-      this.disconnectButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_disconnect;
-      this.disconnectButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.disconnectButton.Name = "disconnectButton";
-      this.disconnectButton.Size = new System.Drawing.Size(23, 22);
-      this.disconnectButton.Text = "Disconnect from MySQL";
-      this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
+      this.DisconnectToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.DisconnectToolStripButton.Enabled = false;
+      this.DisconnectToolStripButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_disconnect;
+      this.DisconnectToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.DisconnectToolStripButton.Name = "DisconnectToolStripButton";
+      this.DisconnectToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.DisconnectToolStripButton.Text = "Disconnect from MySQL";
+      this.DisconnectToolStripButton.Click += new System.EventHandler(this.disconnectButton_Click);
       // 
       // toolStripSeparator1
       // 
       this.toolStripSeparator1.Name = "toolStripSeparator1";
       this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
       // 
-      // runSqlButton
+      // RunSqlToolStripButton
       // 
-      this.runSqlButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.runSqlButton.Enabled = false;
-      this.runSqlButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
-      this.runSqlButton.ImageTransparentColor = System.Drawing.Color.Transparent;
-      this.runSqlButton.Name = "runSqlButton";
-      this.runSqlButton.Size = new System.Drawing.Size(23, 22);
-      this.runSqlButton.Text = "runSqlButton";
-      this.runSqlButton.ToolTipText = "Run SQL";
-      this.runSqlButton.Click += new System.EventHandler(this.runSqlButton_Click);
+      this.RunSqlToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.RunSqlToolStripButton.Enabled = false;
+      this.RunSqlToolStripButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
+      this.RunSqlToolStripButton.ImageTransparentColor = System.Drawing.Color.Transparent;
+      this.RunSqlToolStripButton.Name = "RunSqlToolStripButton";
+      this.RunSqlToolStripButton.Size = new System.Drawing.Size(23, 22);
+      this.RunSqlToolStripButton.Text = "runSqlButton";
+      this.RunSqlToolStripButton.ToolTipText = "Run SQL";
+      this.RunSqlToolStripButton.Click += new System.EventHandler(this.runSqlButton_Click);
       // 
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
       this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-      // 
-      // serverLabel
-      // 
-      this.serverLabel.Name = "serverLabel";
-      this.serverLabel.Size = new System.Drawing.Size(88, 22);
-      this.serverLabel.Text = "Server: <none>";
-      // 
-      // toolStripSeparator3
-      // 
-      this.toolStripSeparator3.Name = "toolStripSeparator3";
-      this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-      // 
-      // userLabel
-      // 
-      this.userLabel.Name = "userLabel";
-      this.userLabel.Size = new System.Drawing.Size(79, 22);
-      this.userLabel.Text = "User: <none>";
-      // 
-      // toolStripSeparator4
-      // 
-      this.toolStripSeparator4.Name = "toolStripSeparator4";
-      this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-      // 
-      // dbLabel
-      // 
-      this.dbLabel.Name = "dbLabel";
-      this.dbLabel.Size = new System.Drawing.Size(104, 22);
-      this.dbLabel.Text = "Database: <none>";
       // 
       // splitter1
       // 
@@ -160,22 +129,22 @@ namespace MySql.Data.VisualStudio.Editors
       this.splitter1.TabIndex = 3;
       this.splitter1.TabStop = false;
       // 
-      // tabControl1
+      // ResultsTabControl
       // 
-      this.tabControl1.Controls.Add(this.resultsPage);
-      this.tabControl1.Controls.Add(this.messagesPage);
-      this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tabControl1.ImageList = this.imageList1;
-      this.tabControl1.Location = new System.Drawing.Point(0, 281);
-      this.tabControl1.Name = "tabControl1";
-      this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(604, 185);
-      this.tabControl1.TabIndex = 4;
-      this.tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+      this.ResultsTabControl.Controls.Add(this.resultsPage);
+      this.ResultsTabControl.Controls.Add(this.messagesPage);
+      this.ResultsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ResultsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+      this.ResultsTabControl.ImageList = this.imageList1;
+      this.ResultsTabControl.Location = new System.Drawing.Point(0, 281);
+      this.ResultsTabControl.Name = "ResultsTabControl";
+      this.ResultsTabControl.SelectedIndex = 0;
+      this.ResultsTabControl.Size = new System.Drawing.Size(604, 185);
+      this.ResultsTabControl.TabIndex = 4;
       // 
       // resultsPage
-      //
-      this.resultsPage.Controls.Add(this.resultsGrid);
+      // 
+      this.resultsPage.Controls.Add(this.ResultsDataGridView);
       this.resultsPage.ImageIndex = 1;
       this.resultsPage.Location = new System.Drawing.Point(4, 23);
       this.resultsPage.Name = "resultsPage";
@@ -185,17 +154,17 @@ namespace MySql.Data.VisualStudio.Editors
       this.resultsPage.Text = "Results";
       this.resultsPage.UseVisualStyleBackColor = true;
       // 
-      // resultsGrid
+      // ResultsDataGridView
       // 
-      this.resultsGrid.AllowUserToAddRows = false;
-      this.resultsGrid.AllowUserToDeleteRows = false;
-      this.resultsGrid.BackgroundColor = System.Drawing.SystemColors.Window;
-      this.resultsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.resultsGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.resultsGrid.Location = new System.Drawing.Point(3, 3);
-      this.resultsGrid.Name = "resultsGrid";
-      this.resultsGrid.Size = new System.Drawing.Size(590, 152);
-      this.resultsGrid.TabIndex = 0;
+      this.ResultsDataGridView.AllowUserToAddRows = false;
+      this.ResultsDataGridView.AllowUserToDeleteRows = false;
+      this.ResultsDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
+      this.ResultsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.ResultsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ResultsDataGridView.Location = new System.Drawing.Point(3, 3);
+      this.ResultsDataGridView.Name = "ResultsDataGridView";
+      this.ResultsDataGridView.Size = new System.Drawing.Size(590, 152);
+      this.ResultsDataGridView.TabIndex = 0;
       // 
       // messagesPage
       // 
@@ -224,30 +193,81 @@ namespace MySql.Data.VisualStudio.Editors
       this.imageList1.Images.SetKeyName(0, "messages_icon.png");
       this.imageList1.Images.SetKeyName(1, "results_icon.png");
       // 
-      // codeEditor
+      // CodeEditor
       // 
-      this.codeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.codeEditor.Dock = System.Windows.Forms.DockStyle.Top;
-      this.codeEditor.Location = new System.Drawing.Point(0, 25);
-      this.codeEditor.Name = "codeEditor";
-      this.codeEditor.Size = new System.Drawing.Size(604, 246);
-      this.codeEditor.TabIndex = 2;
+      this.CodeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.CodeEditor.Dock = System.Windows.Forms.DockStyle.Top;
+      this.CodeEditor.IsDirty = false;
+      this.CodeEditor.Location = new System.Drawing.Point(0, 25);
+      this.CodeEditor.Name = "CodeEditor";
+      this.CodeEditor.Size = new System.Drawing.Size(604, 246);
+      this.CodeEditor.TabIndex = 2;
+      // 
+      // ConnectionInfoToolStripDropDownButton
+      // 
+      this.ConnectionInfoToolStripDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ConnectionInfoToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ConnectionMethodToolStripMenuItem,
+            this.HostIdToolStripMenuItem,
+            this.ServerVersionToolStripMenuItem,
+            this.UserToolStripMenuItem,
+            this.SchemaToolStripMenuItem});
+      this.ConnectionInfoToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ConnectionInfoToolStripDropDownButton.Image")));
+      this.ConnectionInfoToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.ConnectionInfoToolStripDropDownButton.Name = "ConnectionInfoToolStripDropDownButton";
+      this.ConnectionInfoToolStripDropDownButton.Size = new System.Drawing.Size(91, 22);
+      this.ConnectionInfoToolStripDropDownButton.Text = "Connection...";
+      // 
+      // ConnectionMethodToolStripMenuItem
+      // 
+      this.ConnectionMethodToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ConnectionMethodToolStripMenuItem.Name = "ConnectionMethodToolStripMenuItem";
+      this.ConnectionMethodToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.ConnectionMethodToolStripMenuItem.Text = "Connection Method: <none>";
+      // 
+      // HostIdToolStripMenuItem
+      // 
+      this.HostIdToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.HostIdToolStripMenuItem.Name = "HostIdToolStripMenuItem";
+      this.HostIdToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.HostIdToolStripMenuItem.Text = "Host ID: <none>";
+      // 
+      // ServerVersionToolStripMenuItem
+      // 
+      this.ServerVersionToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ServerVersionToolStripMenuItem.Name = "ServerVersionToolStripMenuItem";
+      this.ServerVersionToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.ServerVersionToolStripMenuItem.Text = "Server Version: <none>";
+      // 
+      // UserToolStripMenuItem
+      // 
+      this.UserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.UserToolStripMenuItem.Name = "UserToolStripMenuItem";
+      this.UserToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.UserToolStripMenuItem.Text = "User: <none>";
+      // 
+      // SchemaToolStripMenuItem
+      // 
+      this.SchemaToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.SchemaToolStripMenuItem.Name = "SchemaToolStripMenuItem";
+      this.SchemaToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.SchemaToolStripMenuItem.Text = "Schema: <none>";
       // 
       // SqlEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.tabControl1);
+      this.Controls.Add(this.ResultsTabControl);
       this.Controls.Add(this.splitter1);
-      this.Controls.Add(this.codeEditor);
+      this.Controls.Add(this.CodeEditor);
       this.Controls.Add(this.toolStrip1);
       this.Name = "SqlEditor";
       this.Size = new System.Drawing.Size(604, 466);
       this.toolStrip1.ResumeLayout(false);
       this.toolStrip1.PerformLayout();
-      this.tabControl1.ResumeLayout(false);
+      this.ResultsTabControl.ResumeLayout(false);
       this.resultsPage.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.resultsGrid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.ResultsDataGridView)).EndInit();
       this.messagesPage.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
@@ -257,24 +277,24 @@ namespace MySql.Data.VisualStudio.Editors
     #endregion
 
     private System.Windows.Forms.ToolStrip toolStrip1;
-    private VSCodeEditorUserControl codeEditor;
+    private VSCodeEditorUserControl CodeEditor;
     private System.Windows.Forms.Splitter splitter1;
-    private System.Windows.Forms.TabControl tabControl1;
+    private System.Windows.Forms.TabControl ResultsTabControl;
     private System.Windows.Forms.TabPage resultsPage;
     private System.Windows.Forms.TabPage messagesPage;
-    private System.Windows.Forms.ToolStripButton connectButton;
-    private System.Windows.Forms.ToolStripLabel serverLabel;
-    private System.Windows.Forms.ToolStripButton runSqlButton;
+    private System.Windows.Forms.ToolStripButton ConnectToolStripButton;
+    private System.Windows.Forms.ToolStripButton RunSqlToolStripButton;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    private System.Windows.Forms.ToolStripButton disconnectButton;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-    private System.Windows.Forms.ToolStripLabel userLabel;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-    private System.Windows.Forms.ToolStripLabel dbLabel;
-    private System.Windows.Forms.DataGridView resultsGrid;
+    private System.Windows.Forms.ToolStripButton DisconnectToolStripButton;
+    private System.Windows.Forms.DataGridView ResultsDataGridView;
     private System.Windows.Forms.Label messages;
     private System.Windows.Forms.ImageList imageList1;
-
+    private ToolStripDropDownButton ConnectionInfoToolStripDropDownButton;
+    private ToolStripMenuItem ConnectionMethodToolStripMenuItem;
+    private ToolStripMenuItem HostIdToolStripMenuItem;
+    private ToolStripMenuItem ServerVersionToolStripMenuItem;
+    private ToolStripMenuItem UserToolStripMenuItem;
+    private ToolStripMenuItem SchemaToolStripMenuItem;
   }
 }

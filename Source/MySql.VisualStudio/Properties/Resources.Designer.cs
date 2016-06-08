@@ -3190,6 +3190,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error establishing the database Connection.
+        ///Check that the server is running, the database exist and the user credentials are valid..
+        /// </summary>
+        public static string MySqlHybridScriptEditor_NewConnectionError {
+            get {
+                return ResourceManager.GetString("MySqlHybridScriptEditor_NewConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MySQL Output.
         /// </summary>
         public static string MySqlOutputToolCaptionFrame {
