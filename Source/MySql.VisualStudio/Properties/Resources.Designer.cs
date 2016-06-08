@@ -370,6 +370,16 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Connection_Fabric_disabled {
+            get {
+                object obj = ResourceManager.GetObject("Connection_Fabric_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Connection_Socket_32x32 {
             get {
                 object obj = ResourceManager.GetObject("Connection_Socket_32x32", resourceCulture);

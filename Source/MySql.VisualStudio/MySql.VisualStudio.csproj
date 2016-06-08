@@ -1487,6 +1487,7 @@
     <None Include="Resources\Connection-TCP-32x32.png" />
     <None Include="Resources\Connection-X-32x32.png" />
     <None Include="Resources\list-view.png" />
+    <None Include="Resources\Connection-Fabric-disabled.png" />
     <Content Include="Resources\ConnectionsManager_16x16.bmp" />
     <Content Include="Resources\icon-black.bmp" />
     <Content Include="Resources\MySQL.png" />

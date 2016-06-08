@@ -253,7 +253,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       // 
       this.ConnectionTypesImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ConnectionTypesImageList.ImageStream")));
       this.ConnectionTypesImageList.TransparentColor = System.Drawing.Color.Transparent;
-      this.ConnectionTypesImageList.Images.SetKeyName(0, "Connection-Fabric.png");
+      this.ConnectionTypesImageList.Images.SetKeyName(0, "Connection-Fabric-disabled.png");
       this.ConnectionTypesImageList.Images.SetKeyName(1, "Connection-Socket-32x32.png");
       this.ConnectionTypesImageList.Images.SetKeyName(2, "Connection-SSH.png");
       this.ConnectionTypesImageList.Images.SetKeyName(3, "Connection-TCP-32x32.png");

@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Data.Services;
@@ -89,6 +90,24 @@ namespace MySql.Data.VisualStudio.MySqlX
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MySqlWorkbenchConnection SelectedWorkbenchConnection { get; private set; }
 
+    /// <summary>
+    /// Gets a value indicating whether there is a selected connection and is valid (i.e. it is not a Fabric Managed one).
+    /// </summary>
+    private bool IsSelectedConnectionValid
+    {
+      get
+      {
+        if (WorkbenchConnectionsListView.SelectedItems.Count == 0)
+        {
+          return false;
+        }
+
+        var selectedListViewItem = WorkbenchConnectionsListView.SelectedItems[0];
+        var selectedWorkbenchConnection = selectedListViewItem.Tag as MySqlWorkbenchConnection;
+        return selectedWorkbenchConnection != null && !selectedWorkbenchConnection.IsFabricManaged;
+      }
+    }
+
     #endregion Properties
 
     /// <summary>
@@ -119,13 +138,14 @@ namespace MySql.Data.VisualStudio.MySqlX
     {
      var similarFound = CheckIfSimilarConnectionExistsInServerExplorer(workbenchConnection);
       var newItem = new ListViewItem(new[]
-      {
-        workbenchConnection.Name,
-        workbenchConnection.HostIdentifier,
-        workbenchConnection.ConnectionMethod.GetDescription()
-      }, GetConnetionImageIndexFromType(workbenchConnection),
+        {
+          workbenchConnection.Name,
+          workbenchConnection.HostIdentifier,
+          workbenchConnection.ConnectionMethod.GetDescription()
+        }, GetConnetionImageIndexFromType(workbenchConnection),
         WorkbenchConnectionsListView.Groups[similarFound ? 1 : 0]);
 
+      newItem.ForeColor = workbenchConnection.IsFabricManaged ? SystemColors.InactiveCaption : SystemColors.WindowText;
       newItem.Tag = workbenchConnection;
       WorkbenchConnectionsListView.Items.Add(newItem);
     }
@@ -440,6 +460,11 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// <param name="e">Event arguments.</param>
     private void WorkbenchConnectionsListView_DoubleClick(object sender, EventArgs e)
     {
+      if (!IsSelectedConnectionValid)
+      {
+        return;
+      }
+
       DialogOKButton.PerformClick();
     }
 
@@ -450,7 +475,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// <param name="e">Event arguments.</param>
     private void WorkbenchConnectionsListView_SelectedIndexChanged(object sender, EventArgs e)
     {
-      DialogOKButton.Enabled = WorkbenchConnectionsListView.SelectedItems.Count > 0;
+      DialogOKButton.Enabled = IsSelectedConnectionValid;
     }
   }
 }
