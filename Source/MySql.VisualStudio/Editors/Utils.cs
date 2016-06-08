@@ -907,21 +907,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>Connection string with the format "user:pass@server:port"</returns>
     public static string ToXFormat(this MySqlConnection connection)
     {
-      var connProp = new MySqlConnectionProperties();
-      connProp.ConnectionStringBuilder.ConnectionString = connection.ConnectionString;
-      string user = connProp["User Id"] as string;
-      string pass = connProp["Password"] as string;
-      string server = connProp["server"] as string;
+      var connStrBuilder = new MySqlConnectionStringBuilder(connection.ConnectionString);
+      string user = connStrBuilder.UserID;
+      string pass = connStrBuilder.Password;
+      string server = connStrBuilder.Server;
 
-      //TODO: currently the Shell gets connected to the server using the port 33060 and there is no way to specify other port
-      //so we'll use the 33060 port by default until we have support to specify it
-      //UInt32 port = 33060; //assign the default port
-      //verify if the user is not using the default port, if not then extract the value
-      //object givenPort = connProp["Port"];
-      //if (givenPort != null)
-      //{
-      //  port = (UInt32)givenPort;
-      //}
 
       var xPort = connection.FetchXProtocolPort();
       if (xPort == -1)
@@ -929,7 +919,34 @@ namespace MySql.Data.VisualStudio.Editors
         throw new Exception("Unable to extract the X Protocol port from connected Server.");
       }
 
-      return string.Format("{0}:{1}@{2}:{3}", user, pass, server, xPort);
+      if (connStrBuilder.SslMode == MySqlSslMode.None)
+      {
+        return string.Format("{0}:{1}@{2}:{3}", user, pass, server, xPort);
+      }
+
+      StringBuilder xConecction = new StringBuilder();
+      bool sslPameterAdded = false;
+      xConecction.AppendFormat("{0}:{1}@{2}:{3}", user, pass, server, xPort);
+      if (!string.IsNullOrEmpty(connStrBuilder.SslCertificationAuthorityFile))
+      {
+        xConecction.AppendFormat("?ssl_ca={0}", connStrBuilder.SslCertificationAuthorityFile);
+        sslPameterAdded = true;
+      }
+
+      if (!string.IsNullOrEmpty(connStrBuilder.SslClientCertificateFile))
+      {
+        var sslCert = !sslPameterAdded ? string.Format("?ssl_cert={0}", connStrBuilder.SslClientCertificateFile) : string.Format("&ssl_cert={0}", connStrBuilder.SslClientCertificateFile);
+        xConecction.Append(sslCert);
+        sslPameterAdded = true;
+      }
+
+      if (!string.IsNullOrEmpty(connStrBuilder.SslKeyFile))
+      {
+        var sslKey = !sslPameterAdded ? string.Format("?ssl_key={0}", connStrBuilder.SslKeyFile) : string.Format("&ssl_key={0}", connStrBuilder.SslKeyFile);
+        xConecction.Append(sslKey);
+      }
+
+      return xConecction.ToString();
     }
 
     /// <summary>
