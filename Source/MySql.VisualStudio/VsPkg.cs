@@ -922,8 +922,14 @@ namespace MySql.Data.VisualStudio
     {
       IVsDataExplorerConnection con = GetConnection(GetCurrentConnectionName());
       var connection = con.Connection.GetLockedProviderObject() as MySqlConnection;
+      if (connection == null)
+      {
+        con.Connection.UnlockProviderObject();
+        return null;
+      }
+
+      SelectedMySqlConnection = new MySqlConnection(connection.ConnectionString);
       con.Connection.UnlockProviderObject();
-      SelectedMySqlConnection = connection;
       return SelectedMySqlConnection;
     }
 
