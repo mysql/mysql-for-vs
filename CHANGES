@@ -1,10 +1,18 @@
 2.0.3
-- Fixed the error being thrown when executing xShell javascript queries that involves the use of the "mysqlx"
-  module, because the module "mysqlx" for javascript cannot be imported (MySql Bug #81052, Oracle bug #23091964).
-- Fixing the unit tests related to the X Protocol.
-- Improve the implementation of the XShell wrapper, adding a error handling mechanism that shows the error message
-  in the output window and displaying a more detailed information about the execution results
-  (rows returned affected, execution time, etc).
+- Fixed the error being thrown when executing JavaScript queries on MySQL X Protocol connections that involve the use of the
+  "mysqlx" module, because the module "mysqlx" for JavaScript cannot be imported. (MySql Bug #81052, Oracle bug #23091964).
+- Improved the handling of errors, warnings and execution stats output of MySQL X DevAPI statements, all messages are properly
+  handled and displayed after batch or console execution.
+- Added a new “MySQL Output” pane to display MySQL X DevAPI execution results information, like execution success and times.
+- Added "Console Mode" support for JavaScript and Python script editors.  In this mode query execution mimics the way the
+  MySQL Shell works, meaning MySQL X DevAPI statements are executed after hitting <ENTER> and results are displayed inline.
+- Added a new “MySQL Connections Manager” that enables the sharing of stored MySQL connections with MySQL Workbench if
+  It’s installed. MySQL connections are displayed in a friendly way and can be created and edited from within the 
+  “MySQL Connections Manager” dialog, and these can be imported to Visual Studio’s Server Explorer to be used in Visual Studio.
+- Added SSL support for MySQL connections that use the MySQL X Protocol. SSL support works with PEM files, so SSL connections
+  need to be created through the “MySQL Connections Manager” or MySQL Workbench.  Please refer to the official documentation
+  for more information.
+- Added support for new MySQL X DevAPI functions: parseUri(), isOpen().
 
 
 2.0.2
@@ -24,8 +32,10 @@
 - Added a new Editor to handle Javascript files.
 - Added a new option to create new MyJs scripts directly from Server Explorer.
 - Move info messages from "Messages" Tab in the current Query Editor to the VS output Window.
-- Added a Workbench-like vertical menu to the current Query Editor which will be shown with script results to switch between the following views: Result Set, Field Types, Query Stats and Execution Plan.
-- Added new information panes to the current Query Editor that are going to be displayed in the result set area: Field Types, Query Stats and Execution Plan.
+- Added a Workbench-like vertical menu to the current Query Editor which will be shown with script results to switch between 
+  the following views: Result Set, Field Types, Query Stats and Execution Plan.
+- Added new information panes to the current Query Editor that are going to be displayed in the result set area: 
+  Field Types, Query Stats and Execution Plan.
 - Added the support to handle multiple result sets in the current Query Editor.
 - Fix controls color to match default provided VS Themes (Dark, Blue and Light).
 - Support added for MySQLX protocol, included in MySQL Server 5.7.8.

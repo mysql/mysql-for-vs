@@ -1,7 +1,36 @@
-﻿MySQL for Visual Studio 2.0.2 Milestone 1 Release Notes
+﻿MySQL for Visual Studio 2.0.3 Release Notes
+------------------------------------
+Welcome to the release notes for MySQL for Visual Studio 2.0.3.
+This is the second preview release in the 2.0 series, and is not feature complete, has limitations, and should not be used 
+in a production environment.
+
+* Improved the handling of errors, warnings and execution stats output of MySQL X DevAPI statements, all messages are properly
+  handled and displayed after batch or console execution.
+* Added a new “MySQL Output” pane to display MySQL X DevAPI execution results information, like execution success and times.
+* Added "Console Mode" support for JavaScript and Python script editors.  In this mode query execution mimics the way the
+  MySQL Shell works, meaning MySQL X DevAPI statements are executed after hitting <ENTER> and results are displayed inline.
+* Added a new “MySQL Connections Manager” that enables the sharing of stored MySQL connections with MySQL Workbench if
+  It’s installed. MySQL connections are displayed in a friendly way and can be created and edited from within the 
+  “MySQL Connections Manager” dialog, and these can be imported to Visual Studio’s Server Explorer to be used in Visual Studio.
+* Added SSL support for MySQL connections that use the MySQL X Protocol. SSL support works with PEM files, so SSL connections
+  need to be created through the “MySQL Connections Manager” or MySQL Workbench.  Please refer to the official documentation
+  for more information.
+* Added support for new MySQL X DevAPI functions: parseUri(), isOpen().
+
+Known Issues
+--------------------
+* Some features do not work with SSL connections where the "PEM" certificates have been specified, such as Entity Framework, 
+  Query Designer and the MySQL SQL Script editor. If SSL is to be used with these features connections must only specify 
+  PFX information and not PEM parameters.
+
+
+
+
+MySQL for Visual Studio 2.0.2 Milestone 1 Release Notes
 ------------------------------------
 Welcome to the release notes for MySQL for Visual Studio 2.0.2 Milestone 1.
-This is the first preview release in the 2.0 series released to the public.
+This is the first preview release in the 2.0 series released to the public, and is not feature complete, has limitations, 
+and should not be used in a production environment.
 
 * Fixed the MySQL X support for all Visual Studio versions supported by MySQL for Visual Studio (2010 and newer).
 * Added support for Visual Studio 2015 with .NET Framework 4.6.
@@ -18,7 +47,8 @@ Known Issues
 MySQL for Visual Studio 2.0.1 (Not released, Internal) Release Notes
 ------------------------------------
 Welcome to the release notes for MySQL for Visual Studio 2.0.1 Internal Release.
-This is an internal development release not released to the public.
+This is an internal development release not released to the public, and is not feature complete, has limitations, 
+and should not be used in a production environment.
 
 * Added support for Python scripts. Python code can now be executed and can interact with the X DevAPI introduced
   in MySQL 5.7, where relational and document data can be queried.  Python support works in a very similar way
@@ -39,7 +69,8 @@ Known Issues
 MySQL for Visual Studio 2.0.0 (Not released, Internal) Release Notes
 ------------------------------------
 Welcome to the release notes for MySQL for Visual Studio 2.0.0 Internal Release.
-This is an internal development release not released to the public.
+This is an internal development release not released to the public, and is not feature complete, has limitations, 
+and should not be used in a production environment.
 
 * Added an option to create MySQL scripts directly from a MySQL Server instance lying in the Server Explorer.
   This makes the creation of scripts more intuitive and there is no need to open a connection for each created
