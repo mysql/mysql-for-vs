@@ -773,8 +773,8 @@ namespace MySql.Data.VisualStudio
       // Attempt to migrate external connections to MySQL Workbench
       MySqlWorkbench.MigrateExternalConnectionsToWorkbench();
 
-      IVsDataExplorerConnection relatedServerExplorerConnection = null;
-      MySqlWorkbenchConnection selectedMySqlWorkbenchConnection = null;
+      IVsDataExplorerConnection relatedServerExplorerConnection;
+      MySqlWorkbenchConnection selectedMySqlWorkbenchConnection;
       using (var connectionsManagerDialog = new MySqlX.MySqlConnectionsManagerDialog())
       {
         if (connectionsManagerDialog.ShowDialog() != DialogResult.OK)
@@ -791,20 +791,52 @@ namespace MySql.Data.VisualStudio
         return;
       }
 
-      var connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
-      if (connectionManager == null)
-      {
-        return;
-      }
-
       string newConnectionName = selectedMySqlWorkbenchConnection.Name;
       if (selectedMySqlWorkbenchConnection.Existing)
       {
         newConnectionName = relatedServerExplorerConnection.DisplayName;
-        connectionManager.RemoveConnection(relatedServerExplorerConnection);
+      }
+      else
+      {
+        relatedServerExplorerConnection = null;
       }
 
-      connectionManager.AddConnection(newConnectionName, GuidList.Provider, selectedMySqlWorkbenchConnection.ConnectionString, false);
+      AddServerExplorerConnection(newConnectionName, selectedMySqlWorkbenchConnection.ConnectionString, relatedServerExplorerConnection);
+    }
+
+    /// <summary>
+    /// Adds a new MySQL connection to the Server Explorer.
+    /// </summary>
+    /// <param name="connectionName">The name of the connection being added.</param>
+    /// <param name="connectionString">The connection string of the connection being added.</param>
+    /// <param name="removeConnectionBeforeAdd">A <see cref="IVsDataExplorerConnection"/> to remove before adding a new one.</param>
+    /// <returns>A <see cref="IVsDataExplorerConnection"/> correspnding to the connection added to the Server Explorer.</returns>
+    private IVsDataExplorerConnection AddServerExplorerConnection(string connectionName, string connectionString, IVsDataExplorerConnection removeConnectionBeforeAdd = null)
+    {
+      if (string.IsNullOrEmpty(connectionString))
+      {
+        return null;
+      }
+
+      var env = (DTE)GetService(typeof(DTE));
+      var mySqlServiceProvider = new ServiceProvider((IOleServiceProvider)env);
+      var connectionManager = mySqlServiceProvider.GetService(typeof(IVsDataExplorerConnectionManager).GUID) as IVsDataExplorerConnectionManager;
+      if (connectionManager == null)
+      {
+        return null;
+      }
+
+      if (removeConnectionBeforeAdd != null)
+      {
+        connectionManager.RemoveConnection(removeConnectionBeforeAdd);
+      }
+
+      if (string.IsNullOrEmpty(connectionName))
+      {
+        connectionName = BaseEditorControl.UNTITLED_CONNECTION;
+      }
+
+      return connectionManager.AddConnection(connectionName, GuidList.Provider, connectionString, false);
     }
 
     /// <summary>
@@ -892,9 +924,7 @@ namespace MySql.Data.VisualStudio
       {
         SelectedMySqlConnection = (MySqlConnection)d.Connection;
         DTE env = (DTE)GetService(typeof(DTE));
-        var sp = new ServiceProvider((IOleServiceProvider)env);
-        IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
-        seConnectionsMgr.AddConnection(string.Format("{0}({1})", SelectedMySqlConnection.DataSource, SelectedMySqlConnection.Database), GuidList.Provider, SelectedMySqlConnection.ConnectionString, false);
+        AddServerExplorerConnection(string.Format("{0}({1})", SelectedMySqlConnection.DataSource, SelectedMySqlConnection.Database), SelectedMySqlConnection.ConnectionString);
         ItemOperations itemOp = env.ItemOperations;
         itemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
       }
