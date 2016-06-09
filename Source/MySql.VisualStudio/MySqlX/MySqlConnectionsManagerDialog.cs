@@ -117,7 +117,7 @@ namespace MySql.Data.VisualStudio.MySqlX
     /// <param name="e">Event arguments.</param>
     private void AddConnectionButton_Click(object sender, EventArgs e)
     {
-      using (var instanceConnectionDialog = new MySqlWorkbenchConnectionDialog(null))
+      using (var instanceConnectionDialog = new MySqlWorkbenchConnectionDialog(null, true))
       {
         instanceConnectionDialog.Icon = Resources.__TemplateIcon;
         instanceConnectionDialog.ShowIcon = true;
@@ -225,7 +225,7 @@ namespace MySql.Data.VisualStudio.MySqlX
         return;
       }
 
-      using (var instanceConnectionDialog = new MySqlWorkbenchConnectionDialog(workbenchConnection))
+      using (var instanceConnectionDialog = new MySqlWorkbenchConnectionDialog(workbenchConnection, true))
       {
         instanceConnectionDialog.Icon = Resources.__TemplateIcon;
         instanceConnectionDialog.ShowIcon = true;
@@ -323,16 +323,43 @@ namespace MySql.Data.VisualStudio.MySqlX
 
       var selectedListViewItem = WorkbenchConnectionsListView.SelectedItems[0];
       SelectedWorkbenchConnection = selectedListViewItem.Tag as MySqlWorkbenchConnection;
+      if (SelectedWorkbenchConnection == null)
+      {
+        return;
+      }
+
+      // Validate if the selected connection has a default schema
+      if (string.IsNullOrEmpty(SelectedWorkbenchConnection.Schema))
+      {
+        using (var yesNoDialog = new InfoDialog(InfoDialogProperties.GetYesNoDialogProperties(
+        InfoDialog.InfoType.Warning,
+        Resources.MySqlConnectionsManagerDialog_EmptySchemaTitle,
+        Resources.MySqlConnectionsManagerDialog_EmptySchemaDetail,
+        Resources.MySqlConnectionsManagerDialog_EmptySchemaSubDetail)))
+        {
+          yesNoDialog.DefaultButton = InfoDialog.DefaultButtonType.Button2;
+          yesNoDialog.DefaultButtonTimeout = 30;
+          SelectedWorkbenchConnection = null;
+          e.Cancel = true;
+          if (yesNoDialog.ShowDialog() != DialogResult.No)
+          {
+            EditConnectionToolStripMenuItem_Click(null, EventArgs.Empty);
+          }
+        }
+      }
+
+      // If the selected connection does not exist already in the Server Explorer just exit.
       if (SelectedWorkbenchConnection == null || !SelectedWorkbenchConnection.Existing)
       {
         return;
       }
 
+      // Ask the user if an existing connection in the Server Explorer should be replaced with the selected one.
       using (var yesNoDialog = new InfoDialog(InfoDialogProperties.GetYesNoDialogProperties(
-        InfoDialog.InfoType.Info,
-        Resources.MySqlConnectionsManagerDialogExistingConnectionTitle,
-        string.Format(Resources.MySqlConnectionsManagerDialogExistingConnectionDetail, SelectedWorkbenchConnection.HostIdentifier),
-        Resources.MySqlConnectionsManagerDialogExistingConnectionSubDetail)))
+        InfoDialog.InfoType.Warning,
+        Resources.MySqlConnectionsManagerDialog_ExistingConnectionTitle,
+        string.Format(Resources.MySqlConnectionsManagerDialog_ExistingConnectionDetail, SelectedWorkbenchConnection.HostIdentifier),
+        Resources.MySqlConnectionsManagerDialog_ExistingConnectionSubDetail)))
       {
         yesNoDialog.DefaultButton = InfoDialog.DefaultButtonType.Button2;
         yesNoDialog.DefaultButtonTimeout = 10;

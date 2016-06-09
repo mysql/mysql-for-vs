@@ -1294,13 +1294,13 @@ Check that the server is running, the database exists and the user Error establi
   <data name="MySqlConnectionsManagerDialogViewAsTiles" xml:space="preserve">
     <value>View as Tiles</value>
   </data>
-  <data name="MySqlConnectionsManagerDialogExistingConnectionDetail" xml:space="preserve">
+  <data name="MySqlConnectionsManagerDialog_ExistingConnectionDetail" xml:space="preserve">
     <value>A MySQL connection for {0} already exists in the Server Explorer.</value>
   </data>
-  <data name="MySqlConnectionsManagerDialogExistingConnectionSubDetail" xml:space="preserve">
+  <data name="MySqlConnectionsManagerDialog_ExistingConnectionSubDetail" xml:space="preserve">
     <value>Do you want to replace the existing connection with the selected one?</value>
   </data>
-  <data name="MySqlConnectionsManagerDialogExistingConnectionTitle" xml:space="preserve">
+  <data name="MySqlConnectionsManagerDialog_ExistingConnectionTitle" xml:space="preserve">
     <value>MySQL Connection already exists</value>
   </data>
   <data name="ConnectDialog_AdvancedButtonText" xml:space="preserve">
@@ -1372,5 +1372,15 @@ Check that the server is running, the database exist and the user credentials ar
   </data>
   <data name="Connection_Fabric_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Connection-Fabric-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialog_EmptySchemaDetail" xml:space="preserve">
+    <value>The schema for the selected connection is empty.</value>
+  </data>
+  <data name="MySqlConnectionsManagerDialog_EmptySchemaSubDetail" xml:space="preserve">
+    <value>Do you want to edit the selected connection to specify a default schema?</value>
+    <comment>0</comment>
+  </data>
+  <data name="MySqlConnectionsManagerDialog_EmptySchemaTitle" xml:space="preserve">
+    <value>Schema not specified</value>
   </data>
 </root>

@@ -3074,29 +3074,56 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The schema for the selected connection is empty..
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_EmptySchemaDetail {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_EmptySchemaDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to edit the selected connection to specify a default schema?.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_EmptySchemaSubDetail {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_EmptySchemaSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schema not specified.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_EmptySchemaTitle {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_EmptySchemaTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A MySQL connection for {0} already exists in the Server Explorer..
         /// </summary>
-        public static string MySqlConnectionsManagerDialogExistingConnectionDetail {
+        public static string MySqlConnectionsManagerDialog_ExistingConnectionDetail {
             get {
-                return ResourceManager.GetString("MySqlConnectionsManagerDialogExistingConnectionDetail", resourceCulture);
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_ExistingConnectionDetail", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Do you want to replace the existing connection with the selected one?.
         /// </summary>
-        public static string MySqlConnectionsManagerDialogExistingConnectionSubDetail {
+        public static string MySqlConnectionsManagerDialog_ExistingConnectionSubDetail {
             get {
-                return ResourceManager.GetString("MySqlConnectionsManagerDialogExistingConnectionSubDetail", resourceCulture);
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_ExistingConnectionSubDetail", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MySQL Connection already exists.
         /// </summary>
-        public static string MySqlConnectionsManagerDialogExistingConnectionTitle {
+        public static string MySqlConnectionsManagerDialog_ExistingConnectionTitle {
             get {
-                return ResourceManager.GetString("MySqlConnectionsManagerDialogExistingConnectionTitle", resourceCulture);
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_ExistingConnectionTitle", resourceCulture);
             }
         }
         
