@@ -267,7 +267,7 @@ namespace MySql.Data.VisualStudio.Editors
           {
             return;
           }
-        
+
           Connection = connectDialog.Connection;
           UpdateButtons();
         }
@@ -301,9 +301,22 @@ namespace MySql.Data.VisualStudio.Editors
     {
       MySqlConnection con = (MySqlConnection)Connection;
       MySqlCommand cmd = new MySqlCommand("select database();", con);
-      object val = cmd.ExecuteScalar();
-      if (val is DBNull) CurrentDatabase = "";
-      else CurrentDatabase = (string)val;
+      try
+      {
+        object val = cmd.ExecuteScalar();
+        if (val is DBNull)
+        {
+          CurrentDatabase = "";
+        }
+        else
+        {
+          CurrentDatabase = (string)val;
+        }
+      }
+      catch
+      {
+        WriteToMySqlOutput(Resources.ConnectionClosedErrorTitle, Resources.ConnectionClosedErrorMessage, null, MessageType.Error);
+      }
     }
 
     /// <summary>
@@ -711,7 +724,7 @@ namespace MySql.Data.VisualStudio.Editors
         ? (!ConnectionChanged ? MySqlDataProviderPackage.Instance.SelectedMySqlConnectionName : UNTITLED_CONNECTION)
         : NONE_TEXT;
       ConnectionMethodToolStripMenuItem.Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
-        connected 
+        connected
           ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
           : NONE_TEXT);
       HostIdToolStripMenuItem.Text = string.Format(HOST_ID_FORMAT_TEXT,
@@ -721,7 +734,7 @@ namespace MySql.Data.VisualStudio.Editors
       ServerVersionToolStripMenuItem.Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
       UserToolStripMenuItem.Text = string.Format(USER_FORMAT_TEXT,
         connected
-          ? (!ConnectionChanged &&  relatedWbConnection != null ? relatedWbConnection.UserName : connectionStringBuilder.UserID)
+          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.UserName : connectionStringBuilder.UserID)
           : NONE_TEXT);
       SchemaToolStripMenuItem.Text = string.Format(SCHEMA_FORMAT_TEXT,
         connected

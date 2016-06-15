@@ -418,6 +418,24 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection has been forcibly closed. Please refresh the connection before running the query..
+        /// </summary>
+        public static string ConnectionClosedErrorMessage {
+            get {
+                return ResourceManager.GetString("ConnectionClosedErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error connecting to MySQL host..
+        /// </summary>
+        public static string ConnectionClosedErrorTitle {
+            get {
+                return ResourceManager.GetString("ConnectionClosedErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred that is normally caused by not having for Visual Studio properly installed..
         /// </summary>
         public static string ConnectionPropertiesNull {
