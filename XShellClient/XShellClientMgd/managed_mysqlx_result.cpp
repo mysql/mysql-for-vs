@@ -47,6 +47,8 @@ Object^ wrap_value(const shcore::Value& val)
       o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
     else if (class_name == "SqlResult")
       o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+    else
+      o = msclr::interop::marshal_as<String^>(val.descr());
     break;
   case shcore::Integer:
     o = gcnew Int32(val.as_int());
