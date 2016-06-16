@@ -836,7 +836,9 @@ namespace MySql.Data.VisualStudio
         connectionName = BaseEditorControl.UNTITLED_CONNECTION;
       }
 
-      return connectionManager.AddConnection(connectionName, GuidList.Provider, connectionString, false);
+      var connection = connectionManager.AddConnection(connectionName, GuidList.Provider, connectionString, false);
+      connection.Connection.EnsureConnected();
+      return connection;
     }
 
     /// <summary>

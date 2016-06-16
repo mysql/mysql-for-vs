@@ -207,6 +207,8 @@ namespace MySql.Data.VisualStudio.DDEX
       {
         packInstance.SelectedMySqlConnection = null;
       }
+
+      base.Close();
     }
   }
 }
