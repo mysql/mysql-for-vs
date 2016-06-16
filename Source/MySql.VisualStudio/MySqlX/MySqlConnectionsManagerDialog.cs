@@ -352,11 +352,8 @@ namespace MySql.Data.VisualStudio.MySqlX
       // Test the connection if it has not been tested before adding it to the Server Explorer
       if (SelectedWorkbenchConnection != null)
       {
-        if (SelectedWorkbenchConnection.ConnectionStatus == MySqlWorkbenchConnection.ConnectionStatusType.Unknown)
-        {
-          // Test the connection to change its connection status
-          SelectedWorkbenchConnection.TestConnectionAndRetryOnWrongPassword();
-        }
+        // Test the connection to change its connection status
+        SelectedWorkbenchConnection.TestConnectionAndRetryOnWrongPassword();
 
         switch (SelectedWorkbenchConnection.ConnectionStatus)
         {
