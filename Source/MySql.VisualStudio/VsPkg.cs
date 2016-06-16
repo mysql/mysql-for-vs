@@ -959,8 +959,32 @@ namespace MySql.Data.VisualStudio
       }
 
       SelectedMySqlConnection = new MySqlConnection(connection.ConnectionString);
+      // Get settings from current connection to assign them to the SelectedMySqlConnection
+      var settingsValue = GetSettingsPropertyFromConnection(connection) != null
+                          ? GetSettingsPropertyFromConnection(connection).GetValue(connection, null)
+                          : null;
+      if (settingsValue != null)
+      {
+        GetSettingsPropertyFromConnection(SelectedMySqlConnection).SetValue(SelectedMySqlConnection, settingsValue, null);
+      }
+
       con.Connection.UnlockProviderObject();
       return SelectedMySqlConnection;
+    }
+
+    /// <summary>
+    /// Gets the Settings property from MySql connection.
+    /// </summary>
+    /// <param name="connection">The MySql connection.</param>
+    /// <returns>A PropertyInfo object containing the description of the property.</returns>
+    internal PropertyInfo GetSettingsPropertyFromConnection(MySqlConnection connection)
+    {
+      if (connection == null)
+      {
+        return null;
+      }
+
+      return connection.GetType().GetProperty("Settings", BindingFlags.Instance | BindingFlags.NonPublic);
     }
 
     internal EnvDTE80.DTE2 GetDTE2()

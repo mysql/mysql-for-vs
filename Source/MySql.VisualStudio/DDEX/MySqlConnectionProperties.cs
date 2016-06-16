@@ -50,7 +50,7 @@ namespace MySql.Data.VisualStudio.DDEX
       ConnectionStringBuilder = new MySqlConnectionStringBuilder();
     }
 
-    public DbConnectionStringBuilder ConnectionStringBuilder { get; }
+    public DbConnectionStringBuilder ConnectionStringBuilder { get; private set; }
 
     public override object this[string propertyName]
     {

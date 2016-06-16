@@ -131,7 +131,7 @@ namespace MySql.Data.VisualStudio.DDEX
         // If can't prompt user for new authentication data, re-throw exception
         if (string.IsNullOrEmpty(Connection.ConnectionString))
           // If missing server & user, throw a more friendly error message
-          throw new Exception( Resources.MissingServerAndUser, ex );
+          throw new Exception(Resources.MissingServerAndUser, ex);
         throw;
       }
 
@@ -170,12 +170,12 @@ namespace MySql.Data.VisualStudio.DDEX
       MySqlConnection con = (MySqlConnection)Connection;
       MySqlCommand cmd = new MySqlCommand(command, con)
       {
-        Transaction = (MySqlTransaction) Transaction,
-        CommandType = (CommandType) commandType,
+        Transaction = (MySqlTransaction)Transaction,
+        CommandType = (CommandType)commandType,
         CommandTimeout = commandTimeout
       };
 
-      if( parameters == null ) return cmd;
+      if (parameters == null) return cmd;
       foreach (DataParameter p in parameters)
       {
         var par = new MySqlParameter(p.Name, p.Value);
@@ -195,6 +195,18 @@ namespace MySql.Data.VisualStudio.DDEX
       }
 
       return cmd;
+    }
+
+    /// <summary>
+    /// Closes the specified data connection, setting the base "SelectedMySqlConnection" to null.
+    /// </summary>
+    public override void Close()
+    {
+      var packInstance = MySqlDataProviderPackage.Instance;
+      if (packInstance != null)
+      {
+        packInstance.SelectedMySqlConnection = null;
+      }
     }
   }
 }

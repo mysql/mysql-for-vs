@@ -32,7 +32,6 @@ using System.Drawing;
 using EnvDTE;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.DDEX;
 using MySqlX;
 using MySQL.Utility.Classes.Tokenizers;
 using Color = System.Drawing.Color;
@@ -907,7 +906,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>Connection string with the format "user:pass@server:port"</returns>
     public static string ToXFormat(this MySqlConnection connection)
     {
-      var connStrBuilder = new MySqlConnectionStringBuilder(connection.ConnectionString);
+      // Create the connection string builder
+      var connStrBuilder = !connection.ConnectionString.ToLower().Contains("password")
+              ? new MySqlConnectionStringBuilder(GetCompleteConnectionString(connection))
+              : new MySqlConnectionStringBuilder(connection.ConnectionString);
+
       string user = connStrBuilder.UserID;
       string pass = connStrBuilder.Password;
       string server = connStrBuilder.Server;
@@ -947,6 +950,30 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       return xConecction.ToString();
+    }
+
+    /// <summary>
+    /// Gets the complete connection string from a MySql connection.
+    /// </summary>
+    /// <param name="connection">The connection.</param>
+    /// <returns></returns>
+    public static string GetCompleteConnectionString(MySqlConnection connection)
+    {
+      // Open and activate the MySql Output window
+      var package = MySqlDataProviderPackage.Instance;
+      if (package == null || connection == null)
+      {
+        return null;
+      }
+
+      var settings = package.GetSettingsPropertyFromConnection(connection);
+      if (settings == null)
+      {
+        return connection.ConnectionString;
+      }
+
+      var csb = (MySqlConnectionStringBuilder)settings.GetValue(connection, null);
+      return csb.ConnectionString;
     }
 
     /// <summary>

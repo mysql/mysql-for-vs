@@ -103,7 +103,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
     /// </summary>
-    internal MySqlHybridScriptEditorPane Pane { get; }
+    internal MySqlHybridScriptEditorPane Pane { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
@@ -124,6 +124,7 @@ namespace MySql.Data.VisualStudio.Editors
       ScriptType = ScriptType.JavaScript;
       SetXShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
+      UpdateButtons();
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -176,6 +177,7 @@ namespace MySql.Data.VisualStudio.Editors
       ConnectionChanged = false;
       if (Connection.State != ConnectionState.Open)
       {
+        Connection.ConnectionString = Utils.GetCompleteConnectionString((MySqlConnection)Connection);
         Connection.Open();
       }
 
@@ -714,10 +716,23 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private void UpdateButtons()
     {
-      bool connected = Connection.State == ConnectionState.Open;
+      bool connected = Connection != null && Connection.State == ConnectionState.Open;
       RunScriptToolStripButton.Enabled = connected;
       DisconnectToolStripButton.Enabled = connected;
       ConnectToolStripButton.Enabled = !connected;
+      if (Connection != null)
+      {
+        UpdateToolStripMenuItemsText(connected);
+      }
+    }
+
+
+    /// <summary>
+    /// Updates the tool strip menu items text.
+    /// </summary>
+    /// <param name="connected">if set to <c>true</c> [connected].</param>
+    private void UpdateToolStripMenuItemsText(bool connected)
+    {
       var relatedWbConnection = MySqlDataProviderPackage.Instance.SelectedMySqlWorkbenchConnection;
       var connectionStringBuilder = new MySqlConnectionStringBuilder(Connection.ConnectionString);
       ConnectionInfoToolStripDropDownButton.Text = connected

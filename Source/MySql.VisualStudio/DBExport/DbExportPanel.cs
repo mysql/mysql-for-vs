@@ -1216,7 +1216,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
     public bool Export { get; private set; }
 
-    public string Name { get; }
+    public string Name { get; private set; }
 
     public Schema(bool export, string name)
     {
@@ -1265,10 +1265,10 @@ namespace MySql.Data.VisualStudio.DBExport
     }
 
     [DisplayName(@"Schema Object")]
-    public string DbObjectName { get; }
+    public string DbObjectName { get; private set; }
 
     [DisplayName(@"Kind")]
-    public DbObjectKind Kind { get; }
+    public DbObjectKind Kind { get; private set; }
 
     private bool _notifiedProperty;
 

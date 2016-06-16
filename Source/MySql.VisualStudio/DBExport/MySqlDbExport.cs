@@ -42,7 +42,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
     public StringBuilder ErrorsOutput { get; private set; }
 
-    public MySqlDbExportOptions ExportOptions { get; }
+    public MySqlDbExportOptions ExportOptions { get; private set; }
 
     public StringBuilder MySqlDumpLog { get; private set; }
 
