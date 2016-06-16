@@ -3092,6 +3092,33 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The connection to the MySQL server could not be established..
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_BadConnectionDetail {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_BadConnectionDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you still want to add the connection to the Server Explorer?.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_BadConnectionSubDetail {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_BadConnectionSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection not working.
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_BadConnectionTitle {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_BadConnectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The schema for the selected connection is empty..
         /// </summary>
         public static string MySqlConnectionsManagerDialog_EmptySchemaDetail {
@@ -3142,6 +3169,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string MySqlConnectionsManagerDialog_ExistingConnectionTitle {
             get {
                 return ResourceManager.GetString("MySqlConnectionsManagerDialog_ExistingConnectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tested connection but status remained unknown..
+        /// </summary>
+        public static string MySqlConnectionsManagerDialog_UnkownStatusError {
+            get {
+                return ResourceManager.GetString("MySqlConnectionsManagerDialog_UnkownStatusError", resourceCulture);
             }
         }
         
@@ -3241,6 +3277,76 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string MySqlDumpSummary {
             get {
                 return ResourceManager.GetString("MySqlDumpSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio_Error {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio_Error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio_FullNoShadow {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio_FullNoShadow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio_Input {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio_Input", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio_Security {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio_Security", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio_Success {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio_Success", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio_Warning {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio_Warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -228,7 +228,7 @@ namespace MySql.Data.VisualStudio
 
       // Initialize settings related to MySQL Workbench in the MySQL Utility and InfoDialog
       InitializeMySqlWorkbenchStaticSettings();
-      CustomizeInfoDialog();
+      CustomizeUtilityDialogs();
 
       // load our connections
       MysqlConnectionsList = GetMySqlConnections();
@@ -1232,17 +1232,17 @@ namespace MySql.Data.VisualStudio
     }
 
     /// <summary>
-    /// Customizes the looks of the <see cref="MySQL.Utility.Forms.InfoDialog"/> form for MySQL for Visual Studio.
+    /// Customizes the looks of some dialogs found in the MySQL.Utility for MySQL for Visual Studio.
     /// </summary>
-    private void CustomizeInfoDialog()
+    private void CustomizeUtilityDialogs()
     {
       InfoDialog.ApplicationName = AssemblyInfo.AssemblyTitle;
-
-      // TODO: We do not have customized logos in the plugin, so leaving these in case in the future we add some.
-      //InfoDialog.SuccessLogo = Resources.MySQLforExcel_InfoDlg_Success_64x64;
-      //InfoDialog.ErrorLogo = Resources.MySQLforExcel_InfoDlg_Error_64x64;
-      //InfoDialog.WarningLogo = Resources.MySQLforExcel_InfoDlg_Warning_64x64;
-      //InfoDialog.InformationLogo = Resources.MySQLforExcel_Logo_64x64;
+      InfoDialog.SuccessLogo = Resources.MySQLforVisualStudio_Success;
+      InfoDialog.ErrorLogo = Resources.MySQLforVisualStudio_Error;
+      InfoDialog.WarningLogo = Resources.MySQLforVisualStudio_Warning;
+      InfoDialog.InformationLogo = Resources.MySQLforVisualStudio;
+      PasswordDialog.ApplicationIcon = Resources.__TemplateIcon;
+      PasswordDialog.SecurityLogo = Resources.MySQLforVisualStudio_Security;
     }
 
     /// <summary>
@@ -1257,6 +1257,16 @@ namespace MySql.Data.VisualStudio
       MySqlWorkbenchPasswordVault.ApplicationPasswordVaultFilePath = AppDataPath + "user_data.dat";
       MySqlWorkbench.ExternalConnections.CreateDefaultConnections = !MySqlWorkbench.ConnectionsFileExists && MySqlWorkbench.Connections.Count == 0;
       MySqlWorkbench.ExternalApplicationConnectionsFilePath = AppDataPath + "connections.xml";
+      MySqlWorkbench.ChangeCurrentCursor = delegate (Cursor cursor)
+      {
+        // TODO: MYSQLFORVS-591 - Change the cursor when a connection is being tested
+        //if (cursor == Cursors.WaitCursor)
+        //{
+        //}
+        //else if (cursor == Cursors.Default)
+        //{
+        //}
+      };
     }
 
     public struct ConnectionParameters

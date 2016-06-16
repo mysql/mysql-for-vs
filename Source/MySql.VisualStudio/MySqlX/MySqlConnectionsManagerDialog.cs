@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Data.Services;
 using MySql.Data.VisualStudio.Properties;
 using MySQL.Utility.Classes;
+using MySQL.Utility.Classes.MySQL;
 using MySQL.Utility.Classes.MySQLWorkbench;
 using MySQL.Utility.Forms;
 
@@ -332,10 +333,10 @@ namespace MySql.Data.VisualStudio.MySqlX
       if (string.IsNullOrEmpty(SelectedWorkbenchConnection.Schema))
       {
         using (var yesNoDialog = new InfoDialog(InfoDialogProperties.GetYesNoDialogProperties(
-        InfoDialog.InfoType.Warning,
-        Resources.MySqlConnectionsManagerDialog_EmptySchemaTitle,
-        Resources.MySqlConnectionsManagerDialog_EmptySchemaDetail,
-        Resources.MySqlConnectionsManagerDialog_EmptySchemaSubDetail)))
+                InfoDialog.InfoType.Warning,
+                Resources.MySqlConnectionsManagerDialog_EmptySchemaTitle,
+                Resources.MySqlConnectionsManagerDialog_EmptySchemaDetail,
+                Resources.MySqlConnectionsManagerDialog_EmptySchemaSubDetail)))
         {
           yesNoDialog.DefaultButton = InfoDialog.DefaultButtonType.Button2;
           yesNoDialog.DefaultButtonTimeout = 30;
@@ -348,8 +349,50 @@ namespace MySql.Data.VisualStudio.MySqlX
         }
       }
 
+      // Test the connection if it has not been tested before adding it to the Server Explorer
+      if (SelectedWorkbenchConnection != null)
+      {
+        if (SelectedWorkbenchConnection.ConnectionStatus == MySqlWorkbenchConnection.ConnectionStatusType.Unknown)
+        {
+          // Test the connection to change its connection status
+          SelectedWorkbenchConnection.TestConnectionAndRetryOnWrongPassword();
+        }
+
+        switch (SelectedWorkbenchConnection.ConnectionStatus)
+        {
+          case MySqlWorkbenchConnection.ConnectionStatusType.Unknown:
+            // Should not be in this status, so log the error
+            MySqlSourceTrace.WriteToLog(Resources.MySqlConnectionsManagerDialog_UnkownStatusError);
+            break;
+
+          case MySqlWorkbenchConnection.ConnectionStatusType.AcceptingConnections:
+            // Do nothing since the connection was already tested and is working.
+            break;
+
+          case MySqlWorkbenchConnection.ConnectionStatusType.RefusingConnections:
+            // Ask the user if he wants to add the connection regardless of its failing status
+            var infoProps = InfoDialogProperties.GetYesNoDialogProperties(
+              InfoDialog.InfoType.Warning,
+              Resources.MySqlConnectionsManagerDialog_BadConnectionTitle,
+              Resources.MySqlConnectionsManagerDialog_BadConnectionDetail,
+              Resources.MySqlConnectionsManagerDialog_BadConnectionSubDetail);
+            infoProps.FitTextStrategy = InfoDialog.FitTextsAction.IncreaseDialogWidth;
+            using (var yesNoDialog = new InfoDialog(infoProps))
+            {
+              yesNoDialog.DefaultButton = InfoDialog.DefaultButtonType.Button2;
+              yesNoDialog.DefaultButtonTimeout = 30;
+              if (yesNoDialog.ShowDialog() == DialogResult.No)
+              {
+                SelectedWorkbenchConnection = null;
+                e.Cancel = true;
+              }
+            }
+            break;
+        }
+      }
+
       // If the selected connection does not exist already in the Server Explorer just exit.
-      if (SelectedWorkbenchConnection == null || !SelectedWorkbenchConnection.Existing)
+        if (SelectedWorkbenchConnection == null || !SelectedWorkbenchConnection.Existing)
       {
         return;
       }

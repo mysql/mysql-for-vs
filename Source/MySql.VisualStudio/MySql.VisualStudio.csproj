@@ -1494,6 +1494,13 @@
     <None Include="Resources\mysql_project_wizard.png" />
     <None Include="Resources\mysql_ItemTemplate_wizard.png" />
     <None Include="Resources\mysql_WebsiteConfig.png" />
+    <None Include="Resources\MySQLforVisualStudio.png" />
+    <None Include="Resources\MySQLforVisualStudio-Error.png" />
+    <None Include="Resources\MySQLforVisualStudio-FullNoShadow.png" />
+    <None Include="Resources\MySQLforVisualStudio-Input.png" />
+    <None Include="Resources\MySQLforVisualStudio-Security.png" />
+    <None Include="Resources\MySQLforVisualStudio-Success.png" />
+    <None Include="Resources\MySQLforVisualStudio-Warning.png" />
     <Content Include="Resources\MySQLOutputWindow_16.bmp" />
     <Content Include="Resources\MySQLOutputWindow_96.png" />
     <Content Include="Resources\output_type-executionplan.png" />
