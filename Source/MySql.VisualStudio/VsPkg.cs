@@ -1259,15 +1259,13 @@ namespace MySql.Data.VisualStudio
       MySqlWorkbenchPasswordVault.ApplicationPasswordVaultFilePath = AppDataPath + "user_data.dat";
       MySqlWorkbench.ExternalConnections.CreateDefaultConnections = !MySqlWorkbench.ConnectionsFileExists && MySqlWorkbench.Connections.Count == 0;
       MySqlWorkbench.ExternalApplicationConnectionsFilePath = AppDataPath + "connections.xml";
+      SetChangeCursorDelegate();
+    }
+
+    public void SetChangeCursorDelegate()
+    {
       MySqlWorkbench.ChangeCurrentCursor = delegate (Cursor cursor)
       {
-        // TODO: MYSQLFORVS-591 - Change the cursor when a connection is being tested
-        //if (cursor == Cursors.WaitCursor)
-        //{
-        //}
-        //else if (cursor == Cursors.Default)
-        //{
-        //}
       };
     }
 

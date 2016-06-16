@@ -69,6 +69,7 @@ namespace MySql.Data.VisualStudio.MySqlX
 
       InitializeComponent();
 
+      ResetChangeCursorDelegate(true);
       ResetConnectionsViewMode(false);
       _lastServicesNameFilter = FilterTextBox.Text;
       if (MySqlDataProviderPackage.Instance != null)
@@ -319,6 +320,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       SelectedWorkbenchConnection = null;
       if (DialogResult != DialogResult.OK || WorkbenchConnectionsListView.SelectedItems.Count == 0)
       {
+        ResetChangeCursorDelegate(false);
         return;
       }
 
@@ -326,6 +328,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       SelectedWorkbenchConnection = selectedListViewItem.Tag as MySqlWorkbenchConnection;
       if (SelectedWorkbenchConnection == null)
       {
+        ResetChangeCursorDelegate(false);
         return;
       }
 
@@ -391,6 +394,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       // If the selected connection does not exist already in the Server Explorer just exit.
         if (SelectedWorkbenchConnection == null || !SelectedWorkbenchConnection.Existing)
       {
+        ResetChangeCursorDelegate(false);
         return;
       }
 
@@ -413,6 +417,30 @@ namespace MySql.Data.VisualStudio.MySqlX
       if (SelectedWorkbenchConnection != null && SelectedWorkbenchConnection.Existing)
       {
         RelatedServerExplorerConnection = _serverExplorerConnections.FirstOrDefault(seConn => seConn.Connection.DisplayConnectionString.Equals(SelectedWorkbenchConnection.ConnectionString));
+      }
+
+      if (!e.Cancel)
+      {
+        ResetChangeCursorDelegate(false);
+      }
+    }
+
+    /// <summary>
+    /// Sets a delegate for the MySQL Utility to change the cursor on top of caller windows.
+    /// </summary>
+    /// <param name="set">Flag indicating whether the delegate is set for this form, or reset to be empty.</param>
+    private void ResetChangeCursorDelegate(bool set)
+    {
+      if (set)
+      {
+        MySqlWorkbench.ChangeCurrentCursor = delegate (Cursor cursor)
+        {
+          Cursor = cursor;
+        };
+      }
+      else
+      {
+        MySqlDataProviderPackage.Instance.SetChangeCursorDelegate();
       }
     }
 
