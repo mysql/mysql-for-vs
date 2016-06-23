@@ -16,12 +16,12 @@
       </Properties>
 
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator"/>
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.DDEX.MySqlDataObjectEnumerator"/>
       </Actions>
     </RootType>
 
     <!--
-      Defines a type that represents a table. Table properties extracted from 
+      Defines a type that represents a table. Table properties extracted from
       information_schema.`TABLES` table.
     -->
     <Type name="Table">
@@ -84,7 +84,7 @@
         <Property name="Comment" type="System.String" itemName="TABLE_COMMENT"/>
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.DDEX.MySqlDataObjectEnumerator">
           <Parameter value="Tables"/>
         </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144"
@@ -165,7 +165,7 @@
         <Property name="SecurityType" type="System.String" itemName="SECURITY_TYPE" />
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.DDEX.MySqlDataObjectEnumerator">
           <Parameter value="Views"/>
         </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144" handler="Microsoft.VisualStudio.Data.DSRefBuilder">
@@ -299,7 +299,7 @@
         <Property name="Comment" type="System.String" itemName="COLUMN_COMMENT" />
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.DDEX.MySqlDataObjectEnumerator">
           <Parameter value="Columns"/>
         </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144" handler="MySql.Data.VisualStudio.MyDSRefBuilder">
@@ -644,7 +644,7 @@
         </Property>
       </Properties>
       <Actions>
-        <Action guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" name="Enumerate" handler="MySql.Data.VisualStudio.StoredProcedureColumnEnumerator"/>
+        <Action guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" name="Enumerate" handler="MySql.Data.VisualStudio.DDEX.StoredProcedureColumnEnumerator"/>
       </Actions>
     </Type>
 

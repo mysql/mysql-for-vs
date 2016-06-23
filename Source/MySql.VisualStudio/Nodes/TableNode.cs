@@ -29,6 +29,7 @@ using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.DbObjects;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Data.VisualStudio.DDEX;
 
 namespace MySql.Data.VisualStudio.Nodes
 {

@@ -44,11 +44,11 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Data;
 using MySQL.Utility.Classes.MySQL;
 using MySQL.Utility.Forms;
 using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
 using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
+using MySql.Data.VisualStudio.DDEX;
 
 namespace MySql.Data.VisualStudio
 {

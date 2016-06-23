@@ -26,59 +26,59 @@
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="LaunchDbExport" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397B"
-                          cmdid="510" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="510" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="LaunchUtilities" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="505" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="505" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="LaunchWorkbench" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="506" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="506" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="NewPythonScript" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="13611" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="13611" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="NewJavascript" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="13610" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="13610" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="NewScript" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="13609" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="13609" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="GenerateDatabaseScript" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="507" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="507" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="SchemaCompareTo" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="508" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="508" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="SchemaCompare" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397A"
-                          cmdid="509" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="509" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
         </CommandBindings>
@@ -98,33 +98,33 @@
           <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
             <Parameter value="NewQuery"/>
             <Parameter value="Query"/>
-          </CommandBinding>          
+          </CommandBinding>
           <CommandBinding name="CreateTable"
                           guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="256"
-                          handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+                          handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="GenerateTableScript" guid="5036786C-CB64-4C3F-8AD4-6F147BD25D17" cmdid="258"
-            handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+            handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
         </CommandBindings>
         <Children>
           <Selection type="Table" restrictions="null,{Root.Schema}" hideWhen="False AND False">
@@ -161,29 +161,29 @@
           <CommandBinding name="CreateView"
                           guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="272"
-                          handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+                          handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
           <CommandBinding name="New" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13601"  handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_CommandHandler_TableTools">
             <Parameter value="New"/>
             <Parameter value="View"/>
           </CommandBinding>
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
         </CommandBindings>
@@ -215,25 +215,25 @@
           <CommandBinding name="CreateStoredProcedure"
                           guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="288"
-                          handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+                          handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
         </CommandBindings>
@@ -262,29 +262,29 @@
       <StaticNode nid="Functions" minSourceVersion="5.0.0">
         <DisplayName resource="Node_Functions" />
         <CommandBindings>
-          <CommandBinding name="CreateFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="304" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+          <CommandBinding name="CreateFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="304" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
           <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
             <Parameter value="NewQuery"/>
             <Parameter value="Query"/>
           </CommandBinding>
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
         </CommandBindings>
@@ -315,29 +315,29 @@
       <StaticNode nid="UDFs">
         <DisplayName resource="Node_UDFs" />
         <CommandBindings>
-          <CommandBinding name="CreateUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="336" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+          <CommandBinding name="CreateUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="336" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
           <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
             <Parameter value="NewQuery"/>
             <Parameter value="Query"/>
           </CommandBinding>
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
           <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                          cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
           </CommandBinding>
         </CommandBindings>
@@ -467,13 +467,13 @@
       </Properties>
 
       <CommandBindings defaultCommand="Design">
-        <CommandBinding name="Design" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12291" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="Design" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12291" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="Design"/>
         </CommandBinding>
-        <CommandBinding name="DropTable" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="DropTable" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="Table"/>
         </CommandBinding>
-        <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+        <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384"
                         handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="Open"/>
@@ -484,27 +484,27 @@
           <Parameter value="Query"/>
         </CommandBinding>
         <CommandBinding name="GenerateTableScript" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="258"
-            handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        
+            handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
+
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -571,9 +571,9 @@
       </Properties>
 
       <CommandBindings defaultCommand="AlterView">
-        <CommandBinding name="AlterView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="273" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+        <CommandBinding name="AlterView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="273" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
 
-        <CommandBinding name="DropView" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="DropView" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="View"/>
         </CommandBinding>
 
@@ -588,23 +588,23 @@
           <Parameter value="Query"/>
         </CommandBinding>
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -729,23 +729,23 @@
           <Parameter value="Query"/>
         </CommandBinding>
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -869,23 +869,23 @@
           <Parameter value="Query"/>
         </CommandBinding>
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -1029,9 +1029,9 @@
         </Property>
       </Properties>
       <CommandBindings defaultCommand="AlterStoredProcedure">
-        <CommandBinding name="AlterStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="289" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="DebugStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="290" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="DropProcedure" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="AlterStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="289" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
+        <CommandBinding name="DebugStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="290" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
+        <CommandBinding name="DropProcedure" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="StoredProcedure"/>
         </CommandBinding>
         <!-- global data menus -->
@@ -1040,23 +1040,23 @@
           <Parameter value="Query"/>
         </CommandBinding>
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -1145,23 +1145,23 @@
           <Parameter value="Query"/>
         </CommandBinding>
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -1279,29 +1279,29 @@
         </Property>
       </Properties>
       <CommandBindings defaultCommand="AlterTrigger">
-        <CommandBinding name="AlterTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="321" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="DropTrigger" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="AlterTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="321" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
+        <CommandBinding name="DropTrigger" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="Trigger"/>
         </CommandBinding>
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
@@ -1337,26 +1337,26 @@
         </Property>
       </Properties>
       <CommandBindings defaultCommand="DeleteUDF">
-        <CommandBinding name="DeleteUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+        <CommandBinding name="DeleteUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="337" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler" />
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="500" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="501" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="502" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="503" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
         <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                        cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+                        cmdid="504" handler="MySql.Data.VisualStudio.DDEX.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
       </CommandBindings>
