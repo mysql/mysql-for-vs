@@ -19,11 +19,8 @@ in a production environment.
 
 Known Issues
 --------------------
-* Some features do not work with SSL connections where the "PEM" certificates have been specified, such as Entity Framework, 
-  Query Designer, drag & drop elements from a MySql connection in Server Explorer to a Dataset designer, 
-  and the MySQL SQL Script editor. If SSL is to be used with these features connections must only specify PFX information 
-  and not PEM parameters.
-
+* Some features such as Entity Framework and some Server Explorer functionality like drag & drop elements into a Dataset designer
+  or design tables do not work in this version.
 
 
 
