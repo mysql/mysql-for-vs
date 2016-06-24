@@ -19,8 +19,8 @@ in a production environment.
 
 Known Issues
 --------------------
-* Some features such as Entity Framework and some Server Explorer functionality like drag & drop elements into a Dataset designer
-  or design tables do not work in this version.
+* Some features such as Entity Framework and some Server Explorer functionality like drag & drop elements into a Dataset Designer
+  or Design Tables do not work in this version.
 
 
 
