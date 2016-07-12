@@ -1546,7 +1546,7 @@ namespace MySql.Data.VisualStudio
 
       _connectionsMigrationTimer = new Timer();
       _connectionsMigrationTimer.Tick += ConnectionsMigrationTimer_Tick; ;
-      _connectionsMigrationTimer.Interval = 20000; //MILLISECONDS_IN_HOUR;
+      _connectionsMigrationTimer.Interval = MILLISECONDS_IN_HOUR;
       _connectionsMigrationTimer.Start();
     }
 
