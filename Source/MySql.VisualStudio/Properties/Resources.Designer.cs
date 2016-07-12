@@ -212,15 +212,6 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MySQL for Visual Studio.
-        /// </summary>
-        public static string ApplicationName {
-            get {
-                return ResourceManager.GetString("ApplicationName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap ArrowKey {

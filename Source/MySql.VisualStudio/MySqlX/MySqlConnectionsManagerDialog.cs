@@ -76,6 +76,8 @@ namespace MySql.Data.VisualStudio.MySqlX
       {
         _serverExplorerConnections = MySqlDataProviderPackage.Instance.GetMySqlConnections();
       }
+
+      SetAutomaticMigrationDelayText();
     }
 
     #region Properties
@@ -107,6 +109,19 @@ namespace MySql.Data.VisualStudio.MySqlX
         var selectedListViewItem = WorkbenchConnectionsListView.SelectedItems[0];
         var selectedWorkbenchConnection = selectedListViewItem.Tag as MySqlWorkbenchConnection;
         return selectedWorkbenchConnection != null && !selectedWorkbenchConnection.IsFabricManaged;
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the <see cref="MigrateWorkbenchConnectionsButton"/> should be enabled.
+    /// </summary>
+    private bool MigrateConnectionsButtonEnabled
+    {
+      get
+      {
+        return !Settings.Default.WorkbenchMigrationSucceeded &&
+               Settings.Default.WorkbenchMigrationLastAttempt != DateTime.MinValue &&
+               Settings.Default.WorkbenchMigrationRetryDelay != 0;
       }
     }
 
@@ -311,6 +326,17 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
+    /// Event delegate method fired when the <see cref="MigrateWorkbenchConnectionsButton"/> is clicked.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    private void MigrateWorkbenchConnectionsButton_Click(object sender, EventArgs e)
+    {
+      MySqlDataProviderPackage.Instance.MigrateExternalConnectionsToWorkbench(false);
+      SetAutomaticMigrationDelayText();
+    }
+
+    /// <summary>
     /// Event delegate method fired before the <see cref="MySqlConnectionsManagerDialog"/> dialog is closed.
     /// </summary>
     /// <param name="sender">Sender object.</param>
@@ -426,6 +452,16 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
+    /// Event delegate method fired when the <see cref="MySqlConnectionsManagerDialog"/> dialog is shown.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    private void MySqlConnectionsManagerDialog_Shown(object sender, EventArgs e)
+    {
+      RefreshConnectionsList(true);
+    }
+
+    /// <summary>
     /// Sets a delegate for the MySQL Utility to change the cursor on top of caller windows.
     /// </summary>
     /// <param name="set">Flag indicating whether the delegate is set for this form, or reset to be empty.</param>
@@ -445,16 +481,6 @@ namespace MySql.Data.VisualStudio.MySqlX
     }
 
     /// <summary>
-    /// Event delegate method fired when the <see cref="MySqlConnectionsManagerDialog"/> dialog is shown.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="e">Event arguments.</param>
-    private void MySqlConnectionsManagerDialog_Shown(object sender, EventArgs e)
-    {
-      RefreshConnectionsList(true);
-    }
-
-    /// <summary>
     /// Reloads the list of MySQL Server instances from the ones contained in the MySQL Workbench connections file.
     /// </summary>
     /// <param name="forceRefresh">Flag indicating if the refresh must be done although filters haven't changed.</param>
@@ -467,7 +493,7 @@ namespace MySql.Data.VisualStudio.MySqlX
 
       if (forceRefresh)
       {
-        MySqlWorkbench.Connections.Load();
+        MySqlWorkbench.Connections.Load(true);
       }
 
       RefreshConnectionsList(_lastServicesNameFilter);
@@ -536,6 +562,15 @@ namespace MySql.Data.VisualStudio.MySqlX
         ViewAsToolStripMenuItem.Text = Resources.MySqlConnectionsManagerDialogViewAsTiles;
         ViewAsToolStripMenuItem.Image = Resources.tile_view;
       }
+    }
+
+    /// <summary>
+    /// Icnreases the width of the dialog in case the <see cref="AutomaticMigrationDelayLabel"/> gets too big.
+    /// </summary>
+    private void SetAutomaticMigrationDelayText()
+    {
+      AutomaticMigrationDelayValueLabel.Text = MySqlWorkbench.GetConnectionsMigrationDelayText(MySqlDataProviderPackage.Instance.NextAutomaticConnectionsMigration, Settings.Default.WorkbenchMigrationSucceeded);
+      MigrateWorkbenchConnectionsButton.Enabled = MigrateConnectionsButtonEnabled;
     }
 
     /// <summary>

@@ -1,3 +1,13 @@
+2.0.4
+- Enhanced the logic that migrates stored MySQL connections to the MySQL Workbench connections.xml file. In previous versions
+  the migration was offered and if not done at that moment, the dialog to migrate was shown every time the "MySQL Connections
+  Manager" dialog was shown, but there was no way to choose to remain storing MySQL connections in the MySQL for Visual Studio
+  configuration folder instead of merging them with the Workbench ones. Now the connections migration dialog offers a way to
+  postpone the migration 1 hour, 1 day, 1 week, 1 month or indefinitely. If the migration is postponed the dialog is shown again
+  after that time elapses, although if it is postponed indefinitely an option was added to the "MySQL Connections Manager"
+  dialog that permits the migration of connections to be done manually, as long as MySQL Workbench is installed.
+
+
 2.0.3
 - Fixed the error being thrown when executing JavaScript queries on MySQL X Protocol connections that involve the use of the
   "mysqlx" module, because the module "mysqlx" for JavaScript cannot be imported. (MySql Bug #81052, Oracle bug #23091964).
@@ -39,6 +49,7 @@
 - Added the support to handle multiple result sets in the current Query Editor.
 - Fix controls color to match default provided VS Themes (Dark, Blue and Light).
 - Support added for MySQLX protocol, included in MySQL Server 5.7.8.
+
 
 1.2.6
 

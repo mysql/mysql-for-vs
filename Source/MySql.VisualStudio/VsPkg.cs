@@ -109,10 +109,44 @@ namespace MySql.Data.VisualStudio
   {
     private const string MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE = "MYSQLCONNECTOR_ASSEMBLIESPATH";
 
+    /// <summary>
+    /// The number of seconds in 1 hour.
+    /// </summary>
+    private const int MILLISECONDS_IN_HOUR = 3600000;
+
     private string _appDataPath;
+
+    private MySqlX.MySqlConnectionsManagerDialog _connectionsManagerDialog;
+
+    /// <summary>
+    /// The timer that checks for automatic connetions migration.
+    /// </summary>
+    private Timer _connectionsMigrationTimer;
+
+    /// <summary>
+    /// Flag indicating whether the code that migrates connections is in progress.
+    /// </summary>
+    private bool _migratingStoredConnections;
+
     private MySqlConnection _selectedMySqlConnection;
     private MySqlWorkbenchConnection _selectedMySqlWorkbenchConnection;
     public static MySqlDataProviderPackage Instance;
+
+    /// <summary>
+    /// Gets a <see cref="DateTime"/> value for when the next automatic connections migration will occur.
+    /// </summary>
+    public DateTime NextAutomaticConnectionsMigration
+    {
+      get
+      {
+        var alreadyMigrated = Settings.Default.WorkbenchMigrationSucceeded;
+        var delay = Settings.Default.WorkbenchMigrationRetryDelay;
+        var lastAttempt = Settings.Default.WorkbenchMigrationLastAttempt;
+        return alreadyMigrated || (lastAttempt.Equals(DateTime.MinValue) && delay == 0)
+          ? DateTime.MinValue
+          : (delay == -1 ? DateTime.MaxValue : lastAttempt.AddHours(delay));
+      }
+    }
 
     public MySqlConnection SelectedMySqlConnection
     {
@@ -179,6 +213,9 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public MySqlDataProviderPackage()
     {
+      _connectionsManagerDialog = null;
+      _connectionsMigrationTimer = null;
+      _migratingStoredConnections = false;
       if (Instance != null)
         throw new Exception("Creating second instance of package");
       Instance = this;
@@ -232,6 +269,9 @@ namespace MySql.Data.VisualStudio
 
       // load our connections
       MysqlConnectionsList = GetMySqlConnections();
+
+      // Start timer that checks for automatic connections migration.
+      StartConnectionsMigrationTimer();
 
       // Add our command handlers for menu (commands must exist in the .vsct file)
       OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -770,22 +810,24 @@ namespace MySql.Data.VisualStudio
     /// <param name="args">Event arguments.</param>
     private void OpenConnectionsManager_Callback(object sender, EventArgs args)
     {
-      // Attempt to migrate external connections to MySQL Workbench
-      MySqlWorkbench.MigrateExternalConnectionsToWorkbench();
+      // Attemtp to migrate all locally stored connections to the MySQL Workbench connections file.
+      CheckForNextAutomaticConnectionsMigration(false);
 
       IVsDataExplorerConnection relatedServerExplorerConnection;
       MySqlWorkbenchConnection selectedMySqlWorkbenchConnection;
-      using (var connectionsManagerDialog = new MySqlX.MySqlConnectionsManagerDialog())
+      using (_connectionsManagerDialog = new MySqlX.MySqlConnectionsManagerDialog())
       {
-        if (connectionsManagerDialog.ShowDialog() != DialogResult.OK)
+        if (_connectionsManagerDialog.ShowDialog() != DialogResult.OK)
         {
+          _connectionsManagerDialog = null;
           return;
         }
 
-        selectedMySqlWorkbenchConnection = connectionsManagerDialog.SelectedWorkbenchConnection;
-        relatedServerExplorerConnection = connectionsManagerDialog.RelatedServerExplorerConnection;
+        selectedMySqlWorkbenchConnection = _connectionsManagerDialog.SelectedWorkbenchConnection;
+        relatedServerExplorerConnection = _connectionsManagerDialog.RelatedServerExplorerConnection;
       }
 
+      _connectionsManagerDialog = null;
       if (selectedMySqlWorkbenchConnection == null || Instance == null)
       {
         return;
@@ -1386,6 +1428,126 @@ namespace MySql.Data.VisualStudio
       return documents.Cast<Document>().Count(document =>
         document.FullName.Contains(JAVASCRIPT_EXTENSION, StringComparison.InvariantCultureIgnoreCase) ||
         document.FullName.Contains(PYTHON_EXTENSION, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    /// <summary>
+    /// Event delegate that checks if it's time to display the dialog for connections migration.
+    /// </summary>
+    /// <param name="fromTimer">Flag indicating whether this method is called from a timer.</param>
+    private void CheckForNextAutomaticConnectionsMigration(bool fromTimer)
+    {
+      // If the execution of the code that migrates connections is sitll executing, then exit.
+      if (_migratingStoredConnections)
+      {
+        return;
+      }
+
+      // Temporarily disable the timer.
+      if (fromTimer)
+      {
+        _connectionsMigrationTimer.Enabled = false;
+      }
+
+      // Check if the next connections migration is due now.
+      bool doMigration = true;
+      var nextMigrationAttempt = NextAutomaticConnectionsMigration;
+      if (!fromTimer && !nextMigrationAttempt.Equals(DateTime.MinValue) && (nextMigrationAttempt.Equals(DateTime.MaxValue) || DateTime.Now.CompareTo(nextMigrationAttempt) < 0))
+      {
+        doMigration = false;
+      }
+      else if (fromTimer && nextMigrationAttempt.Equals(DateTime.MinValue) || nextMigrationAttempt.Equals(DateTime.MaxValue) || DateTime.Now.CompareTo(nextMigrationAttempt) < 0)
+      {
+        doMigration = false;
+      }
+
+      if (doMigration)
+      {
+        MigrateExternalConnectionsToWorkbench(true);
+      }
+
+      // Re-enable the timer.
+      if (fromTimer)
+      {
+        _connectionsMigrationTimer.Enabled = true;
+      }
+    }
+
+    /// <summary>
+    /// Event delegate method fired when the <see cref="_connectionsMigrationTimer"/> ticks.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    private void ConnectionsMigrationTimer_Tick(object sender, EventArgs e)
+    {
+      CheckForNextAutomaticConnectionsMigration(true);
+    }
+
+    /// <summary>
+    /// Attempts to migrate connections created in the MySQL for Excel's connections file to the Workbench's one.
+    /// </summary>
+    /// <param name="showDelayOptions">Flag indicating whether options to delay the migration are shown in case the user chooses not to migrate connections now.</param>
+    public void MigrateExternalConnectionsToWorkbench(bool showDelayOptions)
+    {
+      _migratingStoredConnections = true;
+
+      // If the method is not being called from the Connections Manager dialog itself, then force close the dialog.
+      // This is necessary since when this code is executed from another thread the dispatch is posted to the main thread, so we don't have control over when the code
+      // starts and when finishes in order to prevent the users from doing a manual migration in the options dialog, and we can't update the automatic migration date either.
+      if (showDelayOptions && _connectionsManagerDialog != null)
+      {
+        _connectionsManagerDialog.Close();
+        _connectionsManagerDialog.Dispose();
+        _connectionsManagerDialog = null;
+      }
+
+      // Attempt to perform the migration
+      MySqlWorkbench.MigrateExternalConnectionsToWorkbench(showDelayOptions);
+
+      // Update settings depending on the migration outcome.
+      Settings.Default.WorkbenchMigrationSucceeded = MySqlWorkbench.ConnectionsMigrationStatus == MySqlWorkbench.ConnectionsMigrationStatusType.MigrationNeededAlreadyMigrated;
+      if (MySqlWorkbench.ConnectionsMigrationStatus == MySqlWorkbench.ConnectionsMigrationStatusType.MigrationNeededButNotMigrated)
+      {
+        Settings.Default.WorkbenchMigrationLastAttempt = DateTime.Now;
+        if (showDelayOptions)
+        {
+          Settings.Default.WorkbenchMigrationRetryDelay = MySqlWorkbench.ConnectionsMigrationDelay.ToHours();
+        }
+      }
+      else
+      {
+        Settings.Default.WorkbenchMigrationLastAttempt = DateTime.MinValue;
+        Settings.Default.WorkbenchMigrationRetryDelay = 0;
+      }
+
+      Settings.Default.Save();
+
+      // If the migration was done successfully, no need to keep the timer running.
+      if (Settings.Default.WorkbenchMigrationSucceeded && _connectionsMigrationTimer != null)
+      {
+        _connectionsMigrationTimer.Enabled = false;
+      }
+
+      _migratingStoredConnections = false;
+    }
+
+    /// <summary>
+    /// Starts the global timer that fires connections migration checks.
+    /// </summary>
+    private void StartConnectionsMigrationTimer()
+    {
+      _connectionsMigrationTimer = null;
+      _migratingStoredConnections = false;
+
+      // Determine if the timer is needed
+      if (Settings.Default.WorkbenchMigrationSucceeded && !MySqlWorkbench.ExternalApplicationConnectionsFileExists)
+      {
+        return;
+      }
+
+      _connectionsMigrationTimer = new Timer();
+      _connectionsMigrationTimer.Tick += ConnectionsMigrationTimer_Tick; ;
+      _connectionsMigrationTimer.Interval = 20000; //MILLISECONDS_IN_HOUR;
+      _connectionsMigrationTimer.Start();
     }
 
     #region IVsInstalledProduct Members

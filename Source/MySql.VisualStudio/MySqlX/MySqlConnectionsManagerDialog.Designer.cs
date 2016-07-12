@@ -51,8 +51,8 @@ namespace MySql.Data.VisualStudio.MySqlX
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Available", System.Windows.Forms.HorizontalAlignment.Left);
-      System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Similar already in Server Explorer", System.Windows.Forms.HorizontalAlignment.Left);
+      System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Available", System.Windows.Forms.HorizontalAlignment.Left);
+      System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Similar already in Server Explorer", System.Windows.Forms.HorizontalAlignment.Left);
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MySqlConnectionsManagerDialog));
       this.ConnectionNameLabel = new System.Windows.Forms.Label();
       this.FilterTextBox = new System.Windows.Forms.TextBox();
@@ -73,6 +73,9 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.AddConnectionButton = new System.Windows.Forms.Button();
       this.DialogOKButton = new System.Windows.Forms.Button();
       this.FilterTimer = new System.Windows.Forms.Timer(this.components);
+      this.MigrateWorkbenchConnectionsButton = new System.Windows.Forms.Button();
+      this.AutomaticMigrationDelayValueLabel = new System.Windows.Forms.Label();
+      this.AutomaticMigrationDelayLabel = new System.Windows.Forms.Label();
       this.ContentAreaPanel.SuspendLayout();
       this.CommandAreaPanel.SuspendLayout();
       this.ConnectionsContextMenuStrip.SuspendLayout();
@@ -85,19 +88,25 @@ namespace MySql.Data.VisualStudio.MySqlX
       // 
       // ContentAreaPanel
       // 
+      this.ContentAreaPanel.Controls.Add(this.AutomaticMigrationDelayValueLabel);
+      this.ContentAreaPanel.Controls.Add(this.AutomaticMigrationDelayLabel);
+      this.ContentAreaPanel.Controls.Add(this.MigrateWorkbenchConnectionsButton);
       this.ContentAreaPanel.Controls.Add(this.CommandAreaPanel);
       this.ContentAreaPanel.Controls.Add(this.ConnectionNameLabel);
       this.ContentAreaPanel.Controls.Add(this.FilterTextBox);
       this.ContentAreaPanel.Controls.Add(this.MySQLConnectionsHelpLabel);
       this.ContentAreaPanel.Controls.Add(this.MySQLConnectionsHyperTitleLabel);
       this.ContentAreaPanel.Controls.Add(this.WorkbenchConnectionsListView);
-      this.ContentAreaPanel.Size = new System.Drawing.Size(744, 571);
+      this.ContentAreaPanel.Size = new System.Drawing.Size(744, 601);
       this.ContentAreaPanel.Controls.SetChildIndex(this.WorkbenchConnectionsListView, 0);
       this.ContentAreaPanel.Controls.SetChildIndex(this.MySQLConnectionsHyperTitleLabel, 0);
       this.ContentAreaPanel.Controls.SetChildIndex(this.MySQLConnectionsHelpLabel, 0);
       this.ContentAreaPanel.Controls.SetChildIndex(this.FilterTextBox, 0);
       this.ContentAreaPanel.Controls.SetChildIndex(this.ConnectionNameLabel, 0);
       this.ContentAreaPanel.Controls.SetChildIndex(this.CommandAreaPanel, 0);
+      this.ContentAreaPanel.Controls.SetChildIndex(this.MigrateWorkbenchConnectionsButton, 0);
+      this.ContentAreaPanel.Controls.SetChildIndex(this.AutomaticMigrationDelayLabel, 0);
+      this.ContentAreaPanel.Controls.SetChildIndex(this.AutomaticMigrationDelayValueLabel, 0);
       // 
       // CommandAreaPanel
       // 
@@ -105,13 +114,14 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.CommandAreaPanel.Controls.Add(this.DialogCancelButton);
       this.CommandAreaPanel.Controls.Add(this.AddConnectionButton);
       this.CommandAreaPanel.Controls.Add(this.DialogOKButton);
-      this.CommandAreaPanel.Location = new System.Drawing.Point(0, 526);
+      this.CommandAreaPanel.Location = new System.Drawing.Point(0, 556);
       this.CommandAreaPanel.Size = new System.Drawing.Size(744, 45);
-      this.CommandAreaPanel.TabIndex = 6;
+      this.CommandAreaPanel.TabIndex = 8;
       // 
       // ConnectionNameLabel
       // 
       this.ConnectionNameLabel.AutoSize = true;
+      this.ConnectionNameLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ConnectionNameLabel.Location = new System.Drawing.Point(25, 109);
       this.ConnectionNameLabel.Name = "ConnectionNameLabel";
       this.ConnectionNameLabel.Size = new System.Drawing.Size(36, 15);
@@ -122,6 +132,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       // 
       this.FilterTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.FilterTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.FilterTextBox.Location = new System.Drawing.Point(67, 106);
       this.FilterTextBox.Name = "FilterTextBox";
       this.FilterTextBox.Size = new System.Drawing.Size(652, 23);
@@ -133,6 +144,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       // 
       this.MySQLConnectionsHelpLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.MySQLConnectionsHelpLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.MySQLConnectionsHelpLabel.Location = new System.Drawing.Point(24, 53);
       this.MySQLConnectionsHelpLabel.Name = "MySQLConnectionsHelpLabel";
       this.MySQLConnectionsHelpLabel.Size = new System.Drawing.Size(695, 38);
@@ -161,22 +173,23 @@ namespace MySql.Data.VisualStudio.MySqlX
             this.HostnameIdColumnHeader,
             this.ConnectionTypeColumnHeader});
       this.WorkbenchConnectionsListView.ContextMenuStrip = this.ConnectionsContextMenuStrip;
+      this.WorkbenchConnectionsListView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.WorkbenchConnectionsListView.FullRowSelect = true;
-      listViewGroup1.Header = "Available";
-      listViewGroup1.Name = "AvailableListViewGroup";
-      listViewGroup2.Header = "Similar already in Server Explorer";
-      listViewGroup2.Name = "InServerExplorerListViewGroup";
+      listViewGroup3.Header = "Available";
+      listViewGroup3.Name = "AvailableListViewGroup";
+      listViewGroup4.Header = "Similar already in Server Explorer";
+      listViewGroup4.Name = "InServerExplorerListViewGroup";
       this.WorkbenchConnectionsListView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2});
+            listViewGroup3,
+            listViewGroup4});
       this.WorkbenchConnectionsListView.HideSelection = false;
       this.WorkbenchConnectionsListView.LargeImageList = this.ConnectionTypesImageList;
       this.WorkbenchConnectionsListView.Location = new System.Drawing.Point(25, 135);
       this.WorkbenchConnectionsListView.MultiSelect = false;
       this.WorkbenchConnectionsListView.Name = "WorkbenchConnectionsListView";
-      this.WorkbenchConnectionsListView.Size = new System.Drawing.Size(694, 363);
+      this.WorkbenchConnectionsListView.Size = new System.Drawing.Size(694, 338);
       this.WorkbenchConnectionsListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-      this.WorkbenchConnectionsListView.TabIndex = 5;
+      this.WorkbenchConnectionsListView.TabIndex = 4;
       this.WorkbenchConnectionsListView.TileSize = new System.Drawing.Size(330, 65);
       this.WorkbenchConnectionsListView.UseCompatibleStateImageBehavior = false;
       this.WorkbenchConnectionsListView.View = System.Windows.Forms.View.Tile;
@@ -263,22 +276,23 @@ namespace MySql.Data.VisualStudio.MySqlX
       // 
       this.DialogCancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.DialogCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.DialogCancelButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.DialogCancelButton.Location = new System.Drawing.Point(644, 11);
+      this.DialogCancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.DialogCancelButton.Location = new System.Drawing.Point(657, 11);
       this.DialogCancelButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.DialogCancelButton.Name = "DialogCancelButton";
       this.DialogCancelButton.Size = new System.Drawing.Size(75, 23);
-      this.DialogCancelButton.TabIndex = 2;
+      this.DialogCancelButton.TabIndex = 1;
       this.DialogCancelButton.Text = "Cancel";
       this.DialogCancelButton.UseVisualStyleBackColor = true;
       // 
       // AddConnectionButton
       // 
       this.AddConnectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.AddConnectionButton.Location = new System.Drawing.Point(25, 11);
+      this.AddConnectionButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.AddConnectionButton.Location = new System.Drawing.Point(12, 11);
       this.AddConnectionButton.Name = "AddConnectionButton";
       this.AddConnectionButton.Size = new System.Drawing.Size(157, 23);
-      this.AddConnectionButton.TabIndex = 0;
+      this.AddConnectionButton.TabIndex = 2;
       this.AddConnectionButton.Text = "Add New Connection...";
       this.AddConnectionButton.UseVisualStyleBackColor = true;
       this.AddConnectionButton.Click += new System.EventHandler(this.AddConnectionButton_Click);
@@ -288,12 +302,12 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.DialogOKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.DialogOKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
       this.DialogOKButton.Enabled = false;
-      this.DialogOKButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.DialogOKButton.Location = new System.Drawing.Point(563, 11);
+      this.DialogOKButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.DialogOKButton.Location = new System.Drawing.Point(576, 11);
       this.DialogOKButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
       this.DialogOKButton.Name = "DialogOKButton";
       this.DialogOKButton.Size = new System.Drawing.Size(75, 23);
-      this.DialogOKButton.TabIndex = 1;
+      this.DialogOKButton.TabIndex = 0;
       this.DialogOKButton.Text = "OK";
       this.DialogOKButton.UseVisualStyleBackColor = true;
       // 
@@ -302,12 +316,48 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.FilterTimer.Interval = 500;
       this.FilterTimer.Tick += new System.EventHandler(this.FilterTimer_Tick);
       // 
+      // MigrateWorkbenchConnectionsButton
+      // 
+      this.MigrateWorkbenchConnectionsButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.MigrateWorkbenchConnectionsButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.MigrateWorkbenchConnectionsButton.Location = new System.Drawing.Point(25, 504);
+      this.MigrateWorkbenchConnectionsButton.Name = "MigrateWorkbenchConnectionsButton";
+      this.MigrateWorkbenchConnectionsButton.Size = new System.Drawing.Size(694, 23);
+      this.MigrateWorkbenchConnectionsButton.TabIndex = 7;
+      this.MigrateWorkbenchConnectionsButton.Text = "Migrate stored connections to MySQL Workbench now";
+      this.MigrateWorkbenchConnectionsButton.UseVisualStyleBackColor = true;
+      this.MigrateWorkbenchConnectionsButton.Click += new System.EventHandler(this.MigrateWorkbenchConnectionsButton_Click);
+      // 
+      // AutomaticMigrationDelayValueLabel
+      // 
+      this.AutomaticMigrationDelayValueLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.AutomaticMigrationDelayValueLabel.AutoSize = true;
+      this.AutomaticMigrationDelayValueLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.AutomaticMigrationDelayValueLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+      this.AutomaticMigrationDelayValueLabel.Location = new System.Drawing.Point(289, 486);
+      this.AutomaticMigrationDelayValueLabel.Name = "AutomaticMigrationDelayValueLabel";
+      this.AutomaticMigrationDelayValueLabel.Size = new System.Drawing.Size(67, 15);
+      this.AutomaticMigrationDelayValueLabel.TabIndex = 6;
+      this.AutomaticMigrationDelayValueLabel.Text = "Delay Value";
+      // 
+      // AutomaticMigrationDelayLabel
+      // 
+      this.AutomaticMigrationDelayLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.AutomaticMigrationDelayLabel.AutoSize = true;
+      this.AutomaticMigrationDelayLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.AutomaticMigrationDelayLabel.Location = new System.Drawing.Point(25, 486);
+      this.AutomaticMigrationDelayLabel.Name = "AutomaticMigrationDelayLabel";
+      this.AutomaticMigrationDelayLabel.Size = new System.Drawing.Size(263, 15);
+      this.AutomaticMigrationDelayLabel.TabIndex = 5;
+      this.AutomaticMigrationDelayLabel.Text = "Automatic connections migration delayed until: ";
+      // 
       // MySqlConnectionsManagerDialog
       // 
       this.AcceptButton = this.DialogOKButton;
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
       this.CancelButton = this.DialogCancelButton;
-      this.ClientSize = new System.Drawing.Size(744, 571);
+      this.ClientSize = new System.Drawing.Size(744, 601);
       this.CommandAreaVisible = true;
       this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
       this.FootnoteAreaHeight = 0;
@@ -349,5 +399,8 @@ namespace MySql.Data.VisualStudio.MySqlX
     private System.Windows.Forms.ImageList ConnectionTypesImageList;
     private System.Windows.Forms.ToolStripMenuItem ViewAsToolStripMenuItem;
     private System.Windows.Forms.ToolStripSeparator ToolStripSeparator1;
+    private System.Windows.Forms.Button MigrateWorkbenchConnectionsButton;
+    private System.Windows.Forms.Label AutomaticMigrationDelayValueLabel;
+    private System.Windows.Forms.Label AutomaticMigrationDelayLabel;
   }
 }

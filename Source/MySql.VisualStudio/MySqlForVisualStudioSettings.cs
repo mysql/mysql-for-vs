@@ -25,22 +25,44 @@ using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
+  /// <summary>
+  /// A settings provider customized for MySQL for Visual Studio.
+  /// </summary>
   public class MySqlForVisualStudioSettings : CustomSettingsProvider
   {
-    public override string ApplicationName
-    {
-      get
-      {
-        return Resources.ApplicationName;
-      }
-      set { }
-    }
-
-    public override string SettingsPath
+    /// <summary>
+    /// Gets the fle path for the settings file.
+    /// </summary>
+    public static string SettingsFilePath
     {
       get
       {
         return MySqlDataProviderPackage.Instance.AppDataPath + "settings.config";
+      }
+    }
+
+    /// <summary>
+    /// Gets the name of this application.
+    /// </summary>
+    public override string ApplicationName
+    {
+      get
+      {
+        return AssemblyInfo.AssemblyTitle;
+      }
+      set
+      {
+      }
+    }
+
+    /// <summary>
+    /// Gets the custom path where the settings file is saved.
+    /// </summary>
+    public override string SettingsPath
+    {
+      get
+      {
+        return SettingsFilePath;
       }
     }
   }
