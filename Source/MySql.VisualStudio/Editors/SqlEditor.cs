@@ -56,9 +56,13 @@ namespace MySql.Data.VisualStudio.Editors
       {
         throw new Exception("MySql Data Provider is not correctly registered");
       }
+
       ResultsTabControl.TabPages.Clear();
+
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       ResultsTabControl.Visible = false;
+
+      UpdateButtons();
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -105,6 +109,7 @@ namespace MySql.Data.VisualStudio.Editors
       ConnectionChanged = false;
       if (Connection != null && Connection.State != ConnectionState.Open)
       {
+        Connection.ConnectionString = Utils.GetCompleteConnectionString((MySqlConnection)Connection);
         Connection.Open();
       }
 
@@ -347,10 +352,23 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private void UpdateButtons()
     {
-      bool connected = Connection.State == ConnectionState.Open;
+      bool connected = Connection != null && Connection.State == ConnectionState.Open;
       RunSqlToolStripButton.Enabled = connected;
       DisconnectToolStripButton.Enabled = connected;
       ConnectToolStripButton.Enabled = !connected;
+      if (Connection != null)
+      {
+        UpdateToolStripMenuItemsText(connected);
+      }
+    }
+
+
+    /// <summary>
+    /// Updates the tool strip menu items text.
+    /// </summary>
+    /// <param name="connected">if set to <c>true</c> [connected].</param>
+    private void UpdateToolStripMenuItemsText(bool connected)
+    {
       var relatedWbConnection = MySqlDataProviderPackage.Instance.SelectedMySqlWorkbenchConnection;
       var connectionStringBuilder = new MySqlConnectionStringBuilder(Connection.ConnectionString);
       ConnectionInfoToolStripDropDownButton.Text = connected

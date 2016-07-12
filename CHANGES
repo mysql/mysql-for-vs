@@ -6,6 +6,9 @@
   postpone the migration 1 hour, 1 day, 1 week, 1 month or indefinitely. If the migration is postponed the dialog is shown again
   after that time elapses, although if it is postponed indefinitely an option was added to the "MySQL Connections Manager"
   dialog that permits the migration of connections to be done manually, as long as MySQL Workbench is installed.
+- Fixed a problem when a new MySQL script editor for SQL is initialized through the creation of a new SQL script file, the
+  plugin tried to retrieve some information from a non-existent connection.
+  (Bug #23619311 - ERROR GENERATED WHEN MYSQL SCRIPT IS CREATED)
 
 
 2.0.3
