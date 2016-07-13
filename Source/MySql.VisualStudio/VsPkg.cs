@@ -45,6 +45,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using MySQL.Utility.Classes.MySQL;
 using MySQL.Utility.Forms;
 using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
@@ -240,6 +241,9 @@ namespace MySql.Data.VisualStudio
         throw new Exception("Creating second instance of package");
       Instance = this;
       Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", ToString()));
+
+      // Update the settings file with new default values.
+      UpdateSettingsFile();
     }
 
     internal string ConnectionName { get; set; }
@@ -1478,6 +1482,22 @@ namespace MySql.Data.VisualStudio
       _connectionsMigrationTimer.Tick += ConnectionsMigrationTimer_Tick; ;
       _connectionsMigrationTimer.Interval = MILLISECONDS_IN_HOUR;
       _connectionsMigrationTimer.Start();
+    }
+
+    private static void UpdateSettingsFile()
+    {
+      // Fix the error where the settings file had main element as MySQLForExcel
+      var settingsFilePath = MySqlForVisualStudioSettings.SettingsFilePath;
+      if (File.Exists(settingsFilePath))
+      {
+        var xdoc = XDocument.Load(settingsFilePath);
+        var element = xdoc.Elements("MySQLForExcel").FirstOrDefault();
+        if (element != null)
+        {
+          element.Name = AssemblyInfo.AssemblyTitle.Replace(" ", string.Empty);
+          xdoc.Save(settingsFilePath);
+        }
+      }
     }
 
     #region IVsInstalledProduct Members

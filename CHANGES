@@ -12,6 +12,9 @@
 - Fixed code that enables/disables the context menu options for creating a new MySQL Script file by right-clicking a MySQL
   connection in the Server Explorer, depending on the connection status and on the MySQL Server version supporting the MySQL
   X Protocol. (MySQL Bug #82205, Bug #24064816 - ERROR WHEN SELECTING NEW MYSQL SCRIPT CONTEXT-MENU OPTION FROM A CLOSED CONN)
+- Fixed the hardcoding of MySQLForExcel in the custom settings provider so its main XML element is named after the Application
+  Name ("MySQLForVisualStudio"). Added indentation to inner elements in the configuration file.
+  (MySQL Bug #82221, Bug #24291264 - SETTINGS FILE MAIN XML ELEMENT CALLED MYSQLFOREXCEL)
 
 
 2.0.3
