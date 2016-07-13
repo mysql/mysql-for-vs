@@ -38,6 +38,7 @@ using MySQL.Utility.Classes;
 using MySQL.Utility.Classes.MySQLWorkbench;
 using System;
 using System.ComponentModel.Design;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -130,6 +131,8 @@ namespace MySql.Data.VisualStudio
 
     private MySqlConnection _selectedMySqlConnection;
     private MySqlWorkbenchConnection _selectedMySqlWorkbenchConnection;
+    private Version _serverVersionSupportingXProtocol;
+
     public static MySqlDataProviderPackage Instance;
 
     /// <summary>
@@ -185,6 +188,22 @@ namespace MySql.Data.VisualStudio
     public string SelectedMySqlConnectionName { get; private set; }
 
     /// <summary>
+    /// Gets the minimum MySQL Server version supporting the X Protocol.
+    /// </summary>
+    public Version ServerVersionSupportingXProtocol
+    {
+      get
+      {
+        if (_serverVersionSupportingXProtocol == null)
+        {
+          _serverVersionSupportingXProtocol = new Version(5, 7, 9);
+        }
+
+        return _serverVersionSupportingXProtocol;
+      }
+    }
+
+    /// <summary>
     /// Variable used to hold how many MySqlOutputWindow objects have been created
     /// </summary>
     private int _mySqlOutputWindowCounter = 0;
@@ -216,6 +235,7 @@ namespace MySql.Data.VisualStudio
       _connectionsManagerDialog = null;
       _connectionsMigrationTimer = null;
       _migratingStoredConnections = false;
+      _serverVersionSupportingXProtocol = null;
       if (Instance != null)
         throw new Exception("Creating second instance of package");
       Instance = this;
@@ -296,17 +316,17 @@ namespace MySql.Data.VisualStudio
 
         CommandID cmdNewMySqlScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidNewMySQLScript);
         OleMenuCommand cmdMenuNewMySqlScript = new OleMenuCommand(NewMySqlScriptCallback, cmdNewMySqlScript);
-        cmdMenuNewMySqlScript.BeforeQueryStatus += cmdMenuNewMySQLScript_BeforeQueryStatus;
+        cmdMenuNewMySqlScript.BeforeQueryStatus += cmdMenuNewScript_BeforeQueryStatus;
         mcs.AddCommand(cmdMenuNewMySqlScript);
 
         CommandID cmdNewJavascript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidNewJavascript);
         OleMenuCommand cmdMenuNewJavascript = new OleMenuCommand(NewJavascriptCallback, cmdNewJavascript);
-        cmdMenuNewJavascript.BeforeQueryStatus += cmdMenuNewJavascript_BeforeQueryStatus;
+        cmdMenuNewJavascript.BeforeQueryStatus += cmdMenuNewScript_BeforeQueryStatus;
         mcs.AddCommand(cmdMenuNewJavascript);
 
         CommandID cmdNewPythonScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidNewPythonscript);
         OleMenuCommand cmdMenuNewPythonscript = new OleMenuCommand(NewPythonScriptCallback, cmdNewPythonScript);
-        cmdMenuNewPythonscript.BeforeQueryStatus += cmdMenuNewPythonScript_BeforeQueryStatus;
+        cmdMenuNewPythonscript.BeforeQueryStatus += cmdMenuNewScript_BeforeQueryStatus;
         mcs.AddCommand(cmdMenuNewPythonscript);
 
         CommandID menuGenDbScript = new CommandID(GuidList.CmdSet, (int)PkgCmdIDList.cmdidGenerateDatabaseScript);
@@ -381,6 +401,17 @@ namespace MySql.Data.VisualStudio
       GetCurrentConnection();
     }
 
+    private void SetEnvironmentVariableValues(string mySqlConnectorPath)
+    {
+      Environment.SetEnvironmentVariable(MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.User);
+      Environment.SetEnvironmentVariable(MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.Process);
+    }
+
+    /// <summary>
+    /// Handles the <see cref="OleMenuCommand.BeforeQueryStatus"/> event.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     private void cmdMenuNewScript_BeforeQueryStatus(object sender, EventArgs e)
     {
       var newScriptButton = sender as OleMenuCommand;
@@ -402,62 +433,33 @@ namespace MySql.Data.VisualStudio
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
-      if (GetConnection(ConnectionName) != null)
+      var dataExplorerConnection = GetConnection(ConnectionName);
+      bool connected = dataExplorerConnection != null
+        && dataExplorerConnection.Connection != null
+        && dataExplorerConnection.Connection.State == DataConnectionState.Open;
+      bool showNewScriptButton = false;
+      if (connected)
       {
-        newScriptButton.Enabled = true;
-        newScriptButton.Visible = true;
-      }
-      else
-        newScriptButton.Visible = newScriptButton.Enabled = false;
-    }
-
-    private void SetEnvironmentVariableValues(string mySqlConnectorPath)
-    {
-      Environment.SetEnvironmentVariable(MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.User);
-      Environment.SetEnvironmentVariable(MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.Process);
-    }
-
-    /// <summary>
-    /// Handles the BeforeQueryStatus event of the cmdMenuNewJavascript control.
-    /// Hides the option from servers that do not support the X-Protocol.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void cmdMenuNewJavascript_BeforeQueryStatus(object sender, EventArgs e)
-    {
-      var newScriptbtn = sender as OleMenuCommand;
-      if (newScriptbtn == null)
-      {
-        return;
-      }
-
-      EnvDTE80.DTE2 applicationObject = GetDTE2();
-      UIHierarchy uih = applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
-      if (uih == null)
-      {
-        return;
-      }
-
-      Array selectedItems = uih.SelectedItems as Array;
-      bool shownewScriptbtn = false;
-      if (selectedItems != null)
-      {
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      }
-
-      var connection = GetConnection(ConnectionName);
-      if (connection != null && connection.Connection != null)
-      {
-        var currentConnection = connection.Connection.GetLockedProviderObject() as MySqlConnection;
-        if (currentConnection != null && currentConnection.ServerVersion != null)
+        if (newScriptButton.CommandID.ID == PkgCmdIDList.cmdidNewMySQLScript)
         {
-          Version serverVer = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
-          var version = (serverVer.Major * 10) + serverVer.Minor;
-          shownewScriptbtn = version > 57 || (version == 57 && serverVer.Build >= 9);
+          showNewScriptButton = true;
+        }
+        else
+        {
+          // Hide the option from servers that do not support the X-Protocol.
+          var currentConnection = dataExplorerConnection.Connection.GetLockedProviderObject() as MySqlConnection;
+          if (currentConnection != null
+              && currentConnection.State == ConnectionState.Open
+              && currentConnection.ServerVersion != null)
+          {
+            var serverVersion = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
+            showNewScriptButton = serverVersion.CompareTo(ServerVersionSupportingXProtocol) >= 0;
+          }
         }
       }
 
-      newScriptbtn.Visible = newScriptbtn.Enabled = shownewScriptbtn;
+      newScriptButton.Visible = showNewScriptButton;
+      newScriptButton.Enabled = showNewScriptButton;
     }
 
     /// <summary>
@@ -476,78 +478,6 @@ namespace MySql.Data.VisualStudio
 
       // Create New JavaScript file and open the editor with it.
       CreateNewScript(ScriptType.JavaScript);
-    }
-
-    /// <summary>
-    /// Handles the BeforeQueryStatus event of the cmdMenuNewMySQLScript control, sets the connection object to be used by the opening SQL Editor.
-    /// </summary>
-    /// <param name="sender">The generator of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void cmdMenuNewMySQLScript_BeforeQueryStatus(object sender, EventArgs e)
-    {
-      var newScriptButton = sender as OleMenuCommand;
-      if (newScriptButton == null)
-      {
-        return;
-      }
-
-      EnvDTE80.DTE2 applicationObject = GetDTE2();
-      var uih = applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
-      if (uih == null)
-      {
-        return;
-      }
-
-      var selectedItems = uih.SelectedItems as Array;
-      if (selectedItems != null)
-      {
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      }
-
-      newScriptButton.Visible = newScriptButton.Enabled = GetConnection(ConnectionName) != null;
-    }
-
-    /// <summary>
-    /// Handles the BeforeQueryStatus event of the cmdMenuNewPythonScript control.
-    /// Hides the option from servers that do not support the X-Protocol.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void cmdMenuNewPythonScript_BeforeQueryStatus(object sender, EventArgs e)
-    {
-      var newScriptbtn = sender as OleMenuCommand;
-      if (newScriptbtn == null)
-      {
-        return;
-      }
-
-      EnvDTE80.DTE2 applicationObject = GetDTE2();
-      UIHierarchy uih = applicationObject.ToolWindows.GetToolWindow(EnvDTE.Constants.vsWindowKindServerExplorer) as UIHierarchy;
-      if (uih == null)
-      {
-        return;
-      }
-
-      var selectedItems = uih.SelectedItems as Array;
-      bool shownewScriptbtn = false;
-      if (selectedItems != null)
-      {
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      }
-
-      var connection = GetConnection(ConnectionName);
-      if (connection != null && connection.Connection != null)
-      {
-        var currentConnection = connection.Connection.GetLockedProviderObject() as MySqlConnection;
-        if (currentConnection != null && currentConnection.ServerVersion != null)
-        {
-          Version serverVer = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
-          var version = (serverVer.Major * 10) + serverVer.Minor;
-          shownewScriptbtn = version > 57 || (version == 57 && serverVer.Build >= 9);
-        }
-      }
-
-      newScriptbtn.Visible = newScriptbtn.Enabled = shownewScriptbtn;
     }
 
     /// <summary>

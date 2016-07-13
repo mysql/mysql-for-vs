@@ -9,6 +9,9 @@
 - Fixed a problem when a new MySQL script editor for SQL is initialized through the creation of a new SQL script file, the
   plugin tried to retrieve some information from a non-existent connection.
   (Bug #23619311 - ERROR GENERATED WHEN MYSQL SCRIPT IS CREATED)
+- Fixed code that enables/disables the context menu options for creating a new MySQL Script file by right-clicking a MySQL
+  connection in the Server Explorer, depending on the connection status and on the MySQL Server version supporting the MySQL
+  X Protocol. (MySQL Bug #82205, Bug #24064816 - ERROR WHEN SELECTING NEW MYSQL SCRIPT CONTEXT-MENU OPTION FROM A CLOSED CONN)
 
 
 2.0.3
@@ -29,7 +32,7 @@
 
 
 2.0.2
-- Fixed the MySQL X support for all Visual Studio versions supported by MySQL for Visual Studio (2010 and newer).
+- Fixed the MySQL X Protocol support for all Visual Studio versions supported by MySQL for Visual Studio (2010 and newer).
 - Added support for Visual Studio 2015 with .NET Framework 4.6.
 - Updated the MySQL parser's grammar to include keywords introduced in MySQL 5.7.
 
@@ -51,7 +54,7 @@
   Field Types, Query Stats and Execution Plan.
 - Added the support to handle multiple result sets in the current Query Editor.
 - Fix controls color to match default provided VS Themes (Dark, Blue and Light).
-- Support added for MySQLX protocol, included in MySQL Server 5.7.8.
+- Support added for MySQL X Protocol, included in MySQL Server 5.7.9.
 
 
 1.2.6
