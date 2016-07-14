@@ -1363,10 +1363,6 @@ Check that the server is running, the database exists and the user Error establi
   <data name="ItemTemplateUtilities_SettingsRetrievalError" xml:space="preserve">
     <value>An error occured obtaining the connection string settings.</value>
   </data>
-  <data name="MySqlHybridScriptEditor_NewConnectionError" xml:space="preserve">
-    <value>Error establishing the database Connection.
-Check that the server is running, the database exist and the user credentials are valid.</value>
-  </data>
   <data name="Connection_Fabric_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Connection-Fabric-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -1418,5 +1414,20 @@ Check that the server is running, the database exist and the user credentials ar
   </data>
   <data name="MySqlConnectionsManagerDialog_UnkownStatusError" xml:space="preserve">
     <value>Tested connection but status remained unknown.</value>
+  </data>
+  <data name="NewConnectionErrorDetail" xml:space="preserve">
+    <value>Error establishing the database Connection.</value>
+  </data>
+  <data name="NewConnectionErrorSubDetail" xml:space="preserve">
+    <value>Check that the server is running, the database exist and the user credentials are valid.</value>
+  </data>
+  <data name="NewConnectionNotXProtocolCompatibleDetail" xml:space="preserve">
+    <value>The MySQL Server of this connection does not support the X Protocol.</value>
+  </data>
+  <data name="NewConnectionNotXProtocolCompatibleMoreInfo" xml:space="preserve">
+    <value>Please make sure you are connecting to a MySQL Server that supports the X Protocol and that its X Plugin is enabled.
+
+You can refer to the following link for more information:
+https://dev.mysql.com/doc/internals/en/x-protocol.html</value>
   </data>
 </root>

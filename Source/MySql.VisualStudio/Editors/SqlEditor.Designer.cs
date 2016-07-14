@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Data;
+using System.Windows.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -9,16 +10,30 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary> 
+    /// <summary>
     /// Clean up any resources being used.
     /// </summary>
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-      if (disposing && (components != null))
+      if (disposing)
       {
-        components.Dispose();
+        if (components != null)
+        {
+          components.Dispose();
+        }
+
+        if (Connection != null)
+        {
+          if (Connection.State != ConnectionState.Closed)
+          {
+            Connection.Close();
+          }
+
+          Connection.Dispose();
+        }
       }
+
       base.Dispose(disposing);
     }
 
@@ -38,6 +53,12 @@ namespace MySql.Data.VisualStudio.Editors
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
       this.RunSqlToolStripButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+      this.ConnectionInfoToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+      this.ConnectionMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.HostIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.ServerVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.UserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.SchemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.splitter1 = new System.Windows.Forms.Splitter();
       this.ResultsTabControl = new System.Windows.Forms.TabControl();
       this.resultsPage = new System.Windows.Forms.TabPage();
@@ -46,12 +67,6 @@ namespace MySql.Data.VisualStudio.Editors
       this.messages = new System.Windows.Forms.Label();
       this.imageList1 = new System.Windows.Forms.ImageList(this.components);
       this.CodeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
-      this.ConnectionInfoToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-      this.ConnectionMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.HostIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.ServerVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.UserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.SchemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStrip1.SuspendLayout();
       this.ResultsTabControl.SuspendLayout();
       this.resultsPage.SuspendLayout();
@@ -112,13 +127,63 @@ namespace MySql.Data.VisualStudio.Editors
       this.RunSqlToolStripButton.Name = "RunSqlToolStripButton";
       this.RunSqlToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.RunSqlToolStripButton.Text = "runSqlButton";
-      this.RunSqlToolStripButton.ToolTipText = "Run SQL";
+      this.RunSqlToolStripButton.ToolTipText = "Run script";
       this.RunSqlToolStripButton.Click += new System.EventHandler(this.runSqlButton_Click);
       // 
       // toolStripSeparator2
       // 
       this.toolStripSeparator2.Name = "toolStripSeparator2";
       this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+      // 
+      // ConnectionInfoToolStripDropDownButton
+      // 
+      this.ConnectionInfoToolStripDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ConnectionInfoToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ConnectionMethodToolStripMenuItem,
+            this.HostIdToolStripMenuItem,
+            this.ServerVersionToolStripMenuItem,
+            this.UserToolStripMenuItem,
+            this.SchemaToolStripMenuItem});
+      this.ConnectionInfoToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ConnectionInfoToolStripDropDownButton.Image")));
+      this.ConnectionInfoToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.ConnectionInfoToolStripDropDownButton.Name = "ConnectionInfoToolStripDropDownButton";
+      this.ConnectionInfoToolStripDropDownButton.Size = new System.Drawing.Size(91, 22);
+      this.ConnectionInfoToolStripDropDownButton.Text = "Connection...";
+      // 
+      // ConnectionMethodToolStripMenuItem
+      // 
+      this.ConnectionMethodToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ConnectionMethodToolStripMenuItem.Name = "ConnectionMethodToolStripMenuItem";
+      this.ConnectionMethodToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.ConnectionMethodToolStripMenuItem.Text = "Connection Method: <none>";
+      // 
+      // HostIdToolStripMenuItem
+      // 
+      this.HostIdToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.HostIdToolStripMenuItem.Name = "HostIdToolStripMenuItem";
+      this.HostIdToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.HostIdToolStripMenuItem.Text = "Host ID: <none>";
+      // 
+      // ServerVersionToolStripMenuItem
+      // 
+      this.ServerVersionToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.ServerVersionToolStripMenuItem.Name = "ServerVersionToolStripMenuItem";
+      this.ServerVersionToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.ServerVersionToolStripMenuItem.Text = "Server Version: <none>";
+      // 
+      // UserToolStripMenuItem
+      // 
+      this.UserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.UserToolStripMenuItem.Name = "UserToolStripMenuItem";
+      this.UserToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.UserToolStripMenuItem.Text = "User: <none>";
+      // 
+      // SchemaToolStripMenuItem
+      // 
+      this.SchemaToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.SchemaToolStripMenuItem.Name = "SchemaToolStripMenuItem";
+      this.SchemaToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+      this.SchemaToolStripMenuItem.Text = "Schema: <none>";
       // 
       // splitter1
       // 
@@ -202,56 +267,6 @@ namespace MySql.Data.VisualStudio.Editors
       this.CodeEditor.Name = "CodeEditor";
       this.CodeEditor.Size = new System.Drawing.Size(604, 246);
       this.CodeEditor.TabIndex = 2;
-      // 
-      // ConnectionInfoToolStripDropDownButton
-      // 
-      this.ConnectionInfoToolStripDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.ConnectionInfoToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ConnectionMethodToolStripMenuItem,
-            this.HostIdToolStripMenuItem,
-            this.ServerVersionToolStripMenuItem,
-            this.UserToolStripMenuItem,
-            this.SchemaToolStripMenuItem});
-      this.ConnectionInfoToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ConnectionInfoToolStripDropDownButton.Image")));
-      this.ConnectionInfoToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.ConnectionInfoToolStripDropDownButton.Name = "ConnectionInfoToolStripDropDownButton";
-      this.ConnectionInfoToolStripDropDownButton.Size = new System.Drawing.Size(91, 22);
-      this.ConnectionInfoToolStripDropDownButton.Text = "Connection...";
-      // 
-      // ConnectionMethodToolStripMenuItem
-      // 
-      this.ConnectionMethodToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.ConnectionMethodToolStripMenuItem.Name = "ConnectionMethodToolStripMenuItem";
-      this.ConnectionMethodToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-      this.ConnectionMethodToolStripMenuItem.Text = "Connection Method: <none>";
-      // 
-      // HostIdToolStripMenuItem
-      // 
-      this.HostIdToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.HostIdToolStripMenuItem.Name = "HostIdToolStripMenuItem";
-      this.HostIdToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-      this.HostIdToolStripMenuItem.Text = "Host ID: <none>";
-      // 
-      // ServerVersionToolStripMenuItem
-      // 
-      this.ServerVersionToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.ServerVersionToolStripMenuItem.Name = "ServerVersionToolStripMenuItem";
-      this.ServerVersionToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-      this.ServerVersionToolStripMenuItem.Text = "Server Version: <none>";
-      // 
-      // UserToolStripMenuItem
-      // 
-      this.UserToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.UserToolStripMenuItem.Name = "UserToolStripMenuItem";
-      this.UserToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-      this.UserToolStripMenuItem.Text = "User: <none>";
-      // 
-      // SchemaToolStripMenuItem
-      // 
-      this.SchemaToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.SchemaToolStripMenuItem.Name = "SchemaToolStripMenuItem";
-      this.SchemaToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-      this.SchemaToolStripMenuItem.Text = "Schema: <none>";
       // 
       // SqlEditor
       // 

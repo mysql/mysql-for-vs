@@ -3342,16 +3342,6 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error establishing the database Connection.
-        ///Check that the server is running, the database exist and the user credentials are valid..
-        /// </summary>
-        public static string MySqlHybridScriptEditor_NewConnectionError {
-            get {
-                return ResourceManager.GetString("MySqlHybridScriptEditor_NewConnectionError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to MySQL Output.
         /// </summary>
         public static string MySqlOutputToolCaptionFrame {
@@ -3366,6 +3356,45 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string MySqlScriptWindowLaunchError {
             get {
                 return ResourceManager.GetString("MySqlScriptWindowLaunchError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error establishing the database Connection..
+        /// </summary>
+        public static string NewConnectionErrorDetail {
+            get {
+                return ResourceManager.GetString("NewConnectionErrorDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check that the server is running, the database exist and the user credentials are valid..
+        /// </summary>
+        public static string NewConnectionErrorSubDetail {
+            get {
+                return ResourceManager.GetString("NewConnectionErrorSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The MySQL Server of this connection does not support the X Protocol..
+        /// </summary>
+        public static string NewConnectionNotXProtocolCompatibleDetail {
+            get {
+                return ResourceManager.GetString("NewConnectionNotXProtocolCompatibleDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please make sure you are connecting to a MySQL Server that supports the X Protocol and that its X Plugin is enabled.
+        ///
+        ///You can refer to the following link for more information:
+        ///https://dev.mysql.com/doc/internals/en/x-protocol.html.
+        /// </summary>
+        public static string NewConnectionNotXProtocolCompatibleMoreInfo {
+            get {
+                return ResourceManager.GetString("NewConnectionNotXProtocolCompatibleMoreInfo", resourceCulture);
             }
         }
         

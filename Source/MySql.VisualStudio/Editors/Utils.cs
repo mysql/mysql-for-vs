@@ -160,6 +160,17 @@ namespace MySql.Data.VisualStudio.Editors
     /// True when updating controls to match _currentVsTheme and avoid modifying its value until the process has finished. 
     /// </summary>
     private static bool _isUpdating;
+
+    /// <summary>
+    /// Variable used to hold the current MySql Output Tool Window Pane.
+    /// </summary>
+    private static MySqlOutputWindowPane _mySqlOutputToolWindowPane;
+
+    /// <summary>
+    /// The minimum MySQL Server version supporting the X Protocol.
+    /// </summary>
+    private static Version _serverVersionSupportingXProtocol;
+
     /// <summary>
     /// Dictionary containing a key composed of host + classsicPort and its corresponding xPort.
     /// </summary>
@@ -245,9 +256,20 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Variable used to hold the current MySql Output Tool Window Pane.
+    /// Gets the minimum MySQL Server version supporting the X Protocol.
     /// </summary>
-    private static MySqlOutputWindowPane _mySqlOutputToolWindowPane;
+    public static Version ServerVersionSupportingXProtocol
+    {
+      get
+      {
+        if (_serverVersionSupportingXProtocol == null)
+        {
+          _serverVersionSupportingXProtocol = new Version(5, 7, 9);
+        }
+
+        return _serverVersionSupportingXProtocol;
+      }
+    }
 
     /// <summary>
     /// Separates multiple javascript statements into single ones
@@ -412,7 +434,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// Extract the properties from a given <see cref="MySqlClient.MySqlConnection"/>.
     /// </summary>
     /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
-    /// <returns>The <see cref="MySqlConnectionProperties"/> related to the connection.</returns>
+    /// <returns>A <see cref="MySqlConnectionStringBuilder"/> related to the connection.</returns>
     public static MySqlConnectionStringBuilder GetProperties(this MySqlConnection connection)
     {
       if (connection == null)
@@ -548,6 +570,23 @@ namespace MySql.Data.VisualStudio.Editors
             e.Value = "<BLOB>";
         }
       };
+    }
+
+    /// <summary>
+    /// Checks if the given connection is tied to a MySQL Server version that supports the X Protocol.
+    /// </summary>
+    /// <param name="connection">An instance of a class implementing <see cref="IDbConnection"/>.</param>
+    /// <returns><c>true</c> if the given connection is tied to a MySQL Server version that supports the X Protocol, <c>false</c> otherwise.</returns>
+    public static bool ServerVersionSupportsXProtocol(this IDbConnection connection)
+    {
+      var mySqlConnection = connection as MySqlConnection;
+      if (mySqlConnection == null || mySqlConnection.State != ConnectionState.Open || mySqlConnection.ServerVersion == null)
+      {
+        return false;
+      }
+
+      var serverVersion = Parser.ParserUtils.GetVersion(mySqlConnection.ServerVersion);
+      return serverVersion.CompareTo(ServerVersionSupportingXProtocol) >= 0;
     }
 
     /// <summary>

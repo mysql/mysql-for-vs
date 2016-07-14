@@ -15,6 +15,9 @@
 - Fixed the hardcoding of MySQLForExcel in the custom settings provider so its main XML element is named after the Application
   Name ("MySQLForVisualStudio"). Added indentation to inner elements in the configuration file.
   (MySQL Bug #82221, Bug #24291264 - SETTINGS FILE MAIN XML ELEMENT CALLED MYSQLFOREXCEL)
+- Added a validation to check if the Server version of an unnamed/temporary connection, created within a MySQL Script editor,
+  supports the X Protocol; since JavaScript and Python scripts only work using the X Protocol.
+  (MySQL Bug #82219, Bug #24290570 - PYTHON AND JS SCRIPTS NOT VALIDATING X PROTOCOL SUPPORT USING MANUAL CONNECTIONS)
 
 
 2.0.3

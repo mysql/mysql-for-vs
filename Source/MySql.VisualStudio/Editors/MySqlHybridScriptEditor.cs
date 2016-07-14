@@ -36,7 +36,7 @@ using MySqlX;
 using System.Text;
 using ConsoleTables.Core;
 using MySql.Data.VisualStudio.Properties;
-using MessageBox = System.Windows.Forms.MessageBox;
+using MySQL.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -264,9 +264,15 @@ namespace MySql.Data.VisualStudio.Editors
         using (var connectDialog = new ConnectDialog())
         {
           connectDialog.Connection = Connection;
-          DialogResult r = connectDialog.ShowDialog();
-          if (r == DialogResult.Cancel)
+          if (connectDialog.ShowDialog() == DialogResult.Cancel)
           {
+            return;
+          }
+
+          // Check if the MySQL Server version supports the X Protocol.
+          if (!connectDialog.Connection.ServerVersionSupportsXProtocol())
+          {
+            InfoDialog.ShowDialog(InfoDialogProperties.GetWarningDialogProperties(Resources.WarningText, Resources.NewConnectionNotXProtocolCompatibleDetail, null, Resources.NewConnectionNotXProtocolCompatibleMoreInfo));
             return;
           }
 
@@ -276,7 +282,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       catch (MySqlException)
       {
-        MessageBox.Show(Resources.MySqlHybridScriptEditor_NewConnectionError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.NewConnectionErrorDetail, Resources.NewConnectionErrorSubDetail));
       }
     }
 
@@ -873,33 +879,6 @@ namespace MySql.Data.VisualStudio.Editors
           xShellConsoleEditor1.PromptString = "mysql-js>";
           break;
       }
-    }
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        if (components != null)
-        {
-          components.Dispose();
-        }
-
-        if (_xShellWrapper != null)
-        {
-          _xShellWrapper.CleanConnection();
-        }
-
-        if (Connection.State != ConnectionState.Closed)
-        {
-          Connection.Close();
-        }
-      }
-
-      base.Dispose(disposing);
     }
   }
 }

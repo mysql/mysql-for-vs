@@ -132,7 +132,6 @@ namespace MySql.Data.VisualStudio
 
     private MySqlConnection _selectedMySqlConnection;
     private MySqlWorkbenchConnection _selectedMySqlWorkbenchConnection;
-    private Version _serverVersionSupportingXProtocol;
 
     public static MySqlDataProviderPackage Instance;
 
@@ -189,22 +188,6 @@ namespace MySql.Data.VisualStudio
     public string SelectedMySqlConnectionName { get; private set; }
 
     /// <summary>
-    /// Gets the minimum MySQL Server version supporting the X Protocol.
-    /// </summary>
-    public Version ServerVersionSupportingXProtocol
-    {
-      get
-      {
-        if (_serverVersionSupportingXProtocol == null)
-        {
-          _serverVersionSupportingXProtocol = new Version(5, 7, 9);
-        }
-
-        return _serverVersionSupportingXProtocol;
-      }
-    }
-
-    /// <summary>
     /// Variable used to hold how many MySqlOutputWindow objects have been created
     /// </summary>
     private int _mySqlOutputWindowCounter = 0;
@@ -236,7 +219,6 @@ namespace MySql.Data.VisualStudio
       _connectionsManagerDialog = null;
       _connectionsMigrationTimer = null;
       _migratingStoredConnections = false;
-      _serverVersionSupportingXProtocol = null;
       if (Instance != null)
         throw new Exception("Creating second instance of package");
       Instance = this;
@@ -452,13 +434,7 @@ namespace MySql.Data.VisualStudio
         {
           // Hide the option from servers that do not support the X-Protocol.
           var currentConnection = dataExplorerConnection.Connection.GetLockedProviderObject() as MySqlConnection;
-          if (currentConnection != null
-              && currentConnection.State == ConnectionState.Open
-              && currentConnection.ServerVersion != null)
-          {
-            var serverVersion = Parser.ParserUtils.GetVersion(currentConnection.ServerVersion);
-            showNewScriptButton = serverVersion.CompareTo(ServerVersionSupportingXProtocol) >= 0;
-          }
+          showNewScriptButton = currentConnection.ServerVersionSupportsXProtocol();
         }
       }
 

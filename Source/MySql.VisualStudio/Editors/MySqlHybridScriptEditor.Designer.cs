@@ -20,6 +20,7 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System.Data;
 using System.Windows.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -30,6 +31,38 @@ namespace MySql.Data.VisualStudio.Editors
     /// Required designer variable.
     /// </summary>
     private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        if (components != null)
+        {
+          components.Dispose();
+        }
+
+        if (_xShellWrapper != null)
+        {
+          _xShellWrapper.CleanConnection();
+        }
+
+        if (Connection != null)
+        {
+          if (Connection.State != ConnectionState.Closed)
+          {
+            Connection.Close();
+          }
+
+          Connection.Dispose();
+        }
+      }
+
+      base.Dispose(disposing);
+    }
 
     #region Component Designer generated code
 
@@ -107,7 +140,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.ConnectToolStripButton.Name = "ConnectToolStripButton";
       this.ConnectToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.ConnectToolStripButton.Text = "connectButton";
-      this.ConnectToolStripButton.ToolTipText = "Connect to...";
+      this.ConnectToolStripButton.ToolTipText = "Connect to MySQL...";
       this.ConnectToolStripButton.Click += new System.EventHandler(this.connectButton_Click);
       // 
       // DisconnectToolStripButton
@@ -135,7 +168,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.RunScriptToolStripButton.Name = "RunScriptToolStripButton";
       this.RunScriptToolStripButton.Size = new System.Drawing.Size(23, 22);
       this.RunScriptToolStripButton.Text = "runScriptButton";
-      this.RunScriptToolStripButton.ToolTipText = "Run Js";
+      this.RunScriptToolStripButton.ToolTipText = "Run script";
       this.RunScriptToolStripButton.Click += new System.EventHandler(this.runScriptButton_Click);
       // 
       // toolStripSeparator2

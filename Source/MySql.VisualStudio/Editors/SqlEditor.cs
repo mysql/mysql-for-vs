@@ -30,6 +30,7 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Properties;
 using MySQL.Utility.Classes;
+using MySQL.Utility.Forms;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -183,20 +184,23 @@ namespace MySql.Data.VisualStudio.Editors
     private void connectButton_Click(object sender, EventArgs e)
     {
       resultsPage.Hide();
-      using (var d = new ConnectDialog())
+      try
       {
-        d.Connection = Connection;
-        DialogResult r = d.ShowDialog();
-        if (r == DialogResult.Cancel) return;
-        try
+        using (var connectDialog = new ConnectDialog())
         {
-          Connection = d.Connection;
+          connectDialog.Connection = Connection;
+          if (connectDialog.ShowDialog() == DialogResult.Cancel)
+          {
+            return;
+          }
+
+          Connection = connectDialog.Connection;
           UpdateButtons();
         }
-        catch (MySqlException)
-        {
-          MessageBox.Show(Resources.MySqlHybridScriptEditor_NewConnectionError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
-        }
+      }
+      catch (MySqlException)
+      {
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.NewConnectionErrorDetail, Resources.NewConnectionErrorSubDetail));
       }
     }
 
