@@ -1,120 +1,83 @@
-﻿// Copyright © 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
-using System.IO;
-using MySql.Parser;
 using Xunit;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace MySql.Parser.Tests
 {
   public static class Utility
   {
-    public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb)
+    internal const string DEFAULT_HOST = "localhost";
+    internal const string DEFAULT_USER = "test";
+    internal const string DEFAULT_PASSWORD = "test";
+    internal const string DEFAULT_DATABASE = "sakila";
+    internal const string DEFAULT_PORT = "3357";
+
+    public static string ParseSql(string sql)
     {
-      return ParseSql(sql, expectErrors, out sb, new Version(5, 1));
+      return ParseSql(sql, false);
     }
 
-    public static MySQL51Parser.query_return ParseSqlQuery(string sql, bool expectErrors, out StringBuilder sb)
+    public static string ParseSql(string sql, bool expectErrors)
     {
-      return ParseSqlQuery(sql, expectErrors, out sb, new Version(5, 1));
+      return ParseSql(sql, expectErrors, new Version(5, 7, 12));
     }
 
-    public static MySQL51Parser.query_return ParseSqlQuery(string sql, bool expectErrors, out StringBuilder sb, Version version)
+    public static string ParseSql(string sql, bool expectErrors, Version version)
     {
-      MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(sql));//ASCIIEncoding.ASCII.GetBytes(sql/*.ToUpper() */));
-      CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
-      MySQLLexer lexer = new MySQLLexer(input);
-      lexer.MySqlVersion = version;
-      StringBuilder sbLex = new StringBuilder();
-      lexer.TraceDestination = new StringWriter(sbLex);
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      MySQLParser parser = new MySQLParser(tokens);
-      parser.MySqlVersion = version;
-      sb = new StringBuilder();
-      TextWriter tw = new StringWriter(sb);
-      parser.TraceDestination = tw;
-      MySQL51Parser.query_return r = parser.query();
+      var mySqlConnection = CreateMySqlConnection();
+      var mySqlParser = new MySqlWbParser(mySqlConnection, version);
+      var result = mySqlParser.CheckSyntax(sql);
       if (!expectErrors)
       {
-        if (0 != parser.NumberOfSyntaxErrors)
-          Assert.Equal("", sb.ToString());
-        Assert.Equal("", sbLex.ToString());
+        Assert.Equal(string.Empty, result);
       }
       else
       {
-        Assert.NotEqual(0, parser.NumberOfSyntaxErrors);
+        Assert.NotEqual(string.Empty, result);
       }
-      return r;
+
+      return result;
     }
 
-    public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb, Version version )
+    private static MySqlConnection CreateMySqlConnection()
     {
-      MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(sql));//ASCIIEncoding.ASCII.GetBytes(sql/*.ToUpper() */));
-      CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
-      MySQLLexer lexer = new MySQLLexer(input);
-      lexer.MySqlVersion = version;
-      StringBuilder sbLex = new StringBuilder();
-      lexer.TraceDestination = new StringWriter(sbLex);
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      MySQLParser parser = new MySQLParser(tokens);
-      parser.MySqlVersion = version;
-      sb = new StringBuilder();
-      TextWriter tw = new StringWriter(sb);
-      parser.TraceDestination = tw;
-      MySQL51Parser.program_return r = parser.program();
-      if (!expectErrors)
-      {
-        if (0 != parser.NumberOfSyntaxErrors)
-          Assert.Equal("", sb.ToString());
-        Assert.Equal("", sbLex.ToString());
-      }
-      else
-      {
-        Assert.NotEqual(0, parser.NumberOfSyntaxErrors);
-      }
-      return r;
+      // Get conn string from config file
+      string host = ConfigurationManager.AppSettings["host"];
+      host = !string.IsNullOrEmpty(host) ? host : DEFAULT_HOST;
+      string user = ConfigurationManager.AppSettings["user"];
+      user = !string.IsNullOrEmpty(user) ? user : DEFAULT_USER;
+      string password = ConfigurationManager.AppSettings["password"];
+      password = !string.IsNullOrEmpty(password) ? password : DEFAULT_PASSWORD;
+      string database = ConfigurationManager.AppSettings["database"];
+      database = !string.IsNullOrEmpty(database) ? database : DEFAULT_DATABASE;
+      string port = ConfigurationManager.AppSettings["port"];
+      port = !string.IsNullOrEmpty(port) ? port : DEFAULT_PORT;
+      var conn = new MySqlConnection(string.Format("server={0};uid={1};pwd={2};database={3};port={4}", host, user, password, database, port));
+      conn.Open();
+      return conn;
     }
-
-    public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, Version version)
-    {
-      StringBuilder sb;
-      return ParseSql(sql, expectErrors, out sb, version);
-    }
-
-    public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors)
-    {
-      StringBuilder sb;
-      return ParseSql(sql, expectErrors, out sb);
-    }
-
-    public static MySQL51Parser.program_return ParseSql(string sql)
-  {
-    return ParseSql(sql, false);
-  }
   }
 }

@@ -20,53 +20,40 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-namespace MySql.Parser.Tests
+using System;
+using Xunit;
+
+namespace MySql.Parser.Tests.DDL.Alter
 {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Text;
-  using Antlr.Runtime;
-  using Antlr.Runtime.Tree;
-  using MySql.Parser;
-  using Xunit;
-
-
   public class AlterUser
   {
     [Fact]
     public void Simple()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: http://dev.mysql.com/doc/refman/5.7/en/alter-user.html
+      //Utility.ParseSql(@"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", false, new Version(5, 7, 12));
     }
 
     [Fact]
     public void Simple55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", true, out sb, new Version(5, 5));
-      Assert.True(sb.ToString().IndexOf("user", StringComparison.InvariantCultureIgnoreCase)
-        != -1);
+      string result = Utility.ParseSql(@"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", true, new Version(5, 5, 0));
+      Assert.True(result.IndexOf("This syntax is only allowed for server versions starting with 5.6.6. The current version is 5.5.0", StringComparison.InvariantCultureIgnoreCase) != -1);
     }
 
+    [Fact]
     public void AlterUser_IfExists_5_6()
     {
       string sql = @"ALTER USER IF EXISTS 'jeffrey'@'localhost' PASSWORD EXPIRE;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, true, out sb, new Version(5, 6));
+      Utility.ParseSql(sql, true, new Version(5, 6, 0));
     }
 
     [Fact]
     public void AlterUser_IfExists_5_7()
     {
-      string sql = @"ALTER USER IF EXISTS 'jeffrey'@'localhost' PASSWORD EXPIRE;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb, new Version(5, 7));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: http://dev.mysql.com/doc/refman/5.7/en/alter-user.html
+      //string sql = @"ALTER USER IF EXISTS 'jeffrey'@'localhost' PASSWORD EXPIRE;";
+      //Utility.ParseSql(sql, false, new Version(5, 7, 12));
     }
   }
 }

@@ -1,43 +1,36 @@
-﻿// Copyright © 2013 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
-
-namespace MySql.Parser.Tests
+namespace MySql.Parser.Tests.DDL.Create
 {
-  
   public class CreateEvent
   {
     [Fact]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT myevent
+      Utility.ParseSql(@"CREATE EVENT myevent
     ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR
     DO
       UPDATE myschema.mytable SET mycol = mycol + 1;", false);
@@ -46,7 +39,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_totals
+      Utility.ParseSql(@"CREATE EVENT e_totals
          ON SCHEDULE AT '2006-02-10 23:59:00'
          DO INSERT INTO test.totals VALUES (NOW())", false);
     }
@@ -54,7 +47,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_hourly
+      Utility.ParseSql(@"CREATE EVENT e_hourly
     ON SCHEDULE
       EVERY 1 HOUR
     COMMENT 'Clears out sessions table each hour.'
@@ -65,7 +58,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_daily
+      Utility.ParseSql(@"CREATE EVENT e_daily
     ON SCHEDULE
       EVERY 1 DAY
     COMMENT 'Saves total number of sessions then clears the table each day'
@@ -81,7 +74,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple4a()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e
+      Utility.ParseSql(@"CREATE EVENT e
     ON SCHEDULE
       EVERY 5 SECOND
     DO
@@ -102,7 +95,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple5()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_call_myproc
+      Utility.ParseSql(@"CREATE EVENT e_call_myproc
     ON SCHEDULE
       AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
     DO CALL myproc(5, 27);", false);
@@ -111,12 +104,12 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple5In50()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_call_myproc
+      string result = Utility.ParseSql(@"CREATE EVENT e_call_myproc
     ON SCHEDULE
       AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
-    DO CALL myproc(5, 27);", true, out sb, new Version( 5, 0 ));
-      Assert.True(sb.ToString().IndexOf( "no viable alternative at input 'EVENT'" ) != -1 );
+    DO CALL myproc(5, 27);", true, new Version(5, 0, 0));
+      Assert.True(result.IndexOf(@"'EVENT' (event) is not valid input here.", StringComparison.InvariantCultureIgnoreCase) != -1 &&
+        result.IndexOf("This syntax is only allowed for server versions starting with 5.1.0. The current version is 5.0.0", StringComparison.InvariantCultureIgnoreCase) != -1);
     }
   }
 }

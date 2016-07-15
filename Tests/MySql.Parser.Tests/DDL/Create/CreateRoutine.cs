@@ -1,37 +1,30 @@
-﻿// Copyright © 2013 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
-
-namespace MySql.Parser.Tests
+namespace MySql.Parser.Tests.DDL.Create
 {
-  
   public class CreateRoutine
   {
     [Fact]
@@ -42,9 +35,7 @@ CREATE PROCEDURE simpleproc (OUT param1 INT)
     BEGIN
       SELECT COUNT(*) INTO param1 FROM t;
     END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -57,9 +48,7 @@ BEGIN
   REPEAT SET @x = @x + 1; UNTIL @x > p1 END REPEAT;
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -70,9 +59,7 @@ SQL SECURITY INVOKER
 BEGIN
   SELECT 'Number of accounts:', COUNT(*) FROM mysql.user;
 END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -95,9 +82,7 @@ BEGIN
 INSERT INTO tbl_error_log(error_level, error_level_name, error_message, error_file,error_line, error_context,error_query_string,error_time, user_id, post_data, user_msg)
 values(error_level, error_level_name, error_message, error_file,error_line, error_context,error_query_string, error_time, user_id, post_data, user_msg);
 END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -118,16 +103,14 @@ begin
     set y = n * 5;
     set z = n * 10;
     set str = CONCAT(str, 'o');
-    
+
     end;
     end while;
 
 end;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
-    
+
 
     [Fact]
     public void SimpleFunc()
@@ -135,9 +118,7 @@ end;";
       string sql = @"CREATE FUNCTION hello (s CHAR(20))
     RETURNS CHAR(50) DETERMINISTIC
     RETURN CONCAT('Hello, ',s,'!');";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -158,9 +139,7 @@ set fieldresult = case when locate(xmlTagBegin,message) = 0 then ''
 else substring(message,locate(xmlTagBegin,message) + lenField,locate(xmlTagEnd,message) - (locate(xmlTagBegin,message) + lenField)) end;
 return fieldresult;
 end";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -177,9 +156,7 @@ SELECT CONCAT_WS(' ', db.people.FirstName, db.people.MiddleName, db.people.Famil
 RETURN fulname;
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -200,9 +177,7 @@ END;
 
     RETURN s;
   END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -227,9 +202,7 @@ END;
 
     RETURN s;
   END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -241,48 +214,44 @@ begin
   insert into test3 (1), (2), (3);
   # insert into test3 values (1), (2), (3);
 end";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, true, out sb);
+      Utility.ParseSql(sql, true);
     }
 
     [Fact]
     public void NameIsKeyword()
     {
       string sql = @"
-CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
-BEGIN 
-  DECLARE y varchar(50); 
-  INSERT INTO world.d_table (`name`) VALUES (""Armando""); 
-  INSERT INTO world.d_table (`name`) VALUES (""Elisa""); 
-  select row_count() into y; 
-  select found_rows() into y; 
-  select last_insert_id() into y; 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `count`()
+BEGIN
+  DECLARE y varchar(50);
+  INSERT INTO world.d_table (`name`) VALUES (""Armando"");
+  INSERT INTO world.d_table (`name`) VALUES (""Elisa"");
+  select row_count() into y;
+  select found_rows() into y;
+  select last_insert_id() into y;
 END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
     public void DifferentDeclareOrders()
     {
       string sql = @"
-CREATE DEFINER=`root`@`localhost` PROCEDURE `dohandler`() 
-BEGIN 
-  DECLARE dup_keys CONDITION FOR SQLSTATE '23000'; 
-  DECLARE y varchar(50); 
-  DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1; 
-  SET @x = 1; 
-  INSERT INTO world.d_table (`name`) VALUES (""Armando""); 
-  SET @x = 2; 
-  INSERT INTO world.d_table (`name`) VALUES (""Elisa""); 
-  set @x = 3; 
-  select row_count() into y; 
-  select found_rows() into y; 
-  select last_insert_id() into y; 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `dohandler`()
+BEGIN
+  DECLARE dup_keys CONDITION FOR SQLSTATE '23000';
+  DECLARE y varchar(50);
+  DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
+  SET @x = 1;
+  INSERT INTO world.d_table (`name`) VALUES (""Armando"");
+  SET @x = 2;
+  INSERT INTO world.d_table (`name`) VALUES (""Elisa"");
+  set @x = 3;
+  select row_count() into y;
+  select found_rows() into y;
+  select last_insert_id() into y;
 END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -294,57 +263,54 @@ begin
 
     declare i int;
     declare myresult int;
-    
+
     SET @@GLOBAL.max_sp_recursion_depth = 20;
-    SET @@session.max_sp_recursion_depth = 20; 
+    SET @@session.max_sp_recursion_depth = 20;
     set i = 0;
-    
+
     drop table if exists tblFibo;
     create table tblFibo( n int, fibo int );
-    
-    while i < nMax do    
+
+    while i < nMax do
         call spFiboGen( i, myresult );
         insert into tblFibo( n, fibo ) values ( i, myresult );
         set i = i + 1;
     end while;
 
 end;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
     public void RoutineWithRowcount51()
     {
-      string sql = @"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
-BEGIN 
-  DECLARE y varchar(50); 
-  INSERT INTO d_table (`name`) VALUES (""y""); 
-  INSERT INTO d_table (`name`) VALUES (""x""); 
-  select row_count() into y; 
-  select found_rows() into y; 
-  select last_insert_id() into y; 
+      string sql = @"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`()
+BEGIN
+  DECLARE y varchar(50);
+  INSERT INTO d_table (`name`) VALUES (""y"");
+  INSERT INTO d_table (`name`) VALUES (""x"");
+  select row_count() into y;
+  select found_rows() into y;
+  select last_insert_id() into y;
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version(5, 1));
+      Utility.ParseSql(sql, false, new Version(5, 1, 0));
     }
 
     [Fact]
     public void RoutineWithRowcount56()
     {
-      string sql = @"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
-BEGIN 
-  DECLARE y varchar(50); 
-  INSERT INTO d_table (`name`) VALUES (""y""); 
-  INSERT INTO d_table (`name`) VALUES (""x""); 
-  select row_count() into y; 
-  select found_rows() into y; 
-  select last_insert_id() into y; 
+      string sql = @"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`()
+BEGIN
+  DECLARE y varchar(50);
+  INSERT INTO d_table (`name`) VALUES (""y"");
+  INSERT INTO d_table (`name`) VALUES (""x"");
+  select row_count() into y;
+  select found_rows() into y;
+  select last_insert_id() into y;
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version( 5, 6 ));
+      Utility.ParseSql(sql, false, new Version(5, 6, 0));
     }
 
     [Fact]
@@ -352,33 +318,32 @@ END;
     {
       string sql = @"create procedure sp()
   begin
-     DECLARE temp_timestamp datetime DEFAULT CURRENT_TIMESTAMP;     
+     DECLARE temp_timestamp datetime DEFAULT CURRENT_TIMESTAMP;
      DECLARE temp_news_type varchar(3);
-     DECLARE temp_news_id decimal(3);        
-     DECLARE temp_news_line varchar(80) character set big5; 
-     
-     DECLARE temp_start_time ,temp_end_time varchar(19);     
-          
-     DECLARE turnover_str varchar(30) character set big5 DEFAULT 'Short Sell Turnover';      
+     DECLARE temp_news_id decimal(3);
+     DECLARE temp_news_line varchar(80) character set big5;
+
+     DECLARE temp_start_time ,temp_end_time varchar(19);
+
+     DECLARE turnover_str varchar(30) character set big5 DEFAULT 'Short Sell Turnover';
      DECLARE shortsellz INT;
-     
+
      DECLARE stock_code varchar(8);
-     DECLARE stock_code_is_num decimal(1);     
-     DECLARE stock_code_int decimal(5) DEFAULT 0;      
-     DECLARE shortsell_share_char,shortsell_turnover_char  varchar(15); 
-       
-     DECLARE shortsell_share_pre,shortsell_turnover_pre decimal(15);         
-     DECLARE temp_timestamp_out varchar(10);       
-     DECLARE temp_sub_line1 ,temp_sub_line2 varchar(70);      
-     DECLARE turnover_char_length,temp_sub_line1_length,temp_sub_length_a ,stock_code_include_x INT;         
-     DECLARE stock_code_include_v varchar(5); 
+     DECLARE stock_code_is_num decimal(1);
+     DECLARE stock_code_int decimal(5) DEFAULT 0;
+     DECLARE shortsell_share_char,shortsell_turnover_char  varchar(15);
+
+     DECLARE shortsell_share_pre,shortsell_turnover_pre decimal(15);
+     DECLARE temp_timestamp_out varchar(10);
+     DECLARE temp_sub_line1 ,temp_sub_line2 varchar(70);
+     DECLARE turnover_char_length,temp_sub_line1_length,temp_sub_length_a ,stock_code_include_x INT;
+     DECLARE stock_code_include_v varchar(5);
      DECLARE non_designated_char varchar(1) DEFAULT 'N';
-     DECLARE stock_code_include_y INT;     
-     DECLARE stock_code_include_yv varchar(5); 
+     DECLARE stock_code_include_y INT;
+     DECLARE stock_code_include_yv varchar(5);
      DECLARE non_HKD_char varchar(1) DEFAULT 'N';
   end;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -443,8 +408,7 @@ proc: BEGIN
     /* Clean up */
     DROP TABLE tmpCustomer;
 END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version(5, 1));
+      Utility.ParseSql(sql, false, new Version(5, 1, 0));
     }
   }
 }

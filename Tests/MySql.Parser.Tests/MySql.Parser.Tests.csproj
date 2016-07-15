@@ -83,11 +83,41 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\Source\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="ParsingSupport">
+      <HintPath>..\..\Dependencies\Parser\ParsingSupport.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -125,7 +155,6 @@
     <Compile Include="DDL\Create\CreateTablespace.cs" />
     <Compile Include="DDL\Create\CreateTrigger.cs" />
     <Compile Include="DDL\Create\CreateView.cs" />
-    <Compile Include="Other\AccountManagement.cs" />
     <Compile Include="DDL\Drop\DropDatabase.cs" />
     <Compile Include="DDL\Drop\DropEvent.cs" />
     <Compile Include="DDL\Drop\DropIndex.cs" />
@@ -133,6 +162,13 @@
     <Compile Include="DDL\Drop\DropTable.cs" />
     <Compile Include="DDL\Drop\DropTrigger.cs" />
     <Compile Include="DDL\Drop\DropView.cs" />
+    <Compile Include="DDL\Show\Show.cs" />
+    <Compile Include="DML\Delete.cs" />
+    <Compile Include="DML\Insert.cs" />
+    <Compile Include="DML\Select.cs" />
+    <Compile Include="DML\Update.cs" />
+    <Compile Include="Infrastructure\TokenStreamRemovable.cs" />
+    <Compile Include="Other\AccountManagement.cs" />
     <Compile Include="Other\Call.cs" />
     <Compile Include="Other\CompoundStatements.cs" />
     <Compile Include="Other\Explain.cs" />
@@ -143,7 +179,6 @@
     <Compile Include="Other\Handler.cs" />
     <Compile Include="Other\Intellisense.cs" />
     <Compile Include="Other\Literal.cs" />
-    <Compile Include="Infrastructure\TokenStreamRemovable.cs" />
     <Compile Include="Other\LoadDataInfile.cs" />
     <Compile Include="Other\Other.cs" />
     <Compile Include="Other\Other2.cs" />
@@ -154,11 +189,6 @@
     <Compile Include="Other\Signal.cs" />
     <Compile Include="Other\Transaction.cs" />
     <Compile Include="Other\TruncateTable.cs" />
-    <Compile Include="DDL\Show\Show.cs" />
-    <Compile Include="DML\Delete.cs" />
-    <Compile Include="DML\Insert.cs" />
-    <Compile Include="DML\Select.cs" />
-    <Compile Include="DML\Update.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
@@ -169,7 +199,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+    <None Include="testsettings.runsettings" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -182,4 +216,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <!-- Custom targets to:
+	1. Copy the "Parser" dependencies to the build folder -->
+  <Target Name="AfterBuild">
+    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\Parser\*.*&quot; &quot;$(OutputPath)&quot; /S /Y /I" />
+  </Target>
 </Project>

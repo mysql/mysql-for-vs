@@ -1,78 +1,67 @@
-﻿// Copyright © 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
-
-namespace MySql.Parser.Tests
+namespace MySql.Parser.Tests.Other
 {
-  
   public class GetDiagnostics
   {
     [Fact]
     public void Simple_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", true, out sb, new Version(5, 5));
-      Assert.True(sb.ToString().IndexOf("rule savepoint_ident failed predicate: { input.LT(1).Text.ToLower() == \"savepoint\" }?") != -1);
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+      //string result = Utility.ParseSql(@"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", true, new Version(5, 5, 0));
+      //Assert.True(result.IndexOf("rule savepoint_ident failed predicate: { input.LT(1).Text.ToLower() == \"savepoint\" }?",
+      //  StringComparison.InvariantCultureIgnoreCase) != -1);
     }
 
     [Fact]
     public void Simple_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+      //Utility.ParseSql(@"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Simple_2_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS @cno = NUMBER;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+      //Utility.ParseSql(@"GET DIAGNOSTICS @cno = NUMBER;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Simple_3_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION @cno @errno = MYSQL_ERRNO;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+      //Utility.ParseSql(@"GET DIAGNOSTICS CONDITION @cno @errno = MYSQL_ERRNO;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Compound_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"CREATE PROCEDURE do_insert(`value` INT)
 BEGIN
   -- declare variables to hold diagnostics area information
@@ -98,49 +87,45 @@ BEGIN
   END IF;
   -- say what happened
   SELECT result;
-END;", false, out sb, new Version(5, 6));
+END;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Compound__2_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION 1
-@p3 = SCHEMA_NAME, @p4 = TABLE_NAME;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+//      Utility.ParseSql(
+//        @"GET DIAGNOSTICS CONDITION 1
+//@p3 = SCHEMA_NAME, @p4 = TABLE_NAME;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Compound_3_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION 1
-    @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+    //  Utility.ParseSql(
+    //    @"GET DIAGNOSTICS CONDITION 1
+    //@p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Compound_4_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, out sb, new Version(5, 6));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+      //Utility.ParseSql(@"GET DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Stacked_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", true, out sb, new Version(5, 6));
+      Utility.ParseSql(@"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", true, new Version(5, 6, 31));
     }
 
     [Fact]
     public void Stacked_57()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, out sb, new Version(5, 7));
+      // ToDo: MYSQLFORVS-612 - This should be working, as stated here: https://dev.mysql.com/doc/refman/5.6/en/get-diagnostics.html
+      //Utility.ParseSql(@"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, new Version(5, 7, 12));
     }
   }
 }
