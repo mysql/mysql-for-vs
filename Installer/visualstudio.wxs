@@ -44,6 +44,18 @@
         <File Id='msvcp120' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
         <File Id='msvcr120' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
         <File Id='vccorlib120' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+        <File Id='base.dll' Name='base.dll' DiskId='1'
+              Source='..\Dependencies\Parser\base.dll'/>
+        <File Id='libglib-2.0-0.dll' Name='libglib-2.0-0.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
+        <File Id='libiconv.dll' Name='libiconv.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libiconv.dll'/>
+        <File Id='libintl-8.dll' Name='libintl-8.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libintl-8.dll'/>
+        <File Id='parsers.dll' Name='parsers.dll' DiskId='1'
+              Source='..\Dependencies\Parser\parsers.dll'/>
+        <File Id='ParsingSupport.dll' Name='ParsingSupport.dll' DiskId='1'
+              Source='..\Dependencies\Parser\ParsingSupport.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -155,6 +167,18 @@
         <File Id='msvcp120_2012' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
         <File Id='msvcr120_2012' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
         <File Id='vccorlib120_2012' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+        <File Id='base.dll_2012' Name='base.dll' DiskId='1'
+              Source='..\Dependencies\Parser\base.dll'/>
+        <File Id='libglib-2.0-0.dll_2012' Name='libglib-2.0-0.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
+        <File Id='libiconv.dll_2012' Name='libiconv.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libiconv.dll'/>
+        <File Id='libintl-8.dll_2012' Name='libintl-8.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libintl-8.dll'/>
+        <File Id='parsers.dll_2012' Name='parsers.dll' DiskId='1'
+              Source='..\Dependencies\Parser\parsers.dll'/>
+        <File Id='ParsingSupport.dll_2012' Name='ParsingSupport.dll' DiskId='1'
+              Source='..\Dependencies\Parser\ParsingSupport.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -266,6 +290,18 @@
         <File Id='msvcp120_2013' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
         <File Id='msvcr120_2013' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
         <File Id='vccorlib120_2013' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+        <File Id='base.dll_2013' Name='base.dll' DiskId='1'
+              Source='..\Dependencies\Parser\base.dll'/>
+        <File Id='libglib-2.0-0.dll_2013' Name='libglib-2.0-0.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
+        <File Id='libiconv.dll_2013' Name='libiconv.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libiconv.dll'/>
+        <File Id='libintl-8.dll_2013' Name='libintl-8.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libintl-8.dll'/>
+        <File Id='parsers.dll_2013' Name='parsers.dll' DiskId='1'
+              Source='..\Dependencies\Parser\parsers.dll'/>
+        <File Id='ParsingSupport.dll_2013' Name='ParsingSupport.dll' DiskId='1'
+              Source='..\Dependencies\Parser\ParsingSupport.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -378,6 +414,18 @@
         <File Id='msvcp120_2015' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
         <File Id='msvcr120_2015' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
         <File Id='vccorlib120_2015' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+        <File Id='base.dll_2015' Name='base.dll' DiskId='1'
+              Source='..\Dependencies\Parser\base.dll'/>
+        <File Id='libglib-2.0-0.dll_2015' Name='libglib-2.0-0.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
+        <File Id='libiconv.dll_2015' Name='libiconv.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libiconv.dll'/>
+        <File Id='libintl-8.dll_2015' Name='libintl-8.dll' DiskId='1'
+              Source='..\Dependencies\Parser\libintl-8.dll'/>
+        <File Id='parsers.dll_2015' Name='parsers.dll' DiskId='1'
+              Source='..\Dependencies\Parser\parsers.dll'/>
+        <File Id='ParsingSupport.dll_2015' Name='ParsingSupport.dll' DiskId='1'
+              Source='..\Dependencies\Parser\ParsingSupport.dll'/>
       </Component>
     </DirectoryRef>
 
