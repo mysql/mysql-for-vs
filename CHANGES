@@ -18,6 +18,8 @@
 - Added a validation to check if the Server version of an unnamed/temporary connection, created within a MySQL Script editor,
   supports the X Protocol; since JavaScript and Python scripts only work using the X Protocol.
   (MySQL Bug #82219, Bug #24290570 - PYTHON AND JS SCRIPTS NOT VALIDATING X PROTOCOL SUPPORT USING MANUAL CONNECTIONS)
+- Added support for "Optimizer Hints", creating Parser unit tests to validate optimizer hints queries and validating such queries
+  can be executed in MySQL query editor.
 
 
 2.0.3
