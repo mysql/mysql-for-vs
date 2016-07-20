@@ -180,6 +180,7 @@
     <Compile Include="Other\Intellisense.cs" />
     <Compile Include="Other\Literal.cs" />
     <Compile Include="Other\LoadDataInfile.cs" />
+    <Compile Include="Other\OptimizerHints.cs" />
     <Compile Include="Other\Other.cs" />
     <Compile Include="Other\Other2.cs" />
     <Compile Include="Other\Other3.cs" />
