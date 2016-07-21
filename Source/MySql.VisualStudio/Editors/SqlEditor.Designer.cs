@@ -190,7 +190,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
       this.splitter1.Location = new System.Drawing.Point(0, 271);
       this.splitter1.Name = "splitter1";
-      this.splitter1.Size = new System.Drawing.Size(604, 10);
+      this.splitter1.Size = new System.Drawing.Size(604, 3);
       this.splitter1.TabIndex = 3;
       this.splitter1.TabStop = false;
       // 
@@ -201,10 +201,10 @@ namespace MySql.Data.VisualStudio.Editors
       this.ResultsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
       this.ResultsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
       this.ResultsTabControl.ImageList = this.imageList1;
-      this.ResultsTabControl.Location = new System.Drawing.Point(0, 281);
+      this.ResultsTabControl.Location = new System.Drawing.Point(0, 274);
       this.ResultsTabControl.Name = "ResultsTabControl";
       this.ResultsTabControl.SelectedIndex = 0;
-      this.ResultsTabControl.Size = new System.Drawing.Size(604, 185);
+      this.ResultsTabControl.Size = new System.Drawing.Size(604, 192);
       this.ResultsTabControl.TabIndex = 4;
       // 
       // resultsPage
@@ -214,7 +214,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.resultsPage.Location = new System.Drawing.Point(4, 23);
       this.resultsPage.Name = "resultsPage";
       this.resultsPage.Padding = new System.Windows.Forms.Padding(3);
-      this.resultsPage.Size = new System.Drawing.Size(596, 158);
+      this.resultsPage.Size = new System.Drawing.Size(596, 165);
       this.resultsPage.TabIndex = 0;
       this.resultsPage.Text = "Results";
       this.resultsPage.UseVisualStyleBackColor = true;
@@ -228,7 +228,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.ResultsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
       this.ResultsDataGridView.Location = new System.Drawing.Point(3, 3);
       this.ResultsDataGridView.Name = "ResultsDataGridView";
-      this.ResultsDataGridView.Size = new System.Drawing.Size(590, 152);
+      this.ResultsDataGridView.Size = new System.Drawing.Size(590, 159);
       this.ResultsDataGridView.TabIndex = 0;
       // 
       // messagesPage

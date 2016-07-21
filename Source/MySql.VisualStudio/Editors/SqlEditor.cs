@@ -62,7 +62,7 @@ namespace MySql.Data.VisualStudio.Editors
 
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       ResultsTabControl.Visible = false;
-
+      CodeEditor.Dock = DockStyle.Fill;
       UpdateButtons();
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
@@ -267,6 +267,7 @@ namespace MySql.Data.VisualStudio.Editors
         newResPage.Controls.Add(detailedData);
         ResultsTabControl.TabPages.Add(newResPage);
         ResultsTabControl.Visible = true;
+        CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
       }
       catch (Exception ex)
       {

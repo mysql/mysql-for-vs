@@ -121,6 +121,7 @@ namespace MySql.Data.VisualStudio.Editors
       ResultsTabControl.TabPages.Clear();
       //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       ResultsTabControl.Visible = false;
+      CodeEditor.Dock = DockStyle.Fill;
       ScriptType = ScriptType.JavaScript;
       SetXShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
@@ -407,6 +408,7 @@ namespace MySql.Data.VisualStudio.Editors
         PrintResult(statements[statementIndex], result.Result, result.ExecutionTime);
         statementIndex++;
         ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
+        CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
         CodeEditor.Focus();
       }
     }
