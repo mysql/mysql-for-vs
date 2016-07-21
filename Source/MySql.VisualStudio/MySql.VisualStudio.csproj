@@ -1636,11 +1636,14 @@
 	2. Copy the xShell modules to the path "%APPDATA%\Oracle\MySQL for Visual Studio"
 	3. Copy the "Templates" folder to the VS Extensions folder, in order to debug the M4VS custom templates -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="rd &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio&quot; /S /Q" />
+    <Exec Command="IF EXIST &quot;$(VS_Expr_Folder)\Extensions&quot; del /f /s /q &quot;$(VS_Expr_Folder)\Extensions\*&quot;" />
+    <Exec Command="rd /s /q &quot;$(VS_Expr_Folder)\Extensions&quot;" />
+    <!-- Reset the experimental instance -->
+    <Exec Command="&quot;$(VsSDKToolsPath)\CreateExpInstance.exe&quot; /Reset /VSInstance=$(VisualStudioVersion) /RootSuffix=Exp" />
   </Target>
   <Target Name="AfterBuild">
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
     <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\modules\*&quot; &quot;%APPDATA%\Oracle\MySQL for Visual Studio\modules&quot; /S /Y /I" />
-	<Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Source\MySql.VisualStudio\Templates\*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\Templates&quot; /S /Y /I" />
+    <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Source\MySql.VisualStudio\Templates\*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\Templates&quot; /S /Y /I" />
   </Target>
 </Project>
