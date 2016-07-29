@@ -50,7 +50,6 @@ namespace mysh
       virtual ~AdminSession() { reset_session(); }
 
       virtual shcore::Value get_member(const std::string &prop) const;
-      virtual bool has_member(const std::string &prop) const;
 
       virtual shcore::Value connect(const shcore::Argument_list &args);
       virtual shcore::Value close(const shcore::Argument_list &args);
@@ -69,7 +68,7 @@ namespace mysh
 
       boost::shared_ptr<shcore::Object_bridge> create(const shcore::Argument_list &args);
 
-#ifdef DOXYGEN
+#if DOXYGEN_JS
       String uri; //!< Same as getUri()
       Schema defaultCluster; //!< Same as getDefaultSchema()
 
