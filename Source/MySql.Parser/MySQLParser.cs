@@ -29,7 +29,7 @@ using Parsers;
 
 namespace MySql.Parser
 {
-  public class MySqlWbParser : IMySQLParsingDataProvider
+  public class MySqlWbParser : IMySQLParsingDataProvider, IDisposable
   {
     private static MySQLParseService _service;
     private const string MYSQL_CASESENSITIVITY_COMMAND = "lower_case_table_names";
@@ -40,8 +40,7 @@ namespace MySql.Parser
       try
       {
         // Create the Parser service, getting the MySql mode and version from the server.
-        _service = MySQLParseService.CreateServiceW(this, GetVersion(null),
-          GetMySqlMode(mySqlConnection), GetMySqlCaseSensitivity(mySqlConnection));
+        _service = new MySQLParseService(this, GetVersion(null), GetMySqlMode(mySqlConnection), string.Empty);
       }
       catch (Exception ex)
       {
@@ -55,8 +54,7 @@ namespace MySql.Parser
       try
       {
         // Create the Parser service, with an specific version and getting the MySql mode from the server.
-        _service = MySQLParseService.CreateServiceW(this, version,
-          GetMySqlMode(mySqlConnection), GetMySqlCaseSensitivity(mySqlConnection));
+        _service = new MySQLParseService(this, version, GetMySqlMode(mySqlConnection), string.Empty);
       }
       catch (Exception ex)
       {
@@ -65,10 +63,24 @@ namespace MySql.Parser
       }
     }
 
+    #region "IMySQLParsingDataProvider implementation"
     public List<Tuple<string, string>> RunQuery(string query)
     {
       return new List<Tuple<string, string>>();
     }
+
+    public void DataRetrievalInProgress(bool busy)
+    {
+    }
+    #endregion
+
+    #region "IDisposable implementation"
+
+    public void Dispose()
+    {
+      GC.SuppressFinalize(_service);
+    }
+    #endregion
 
     public string CheckSyntax(string query)
     {

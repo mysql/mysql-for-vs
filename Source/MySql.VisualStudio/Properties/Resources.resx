@@ -1430,4 +1430,10 @@ Check that the server is running, the database exists and the user Error establi
 You can refer to the following link for more information:
 https://dev.mysql.com/doc/internals/en/x-protocol.html</value>
   </data>
+  <data name="ErrorInMySqlCommand" xml:space="preserve">
+    <value>There is an error in the MySql Command.</value>
+  </data>
+  <data name="ErrorNoActiveMySqlConnection" xml:space="preserve">
+    <value>There is no active MySql connection.</value>
+  </data>
 </root>

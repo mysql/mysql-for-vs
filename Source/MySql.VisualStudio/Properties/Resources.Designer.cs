@@ -2870,6 +2870,24 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is an error in the MySql Command..
+        /// </summary>
+        public static string ErrorInMySqlCommand {
+            get {
+                return ResourceManager.GetString("ErrorInMySqlCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no active MySql connection..
+        /// </summary>
+        public static string ErrorNoActiveMySqlConnection {
+            get {
+                return ResourceManager.GetString("ErrorNoActiveMySqlConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error establishing the database connection.
         ///Check that the server is running, the database exists and the user Error establishing the database connection. Check that the server is running, the database exists and the user credentials are valid..
         /// </summary>

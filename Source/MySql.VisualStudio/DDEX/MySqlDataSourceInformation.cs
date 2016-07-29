@@ -63,6 +63,7 @@ namespace MySql.Data.VisualStudio.DDEX
       AddProperty(ParameterPrefix, "@");
       AddProperty(ParameterPrefixInName, true);
       AddProperty(DefaultCatalog, null);
+      AddProperty(SupportsVerifySql, true);
     }
 
     internal void Refresh()

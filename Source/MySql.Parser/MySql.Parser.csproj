@@ -70,6 +70,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>114;3021;414</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -80,6 +81,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>114;3021;414</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>false</DebugSymbols>
@@ -247,5 +249,6 @@
 	1. Copy the "Parser" dependencies to the build -->
   <Target Name="AfterBuild">
     <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\Parser\*.*&quot; &quot;$(OutputPath)&quot; /S /Y /I" />
+    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\XShell\*.*&quot; &quot;$(OutputPath)&quot; /S /Y /I" />
   </Target>
 </Project>

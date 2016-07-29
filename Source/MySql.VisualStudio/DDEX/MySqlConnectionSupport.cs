@@ -30,6 +30,7 @@ using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Parser;
 
 namespace MySql.Data.VisualStudio.DDEX
 {
@@ -209,6 +210,43 @@ namespace MySql.Data.VisualStudio.DDEX
       }
 
       base.Close();
+    }
+
+    /// <summary>
+    /// Derives the schema returned from a specified MySQL command, indicating the layout of items and blocks in a given data reader.
+    /// </summary>
+    /// <param name="command">Data-source-specific MySQL command for which to derive the schema</param>
+    /// <param name="commandType">Type of the indicated MySQL command, specifying how to interpret the contents of the <paramref name="command" /> parameter.</param>
+    /// <param name="parameters">Array of <see cref="T:Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetParameter" /> objects for the specified command type.</param>
+    /// <param name="commandTimeout">Length of time, in seconds, to block the client before canceling the schema derivation and returning to the caller. A value of zero indicates infinite timeout; value of -1 indicates a provider default.</param>
+    /// <returns>
+    /// Returns a <see cref="T:Microsoft.VisualStudio.Data.DataReader" /> object instance representing the command schema.
+    /// </returns>
+    /// <exception cref="System.Exception">
+    /// There is no active MySql connection.
+    /// </exception>
+    public override DataReader DeriveSchema(string command, int commandType, DataParameter[] parameters, int commandTimeout)
+    {
+      if (string.IsNullOrEmpty(Connection.ConnectionString))
+      {
+        throw new Exception(Resources.ErrorNoActiveMySqlConnection);
+      }
+
+      using (var mySqlConnection = new MySqlConnection(Connection.ConnectionString))
+      {
+        using (var mySqlParser = new MySqlWbParser(mySqlConnection))
+        {
+          var result = mySqlParser.CheckSyntax(command);
+          if (!string.IsNullOrEmpty(result))
+          {
+            // Show error dialog with syntax check error message.
+            throw new Exception(string.Format("{0} {1}", Resources.ErrorInMySqlCommand, result));
+          }
+        }
+      }
+
+      // Return OK with the query window
+      return base.Execute(command, commandType, parameters, commandTimeout);
     }
   }
 }

@@ -189,6 +189,10 @@
   </PropertyGroup>
   <!-- References that applies for all VS versions -->
   <ItemGroup>
+    <Reference Include="ParsingSupport, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Parser\ParsingSupport.dll</HintPath>
+    </Reference>
     <Reference Include="XShellClientMgd">
       <HintPath>..\..\Dependencies\xShell\XShellClientMgd.dll</HintPath>
     </Reference>
@@ -1634,7 +1638,8 @@
   <!-- Targets when debugging VS
 	1. Clean the experimental instance folder and copy the xShell dependencies to it.
 	2. Copy the xShell modules to the path "%APPDATA%\Oracle\MySQL for Visual Studio"
-	3. Copy the "Templates" folder to the VS Extensions folder, in order to debug the M4VS custom templates -->
+	3. Copy the "Templates" folder to the VS Extensions folder, in order to debug the M4VS custom templates
+  4. Copy the "Parser" dependencies to the VS Extensions folder -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
     <Exec Command="IF EXIST &quot;$(VS_Expr_Folder)\Extensions&quot; del /f /s /q &quot;$(VS_Expr_Folder)\Extensions\*&quot;" />
     <Exec Command="rd /s /q &quot;$(VS_Expr_Folder)\Extensions&quot;" />
@@ -1643,6 +1648,7 @@
   </Target>
   <Target Name="AfterBuild">
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
+    <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\Parser\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
     <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\modules\*&quot; &quot;%APPDATA%\Oracle\MySQL for Visual Studio\modules&quot; /S /Y /I" />
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Source\MySql.VisualStudio\Templates\*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\Templates&quot; /S /Y /I" />
   </Target>
