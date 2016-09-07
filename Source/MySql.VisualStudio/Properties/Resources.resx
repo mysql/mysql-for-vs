@@ -1527,4 +1527,10 @@ https://dev.mysql.com/doc/internals/en/x-protocol.html</value>
   <data name="ConnectDialog_ConnectionAlreadyExistsSubDetail" xml:space="preserve">
     <value>Do you want to rename it to '{0}'?</value>
   </data>
+  <data name="DetailedResultsetView_LoadData_OpenConnectionError" xml:space="preserve">
+    <value>The following error occurred while opening the connection to the MySQL Server: {0}</value>
+  </data>
+  <data name="DetailedResultsetView_LoadData_QueryExecuteError" xml:space="preserve">
+    <value>The following error occurred while executing query '{0}': {1}</value>
+  </data>
 </root>

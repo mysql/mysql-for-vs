@@ -29,7 +29,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.VisualStudio.Properties;
 using MySQL.Utility.Classes;
+using MySQL.Utility.Classes.MySQL;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -90,20 +92,20 @@ namespace MySql.Data.VisualStudio.Editors
     private string _baseExecutionPlanQuery;
 
     /// <summary>
-    /// This property stores the MySqlConnection object used to execute the queries
+    /// The <see cref="MySqlConnection"/> object used to execute the queries.
     /// </summary>
-    internal MySqlConnection Connection;
-
-    /// <summary>
-    /// Stores the Server version used in the current MySqlConnection
-    /// </summary>
-    private int _currentServerVersion;
+    private MySqlConnection _connection;
 
     /// <summary>
     /// Dictionary used to store the queries that are executed in the database which are generated after a query is received
     /// </summary>
     private Dictionary<string, string> _queries;
-    
+
+    /// <summary>
+    /// Gets the version of the connected MySQL Server.
+    /// </summary>
+    private int _serverVersion;
+
     #endregion Fields
 
     /// <summary>
@@ -112,6 +114,7 @@ namespace MySql.Data.VisualStudio.Editors
     public DetailedResultsetView()
     {
       InitializeComponent();
+      Connection = null;
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       Controls.SetColors();
@@ -126,6 +129,44 @@ namespace MySql.Data.VisualStudio.Editors
       Controls.SetColors();
 #endif
     }
+
+    #region Properties
+
+    /// <summary>
+    /// Gets or sets the <see cref="MySqlConnection"/> object used to execute the queries.
+    /// </summary>
+    public MySqlConnection Connection
+    {
+      get
+      {
+        return _connection;
+      }
+
+      set
+      {
+        _connection = value;
+        _serverVersion = 0;
+      }
+    }
+
+    /// <summary>
+    /// Gets the version of the connected MySQL Server.
+    /// </summary>
+    public int ServerVersion
+    {
+      get
+      {
+        if (_serverVersion == 0 && _connection != null)
+        {
+          var version = Parser.ParserUtils.GetVersion(_connection.ServerVersion);
+          _serverVersion = (version.Major * 10) + version.Minor;
+        }
+
+        return _serverVersion;
+      }
+    }
+
+    #endregion Properties
 
     /// <summary>
     /// Set the query that will be used to generate the information views
@@ -146,7 +187,6 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       Connection = connection;
-      ValidateServerVersion();
       LoadResources();
       return GenerateQueryBatch(query);
     }
@@ -178,7 +218,7 @@ namespace MySql.Data.VisualStudio.Editors
         _queries.Add(EXECUTION_PLAN_KEY, string.Format(_baseExecutionPlanQuery, baseQuery));
       }
 
-      if (_currentServerVersion > 55)
+      if (ServerVersion > 55)
       {
         _queries.Add(PERFORMANCE_SCHEMA_KEY, _basePerformanceSchemaConfigurationQuery);
         _queries.Add(QUERY_STATISTICS_KEY, string.Format(_baseQueryStatisticsQuery, baseQuery.Substring(0, baseQuery.LastIndexOf(';')).Trim().Replace("'", "''")));
@@ -194,89 +234,92 @@ namespace MySql.Data.VisualStudio.Editors
     private bool LoadData()
     {
       bool success = true;
-      DataTable resultDataTable = new DataTable();
-      DataTable fieldTypesDataTable = new DataTable();
+      var resultDataTable = new DataTable();
+      var fieldTypesDataTable = new DataTable();
       DataTable queryStatisticsDataTable = null;
-      string executionPlanJsonData = string.Empty;
       DataTable executionPlanDataTable = null;
       bool closeConn = false;
+      MySqlTransaction transaction = null;
+      string currentQuery = null;
 
-
-      if (Connection.State != ConnectionState.Open)
+      try
       {
-        Connection.Open();
-        closeConn = true;
-      }
-
-      var tran = Connection.BeginTransaction();
-      using (var cmd = new MySqlCommand())
-      {
-        cmd.Connection = Connection;
-        cmd.Transaction = tran;
-        try
+        if (Connection.State != ConnectionState.Open)
         {
-          if (_queries.ContainsKey(PERFORMANCE_SCHEMA_KEY) && !string.IsNullOrEmpty(_queries[PERFORMANCE_SCHEMA_KEY]))
-          {
-            cmd.CommandText = _queries[PERFORMANCE_SCHEMA_KEY];
-            cmd.ExecuteNonQuery();
-          }
+          Connection.Open();
+          closeConn = true;
+        }
 
-          cmd.CommandText = _queries[QUERY_KEY];
-          resultDataTable.Load(cmd.ExecuteReader());
-
-          if (_queries.ContainsKey(FIELD_TYPE_KEY) && !string.IsNullOrEmpty(_queries[FIELD_TYPE_KEY]))
+        transaction = Connection.BeginTransaction();
+        using (var cmd = new MySqlCommand())
+        {
+          using (var mysqlAdapter = new MySqlDataAdapter(cmd))
           {
-            cmd.CommandText = _queries[FIELD_TYPE_KEY];
-            fieldTypesDataTable.Load(cmd.ExecuteReader());
-          }
-
-          if (_queries.ContainsKey(QUERY_STATISTICS_KEY) && !string.IsNullOrEmpty(_queries[QUERY_STATISTICS_KEY]))
-          {
-            cmd.CommandText = _queries[QUERY_STATISTICS_KEY];
-            queryStatisticsDataTable = new DataTable();
-            queryStatisticsDataTable.Load(cmd.ExecuteReader());
-          }
-
-          if (_queries.ContainsKey(EXECUTION_PLAN_KEY) && !string.IsNullOrEmpty(_queries[EXECUTION_PLAN_KEY]))
-          {
-            if (_currentServerVersion > 55)
+            cmd.Connection = Connection;
+            cmd.Transaction = transaction;
+            if (_queries.ContainsKey(PERFORMANCE_SCHEMA_KEY) && !string.IsNullOrEmpty(_queries[PERFORMANCE_SCHEMA_KEY]))
             {
-              cmd.CommandText = _queries[EXECUTION_PLAN_KEY];
-              var reader = cmd.ExecuteReader();
-              reader.Read();
-              executionPlanJsonData = reader[0].ToString();
-              reader.Close();
+              currentQuery = cmd.CommandText = _queries[PERFORMANCE_SCHEMA_KEY];
+              cmd.ExecuteNonQuery();
             }
-            else
+
+            currentQuery = cmd.CommandText = _queries[QUERY_KEY];
+            mysqlAdapter.Fill(resultDataTable);
+
+            if (_queries.ContainsKey(FIELD_TYPE_KEY) && !string.IsNullOrEmpty(_queries[FIELD_TYPE_KEY]))
             {
-              cmd.CommandText = _queries[EXECUTION_PLAN_KEY];
+              currentQuery = cmd.CommandText = _queries[FIELD_TYPE_KEY];
+              mysqlAdapter.Fill(fieldTypesDataTable);
+            }
+
+            if (_queries.ContainsKey(QUERY_STATISTICS_KEY) && !string.IsNullOrEmpty(_queries[QUERY_STATISTICS_KEY]))
+            {
+              currentQuery = cmd.CommandText = _queries[QUERY_STATISTICS_KEY];
+              queryStatisticsDataTable = new DataTable();
+              mysqlAdapter.Fill(queryStatisticsDataTable);
+            }
+
+            if (_queries.ContainsKey(EXECUTION_PLAN_KEY) && !string.IsNullOrEmpty(_queries[EXECUTION_PLAN_KEY]))
+            {
+              currentQuery = cmd.CommandText = _queries[EXECUTION_PLAN_KEY];
               executionPlanDataTable = new DataTable();
-              executionPlanDataTable.Load(cmd.ExecuteReader());
+              mysqlAdapter.Fill(executionPlanDataTable);
             }
           }
 
-          tran.Commit();
+          transaction.Commit();
         }
-        catch (Exception ex)
+      }
+      catch (Exception ex)
+      {
+        success = false;
+        if (transaction != null)
         {
-          success = false;
-          tran.Rollback();
-          Utils.WriteToOutputWindow(string.Format("Error trying to load the data: {0}", ex), MessageType.Error);
+          transaction.Rollback();
         }
-        finally
+
+        var errorMessage = string.IsNullOrEmpty(currentQuery)
+          ? string.Format(Resources.DetailedResultsetView_LoadData_OpenConnectionError, ex.Message)
+          : string.Format(Resources.DetailedResultsetView_LoadData_QueryExecuteError, currentQuery, ex.Message);
+        Utils.WriteToOutputWindow(errorMessage, MessageType.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, errorMessage, false);
+      }
+      finally
+      {
+        if (closeConn && Connection.State != ConnectionState.Closed)
         {
-          if (closeConn)
-          {
-            Connection.Close();
-          }
+          Connection.Close();
         }
       }
 
       ctrlResultSet.SetData(resultDataTable);
       ctrlFieldtypes.SetData(fieldTypesDataTable);
 
-      if (_currentServerVersion > 55)
+      if (ServerVersion > 55)
       {
+        string executionPlanJsonData = executionPlanDataTable != null && executionPlanDataTable.Rows.Count > 0
+          ? executionPlanDataTable.Rows[0][0].ToString()
+          : null;
         ctrlExecPlan.SetData(executionPlanJsonData);
       }
       else
@@ -284,7 +327,7 @@ namespace MySql.Data.VisualStudio.Editors
         ctrlExecPlan.SetData(executionPlanDataTable);
       }
 
-      ctrlQueryStats.SetData(queryStatisticsDataTable, (ServerVersion)_currentServerVersion);
+      ctrlQueryStats.SetData(queryStatisticsDataTable, (ServerVersion)ServerVersion);
       return success;
     }
 
@@ -368,7 +411,7 @@ namespace MySql.Data.VisualStudio.Editors
       ComponentResourceManager resources = new ComponentResourceManager(typeof(DetailedResultsetView));
       _baseFieldTypeQuery = resources.GetString("baseFieldTypeQuery");
 
-      if (_currentServerVersion < 56)
+      if (ServerVersion < 56)
       {
         _baseExecutionPlanQuery = resources.GetString("baseExecPlanQuery51_55");
       }
@@ -431,18 +474,6 @@ namespace MySql.Data.VisualStudio.Editors
     {
       LoadResources();
       ConfigureMenu();
-    }
-
-    /// <summary>
-    /// Get the Server version from the current MySqlConnection and store it in a internal property
-    /// </summary>
-    private void ValidateServerVersion()
-    {
-      if (Connection != null)
-      {
-        Version serverVer = Parser.ParserUtils.GetVersion(Connection.ServerVersion);
-        _currentServerVersion = (serverVer.Major * 10) + serverVer.Minor;
-      }
     }
   }
 }

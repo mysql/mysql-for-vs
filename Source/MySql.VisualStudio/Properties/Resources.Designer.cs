@@ -1895,6 +1895,24 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following error occurred while opening the connection to the MySQL Server: {0}.
+        /// </summary>
+        public static string DetailedResultsetView_LoadData_OpenConnectionError {
+            get {
+                return ResourceManager.GetString("DetailedResultsetView_LoadData_OpenConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following error occurred while executing query &apos;{0}&apos;: {1}.
+        /// </summary>
+        public static string DetailedResultsetView_LoadData_QueryExecuteError {
+            get {
+                return ResourceManager.GetString("DetailedResultsetView_LoadData_QueryExecuteError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow Batch.
         /// </summary>
         public static string DisplayName_AllowBatch {

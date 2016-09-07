@@ -36,6 +36,8 @@
 - Added the ability to fast-switch connections within any of the MySQL script editor windows (SQL, JavaScript or Python), a new
   drop-down is available next to the "Connect to MySQL..." button (first button in the editor window toolbar) that shows all
   Server Explorer connections for the MySQL data provider.
+- Changed the way queries are executed in the SQL script editor, so that a problem caused by non-unique data in MySQL Document
+  Store tables is not present anymore. (MySQL Bug #82589, Bug #24462707 - SQL EDITOR - ERROR ON SELECT WITH DOC STORE TABLE)
 
 
 2.0.3
