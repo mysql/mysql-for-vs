@@ -1419,7 +1419,7 @@ Check that the server is running, the database exists and the user Error establi
     <value>Error establishing the database Connection.</value>
   </data>
   <data name="NewConnectionErrorSubDetail" xml:space="preserve">
-    <value>Check that the server is running, the database exist and the user credentials are valid.</value>
+    <value>Check that the server is running, the database exists and the user credentials are valid.</value>
   </data>
   <data name="NewConnectionNotXProtocolCompatibleDetail" xml:space="preserve">
     <value>The MySQL Server of this connection does not support the X Protocol.</value>
@@ -1430,10 +1430,101 @@ Check that the server is running, the database exists and the user Error establi
 You can refer to the following link for more information:
 https://dev.mysql.com/doc/internals/en/x-protocol.html</value>
   </data>
+  <data name="ConnectDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ConnectDialog_ConnectionAlreadyExistsDetail" xml:space="preserve">
+    <value>A connection named '{0}' already exists in the Server Explorer.</value>
+  </data>
+  <data name="ConnectDialog_ConnectionAlreadyExistsMoreInfo" xml:space="preserve">
+    <value>You can choose any of the following actions:
+
+1. Rename: The new Server Explorer connection will be renamed to '{0}', so no conflict persists.
+2. Replace: The connection parameters of the existing Server Explorer connection '{1}' will be replaced with the ones in the newly created connection, the name will remain the same.
+3. Cancel: Returns to the Connect to MySQL dialog, so a new name can be given to the connection or to review again the connection parameters before deciding an action.</value>
+  </data>
+  <data name="ConnectDialog_ConnectionAlreadyExistsTitle" xml:space="preserve">
+    <value>Connection already exists</value>
+  </data>
+  <data name="ConnectDialog_CreateSchemaDetail" xml:space="preserve">
+    <value>The schema '{0}' does not exist or you do not have permissions to see it.</value>
+  </data>
+  <data name="ConnectDialog_CreateSchemaSubDetail" xml:space="preserve">
+    <value>Do you want to create it?</value>
+  </data>
+  <data name="ConnectDialog_CreateSchemaTitle" xml:space="preserve">
+    <value>Schema not found</value>
+  </data>
+  <data name="ConnectDialog_DataProviderRegisteredError" xml:space="preserve">
+    <value>MySQL Data Provider is not correctly registered.</value>
+  </data>
+  <data name="ConnectDialog_EmptyConnectionNameDetail" xml:space="preserve">
+    <value>The name for the Server Explorer connection cannot be empty.</value>
+  </data>
+  <data name="ConnectDialog_EmptyConnectionNameSubDetail" xml:space="preserve">
+    <value>Do you want to use the suggested name: '{0}'?</value>
+  </data>
+  <data name="ConnectDialog_EmptyConnectionNameTitle" xml:space="preserve">
+    <value>Connection name is empty</value>
+  </data>
+  <data name="ConnectDialog_GetConnectionError" xml:space="preserve">
+    <value>Error creating a new connection with the specified parameters.</value>
+  </data>
+  <data name="ConnectDialog_LoadingSchemas" xml:space="preserve">
+    <value>Loading schemas...</value>
+  </data>
+  <data name="ConnectDialog_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="ConnectDialog_Replace" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="ConnectDialog_SchemasFetchError" xml:space="preserve">
+    <value>Error attempting to retrieve MySQL schemas.</value>
+  </data>
+  <data name="info" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="batch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\batch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="console" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\console.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="database_connect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\database-connect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="database_disconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\database-disconnect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Editors_SeConnectionNotFoundDetail" xml:space="preserve">
+    <value>The connection '{0}' is not in the Server Explorer anymore.</value>
+  </data>
+  <data name="Editors_SeConnectionNotFoundTitle" xml:space="preserve">
+    <value>Connection not found</value>
+  </data>
+  <data name="play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="variable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\variable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="js_id" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\js_id.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="py_id" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\py_id.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_id" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_id.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ErrorInMySqlCommand" xml:space="preserve">
     <value>There is an error in the MySql Command.</value>
   </data>
   <data name="ErrorNoActiveMySqlConnection" xml:space="preserve">
     <value>There is no active MySql connection.</value>
+  </data>
+  <data name="ConnectDialog_ConnectionAlreadyExistsSubDetail" xml:space="preserve">
+    <value>Do you want to rename it to '{0}'?</value>
   </data>
 </root>

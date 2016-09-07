@@ -388,7 +388,7 @@ namespace MySql.Data.VisualStudio.MySqlX
         {
           case MySqlWorkbenchConnection.ConnectionStatusType.Unknown:
             // Should not be in this status, so log the error
-            MySqlSourceTrace.WriteToLog(Resources.MySqlConnectionsManagerDialog_UnkownStatusError);
+            MySqlSourceTrace.WriteToLog(Resources.MySqlConnectionsManagerDialog_UnkownStatusError, false);
             break;
 
           case MySqlWorkbenchConnection.ConnectionStatusType.AcceptingConnections:

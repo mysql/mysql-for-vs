@@ -21,7 +21,6 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Data;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.PlatformUI;
@@ -36,15 +35,16 @@ using MySqlX;
 using System.Text;
 using ConsoleTables.Core;
 using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {
   /// <summary>
   /// This class will handle the logic for the Script Files Editor.
   /// </summary>
-  internal partial class MySqlHybridScriptEditor : BaseEditorControl
+  internal sealed partial class MySqlHybridScriptEditor : BaseEditorControl
   {
+    #region Constants
+
     /// <summary>
     /// Constant to hold the MySqlX "Result" string type
     /// </summary>
@@ -70,10 +70,9 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private const string SYSTEM_STRING_TYPE = "system.string";
 
-    /// <summary>
-    /// Variable to store the value to know if the user wants to execute the statements in the same session or not
-    /// </summary>
-    private SessionOption _sessionOption = SessionOption.UseSameSession;
+    #endregion Constants
+
+    #region Fields
 
     /// <summary>
     /// Variable to store the value to know if the user wants to execute the statements in batch mode or in console mode
@@ -81,19 +80,14 @@ namespace MySql.Data.VisualStudio.Editors
     private ExecutionModeOption _executionModeOption = ExecutionModeOption.BatchMode;
 
     /// <summary>
-    /// Variable used to executes the script
-    /// </summary>
-    private MySqlXProxy _xShellWrapper;
-
-    /// <summary>
-    /// The script type.
-    /// </summary>
-    public ScriptType ScriptType;
-
-    /// <summary>
     /// Variable to verify if the query execution result is not an empty document
     /// </summary>
     private bool _resultIsNotEmptyDocument;
+
+    /// <summary>
+    /// Variable to store the value to know if the user wants to execute the statements in the same session or not
+    /// </summary>
+    private SessionOption _sessionOption = SessionOption.UseSameSession;
 
     /// <summary>
     /// Variable to hold the number of tabs created in the output pane
@@ -101,9 +95,11 @@ namespace MySql.Data.VisualStudio.Editors
     private int _tabCounter;
 
     /// <summary>
-    /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
+    /// Variable used to executes the script
     /// </summary>
-    internal MySqlHybridScriptEditorPane Pane { get; set; }
+    private MySqlXProxy _xShellWrapper;
+
+    #endregion Fields
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MySqlHybridScriptEditor"/> class.
@@ -112,20 +108,22 @@ namespace MySql.Data.VisualStudio.Editors
     public MySqlHybridScriptEditor()
     {
       InitializeComponent();
+
       Factory = MySqlClientFactory.Instance;
       if (Factory == null)
       {
         throw new Exception("MySql Data Provider is not correctly registered");
       }
 
-      ResultsTabControl.TabPages.Clear();
-      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      ResultsTabControl.Visible = false;
-      CodeEditor.Dock = DockStyle.Fill;
+      SetConnection(null, string.Empty, null);
+      IsHybrid = true;
+      EditorActionsToolStrip = EditorToolStrip;
+      Package = MySqlDataProviderPackage.Instance;
+      SetBaseEvents();
+      ClearResults();
       ScriptType = ScriptType.JavaScript;
       SetXShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
-      UpdateButtons();
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -147,10 +145,10 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Controls.SetColors();
       BackColor = Utils.BackgroundColor;
-      xShellConsoleEditor1.Controls.SetColors();
-      xShellConsoleEditor1.BackColor = Utils.EditorBackgroundColor;
-      xShellConsoleEditor1.PromptColor = Utils.FontColor;
-      xShellConsoleEditor1.ForeColor = Utils.FontColor;
+      XShellConsoleEditor.Controls.SetColors();
+      XShellConsoleEditor.BackColor = Utils.EditorBackgroundColor;
+      XShellConsoleEditor.PromptColor = Utils.FontColor;
+      XShellConsoleEditor.ForeColor = Utils.FontColor;
 #endif
     }
 
@@ -164,26 +162,34 @@ namespace MySql.Data.VisualStudio.Editors
       : this()
     {
       ScriptType = scriptType;
+      ConnectionInfoToolStripDropDownButton.Image = scriptType == ScriptType.JavaScript
+        ? Resources.js_id
+        : Resources.py_id;
       SetXShellConsoleEditorPromptString();
       Pane = pane;
       ServiceProvider = sp;
       CodeEditor.Init(sp, this);
-      var package = MySqlDataProviderPackage.Instance;
-      if (package == null || package.SelectedMySqlConnection == null)
+      if (Package == null)
       {
         return;
       }
 
-      Connection = package.SelectedMySqlConnection;
-      ConnectionChanged = false;
-      if (Connection.State != ConnectionState.Open)
-      {
-        Connection.ConnectionString = Utils.GetCompleteConnectionString((MySqlConnection)Connection);
-        Connection.Open();
-      }
-
-      UpdateButtons();
+      SetConnection(Package.SelectedMySqlConnection, Package.SelectedMySqlConnectionName, Package.SelectedMySqlWorkbenchConnection);
     }
+
+    #region Properties
+
+    /// <summary>
+    /// Gets the pane for the current editor. In this case, the pane is from type MySqlScriptEditorPane.
+    /// </summary>
+    internal MySqlHybridScriptEditorPane Pane { get; set; }
+
+    /// <summary>
+    /// The script type.
+    /// </summary>
+    public ScriptType ScriptType { get; set; }
+
+    #endregion Properties
 
     #region Overrides
 
@@ -253,79 +259,90 @@ namespace MySql.Data.VisualStudio.Editors
     #endregion
 
     /// <summary>
-    /// Handles the Click event of the connectButton control.
+    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
     /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void connectButton_Click(object sender, EventArgs e)
+    /// <param name="data">Data to load</param>
+    /// <param name="resultNumber">Result counter</param>
+    private void CreateResultPane(List<Dictionary<string, object>> data, int resultNumber)
     {
-      resultsPage.Hide();
-      try
+      if (data == null)
       {
-        using (var connectDialog = new ConnectDialog())
-        {
-          connectDialog.Connection = Connection;
-          if (connectDialog.ShowDialog() == DialogResult.Cancel)
-          {
-            return;
-          }
-
-          // Check if the MySQL Server version supports the X Protocol.
-          if (!connectDialog.Connection.ServerVersionSupportsXProtocol())
-          {
-            InfoDialog.ShowDialog(InfoDialogProperties.GetWarningDialogProperties(Resources.WarningText, Resources.NewConnectionNotXProtocolCompatibleDetail, null, Resources.NewConnectionNotXProtocolCompatibleMoreInfo));
-            return;
-          }
-
-          Connection = connectDialog.Connection;
-          UpdateButtons();
-        }
+        return;
       }
-      catch (MySqlException)
+
+      TabPage newResPage = Utils.CreateResultPage(resultNumber);
+      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
+      resultViews.Dock = DockStyle.Fill;
+      resultViews.LoadData(data);
+      newResPage.Controls.Add(resultViews);
+      ResultsTabControl.TabPages.Add(newResPage);
+    }
+
+    /// <summary>
+    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
+    /// </summary>
+    /// <param name="data">Data to load</param>
+    /// <param name="resultNumber">Result counter</param>
+    private void CreateResultPane(DocResult data, int resultNumber)
+    {
+      if (data == null)
       {
-        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.NewConnectionErrorDetail, Resources.NewConnectionErrorSubDetail));
+        return;
+      }
+
+      TabPage newResPage = Utils.CreateResultPage(resultNumber);
+      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
+      resultViews.Dock = DockStyle.Fill;
+      resultViews.LoadData(data);
+      newResPage.Controls.Add(resultViews);
+      ResultsTabControl.TabPages.Add(newResPage);
+    }
+
+    /// <summary>
+    /// Executes the script in batch mode.
+    /// </summary>
+    /// <param name="script">The script.</param>
+    private void ExecuteBatchScript(string script)
+    {
+      var statements = new List<string>();
+      switch (ScriptType)
+      {
+        case ScriptType.JavaScript:
+          statements = script.BreakJavaScriptStatements();
+          break;
+        case ScriptType.Python:
+          statements = script.BreakPythonStatements();
+          break;
+      }
+
+      var results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+      if (!results.Any())
+      {
+        return;
+      }
+
+      _tabCounter = 1;
+      _resultIsNotEmptyDocument = false;
+      int statementIndex = 0;
+      foreach (MySqlXResult result in results)
+      {
+        PrintResult(statements[statementIndex], result.Result, result.ExecutionTime);
+        statementIndex++;
+        ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
+        CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
+        CodeEditor.Focus();
       }
     }
 
     /// <summary>
-    /// Handles the Click event of the runSqlButton control.
+    /// Executes the script in console mode.
     /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void runScriptButton_Click(object sender, EventArgs e)
+    /// <param name="script">The script.</param>
+    private void ExecuteConsoleScript(string script)
     {
-      string script = CodeEditor.Text.Trim();
-      ResultsTabControl.TabPages.Clear();
-      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      ResultsTabControl.Visible = false;
-      ExecuteScript(script);
-      StoreCurrentDatabase();
-    }
-
-    /// <summary>
-    /// Reads the current database from the last query executed or batch
-    /// of queries.
-    /// </summary>
-    private void StoreCurrentDatabase()
-    {
-      MySqlConnection con = (MySqlConnection)Connection;
-      MySqlCommand cmd = new MySqlCommand("select database();", con);
-      try
-      {
-        object val = cmd.ExecuteScalar();
-        if (val is DBNull)
-        {
-          CurrentDatabase = "";
-        }
-        else
-        {
-          CurrentDatabase = (string)val;
-        }
-      }
-      catch
-      {
-        WriteToMySqlOutput(Resources.ConnectionClosedErrorTitle, Resources.ConnectionClosedErrorMessage, null, MessageType.Error);
-      }
+      var result = _xShellWrapper.ExecuteQuery(script, ScriptType);
+      PrintResult(script, result.Result, result.ExecutionTime);
+      XShellConsoleEditor.Focus();
     }
 
     /// <summary>
@@ -378,66 +395,70 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Executes the script in batch mode.
+    /// Event fired when the Session Option is changed
     /// </summary>
-    /// <param name="script">The script.</param>
-    private void ExecuteBatchScript(string script)
+    /// <param name="sender">Sender that calls the event (item clicked)</param>
+    /// <param name="e">Event arguments</param>
+    private void PreserveVariablesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      var statements = new List<string>();
-      switch (ScriptType)
-      {
-        case ScriptType.JavaScript:
-          statements = script.BreakJavaScriptStatements();
-          break;
-        case ScriptType.Python:
-          statements = script.BreakPythonStatements();
-          break;
-      }
-
-      var results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
-      if (!results.Any())
+      var clickedItem = sender as ToolStripMenuItem;
+      if (clickedItem == null)
       {
         return;
       }
 
-      _tabCounter = 1;
-      _resultIsNotEmptyDocument = false;
-      int statementIndex = 0;
-      foreach (MySqlXResult result in results)
+      _sessionOption = clickedItem.Checked ? SessionOption.UseSameSession : SessionOption.UseNewSession;
+      if (_xShellWrapper != null)
       {
-        PrintResult(statements[statementIndex], result.Result, result.ExecutionTime);
-        statementIndex++;
-        ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
+        _xShellWrapper.CleanConnection();
+        _xShellWrapper = null;
         CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
-        CodeEditor.Focus();
       }
     }
 
     /// <summary>
-    /// Executes the script in console mode.
+    /// Prints the DocResult type query execution results in the output window
+    /// showing extended information about the execution result (documents returned, execution time, etc.).
     /// </summary>
-    /// <param name="script">The script.</param>
-    private void ExecuteConsoleScript(string script)
+    /// <param name="script">The executed command.</param>
+    /// <param name="result">The DocResult execution result.</param>
+    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintDocResult(string script, DocResult result, ExecutionModeOption executionMode, string duration)
     {
-      var result = _xShellWrapper.ExecuteQuery(script, ScriptType);
-      PrintResult(script, result.Result, result.ExecutionTime);
-      xShellConsoleEditor1.Focus();
-    }
-
-    /// <summary>
-    /// Writes to the My SQL Output Tool Window.
-    /// </summary>
-    /// <param name="action">The action.</param>
-    /// <param name="message">The message.</param>
-    /// <param name="duration">The duration.</param>
-    /// <param name="messageType">Type of the message.</param>
-    private void WriteToMySqlOutput(string action, string message, string duration, MessageType messageType)
-    {
-      Utils.WriteToMySqlOutputWindow(action, message, duration, messageType);
-      if (_executionModeOption == ExecutionModeOption.ConsoleMode)
+      switch (executionMode)
       {
-        xShellConsoleEditor1.AddMessage(message);
+        case ExecutionModeOption.BatchMode:
+          _resultIsNotEmptyDocument = result.FetchAll().Count > 0;
+          if (_resultIsNotEmptyDocument)
+          {
+            CreateResultPane(result, _tabCounter);
+            _tabCounter++;
+          }
+
+          break;
+        case ExecutionModeOption.ConsoleMode:
+          List<Dictionary<string, object>> data = result.FetchAll();
+          foreach (Dictionary<string, object> row in data)
+          {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("{");
+            int i = 0;
+            foreach (KeyValuePair<string, object> kvp in row)
+            {
+              sb.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (i == row.Count - 1) ? "" : ",");
+              i++;
+            }
+
+            sb.AppendLine("},");
+            XShellConsoleEditor.AddMessage(sb.ToString());
+          }
+
+          break;
       }
+
+      WriteToMySqlOutput(script, string.Format("{0} documents in set.", result.FetchAll().Count), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
+      PrintWarnings(script, result, duration);
     }
 
     /// <summary>
@@ -503,73 +524,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Prints the warnings (if exists) of the query execution results, in the output window
-    /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="result">The BaseResult execution result.</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    private void PrintWarnings(string script, BaseResult result, string duration)
-    {
-      if (result.GetWarningCount() > 0)
-      {
-        StringBuilder warningsMessages = new StringBuilder();
-        warningsMessages.AppendFormat(" Warning Count: {0}\n", result.GetWarningCount());
-        List<Dictionary<String, Object>> warnings = result.GetWarnings();
-        foreach (Dictionary<String, Object> warning in warnings)
-        {
-          warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
-        }
-
-        WriteToMySqlOutput(script, warningsMessages.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Warning);
-      }
-    }
-
-    /// <summary>
-    /// Prints the DocResult type query execution results in the output window
-    /// showing extended information about the execution result (documents returned, execution time, etc.).
-    /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="result">The DocResult execution result.</param>
-    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    private void PrintDocResult(string script, DocResult result, ExecutionModeOption executionMode, string duration)
-    {
-      switch (executionMode)
-      {
-        case ExecutionModeOption.BatchMode:
-          _resultIsNotEmptyDocument = result.FetchAll().Count > 0;
-          if (_resultIsNotEmptyDocument)
-          {
-            CreateResultPane(result, _tabCounter);
-            _tabCounter++;
-          }
-
-          break;
-        case ExecutionModeOption.ConsoleMode:
-          List<Dictionary<string, object>> data = result.FetchAll();
-          foreach (Dictionary<string, object> row in data)
-          {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("{");
-            int i = 0;
-            foreach (KeyValuePair<string, object> kvp in row)
-            {
-              sb.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (i == row.Count - 1) ? "" : ",");
-              i++;
-            }
-
-            sb.AppendLine("},");
-            xShellConsoleEditor1.AddMessage(sb.ToString());
-          }
-
-          break;
-      }
-
-      WriteToMySqlOutput(script, string.Format("{0} documents in set.", result.FetchAll().Count), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
-      PrintWarnings(script, result, duration);
-    }
-
-    /// <summary>
     /// Prints the RowResult type query execution results in the output window
     /// showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
@@ -626,7 +580,7 @@ namespace MySql.Data.VisualStudio.Editors
 
           if (table.Rows.Count > 0)
           {
-            xShellConsoleEditor1.AddMessage(table.ToStringAlternative());
+            XShellConsoleEditor.AddMessage(table.ToStringAlternative());
           }
 
           break;
@@ -669,120 +623,97 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
+    /// Prints the warnings (if exists) of the query execution results, in the output window
     /// </summary>
-    /// <param name="data">Data to load</param>
-    /// <param name="resultNumber">Result counter</param>
-    private void CreateResultPane(List<Dictionary<string, object>> data, int resultNumber)
+    /// <param name="script">The executed command.</param>
+    /// <param name="result">The BaseResult execution result.</param>
+    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    private void PrintWarnings(string script, BaseResult result, string duration)
     {
-      if (data == null)
+      if (result.GetWarningCount() <= 0)
       {
         return;
       }
 
-      TabPage newResPage = Utils.CreateResultPage(resultNumber);
-      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
-      resultViews.Dock = DockStyle.Fill;
-      resultViews.LoadData(data);
-      newResPage.Controls.Add(resultViews);
-      ResultsTabControl.TabPages.Add(newResPage);
-    }
-
-    /// <summary>
-    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
-    /// </summary>
-    /// <param name="data">Data to load</param>
-    /// <param name="resultNumber">Result counter</param>
-    private void CreateResultPane(DocResult data, int resultNumber)
-    {
-      if (data == null)
+      StringBuilder warningsMessages = new StringBuilder();
+      warningsMessages.AppendFormat(" Warning Count: {0}\n", result.GetWarningCount());
+      List<Dictionary<String, Object>> warnings = result.GetWarnings();
+      foreach (Dictionary<String, Object> warning in warnings)
       {
-        return;
+        warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
       }
 
-      TabPage newResPage = Utils.CreateResultPage(resultNumber);
-      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
-      resultViews.Dock = DockStyle.Fill;
-      resultViews.LoadData(data);
-      newResPage.Controls.Add(resultViews);
-      ResultsTabControl.TabPages.Add(newResPage);
+      WriteToMySqlOutput(script, warningsMessages.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Warning);
     }
 
     /// <summary>
-    /// Handles the Click event of the disconnectButton control.
+    /// Event delegate method fired when the <see cref="RunScriptToolStripButton"/> is clicked.
     /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void disconnectButton_Click(object sender, EventArgs e)
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    private void RunScriptToolStripButton_Click(object sender, EventArgs e)
     {
-      Connection.Close();
-      UpdateButtons();
+      string script = CodeEditor.Text.Trim();
+      ClearResults();
+      ExecuteScript(script);
+      StoreCurrentDatabase();
     }
 
     /// <summary>
-    /// Updates the toolbar buttons.
+    /// Set the XShellConsoleEditor prompt string according the ScriptType the file format list.
     /// </summary>
-    private void UpdateButtons()
+    private void SetXShellConsoleEditorPromptString()
     {
-      bool connected = Connection != null && Connection.State == ConnectionState.Open;
-      RunScriptToolStripButton.Enabled = connected;
-      DisconnectToolStripButton.Enabled = connected;
-      ConnectToolStripButton.Enabled = !connected;
-      if (Connection != null)
+      switch (ScriptType)
       {
-        UpdateToolStripMenuItemsText(connected);
+        case ScriptType.Sql:
+          XShellConsoleEditor.PromptString = "mysql-slq>";
+          break;
+        case ScriptType.Python:
+          XShellConsoleEditor.PromptString = "mysql-py>";
+          break;
+        case ScriptType.JavaScript:
+          XShellConsoleEditor.PromptString = "mysql-js>";
+          break;
       }
     }
 
-
     /// <summary>
-    /// Updates the tool strip menu items text.
+    /// Toggles the editors between batch mode and console mode.
     /// </summary>
-    /// <param name="connected">if set to <c>true</c> [connected].</param>
-    private void UpdateToolStripMenuItemsText(bool connected)
+    /// <param name="executionMode">The execution mode.</param>
+    private void ToggleEditors(ExecutionModeOption executionMode)
     {
-      var relatedWbConnection = MySqlDataProviderPackage.Instance.SelectedMySqlWorkbenchConnection;
-      var connectionStringBuilder = new MySqlConnectionStringBuilder(Connection.ConnectionString);
-      ConnectionInfoToolStripDropDownButton.Text = connected
-        ? (!ConnectionChanged ? MySqlDataProviderPackage.Instance.SelectedMySqlConnectionName : UNTITLED_CONNECTION)
-        : NONE_TEXT;
-      ConnectionMethodToolStripMenuItem.Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
-          : NONE_TEXT);
-      HostIdToolStripMenuItem.Text = string.Format(HOST_ID_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.HostIdentifier : connectionStringBuilder.GetHostIdentifier())
-          : NONE_TEXT);
-      ServerVersionToolStripMenuItem.Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
-      UserToolStripMenuItem.Text = string.Format(USER_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.UserName : connectionStringBuilder.UserID)
-          : NONE_TEXT);
-      SchemaToolStripMenuItem.Text = string.Format(SCHEMA_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.Schema : connectionStringBuilder.Database)
-          : NONE_TEXT);
-    }
-
-    /// <summary>
-    /// Event fired when the Session Option is changed
-    /// </summary>
-    /// <param name="sender">Sender that calls the event (item clicked)</param>
-    /// <param name="e">Event arguments</param>
-    private void PreserveVariablesToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      var clickedItem = sender as ToolStripMenuItem;
-      if (clickedItem == null)
+      try
       {
-        return;
+        panel1.SuspendLayout();
+        if (executionMode == ExecutionModeOption.BatchMode)
+        {
+          panel1.Controls.Remove(XShellConsoleEditor);
+          panel1.Controls.Add(ResultsTabControl);
+          panel1.Controls.Add(splitter1);
+          // Register the code editor, to add back its handles and events
+          CodeEditor.RegisterEditor();
+          panel1.Controls.Add(CodeEditor);
+          RunScriptToolStripButton.Enabled = true;
+          CodeEditor.Focus();
+        }
+        else
+        {
+          panel1.Controls.Remove(ResultsTabControl);
+          panel1.Controls.Remove(splitter1);
+          // Unregister the code editor, to remove its handles and events
+          CodeEditor.UnregisterEditor();
+          panel1.Controls.Remove(CodeEditor);
+          XShellConsoleEditor.Dock = DockStyle.Fill;
+          panel1.Controls.Add(XShellConsoleEditor);
+          RunScriptToolStripButton.Enabled = false;
+          XShellConsoleEditor.Focus();
+        }
       }
-
-      _sessionOption = clickedItem.Checked ? SessionOption.UseSameSession : SessionOption.UseNewSession;
-      if (_xShellWrapper != null)
+      finally
       {
-        _xShellWrapper.CleanConnection();
-        _xShellWrapper = null;
+        panel1.ResumeLayout();
       }
     }
 
@@ -809,41 +740,18 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Toggles the editors between batch mode and console mode.
+    /// Writes to the My SQL Output Tool Window.
     /// </summary>
-    /// <param name="executionMode">The execution mode.</param>
-    private void ToggleEditors(ExecutionModeOption executionMode)
+    /// <param name="action">The action.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="messageType">Type of the message.</param>
+    protected override void WriteToMySqlOutput(string action, string message, string duration, MessageType messageType)
     {
-      try
+      base.WriteToMySqlOutput(action, message, duration, messageType);
+      if (_executionModeOption == ExecutionModeOption.ConsoleMode)
       {
-        panel1.SuspendLayout();
-        if (executionMode == ExecutionModeOption.BatchMode)
-        {
-          panel1.Controls.Remove(xShellConsoleEditor1);
-          panel1.Controls.Add(ResultsTabControl);
-          panel1.Controls.Add(splitter1);
-          // Register the code editor, to add back its handles and events
-          CodeEditor.RegisterEditor();
-          panel1.Controls.Add(CodeEditor);
-          RunScriptToolStripButton.Enabled = true;
-          CodeEditor.Focus();
-        }
-        else
-        {
-          panel1.Controls.Remove(ResultsTabControl);
-          panel1.Controls.Remove(splitter1);
-          // Unregister the code editor, to remove its handles and events
-          CodeEditor.UnregisterEditor();
-          panel1.Controls.Remove(CodeEditor);
-          xShellConsoleEditor1.Dock = DockStyle.Fill;
-          panel1.Controls.Add(xShellConsoleEditor1);
-          RunScriptToolStripButton.Enabled = false;
-          xShellConsoleEditor1.Focus();
-        }
-      }
-      finally
-      {
-        panel1.ResumeLayout();
+        XShellConsoleEditor.AddMessage(message);
       }
     }
 
@@ -852,35 +760,16 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="XShellConsoleCommandEventArgs"/> instance containing the event data.</param>
-    private void xShellConsoleEditor1_Command(object sender, XShellConsoleCommandEventArgs e)
+    private void XShellConsoleEditor_Command(object sender, XShellConsoleCommandEventArgs e)
     {
       if (e.Command == "cls")
       {
-        xShellConsoleEditor1.ClearMessages();
+        XShellConsoleEditor.ClearMessages();
         e.Cancel = true;
         return;
       }
 
       ExecuteScript(e.Command);
-    }
-
-    /// <summary>
-    /// Set the XShellConsoleEditor prompt string according the ScriptType the file format list.
-    /// </summary>
-    private void SetXShellConsoleEditorPromptString()
-    {
-      switch (ScriptType)
-      {
-        case ScriptType.Sql:
-          xShellConsoleEditor1.PromptString = "mysql-slq>";
-          break;
-        case ScriptType.Python:
-          xShellConsoleEditor1.PromptString = "mysql-py>";
-          break;
-        case ScriptType.JavaScript:
-          xShellConsoleEditor1.PromptString = "mysql-js>";
-          break;
-      }
     }
   }
 }

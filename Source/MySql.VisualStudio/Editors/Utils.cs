@@ -52,7 +52,7 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// Enum used to know what kind of message will be written to the output window
   /// </summary>
-  internal enum MessageType
+  public enum MessageType
   {
     /// <summary>
     /// Use this option to clasify the message as Error
@@ -222,6 +222,7 @@ namespace MySql.Data.VisualStudio.Editors
         return _currentVsTheme;
       }
     }
+
     /// <summary>
     /// Gets the color of the data grid view cell style back.
     /// </summary>
@@ -576,17 +577,44 @@ namespace MySql.Data.VisualStudio.Editors
     /// Checks if the given connection is tied to a MySQL Server version that supports the X Protocol.
     /// </summary>
     /// <param name="connection">An instance of a class implementing <see cref="IDbConnection"/>.</param>
+    /// <param name="openAndCloseConnection">Flag indicating whether the connection is opened and closed if it is not open.</param>
     /// <returns><c>true</c> if the given connection is tied to a MySQL Server version that supports the X Protocol, <c>false</c> otherwise.</returns>
-    public static bool ServerVersionSupportsXProtocol(this IDbConnection connection)
+    public static bool ServerVersionSupportsXProtocol(this IDbConnection connection, bool openAndCloseConnection)
     {
       var mySqlConnection = connection as MySqlConnection;
-      if (mySqlConnection == null || mySqlConnection.State != ConnectionState.Open || mySqlConnection.ServerVersion == null)
+      if (mySqlConnection == null || (mySqlConnection.State != ConnectionState.Open && !openAndCloseConnection))
       {
         return false;
       }
 
-      var serverVersion = Parser.ParserUtils.GetVersion(mySqlConnection.ServerVersion);
-      return serverVersion.CompareTo(ServerVersionSupportingXProtocol) >= 0;
+      bool openedConnection = false;
+      try
+      {
+        if (mySqlConnection.State != ConnectionState.Open && openAndCloseConnection)
+        {
+          mySqlConnection.Open();
+          openedConnection = true;
+        }
+
+        if (mySqlConnection.ServerVersion == null)
+        {
+          return false;
+        }
+
+        var serverVersion = Parser.ParserUtils.GetVersion(mySqlConnection.ServerVersion);
+        return serverVersion.CompareTo(ServerVersionSupportingXProtocol) >= 0;
+      }
+      catch
+      {
+        return false;
+      }
+      finally
+      {
+        if (openedConnection)
+        {
+          mySqlConnection.Close();
+        }
+      }
     }
 
     /// <summary>
@@ -1028,31 +1056,35 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-      if (outWindow != null)
+      if (outWindow == null)
       {
-        // Activate the Output window
-        DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-        if (dte != null)
-        {
-          var win = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
-          win.Activate();
-        }
-
-        Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
-        IVsOutputWindowPane outputPane;
-
-        if (outWindow.GetPane(ref generalPaneGuid, out outputPane) < 0)
-        {
-          outWindow.CreatePane(ref generalPaneGuid, "MySQL", 1, 0);
-          outWindow.GetPane(ref generalPaneGuid, out outputPane);
-        }
-
-        if (outputPane != null)
-        {
-          outputPane.OutputString(string.Format("[{0}] - {1}", type.ToString(), message) + Environment.NewLine);
-          outputPane.Activate();
-        }
+        return;
       }
+
+      // Activate the Output window
+      DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+      if (dte != null)
+      {
+        var win = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
+        win.Activate();
+      }
+
+      Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+      IVsOutputWindowPane outputPane;
+
+      if (outWindow.GetPane(ref generalPaneGuid, out outputPane) < 0)
+      {
+        outWindow.CreatePane(ref generalPaneGuid, "MySQL", 1, 0);
+        outWindow.GetPane(ref generalPaneGuid, out outputPane);
+      }
+
+      if (outputPane == null)
+      {
+        return;
+      }
+
+      outputPane.OutputString(string.Format("[{0}] - {1}", type.ToString(), message) + Environment.NewLine);
+      outputPane.Activate();
     }
 
     /// <summary>

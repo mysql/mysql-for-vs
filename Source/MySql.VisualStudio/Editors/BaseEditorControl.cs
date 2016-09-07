@@ -20,9 +20,10 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-
 using System;
+using System.Data;
 using System.Data.Common;
+using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
@@ -30,7 +31,13 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.IO;
 using System.Globalization;
+using MySql.Data.MySqlClient;
+using MySQL.Utility.Classes;
+using MySQL.Utility.Classes.MySQLWorkbench;
+using MySQL.Utility.Forms;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using MySql.Data.VisualStudio.Properties;
+using MySQL.Utility.Classes.MySQL;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -72,7 +79,7 @@ namespace MySql.Data.VisualStudio.Editors
     public const string SCHEMA_FORMAT_TEXT = "Schema: {0}";
 
     /// <summary>
-    /// The connection used for the editor.
+    /// The connection used by the editor.
     /// </summary>
     private DbConnection _connection;
 
@@ -81,12 +88,12 @@ namespace MySql.Data.VisualStudio.Editors
     protected string FileName;
 
     /// <summary>
-    /// Gets a value indicating whether the connection has changed.
+    /// Gests the <see cref="MySqlDataProviderPackage"/> of this plugin.
     /// </summary>
-    public bool ConnectionChanged { get; protected set; }
+    public MySqlDataProviderPackage Package { get; protected set; }
 
     /// <summary>
-    /// Gets the connection used for the editor.
+    /// Gets the connection used yb the editor.
     /// </summary>
     public DbConnection Connection
     {
@@ -95,17 +102,48 @@ namespace MySql.Data.VisualStudio.Editors
         return _connection;
       }
 
-      protected set
+      private set
       {
         _connection = value;
-        ConnectionChanged = true;
+        if (_connection == null || _connection.State == ConnectionState.Open)
+        {
+          return;
+        }
+
+        // Open the connection in case it was closed.
+        _connection.ConnectionString = Utils.GetCompleteConnectionString((MySqlConnection)_connection);
+        _connection.Open();
       }
     }
+
+    /// <summary>
+    /// Gets the display name of the connection used for the editor.
+    /// </summary>
+    public string ConnectionName { get; private set; }
+
+    /// <summary>
+    /// Gets the name of the database being used by the code editor.
+    /// </summary>
+    public string CurrentDatabase { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the <see cref="ToolStrip"/> containing actions for the editor.
+    /// </summary>
+    protected ToolStrip EditorActionsToolStrip { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the editor is used for JavaScript and Python.
+    /// </summary>
+    protected bool IsHybrid { get; set; }
+
+    /// <summary>
+    /// Gets the <see cref="MySqlWorkbenchConnection"/> related to the connection used for the editor.
+    /// </summary>
+    public MySqlWorkbenchConnection RelatedMySqlWorkbenchConnection { get; private set; }
 
     protected DbProviderFactory Factory;
 
     protected bool[] IsColBlob = null;
-    internal string CurrentDatabase = null;
 
     #region IVsPersistDocData Members
 
@@ -261,28 +299,18 @@ namespace MySql.Data.VisualStudio.Editors
         throw new ArgumentNullException("pszFilename");
 
       int hr = VSConstants.S_OK;
-      try
+      // --- If the new file name is null, then this operation is a reload
+      bool isReload = pszFilename == null;
+      // --- Set the new file name
+      if (!isReload)
       {
-        // --- If the new file name is null, then this operation is a reload
-        bool isReload = false;
-        if (pszFilename == null)
-        {
-          isReload = true;
-        }
-        // --- Set the new file name
-        if (!isReload)
-        {
-          FileName = pszFilename;
-        }
-        // --- Load the file
-        LoadFile(FileName);
-        IsDirty = false;
-        // --- Notify the load or reload
-        //NotifyDocChanged();
+        FileName = pszFilename;
       }
-      finally
-      {
-      }
+      // --- Load the file
+      LoadFile(FileName);
+      IsDirty = false;
+      // --- Notify the load or reload
+      //NotifyDocChanged();
       return hr;
     }
 
@@ -368,5 +396,323 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     #endregion
+
+    /// <summary>
+    /// Sets the <see cref="Connection"/>, <see cref="ConnectionName"/> and <see cref="RelatedMySqlWorkbenchConnection"/> property values.
+    /// </summary>
+    /// <param name="connection">A <see cref="DbConnection"/> to set in <see cref="Connection"/>.</param>
+    /// <param name="connectionName">A connection name to set in <see cref="ConnectionName"/>.</param>
+    /// <param name="relatedMySqlWorkbenchConnection">
+    /// A <see cref="MySqlWorkbenchConnection"/> to set in <see cref="RelatedMySqlWorkbenchConnection"/>.
+    /// If <c>null</c> the value is calculated from the connection and connectionName parameters.
+    /// </param>
+    public void SetConnection(DbConnection connection, string connectionName, MySqlWorkbenchConnection relatedMySqlWorkbenchConnection)
+    {
+      Connection = connection;
+      ConnectionName = connection == null
+        ? string.Empty
+        : connectionName;
+      RelatedMySqlWorkbenchConnection = connection == null
+        ? null
+        : relatedMySqlWorkbenchConnection ?? Package.GetMySqlWorkbenchConnection(connectionName, connection as MySqlConnection);
+      UpdateButtons();
+    }
+
+
+    /// <summary>
+    /// Hides the results pane.
+    /// </summary>
+    protected void ClearResults()
+    {
+      if (!Controls.ContainsKey("ResultsTabControl"))
+      {
+        return;
+      }
+
+      var resultsTab = Controls["ResultsTabControl"] as TabControl;
+      if (resultsTab == null)
+      {
+        return;
+      }
+
+      // Clear tab pages.
+      resultsTab.TabPages.Clear();
+
+      // The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
+      resultsTab.Visible = false;
+
+      if (!Controls.ContainsKey("CodeEditor"))
+      {
+        return;
+      }
+
+      var codeEditor = Controls["CodeEditor"] as VSCodeEditorUserControl;
+      if (codeEditor == null)
+      {
+        return;
+      }
+
+      codeEditor.Dock = DockStyle.Fill;
+    }
+
+    /// <summary>
+    /// Event delegate method fired when the button to connect to the database is clicked.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    protected void ConnectButtonClick(object sender, EventArgs e)
+    {
+      try
+      {
+        using (var connectDialog = new ConnectDialog())
+        {
+          connectDialog.Connection = Connection;
+          if (connectDialog.ShowDialog() == DialogResult.Cancel)
+          {
+            return;
+          }
+
+          // Check if the MySQL Server version supports the X Protocol.
+          if (IsHybrid && !connectDialog.Connection.ServerVersionSupportsXProtocol(false))
+          {
+            InfoDialog.ShowDialog(InfoDialogProperties.GetWarningDialogProperties(Resources.WarningText,
+              Resources.NewConnectionNotXProtocolCompatibleDetail, null,
+              Resources.NewConnectionNotXProtocolCompatibleMoreInfo));
+            return;
+          }
+
+          SetConnection(connectDialog.Connection, connectDialog.ConnectionName, null);
+          ClearResults();
+        }
+      }
+      catch (MySqlException ex)
+      {
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.NewConnectionErrorDetail, Resources.NewConnectionErrorSubDetail, true);
+      }
+    }
+
+    /// <summary>
+    /// Event delegate method fired when the button to disconnect from the database is clicked.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    protected void DisconnectButtonClick(object sender, EventArgs e)
+    {
+      Connection.Close();
+      SetConnection(null, null, null);
+    }
+
+    /// <summary>
+    /// Subscribes some controls to events common to all editors declared in the base <see cref="BaseEditorControl"/>.
+    /// </summary>
+    protected void SetBaseEvents()
+    {
+      if (EditorActionsToolStrip == null)
+      {
+        return;
+      }
+
+      if (EditorActionsToolStrip.Items.ContainsKey("ConnectToolStripButton"))
+      {
+        var connectButton = EditorActionsToolStrip.Items["ConnectToolStripButton"] as ToolStripButton;
+        if (connectButton != null)
+        {
+          connectButton.Click += ConnectButtonClick;
+        }
+      }
+
+      if (EditorActionsToolStrip.Items.ContainsKey("DisconnectToolStripButton"))
+      {
+        var disconnectButton = EditorActionsToolStrip.Items["DisconnectToolStripButton"] as ToolStripButton;
+        if (disconnectButton != null)
+        {
+          disconnectButton.Click += DisconnectButtonClick;
+        }
+      }
+
+      if (EditorActionsToolStrip.Items.ContainsKey("SwitchConnectionToolStripDropDownButton"))
+      {
+        var switchConnectionButton = EditorActionsToolStrip.Items["SwitchConnectionToolStripDropDownButton"] as ToolStripDropDownButton;
+        if (switchConnectionButton != null)
+        {
+          switchConnectionButton.DropDownOpening += SwitchConnectionDropDownOpening;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Reads the current database from the last query executed or batch
+    /// of queries.
+    /// </summary>
+    protected virtual void StoreCurrentDatabase()
+    {
+      var con = Connection as MySqlConnection;
+      if (con == null)
+      {
+        return;
+      }
+
+      try
+      {
+        MySqlCommand cmd = new MySqlCommand("select database();", con);
+        object val = cmd.ExecuteScalar();
+        CurrentDatabase = val is DBNull ? string.Empty : val.ToString();
+      }
+      catch (Exception ex)
+      {
+        WriteToMySqlOutput(Resources.ConnectionClosedErrorTitle, Resources.ConnectionClosedErrorMessage, null, MessageType.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.ConnectionClosedErrorTitle, Resources.ConnectionClosedErrorMessage, false);
+      }
+    }
+
+    /// <summary>
+    /// Event delegate method fired when one of the items in the fast-switch connections drop-down menu is clicked.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    protected virtual void SwitchConnectionItemClick(object sender, EventArgs e)
+    {
+      var connectionMenuItem = sender as ToolStripMenuItem;
+      if (connectionMenuItem == null)
+      {
+        return;
+      }
+
+      var parent = connectionMenuItem.GetCurrentParent();
+      if (parent == null)
+      {
+        return;
+      }
+
+      var connectionName = connectionMenuItem.Text;
+      var connection = Package.GetMySqlConnection(connectionName);
+      if (connection == null)
+      {
+        // The connection is no longer present in the Server Explorer
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(
+          Resources.Editors_SeConnectionNotFoundTitle,
+          string.Format(Resources.Editors_SeConnectionNotFoundDetail, connectionName)));
+        return;
+      }
+
+      // Switch to the selected connection
+      SetConnection(connection, connectionName, null);
+      ClearResults();
+    }
+
+    /// <summary>
+    /// Event delegate method fired when the fast-switch connections drop-down menu is being opened.
+    /// </summary>
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    protected virtual void SwitchConnectionDropDownOpening(object sender, EventArgs e)
+    {
+      var dropDownButton = sender as ToolStripDropDownButton;
+      if (dropDownButton == null)
+      {
+        return;
+      }
+
+      Cursor = Cursors.WaitCursor;
+      dropDownButton.DropDownItems.Clear();
+      var mySqlServerExplorerConnections = Package.GetMySqlConnections();
+      foreach (var mySqlServerExplorerConnection in mySqlServerExplorerConnections)
+      {
+        var mySqlConnection = Package.GetMySqlConnection(mySqlServerExplorerConnection);
+        if (mySqlConnection == null)
+        {
+          continue;
+        }
+
+        var isCurrentConnection = Connection != null && (mySqlConnection.Equals(Connection) || mySqlConnection.ConnectionString.Equals(Connection.ConnectionString));
+        if (IsHybrid && !isCurrentConnection && !mySqlConnection.ServerVersionSupportsXProtocol(true))
+        {
+          continue;
+        }
+
+        var newItem = new ToolStripMenuItem(mySqlServerExplorerConnection.DisplayName, Resources.database_connect);
+        newItem.Click += SwitchConnectionItemClick;
+        if (isCurrentConnection)
+        {
+          newItem.Font = new Font(newItem.Font, FontStyle.Bold);
+          newItem.Enabled = false;
+        }
+
+        dropDownButton.DropDownItems.Add(newItem);
+      }
+
+      Cursor = Cursors.Default;
+    }
+
+    /// <summary>
+    /// Updates the toolbar buttons.
+    /// </summary>
+    protected virtual void UpdateButtons()
+    {
+      if (EditorActionsToolStrip == null)
+      {
+        return;
+      }
+
+      bool connected = Connection != null && Connection.State == ConnectionState.Open;
+      EditorActionsToolStrip.Items["RunScriptToolStripButton"].Enabled = connected;
+      EditorActionsToolStrip.Items["DisconnectToolStripButton"].Enabled = connected;
+      EditorActionsToolStrip.Items["ConnectToolStripButton"].Enabled = !connected;
+      UpdateConnectionInformationToolStripMenuItems(connected);
+    }
+
+    /// <summary>
+    /// Updates the tool strip menu items text.
+    /// </summary>
+    /// <param name="connected">if set to <c>true</c> [connected].</param>
+    protected virtual void UpdateConnectionInformationToolStripMenuItems(bool connected)
+    {
+      if (EditorActionsToolStrip == null)
+      {
+        return;
+      }
+
+      var connectionInformationDropDown = EditorActionsToolStrip.Items["ConnectionInfoToolStripDropDownButton"] as ToolStripDropDownButton;
+      if (connectionInformationDropDown == null)
+      {
+        return;
+      }
+
+      var connectionStringBuilder = connected
+        ? new MySqlConnectionStringBuilder(Connection.ConnectionString)
+        : null;
+      connectionInformationDropDown.Text = connected
+        ? (!string.IsNullOrEmpty(ConnectionName) ? ConnectionName : UNTITLED_CONNECTION)
+        : NONE_TEXT;
+      connectionInformationDropDown.DropDownItems["ConnectionMethodToolStripMenuItem"].Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
+        connected
+          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
+          : NONE_TEXT);
+      connectionInformationDropDown.DropDownItems["HostIdToolStripMenuItem"].Text = string.Format(HOST_ID_FORMAT_TEXT,
+        connected
+          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.HostIdentifier : connectionStringBuilder.GetHostIdentifier())
+          : NONE_TEXT);
+      connectionInformationDropDown.DropDownItems["ServerVersionToolStripMenuItem"].Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
+      connectionInformationDropDown.DropDownItems["UserToolStripMenuItem"].Text = string.Format(USER_FORMAT_TEXT,
+        connected
+          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.UserName : connectionStringBuilder.UserID)
+          : NONE_TEXT);
+      connectionInformationDropDown.DropDownItems["SchemaToolStripMenuItem"].Text = string.Format(SCHEMA_FORMAT_TEXT,
+        connected
+          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.Schema : connectionStringBuilder.Database)
+          : NONE_TEXT);
+    }
+
+    /// <summary>
+    /// Writes to the My SQL Output Tool Window.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="messageType">Type of the message.</param>
+    protected virtual void WriteToMySqlOutput(string action, string message, string duration, MessageType messageType)
+    {
+      Utils.WriteToMySqlOutputWindow(action, message, duration, messageType);
+    }
   }
 }

@@ -708,12 +708,20 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="Editors\ConnectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\ConnectDialog.Designer.cs">
+      <DependentUpon>ConnectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\EditorBroker.cs" />
     <Compile Include="Editors\MySqlOutputPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editors\MySqlOutputPanel.Designer.cs">
       <DependentUpon>MySqlOutputPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\NativeMethods.cs" />
     <Compile Include="MySqlX\MySqlConnectionsManagerDialog.Designer.cs">
       <DependentUpon>MySqlConnectionsManagerDialog.cs</DependentUpon>
     </Compile>
@@ -737,6 +745,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editors\ConnectDialog.resx">
+      <DependentUpon>ConnectDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MySqlX\MySqlConnectionsManagerDialog.resx">
       <DependentUpon>MySqlConnectionsManagerDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -932,12 +943,6 @@
     <Compile Include="Editors\MySqlHybridScriptEditorPane.cs" />
     <Compile Include="Editors\VSCodeEditorUserControl.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\ConnectDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\ConnectDialog.Designer.cs">
-      <DependentUpon>ConnectDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\CustomPropertyDescriptor.cs">
     </Compile>
@@ -1358,9 +1363,6 @@
     <EmbeddedResource Include="DDEX\MySqlScriptDialog.resx">
       <DependentUpon>MySqlScriptDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\ConnectDialog.resx">
-      <DependentUpon>ConnectDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Editors\ForeignKeyDialog.resx">
       <DependentUpon>ForeignKeyDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -1492,8 +1494,14 @@
     <None Include="Resources\Connection-X-32x32.png" />
     <None Include="Resources\list-view.png" />
     <None Include="Resources\Connection-Fabric-disabled.png" />
+    <None Include="Resources\batch.png" />
     <Content Include="Resources\ConnectionsManager_16x16.bmp" />
+    <None Include="Resources\console.png" />
+    <None Include="Resources\database-connect.png" />
+    <None Include="Resources\database-disconnect.png" />
     <Content Include="Resources\icon-black.bmp" />
+    <None Include="Resources\info.png" />
+    <None Include="Resources\js_id.png" />
     <Content Include="Resources\MySQL.png" />
     <None Include="Resources\mysql_project_wizard.png" />
     <None Include="Resources\mysql_ItemTemplate_wizard.png" />
@@ -1514,6 +1522,8 @@
     <None Include="Resources\selected_item.png" />
     <None Include="Resources\output_type_json.png" />
     <None Include="Resources\refresh.png" />
+    <None Include="Resources\play.png" />
+    <None Include="Resources\py_id.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">
@@ -1526,6 +1536,8 @@
     <None Include="Resources\successIcon.ico" />
     <None Include="Resources\warningIcon.ico" />
     <None Include="Resources\tile-view.png" />
+    <None Include="Resources\variable.png" />
+    <None Include="Resources\sql_id.png" />
     <Content Include="Templates\MySQL Script.mysql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1641,10 +1653,11 @@
 	3. Copy the "Templates" folder to the VS Extensions folder, in order to debug the M4VS custom templates
   4. Copy the "Parser" dependencies to the VS Extensions folder -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="IF EXIST &quot;$(VS_Expr_Folder)\Extensions&quot; del /f /s /q &quot;$(VS_Expr_Folder)\Extensions\*&quot;" />
-    <Exec Command="rd /s /q &quot;$(VS_Expr_Folder)\Extensions&quot;" />
+    <Exec Command="rd &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio&quot; /S /Q" />
+    <!-- <Exec Command="IF EXIST &quot;$(VS_Expr_Folder)\Extensions&quot; del /f /s /q &quot;$(VS_Expr_Folder)\Extensions\*&quot;" />
+    <Exec Command="rd /s /q &quot;$(VS_Expr_Folder)\Extensions&quot;" /> -->
     <!-- Reset the experimental instance -->
-    <Exec Command="&quot;$(VsSDKToolsPath)\CreateExpInstance.exe&quot; /Reset /VSInstance=$(VisualStudioVersion) /RootSuffix=Exp" />
+    <!-- <Exec Command="&quot;$(VsSDKToolsPath)\CreateExpInstance.exe&quot; /Reset /VSInstance=$(VisualStudioVersion) /RootSuffix=Exp" /> -->
   </Target>
   <Target Name="AfterBuild">
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />

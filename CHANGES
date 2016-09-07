@@ -20,6 +20,22 @@
   (MySQL Bug #82219, Bug #24290570 - PYTHON AND JS SCRIPTS NOT VALIDATING X PROTOCOL SUPPORT USING MANUAL CONNECTIONS)
 - Added support for "Optimizer Hints", creating Parser unit tests to validate optimizer hints queries and validating such queries
   can be executed in MySQL query editor.
+- When the MySQL Script Editor window is opened (either by selecting SQL, JavaScript or Python from the New MySQL Script menu),
+  the Results area was visible showing a big gray area in the editor, despite having nothing to display. Now, this area is hidden
+  until results are ready to display, which happens after clicking Run.
+- Dragging a and dropping a table from Visual Studio's Server Explorer to a project would fail with the following error: "Some
+  updating commands could not be generated automatically. The database returned the following error: You have a usable connection
+  already". After clicking OK, Visual Studio would emit the following error "Mouse drag operation failed. Could not retrieve
+  schema information from table or view". To solve this issue, MySql.Data was updated to version 6.9.9.
+- From the Query Designer, selecting Verify SQL Syntax would always display "Not supported by the provider" instead of verifying
+  the SQL syntax.
+- Enhanced the "Connect to MySQL" dialog shown when establishing a new connection within MySQL script editor windows, to have a
+  look and feel consistent with other MySQL for Windows products. The dialog now offers the ability to add the newly created
+  connection to the Server Explorer in Visual Studio. The problem with the Advanced button was also fixed.
+  (Bug #22114315 - ADVANCED BUTTON IN MYSQL SCRIPT -> CONNECT TO MYSQL CONFIGURATION HIDE BUTTONS)
+- Added the ability to fast-switch connections within any of the MySQL script editor windows (SQL, JavaScript or Python), a new
+  drop-down is available next to the "Connect to MySQL..." button (first button in the editor window toolbar) that shows all
+  Server Explorer connections for the MySQL data provider.
 
 
 2.0.3

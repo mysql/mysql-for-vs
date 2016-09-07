@@ -241,6 +241,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap batch {
+            get {
+                object obj = ResourceManager.GetObject("batch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         public static string Category_Advanced {
@@ -336,6 +346,163 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string ConnectDialog_AdvancedButtonText {
             get {
                 return ResourceManager.GetString("ConnectDialog_AdvancedButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string ConnectDialog_Cancel {
+            get {
+                return ResourceManager.GetString("ConnectDialog_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A connection named &apos;{0}&apos; already exists in the Server Explorer..
+        /// </summary>
+        public static string ConnectDialog_ConnectionAlreadyExistsDetail {
+            get {
+                return ResourceManager.GetString("ConnectDialog_ConnectionAlreadyExistsDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can choose any of the following actions:
+        ///
+        ///1. Rename: The new Server Explorer connection will be renamed to &apos;{0}&apos;, so no conflict persists.
+        ///2. Replace: The connection parameters of the existing Server Explorer connection &apos;{1}&apos; will be replaced with the ones in the newly created connection, the name will remain the same.
+        ///3. Cancel: Returns to the Connect to MySQL dialog, so a new name can be given to the connection or to review again the connection parameters before deciding an action..
+        /// </summary>
+        public static string ConnectDialog_ConnectionAlreadyExistsMoreInfo {
+            get {
+                return ResourceManager.GetString("ConnectDialog_ConnectionAlreadyExistsMoreInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to rename it to &apos;{0}&apos;?.
+        /// </summary>
+        public static string ConnectDialog_ConnectionAlreadyExistsSubDetail {
+            get {
+                return ResourceManager.GetString("ConnectDialog_ConnectionAlreadyExistsSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection already exists.
+        /// </summary>
+        public static string ConnectDialog_ConnectionAlreadyExistsTitle {
+            get {
+                return ResourceManager.GetString("ConnectDialog_ConnectionAlreadyExistsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The schema &apos;{0}&apos; does not exist or you do not have permissions to see it..
+        /// </summary>
+        public static string ConnectDialog_CreateSchemaDetail {
+            get {
+                return ResourceManager.GetString("ConnectDialog_CreateSchemaDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to create it?.
+        /// </summary>
+        public static string ConnectDialog_CreateSchemaSubDetail {
+            get {
+                return ResourceManager.GetString("ConnectDialog_CreateSchemaSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schema not found.
+        /// </summary>
+        public static string ConnectDialog_CreateSchemaTitle {
+            get {
+                return ResourceManager.GetString("ConnectDialog_CreateSchemaTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MySQL Data Provider is not correctly registered..
+        /// </summary>
+        public static string ConnectDialog_DataProviderRegisteredError {
+            get {
+                return ResourceManager.GetString("ConnectDialog_DataProviderRegisteredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name for the Server Explorer connection cannot be empty..
+        /// </summary>
+        public static string ConnectDialog_EmptyConnectionNameDetail {
+            get {
+                return ResourceManager.GetString("ConnectDialog_EmptyConnectionNameDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to use the suggested name: &apos;{0}&apos;?.
+        /// </summary>
+        public static string ConnectDialog_EmptyConnectionNameSubDetail {
+            get {
+                return ResourceManager.GetString("ConnectDialog_EmptyConnectionNameSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection name is empty.
+        /// </summary>
+        public static string ConnectDialog_EmptyConnectionNameTitle {
+            get {
+                return ResourceManager.GetString("ConnectDialog_EmptyConnectionNameTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating a new connection with the specified parameters..
+        /// </summary>
+        public static string ConnectDialog_GetConnectionError {
+            get {
+                return ResourceManager.GetString("ConnectDialog_GetConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading schemas....
+        /// </summary>
+        public static string ConnectDialog_LoadingSchemas {
+            get {
+                return ResourceManager.GetString("ConnectDialog_LoadingSchemas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string ConnectDialog_Rename {
+            get {
+                return ResourceManager.GetString("ConnectDialog_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace.
+        /// </summary>
+        public static string ConnectDialog_Replace {
+            get {
+                return ResourceManager.GetString("ConnectDialog_Replace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error attempting to retrieve MySQL schemas..
+        /// </summary>
+        public static string ConnectDialog_SchemasFetchError {
+            get {
+                return ResourceManager.GetString("ConnectDialog_SchemasFetchError", resourceCulture);
             }
         }
         
@@ -451,6 +618,36 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string ConnectionStringInvalid {
             get {
                 return ResourceManager.GetString("ConnectionStringInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap console {
+            get {
+                object obj = ResourceManager.GetObject("console", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap database_connect {
+            get {
+                object obj = ResourceManager.GetObject("database_connect", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap database_disconnect {
+            get {
+                object obj = ResourceManager.GetObject("database_disconnect", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -2824,6 +3021,24 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The connection &apos;{0}&apos; is not in the Server Explorer anymore..
+        /// </summary>
+        public static string Editors_SeConnectionNotFoundDetail {
+            get {
+                return ResourceManager.GetString("Editors_SeConnectionNotFoundDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection not found.
+        /// </summary>
+        public static string Editors_SeConnectionNotFoundTitle {
+            get {
+                return ResourceManager.GetString("Editors_SeConnectionNotFoundTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There was an error attempting to create the database &apos;{0}&apos;.
         /// </summary>
         public static string ErrorAttemptingToCreateDB {
@@ -2979,6 +3194,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap info {
+            get {
+                object obj = ResourceManager.GetObject("info", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data type is not valid..
         /// </summary>
         public static string InvalidDataType {
@@ -3011,6 +3236,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string ItemTemplateUtilities_SettingsRetrievalError {
             get {
                 return ResourceManager.GetString("ItemTemplateUtilities_SettingsRetrievalError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap js_id {
+            get {
+                object obj = ResourceManager.GetObject("js_id", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -3387,7 +3622,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Check that the server is running, the database exist and the user credentials are valid..
+        ///   Looks up a localized string similar to Check that the server is running, the database exists and the user credentials are valid..
         /// </summary>
         public static string NewConnectionErrorSubDetail {
             get {
@@ -3518,6 +3753,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap play {
+            get {
+                object obj = ResourceManager.GetObject("play", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2007-2016 Oracle, Inc..
         /// </summary>
         public static string ProductDetails {
@@ -3559,6 +3804,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Provider_ShortDisplayName {
             get {
                 return ResourceManager.GetString("Provider_ShortDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap py_id {
+            get {
+                object obj = ResourceManager.GetObject("py_id", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -3637,6 +3892,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static System.Drawing.Bitmap sql_editor_validatesql {
             get {
                 object obj = ResourceManager.GetObject("sql_editor_validatesql", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap sql_id {
+            get {
+                object obj = ResourceManager.GetObject("sql_id", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -3975,6 +4240,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Value_String {
             get {
                 return ResourceManager.GetString("Value_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap variable {
+            get {
+                object obj = ResourceManager.GetObject("variable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -21,121 +21,17 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Data.Common;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Constants = Microsoft.VisualStudio.OLE.Interop.Constants;
 using IMessageFilter = System.Windows.Forms.IMessageFilter;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-
-  /// <summary>
-  /// This class serves as
-  /// a) Command broker (subscribing once to the mappable keys of Visual Studio, instead of many times
-  /// Solving a bug of backspace affecting the wrong mysql editorWindow window when more than one is open).
-  /// b) A repository to serve the connections of each Editor for the Intellisense classifiers.
-  /// </summary>
-  internal class EditorBroker : IOleCommandTarget
-  {
-    private Dictionary<string, VSCodeEditorWindow> dic = new Dictionary<string, VSCodeEditorWindow>();
-    private DTE Dte;
-    private uint CmdTargetCookie;
-    internal static EditorBroker Broker { get; private set; }
-
-    private EditorBroker(ServiceBroker sb)
-    {
-      // Register priority command target, this dispatches mappable keys like Enter, Backspace, Arrows, etc.
-      int hr = sb.VsRegisterPriorityCommandTarget.RegisterPriorityCommandTarget(
-        0, (IOleCommandTarget)this, out this.CmdTargetCookie);
-
-      if (hr != VSConstants.S_OK)
-        Marshal.ThrowExceptionForHR(hr);
-      this.Dte = (DTE)sb.Site.GetService(typeof(DTE));
-    }
-
-    // this method must be externally synchronized
-    internal static void CreateSingleton(ServiceBroker sb)
-    {
-      if (Broker != null)
-        throw new InvalidOperationException("The singleton broker has alreaby been created.");
-      Broker = new EditorBroker(sb);
-    }
-
-    internal static void RegisterEditor(VSCodeEditorWindow editorWindow)
-    {
-      Broker.dic.Add(editorWindow.Parent.Editor.GetDocumentPath(), editorWindow);
-    }
-
-    internal static void UnregisterEditor(VSCodeEditorWindow editor)
-    {
-      Broker.dic.Remove(editor.Parent.Editor.GetDocumentPath());
-    }
-
-    /// <summary>
-    /// Returns the DbConnection associated with the current mysql editorWindow.
-    /// </summary>
-    /// <returns></returns>
-    internal DbConnection GetCurrentConnection()
-    {
-      VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null) return null;
-      dic.TryGetValue(Dte.ActiveDocument.FullName, out editor);
-      // Null here means No connection opened for the current mysql editorWindow, or current active window not a mysql editorWindow.
-      if (editor == null) return null;
-      else
-      {
-        return editor.Parent.Editor.Connection;
-      }
-    }
-
-    /// <summary>
-    /// Returns the current database, as per the last query executed.
-    /// </summary>
-    /// <returns></returns>
-    internal string GetCurrentDatabase()
-    {
-      VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null) return null;
-      dic.TryGetValue(Dte.ActiveDocument.FullName, out editor);
-      // Null here means No connection opened for the current mysql editorWindow, or current active window not a mysql editorWindow.
-      if (editor == null) return null;
-      else
-      {
-        return editor.Parent.Editor.CurrentDatabase;
-      }
-    }
-
-    public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-    {
-      VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null)
-        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
-      if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
-        return ((IOleCommandTarget)editor).Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
-      else
-        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
-    }
-
-    public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
-    {
-      VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null)
-        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
-      if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
-        return ((IOleCommandTarget)editor).QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
-      else
-        return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
-    }
-  }
-
   internal class VSCodeEditorWindow : NativeWindow, IMessageFilter, IOleCommandTarget, IDisposable
   {
     ServiceBroker services;
@@ -310,15 +206,5 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     #endregion
-  }
-
-  internal static class NativeMethods
-  {
-    [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-    internal static extern IntPtr SetFocus(IntPtr hWnd);
-
-    [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-    [return: MarshalAs(UnmanagedType.U1)]
-    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, int flags);
   }
 }

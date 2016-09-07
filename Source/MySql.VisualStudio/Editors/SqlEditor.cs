@@ -21,16 +21,13 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Data;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.LanguageService;
-using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Forms;
+using MySQL.Utility.Classes.MySQL;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -38,13 +35,8 @@ namespace MySql.Data.VisualStudio.Editors
   /// <summary>
   /// This class will handle the logic for the MySQL Files Editor.
   /// </summary>
-  internal partial class SqlEditor : BaseEditorControl
+  internal sealed partial class SqlEditor : BaseEditorControl
   {
-    /// <summary>
-    /// Gets the pane for the current editor. In this case, the pane is from type SqlEditorPane.
-    /// </summary>
-    internal SqlEditorPane Pane { get; set; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SqlEditor"/> class.
     /// </summary>
@@ -52,18 +44,19 @@ namespace MySql.Data.VisualStudio.Editors
     public SqlEditor()
     {
       InitializeComponent();
+
       Factory = MySqlClientFactory.Instance;
       if (Factory == null)
       {
         throw new Exception("MySql Data Provider is not correctly registered");
       }
 
-      ResultsTabControl.TabPages.Clear();
-
-      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      ResultsTabControl.Visible = false;
-      CodeEditor.Dock = DockStyle.Fill;
-      UpdateButtons();
+      SetConnection(null, string.Empty, null);
+      IsHybrid = false;
+      EditorActionsToolStrip = EditorToolStrip;
+      Package = MySqlDataProviderPackage.Instance;
+      SetBaseEvents();
+      ClearResults();
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
@@ -73,7 +66,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// Responds to the event when Visual Studio theme changed.
     /// </summary>
     /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
-    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
     {
       SetColors();
     }
@@ -99,23 +92,19 @@ namespace MySql.Data.VisualStudio.Editors
       Pane = pane;
       ServiceProvider = sp;
       CodeEditor.Init(sp, this);
-
-      var package = MySqlDataProviderPackage.Instance;
-      if (package == null || package.SelectedMySqlConnection != null)
+      if (Package == null)
       {
         return;
       }
 
-      Connection = package.SelectedMySqlConnection;
-      ConnectionChanged = false;
-      if (Connection != null && Connection.State != ConnectionState.Open)
-      {
-        Connection.ConnectionString = Utils.GetCompleteConnectionString((MySqlConnection)Connection);
-        Connection.Open();
-      }
-
-      UpdateButtons();
+      SetConnection(Package.SelectedMySqlConnection, Package.SelectedMySqlConnectionName, Package.SelectedMySqlWorkbenchConnection);
     }
+
+    /// <summary>
+    /// Gets or sets the pane for the current editor.}
+    /// In this case, the pane is from type <see cref="SqlEditorPane"/>.
+    /// </summary>
+    internal SqlEditorPane Pane { get; set; }
 
     #region Overrides
 
@@ -177,73 +166,27 @@ namespace MySql.Data.VisualStudio.Editors
     #endregion
 
     /// <summary>
-    /// Handles the Click event of the connectButton control.
+    /// Executes the script.
     /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void connectButton_Click(object sender, EventArgs e)
+    /// <param name="sql">The SQL.</param>
+    private void ExecuteScript(string sql)
     {
-      resultsPage.Hide();
+      if (string.IsNullOrEmpty(sql))
+      {
+        return;
+      }
+
+      var script = new MySqlScript(Connection as MySqlConnection, sql);
       try
       {
-        using (var connectDialog = new ConnectDialog())
-        {
-          connectDialog.Connection = Connection;
-          if (connectDialog.ShowDialog() == DialogResult.Cancel)
-          {
-            return;
-          }
-
-          Connection = connectDialog.Connection;
-          UpdateButtons();
-        }
+        int rows = script.Execute();
+        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", rows), MessageType.Information);
       }
-      catch (MySqlException)
+      catch (Exception ex)
       {
-        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.NewConnectionErrorDetail, Resources.NewConnectionErrorSubDetail));
+        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, false);
       }
-    }
-
-    /// <summary>
-    /// Handles the Click event of the runSqlButton control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void runSqlButton_Click(object sender, EventArgs e)
-    {
-      string sql = CodeEditor.Text.Trim();
-      ResultsTabControl.TabPages.Clear();
-      //The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
-      ResultsTabControl.Visible = false;
-      string[] sqlStmt = sql.BreakSqlStatements().ToArray();
-      int ctr = 1;
-      for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
-      {
-        bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)Connection);
-        if (isResultSet)
-        {
-          ExecuteSelect(sqlStmt[sqlIdx], ctr);
-          ctr++;
-        }
-        else
-        {
-          ExecuteScript(sqlStmt[sqlIdx]);
-        }
-      }
-      StoreCurrentDatabase();
-    }
-
-    /// <summary>
-    /// Reads the current database from the last query executed or batch
-    /// of queries.
-    /// </summary>
-    private void StoreCurrentDatabase()
-    {
-      MySqlConnection con = (MySqlConnection)Connection;
-      MySqlCommand cmd = new MySqlCommand("select database();", con);
-      object val = cmd.ExecuteScalar();
-      if (val is DBNull) CurrentDatabase = "";
-      else CurrentDatabase = (string)val;
     }
 
     /// <summary>
@@ -260,142 +203,54 @@ namespace MySql.Data.VisualStudio.Editors
 
       try
       {
-        TabPage newResPage = Utils.CreateResultPage(counter);
-        DetailedResultsetView detailedData = new DetailedResultsetView();
-        detailedData.Dock = DockStyle.Fill;
-        detailedData.SetQuery((MySqlConnection)Connection, sql);
+        var newResPage = Utils.CreateResultPage(counter);
+        var detailedData = new DetailedResultsetView
+        {
+          Dock = DockStyle.Fill
+        };
+
+        bool querySuccess = detailedData.SetQuery((MySqlConnection) Connection, sql);
         newResPage.Controls.Add(detailedData);
         ResultsTabControl.TabPages.Add(newResPage);
-        ResultsTabControl.Visible = true;
+        ResultsTabControl.Visible = querySuccess;
+      }
+      catch (Exception ex)
+      {
+        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, false);
+      }
+      finally
+      {
         CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
       }
-      catch (Exception ex)
-      {
-        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
-      }
     }
 
     /// <summary>
-    /// In DataGridView column with blob data type are by default associated with a DataGridViewImageColumn
-    /// this column internally uses the System.Drawing APIs to try to load images, obviously not all blobs
-    /// are images, so that fails.
-    ///   The fix implemented in this function represents blobs a a fixed &lt;Blob&gt; string.
+    /// Event delegate method fired when the <see cref="RunScriptToolStripButton"/> is clicked.
     /// </summary>
-    private void SanitizeBlobs()
+    /// <param name="sender">Sender object.</param>
+    /// <param name="e">Event arguments.</param>
+    private void RunScriptToolStripButton_Click(object sender, EventArgs e)
     {
-      DataGridViewColumnCollection coll = ResultsDataGridView.Columns;
-      IsColBlob = new bool[coll.Count];
-      for (int i = 0; i < coll.Count; i++)
+      string sql = CodeEditor.Text.Trim();
+      ClearResults();
+      string[] sqlStmt = sql.BreakSqlStatements().ToArray();
+      int ctr = 1;
+      for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
       {
-        DataGridViewColumn col = coll[i];
-        DataGridViewTextBoxColumn newCol = null;
-        if (!(col is DataGridViewImageColumn)) continue;
-        coll.Insert(i, newCol = new DataGridViewTextBoxColumn()
+        bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)Connection);
+        if (isResultSet)
         {
-          DataPropertyName = col.DataPropertyName,
-          HeaderText = col.HeaderText,
-          ReadOnly = true
-        });
-        coll.Remove(col);
-        IsColBlob[i] = true;
-      }
-    }
-
-    /// <summary>
-    /// Handles the CellFormatting event of the resultsGrid control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> instance containing the event data.</param>
-    private void resultsGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-    {
-      if (e.ColumnIndex == -1) return;
-      if (IsColBlob[e.ColumnIndex])
-      {
-        if (e.Value == null || e.Value is DBNull)
-          e.Value = "<NULL>";
+          ExecuteSelect(sqlStmt[sqlIdx], ctr);
+          ctr++;
+        }
         else
-          e.Value = "<BLOB>";
-      }
-    }
-
-    /// <summary>
-    /// Executes the script.
-    /// </summary>
-    /// <param name="sql">The SQL.</param>
-    private void ExecuteScript(string sql)
-    {
-      if (string.IsNullOrEmpty(sql))
-      {
-        return;
+        {
+          ExecuteScript(sqlStmt[sqlIdx]);
+        }
       }
 
-      MySqlScript script = new MySqlScript((MySqlConnection)Connection, sql);
-      try
-      {
-        int rows = script.Execute();
-        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", rows), MessageType.Information);
-      }
-      catch (Exception ex)
-      {
-        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
-      }
-    }
-
-    /// <summary>
-    /// Handles the Click event of the disconnectButton control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    private void disconnectButton_Click(object sender, EventArgs e)
-    {
-      Connection.Close();
-      UpdateButtons();
-    }
-
-    /// <summary>
-    /// Updates the buttons.
-    /// </summary>
-    private void UpdateButtons()
-    {
-      bool connected = Connection != null && Connection.State == ConnectionState.Open;
-      RunSqlToolStripButton.Enabled = connected;
-      DisconnectToolStripButton.Enabled = connected;
-      ConnectToolStripButton.Enabled = !connected;
-      if (Connection != null)
-      {
-        UpdateToolStripMenuItemsText(connected);
-      }
-    }
-
-
-    /// <summary>
-    /// Updates the tool strip menu items text.
-    /// </summary>
-    /// <param name="connected">if set to <c>true</c> [connected].</param>
-    private void UpdateToolStripMenuItemsText(bool connected)
-    {
-      var relatedWbConnection = MySqlDataProviderPackage.Instance.SelectedMySqlWorkbenchConnection;
-      var connectionStringBuilder = new MySqlConnectionStringBuilder(Connection.ConnectionString);
-      ConnectionInfoToolStripDropDownButton.Text = connected
-        ? (!ConnectionChanged ? MySqlDataProviderPackage.Instance.SelectedMySqlConnectionName : UNTITLED_CONNECTION)
-        : NONE_TEXT;
-      ConnectionMethodToolStripMenuItem.Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
-          : NONE_TEXT);
-      HostIdToolStripMenuItem.Text = string.Format(HOST_ID_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.HostIdentifier : connectionStringBuilder.GetHostIdentifier())
-          : NONE_TEXT);
-      ServerVersionToolStripMenuItem.Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
-      UserToolStripMenuItem.Text = string.Format(USER_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.UserName : connectionStringBuilder.UserID)
-          : NONE_TEXT);
-      SchemaToolStripMenuItem.Text = string.Format(SCHEMA_FORMAT_TEXT,
-        connected
-          ? (!ConnectionChanged && relatedWbConnection != null ? relatedWbConnection.Schema : connectionStringBuilder.Database)
-          : NONE_TEXT);
+      StoreCurrentDatabase();
     }
   }
 }

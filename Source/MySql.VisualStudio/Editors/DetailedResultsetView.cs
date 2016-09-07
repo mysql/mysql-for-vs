@@ -29,6 +29,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MySQL.Utility.Classes;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -131,11 +132,12 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="connection">MySqlConnection to execute the query</param>
     /// <param name="query">Query that will be executed</param>
-    public void SetQuery(MySqlConnection connection, string query)
+    /// <returns><c>true</c> if the query executed successfully without errors, <c>false</c> otherwise.</returns>
+    public bool SetQuery(MySqlConnection connection, string query)
     {
       if (string.IsNullOrEmpty(query))
       {
-        return;
+        return false;
       }
 
       if (!query.Contains(";"))
@@ -146,18 +148,19 @@ namespace MySql.Data.VisualStudio.Editors
       Connection = connection;
       ValidateServerVersion();
       LoadResources();
-      GenerateQueryBatch(query);
+      return GenerateQueryBatch(query);
     }
 
     /// <summary>
     /// Generates the queries that will be executed in the database basis on the original query received
     /// </summary>
     /// <param name="baseQuery">Original query</param>
-    private void GenerateQueryBatch(string baseQuery)
+    /// <returns><c>true</c> if the query executed successfully without errors, <c>false</c> otherwise.</returns>
+    private bool GenerateQueryBatch(string baseQuery)
     {
       if (string.IsNullOrEmpty(baseQuery))
       {
-        return;
+        return false;
       }
 
       _queries = new Dictionary<string, string>();
@@ -181,19 +184,21 @@ namespace MySql.Data.VisualStudio.Editors
         _queries.Add(QUERY_STATISTICS_KEY, string.Format(_baseQueryStatisticsQuery, baseQuery.Substring(0, baseQuery.LastIndexOf(';')).Trim().Replace("'", "''")));
       }
 
-      LoadData();
+      return LoadData();
     }
 
     /// <summary>
     /// Executes the queries in the database and the data returned is loaded in its corresponding view
     /// </summary>
-    private void LoadData()
+    /// <returns><c>true</c> if the query executed successfully without errors, <c>false</c> otherwise.</returns>
+    private bool LoadData()
     {
+      bool success = true;
       DataTable resultDataTable = new DataTable();
       DataTable fieldTypesDataTable = new DataTable();
-      DataTable queryStatisticsDataTable = new DataTable();
-      string executionPlanJsonData = "";
-      DataTable executionPlanDataTable = new DataTable();
+      DataTable queryStatisticsDataTable = null;
+      string executionPlanJsonData = string.Empty;
+      DataTable executionPlanDataTable = null;
       bool closeConn = false;
 
 
@@ -228,6 +233,7 @@ namespace MySql.Data.VisualStudio.Editors
           if (_queries.ContainsKey(QUERY_STATISTICS_KEY) && !string.IsNullOrEmpty(_queries[QUERY_STATISTICS_KEY]))
           {
             cmd.CommandText = _queries[QUERY_STATISTICS_KEY];
+            queryStatisticsDataTable = new DataTable();
             queryStatisticsDataTable.Load(cmd.ExecuteReader());
           }
 
@@ -244,6 +250,7 @@ namespace MySql.Data.VisualStudio.Editors
             else
             {
               cmd.CommandText = _queries[EXECUTION_PLAN_KEY];
+              executionPlanDataTable = new DataTable();
               executionPlanDataTable.Load(cmd.ExecuteReader());
             }
           }
@@ -252,6 +259,7 @@ namespace MySql.Data.VisualStudio.Editors
         }
         catch (Exception ex)
         {
+          success = false;
           tran.Rollback();
           Utils.WriteToOutputWindow(string.Format("Error trying to load the data: {0}", ex), MessageType.Error);
         }
@@ -277,6 +285,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       ctrlQueryStats.SetData(queryStatisticsDataTable, (ServerVersion)_currentServerVersion);
+      return success;
     }
 
     /// <summary>
@@ -293,9 +302,9 @@ namespace MySql.Data.VisualStudio.Editors
 
       query = query.ToLower().Replace("`", string.Empty);
       var result = new StringBuilder();
-      string whereOrSemicolon = query.Contains(" where ") ? "where" : ";";
-      int fromIndex = query.IndexOf("from", StringComparison.Ordinal);
-      var tablesSubstr = query.Substring(fromIndex + 4, query.IndexOf(whereOrSemicolon, StringComparison.Ordinal) - (fromIndex + 4));
+      string whereOrSemicolon = query.Contains(" where ", StringComparison.InvariantCultureIgnoreCase) ? "where" : ";";
+      int fromIndex = query.IndexOf("from", StringComparison.InvariantCultureIgnoreCase);
+      var tablesSubstr = query.Substring(fromIndex + 4, query.IndexOf(whereOrSemicolon, StringComparison.InvariantCultureIgnoreCase) - (fromIndex + 4));
       result.Append(" `table_name` in (");
       var tables = tablesSubstr.Split(new[] { "join" }, StringSplitOptions.None);
       for (int ctr = 0; ctr < tables.Count(); ctr++)
@@ -319,15 +328,15 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>Columns separated by comma</returns>
     private string GetColumnsFromQuery(string query)
     {
-      if (string.IsNullOrEmpty(query) || !query.Contains("select"))
+      if (string.IsNullOrEmpty(query) || !query.Contains("select", StringComparison.InvariantCultureIgnoreCase))
       {
         return string.Empty;
       }
 
-      var selectIndex = query.IndexOf("select", StringComparison.Ordinal);
+      var selectIndex = query.IndexOf("select", StringComparison.InvariantCultureIgnoreCase);
       query = query.ToLower().Replace("`", string.Empty);
       var result = new StringBuilder();
-      var colsSubstr = query.Substring(selectIndex + 6, query.IndexOf("from", StringComparison.Ordinal) - (selectIndex + 6));
+      var colsSubstr = query.Substring(selectIndex + 6, query.IndexOf("from", StringComparison.InvariantCultureIgnoreCase) - (selectIndex + 6));
       if (colsSubstr.Contains("*"))
       {
         return "*";

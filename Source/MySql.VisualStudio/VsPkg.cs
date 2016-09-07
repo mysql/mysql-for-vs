@@ -155,6 +155,7 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
+        _selectedMySqlConnection = GetMySqlConnection(GetCurrentConnectionName());
         return _selectedMySqlConnection;
       }
 
@@ -169,23 +170,16 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
-        // Try first to retrieve a related Workbench connection using the connection name
         if (_selectedMySqlWorkbenchConnection == null)
         {
-          _selectedMySqlWorkbenchConnection = MySqlWorkbench.Connections.GetConnectionForName(SelectedMySqlConnectionName);
-        }
-
-        // In case connection names do not match, try to retrieve a related Workbench connection by its exact connection string, for example if a user renamed the connection
-        if (_selectedMySqlWorkbenchConnection == null)
-        {
-          _selectedMySqlWorkbenchConnection = MySqlWorkbench.Connections.GetConnectionFromMySqlConnection(SelectedMySqlConnection, true);
+          _selectedMySqlWorkbenchConnection = GetMySqlWorkbenchConnection(SelectedMySqlConnectionName, SelectedMySqlConnection);
         }
 
         return _selectedMySqlWorkbenchConnection;
       }
     }
 
-    public string SelectedMySqlConnectionName { get; private set; }
+    public string SelectedMySqlConnectionName { get; set; }
 
     /// <summary>
     /// Variable used to hold how many MySqlOutputWindow objects have been created
@@ -381,12 +375,6 @@ namespace MySql.Data.VisualStudio
       }
     }
 
-    private void NewScriptCallback(object sender, EventArgs e)
-    {
-      // Set the selected connection so when the editor window is open it can work with.
-      GetCurrentConnection();
-    }
-
     private void SetEnvironmentVariableValues(string mySqlConnectorPath)
     {
       Environment.SetEnvironmentVariable(MYSQL_CONNECTOR_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.User);
@@ -419,7 +407,7 @@ namespace MySql.Data.VisualStudio
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
-      var dataExplorerConnection = GetConnection(ConnectionName);
+      var dataExplorerConnection = GetServerExplorerConnection(ConnectionName);
       bool connected = dataExplorerConnection != null
         && dataExplorerConnection.Connection != null
         && dataExplorerConnection.Connection.State == DataConnectionState.Open;
@@ -434,7 +422,7 @@ namespace MySql.Data.VisualStudio
         {
           // Hide the option from servers that do not support the X-Protocol.
           var currentConnection = dataExplorerConnection.Connection.GetLockedProviderObject() as MySqlConnection;
-          showNewScriptButton = currentConnection.ServerVersionSupportsXProtocol();
+          showNewScriptButton = currentConnection.ServerVersionSupportsXProtocol(false);
         }
       }
 
@@ -450,8 +438,7 @@ namespace MySql.Data.VisualStudio
     private void NewJavascriptCallback(object sender, EventArgs e)
     {
       // Set the selected connection so when the editor window is open it can work with.
-      var connection = GetCurrentConnection();
-      if (connection == null)
+      if (SelectedMySqlConnection == null)
       {
         return;
       }
@@ -468,8 +455,7 @@ namespace MySql.Data.VisualStudio
     private void NewPythonScriptCallback(object sender, EventArgs e)
     {
       // Set the selected connection so when the editor window is open it can work with.
-      var connection = GetCurrentConnection();
-      if (connection == null)
+      if (SelectedMySqlConnection == null)
       {
         return;
       }
@@ -498,7 +484,7 @@ namespace MySql.Data.VisualStudio
       var selectedItems = uih.SelectedItems as Array;
       if (selectedItems != null)
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      if (GetConnection(ConnectionName) != null)
+      if (GetServerExplorerConnection(ConnectionName) != null)
       {
         if (MySqlWorkbench.IsInstalled)
           openUtilities.Visible = openUtilities.Enabled = true;
@@ -533,7 +519,7 @@ namespace MySql.Data.VisualStudio
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
-      if (GetConnection(ConnectionName) != null)
+      if (GetServerExplorerConnection(ConnectionName) != null)
       {
         if (MySqlWorkbench.IsInstalled)
           launchWbButton.Visible = launchWbButton.Enabled = true;
@@ -625,7 +611,7 @@ namespace MySql.Data.VisualStudio
         ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
-      if (GetConnection(ConnectionName) != null)
+      if (GetServerExplorerConnection(ConnectionName) != null)
       {
         dbExportButton.Visible = true;
         dbExportButton.Enabled = true;
@@ -638,9 +624,8 @@ namespace MySql.Data.VisualStudio
 
     private void cmdDbExport_Callback(object sender, EventArgs e)
     {
-      MySqlConnection connection = GetCurrentConnection();
       string currentConnectionName = GetCurrentConnectionName();
-      if (connection == null)
+      if (SelectedMySqlConnection == null)
       {
         return;
       }
@@ -763,7 +748,7 @@ namespace MySql.Data.VisualStudio
     /// <param name="connectionString">The connection string of the connection being added.</param>
     /// <param name="removeConnectionBeforeAdd">A <see cref="IVsDataExplorerConnection"/> to remove before adding a new one.</param>
     /// <returns>A <see cref="IVsDataExplorerConnection"/> correspnding to the connection added to the Server Explorer.</returns>
-    private IVsDataExplorerConnection AddServerExplorerConnection(string connectionName, string connectionString, IVsDataExplorerConnection removeConnectionBeforeAdd = null)
+    public IVsDataExplorerConnection AddServerExplorerConnection(string connectionName, string connectionString, IVsDataExplorerConnection removeConnectionBeforeAdd = null)
     {
       if (string.IsNullOrEmpty(connectionString))
       {
@@ -801,8 +786,7 @@ namespace MySql.Data.VisualStudio
     private void NewMySqlScriptCallback(object sender, EventArgs e)
     {
       // Set the selected connection so when the editor window is open it can work with.
-      var connection = GetCurrentConnection();
-      if (connection == null)
+      if (SelectedMySqlConnection == null)
       {
         return;
       }
@@ -813,7 +797,7 @@ namespace MySql.Data.VisualStudio
 
     private void LaunchWbCallback(object sender, EventArgs e)
     {
-      IVsDataExplorerConnection connection = GetConnection(ConnectionName);
+      IVsDataExplorerConnection connection = GetServerExplorerConnection(ConnectionName);
       if (connection == null)
       {
         return;
@@ -848,7 +832,7 @@ namespace MySql.Data.VisualStudio
         conStr = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
       }
 
-      IVsDataExplorerConnection con = GetConnection(conStr);
+      IVsDataExplorerConnection con = GetServerExplorerConnection(conStr);
       // Get script
       MySqlConnection myCon = new MySqlConnection(con.Connection.DisplayConnectionString);
       myCon.Open();
@@ -902,28 +886,47 @@ namespace MySql.Data.VisualStudio
       return SelectedMySqlConnectionName;
     }
 
-    private MySqlConnection GetCurrentConnection()
+    /// <summary>
+    /// Gets the corresponding <see cref="MySqlConnection"/>
+    /// </summary>
+    /// <param name="serverExplorerConnectionName"></param>
+    /// <returns></returns>
+    public MySqlConnection GetMySqlConnection(string serverExplorerConnectionName)
     {
-      IVsDataExplorerConnection con = GetConnection(GetCurrentConnectionName());
-      var connection = con.Connection.GetLockedProviderObject() as MySqlConnection;
-      if (connection == null)
+      return GetMySqlConnection(GetServerExplorerConnection(serverExplorerConnectionName));
+    }
+
+    /// <summary>
+    /// Returns a <see cref="MySqlConnection"/> corresponding to the given <see cref="IVsDataExplorerConnection"/>.
+    /// </summary>
+    /// <param name="serverExplorerConnection">A <see cref="IVsDataExplorerConnection"/>.</param>
+    /// <returns>A <see cref="MySqlConnection"/> corresponding to the given <see cref="IVsDataExplorerConnection"/>.</returns>
+    public MySqlConnection GetMySqlConnection(IVsDataExplorerConnection serverExplorerConnection)
+    {
+      if (serverExplorerConnection == null)
       {
-        con.Connection.UnlockProviderObject();
         return null;
       }
 
-      SelectedMySqlConnection = new MySqlConnection(connection.ConnectionString);
+      var mySqlConnection = serverExplorerConnection.Connection.GetLockedProviderObject() as MySqlConnection;
+      if (mySqlConnection == null)
+      {
+        serverExplorerConnection.Connection.UnlockProviderObject();
+        return null;
+      }
+
+      mySqlConnection = new MySqlConnection(mySqlConnection.ConnectionString);
       // Get settings from current connection to assign them to the SelectedMySqlConnection
-      var settingsValue = GetSettingsPropertyFromConnection(connection) != null
-                          ? GetSettingsPropertyFromConnection(connection).GetValue(connection, null)
+      var settingsValue = GetSettingsPropertyFromConnection(mySqlConnection) != null
+                          ? GetSettingsPropertyFromConnection(mySqlConnection).GetValue(mySqlConnection, null)
                           : null;
       if (settingsValue != null)
       {
-        GetSettingsPropertyFromConnection(SelectedMySqlConnection).SetValue(SelectedMySqlConnection, settingsValue, null);
+        GetSettingsPropertyFromConnection(mySqlConnection).SetValue(mySqlConnection, settingsValue, null);
       }
 
-      con.Connection.UnlockProviderObject();
-      return SelectedMySqlConnection;
+      serverExplorerConnection.Connection.UnlockProviderObject();
+      return mySqlConnection;
     }
 
     /// <summary>
@@ -946,8 +949,18 @@ namespace MySql.Data.VisualStudio
       return GetGlobalService(typeof(DTE)) as EnvDTE80.DTE2;
     }
 
-    public IVsDataExplorerConnection GetConnection(string connectionName)
+    /// <summary>
+    /// Returns a <see cref="IVsDataExplorerConnectionManager"/> from the ones in the Server Explorer with the given connection name.
+    /// </summary>
+    /// <param name="connectionName">The name of the connection.</param>
+    /// <returns>A <see cref="IVsDataExplorerConnectionManager"/> from the ones in the Server Explorer with the given connection name.</returns>
+    public IVsDataExplorerConnection GetServerExplorerConnection(string connectionName)
     {
+      if (string.IsNullOrEmpty(connectionName))
+      {
+        return null;
+      }
+
       IVsDataExplorerConnectionManager connectionManager = GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
       if (connectionManager == null)
       {
@@ -955,7 +968,6 @@ namespace MySql.Data.VisualStudio
       }
 
       var connections = connectionManager.Connections;
-
       foreach (var connection in connections)
       {
         if (GuidList.Provider.Equals(connection.Value.Provider) && connection.Value.DisplayName.Equals(connectionName))
@@ -965,6 +977,32 @@ namespace MySql.Data.VisualStudio
       return null;
     }
 
+    /// <summary>
+    /// Returns a <see cref="MySqlWorkbenchConnection"/> with the given connection name or if not found, one with the same connection parameters as the given <see cref="MySqlConnection"/>.
+    /// </summary>
+    /// <param name="connectionName">The name of the connection.</param>
+    /// <param name="mySqlConnection">A <see cref="MySqlConnection"/> to compare connection parameters with.</param>
+    /// <returns>A <see cref="MySqlWorkbenchConnection"/> with the given connection name or if not found, one with the same connection parameters as the given <see cref="MySqlConnection"/>.</returns>
+    public MySqlWorkbenchConnection GetMySqlWorkbenchConnection(string connectionName, MySqlConnection mySqlConnection)
+    {
+      // Try first to retrieve a related Workbench connection using the connection name
+      var mySqlWorkbenchConnection = !string.IsNullOrEmpty(connectionName)
+        ? MySqlWorkbench.Connections.GetConnectionForName(connectionName)
+        : null;
+
+      // In case connection names do not match, try to retrieve a related Workbench connection by its exact connection string, for example if a user renamed the connection
+      if (mySqlWorkbenchConnection == null)
+      {
+        mySqlWorkbenchConnection = MySqlWorkbench.Connections.GetConnectionFromMySqlConnection(mySqlConnection, true);
+      }
+
+      return mySqlWorkbenchConnection;
+    }
+
+    /// <summary>
+    /// Returns a list of Server Explorer connections corresponding to MySQL Server connections.
+    /// </summary>
+    /// <returns>A list of Server Explorer connections corresponding to MySQL Server connections.</returns>
     public List<IVsDataExplorerConnection> GetMySqlConnections()
     {
       try

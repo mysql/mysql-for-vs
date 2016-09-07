@@ -1,26 +1,4 @@
-﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
-//
-// MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
-// FLOSS License Exception
-// <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
-//
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; version 2 of the License.
-//
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
-// for more details.
-//
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
-// 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-
-namespace MySql.Data.VisualStudio.Editors
+﻿namespace MySql.Data.VisualStudio.Editors
 {
   partial class ConnectDialog
   {
@@ -50,255 +28,342 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private void InitializeComponent()
     {
-      this.label1 = new System.Windows.Forms.Label();
-      this.serverName = new System.Windows.Forms.TextBox();
-      this.database = new System.Windows.Forms.ComboBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.password = new System.Windows.Forms.TextBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.label3 = new System.Windows.Forms.Label();
-      this.userId = new System.Windows.Forms.TextBox();
-      this.cancelButton = new System.Windows.Forms.Button();
-      this.connectButton = new System.Windows.Forms.Button();
-      this.pictureBox1 = new System.Windows.Forms.PictureBox();
-      this.advancedButton = new System.Windows.Forms.Button();
-      this.label4 = new System.Windows.Forms.Label();
-      this.simplePanel = new System.Windows.Forms.Panel();
-      this.txtPort = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
-      this.btnRefresh = new System.Windows.Forms.Button();
-      this.connectionProperties = new System.Windows.Forms.PropertyGrid();
-      ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-      this.simplePanel.SuspendLayout();
+      this.components = new System.ComponentModel.Container();
+      this.MySqlLogoPictureBox = new System.Windows.Forms.PictureBox();
+      this.AdvancedButton = new System.Windows.Forms.Button();
+      this.ConnectButton = new System.Windows.Forms.Button();
+      this.CancelDlgButton = new System.Windows.Forms.Button();
+      this.AdvancedPropertyGrid = new System.Windows.Forms.PropertyGrid();
+      this.HelpToolTip = new System.Windows.Forms.ToolTip(this.components);
+      this.ConnectionNameTextBox = new System.Windows.Forms.TextBox();
+      this.AddToServerExplorerCheckBox = new System.Windows.Forms.CheckBox();
+      this.PortTextBox = new System.Windows.Forms.TextBox();
+      this.RefreshButton = new System.Windows.Forms.Button();
+      this.UsernameTextBox = new System.Windows.Forms.TextBox();
+      this.PasswordTextBox = new System.Windows.Forms.TextBox();
+      this.HostnameTextBox = new System.Windows.Forms.TextBox();
+      this.SimpleGroupBox = new System.Windows.Forms.GroupBox();
+      this.SchemaComboBox = new System.Windows.Forms.ComboBox();
+      this.ConnectionNameLabel = new System.Windows.Forms.Label();
+      this.PortLabel = new System.Windows.Forms.Label();
+      this.PasswordLabel = new System.Windows.Forms.Label();
+      this.UsernameLabel = new System.Windows.Forms.Label();
+      this.SchemaLabel = new System.Windows.Forms.Label();
+      this.HostnameLabel = new System.Windows.Forms.Label();
+      this.ContentAreaPanel.SuspendLayout();
+      this.CommandAreaPanel.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.MySqlLogoPictureBox)).BeginInit();
+      this.SimpleGroupBox.SuspendLayout();
       this.SuspendLayout();
       // 
-      // label1
+      // FootnoteAreaPanel
       // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(4, 24);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(70, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Server name:";
+      this.FootnoteAreaPanel.Location = new System.Drawing.Point(0, 292);
+      this.FootnoteAreaPanel.Size = new System.Drawing.Size(634, 0);
       // 
-      // serverName
+      // ContentAreaPanel
       // 
-      this.serverName.Location = new System.Drawing.Point(95, 21);
-      this.serverName.Name = "serverName";
-      this.serverName.Size = new System.Drawing.Size(234, 20);
-      this.serverName.TabIndex = 1;
-      this.serverName.Text = "localhost";
-      this.serverName.Leave += new System.EventHandler(this.serverName_Leave);
+      this.ContentAreaPanel.Controls.Add(this.SimpleGroupBox);
+      this.ContentAreaPanel.Controls.Add(this.MySqlLogoPictureBox);
+      this.ContentAreaPanel.Controls.Add(this.AdvancedPropertyGrid);
+      this.ContentAreaPanel.Size = new System.Drawing.Size(484, 361);
       // 
-      // database
+      // CommandAreaPanel
       // 
-      this.database.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
-      this.database.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-      this.database.FormattingEnabled = true;
-      this.database.Location = new System.Drawing.Point(94, 123);
-      this.database.Name = "database";
-      this.database.Size = new System.Drawing.Size(330, 21);
-      this.database.TabIndex = 4;
-      this.database.DropDown += new System.EventHandler(this.database_DropDown);
-      this.database.Leave += new System.EventHandler(this.database_Leave);
+      this.CommandAreaPanel.Controls.Add(this.ConnectButton);
+      this.CommandAreaPanel.Controls.Add(this.CancelDlgButton);
+      this.CommandAreaPanel.Controls.Add(this.AdvancedButton);
+      this.CommandAreaPanel.Location = new System.Drawing.Point(0, 316);
+      this.CommandAreaPanel.Size = new System.Drawing.Size(484, 45);
+      this.CommandAreaPanel.TabIndex = 2;
       // 
-      // label5
+      // MySqlLogoPictureBox
       // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(4, 103);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(164, 13);
-      this.label5.TabIndex = 8;
-      this.label5.Text = "Select or enter a database name:";
+      this.MySqlLogoPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
+      this.MySqlLogoPictureBox.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_banner;
+      this.MySqlLogoPictureBox.Location = new System.Drawing.Point(0, 0);
+      this.MySqlLogoPictureBox.Name = "MySqlLogoPictureBox";
+      this.MySqlLogoPictureBox.Size = new System.Drawing.Size(484, 89);
+      this.MySqlLogoPictureBox.TabIndex = 6;
+      this.MySqlLogoPictureBox.TabStop = false;
       // 
-      // password
+      // AdvancedButton
       // 
-      this.password.Location = new System.Drawing.Point(95, 73);
-      this.password.Name = "password";
-      this.password.PasswordChar = '*';
-      this.password.Size = new System.Drawing.Size(184, 20);
-      this.password.TabIndex = 3;
-      this.password.Leave += new System.EventHandler(this.password_Leave);
+      this.AdvancedButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.AdvancedButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.AdvancedButton.Location = new System.Drawing.Point(12, 11);
+      this.AdvancedButton.Name = "AdvancedButton";
+      this.AdvancedButton.Size = new System.Drawing.Size(108, 25);
+      this.AdvancedButton.TabIndex = 0;
+      this.AdvancedButton.Text = "Advanced >>";
+      this.AdvancedButton.UseVisualStyleBackColor = true;
+      this.AdvancedButton.Click += new System.EventHandler(this.AdvancedButton_Click);
       // 
-      // label2
+      // ConnectButton
       // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(4, 49);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(44, 13);
-      this.label2.TabIndex = 2;
-      this.label2.Text = "User Id:";
+      this.ConnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.ConnectButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+      this.ConnectButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.ConnectButton.Location = new System.Drawing.Point(286, 11);
+      this.ConnectButton.Name = "ConnectButton";
+      this.ConnectButton.Size = new System.Drawing.Size(90, 25);
+      this.ConnectButton.TabIndex = 1;
+      this.ConnectButton.Text = "Connect";
+      this.ConnectButton.UseVisualStyleBackColor = true;
       // 
-      // label3
+      // CancelDlgButton
       // 
-      this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(3, 78);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(56, 13);
-      this.label3.TabIndex = 4;
-      this.label3.Text = "Password:";
+      this.CancelDlgButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.CancelDlgButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.CancelDlgButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.CancelDlgButton.Location = new System.Drawing.Point(382, 11);
+      this.CancelDlgButton.Name = "CancelDlgButton";
+      this.CancelDlgButton.Size = new System.Drawing.Size(90, 25);
+      this.CancelDlgButton.TabIndex = 2;
+      this.CancelDlgButton.Text = "Cancel";
+      this.CancelDlgButton.UseVisualStyleBackColor = true;
       // 
-      // userId
+      // AdvancedPropertyGrid
       // 
-      this.userId.Location = new System.Drawing.Point(95, 47);
-      this.userId.Name = "userId";
-      this.userId.Size = new System.Drawing.Size(234, 20);
-      this.userId.TabIndex = 2;
-      this.userId.Leave += new System.EventHandler(this.userId_Leave);
-      // 
-      // cancelButton
-      // 
-      this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.cancelButton.Location = new System.Drawing.Point(245, 259);
-      this.cancelButton.Name = "cancelButton";
-      this.cancelButton.Size = new System.Drawing.Size(90, 25);
-      this.cancelButton.TabIndex = 6;
-      this.cancelButton.Text = "Cancel";
-      this.cancelButton.UseVisualStyleBackColor = true;
-      // 
-      // connectButton
-      // 
-      this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.connectButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.connectButton.Location = new System.Drawing.Point(145, 259);
-      this.connectButton.Name = "connectButton";
-      this.connectButton.Size = new System.Drawing.Size(90, 25);
-      this.connectButton.TabIndex = 5;
-      this.connectButton.Text = "Connect";
-      this.connectButton.UseVisualStyleBackColor = true;
-      this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
-      // 
-      // pictureBox1
-      // 
-      this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
-	    this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_banner;
-      this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-      this.pictureBox1.Name = "pictureBox1";
-      this.pictureBox1.Size = new System.Drawing.Size(450, 89);
-      this.pictureBox1.TabIndex = 5;
-      this.pictureBox1.TabStop = false;
-      // 
-      // advancedButton
-      // 
-      this.advancedButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.advancedButton.Location = new System.Drawing.Point(345, 259);
-      this.advancedButton.Name = "advancedButton";
-      this.advancedButton.Size = new System.Drawing.Size(90, 25);
-      this.advancedButton.TabIndex = 7;
-      this.advancedButton.Text = "Advanced >>";
-      this.advancedButton.UseVisualStyleBackColor = true;
-      this.advancedButton.Click += new System.EventHandler(this.advancedButton_Click);
-      // 
-      // label4
-      // 
-      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+      this.AdvancedPropertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.label4.Location = new System.Drawing.Point(17, 250);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(424, 2);
-      this.label4.TabIndex = 12;
+      this.AdvancedPropertyGrid.LineColor = System.Drawing.SystemColors.Control;
+      this.AdvancedPropertyGrid.Location = new System.Drawing.Point(12, 95);
+      this.AdvancedPropertyGrid.Name = "AdvancedPropertyGrid";
+      this.AdvancedPropertyGrid.Size = new System.Drawing.Size(460, 202);
+      this.AdvancedPropertyGrid.TabIndex = 1;
+      this.AdvancedPropertyGrid.Visible = false;
       // 
-      // simplePanel
+      // ConnectionNameTextBox
       // 
-      this.simplePanel.Controls.Add(this.txtPort);
-      this.simplePanel.Controls.Add(this.label6);
-      this.simplePanel.Controls.Add(this.btnRefresh);
-      this.simplePanel.Controls.Add(this.database);
-      this.simplePanel.Controls.Add(this.userId);
-      this.simplePanel.Controls.Add(this.label3);
-      this.simplePanel.Controls.Add(this.label2);
-      this.simplePanel.Controls.Add(this.label5);
-      this.simplePanel.Controls.Add(this.password);
-      this.simplePanel.Controls.Add(this.label1);
-      this.simplePanel.Controls.Add(this.serverName);
-      this.simplePanel.Location = new System.Drawing.Point(12, 95);
-      this.simplePanel.Name = "simplePanel";
-      this.simplePanel.Size = new System.Drawing.Size(436, 155);
-      this.simplePanel.TabIndex = 0;
+      this.ConnectionNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ConnectionNameTextBox.Enabled = false;
+      this.ConnectionNameTextBox.Location = new System.Drawing.Point(98, 160);
+      this.ConnectionNameTextBox.Name = "ConnectionNameTextBox";
+      this.ConnectionNameTextBox.Size = new System.Drawing.Size(335, 23);
+      this.ConnectionNameTextBox.TabIndex = 13;
+      this.HelpToolTip.SetToolTip(this.ConnectionNameTextBox, "The name of the Server Explorer connection.");
       // 
-      // txtPort
+      // AddToServerExplorerCheckBox
       // 
-      this.txtPort.Location = new System.Drawing.Point(320, 73);
-      this.txtPort.Name = "txtPort";
-      this.txtPort.Size = new System.Drawing.Size(103, 20);
-      this.txtPort.TabIndex = 4;
-      this.txtPort.Text = "3306";
+      this.AddToServerExplorerCheckBox.AutoSize = true;
+      this.AddToServerExplorerCheckBox.Location = new System.Drawing.Point(98, 135);
+      this.AddToServerExplorerCheckBox.Name = "AddToServerExplorerCheckBox";
+      this.AddToServerExplorerCheckBox.Size = new System.Drawing.Size(205, 19);
+      this.AddToServerExplorerCheckBox.TabIndex = 11;
+      this.AddToServerExplorerCheckBox.Text = "Add connection to Server Explorer";
+      this.HelpToolTip.SetToolTip(this.AddToServerExplorerCheckBox, "Adds the connection to the Server Explorer so it can be used in the future.");
+      this.AddToServerExplorerCheckBox.UseVisualStyleBackColor = true;
+      this.AddToServerExplorerCheckBox.CheckedChanged += new System.EventHandler(this.AddToServerExplorerCheckBox_CheckedChanged);
       // 
-      // label6
+      // PortTextBox
       // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(285, 78);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(29, 13);
-      this.label6.TabIndex = 17;
-      this.label6.Text = "Port:";
+      this.PortTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.PortTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.PortTextBox.Location = new System.Drawing.Point(386, 19);
+      this.PortTextBox.Name = "PortTextBox";
+      this.PortTextBox.Size = new System.Drawing.Size(47, 23);
+      this.PortTextBox.TabIndex = 3;
+      this.PortTextBox.Text = "3306";
+      this.HelpToolTip.SetToolTip(this.PortTextBox, "TCP/IP port.");
+      this.PortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.PortTextBox_Validating);
+      this.PortTextBox.Validated += new System.EventHandler(this.SimpleControlValidated);
       // 
-      // btnRefresh
+      // RefreshButton
       // 
-      this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnRefresh.Location = new System.Drawing.Point(333, 18);
-      this.btnRefresh.Name = "btnRefresh";
-      this.btnRefresh.Size = new System.Drawing.Size(90, 25);
-      this.btnRefresh.TabIndex = 16;
-      this.btnRefresh.Text = "Refresh";
-      this.btnRefresh.UseVisualStyleBackColor = true;
+      this.RefreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.RefreshButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.RefreshButton.Location = new System.Drawing.Point(348, 104);
+      this.RefreshButton.Name = "RefreshButton";
+      this.RefreshButton.Size = new System.Drawing.Size(85, 25);
+      this.RefreshButton.TabIndex = 10;
+      this.RefreshButton.Text = "Refresh";
+      this.HelpToolTip.SetToolTip(this.RefreshButton, "Refreshes the list of schemas in the combo box.");
+      this.RefreshButton.UseVisualStyleBackColor = true;
+      this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
       // 
-      // connectionProperties
+      // UsernameTextBox
       // 
-      this.connectionProperties.Location = new System.Drawing.Point(13, 100);
-      this.connectionProperties.Name = "connectionProperties";
-      this.connectionProperties.Size = new System.Drawing.Size(426, 330);
-      this.connectionProperties.TabIndex = 14;
-      this.connectionProperties.Visible = false;
+      this.UsernameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.UsernameTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.UsernameTextBox.Location = new System.Drawing.Point(99, 48);
+      this.UsernameTextBox.Name = "UsernameTextBox";
+      this.UsernameTextBox.Size = new System.Drawing.Size(334, 23);
+      this.UsernameTextBox.TabIndex = 5;
+      this.HelpToolTip.SetToolTip(this.UsernameTextBox, "Name of the user to connect with.");
+      this.UsernameTextBox.Validated += new System.EventHandler(this.SimpleControlValidated);
+      // 
+      // PasswordTextBox
+      // 
+      this.PasswordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.PasswordTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.PasswordTextBox.Location = new System.Drawing.Point(98, 77);
+      this.PasswordTextBox.Name = "PasswordTextBox";
+      this.PasswordTextBox.PasswordChar = '*';
+      this.PasswordTextBox.Size = new System.Drawing.Size(335, 23);
+      this.PasswordTextBox.TabIndex = 7;
+      this.HelpToolTip.SetToolTip(this.PasswordTextBox, "The user\'s password.");
+      this.PasswordTextBox.UseSystemPasswordChar = true;
+      this.PasswordTextBox.Validated += new System.EventHandler(this.SimpleControlValidated);
+      // 
+      // HostnameTextBox
+      // 
+      this.HostnameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.HostnameTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.HostnameTextBox.Location = new System.Drawing.Point(98, 19);
+      this.HostnameTextBox.Name = "HostnameTextBox";
+      this.HostnameTextBox.Size = new System.Drawing.Size(244, 23);
+      this.HostnameTextBox.TabIndex = 1;
+      this.HostnameTextBox.Text = "localhost";
+      this.HelpToolTip.SetToolTip(this.HostnameTextBox, "Name or IP address of the server host .");
+      this.HostnameTextBox.Validated += new System.EventHandler(this.SimpleControlValidated);
+      // 
+      // SimpleGroupBox
+      // 
+      this.SimpleGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.SimpleGroupBox.Controls.Add(this.SchemaComboBox);
+      this.SimpleGroupBox.Controls.Add(this.ConnectionNameLabel);
+      this.SimpleGroupBox.Controls.Add(this.ConnectionNameTextBox);
+      this.SimpleGroupBox.Controls.Add(this.AddToServerExplorerCheckBox);
+      this.SimpleGroupBox.Controls.Add(this.PortTextBox);
+      this.SimpleGroupBox.Controls.Add(this.PortLabel);
+      this.SimpleGroupBox.Controls.Add(this.RefreshButton);
+      this.SimpleGroupBox.Controls.Add(this.UsernameTextBox);
+      this.SimpleGroupBox.Controls.Add(this.PasswordLabel);
+      this.SimpleGroupBox.Controls.Add(this.UsernameLabel);
+      this.SimpleGroupBox.Controls.Add(this.SchemaLabel);
+      this.SimpleGroupBox.Controls.Add(this.PasswordTextBox);
+      this.SimpleGroupBox.Controls.Add(this.HostnameLabel);
+      this.SimpleGroupBox.Controls.Add(this.HostnameTextBox);
+      this.SimpleGroupBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.SimpleGroupBox.Location = new System.Drawing.Point(12, 95);
+      this.SimpleGroupBox.Name = "SimpleGroupBox";
+      this.SimpleGroupBox.Size = new System.Drawing.Size(460, 202);
+      this.SimpleGroupBox.TabIndex = 0;
+      this.SimpleGroupBox.TabStop = false;
+      // 
+      // SchemaComboBox
+      // 
+      this.SchemaComboBox.FormattingEnabled = true;
+      this.SchemaComboBox.Location = new System.Drawing.Point(99, 106);
+      this.SchemaComboBox.Name = "SchemaComboBox";
+      this.SchemaComboBox.Size = new System.Drawing.Size(243, 23);
+      this.SchemaComboBox.TabIndex = 9;
+      this.SchemaComboBox.DropDown += new System.EventHandler(this.SchemaComboBox_DropDown);
+      this.SchemaComboBox.Validated += new System.EventHandler(this.SimpleControlValidated);
+      // 
+      // ConnectionNameLabel
+      // 
+      this.ConnectionNameLabel.AutoSize = true;
+      this.ConnectionNameLabel.Location = new System.Drawing.Point(50, 163);
+      this.ConnectionNameLabel.Name = "ConnectionNameLabel";
+      this.ConnectionNameLabel.Size = new System.Drawing.Size(42, 15);
+      this.ConnectionNameLabel.TabIndex = 12;
+      this.ConnectionNameLabel.Text = "Name:";
+      // 
+      // PortLabel
+      // 
+      this.PortLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.PortLabel.AutoSize = true;
+      this.PortLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.PortLabel.Location = new System.Drawing.Point(348, 22);
+      this.PortLabel.Name = "PortLabel";
+      this.PortLabel.Size = new System.Drawing.Size(32, 15);
+      this.PortLabel.TabIndex = 2;
+      this.PortLabel.Text = "Port:";
+      // 
+      // PasswordLabel
+      // 
+      this.PasswordLabel.AutoSize = true;
+      this.PasswordLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.PasswordLabel.Location = new System.Drawing.Point(32, 79);
+      this.PasswordLabel.Name = "PasswordLabel";
+      this.PasswordLabel.Size = new System.Drawing.Size(60, 15);
+      this.PasswordLabel.TabIndex = 6;
+      this.PasswordLabel.Text = "Password:";
+      // 
+      // UsernameLabel
+      // 
+      this.UsernameLabel.AutoSize = true;
+      this.UsernameLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.UsernameLabel.Location = new System.Drawing.Point(30, 51);
+      this.UsernameLabel.Name = "UsernameLabel";
+      this.UsernameLabel.Size = new System.Drawing.Size(63, 15);
+      this.UsernameLabel.TabIndex = 4;
+      this.UsernameLabel.Text = "Username:";
+      // 
+      // SchemaLabel
+      // 
+      this.SchemaLabel.AutoSize = true;
+      this.SchemaLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.SchemaLabel.Location = new System.Drawing.Point(40, 109);
+      this.SchemaLabel.Name = "SchemaLabel";
+      this.SchemaLabel.Size = new System.Drawing.Size(52, 15);
+      this.SchemaLabel.TabIndex = 8;
+      this.SchemaLabel.Text = "Schema:";
+      // 
+      // HostnameLabel
+      // 
+      this.HostnameLabel.AutoSize = true;
+      this.HostnameLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.HostnameLabel.Location = new System.Drawing.Point(27, 22);
+      this.HostnameLabel.Name = "HostnameLabel";
+      this.HostnameLabel.Size = new System.Drawing.Size(65, 15);
+      this.HostnameLabel.TabIndex = 0;
+      this.HostnameLabel.Text = "Hostname:";
       // 
       // ConnectDialog
       // 
-      this.AcceptButton = this.connectButton;
+      this.AcceptButton = this.ConnectButton;
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.CancelButton = this.cancelButton;
-      this.ClientSize = new System.Drawing.Size(450, 301);
-      this.Controls.Add(this.simplePanel);
-      this.Controls.Add(this.label4);
-      this.Controls.Add(this.advancedButton);
-      this.Controls.Add(this.pictureBox1);
-      this.Controls.Add(this.connectButton);
-      this.Controls.Add(this.cancelButton);
-      this.Controls.Add(this.connectionProperties);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-      this.MaximizeBox = false;
-      this.MinimizeBox = false;
+      this.CancelButton = this.CancelDlgButton;
+      this.ClientSize = new System.Drawing.Size(484, 361);
+      this.CommandAreaVisible = true;
+      this.FootnoteAreaHeight = 0;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+      this.MinimumSize = new System.Drawing.Size(470, 400);
       this.Name = "ConnectDialog";
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Connect to MySQL";
-      ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-      this.simplePanel.ResumeLayout(false);
-      this.simplePanel.PerformLayout();
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConnectDialogNew_FormClosing);
+      this.ContentAreaPanel.ResumeLayout(false);
+      this.CommandAreaPanel.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.MySqlLogoPictureBox)).EndInit();
+      this.SimpleGroupBox.ResumeLayout(false);
+      this.SimpleGroupBox.PerformLayout();
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.TextBox serverName;
-    private System.Windows.Forms.Button cancelButton;
-    private System.Windows.Forms.Button connectButton;
-    private System.Windows.Forms.TextBox password;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.TextBox userId;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.ComboBox database;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.PictureBox pictureBox1;
-    private System.Windows.Forms.Button advancedButton;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Panel simplePanel;
-    private System.Windows.Forms.PropertyGrid connectionProperties;
-    private System.Windows.Forms.Button btnRefresh;
-    private System.Windows.Forms.TextBox txtPort;
-    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.PictureBox MySqlLogoPictureBox;
+    private System.Windows.Forms.Button AdvancedButton;
+    private System.Windows.Forms.Button ConnectButton;
+    private System.Windows.Forms.Button CancelDlgButton;
+    private System.Windows.Forms.PropertyGrid AdvancedPropertyGrid;
+    private System.Windows.Forms.ToolTip HelpToolTip;
+    private System.Windows.Forms.GroupBox SimpleGroupBox;
+    private System.Windows.Forms.Label ConnectionNameLabel;
+    private System.Windows.Forms.TextBox ConnectionNameTextBox;
+    private System.Windows.Forms.CheckBox AddToServerExplorerCheckBox;
+    private System.Windows.Forms.TextBox PortTextBox;
+    private System.Windows.Forms.Label PortLabel;
+    private System.Windows.Forms.Button RefreshButton;
+    private System.Windows.Forms.TextBox UsernameTextBox;
+    private System.Windows.Forms.Label PasswordLabel;
+    private System.Windows.Forms.Label UsernameLabel;
+    private System.Windows.Forms.Label SchemaLabel;
+    private System.Windows.Forms.TextBox PasswordTextBox;
+    private System.Windows.Forms.Label HostnameLabel;
+    private System.Windows.Forms.TextBox HostnameTextBox;
+    private System.Windows.Forms.ComboBox SchemaComboBox;
   }
 }

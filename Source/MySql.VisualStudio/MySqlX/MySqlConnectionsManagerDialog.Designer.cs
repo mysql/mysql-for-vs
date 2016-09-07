@@ -51,8 +51,8 @@ namespace MySql.Data.VisualStudio.MySqlX
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Available", System.Windows.Forms.HorizontalAlignment.Left);
-      System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Similar already in Server Explorer", System.Windows.Forms.HorizontalAlignment.Left);
+      System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Available", System.Windows.Forms.HorizontalAlignment.Left);
+      System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Similar already in Server Explorer", System.Windows.Forms.HorizontalAlignment.Left);
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MySqlConnectionsManagerDialog));
       this.ConnectionNameLabel = new System.Windows.Forms.Label();
       this.FilterTextBox = new System.Windows.Forms.TextBox();
@@ -76,6 +76,7 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.MigrateWorkbenchConnectionsButton = new System.Windows.Forms.Button();
       this.AutomaticMigrationDelayValueLabel = new System.Windows.Forms.Label();
       this.AutomaticMigrationDelayLabel = new System.Windows.Forms.Label();
+      this.HelpToolTip = new System.Windows.Forms.ToolTip(this.components);
       this.ContentAreaPanel.SuspendLayout();
       this.CommandAreaPanel.SuspendLayout();
       this.ConnectionsContextMenuStrip.SuspendLayout();
@@ -175,13 +176,13 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.WorkbenchConnectionsListView.ContextMenuStrip = this.ConnectionsContextMenuStrip;
       this.WorkbenchConnectionsListView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.WorkbenchConnectionsListView.FullRowSelect = true;
-      listViewGroup3.Header = "Available";
-      listViewGroup3.Name = "AvailableListViewGroup";
-      listViewGroup4.Header = "Similar already in Server Explorer";
-      listViewGroup4.Name = "InServerExplorerListViewGroup";
+      listViewGroup1.Header = "Available";
+      listViewGroup1.Name = "AvailableListViewGroup";
+      listViewGroup2.Header = "Similar already in Server Explorer";
+      listViewGroup2.Name = "InServerExplorerListViewGroup";
       this.WorkbenchConnectionsListView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup3,
-            listViewGroup4});
+            listViewGroup1,
+            listViewGroup2});
       this.WorkbenchConnectionsListView.HideSelection = false;
       this.WorkbenchConnectionsListView.LargeImageList = this.ConnectionTypesImageList;
       this.WorkbenchConnectionsListView.Location = new System.Drawing.Point(25, 135);
@@ -326,6 +327,8 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.MigrateWorkbenchConnectionsButton.Size = new System.Drawing.Size(694, 23);
       this.MigrateWorkbenchConnectionsButton.TabIndex = 7;
       this.MigrateWorkbenchConnectionsButton.Text = "Migrate stored connections to MySQL Workbench now";
+      this.HelpToolTip.SetToolTip(this.MigrateWorkbenchConnectionsButton, "Stored connections can be migrated to the MySQL Workbench\'s connections\r\nfile, so" +
+        " they can be shared by both MySQL Workbench and MySQL for Visual Studio.");
       this.MigrateWorkbenchConnectionsButton.UseVisualStyleBackColor = true;
       this.MigrateWorkbenchConnectionsButton.Click += new System.EventHandler(this.MigrateWorkbenchConnectionsButton_Click);
       // 
@@ -351,6 +354,12 @@ namespace MySql.Data.VisualStudio.MySqlX
       this.AutomaticMigrationDelayLabel.Size = new System.Drawing.Size(263, 15);
       this.AutomaticMigrationDelayLabel.TabIndex = 5;
       this.AutomaticMigrationDelayLabel.Text = "Automatic connections migration delayed until: ";
+      // 
+      // HelpToolTip
+      // 
+      this.HelpToolTip.AutoPopDelay = 5000;
+      this.HelpToolTip.InitialDelay = 1000;
+      this.HelpToolTip.ReshowDelay = 100;
       // 
       // MySqlConnectionsManagerDialog
       // 
@@ -402,5 +411,6 @@ namespace MySql.Data.VisualStudio.MySqlX
     private System.Windows.Forms.Button MigrateWorkbenchConnectionsButton;
     private System.Windows.Forms.Label AutomaticMigrationDelayValueLabel;
     private System.Windows.Forms.Label AutomaticMigrationDelayLabel;
+    private System.Windows.Forms.ToolTip HelpToolTip;
   }
 }

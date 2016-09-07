@@ -350,6 +350,7 @@
         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidLanguageIcons" id="bmpSql" />
         <Strings>
           <CommandName>cmdidNewMySQLScript</CommandName>
           <ButtonText>&amp;SQL</ButtonText>
@@ -359,6 +360,7 @@
         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidLanguageIcons" id="bmpJs" />
         <Strings>
           <CommandName>cmdidNewJavascript</CommandName>
           <ButtonText>&amp;JavaScript</ButtonText>
@@ -368,6 +370,7 @@
         <Parent guid="guidMySqlProviderCmdSet" id="NewScriptSubMenuGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
+        <Icon guid="guidLanguageIcons" id="bmpPy" />
         <Strings>
           <CommandName>cmdidNewPythonscript</CommandName>
           <ButtonText>&amp;Python</ButtonText>
@@ -466,6 +469,9 @@
               href="Resources\icon.bmp"
               usedList="bmpConfig,bmpMySqlScript,bmpDebugRoutineToolBar,bmpDbExport,bmpLaunchWorkbenchToolBar,bmpOpenUtilitiesPromptToolBar,
                 bmpAddMySqlConnection,bmpNewMySqlProject,bmpMySqlConnectionsManager,bmpMySqlOutputWindow"/>
+      <Bitmap guid="guidLanguageIcons"
+              href="Resources\script-languages.bmp"
+              usedList="bmpSql,bmpJs,bmpPy"/>
     </Bitmaps>
   </Commands>
 
@@ -628,6 +634,11 @@
       <IDSymbol name="bmpNewMySqlProject" value="8" />
       <IDSymbol name="bmpMySqlConnectionsManager" value="9" />
       <IDSymbol name="bmpMySqlOutputWindow" value="10" />
+    </GuidSymbol>
+    <GuidSymbol name="guidLanguageIcons" value="{65daf3e9-1030-4b45-b772-a528341c5ba7}" >
+      <IDSymbol name="bmpSql" value="1" />
+      <IDSymbol name="bmpJs" value="2" />
+      <IDSymbol name="bmpPy" value="3" />
     </GuidSymbol>
   </Symbols>
 
