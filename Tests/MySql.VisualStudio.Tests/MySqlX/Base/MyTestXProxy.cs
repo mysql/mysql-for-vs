@@ -23,7 +23,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using MySql.Data.VisualStudio.Editors;
-using MySql.Data.VisualStudio.MySqlX;
+using MySql.Utility.Classes.MySqlX;
+using MySql.Utility.Enums;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
@@ -35,7 +36,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <param name="connectionString">Connection string that will be used when a script is executed. Format: "user:pass@server:port".</param>
     /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
     /// <param name="scriptType">The language type used.</param>
-    public MyTestXProxy(string connectionString, bool keepXSession, ScriptType scriptType) : base(connectionString, keepXSession, scriptType)
+    public MyTestXProxy(string connectionString, bool keepXSession, ScriptLanguageType scriptType) : base(connectionString, keepXSession, scriptType)
     {
     }
 
@@ -45,7 +46,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <param name="connection">Connection object that will be used."</param>
     /// /// <param name="keepXSession">Specifies if all the statements will be executed in the same session</param>
     /// <param name="scriptType">The language type used.</param>
-    public MyTestXProxy(DbConnection connection, bool keepXSession, ScriptType scriptType) : base(connection, keepXSession, scriptType)
+    public MyTestXProxy(DbConnection connection, bool keepXSession, ScriptLanguageType scriptType) : base(connection, keepXSession, scriptType)
     {
     }
 
@@ -55,9 +56,9 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <param name="script">The script to execute</param>
     /// <param name="scriptType">The type of language used.</param>
     /// <returns>Returns an empty list of dictionary objects if the result returned from the server doesnt belong to the BaseResult hierarchy</returns>
-    public new List<Dictionary<string, object>> ExecuteScript(string script, ScriptType scriptType)
+    public new List<Dictionary<string, object>> ExecuteScript(string script, ScriptLanguageType scriptType)
     {
-      if (scriptType == ScriptType.JavaScript)
+      if (scriptType == ScriptLanguageType.JavaScript)
       {
         script = script.ToJavaScript();
       }

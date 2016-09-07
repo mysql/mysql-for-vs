@@ -29,12 +29,13 @@ using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using MySQL.Utility.Classes;
-using MySql.Data.VisualStudio.MySqlX;
+using MySql.Utility.Classes;
 using MySqlX;
 using System.Text;
 using ConsoleTables.Core;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySqlX;
+using MySql.Utility.Enums;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -121,7 +122,7 @@ namespace MySql.Data.VisualStudio.Editors
       Package = MySqlDataProviderPackage.Instance;
       SetBaseEvents();
       ClearResults();
-      ScriptType = ScriptType.JavaScript;
+      ScriptLanguageType = ScriptLanguageType.JavaScript;
       SetXShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
 #if !VS_SDK_2010
@@ -158,11 +159,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="sp">The service provider.</param>
     /// <param name="pane">The pane.</param>
     /// <param name="scriptType">Indicates the script type.</param>
-    internal MySqlHybridScriptEditor(ServiceProvider sp, MySqlHybridScriptEditorPane pane, ScriptType scriptType = ScriptType.JavaScript)
+    internal MySqlHybridScriptEditor(ServiceProvider sp, MySqlHybridScriptEditorPane pane, ScriptLanguageType scriptType = ScriptLanguageType.JavaScript)
       : this()
     {
-      ScriptType = scriptType;
-      ConnectionInfoToolStripDropDownButton.Image = scriptType == ScriptType.JavaScript
+      ScriptLanguageType = scriptType;
+      ConnectionInfoToolStripDropDownButton.Image = scriptType == ScriptLanguageType.JavaScript
         ? Resources.js_id
         : Resources.py_id;
       SetXShellConsoleEditorPromptString();
@@ -187,7 +188,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// The script type.
     /// </summary>
-    public ScriptType ScriptType { get; set; }
+    public ScriptLanguageType ScriptLanguageType { get; set; }
 
     #endregion Properties
 
@@ -199,13 +200,13 @@ namespace MySql.Data.VisualStudio.Editors
     /// <returns>The string with the file name and extensions for the 'Save as' dialog.</returns>
     protected override string GetFileFormatList()
     {
-      switch (ScriptType)
+      switch (ScriptLanguageType)
       {
-        case ScriptType.Sql:
+        case ScriptLanguageType.Sql:
           return "MySQL SQL Files (*.mysql)\n*.mysql\n\n";
-        case ScriptType.JavaScript:
+        case ScriptLanguageType.JavaScript:
           return "MySQL JavaScript Files (*.myjs)\n*.myjs\n\n";
-        case ScriptType.Python:
+        case ScriptLanguageType.Python:
           return "MySQL Python Files (*.mypy)\n*.mypy\n\n";
       }
 
@@ -305,17 +306,17 @@ namespace MySql.Data.VisualStudio.Editors
     private void ExecuteBatchScript(string script)
     {
       var statements = new List<string>();
-      switch (ScriptType)
+      switch (ScriptLanguageType)
       {
-        case ScriptType.JavaScript:
-          statements = script.BreakJavaScriptStatements();
+        case ScriptLanguageType.JavaScript:
+          statements = script.BreakIntoJavaScriptStatements();
           break;
-        case ScriptType.Python:
-          statements = script.BreakPythonStatements();
+        case ScriptLanguageType.Python:
+          statements = script.BreakIntoPythonStatements();
           break;
       }
 
-      var results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptType);
+      var results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptLanguageType);
       if (!results.Any())
       {
         return;
@@ -340,7 +341,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="script">The script.</param>
     private void ExecuteConsoleScript(string script)
     {
-      var result = _xShellWrapper.ExecuteQuery(script, ScriptType);
+      var result = _xShellWrapper.ExecuteQuery(script, ScriptLanguageType);
       PrintResult(script, result.Result, result.ExecutionTime);
       XShellConsoleEditor.Focus();
     }
@@ -365,12 +366,12 @@ namespace MySql.Data.VisualStudio.Editors
           case SessionOption.UseSameSession:
             if (_xShellWrapper == null)
             {
-              _xShellWrapper = new MySqlXProxy(((MySqlConnection)Connection).ToXFormat(), true, ScriptType);
+              _xShellWrapper = new MySqlXProxy(Connection.GetXConnectionString(), true, ScriptLanguageType);
             }
 
             break;
           case SessionOption.UseNewSession:
-            _xShellWrapper = new MySqlXProxy(((MySqlConnection)Connection).ToXFormat(), false, ScriptType);
+            _xShellWrapper = new MySqlXProxy(Connection.GetXConnectionString(), false, ScriptLanguageType);
             break;
         }
 
@@ -660,19 +661,19 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Set the XShellConsoleEditor prompt string according the ScriptType the file format list.
+    /// Set the XShellConsoleEditor prompt string according the ScriptLanguageType the file format list.
     /// </summary>
     private void SetXShellConsoleEditorPromptString()
     {
-      switch (ScriptType)
+      switch (ScriptLanguageType)
       {
-        case ScriptType.Sql:
+        case ScriptLanguageType.Sql:
           XShellConsoleEditor.PromptString = "mysql-slq>";
           break;
-        case ScriptType.Python:
+        case ScriptLanguageType.Python:
           XShellConsoleEditor.PromptString = "mysql-py>";
           break;
-        case ScriptType.JavaScript:
+        case ScriptLanguageType.JavaScript:
           XShellConsoleEditor.PromptString = "mysql-js>";
           break;
       }

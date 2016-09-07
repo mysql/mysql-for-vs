@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
+using MySql.Utility.Enums;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
 using MySqlX.Shell;
@@ -32,7 +32,7 @@ using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX
 {
-  public class JsCollectionXShellTests : BaseCollectionTests, IUseFixture<SetUpXShell>
+  public class JsCollectionXShellTests : BaseCollectionTests
   {
     #region Fields
 
@@ -55,15 +55,15 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
-        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXUser);
+        _shellClient.ExecuteToJavaScript(GetSchemaXTest);
+        _shellClient.ExecuteToJavaScript(GetCollectionXTextUser);
 
         // Test single add
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER1);
@@ -126,10 +126,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        _shellClient.ExecuteToJavaScript(DropSchemaTestIfExists);
-        _shellClient.ExecuteToJavaScript(CreateSchemaTest);
+        _shellClient.ExecuteToJavaScript(DropSchemaTempSchemaIfExists);
+        _shellClient.ExecuteToJavaScript(CreateSchemaTempSchema);
         _shellClient.ExecuteToJavaScript(CreateCollectionTest);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEMP_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -164,18 +164,18 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, MOVIES_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, MOVIES_COLLECTION_NAME));
 
-        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
-        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXMovies);
+        _shellClient.ExecuteToJavaScript(GetSchemaXTest);
+        _shellClient.ExecuteToJavaScript(GetCollectionXTestMovies);
 
         // Add non-unique index
         _shellClient.ExecuteToJavaScript(CREATE_NON_UNIQUE_INDEX_MOVIES);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
@@ -183,7 +183,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Add unique index
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_INCLUDE_MYSQLX);
         _shellClient.ExecuteToJavaScript(CREATE_UNIQUE_INDEX_MOVIES);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
@@ -196,14 +196,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         // Drop non-unique index
         _shellClient.ExecuteToJavaScript(DROP_NON_UNIQUE_INDEX_MOVIES);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
         // Drop unique index
         _shellClient.ExecuteToJavaScript(DROP_UNIQUE_INDEX_MOVIES);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
@@ -237,8 +237,8 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.ExecuteToJavaScript(DropSchemaTestIfExists);
-        _shellClient.ExecuteToJavaScript(CreateSchemaTest);
+        _shellClient.ExecuteToJavaScript(DropSchemaTempSchemaIfExists);
+        _shellClient.ExecuteToJavaScript(CreateSchemaTempSchema);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
@@ -246,28 +246,28 @@ namespace MySql.VisualStudio.Tests.MySqlX
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_SCHEMA_NAME)
+          if (retSchema != TEMP_SCHEMA_NAME)
             continue;
           success = true;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
-        _shellClient.ExecuteToJavaScript(DropSchemaTest);
+        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEMP_SCHEMA_NAME));
+        _shellClient.ExecuteToJavaScript(DropSchemaTempSchema);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_SCHEMA_NAME)
+          if (retSchema != TEMP_SCHEMA_NAME)
             continue;
           success = false;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEMP_SCHEMA_NAME));
       }
       finally
       {
@@ -301,15 +301,15 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
-        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXMovies);
+        _shellClient.ExecuteToJavaScript(GetSchemaXTest);
+        _shellClient.ExecuteToJavaScript(GetCollectionXTestMovies);
 
         // Find complex
         _shellClient.ExecuteToJavaScript(FIND_MOVIES_COMPLEX_QUERY1);
@@ -326,7 +326,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         object foundTitle = null;
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MOVIES_BOUND_ARRAY) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult != null ? selectResult.FetchOne() : null;
+        var docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("title", out foundTitle);
@@ -356,16 +356,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         object foundValue = null;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
-        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXUser);
+        _shellClient.ExecuteToJavaScript(GetSchemaXTest);
+        _shellClient.ExecuteToJavaScript(GetCollectionXTextUser);
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER1);
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER2);
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD);
@@ -376,7 +376,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_SET_USER);
         var selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult != null ? selectResult.FetchOne() : null;
+        var docResult = selectResult.FetchOne();
         if (docResult != null)
         {
 
@@ -389,7 +389,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_SET_BINDING_ARRAY_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         List<object> foundRatingList = null;
         if (docResult != null)
         {
@@ -411,14 +411,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_UNSET_LIST_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         Assert.True(docResult != null && !docResult.ContainsKey("status") && !docResult.ContainsKey("ratings"), DATA_NOT_MATCH);
 
         // Modify merge
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_MODIFY_MERGE_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("status", out foundValue);
@@ -434,7 +434,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_APPEND_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -447,7 +447,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_INSERT_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -460,7 +460,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(MODIFY_ARRAY_DELETE_USER);
         selectResult = _shellClient.ExecuteToJavaScript(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -498,16 +498,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.ExecuteToJavaScript(GetSchemaSakilaX);
-        _shellClient.ExecuteToJavaScript(GetCollectionSakilaXUser);
+        _shellClient.ExecuteToJavaScript(GetSchemaXTest);
+        _shellClient.ExecuteToJavaScript(GetCollectionXTextUser);
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER1);
         usersCount++;
         _shellClient.ExecuteToJavaScript(JAVASCRIPT_ADD_SINGLE_USER2);
@@ -558,7 +558,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         // Validate session is open
         var sessionIsOpen = _shellClient.Execute(IS_SESSION_OPEN);
-        bool result = false;
+        bool result;
         Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
 
         // Parse Uri of active session
@@ -584,10 +584,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
       if (_shellClient != null)
         return;
 
-      _shellClient = new MySqlShellClient(ScriptType.JavaScript);
+      _shellClient = new MySqlShellClient();
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.JScript);
-      _shellClient.AppendAdditionalModulePaths(ScriptType.JavaScript);
+      _shellClient.AppendAdditionalModulePaths(ScriptLanguageType.JavaScript);
     }
   }
 }

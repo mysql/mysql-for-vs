@@ -34,11 +34,8 @@ using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.Wizards;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Classes.MySQLWorkbench;
 using System;
 using System.ComponentModel.Design;
-using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -46,11 +43,14 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using MySQL.Utility.Classes.MySQL;
-using MySQL.Utility.Forms;
 using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
 using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
 using MySql.Data.VisualStudio.DDEX;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Classes.MySqlWorkbench;
+using MySql.Utility.Enums;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio
 {
@@ -352,7 +352,7 @@ namespace MySql.Data.VisualStudio
 #else
       string mySqlConnectorAssembliesVersion = "v4.0";
 #endif
-      string mySqlConnectorPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      string mySqlConnectorPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
       mySqlConnectorPath = !string.IsNullOrEmpty(mySqlConnectorPath)
                             ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
                             : string.Empty;
@@ -444,7 +444,7 @@ namespace MySql.Data.VisualStudio
       }
 
       // Create New JavaScript file and open the editor with it.
-      CreateNewScript(ScriptType.JavaScript);
+      CreateNewScript(ScriptLanguageType.JavaScript);
     }
 
     /// <summary>
@@ -461,7 +461,7 @@ namespace MySql.Data.VisualStudio
       }
 
       // Create New PythonScript file and open the editor with it.
-      CreateNewScript(ScriptType.Python);
+      CreateNewScript(ScriptLanguageType.Python);
     }
 
     #endregion
@@ -544,7 +544,7 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
 
       ////this feature can be shown only if Connector/Net is installed too
-      if (string.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Connector/Net")))
+      if (string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
       {
         return;
       }
@@ -677,9 +677,9 @@ namespace MySql.Data.VisualStudio
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      if (string.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Utilities")))
+      if (string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Utilities")))
       {
-        var pathWorkbench = Utility.GetMySqlAppInstallLocation("Workbench");
+        var pathWorkbench = Utilities.GetMySqlAppInstallLocation("Workbench");
         var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
         if (Directory.Exists(pathUtilities))
         {
@@ -792,7 +792,7 @@ namespace MySql.Data.VisualStudio
       }
 
       // Create New SQL Script file and open the editor with it.
-      CreateNewScript(ScriptType.Sql);
+      CreateNewScript(ScriptLanguageType.Sql);
     }
 
     private void LaunchWbCallback(object sender, EventArgs e)
@@ -1097,7 +1097,7 @@ namespace MySql.Data.VisualStudio
       {
         UserId = connStringBuilder.UserID,
         HostName = connStringBuilder.Server,
-        HostIPv4 = Utility.GetIPv4ForHostName(connStringBuilder.Server),
+        HostIPv4 = Utilities.GetIPv4ForHostName(connStringBuilder.Server),
         Port = Convert.ToInt32(connStringBuilder.Port),
         DataBaseName = connStringBuilder.Database,
         NamedPipesEnabled = !string.IsNullOrEmpty(connStringBuilder.PipeName),
@@ -1131,9 +1131,9 @@ namespace MySql.Data.VisualStudio
             continue;
         }
 
-        if (!Utility.IsValidIpAddress(c.Host)) //matching connections by Ip
+        if (!Utilities.IsValidIpAddress(c.Host)) //matching connections by Ip
         {
-          if (Utility.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
+          if (Utilities.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
         }
         else
         {
@@ -1190,7 +1190,7 @@ namespace MySql.Data.VisualStudio
     /// Creates the new script file with its corresponding extension according to the type.
     /// </summary>
     /// <param name="scriptType">Type of the script to be created.</param>
-    private void CreateNewScript(ScriptType scriptType)
+    private void CreateNewScript(ScriptLanguageType scriptType)
     {
       if (Instance == null)
       {
@@ -1202,13 +1202,13 @@ namespace MySql.Data.VisualStudio
         string scriptExtension = string.Empty;
         switch (scriptType)
         {
-          case ScriptType.Sql:
+          case ScriptLanguageType.Sql:
             scriptExtension = SQL_EXTENSION;
             break;
-          case ScriptType.JavaScript:
+          case ScriptLanguageType.JavaScript:
             scriptExtension = JAVASCRIPT_EXTENSION;
             break;
-          case ScriptType.Python:
+          case ScriptLanguageType.Python:
             scriptExtension = PYTHON_EXTENSION;
             break;
         }
@@ -1289,6 +1289,11 @@ namespace MySql.Data.VisualStudio
     void cmdMenuMySqlOutputWindow_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand mySqlOutputWindowMenu = sender as OleMenuCommand;
+      if (mySqlOutputWindowMenu == null)
+      {
+        return;
+      }
+
       mySqlOutputWindowMenu.Visible = false;
       // Check if any "MySqlHybridScriptEditor" editor window is visible, in order to show/hide the MySqlOutput menu item
       if (CountMySqlHybridScriptEditorWindows() > 0)

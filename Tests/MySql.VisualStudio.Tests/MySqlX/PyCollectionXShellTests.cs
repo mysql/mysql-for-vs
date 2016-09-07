@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
+using MySql.Utility.Enums;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
 using MySqlX.Shell;
@@ -35,7 +35,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
   /// <summary>
   /// Python tests related to collections using the XShell directly.
   /// </summary>
-  public class PyCollectionXShellTests : BaseCollectionTests, IUseFixture<SetUpXShell>
+  public class PyCollectionXShellTests : BaseCollectionTests
   {
     #region Fields
 
@@ -57,16 +57,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.Execute(GetSchemaSakilaX);
-        _shellClient.Execute(GetCollectionSakilaXUser);
+        _shellClient.Execute(GetSchemaXTest);
+        _shellClient.Execute(GetCollectionXTextUser);
 
         //Test single add
         _shellClient.Execute(PYTHON_ADD_SINGLE_USER1);
@@ -129,10 +129,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DropSchemaTestIfExists);
-        _shellClient.Execute(CreateSchemaTest);
+        _shellClient.Execute(DropSchemaTempSchemaIfExists);
+        _shellClient.Execute(CreateSchemaTempSchema);
         _shellClient.Execute(CreateCollectionTest);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEMP_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -159,75 +159,75 @@ namespace MySql.VisualStudio.Tests.MySqlX
     /// Test to create and drop unique and non-unique indexes using the <see cref="ShellClient"/> direclty.
     /// </summary>
     //[Fact]
-    //public void CreateAndDropIndex()
-    //{
-    //  OpenConnection();
-    //  int duplicateMovieCount = 0;
+    public void CreateAndDropIndex()
+    {
+      OpenConnection();
+      int duplicateMovieCount = 0;
 
-    //  try
-    //  {
-    //    InitXShell();
+      try
+      {
+        InitXShell();
 
-    //    Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
-    //    var result = Command.ExecuteScalar();
-    //    int count;
-    //    int.TryParse(result.ToString(), out count);
-    //    Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, MOVIES_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, MOVIES_COLLECTION_NAME));
 
-    //    _shellClient.Execute(GetSchemaSakilaX);
-    //    _shellClient.Execute(GetCollectionSakilaXMovies);
+        _shellClient.Execute(GetSchemaXTest);
+        _shellClient.Execute(GetCollectionXTestMovies);
 
-    //    // Add non-unique index
-    //    _shellClient.Execute(CREATE_NON_UNIQUE_INDEX_MOVIES);
-    //    Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
-    //    result = Command.ExecuteScalar();
-    //    int.TryParse(result.ToString(), out count);
-    //    Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+        // Add non-unique index
+        _shellClient.Execute(CREATE_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
-    //    // Add unique index
-    //    _shellClient.Execute(PYTHON_INCLUDE_MYSQLX);
-    //    _shellClient.Execute(CREATE_UNIQUE_INDEX_MOVIES);
-    //    Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
-    //    result = Command.ExecuteScalar();
-    //    int.TryParse(result.ToString(), out count);
-    //    Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+        // Add unique index
+        _shellClient.Execute(PYTHON_INCLUDE_MYSQLX);
+        _shellClient.Execute(CREATE_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
 
-    //    // Test data uniqueness
-    //    _shellClient.Execute(PYTHON_ADD_DUPLICATE_MOVIE);
-    //    var selectResult = _shellClient.Execute(FIND_DUPLICATE_MOVIE_TITLE) as DocResult;
-    //    duplicateMovieCount = selectResult != null ? selectResult.FetchAll().Count : 0;
-    //    Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
+        // Test data uniqueness
+        _shellClient.Execute(PYTHON_ADD_DUPLICATE_MOVIE);
+        var selectResult = _shellClient.Execute(FIND_DUPLICATE_MOVIE_TITLE) as DocResult;
+        duplicateMovieCount = selectResult != null ? selectResult.FetchAll().Count : 0;
+        Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
 
-    //    // Drop non-unique index
-    //    _shellClient.Execute(DROP_NON_UNIQUE_INDEX_MOVIES);
-    //    Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
-    //    result = Command.ExecuteScalar();
-    //    int.TryParse(result.ToString(), out count);
-    //    Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
+        // Drop non-unique index
+        _shellClient.Execute(DROP_NON_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
-    //    // Drop unique index
-    //    _shellClient.Execute(DROP_UNIQUE_INDEX_MOVIES);
-    //    Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
-    //    result = Command.ExecuteScalar();
-    //    int.TryParse(result.ToString(), out count);
-    //    Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
-    //  }
-    //  finally
-    //  {
-    //    // Remove duplicate data in case test failed
-    //    if (duplicateMovieCount > 1)
-    //    {
-    //      _shellClient.Execute(REMOVE_DUPLICATE_MOVIE);
-    //    }
+        // Drop unique index
+        _shellClient.Execute(DROP_UNIQUE_INDEX_MOVIES);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
+      }
+      finally
+      {
+        // Remove duplicate data in case test failed
+        if (duplicateMovieCount > 1)
+        {
+          _shellClient.Execute(REMOVE_DUPLICATE_MOVIE);
+        }
 
-    //    if (Command != null)
-    //    {
-    //      Command.Dispose();
-    //    }
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
 
-    //    CloseConnection();
-    //  }
-    //}
+        CloseConnection();
+      }
+    }
 
     /// <summary>
     /// Test to create and drop a Schema using the <see cref="ShellClient"/> direclty.
@@ -241,30 +241,30 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        _shellClient.Execute(DropSchemaTestIfExists);
-        _shellClient.Execute(CreateSchemaTest);
+        _shellClient.Execute(DropSchemaTempSchemaIfExists);
+        _shellClient.Execute(CreateSchemaTempSchema);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_SCHEMA_NAME)
+          if (retSchema != TEMP_SCHEMA_NAME)
             continue;
           success = true;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEMP_SCHEMA_NAME));
 
-        _shellClient.Execute(DropSchemaTest);
+        _shellClient.Execute(DropSchemaTempSchema);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema == TEST_SCHEMA_NAME)
+          if (retSchema == TEMP_SCHEMA_NAME)
           {
             success = false;
             reader.Close();
@@ -272,7 +272,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           }
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEMP_SCHEMA_NAME));
       }
       finally
       {
@@ -307,15 +307,15 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.Execute(GetSchemaSakilaX);
-        _shellClient.Execute(GetCollectionSakilaXMovies);
+        _shellClient.Execute(GetSchemaXTest);
+        _shellClient.Execute(GetCollectionXTestMovies);
 
         // Find complex
         _shellClient.Execute(FIND_MOVIES_COMPLEX_QUERY1);
@@ -332,7 +332,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         object foundTitle = null;
         selectResult = _shellClient.Execute(FIND_MOVIES_BOUND_ARRAY) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult != null ? selectResult.FetchOne() : null;
+        var docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("title", out foundTitle);
@@ -363,16 +363,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         object foundValue = null;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.Execute(GetSchemaSakilaX);
-        _shellClient.Execute(GetCollectionSakilaXUser);
+        _shellClient.Execute(GetSchemaXTest);
+        _shellClient.Execute(GetCollectionXTextUser);
         _shellClient.Execute(PYTHON_ADD_SINGLE_USER1);
         _shellClient.Execute(PYTHON_ADD_SINGLE_USER2);
         _shellClient.Execute(PYTHON_ADD_MULTIPLE_USERS_SINGLE_ADD);
@@ -382,7 +382,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(MODIFY_SET_USER);
         var selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult != null ? selectResult.FetchOne() : null;
+        var docResult = selectResult.FetchOne();
         if (docResult != null)
         {
 
@@ -395,7 +395,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(MODIFY_SET_BINDING_ARRAY_USER);
         selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         List<object> foundRatingList = null;
         if (docResult != null)
         {
@@ -417,14 +417,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(MODIFY_UNSET_LIST_USER);
         selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         Assert.True(docResult != null && !docResult.ContainsKey("status") && !docResult.ContainsKey("ratings"), DATA_NOT_MATCH);
 
         // Modify merge
         _shellClient.Execute(PYTHON_MODIFY_MERGE_USER);
         selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("status", out foundValue);
@@ -440,7 +440,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(MODIFY_ARRAY_APPEND_USER);
         selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -453,7 +453,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(MODIFY_ARRAY_INSERT_USER);
         selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -466,7 +466,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.Execute(MODIFY_ARRAY_DELETE_USER);
         selectResult = _shellClient.Execute(FIND_MODIFIED_USER) as DocResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FetchOne() : null;
+        docResult = selectResult.FetchOne();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -505,16 +505,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
       try
       {
         InitXShell();
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _shellClient.Execute(GetSchemaSakilaX);
-        _shellClient.Execute(GetCollectionSakilaXUser);
+        _shellClient.Execute(GetSchemaXTest);
+        _shellClient.Execute(GetCollectionXTextUser);
         _shellClient.Execute(PYTHON_ADD_SINGLE_USER1);
         usersCount++;
         _shellClient.Execute(PYTHON_ADD_SINGLE_USER2);
@@ -568,7 +568,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
         // Validate session is open
         var sessionIsOpen = _shellClient.Execute(IS_SESSION_OPEN);
-        bool result = false;
+        bool result;
         Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
 
         // Parse Uri of active session
@@ -594,10 +594,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
     {
       // For now we always create a new instance of the shell client, to avoid the error thrown by Python when handling multiple "sessions"
       // ToDo: Research how to fix the shell to avoid the error thrown by Python when running multiple tests sessions
-      _shellClient = new MySqlShellClient(ScriptType.Python);
+      _shellClient = new MySqlShellClient();
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.Python);
-      _shellClient.AppendAdditionalModulePaths(ScriptType.Python);
+      _shellClient.AppendAdditionalModulePaths(ScriptLanguageType.Python);
     }
 
     /// <summary>

@@ -32,12 +32,12 @@ using Microsoft.VisualStudio.Shell;
 using System.IO;
 using System.Globalization;
 using MySql.Data.MySqlClient;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Classes.MySQLWorkbench;
-using MySQL.Utility.Forms;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Classes.MySQL;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Classes.MySqlWorkbench;
+using MySql.Utility.Forms;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -111,7 +111,12 @@ namespace MySql.Data.VisualStudio.Editors
         }
 
         // Open the connection in case it was closed.
-        _connection.ConnectionString = Utils.GetCompleteConnectionString((MySqlConnection)_connection);
+        var mySqlConnection = _connection as MySqlConnection;
+        if (mySqlConnection != null)
+        {
+          _connection.ConnectionString = mySqlConnection.GetCompleteConnectionString();
+        }
+
         _connection.Open();
       }
     }

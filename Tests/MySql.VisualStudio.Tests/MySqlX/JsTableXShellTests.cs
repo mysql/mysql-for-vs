@@ -22,7 +22,7 @@
 
 using System;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
+using MySql.Utility.Enums;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using MySqlX;
 using MySqlX.Shell;
@@ -33,7 +33,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
   /// <summary>
   /// Class to test the CRUD operations through the XShell Wrapper on Relational DB
   /// </summary>
-  public class JsTableXShellTests : BaseTableTests, IUseFixture<SetUpXShell>
+  public class JsTableXShellTests : BaseTableTests
   {
     #region Fields
 
@@ -66,14 +66,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         while (reader.Read())
         {
           var retDb = reader.GetString(0);
-          if (retDb != TEST_DATABASE_NAME)
+          if (retDb != TEMP_TEST_DATABASE_NAME)
             continue;
           success = true;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(DB_NOT_FOUND, TEST_DATABASE_NAME));
+        Assert.True(success, string.Format(DB_NOT_FOUND, TEMP_TEST_DATABASE_NAME));
 
         _shellClient.ExecuteToJavaScript(DropTestDatabaseIfExists);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
@@ -81,14 +81,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_DATABASE_NAME)
+          if (retSchema != TEMP_TEST_DATABASE_NAME)
             continue;
           success = false;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(DB_NOT_DELETED, TEST_DATABASE_NAME));
+        Assert.True(success, string.Format(DB_NOT_DELETED, TEMP_TEST_DATABASE_NAME));
       }
       finally
       {
@@ -128,7 +128,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UseTestDatabase);
 
         _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
@@ -162,19 +162,19 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Create test table
         _shellClient.ExecuteToJavaScript(DropTestDatabaseIfExists);
         _shellClient.ExecuteToJavaScript(CreateTestDatabase);
         _shellClient.ExecuteToJavaScript(UseTestDatabase);
         _shellClient.ExecuteToJavaScript(CREATE_TEST_TABLE);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
@@ -267,12 +267,12 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert without specifying any columns
         _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
@@ -337,12 +337,12 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert test character rows
         _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
@@ -374,17 +374,17 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Select with field selection
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_WITH_FIELD_SELECTION) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var allResults = selectResult != null ? selectResult.FetchAll() : null;
+        var allResults = selectResult.FetchAll();
         Assert.True(allResults != null && allResults.Count == charactersCount, DATA_NOT_MATCH);
         Assert.True(allResults != null && allResults.Count > 0 && allResults[0].Length == 2, DATA_NOT_MATCH);
 
         // Select with order by descending
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_WITH_ORDER_BY_DESC) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult != null ? selectResult.FetchOne() : null;
+        var singleResult = selectResult.FetchOne();
         int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult[2]) : 0;
         Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
-        singleResult = selectResult != null ? selectResult.FetchOne() : null;
+        singleResult = selectResult.FetchOne();
         fetchedAge = singleResult != null ? Convert.ToInt32(singleResult[2]) : 0;
         Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
 
@@ -426,13 +426,13 @@ namespace MySql.VisualStudio.Tests.MySqlX
       {
         InitXShell();
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count, foundAge = 0;
         object foundValue1 = null;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert test rows
         _shellClient.ExecuteToJavaScript(GetTableSakilaXCharacter);
@@ -453,7 +453,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UPDATE_SIMPLE);
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var rowResult = selectResult != null ? selectResult.FetchOne() : null;
+        var rowResult = selectResult.FetchOne();
         if (rowResult != null)
         {
           foundValue1 = rowResult[5];
@@ -468,7 +468,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UPDATE_IN_SEVERAL_LINES4);
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        rowResult = selectResult != null ? selectResult.FetchOne() : null;
+        rowResult = selectResult.FetchOne();
         if (rowResult != null)
         {
           foundValue1 = rowResult[1];
@@ -481,7 +481,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         _shellClient.ExecuteToJavaScript(UPDATE_WITH_EXPRESSION);
         selectResult = _shellClient.ExecuteToJavaScript(SELECT_UPDATED_TALI) as RowResult;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        rowResult = selectResult != null ? selectResult.FetchOne() : null;
+        rowResult = selectResult.FetchOne();
         if (rowResult != null)
         {
           foundValue1 = rowResult[2];
@@ -531,10 +531,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
       if (_shellClient != null)
         return;
 
-      _shellClient = new MySqlShellClient(ScriptType.JavaScript);
+      _shellClient = new MySqlShellClient();
       _shellClient.MakeConnection(XConnString);
       _shellClient.SwitchMode(Mode.JScript);
-      _shellClient.AppendAdditionalModulePaths(ScriptType.JavaScript);
+      _shellClient.AppendAdditionalModulePaths(ScriptLanguageType.JavaScript);
     }
   }
 }

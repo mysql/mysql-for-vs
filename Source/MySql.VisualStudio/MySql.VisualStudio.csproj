@@ -737,7 +737,6 @@
     <Compile Include="Editors\XShellConsoleEditor.designer.cs">
       <DependentUpon>XShellConsoleEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="MySqlX\MySqlXResult.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -901,7 +900,6 @@
     <Compile Include="Editors\MySqlTreeView.Designer.cs">
       <DependentUpon>MySqlTreeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="MySqlX\MySqlXProxy.cs" />
     <Compile Include="Editors\QueryStatsView.cs">
       <SubType>UserControl</SubType>
     </Compile>

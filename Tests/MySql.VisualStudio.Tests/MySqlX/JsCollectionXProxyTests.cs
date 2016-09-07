@@ -24,13 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
+using MySql.Utility.Enums;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX
 {
-  public class JsCollectionXProxyTests : BaseCollectionTests, IUseFixture<SetUpXShell>
+  public class JsCollectionXProxyTests : BaseCollectionTests
   {
     /// <summary>
     /// Test to Add, Modify, Delete and Find a record from a collection using the <see cref="MyTestXProxy"/>, executing the commands in a single line
@@ -42,53 +42,53 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        InitXProxy(ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetCollectionSakilaXUser, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetSchemaXTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetCollectionXTextUser, ScriptLanguageType.JavaScript);
 
         //Test single add
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptType.JavaScript);
-        var selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptLanguageType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         usersCount += 1;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
         //Test single add again
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         usersCount += 1;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
         //Test multiple documents add statement
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         usersCount += 3;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
         //Test multiple add statements with single documents
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         usersCount += 3;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
-        selectResult = _xProxy.ExecuteScript(FIND_SPECIFIC_USER_TEST, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_SPECIFIC_USER_TEST, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 1, DATA_NOT_MATCH);
 
         // Remove back the added users and test
-        _xProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == USERS_COUNT, DATA_NOT_MATCH);
       }
@@ -114,17 +114,17 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
-        _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CreateCollectionTest, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEST_SCHEMA_NAME), Connection);
+        InitXProxy(ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(DropSchemaTempSchemaIfExists, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CreateSchemaTempSchema, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CreateCollectionTest, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_COLLECTION_NAME, TEMP_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(COLLECTION_NOT_FOUND, TEST_COLLECTION_NAME));
 
-        _xProxy.ExecuteScript(DropCollectionTest, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DropCollectionTest, ScriptLanguageType.JavaScript);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(COLLECTION_NOT_DELETED, TEST_COLLECTION_NAME));
@@ -152,48 +152,48 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_MOVIES_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, MOVIES_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, MOVIES_COLLECTION_NAME));
 
-        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetCollectionSakilaXMovies, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetSchemaXTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetCollectionXTestMovies, ScriptLanguageType.JavaScript);
 
         // Add non-unique index
-        _xProxy.ExecuteScript(CREATE_NON_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        XProxy.ExecuteScript(CREATE_NON_UNIQUE_INDEX_MOVIES, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
         // Add unique index
-        _xProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CREATE_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        XProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CREATE_UNIQUE_INDEX_MOVIES, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
 
         // Test data uniqueness
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_DUPLICATE_MOVIE, ScriptType.JavaScript);
-        var selectResult = _xProxy.ExecuteScript(FIND_DUPLICATE_MOVIE_TITLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_DUPLICATE_MOVIE, ScriptLanguageType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(FIND_DUPLICATE_MOVIE_TITLE, ScriptLanguageType.JavaScript);
         duplicateMovieCount = selectResult != null ? selectResult.Count : 0;
         Assert.True(duplicateMovieCount == 1, DATA_NOT_UNIQUE);
 
         // Drop non-unique index
-        _xProxy.ExecuteScript(DROP_NON_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
+        XProxy.ExecuteScript(DROP_NON_UNIQUE_INDEX_MOVIES, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_NON_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_NON_UNIQUE_INDEX_NAME));
 
         // Drop unique index
-        _xProxy.ExecuteScript(DROP_UNIQUE_INDEX_MOVIES, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, SAKILA_X_SCHEMA_NAME, SAKILA_X_MOVIES_COLLECTION, MOVIES_UNIQUE_INDEX_NAME), Connection);
+        XProxy.ExecuteScript(DROP_UNIQUE_INDEX_MOVIES, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_INDEX_SQL_SYNTAX, X_TEST_SCHEMA_NAME, MOVIES_COLLECTION_NAME, MOVIES_UNIQUE_INDEX_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(INDEX_NOT_FOUND, MOVIES_UNIQUE_INDEX_NAME));
@@ -203,7 +203,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
         // Remove duplicate data in case test failed
         if (duplicateMovieCount > 1)
         {
-          _xProxy.ExecuteScript(REMOVE_DUPLICATE_MOVIE, ScriptType.JavaScript);
+          XProxy.ExecuteScript(REMOVE_DUPLICATE_MOVIE, ScriptLanguageType.JavaScript);
         }
 
         if (Command != null)
@@ -227,16 +227,16 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
-        _xProxy.ExecuteScript(DropSchemaTestIfExists, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CreateSchemaTest, ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(DropSchemaTempSchemaIfExists, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CreateSchemaTempSchema, ScriptLanguageType.JavaScript);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema == TEST_SCHEMA_NAME)
+          if (retSchema == TEMP_SCHEMA_NAME)
           {
             success = true;
             reader.Close();
@@ -244,22 +244,22 @@ namespace MySql.VisualStudio.Tests.MySqlX
           }
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_FOUND, TEMP_SCHEMA_NAME));
 
-        _xProxy.ExecuteScript(DropSchemaTest, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DropSchemaTempSchema, ScriptLanguageType.JavaScript);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_SCHEMA_NAME)
+          if (retSchema != TEMP_SCHEMA_NAME)
             continue;
           success = false;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEST_SCHEMA_NAME));
+        Assert.True(success, string.Format(SCHEMA_NOT_DELETED, TEMP_SCHEMA_NAME));
       }
       finally
       {
@@ -293,31 +293,31 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        InitXProxy(ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, TEST_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetCollectionSakilaXMovies, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetSchemaXTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetCollectionXTestMovies, ScriptLanguageType.JavaScript);
 
         // Find complex
-        _xProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY1, ScriptType.JavaScript);
-        var selectResult = _xProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY3, ScriptType.JavaScript);
+        XProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY1, ScriptLanguageType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY3, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == MOVIES_RATING_R_COUNT, DATA_NOT_MATCH);
 
-        _xProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY2, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY4, ScriptType.JavaScript);
+        XProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY2, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MOVIES_COMPLEX_QUERY4, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 10, DATA_NOT_MATCH);
 
         // Find bound array
         object foundTitle = null;
-        var singleResult = _xProxy.ExecuteScript(FIND_MOVIES_BOUND_ARRAY, ScriptType.JavaScript).FirstOrDefault();
+        var singleResult = XProxy.ExecuteScript(FIND_MOVIES_BOUND_ARRAY, ScriptLanguageType.JavaScript).FirstOrDefault();
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         if (singleResult != null)
         {
@@ -348,28 +348,28 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        InitXProxy(ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         object foundValue = null;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetCollectionSakilaXUser, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetSchemaXTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetCollectionXTextUser, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptLanguageType.JavaScript);
 
         // Modify Set
-        _xProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(MODIFY_SET_USER, ScriptType.JavaScript);
-        var selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_SET_USER, ScriptLanguageType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        var docResult = selectResult.FirstOrDefault();
         if (docResult != null)
         {
 
@@ -379,10 +379,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(foundValue != null && foundValue.ToString().Equals("inactive", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Modify Set binding array
-        _xProxy.ExecuteScript(MODIFY_SET_BINDING_ARRAY_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_SET_BINDING_ARRAY_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        docResult = selectResult.FirstOrDefault();
         List<object> foundRatingList = null;
         if (docResult != null)
         {
@@ -395,24 +395,24 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).SequenceEqual(clearRatingArray), DATA_NOT_MATCH);
 
         // Modify unset single key
-        _xProxy.ExecuteScript(MODIFY_UNSET_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_UNSET_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(docResult != null && !docResult.ContainsKey("age"), DATA_NOT_MATCH);
 
         // Modify unset list of keys
-        _xProxy.ExecuteScript(MODIFY_UNSET_LIST_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_UNSET_LIST_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        docResult = selectResult.FirstOrDefault();
         Assert.True(docResult != null && !docResult.ContainsKey("status") && !docResult.ContainsKey("ratings"), DATA_NOT_MATCH);
 
         // Modify merge
-        _xProxy.ExecuteScript(JAVASCRIPT_MODIFY_MERGE_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_MODIFY_MERGE_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        docResult = selectResult.FirstOrDefault();
         if (docResult != null)
         {
           docResult.TryGetValue("status", out foundValue);
@@ -425,10 +425,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).SequenceEqual(clearRatingArray), DATA_NOT_MATCH);
 
         // Modify array append
-        _xProxy.ExecuteScript(MODIFY_ARRAY_APPEND_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_ARRAY_APPEND_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        docResult = selectResult.FirstOrDefault();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -438,10 +438,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).Contains("PG-13"), DATA_NOT_MATCH);
 
         // Modify array insert
-        _xProxy.ExecuteScript(MODIFY_ARRAY_INSERT_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_ARRAY_INSERT_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        docResult = selectResult.FirstOrDefault();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -451,10 +451,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(foundRatingList != null && foundRatingList.Select(o => o.ToString()).ToList()[2].Equals("G", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Modify array delete
-        _xProxy.ExecuteScript(MODIFY_ARRAY_DELETE_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_ARRAY_DELETE_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_USER, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        docResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        docResult = selectResult.FirstOrDefault();
         if (docResult != null)
         {
           docResult.TryGetValue("ratings", out foundValue);
@@ -464,14 +464,14 @@ namespace MySql.VisualStudio.Tests.MySqlX
         Assert.True(foundRatingList != null && !foundRatingList.Select(o => o.ToString()).ToList()[2].Equals("G", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Modify sort
-        _xProxy.ExecuteScript(MODIFY_SORT_USER, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(FIND_MODIFIED_J_USERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(MODIFY_SORT_USER, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_MODIFIED_J_USERS, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
       }
       finally
       {
-        _xProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptLanguageType.JavaScript);
         if (Command != null)
         {
           Command.Dispose();
@@ -492,44 +492,44 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_USERS_COLLECTION, SAKILA_X_SCHEMA_NAME), Connection);
+        InitXProxy(ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, USERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
 
         var result = Command.ExecuteScalar();
         int count;
         int usersCount = USERS_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(SCHEMA_NOT_FOUND, SAKILA_X_SCHEMA_NAME));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, USERS_COLLECTION_NAME));
 
-        _xProxy.ExecuteScript(GetSchemaSakilaX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetCollectionSakilaXUser, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetSchemaXTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetCollectionXTextUser, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER1, ScriptLanguageType.JavaScript);
         usersCount++;
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_SINGLE_USER2, ScriptLanguageType.JavaScript);
         usersCount++;
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_SINGLE_ADD, ScriptLanguageType.JavaScript);
         usersCount += 3;
-        _xProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_ADD_MULTIPLE_USERS_MULTIPLE_ADD, ScriptLanguageType.JavaScript);
         usersCount += 3;
 
-        _xProxy.ExecuteScript(REMOVE_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REMOVE_USER, ScriptLanguageType.JavaScript);
         usersCount--;
-        var selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
 
-        _xProxy.ExecuteScript(REMOVE_SORT_USER, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REMOVE_SORT_USER, ScriptLanguageType.JavaScript);
         usersCount -= 2;
-        selectResult = _xProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_ALL_DOCUMENTS_IN_COLLECTION, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == usersCount, DATA_NOT_MATCH);
-        selectResult = _xProxy.ExecuteScript(FIND_REMOVED_USERS, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(FIND_REMOVED_USERS, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
       }
       finally
       {
-        _xProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_ADDED_USERS, ScriptLanguageType.JavaScript);
         if (Command != null)
         {
           Command.Dispose();
@@ -550,15 +550,15 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
         // Validate session is open
-        var sessionIsOpen = _xProxy.ExecuteQuery(IS_SESSION_OPEN, ScriptType.JavaScript).Result;
-        bool result = false;
+        var sessionIsOpen = XProxy.ExecuteQuery(IS_SESSION_OPEN, ScriptLanguageType.JavaScript).Result;
+        bool result;
         Assert.True(sessionIsOpen != null && bool.TryParse(sessionIsOpen.ToString(), out result));
 
         // Parse Uri of active session
-        var shellParseSessionResult = _xProxy.ExecuteQuery(SHELL_PARSE_URI_FROM_SESSION_URI, ScriptType.JavaScript).Result;
+        var shellParseSessionResult = XProxy.ExecuteQuery(SHELL_PARSE_URI_FROM_SESSION_URI, ScriptLanguageType.JavaScript).Result;
         Assert.True(shellParseSessionResult != null && shellParseSessionResult.ToString().Contains("dbUser"));
       }
       finally

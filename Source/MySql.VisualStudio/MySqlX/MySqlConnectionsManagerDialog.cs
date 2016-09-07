@@ -28,10 +28,10 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Data.Services;
 using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Classes.MySQL;
-using MySQL.Utility.Classes.MySQLWorkbench;
-using MySQL.Utility.Forms;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Classes.MySqlWorkbench;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.MySqlX
 {

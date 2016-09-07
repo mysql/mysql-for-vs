@@ -20,64 +20,27 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System.Configuration;
-using System.IO;
-using System.Reflection;
-using System.Text;
+using MySql.Utility.Classes;
+using MySql.Utility.Enums;
+using MySql.Utility.Tests;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
   /// <summary>
   /// Class to setup the environment used by the JsTableXShellTests test class
   /// </summary>
-  public class SetUpXShell : SetUp
+  public class SetUpXShell : SetUpDatabaseTestsBase
   {
-    #region Constants
-
-    /// <summary>
-    /// The port used for X Protocol.
-    /// </summary>
-    internal const int DEFAULT_X_PORT = 33570;
-
-    #endregion Constants
-
-    public int XPort { get; protected set; }
-
-    /// <summary>
-    /// Initializes a new instance of SetUpXShell class
-    /// </summary>
     public SetUpXShell()
     {
-      string xPortString = ConfigurationManager.AppSettings["x_port"];
-      XPort = string.IsNullOrEmpty(xPortString) ? DEFAULT_X_PORT : int.Parse(xPortString);
-      CreateData();
-    }
-
-    /// <summary>
-    /// Setup the DB environment
-    /// </summary>
-    internal new void CreateData()
-    {
-      var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.VisualStudio.Tests.Properties.SetupXShell.sql");
-      if (stream == null)
-      {
-        return;
-      }
-
-      var sr = new StreamReader(stream);
-      var sql = new StringBuilder(sr.ReadToEnd());
-      sql.Replace("{0}", BaseTests.SAKILA_X_SCHEMA_NAME);
-      sr.Close();
-      ExecuteSql(sql.ToString());
-    }
-
-    /// <summary>
-    /// Clean Server instance before exit
-    /// </summary>
-    internal new void Dispose()
-    {
-      //var sql = string.Format("DROP DATABASE IF EXISTS {0}; DROP DATABASE IF EXISTS {1}; DROP DATABASE IF EXISTS {2};", BaseTests.SAKILA_X_SCHEMA_NAME, BaseTests.TEST_DATABASE_NAME, BaseTests.TEST_SCHEMA_NAME);
-      //ExecuteSql(sql);
+      SchemaName1 = BaseTests.X_TEST_SCHEMA_NAME;
+      SchemaName2 = null;
+      SchemaName3 = null;
+      DropSchemasOnDispose = false;
+      var sqlScript = Utilities.GetScriptFromResource("MySql.VisualStudio.Tests.Properties.SetupXShell.sql");
+      var jsScript = Utilities.GetScriptFromResource("MySql.VisualStudio.Tests.Properties.SetupXShell.js");
+      ExecuteScriptReplacingSchemas(sqlScript, ScriptLanguageType.Sql);
+      ExecuteScriptReplacingSchemas(jsScript, ScriptLanguageType.JavaScript);
     }
   }
 }

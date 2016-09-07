@@ -22,6 +22,7 @@
 
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
+using MySql.Utility.Enums;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -31,7 +32,7 @@ namespace MySql.Data.VisualStudio.Editors
     internal SqlEditorFactory Factory { get; private set; }
     internal string DocumentPath { get; private set; }
 
-    public MySqlHybridScriptEditorPane(ServiceProvider sp, SqlEditorFactory factory, ScriptType scriptType = ScriptType.JavaScript)
+    public MySqlHybridScriptEditorPane(ServiceProvider sp, SqlEditorFactory factory, ScriptLanguageType scriptType = ScriptLanguageType.JavaScript)
       : base(sp)
     {
       Factory = factory;

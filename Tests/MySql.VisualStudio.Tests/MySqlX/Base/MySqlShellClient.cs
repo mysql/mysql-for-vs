@@ -21,10 +21,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using MySql.Data.VisualStudio;
 using MySql.Data.VisualStudio.Editors;
+using MySql.Utility.Enums;
 using MySqlX.Shell;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
@@ -34,14 +32,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
   /// </summary>
   public class MySqlShellClient : ShellClient
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MySqlShellClient"/> class.
-    /// </summary>
-    /// <param name="scriptType">Type of the script.</param>
-    public MySqlShellClient(ScriptType scriptType)
-    {
-    }
-
     /// <summary>
     /// Executes a base query converting it first to JavaScript format.
     /// </summary>
@@ -97,20 +87,20 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Set the additional modules paths.
     /// </summary>
     /// <param name="scriptType">Type of the script.</param>
-    public void AppendAdditionalModulePaths(ScriptType scriptType)
+    public void AppendAdditionalModulePaths(ScriptLanguageType scriptType)
     {
 
       string modulesPath = string.Format("{0}{1}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"\Oracle\MySQL For Visual Studio\modules").Replace(@"\", "/");
 
       switch (scriptType)
       {
-        case ScriptType.Python:
+        case ScriptLanguageType.Python:
           // Add modules for Python
           Execute("import sys");
           Execute(string.Format("sys.path.append('{0}/python') ", modulesPath));
           Execute(string.Format("sys.path.append('{0}') ", modulesPath));
           break;
-        case ScriptType.JavaScript:
+        case ScriptLanguageType.JavaScript:
           // Add modules for Javascript
           ExecuteToJavaScript(string.Format("shell.js.module_paths[shell.js.module_paths.length] = '{0}/js';", modulesPath));
           ExecuteToJavaScript(string.Format("shell.js.module_paths[shell.js.module_paths.length] = '{0}'; ", modulesPath));

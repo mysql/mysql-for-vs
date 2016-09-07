@@ -26,6 +26,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using MySql.Utility.Enums;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -66,10 +67,10 @@ namespace MySql.Data.VisualStudio.Editors
       }
       else
       {
-        ScriptType scriptType = ScriptType.JavaScript;
+        ScriptLanguageType scriptType = ScriptLanguageType.JavaScript;
         if (fileInfo.Extension.ToLower().Equals(".mypy"))
         {
-          scriptType = ScriptType.Python;
+          scriptType = ScriptLanguageType.Python;
         }
 
 

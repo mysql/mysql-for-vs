@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -20,14 +20,19 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-namespace MySql.Data.VisualStudio.MySqlX
+using MySql.Utility.Classes;
+using MySql.Utility.Enums;
+using MySql.Utility.Tests;
+
+namespace MySql.VisualStudio.Tests
 {
-  /// <summary>
-  /// Class used to hold the results returned by the xShell, along with the execution time for each command.
-  /// </summary>
-  public class MySqlXResult
+  public class SetUpSqlData : SetUpDatabaseTestsBase
   {
-    public object Result { get; set; }
-    public string ExecutionTime { get; set; }
+    public SetUpSqlData()
+    {
+      var script = Utilities.GetScriptFromResource("MySql.VisualStudio.Tests.Properties.Setup.sql");
+      DropSchemasOnDispose = true;
+      ExecuteScriptReplacingSchemas(script, ScriptLanguageType.Sql);
+    }
   }
 }

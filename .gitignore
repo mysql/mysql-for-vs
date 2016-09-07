@@ -5,13 +5,14 @@
 *.suo
 *.sdf
 *.diff
-*.py
+*check.py
 .bzrignore
 **/obj/**
 **/bin/**
 **/bin
 **/obj
 **/tmp
+**/.vs
 MySql.Data/Provider/MySql.Data.xml
 MySql.VisualStudio/Documentation/Build
 MySql.Data.Entity/Tests/Service References

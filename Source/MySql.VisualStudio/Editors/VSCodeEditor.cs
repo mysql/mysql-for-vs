@@ -21,13 +21,11 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell.Interop;
+using MySql.Utility.Enums;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -173,11 +171,11 @@ namespace MySql.Data.VisualStudio.Editors
       else
       {
         //TODO: [MYSQLFORVS-276] - CREATE A CLASSIFIER EXTENSION THAT COLORS THE APPROPRIATE TEXT (MYJS FILES).
-        if (parent == null || typeof(MySqlHybridScriptEditor) == parent.Editor.GetType() && ((MySqlHybridScriptEditor)parent.Editor).ScriptType == ScriptType.JavaScript)
+        if (parent == null || typeof(MySqlHybridScriptEditor) == parent.Editor.GetType() && ((MySqlHybridScriptEditor)parent.Editor).ScriptLanguageType == ScriptLanguageType.JavaScript)
           langSvc = new Guid(MyJsLanguageService.IID);
         //else
         //TODO: [MYSQLFORVS-402] - CREATE A CLASSIFIER EXTENSION THAT COLORS THE APPROPRIATE TEXT (MYPY FILES).
-        else if (parent == null || typeof(MySqlHybridScriptEditor) == parent.Editor.GetType() && ((MySqlHybridScriptEditor)parent.Editor).ScriptType == ScriptType.Python)
+        else if (parent == null || typeof(MySqlHybridScriptEditor) == parent.Editor.GetType() && ((MySqlHybridScriptEditor)parent.Editor).ScriptLanguageType == ScriptLanguageType.Python)
         {
           langSvc = new Guid(MyPyLanguageService.IID);
         }

@@ -27,7 +27,8 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.LanguageService;
-using MySQL.Utility.Classes.MySQL;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -234,7 +235,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       string sql = CodeEditor.Text.Trim();
       ClearResults();
-      string[] sqlStmt = sql.BreakSqlStatements().ToArray();
+      string[] sqlStmt = sql.BreakIntoSqlStatements().ToArray();
       int ctr = 1;
       for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
       {

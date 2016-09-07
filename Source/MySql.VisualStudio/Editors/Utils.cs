@@ -28,27 +28,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
+using System.Data.Common;
 using System.Drawing;
 using EnvDTE;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
+using MySql.Utility.Classes.MySqlX;
 using MySqlX;
-using MySQL.Utility.Classes.Tokenizers;
 using Color = System.Drawing.Color;
-using MySqlTokenizer = MySQL.Utility.Classes.Tokenizers.MySqlTokenizer;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  /// <summary>
-  /// Defines a series of script file types.
-  /// </summary>
-  public enum ScriptType
-  {
-    Sql,
-    JavaScript,
-    Python
-  }
-
   /// <summary>
   /// Enum used to know what kind of message will be written to the output window
   /// </summary>
@@ -172,11 +162,6 @@ namespace MySql.Data.VisualStudio.Editors
     private static Version _serverVersionSupportingXProtocol;
 
     /// <summary>
-    /// Dictionary containing a key composed of host + classsicPort and its corresponding xPort.
-    /// </summary>
-    private static Dictionary<string, int> _xPortsDictionary;
-
-    /// <summary>
     /// Enum used to define the list of available default themes for Visual Studio
     /// </summary>
     public enum VsTheme
@@ -273,54 +258,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Separates multiple javascript statements into single ones
-    /// </summary>
-    /// <param name="jsStatements">Javascript statements</param>
-    /// <returns>List of single statements</returns>
-    public static List<string> BreakJavaScriptStatements(this string jsStatements)
-    {
-      if (string.IsNullOrEmpty(jsStatements))
-      {
-        return null;
-      }
-
-      var tokenizer = new MyJsTokenizer(jsStatements.Trim());
-      return tokenizer.BreakIntoStatements();
-    }
-
-    /// <summary>
-    /// Separates multiple python statements into single ones
-    /// </summary>
-    /// <param name="pythonStatements">Python statements</param>
-    /// <returns>List of single statements</returns>
-    public static List<string> BreakPythonStatements(this string pythonStatements)
-    {
-      if (string.IsNullOrEmpty(pythonStatements))
-      {
-        return null;
-      }
-
-      var tokenizer = new MyPythonTokenizer(pythonStatements.Trim());
-      return tokenizer.BreakIntoStatements();
-    }
-
-    /// <summary>
-    /// Separates multiple MySql query statements contained in a single line
-    /// </summary>
-    /// <param name="sqlStatements">MySql statements line</param>
-    /// <returns>String list of separated statements</returns>
-    public static List<string> BreakSqlStatements(this string sqlStatements)
-    {
-      if (string.IsNullOrEmpty(sqlStatements))
-      {
-        return new List<string>();
-      }
-
-      var tokenizer = new MySqlTokenizer(sqlStatements.Trim());
-      return tokenizer.BreakIntoStatements();
-    }
-
-    /// <summary>
     /// Creates the result page.
     /// </summary>
     /// <param name="counter">The counter.</param>
@@ -333,57 +270,6 @@ namespace MySql.Data.VisualStudio.Editors
       newResPage.ImageIndex = 1;
       newResPage.Padding = new Padding(3);
       return newResPage;
-    }
-
-    /// <summary>
-    /// Fetches from a connected server the port for the X Protocol.
-    /// </summary>
-    /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
-    /// <returns>The port for the X Protocol, or <c>-1</c> if it can't be fetched.</returns>
-    public static int FetchXProtocolPort(this MySqlConnection connection)
-    {
-      string serverKey = connection.GetHostAndPortKey();
-      if (string.IsNullOrEmpty(serverKey))
-      {
-        return -1;
-      }
-
-      // If we already have the key in the dictionary, fetch it from there
-      if (_xPortsDictionary != null && _xPortsDictionary.ContainsKey(serverKey))
-      {
-        return _xPortsDictionary[serverKey];
-      }
-
-      // Fetch the key from the server
-      if (connection == null)
-      {
-        return -1;
-      }
-
-      try
-      {
-        const string sql = "SELECT @@mysqlx_port";
-        object xPortObj = MySqlHelper.ExecuteScalar(connection, sql);
-        if (xPortObj == null)
-        {
-          return -1;
-        }
-
-        var xPort = Convert.ToInt32(xPortObj);
-        if (_xPortsDictionary == null)
-        {
-          _xPortsDictionary = new Dictionary<string, int>();
-        }
-
-        _xPortsDictionary.Add(serverKey, xPort);
-        return xPort;
-      }
-      catch (Exception ex)
-      {
-        WriteToOutputWindow(string.Format(Properties.Resources.FetchXProtocolError, serverKey, ex), MessageType.Error);
-      }
-
-      return -1;
     }
 
     /// <summary>
@@ -416,35 +302,6 @@ namespace MySql.Data.VisualStudio.Editors
         BackColor = Color.WhiteSmoke,
         ForeColor = Color.Black
       };
-    }
-
-    /// <summary>
-    /// Assembles a key with the connected host and port.
-    /// </summary>
-    /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
-    /// <returns>A key with the connected host and port.</returns>
-    public static string GetHostAndPortKey(this MySqlConnection connection)
-    {
-      var connProps = connection.GetProperties();
-      return connProps == null
-        ? string.Empty
-        : string.Format("{0}:{1}", connProps.Server, connProps.Port);
-    }
-
-    /// <summary>
-    /// Extract the properties from a given <see cref="MySqlClient.MySqlConnection"/>.
-    /// </summary>
-    /// <param name="connection">The <see cref="MySqlClient.MySqlConnection"/>.</param>
-    /// <returns>A <see cref="MySqlConnectionStringBuilder"/> related to the connection.</returns>
-    public static MySqlConnectionStringBuilder GetProperties(this MySqlConnection connection)
-    {
-      if (connection == null)
-      {
-        return null;
-      }
-
-      var strb = new MySqlConnectionStringBuilder(connection.ConnectionString);
-      return strb;
     }
 
     /// <summary>
@@ -967,56 +824,22 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Parse a MySqlConnection object to a string format useb by the XShellWrapper
+    /// Returns the connection string in a <see cref="DbConnection"/> converted to X Protocol format "user:pass@server:port".
     /// </summary>
-    /// <param name="connection">Connection to parse</param>
-    /// <returns>Connection string with the format "user:pass@server:port"</returns>
-    public static string ToXFormat(this MySqlConnection connection)
+    /// <param name="connection">A <see cref="DbConnection"/> instance.</param>
+    /// <returns>The connection string of a <see cref="DbConnection"/> converted to X Protocol format: "user:pass@server:port"</returns>
+    public static string GetXConnectionString(this DbConnection connection)
     {
-      // Create the connection string builder
-      var connStrBuilder = !connection.ConnectionString.ToLower().Contains("password")
-              ? new MySqlConnectionStringBuilder(GetCompleteConnectionString(connection))
-              : new MySqlConnectionStringBuilder(connection.ConnectionString);
-
-      string user = connStrBuilder.UserID;
-      string pass = connStrBuilder.Password;
-      string server = connStrBuilder.Server;
-
-
-      var xPort = connection.FetchXProtocolPort();
-      if (xPort == -1)
+      var mySqlConnection = connection as MySqlConnection;
+      if (mySqlConnection == null)
       {
-        throw new Exception("Unable to extract the X Protocol port from connected Server.");
+        return null;
       }
 
-      if (connStrBuilder.SslMode == MySqlSslMode.None)
-      {
-        return string.Format("{0}:{1}@{2}:{3}", user, pass, server, xPort);
-      }
-
-      StringBuilder xConecction = new StringBuilder();
-      bool sslPameterAdded = false;
-      xConecction.AppendFormat("{0}:{1}@{2}:{3}", user, pass, server, xPort);
-      if (!string.IsNullOrEmpty(connStrBuilder.SslCertificationAuthorityFile))
-      {
-        xConecction.AppendFormat("?ssl_ca={0}", connStrBuilder.SslCertificationAuthorityFile);
-        sslPameterAdded = true;
-      }
-
-      if (!string.IsNullOrEmpty(connStrBuilder.SslClientCertificateFile))
-      {
-        var sslCert = !sslPameterAdded ? string.Format("?ssl_cert={0}", connStrBuilder.SslClientCertificateFile) : string.Format("&ssl_cert={0}", connStrBuilder.SslClientCertificateFile);
-        xConecction.Append(sslCert);
-        sslPameterAdded = true;
-      }
-
-      if (!string.IsNullOrEmpty(connStrBuilder.SslKeyFile))
-      {
-        var sslKey = !sslPameterAdded ? string.Format("?ssl_key={0}", connStrBuilder.SslKeyFile) : string.Format("&ssl_key={0}", connStrBuilder.SslKeyFile);
-        xConecction.Append(sslKey);
-      }
-
-      return xConecction.ToString();
+      var connStrBuilder = !mySqlConnection.ConnectionString.ToLower().Contains("password")
+          ? new MySqlConnectionStringBuilder(mySqlConnection.GetCompleteConnectionString())
+          : new MySqlConnectionStringBuilder(mySqlConnection.ConnectionString);
+      return connStrBuilder.GetXConnectionString();
     }
 
     /// <summary>
@@ -1024,7 +847,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="connection">The connection.</param>
     /// <returns></returns>
-    public static string GetCompleteConnectionString(MySqlConnection connection)
+    public static string GetCompleteConnectionString(this MySqlConnection connection)
     {
       // Open and activate the MySql Output window
       var package = MySqlDataProviderPackage.Instance;

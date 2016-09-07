@@ -28,11 +28,11 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.DDEX;
 using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Classes.MySQL;
-using MySQL.Utility.Forms;
-using MySQL.Utility.Classes.MySQLWorkbench;
 using Microsoft.VisualStudio.Data.Services;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Classes.MySqlWorkbench;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {

@@ -23,54 +23,56 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
-using MySql.Data.VisualStudio.MySqlX;
+using MySql.Utility.Classes.MySqlX;
+using MySql.Utility.Enums;
+using MySql.Utility.Tests;
+using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
-  public abstract class BaseTests : IDisposable
+  public abstract class BaseTests : IUseFixture<SetUpXShell>, IDisposable
   {
     #region Constant Names
 
     /// <summary>
     /// SakilaX character table name.
     /// </summary>
-    public const string SAKILA_X_CHARACTER_TABLE = "character";
+    public const string CHARACTERS_COLLECTION_NAME = "character";
 
     /// <summary>
     /// SakilaX movies collection name.
     /// </summary>
-    public const string SAKILA_X_MOVIES_COLLECTION = "movies";
-
-    /// <summary>
-    /// SakilaX schema name.
-    /// </summary>
-    public const string SAKILA_X_SCHEMA_NAME = "sakila_x";
-
-    /// <summary>
-    /// SakilaX users collection name.
-    /// </summary>
-    public const string SAKILA_X_USERS_COLLECTION = "users";
-
-    /// <summary>
-    /// Table test name
-    /// </summary>
-    public const string TEST_COLLECTION_NAME = "collection_test";
+    public const string MOVIES_COLLECTION_NAME = "movies";
 
     /// <summary>
     /// Database test name
     /// </summary>
-    public const string TEST_DATABASE_NAME = "database_test";
+    public const string TEMP_TEST_DATABASE_NAME = "temp_test";
 
     /// <summary>
     /// Test schema name
     /// </summary>
-    public const string TEST_SCHEMA_NAME = "schema_test";
+    public const string TEMP_SCHEMA_NAME = "temp_schema";
 
     /// <summary>
     /// Table test name
     /// </summary>
-    public const string TEST_TABLE_NAME = "table_test";
+    public const string TEST_COLLECTION_NAME = "test";
+
+    /// <summary>
+    /// Table test name
+    /// </summary>
+    public const string TEST_TABLE_NAME = "test_table";
+
+    /// <summary>
+    /// SakilaX users collection name.
+    /// </summary>
+    public const string USERS_COLLECTION_NAME = "users";
+
+    /// <summary>
+    /// The test schema name for all tests.
+    /// </summary>
+    public const string X_TEST_SCHEMA_NAME = "x_test";
 
     #endregion Constant Names
 
@@ -269,7 +271,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Object to access and execute commands to the current database connection through the mysqlx protocol
     /// </summary>
-    public MySqlXProxy _xProxy { get; protected set; }
+    public MySqlXProxy XProxy { get; protected set; }
 
     #endregion Properties
 
@@ -278,7 +280,20 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     public void Dispose()
     {
-      SetUp.Dispose();
+      if (SetUp != null)
+      {
+        SetUp.Dispose();
+      }
+
+      if (Connection != null)
+      {
+        Connection.Dispose();
+      }
+
+      if (Command != null)
+      {
+        Command.Dispose();
+      }
     }
 
     /// <summary>
@@ -288,8 +303,8 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     public virtual void SetFixture(SetUpXShell data)
     {
       SetUp = data;
-      Connection = new MySqlConnection(SetUp.GetConnectionString(SetUp.User, SetUp.Password, false, false));
-      XConnString = string.Format("{0}:{1}@{2}:{3}", SetUp.User, SetUp.Password, SetUp.Host, SetUp.XPort);
+      Connection = new MySqlConnection(SetUpDatabaseTestsBase.GetConnectionString(SetUp.HostName, SetUp.Port, SetUp.UserName, SetUp.Password, false, null));
+      XConnString = string.Format("{0}:{1}@{2}:{3}", SetUp.UserName, SetUp.Password, SetUp.HostName, SetUp.XPort);
     }
 
     /// <summary>
@@ -317,16 +332,16 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Initializes the <see cref="MySqlXProxy"/> instance with common statements
     /// </summary>
-    protected virtual void InitXProxy(ScriptType scriptType)
+    protected virtual void InitXProxy(ScriptLanguageType scriptType)
     {
-      _xProxy = new MySqlXProxy(XConnString, true, scriptType);
+      XProxy = new MySqlXProxy(XConnString, true, scriptType);
     }
 
     protected virtual void DisposeProxy()
     {
-      if (_xProxy != null)
+      if (XProxy != null)
       {
-        _xProxy.CleanConnection();
+        XProxy.CleanConnection();
       }
     }
   }

@@ -30,8 +30,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Classes.MySQL;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
 
 namespace MySql.Data.VisualStudio.Editors
 {

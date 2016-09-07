@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,9 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using System.Reflection;
 using System.IO;
@@ -32,9 +30,7 @@ using MySql.Data.VisualStudio.Properties;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
-using MySQL.Utility;
-using MySQL.Utility.Classes;
-
+using MySql.Utility.Classes;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
@@ -47,7 +43,7 @@ namespace MySql.Data.VisualStudio.DBExport
     private StringBuilder _arguments;
     private string _database = string.Empty;
     private string _credentialsFile;
-    private List<String> _tables { get; set; }
+    private List<string> _tables { get; set; }
     private Process _mysqldumpProcess;
 
     private IVsOutputWindowPane _generalPane;
@@ -84,10 +80,10 @@ namespace MySql.Data.VisualStudio.DBExport
       if (options == null)
         throw new Exception("MySqlDump start options are not valid");
 
-      if (String.IsNullOrEmpty(saveToFile))
+      if (string.IsNullOrEmpty(saveToFile))
         throw new Exception("MySqlDump file Path is not set");
 
-      if (String.IsNullOrEmpty(credentialsFile))
+      if (string.IsNullOrEmpty(credentialsFile))
         throw new Exception("Options to start export action are not completed.");
 
       _credentialsFile = credentialsFile;
@@ -97,9 +93,9 @@ namespace MySql.Data.VisualStudio.DBExport
       _errorsOutput = new StringBuilder();
       _logInfo = new StringBuilder();
       
-      _dumpFilePath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
-      if (!String.IsNullOrEmpty(_dumpFilePath))
-        _dumpFilePath = System.IO.Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
+      _dumpFilePath = Utilities.GetMySqlAppInstallLocation("MySQL for Visual Studio");
+      if (!string.IsNullOrEmpty(_dumpFilePath))
+        _dumpFilePath = Path.Combine(_dumpFilePath, @"Dependencies\mysqldump.exe");
 
       IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
@@ -115,7 +111,7 @@ namespace MySql.Data.VisualStudio.DBExport
       BuildCommandLine(options);
     }
 
-    public MySqlDumpFacade(MySqlDbExportOptions options, string saveToFile, string credentialsFile, List<String> tables) : this(options, saveToFile, credentialsFile)
+    public MySqlDumpFacade(MySqlDbExportOptions options, string saveToFile, string credentialsFile, List<string> tables) : this(options, saveToFile, credentialsFile)
     {
       _arguments.Append(" --tables ");
 
@@ -137,7 +133,7 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         if (prop != null)                
         {
-          string value = null;
+          string value;
           options.dictionary.TryGetValue(prop, out value);
           
           if (value == null)
@@ -147,14 +143,14 @@ namespace MySql.Data.VisualStudio.DBExport
           switch (propType.ToString())
           {
             case "System.Boolean":
-              bool propValue = false;
+              bool propValue;
               propValue = (bool)prop.GetValue(options, null);              
               _arguments.AppendFormat(" {0}{1} ", value, !propValue ? "=false": "");
               break;
             case "System.String":
               string sValue;
               sValue = (string)prop.GetValue(options, null);
-              if (!String.IsNullOrEmpty(sValue))
+              if (!string.IsNullOrEmpty(sValue))
               {
                 if (!prop.Name.Equals("database"))
                   _arguments.AppendFormat(" {0}={1}", value, sValue);                  
@@ -163,7 +159,7 @@ namespace MySql.Data.VisualStudio.DBExport
               }
               break;
             case "System.Int32":
-              int intValue = 0;
+              int intValue;
               intValue = (int)prop.GetValue(options, null);
               if (prop.Name.Equals("max_allowed_packet", StringComparison.InvariantCultureIgnoreCase))
               {
@@ -177,8 +173,6 @@ namespace MySql.Data.VisualStudio.DBExport
                 _arguments.AppendFormat(" {0}={1}", value, intValue.ToString());                
               }              
               break;
-             default:
-                break;
           }                   
         }
       }
@@ -195,7 +189,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
     internal void ProcessRequest( string outputPath )
     {      
-      if(String.IsNullOrEmpty(_dumpFilePath))
+      if(string.IsNullOrEmpty(_dumpFilePath))
         throw new Exception(Resources.MySqlDumpPathNotFound);
       _mysqldumpProcess = new Process();
 
@@ -223,7 +217,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
       AppendToLog(string.Format(Resources.MySqlDumpRunning, _arguments));
       
-      if (!String.IsNullOrEmpty(_errorsOutput.ToString()))      
+      if (!string.IsNullOrEmpty(_errorsOutput.ToString()))      
           AppendToLog(_errorsOutput.ToString().Trim() + ".");
 
       AppendToLog(string.Format(Resources.MySqlDumpEndingInfoLog, string.Format("{0:MM/dd/yyyy HH:mm:ss}", DateTime.Now), _database));      
@@ -241,7 +235,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
     void dumpProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
     {
-      if (!String.IsNullOrEmpty(e.Data))       
+      if (!string.IsNullOrEmpty(e.Data))       
         _errorsOutput.AppendLine(e.Data.Trim());      
     }
   }

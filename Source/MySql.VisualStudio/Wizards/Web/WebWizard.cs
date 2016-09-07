@@ -43,7 +43,7 @@ using Microsoft.VisualStudio.TextTemplating;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
 #endif
 using Microsoft.VisualStudio.Shell;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 using System.Diagnostics;
 using MySql.Data.VisualStudio.ServerInstances;
 
@@ -293,13 +293,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       var connectionstringForModel = string.Empty;
 
-      var path = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      var path = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
       Version mysqlDataVersion = null;
 
 
       if (!string.IsNullOrEmpty(path))
       {
-        mysqlDataVersion = new Version(Utility.GetProductVersion(path + @"\Assemblies\v4.0\MySql.Data.dll"));
+        mysqlDataVersion = new Version(Utilities.GetProductVersion(path + @"\Assemblies\v4.0\MySql.Data.dll"));
       }
 
       _fullconnectionstring = WizardForm.ConnectionStringForAspNetTables;
@@ -341,8 +341,6 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           break;
         case DataEntityVersion.EntityFramework6:
           replacementsDictionary.Add("$EntityFrameworkVersion$", @"<section name=""entityFramework"" type=""System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" requirePermission=""false""/>");
-          break;
-        default:
           break;
       }
 

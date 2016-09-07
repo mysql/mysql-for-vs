@@ -33,7 +33,7 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.DBExport;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.ServerInstances
@@ -64,7 +64,7 @@ namespace MySql.Data.VisualStudio.ServerInstances
 
       // get our host information
       Parameters.HostName = WinService.MachineName == "." ? "localhost" : WinService.MachineName;
-      Parameters.HostIPv4 = Utility.GetIPv4ForHostName(Parameters.HostName);
+      Parameters.HostIPv4 = Utilities.GetIPv4ForHostName(Parameters.HostName);
 
       RegistryKey key = Registry.LocalMachine.OpenSubKey(string.Format(@"SYSTEM\CurrentControlSet\Services\{0}", WinService.ServiceName));
       if (key != null)
@@ -76,7 +76,7 @@ namespace MySql.Data.VisualStudio.ServerInstances
           return;
         }
 
-        string[] args = Utility.SplitArgs(imagepath);
+        string[] args = Utilities.SplitArgs(imagepath);
         RealMySqlService = IsRealMySQLService(args[0]);
 
         // Parse our command line args

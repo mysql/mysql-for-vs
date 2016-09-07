@@ -23,8 +23,7 @@
 using System;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
-//using MySql.Data.VisualStudio.MySqlX;
+using MySql.Utility.Enums;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using Xunit;
 
@@ -33,7 +32,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
   /// <summary>
   /// Class to test the CRUD operations through the XShell Wrapper on Relational DB
   /// </summary>
-  public class PyTableXProxyTests : BaseTableTests, IUseFixture<SetUpXShell>
+  public class PyTableXProxyTests : BaseTableTests
   {
     /// <summary>
     /// Test to create a Database using the <see cref="MyTestXProxy"/> direclty.
@@ -46,10 +45,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.Python);
+        InitXProxy(ScriptLanguageType.Python);
 
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.Python);
-        _xProxy.ExecuteScript(CreateTestDatabase, ScriptType.Python);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(CreateTestDatabase, ScriptLanguageType.Python);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
@@ -57,29 +56,29 @@ namespace MySql.VisualStudio.Tests.MySqlX
         while (reader.Read())
         {
           var retDb = reader.GetString(0);
-          if (retDb != TEST_DATABASE_NAME)
+          if (retDb != TEMP_TEST_DATABASE_NAME)
             continue;
           success = true;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(DB_NOT_FOUND, TEST_DATABASE_NAME));
+        Assert.True(success, string.Format(DB_NOT_FOUND, TEMP_TEST_DATABASE_NAME));
 
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.Python);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.Python);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_DATABASE_NAME)
+          if (retSchema != TEMP_TEST_DATABASE_NAME)
             continue;
           success = false;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(DB_NOT_DELETED, TEST_DATABASE_NAME));
+        Assert.True(success, string.Format(DB_NOT_DELETED, TEMP_TEST_DATABASE_NAME));
       }
       finally
       {
@@ -113,20 +112,20 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.Python);
+        InitXProxy(ScriptLanguageType.Python);
 
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.Python);
-        _xProxy.ExecuteScript(CreateTestDatabase, ScriptType.Python);
-        _xProxy.ExecuteScript(UseTestDatabase, ScriptType.Python);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(CreateTestDatabase, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(UseTestDatabase, ScriptLanguageType.Python);
 
-        _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        XProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptLanguageType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _xProxy.ExecuteScript(DropTestTableIfExists, ScriptType.Python);
+        XProxy.ExecuteScript(DropTestTableIfExists, ScriptLanguageType.Python);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
@@ -153,85 +152,85 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.Python);
+        InitXProxy(ScriptLanguageType.Python);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Create test table
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.Python);
-        _xProxy.ExecuteScript(CreateTestDatabase, ScriptType.Python);
-        _xProxy.ExecuteScript(UseTestDatabase, ScriptType.Python);
-        _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.Python);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(CreateTestDatabase, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(UseTestDatabase, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptLanguageType.Python);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
         // Insert test table data for delete all
-        _xProxy.ExecuteScript(GetDatabaseTest, ScriptType.Python);
-        _xProxy.ExecuteScript(GetDatabaseTestTableTest, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW1, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW2, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW3, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW4, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW5, ScriptType.Python);
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        XProxy.ExecuteScript(GetDatabaseTest, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(GetDatabaseTestTableTest, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_TEST_ROW1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_TEST_ROW2, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_TEST_ROW3, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_TEST_ROW4, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_TEST_ROW5, ScriptLanguageType.Python);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null && selectResult.Count == TEST_COUNT, DATA_NOT_MATCH);
 
         // Delete full
-        _xProxy.ExecuteScript(DELETE_FULL, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        XProxy.ExecuteScript(DELETE_FULL, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
 
         // Insert test character rows
-        _xProxy.ExecuteScript(UseSakilaXDatabase, ScriptType.Python);
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptType.Python);
+        XProxy.ExecuteScript(UseSakilaXDatabase, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptLanguageType.Python);
         charactersCount += 8;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Delete simple, using parameter binding
-        _xProxy.ExecuteScript(DELETE_SIMPLE_WITH_BINDING, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.Python);
+        XProxy.ExecuteScript(DELETE_SIMPLE_WITH_BINDING, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
 
         // Delete with limit
-        _xProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptType.Python);
+        XProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 2, DATA_NOT_MATCH);
 
         // Delete with limit again
-        _xProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptType.Python);
+        XProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 4, DATA_NOT_MATCH);
 
         // Delete inserted test rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
 
         // Drop test table
-        _xProxy.ExecuteScript(UseTestDatabase, ScriptType.Python);
-        _xProxy.ExecuteScript(DropTestTableIfExists, ScriptType.Python);
+        XProxy.ExecuteScript(UseTestDatabase, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(DropTestTableIfExists, ScriptLanguageType.Python);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
@@ -243,7 +242,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
         CloseConnection();
         DisposeProxy();
       }
@@ -259,51 +258,51 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.Python);
+        InitXProxy(ScriptLanguageType.Python);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert without specifying any columns
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.Python);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.Python);
         charactersCount += 2;
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Insert specifying a comma delimited list of columns
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.Python);
         charactersCount += 2;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Insert specifying columns as an array, also in different lines
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.Python);
         charactersCount += 2;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Insert JSON documents
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptLanguageType.Python);
         charactersCount += 2;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Delete inserted rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
@@ -314,7 +313,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
         CloseConnection();
         DisposeProxy();
       }
@@ -330,69 +329,69 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.Python);
+        InitXProxy(ScriptLanguageType.Python);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert test character rows
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptType.Python);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptLanguageType.Python);
         charactersCount += 8;
 
         // Select all
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Select female
-        selectResult = _xProxy.ExecuteScript(SELECT_FEMALE_CHARACTERS, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_FEMALE_CHARACTERS, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FEMALE_COUNT, DATA_NOT_MATCH);
 
         // Select male
-        selectResult = _xProxy.ExecuteScript(SELECT_MALE_CHARACTERS, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_MALE_CHARACTERS, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_MALE_COUNT, DATA_NOT_MATCH);
 
         // Select with field selection
-        selectResult = _xProxy.ExecuteScript(SELECT_WITH_FIELD_SELECTION, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_WITH_FIELD_SELECTION, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
         Assert.True(selectResult != null && selectResult.Count > 0 && selectResult[0].Count == 2, DATA_NOT_MATCH);
 
         // Select with order by descending
-        selectResult = _xProxy.ExecuteScript(SELECT_WITH_ORDER_BY_DESC, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_WITH_ORDER_BY_DESC, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        var singleResult = selectResult.FirstOrDefault();
         int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
         Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
-        singleResult = selectResult != null ? selectResult.ElementAtOrDefault(1) : null;
+        singleResult = selectResult.ElementAtOrDefault(1);
         fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
         Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
 
         // Select by paging (limit + offset)
-        selectResult = _xProxy.ExecuteScript(SELECT_PAGING1, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_PAGING1, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
-        selectResult = _xProxy.ExecuteScript(SELECT_PAGING2, ScriptType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_PAGING2, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount - CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
 
         // Delete inserted test rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
@@ -403,7 +402,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
         CloseConnection();
         DisposeProxy();
       }
@@ -419,70 +418,70 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.Python);
+        InitXProxy(ScriptLanguageType.Python);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert test rows
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.Python);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptType.Python);
-        _xProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptType.Python);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(PYTHON_INSERT_JSON_DOCUMENT2, ScriptLanguageType.Python);
         charactersCount += 8;
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Update simple, 1 record 1 value, using parameter binding
-        _xProxy.ExecuteScript(UPDATE_SIMPLE, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.Python);
+        XProxy.ExecuteScript(UPDATE_SIMPLE, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        var singleResult = selectResult.FirstOrDefault();
         Assert.True(singleResult != null && singleResult["universe"].ToString().Equals("Mass Effect 3", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update a singe value with statements in different lines, using parameter binding
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES1, ScriptType.Python);
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES2, ScriptType.Python);
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES3, ScriptType.Python);
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES4, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.Python);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES1, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES2, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES3, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES4, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        singleResult = selectResult.FirstOrDefault();
         Assert.True(singleResult != null && singleResult["name"].ToString().Equals(TALI_MASS_EFFECT_3, StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update using an expression
-        _xProxy.ExecuteScript(PYTHON_INCLUDE_MYSQLX, ScriptType.Python);
-        _xProxy.ExecuteScript(UPDATE_WITH_EXPRESSION, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.Python);
+        XProxy.ExecuteScript(PYTHON_INCLUDE_MYSQLX, ScriptLanguageType.Python);
+        XProxy.ExecuteScript(UPDATE_WITH_EXPRESSION, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        singleResult = selectResult.FirstOrDefault();
         Assert.True(singleResult != null && singleResult["age"].ToString().Equals("25", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update with limit
-        _xProxy.ExecuteScript(UPDATE_WITH_LIMIT, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_OLD, ScriptType.Python);
+        XProxy.ExecuteScript(UPDATE_WITH_LIMIT, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_OLD, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
 
         // Update with limit
-        _xProxy.ExecuteScript(UPDATE_FULL, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_FROM_VIDEOGAMES, ScriptType.Python);
+        XProxy.ExecuteScript(UPDATE_FULL, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_FROM_VIDEOGAMES, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Delete inserted test rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.Python);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
@@ -493,7 +492,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.Python);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.Python);
         CloseConnection();
         DisposeProxy();
       }

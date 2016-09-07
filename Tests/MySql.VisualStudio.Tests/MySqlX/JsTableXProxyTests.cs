@@ -23,13 +23,13 @@
 using System;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Editors;
+using MySql.Utility.Enums;
 using MySql.VisualStudio.Tests.MySqlX.Base;
 using Xunit;
 
 namespace MySql.VisualStudio.Tests.MySqlX
 {
-  public class JsTableXProxyTests : BaseTableTests, IUseFixture<SetUpXShell>
+  public class JsTableXProxyTests : BaseTableTests
   {
     /// <summary>
     /// Test to create a Database using the <see cref="MyTestXProxy"/> direclty.
@@ -42,10 +42,10 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CreateTestDatabase, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CreateTestDatabase, ScriptLanguageType.JavaScript);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         bool success = false;
@@ -53,29 +53,29 @@ namespace MySql.VisualStudio.Tests.MySqlX
         while (reader.Read())
         {
           var retDb = reader.GetString(0);
-          if (retDb != TEST_DATABASE_NAME)
+          if (retDb != TEMP_TEST_DATABASE_NAME)
             continue;
           success = true;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(DB_NOT_FOUND, TEST_DATABASE_NAME));
+        Assert.True(success, string.Format(DB_NOT_FOUND, TEMP_TEST_DATABASE_NAME));
 
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.JavaScript);
         Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
         reader = Command.ExecuteReader();
         while (reader.Read())
         {
           var retSchema = reader.GetString(0);
-          if (retSchema != TEST_DATABASE_NAME)
+          if (retSchema != TEMP_TEST_DATABASE_NAME)
             continue;
           success = false;
           reader.Close();
           break;
         }
 
-        Assert.True(success, string.Format(DB_NOT_DELETED, TEST_DATABASE_NAME));
+        Assert.True(success, string.Format(DB_NOT_DELETED, TEMP_TEST_DATABASE_NAME));
       }
       finally
       {
@@ -109,20 +109,20 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CreateTestDatabase, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(UseTestDatabase, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CreateTestDatabase, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(UseTestDatabase, ScriptLanguageType.JavaScript);
 
-        _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        XProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
-        _xProxy.ExecuteScript(DropTestTableIfExists, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DropTestTableIfExists, ScriptLanguageType.JavaScript);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
@@ -149,85 +149,85 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Create test table
-        _xProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CreateTestDatabase, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(UseTestDatabase, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptType.JavaScript);
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEST_DATABASE_NAME), Connection);
+        XProxy.ExecuteScript(DropTestDatabaseIfExists, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CreateTestDatabase, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(UseTestDatabase, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(CREATE_TEST_TABLE, ScriptLanguageType.JavaScript);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
 
         // Insert test table data for delete all
-        _xProxy.ExecuteScript(GetDatabaseTest, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetDatabaseTestTableTest, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW3, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW4, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_TEST_ROW5, ScriptType.JavaScript);
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetDatabaseTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetDatabaseTestTableTest, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_TEST_ROW1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_TEST_ROW2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_TEST_ROW3, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_TEST_ROW4, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_TEST_ROW5, ScriptLanguageType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null && selectResult.Count == TEST_COUNT, DATA_NOT_MATCH);
 
         // Delete full
-        _xProxy.ExecuteScript(DELETE_FULL, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DELETE_FULL, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
 
         // Insert test character rows
-        _xProxy.ExecuteScript(UseSakilaXDatabase, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptType.JavaScript);
+        XProxy.ExecuteScript(UseSakilaXDatabase, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptLanguageType.JavaScript);
         charactersCount += 8;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Delete simple, using parameter binding
-        _xProxy.ExecuteScript(DELETE_SIMPLE_WITH_BINDING, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DELETE_SIMPLE_WITH_BINDING, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
 
         // Delete with limit
-        _xProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 2, DATA_NOT_MATCH);
 
         // Delete with limit again
-        _xProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptType.JavaScript);
+        XProxy.ExecuteScript(DELETE_WITH_LIMIT, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_NON_BASE_AGE_GREATER_THAN_30, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 4, DATA_NOT_MATCH);
 
         // Delete inserted test rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
 
         // Drop test table
-        _xProxy.ExecuteScript(UseTestDatabase, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(DropTestTableIfExists, ScriptType.JavaScript);
+        XProxy.ExecuteScript(UseTestDatabase, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(DropTestTableIfExists, ScriptLanguageType.JavaScript);
         result = Command.ExecuteScalar();
         int.TryParse(result.ToString(), out count);
         Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
@@ -239,7 +239,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
         CloseConnection();
         DisposeProxy();
       }
@@ -255,51 +255,51 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert without specifying any columns
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.JavaScript);
         charactersCount += 2;
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Insert specifying a comma delimited list of columns
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.JavaScript);
         charactersCount += 2;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Insert specifying columns as an array, also in different lines
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.JavaScript);
         charactersCount += 2;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Insert JSON documents
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptLanguageType.JavaScript);
         charactersCount += 2;
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Delete inserted rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
@@ -310,7 +310,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
         CloseConnection();
         DisposeProxy();
       }
@@ -326,69 +326,69 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert test character rows
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptLanguageType.JavaScript);
         charactersCount += 8;
 
         // Select all
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Select female
-        selectResult = _xProxy.ExecuteScript(SELECT_FEMALE_CHARACTERS, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_FEMALE_CHARACTERS, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FEMALE_COUNT, DATA_NOT_MATCH);
 
         // Select male
-        selectResult = _xProxy.ExecuteScript(SELECT_MALE_CHARACTERS, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_MALE_CHARACTERS, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_MALE_COUNT, DATA_NOT_MATCH);
 
         // Select with field selection
-        selectResult = _xProxy.ExecuteScript(SELECT_WITH_FIELD_SELECTION, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_WITH_FIELD_SELECTION, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
         Assert.True(selectResult != null && selectResult.Count > 0 && selectResult[0].Count == 2, DATA_NOT_MATCH);
 
         // Select with order by descending
-        selectResult = _xProxy.ExecuteScript(SELECT_WITH_ORDER_BY_DESC, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_WITH_ORDER_BY_DESC, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        var singleResult = selectResult.FirstOrDefault();
         int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
         Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
-        singleResult = selectResult != null ? selectResult.ElementAtOrDefault(1) : null;
+        singleResult = selectResult.ElementAtOrDefault(1);
         fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
         Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
 
         // Select by paging (limit + offset)
-        selectResult = _xProxy.ExecuteScript(SELECT_PAGING1, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_PAGING1, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
-        selectResult = _xProxy.ExecuteScript(SELECT_PAGING2, ScriptType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_PAGING2, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount - CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
 
         // Delete inserted test rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
@@ -399,7 +399,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
         CloseConnection();
         DisposeProxy();
       }
@@ -415,70 +415,70 @@ namespace MySql.VisualStudio.Tests.MySqlX
 
       try
       {
-        InitXProxy(ScriptType.JavaScript);
+        InitXProxy(ScriptLanguageType.JavaScript);
 
-        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, SAKILA_X_CHARACTER_TABLE, SAKILA_X_SCHEMA_NAME), Connection);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTERS_COLLECTION_NAME, X_TEST_SCHEMA_NAME), Connection);
         var result = Command.ExecuteScalar();
         int count;
         int charactersCount = CHARACTERS_FULL_COUNT;
         int.TryParse(result.ToString(), out count);
-        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, SAKILA_X_CHARACTER_TABLE));
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTERS_COLLECTION_NAME));
 
         // Insert test rows
-        _xProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptType.JavaScript);
+        XProxy.ExecuteScript(GetTableSakilaXCharacter, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_NO_COLUMN_SPECIFICATION, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_LIST, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY3, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(INSERT_COLUMNS_AS_ARRAY4, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INSERT_JSON_DOCUMENT2, ScriptLanguageType.JavaScript);
         charactersCount += 8;
-        var selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        var selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Update simple, 1 record 1 value, using parameter binding
-        _xProxy.ExecuteScript(UPDATE_SIMPLE, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_SIMPLE, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        var singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        var singleResult = selectResult.FirstOrDefault();
         Assert.True(singleResult != null && singleResult["universe"].ToString().Equals("Mass Effect 3", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update a singe value with statements in different lines, using parameter binding
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES1, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES2, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES3, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES4, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES1, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES2, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES3, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_IN_SEVERAL_LINES4, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        singleResult = selectResult.FirstOrDefault();
         Assert.True(singleResult != null && singleResult["name"].ToString().Equals(TALI_MASS_EFFECT_3, StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update using an expression
-        _xProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptType.JavaScript);
-        _xProxy.ExecuteScript(UPDATE_WITH_EXPRESSION, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptType.JavaScript);
+        XProxy.ExecuteScript(JAVASCRIPT_INCLUDE_MYSQLX, ScriptLanguageType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_WITH_EXPRESSION, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_TALI, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
-        singleResult = selectResult != null ? selectResult.FirstOrDefault() : null;
+        singleResult = selectResult.FirstOrDefault();
         Assert.True(singleResult != null && singleResult["age"].ToString().Equals("25", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
 
         // Update with limit
-        _xProxy.ExecuteScript(UPDATE_WITH_LIMIT, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_UPDATED_OLD, ScriptType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_WITH_LIMIT, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_UPDATED_OLD, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
 
         // Update with limit
-        _xProxy.ExecuteScript(UPDATE_FULL, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_FROM_VIDEOGAMES, ScriptType.JavaScript);
+        XProxy.ExecuteScript(UPDATE_FULL, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_FROM_VIDEOGAMES, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
 
         // Delete inserted test rows
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
-        selectResult = _xProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
+        selectResult = XProxy.ExecuteScript(SELECT_ALL_TABLE, ScriptLanguageType.JavaScript);
         Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
         Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
       }
@@ -489,7 +489,7 @@ namespace MySql.VisualStudio.Tests.MySqlX
           Command.Dispose();
         }
 
-        _xProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptType.JavaScript);
+        XProxy.ExecuteScript(REVERT_INSERTED_CHARACTERS, ScriptLanguageType.JavaScript);
         CloseConnection();
         DisposeProxy();
       }

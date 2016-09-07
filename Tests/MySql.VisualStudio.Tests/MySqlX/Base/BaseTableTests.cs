@@ -365,14 +365,14 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 
     public BaseTableTests()
     {
-      CreateTestDatabase = string.Format(CREATE_DATABASE, TEST_DATABASE_NAME);
-      DropTestDatabaseIfExists = string.Format(DROP_DATABASE_IF_EXISTS, TEST_DATABASE_NAME);
+      CreateTestDatabase = string.Format(CREATE_DATABASE, TEMP_TEST_DATABASE_NAME);
+      DropTestDatabaseIfExists = string.Format(DROP_DATABASE_IF_EXISTS, TEMP_TEST_DATABASE_NAME);
       DropTestTableIfExists = string.Format(DROP_TABLE_IF_EXISTS, TEST_TABLE_NAME);
-      GetDatabaseTest = string.Format(GET_SCHEMA, TEST_DATABASE_NAME);
+      GetDatabaseTest = string.Format(GET_SCHEMA, TEMP_TEST_DATABASE_NAME);
       GetDatabaseTestTableTest = string.Format(GET_TABLE_IN_SCHEMA, TEST_TABLE_NAME);
-      GetTableSakilaXCharacter = string.Format(GET_TABLE, SAKILA_X_SCHEMA_NAME, SAKILA_X_CHARACTER_TABLE);
-      UseSakilaXDatabase = string.Format(USE_DATABASE, SAKILA_X_SCHEMA_NAME);
-      UseTestDatabase = string.Format(USE_DATABASE, TEST_DATABASE_NAME);
+      GetTableSakilaXCharacter = string.Format(GET_TABLE, X_TEST_SCHEMA_NAME, CHARACTERS_COLLECTION_NAME);
+      UseSakilaXDatabase = string.Format(USE_DATABASE, X_TEST_SCHEMA_NAME);
+      UseTestDatabase = string.Format(USE_DATABASE, TEMP_TEST_DATABASE_NAME);
     }
 
   }
