@@ -116,7 +116,7 @@ namespace MySql.Data.VisualStudio.Editors
         throw new Exception("MySql Data Provider is not correctly registered");
       }
 
-      SetConnection(null, string.Empty, null);
+      SetConnection(null, string.Empty);
       IsHybrid = true;
       EditorActionsToolStrip = EditorToolStrip;
       Package = MySqlDataProviderPackage.Instance;
@@ -175,7 +175,7 @@ namespace MySql.Data.VisualStudio.Editors
         return;
       }
 
-      SetConnection(Package.SelectedMySqlConnection, Package.SelectedMySqlConnectionName, Package.SelectedMySqlWorkbenchConnection);
+      SetConnection(Package.SelectedMySqlConnection, Package.SelectedMySqlConnectionName);
     }
 
     #region Properties

@@ -35,7 +35,6 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Utility.Classes;
 using MySql.Utility.Classes.MySql;
-using MySql.Utility.Classes.MySqlWorkbench;
 using MySql.Utility.Forms;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
@@ -140,11 +139,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// Gets or sets a value indicating whether the editor is used for JavaScript and Python.
     /// </summary>
     protected bool IsHybrid { get; set; }
-
-    /// <summary>
-    /// Gets the <see cref="MySqlWorkbenchConnection"/> related to the connection used for the editor.
-    /// </summary>
-    public MySqlWorkbenchConnection RelatedMySqlWorkbenchConnection { get; private set; }
 
     protected DbProviderFactory Factory;
 
@@ -403,23 +397,16 @@ namespace MySql.Data.VisualStudio.Editors
     #endregion
 
     /// <summary>
-    /// Sets the <see cref="Connection"/>, <see cref="ConnectionName"/> and <see cref="RelatedMySqlWorkbenchConnection"/> property values.
+    /// Sets the <see cref="Connection"/> and <see cref="ConnectionName"/> property values.
     /// </summary>
     /// <param name="connection">A <see cref="DbConnection"/> to set in <see cref="Connection"/>.</param>
     /// <param name="connectionName">A connection name to set in <see cref="ConnectionName"/>.</param>
-    /// <param name="relatedMySqlWorkbenchConnection">
-    /// A <see cref="MySqlWorkbenchConnection"/> to set in <see cref="RelatedMySqlWorkbenchConnection"/>.
-    /// If <c>null</c> the value is calculated from the connection and connectionName parameters.
-    /// </param>
-    public void SetConnection(DbConnection connection, string connectionName, MySqlWorkbenchConnection relatedMySqlWorkbenchConnection)
+    public void SetConnection(DbConnection connection, string connectionName)
     {
       Connection = connection;
       ConnectionName = connection == null
         ? string.Empty
         : connectionName;
-      RelatedMySqlWorkbenchConnection = connection == null
-        ? null
-        : relatedMySqlWorkbenchConnection ?? Package.GetMySqlWorkbenchConnection(connectionName, connection as MySqlConnection);
       UpdateButtons();
     }
 
@@ -486,7 +473,7 @@ namespace MySql.Data.VisualStudio.Editors
             return;
           }
 
-          SetConnection(connectDialog.Connection, connectDialog.ConnectionName, null);
+          SetConnection(connectDialog.Connection, connectDialog.ConnectionName);
           ClearResults();
         }
       }
@@ -504,7 +491,7 @@ namespace MySql.Data.VisualStudio.Editors
     protected void DisconnectButtonClick(object sender, EventArgs e)
     {
       Connection.Close();
-      SetConnection(null, null, null);
+      SetConnection(null, null);
     }
 
     /// <summary>
@@ -601,7 +588,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       // Switch to the selected connection
-      SetConnection(connection, connectionName, null);
+      SetConnection(connection, connectionName);
       ClearResults();
     }
 
@@ -691,20 +678,20 @@ namespace MySql.Data.VisualStudio.Editors
         : NONE_TEXT;
       connectionInformationDropDown.DropDownItems["ConnectionMethodToolStripMenuItem"].Text = string.Format(CONNECTION_METHOD_FORMAT_TEXT,
         connected
-          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.ConnectionMethod.GetDescription() : connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription())
+          ? connectionStringBuilder.ConnectionProtocol.GetConnectionProtocolDescription()
           : NONE_TEXT);
       connectionInformationDropDown.DropDownItems["HostIdToolStripMenuItem"].Text = string.Format(HOST_ID_FORMAT_TEXT,
         connected
-          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.HostIdentifier : connectionStringBuilder.GetHostIdentifier())
+          ? connectionStringBuilder.GetHostIdentifier()
           : NONE_TEXT);
       connectionInformationDropDown.DropDownItems["ServerVersionToolStripMenuItem"].Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
       connectionInformationDropDown.DropDownItems["UserToolStripMenuItem"].Text = string.Format(USER_FORMAT_TEXT,
         connected
-          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.UserName : connectionStringBuilder.UserID)
+          ? connectionStringBuilder.UserID
           : NONE_TEXT);
       connectionInformationDropDown.DropDownItems["SchemaToolStripMenuItem"].Text = string.Format(SCHEMA_FORMAT_TEXT,
         connected
-          ? (RelatedMySqlWorkbenchConnection != null ? RelatedMySqlWorkbenchConnection.Schema : connectionStringBuilder.Database)
+          ? connectionStringBuilder.Database
           : NONE_TEXT);
     }
 
