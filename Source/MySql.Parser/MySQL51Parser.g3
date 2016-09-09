@@ -396,7 +396,7 @@ global_variable
 	;
 
 create_database
-	:	CREATE ( DATABASE | SCHEMA ) ( IF NOT EXISTS )? ident create_specification* 
+	:	CREATE database_or_schema ( IF NOT EXISTS )? ident create_specification*
 		-> ^(CREATE { new CommonTree( new CommonToken( DATABASE, "DATABASE" ) ) } ident)
 	;
 
@@ -414,17 +414,17 @@ show_stmt
     | BINLOG EVENTS (IN logName=STRING_LEX)? (FROM INT_NUMBER)? limit?  -> ^($show_stmt ^(BINLOG $logName? INT_NUMBER? limit?))
     | CHARACTER SET like_or_where?  -> ^($show_stmt ^(CHARACTER like_or_where?))
     | COLLATION like_or_where?    -> ^($show_stmt ^(COLLATION like_or_where?))
-	| COUNT LPAREN MULT RPAREN WARNINGS		-> ^( $show_stmt ^( COUNT WARNINGS ) )
+    | COUNT LPAREN MULT RPAREN WARNINGS		-> ^( $show_stmt ^( COUNT WARNINGS ) )
     | FULL? COLUMNS (FROM|IN) simple_table_ref_no_alias ((FROM|IN) ident)? like_or_where? -> ^($show_stmt ^(COLUMNS FULL? simple_table_ref_no_alias ident? like_or_where?))
-    | CONTRIBUTORS  -> ^($show_stmt ^(CONTRIBUTORS))    
-	| CREATE DATABASE ident -> ^($show_stmt ^(CREATE DATABASE ident))
+    | CONTRIBUTORS  -> ^($show_stmt ^(CONTRIBUTORS))
+    | CREATE DATABASE ident -> ^($show_stmt ^(CREATE DATABASE ident))
     | CREATE EVENT ident    -> ^($show_stmt ^(CREATE EVENT ident))
     | CREATE FUNCTION ident -> ^($show_stmt ^(CREATE FUNCTION ident))
     | CREATE PROCEDURE ident  -> ^($show_stmt ^(CREATE PROCEDURE ident))
     | CREATE TABLE simple_table_ref_no_alias_existing  -> ^($show_stmt ^(CREATE TABLE simple_table_ref_no_alias_existing))
     | CREATE TRIGGER ident  -> ^($show_stmt ^(CREATE TRIGGER ident))
     | CREATE VIEW ident   -> ^($show_stmt ^(CREATE VIEW ident))
-    | DATABASES like_or_where?  -> ^($show_stmt ^(DATABASES like_or_where?))
+    | databases_or_schemas like_or_where?  -> ^($show_stmt ^(DATABASES like_or_where?))
     | ENGINE (INNODB | ident) (what=STATUS | what=MUTEX) // have to add INNODB token, because of SHOW INNODB STATUS :(
                     -> ^($show_stmt ^(ENGINE INNODB? ident? $what))
     | STORAGE? ENGINES    -> ^($show_stmt ^(ENGINES))
@@ -2514,6 +2514,10 @@ drop_database
 
 database_or_schema
 	:	DATABASE | SCHEMA
+	;
+
+databases_or_schemas
+	:	DATABASES | SCHEMAS
 	;
 
 drop_event

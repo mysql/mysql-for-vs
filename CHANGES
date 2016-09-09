@@ -41,6 +41,8 @@
 - Added to the SQL editor the ability to check the syntax of a script when it is executed. Before the script's statements are
   actually sent to the server the syntax check is done; if errors are found the script is not actually executed and the errors
   are displayed in Visual Studio's Output pane.
+- Fixed the ANTLR grammar for the SHOW statement to allow for SHOW SCHEMAS in the same fashion as SHOW DATABASES works.
+  (Bug #24622881 - COMMAND: SHOW SCHEMAS DOES NOTHING ON SQL MODE)
 
 
 2.0.3
