@@ -49,17 +49,9 @@ namespace MySql.Parser.Tests
     {
       var mySqlConnection = CreateMySqlConnection();
       var mySqlParser = new MySqlWbParser(mySqlConnection, version);
-      var result = mySqlParser.CheckSyntax(sql);
-      if (!expectErrors)
-      {
-        Assert.Equal(string.Empty, result);
-      }
-      else
-      {
-        Assert.NotEqual(string.Empty, result);
-      }
-
-      return result;
+      var noErrors = mySqlParser.CheckSyntax(sql);
+      Assert.True((expectErrors && !noErrors) || (!expectErrors && noErrors));
+      return mySqlParser.ErrorMessagesInSingleText;
     }
 
     private static MySqlConnection CreateMySqlConnection()

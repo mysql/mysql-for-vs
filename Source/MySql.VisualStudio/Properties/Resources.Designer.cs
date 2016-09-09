@@ -3103,15 +3103,6 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is an error in the MySql Command..
-        /// </summary>
-        public static string ErrorInMySqlCommand {
-            get {
-                return ResourceManager.GetString("ErrorInMySqlCommand", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to There is no active MySql connection..
         /// </summary>
         public static string ErrorNoActiveMySqlConnection {
@@ -3940,6 +3931,16 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("successIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following errors were found in the script:
+        ///.
+        /// </summary>
+        public static string SyntaxErrorsFoundMessage {
+            get {
+                return ResourceManager.GetString("SyntaxErrorsFoundMessage", resourceCulture);
             }
         }
         

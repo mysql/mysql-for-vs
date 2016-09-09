@@ -22,39 +22,50 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
+using MySql.Utility.Classes;
 using Parsers;
 
 namespace MySql.Parser
 {
+  /// <summary>
+  /// Contains methods to check the syntax of SQL scripts.
+  /// </summary>
   public class MySqlWbParser : IMySQLParsingDataProvider, IDisposable
   {
-    private static MySQLParseService _service;
-    private const string MYSQL_CASESENSITIVITY_COMMAND = "lower_case_table_names";
-    private const string MYSQL_MODE_COMMAND = "GLOBAL.sql_mode";
+    #region Fields
 
+    /// <summary>
+    /// A <see cref="MySQLParseService"/> instance containing the logic to actually parse code.
+    /// </summary>
+    private static MySQLParseService _service;
+
+    #endregion Fields
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MySqlWbParser"/> class.
+    /// </summary>
+    /// <param name="mySqlConnection">A <see cref="MySqlConnection"/> to get the SQL mode from the server.</param>
     public MySqlWbParser(MySqlConnection mySqlConnection)
+      : this(mySqlConnection, GetVersion(null))
     {
-      try
-      {
-        // Create the Parser service, getting the MySql mode and version from the server.
-        _service = new MySQLParseService(this, GetVersion(null), GetMySqlMode(mySqlConnection), string.Empty);
-      }
-      catch (Exception ex)
-      {
-        // If cannot create the Parser service, throw a more friendly error message
-        throw new Exception(Resources.ParserServiceError, ex);
-      }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MySqlWbParser"/> class.
+    /// </summary>
+    /// <param name="mySqlConnection">A <see cref="MySqlConnection"/> to get the SQL mode from the server.</param>
+    /// <param name="version">The Server version.</param>
     public MySqlWbParser(MySqlConnection mySqlConnection, Version version)
     {
+      Errors = null;
+
       try
       {
         // Create the Parser service, with an specific version and getting the MySql mode from the server.
-        _service = new MySQLParseService(this, version, GetMySqlMode(mySqlConnection), string.Empty);
+        _service = new MySQLParseService(this, version, mySqlConnection.GetMySqlServerGlobalMode(), string.Empty);
       }
       catch (Exception ex)
       {
@@ -63,7 +74,59 @@ namespace MySql.Parser
       }
     }
 
-    #region "IMySQLParsingDataProvider implementation"
+    #region Properties
+
+    /// <summary>
+    /// Gets a list of <see cref="ParseError"/> containing information about each error found by running <see cref="CheckSyntax"/>, such as error message, position and length of the token causing the error.
+    /// </summary>
+    public List<ParseError> Errors { get; private set; }
+
+    /// <summary>
+    /// Gets a list of error messages found by running <see cref="CheckSyntax"/>.
+    /// </summary>
+    public List<string> ErrorMessages
+    {
+      get
+      {
+        if (Errors == null)
+        {
+          return null;
+        }
+
+        var syntaxErrorMessage = Resources.SyntaxErrorMessage;
+        var errorMessasges = new List<string>(Errors.Count);
+        errorMessasges.AddRange(Errors.Select(error => string.Format(syntaxErrorMessage, error.message, error.position)));
+        return errorMessasges;
+      }
+    }
+
+    /// <summary>
+    /// Gets a string containing all error messages found by <see cref="CheckSyntax"/> appended in separate lines.
+    /// </summary>
+    public string ErrorMessagesInSingleText
+    {
+      get
+      {
+        var errorMessages = ErrorMessages;
+        if (errorMessages == null)
+        {
+          return string.Empty;
+        }
+
+        var singleErrorTextBuilder = new StringBuilder();
+        foreach (var errorMessage in errorMessages)
+        {
+          singleErrorTextBuilder.AppendLine(errorMessage);
+        }
+
+        return singleErrorTextBuilder.ToString().Trim();
+      }
+    }
+
+    #endregion Properties
+
+    #region IMySQLParsingDataProvider implementation
+
     public List<Tuple<string, string>> RunQuery(string query)
     {
       return new List<Tuple<string, string>>();
@@ -72,34 +135,37 @@ namespace MySql.Parser
     public void DataRetrievalInProgress(bool busy)
     {
     }
-    #endregion
 
-    #region "IDisposable implementation"
+    #endregion IMySQLParsingDataProvider implementation
 
+    /// <summary>
+    /// Checks the syntax of the given SQL script.
+    /// </summary>
+    /// <param name="sqlScript">A SQL script.</param>
+    /// <returns><c>true</c> if no errors were found, <c>false</c> otherwise.</returns>
+    public bool CheckSyntax(string sqlScript)
+    {
+      bool noErrors = _service.SyntaxCheck(sqlScript);
+      Errors = noErrors
+        ? null
+        : _service.GetParseErrorsWithOffset(0);
+      return noErrors;
+    }
+
+    /// <summary>
+    /// Frees resources and performs cleanup operations.
+    /// </summary>
     public void Dispose()
     {
       GC.SuppressFinalize(_service);
     }
-    #endregion
 
-    public string CheckSyntax(string query)
-    {
-      if (_service.SyntaxCheck(query))
-      {
-        return string.Empty;
-      }
-
-      StringBuilder errors = new StringBuilder();
-      List<ParseError> errorsList = _service.GetParseErrorsWithOffset(0);
-      foreach (ParseError error in errorsList)
-      {
-        errors.AppendLine(error.message);
-      }
-
-      return errors.ToString();
-    }
-
-    private Version GetVersion(string versionString)
+    /// <summary>
+    /// Gets a <see cref="Version"/> value from a given string.
+    /// </summary>
+    /// <param name="versionString">A string containing a value.</param>
+    /// <returns>A <see cref="Version"/> value from a given string.</returns>
+    private static Version GetVersion(string versionString)
     {
       if (string.IsNullOrEmpty(versionString))
       {
@@ -113,46 +179,6 @@ namespace MySql.Parser
       }
 
       return new Version(versionString.Substring(0, i));
-    }
-
-    private string GetMySqlMode(MySqlConnection mySqlConnection)
-    {
-      if (mySqlConnection == null)
-      {
-        return string.Empty;
-      }
-
-      try
-      {
-        string sql = string.Format("SELECT @@{0};", MYSQL_MODE_COMMAND);
-        var cmdResult = MySqlHelper.ExecuteScalar(mySqlConnection, sql);
-        return cmdResult != null ? cmdResult.ToString() : string.Empty;
-      }
-      catch (Exception ex)
-      {
-        Debug.WriteLine(ex.Message);
-        return string.Empty;
-      }
-    }
-
-    private bool GetMySqlCaseSensitivity(MySqlConnection mySqlConnection)
-    {
-      if (mySqlConnection == null)
-      {
-        return false;
-      }
-
-      try
-      {
-        string sql = string.Format("SELECT @@{0};", MYSQL_CASESENSITIVITY_COMMAND);
-        var cmdResult = MySqlHelper.ExecuteScalar(mySqlConnection, sql);
-        return cmdResult != null && cmdResult.ToString().Equals("1");
-      }
-      catch (Exception ex)
-      {
-        Debug.WriteLine(ex.Message);
-        return false;
-      }
     }
   }
 }

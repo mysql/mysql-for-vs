@@ -38,6 +38,9 @@
   Server Explorer connections for the MySQL data provider.
 - Changed the way queries are executed in the SQL script editor, so that a problem caused by non-unique data in MySQL Document
   Store tables is not present anymore. (MySQL Bug #82589, Bug #24462707 - SQL EDITOR - ERROR ON SELECT WITH DOC STORE TABLE)
+- Added to the SQL editor the ability to check the syntax of a script when it is executed. Before the script's statements are
+  actually sent to the server the syntax check is done; if errors are found the script is not actually executed and the errors
+  are displayed in Visual Studio's Output pane.
 
 
 2.0.3

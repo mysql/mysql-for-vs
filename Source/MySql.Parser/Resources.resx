@@ -120,4 +120,7 @@
   <data name="ParserServiceError" xml:space="preserve">
     <value>Error creating the Parser service.</value>
   </data>
+  <data name="SyntaxErrorMessage" xml:space="preserve">
+    <value>{0}; at position {1}</value>
+  </data>
 </root>

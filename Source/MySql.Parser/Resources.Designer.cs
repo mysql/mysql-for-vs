@@ -68,5 +68,14 @@ namespace MySql.Parser {
                 return ResourceManager.GetString("ParserServiceError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}; at position {1}.
+        /// </summary>
+        internal static string SyntaxErrorMessage {
+            get {
+                return ResourceManager.GetString("SyntaxErrorMessage", resourceCulture);
+            }
+        }
     }
 }

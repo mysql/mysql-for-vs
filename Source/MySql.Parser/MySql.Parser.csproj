@@ -220,6 +220,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="MySQL.Utility">
+      <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
+    </Reference>
     <Reference Include="ParsingSupport">
       <HintPath>..\..\Dependencies\Parser\ParsingSupport.dll</HintPath>
     </Reference>

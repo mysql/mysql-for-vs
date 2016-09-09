@@ -27,9 +27,11 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.LanguageService;
+using MySql.Parser;
 using MySql.Utility.Classes;
 using MySql.Utility.Classes.MySql;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -237,17 +239,31 @@ namespace MySql.Data.VisualStudio.Editors
       ClearResults();
       string[] sqlStmt = sql.BreakIntoSqlStatements().ToArray();
       int ctr = 1;
-      for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
+      using (var mySqlConnection = new MySqlConnection(Connection.ConnectionString))
       {
-        bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)Connection);
-        if (isResultSet)
+        using (var mySqlParser = new MySqlWbParser(mySqlConnection))
         {
-          ExecuteSelect(sqlStmt[sqlIdx], ctr);
-          ctr++;
-        }
-        else
-        {
-          ExecuteScript(sqlStmt[sqlIdx]);
+          for (int sqlIdx = 0; sqlIdx <= sqlStmt.Length - 1; sqlIdx++)
+          {
+            // Check syntax
+            if (!mySqlParser.CheckSyntax(sqlStmt[sqlIdx]))
+            {
+              Utils.WriteToOutputWindow(Resources.SyntaxErrorsFoundMessage + mySqlParser.ErrorMessagesInSingleText, MessageType.Error);
+              return;
+            }
+
+            // Check if statement returns a result set.
+            bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sqlStmt[sqlIdx], (MySqlConnection)Connection);
+            if (isResultSet)
+            {
+              ExecuteSelect(sqlStmt[sqlIdx], ctr);
+              ctr++;
+            }
+            else
+            {
+              ExecuteScript(sqlStmt[sqlIdx]);
+            }
+          }
         }
       }
 

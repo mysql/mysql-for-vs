@@ -236,11 +236,10 @@ namespace MySql.Data.VisualStudio.DDEX
       {
         using (var mySqlParser = new MySqlWbParser(mySqlConnection))
         {
-          var result = mySqlParser.CheckSyntax(command);
-          if (!string.IsNullOrEmpty(result))
+          if (!mySqlParser.CheckSyntax(command))
           {
             // Show error dialog with syntax check error message.
-            throw new Exception(string.Format("{0} {1}", Resources.ErrorInMySqlCommand, result));
+            throw new Exception(Resources.SyntaxErrorsFoundMessage + mySqlParser.ErrorMessagesInSingleText);
           }
         }
       }
