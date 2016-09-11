@@ -131,7 +131,7 @@ namespace MySql.Data.VisualStudio.Editors
       column = new DataGridViewColumn(new DataGridViewTextBoxCell())
       {
         Name = "DurationColumn",
-        HeaderText = "Duration/Fetch",
+        HeaderText = "Duration",
         Width = 140,
         Resizable = DataGridViewTriState.False
       };

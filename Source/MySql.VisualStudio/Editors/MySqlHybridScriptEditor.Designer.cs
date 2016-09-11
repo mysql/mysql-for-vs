@@ -46,9 +46,9 @@ namespace MySql.Data.VisualStudio.Editors
           components.Dispose();
         }
 
-        if (_xShellWrapper != null)
+        if (_mySqlXProxy != null)
         {
-          _xShellWrapper.CleanConnection();
+          _mySqlXProxy.CleanConnection();
         }
 
         if (Connection != null)

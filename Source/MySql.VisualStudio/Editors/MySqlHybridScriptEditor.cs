@@ -66,11 +66,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private const string MYSQL_X_SQL_RESULT_TYPE = "mysqlx.sqlresult";
 
-    /// <summary>
-    /// Constant to hold the "System.String" string type
-    /// </summary>
-    private const string SYSTEM_STRING_TYPE = "system.string";
-
     #endregion Constants
 
     #region Fields
@@ -79,11 +74,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// Variable to store the value to know if the user wants to execute the statements in batch mode or in console mode
     /// </summary>
     private ExecutionModeOption _executionModeOption = ExecutionModeOption.BatchMode;
-
-    /// <summary>
-    /// Variable to verify if the query execution result is not an empty document
-    /// </summary>
-    private bool _resultIsNotEmptyDocument;
 
     /// <summary>
     /// Variable to store the value to know if the user wants to execute the statements in the same session or not
@@ -98,7 +88,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Variable used to executes the script
     /// </summary>
-    private MySqlXProxy _xShellWrapper;
+    private MySqlXProxy _mySqlXProxy;
 
     #endregion Fields
 
@@ -272,28 +262,10 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       TabPage newResPage = Utils.CreateResultPage(resultNumber);
-      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
-      resultViews.Dock = DockStyle.Fill;
-      resultViews.LoadData(data);
-      newResPage.Controls.Add(resultViews);
-      ResultsTabControl.TabPages.Add(newResPage);
-    }
-
-    /// <summary>
-    /// Creates a Tab Page for a ResultSet provided and add it to the tabs result
-    /// </summary>
-    /// <param name="data">Data to load</param>
-    /// <param name="resultNumber">Result counter</param>
-    private void CreateResultPane(DocResult data, int resultNumber)
-    {
-      if (data == null)
+      var resultViews = new MySqlHybridScriptResultsetView
       {
-        return;
-      }
-
-      TabPage newResPage = Utils.CreateResultPage(resultNumber);
-      MySqlHybridScriptResultsetView resultViews = new MySqlHybridScriptResultsetView();
-      resultViews.Dock = DockStyle.Fill;
+        Dock = DockStyle.Fill
+      };
       resultViews.LoadData(data);
       newResPage.Controls.Add(resultViews);
       ResultsTabControl.TabPages.Add(newResPage);
@@ -311,23 +283,23 @@ namespace MySql.Data.VisualStudio.Editors
         case ScriptLanguageType.JavaScript:
           statements = script.BreakIntoJavaScriptStatements();
           break;
+
         case ScriptLanguageType.Python:
           statements = script.BreakIntoPythonStatements();
           break;
       }
 
-      var results = _xShellWrapper.ExecuteScript(statements.ToArray(), ScriptLanguageType);
-      if (!results.Any())
+      var boxedResults = _mySqlXProxy.ExecuteStatementsBase(statements.ToArray(), ScriptLanguageType);
+      if (!boxedResults.Any())
       {
         return;
       }
 
       _tabCounter = 1;
-      _resultIsNotEmptyDocument = false;
       int statementIndex = 0;
-      foreach (MySqlXResult result in results)
+      foreach (var boxedResult in boxedResults)
       {
-        PrintResult(statements[statementIndex], result.Result, result.ExecutionTime);
+        PrintResult(statements[statementIndex], boxedResult);
         statementIndex++;
         ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
         CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
@@ -341,8 +313,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="script">The script.</param>
     private void ExecuteConsoleScript(string script)
     {
-      var result = _xShellWrapper.ExecuteQuery(script, ScriptLanguageType);
-      PrintResult(script, result.Result, result.ExecutionTime);
+      var boxedResult = _mySqlXProxy.ExecuteQuery(script, ScriptLanguageType);
+      PrintResult(script, boxedResult);
       XShellConsoleEditor.Focus();
     }
 
@@ -364,26 +336,27 @@ namespace MySql.Data.VisualStudio.Editors
         switch (_sessionOption)
         {
           case SessionOption.UseSameSession:
-            if (_xShellWrapper == null)
+            if (_mySqlXProxy == null)
             {
-              _xShellWrapper = new MySqlXProxy(Connection.GetXConnectionString(), true, ScriptLanguageType);
+              _mySqlXProxy = new MySqlXProxy(Connection.GetXConnectionString(), true, ScriptLanguageType);
             }
 
             break;
           case SessionOption.UseNewSession:
-            _xShellWrapper = new MySqlXProxy(Connection.GetXConnectionString(), false, ScriptLanguageType);
+            _mySqlXProxy = new MySqlXProxy(Connection.GetXConnectionString(), false, ScriptLanguageType);
             break;
         }
 
         sw = Stopwatch.StartNew();
-        if (_executionModeOption == ExecutionModeOption.BatchMode)
+        switch (_executionModeOption)
         {
-          ExecuteBatchScript(script);
-        }
+          case ExecutionModeOption.BatchMode:
+            ExecuteBatchScript(script);
+            break;
 
-        if (_executionModeOption == ExecutionModeOption.ConsoleMode)
-        {
-          ExecuteConsoleScript(script);
+          case ExecutionModeOption.ConsoleMode:
+            ExecuteConsoleScript(script);
+            break;
         }
 
         sw.Stop();
@@ -409,45 +382,62 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       _sessionOption = clickedItem.Checked ? SessionOption.UseSameSession : SessionOption.UseNewSession;
-      if (_xShellWrapper != null)
+      if (_mySqlXProxy != null)
       {
-        _xShellWrapper.CleanConnection();
-        _xShellWrapper = null;
+        _mySqlXProxy.CleanConnection();
+        _mySqlXProxy = null;
         CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
       }
     }
 
     /// <summary>
-    /// Prints the DocResult type query execution results in the output window
-    /// showing extended information about the execution result (documents returned, execution time, etc.).
+    /// Prints a <see cref="DocResult"/> in the output window showing extended information about the execution result (documents returned, execution time, etc.).
     /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="result">The DocResult execution result.</param>
-    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    private void PrintDocResult(string script, DocResult result, ExecutionModeOption executionMode, string duration)
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="docResult">A <see cref="DocResult"/> instance.</param>
+    private void PrintDocResult(string statement, DocResult docResult)
     {
-      switch (executionMode)
+      string executionTime = docResult.GetExecutionTime();
+      var dictionariesList = docResult.FetchAll();
+      PrintGenericResult(statement, dictionariesList, executionTime);
+      PrintWarnings(statement, docResult, executionTime);
+    }
+
+    /// <summary>
+    /// Prints a <see cref="DocResult"/> in the output window showing extended information about the execution result (documents returned, execution time, etc.).
+    /// </summary>
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="dictionariesList">A list of dictionaries of results and information about them.</param>
+    /// <param name="executionTime">Execution time formatted to seconds.</param>
+    private void PrintGenericResult(string statement, List<Dictionary<string, object>> dictionariesList, string executionTime)
+    {
+      var count = dictionariesList != null ? dictionariesList.Count : 0;
+      switch (_executionModeOption)
       {
         case ExecutionModeOption.BatchMode:
-          _resultIsNotEmptyDocument = result.FetchAll().Count > 0;
-          if (_resultIsNotEmptyDocument)
+          if (dictionariesList != null && count > 0)
           {
-            CreateResultPane(result, _tabCounter);
+            CreateResultPane(dictionariesList, _tabCounter);
             _tabCounter++;
           }
 
           break;
+
         case ExecutionModeOption.ConsoleMode:
-          List<Dictionary<string, object>> data = result.FetchAll();
-          foreach (Dictionary<string, object> row in data)
+          if (dictionariesList == null)
           {
-            StringBuilder sb = new StringBuilder();
+            break;
+          }
+
+          foreach (var rowData in dictionariesList)
+          {
+            var sb = new StringBuilder();
             sb.AppendLine("{");
             int i = 0;
-            foreach (KeyValuePair<string, object> kvp in row)
+            var rowDataCount = rowData.Count;
+            foreach (var kvp in rowData)
             {
-              sb.AppendFormat("\t\"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (i == row.Count - 1) ? "" : ",");
+              sb.AppendFormat("\t\"{0}\": \"{1}\"{2}{3}", kvp.Key, kvp.Value, i == rowDataCount - 1 ? "" : ",", Environment.NewLine);
               i++;
             }
 
@@ -458,125 +448,97 @@ namespace MySql.Data.VisualStudio.Editors
           break;
       }
 
-      WriteToMySqlOutput(script, string.Format("{0} documents in set.", result.FetchAll().Count), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
-      PrintWarnings(script, result, duration);
+      WriteToMySqlOutput(statement, string.Format("{0} documents in set.", count), executionTime, MessageType.Information);
     }
 
     /// <summary>
-    /// Prints the proper query execution result in the output window, either DocResult, or RowResult, SqlResult or Result,
-    /// showing extended information about the execution result (items affected, execution time, etc.).
+    /// Prints a boxed result in the output window, showing extended information about the execution result (items affected, execution time, etc.).
     /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="executionResult">The xShell execution result.</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    private void PrintResult(string script, Object executionResult, string duration)
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="boxedResult">A boxed execution result.</param>
+    private void PrintResult(string statement, object boxedResult)
     {
-      string type = executionResult.GetType().ToString().ToLowerInvariant();
+      string type = boxedResult.GetType().ToString().ToLowerInvariant();
       switch (type)
       {
         case MYSQL_X_RESULT_TYPE:
-          PrintResult(script, (Result)executionResult, duration);
+          PrintResult(statement, (Result)boxedResult);
           break;
+
         case MYSQL_X_DOC_RESULT_TYPE:
-          PrintDocResult(script, (DocResult)executionResult, _executionModeOption, duration);
+          PrintDocResult(statement, (DocResult)boxedResult);
           break;
+
         case MYSQL_X_ROW_RESULT_TYPE:
-          PrintRowResult(script, (RowResult)executionResult, _executionModeOption, duration);
+          PrintRowResult(statement, (RowResult)boxedResult);
           break;
+
         case MYSQL_X_SQL_RESULT_TYPE:
-          PrintSqlResult(script, (SqlResult)executionResult, _executionModeOption, duration);
+          PrintSqlResult(statement, (SqlResult)boxedResult);
           break;
-        case SYSTEM_STRING_TYPE:
-          if (string.IsNullOrEmpty(executionResult.ToString()))
-          {
-            return;
-          }
 
-          MessageType messageType = MessageType.Information;
-          if (executionResult.ToString().Contains("error", StringComparison.InvariantCultureIgnoreCase))
-          {
-            messageType = MessageType.Error;
-          }
-
-          WriteToMySqlOutput(script, executionResult.ToString(), duration, messageType);
+        default:
+          PrintUnknownResult(statement, boxedResult);
           break;
       }
     }
 
     /// <summary>
-    /// Prints the Result type query execution results in the output window
-    /// showing extended information about the execution result (items affected, execution time, etc.).
+    /// Prints a <see cref="Result"/> in the output window showing extended information about the execution result (items affected, execution time, etc.).
     /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="result">The Result execution result.</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    private void PrintResult(string script, Result result, string duration)
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="result">A <see cref="Result"/> instance.</param>
+    private void PrintResult(string statement, Result result)
     {
-      StringBuilder resultMessage = new StringBuilder();
-      resultMessage.Append("Query OK");
+      var resultMessage = new StringBuilder("Query OK");
       long affectedItems = result.GetAffectedItemCount();
       if (affectedItems >= 0)
       {
         resultMessage.AppendFormat(", {0} items affected", affectedItems);
       }
 
-      WriteToMySqlOutput(script, resultMessage.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
-      PrintWarnings(script, result, duration);
+      var executionTime = result.GetExecutionTime();
+      WriteToMySqlOutput(statement, resultMessage.ToString(), executionTime, MessageType.Information);
+      PrintWarnings(statement, result, executionTime);
     }
 
     /// <summary>
-    /// Prints the RowResult type query execution results in the output window
-    /// showing extended information about the execution result (rows returned, execution time, etc.).
+    /// Prints a <see cref="RowResult"/> in the output window showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="result">The RowResult execution result.</param>
-    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    /// <param name = "affectedItems" > The number of affected items on a DML script.</param>
-    private void PrintRowResult(string script, RowResult result, ExecutionModeOption executionMode, string duration, long affectedItems = 0)
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="rowResult">A <see cref="RowResult"/> instance.</param>
+    private void PrintRowResult(string statement, RowResult rowResult)
     {
-      switch (executionMode)
+      string executionTime;
+      var dictionariesList = rowResult.ToDictionariesList(out executionTime);
+      var count = dictionariesList != null ? dictionariesList.Count : 0;
+      switch (_executionModeOption)
       {
         case ExecutionModeOption.BatchMode:
-          var doc = _xShellWrapper.RowResultToDictionaryList(result);
-          _resultIsNotEmptyDocument = doc.Count > 0;
-          if (_resultIsNotEmptyDocument)
+          if (dictionariesList != null && count > 0)
           {
-            CreateResultPane(doc, _tabCounter);
+            CreateResultPane(dictionariesList, _tabCounter);
             _tabCounter++;
           }
 
           break;
+
         case ExecutionModeOption.ConsoleMode:
-          // Get columns names
-          string[] columns = new string[result.GetColumns().Count];
-          int i = 0;
-          foreach (Column col in result.GetColumns())
+          if (dictionariesList == null)
           {
-            columns[i++] += col.GetColumnName();
+            break;
           }
+
+          // Get columns names
+          var columnsList = rowResult.GetColumns();
+          string[] columns = columnsList.Select(c => c.GetColumnName()).ToArray();
 
           // Create console table object for output format
           var table = new ConsoleTable(columns);
-          object[] record = result.FetchOne();
-          while (record != null)
+          foreach (var rowData in dictionariesList)
           {
-            object[] columnValue = new object[result.GetColumns().Count];
-            i = 0;
-            foreach (object o in record)
-            {
-              if (o == null)
-              {
-                columnValue[i++] = "null";
-              }
-              else
-              {
-                columnValue[i++] = o.ToString();
-              }
-            }
-
+            object[] columnValue = rowData.Select(o => o.Value == null ? (object)"null" : o.Value.ToString()).ToArray();
             table.AddRow(columnValue);
-            record = result.FetchOne();
           }
 
           if (table.Rows.Count > 0)
@@ -587,40 +549,77 @@ namespace MySql.Data.VisualStudio.Editors
           break;
       }
 
-      StringBuilder resultMessage = new StringBuilder();
+      var resultMessage = new StringBuilder();
+
       // If no items are returned, it is a DDL statement (Drop, Create, etc.)
-      int totalItems = result.FetchAll().Count;
-      if (totalItems == 0)
+      if (count == 0)
       {
-        resultMessage.AppendFormat("Query OK, {0} rows affected, {1} warning(s)", affectedItems, result.GetWarningCount());
+        var sqlResult = rowResult as SqlResult;
+        if (sqlResult != null)
+        {
+          resultMessage.AppendFormat("Query OK, {0} rows affected, {1} warning(s)", sqlResult.GetAffectedRowCount(), rowResult.GetWarningCount());
+        }
+        else
+        {
+          resultMessage.AppendFormat("Query OK, {0} warning(s)", rowResult.GetWarningCount());
+        }
       }
       else
       {
-        resultMessage.AppendFormat("{0} rows in set.", totalItems);
+        resultMessage.AppendFormat("{0} rows in set.", count);
       }
 
-      WriteToMySqlOutput(script, resultMessage.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Information);
-      PrintWarnings(script, result, duration);
+      WriteToMySqlOutput(statement, resultMessage.ToString(), executionTime, MessageType.Information);
+      PrintWarnings(statement, rowResult, executionTime);
     }
 
     /// <summary>
-    /// Prints the SqlResult type query execution results in the output window,
-    /// showing extended information about the execution result (rows returned, execution time, etc.).
+    /// Prints a <see cref="SqlResult"/> in the output window, showing extended information about the execution result (rows returned, execution time, etc.).
     /// </summary>
-    /// <param name="script">The executed command.</param>
-    /// <param name="result">The RowResult execution result.</param>
-    /// <param name="executionMode">The statement(s) execution mode (batch or console).</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
-    private void PrintSqlResult(string script, SqlResult result, ExecutionModeOption executionMode, string duration)
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="sqlResult">A <see cref="SqlResult"/> instance.</param>
+    private void PrintSqlResult(string statement, SqlResult sqlResult)
     {
-      if (result.HasData())
+      if (sqlResult.HasData())
       {
-        PrintRowResult(script, result, executionMode, duration, result.GetAffectedRowCount());
+        PrintRowResult(statement, sqlResult);
       }
       else
       {
-        PrintWarnings(script, result, duration);
+        PrintWarnings(statement, sqlResult, sqlResult.GetExecutionTime());
       }
+    }
+
+    /// <summary>
+    /// Prints am unknown boxed result in the output window, showing extended information about the execution result (rows returned, execution time, etc.).
+    /// </summary>
+    /// <param name="statement">The executed statement.</param>
+    /// <param name="boxedResult">A boxed execution result.</param>
+    private void PrintUnknownResult(string statement, object boxedResult)
+    {
+      string executionTime = ExtensionMethods.ZERO_EXECUTION_TIME;
+      var dictionariesList = boxedResult.UnknownResultToDictionaryList();
+      if (dictionariesList != null)
+      {
+        // Result is a collection in string format
+        PrintGenericResult(statement, dictionariesList, executionTime);
+        return;
+      }
+
+      // Not a collection, so maybe just an error or informational message.
+      var stringResult = boxedResult.ToString();
+      if (string.IsNullOrEmpty(stringResult))
+      {
+        return;
+      }
+
+      MessageType messageType = MessageType.Information;
+      if (stringResult.Contains("error", StringComparison.InvariantCultureIgnoreCase))
+      {
+        messageType = MessageType.Error;
+      }
+
+      WriteToMySqlOutput(statement, stringResult, executionTime, messageType);
     }
 
     /// <summary>

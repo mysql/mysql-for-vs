@@ -43,6 +43,9 @@
   are displayed in Visual Studio's Output pane.
 - Fixed the ANTLR grammar for the SHOW statement to allow for SHOW SCHEMAS in the same fashion as SHOW DATABASES works.
   (Bug #24622881 - COMMAND: SHOW SCHEMAS DOES NOTHING ON SQL MODE)
+- Improved the way Result objects from the X Protocol are processed to make the processing faster; and if a result is not a
+  BaseResult object and is a collection returned as plain text, process it so it is displayed as a collection instead of an error
+  or information text message. (Bug #22983803 - JS OUTPUT RESULTS, SHOWS "UNDEFINED" TEXT WHEN COMMAND HAS NOTHING TO DISPLAY)
 
 
 2.0.3
