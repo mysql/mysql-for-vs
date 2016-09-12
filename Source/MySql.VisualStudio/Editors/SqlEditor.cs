@@ -58,7 +58,7 @@ namespace MySql.Data.VisualStudio.Editors
       IsHybrid = false;
       EditorActionsToolStrip = EditorToolStrip;
       Package = MySqlDataProviderPackage.Instance;
-      SetBaseEvents();
+      SetBaseEvents(true);
       ClearResults();
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;

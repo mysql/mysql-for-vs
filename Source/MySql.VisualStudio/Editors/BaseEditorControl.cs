@@ -416,12 +416,13 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     protected void ClearResults()
     {
-      if (!Controls.ContainsKey("ResultsTabControl"))
+      var foundControl = this.GetChildControl("ResultsTabControl");
+      if (foundControl == null)
       {
         return;
       }
 
-      var resultsTab = Controls["ResultsTabControl"] as TabControl;
+      var resultsTab = foundControl as TabControl;
       if (resultsTab == null)
       {
         return;
@@ -433,12 +434,13 @@ namespace MySql.Data.VisualStudio.Editors
       // The tab control needs to be invisible when it has 0 tabs so the background matches the theme.
       resultsTab.Visible = false;
 
-      if (!Controls.ContainsKey("CodeEditor"))
+      foundControl = this.GetChildControl("CodeEditor");
+      if (foundControl == null)
       {
         return;
       }
 
-      var codeEditor = Controls["CodeEditor"] as VSCodeEditorUserControl;
+      var codeEditor = foundControl as VSCodeEditorUserControl;
       if (codeEditor == null)
       {
         return;
@@ -495,9 +497,20 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Frees resources and performs cleanup.
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected override void Dispose(bool disposing)
+    {
+      SetBaseEvents(false);
+      base.Dispose(disposing);
+    }
+
+    /// <summary>
     /// Subscribes some controls to events common to all editors declared in the base <see cref="BaseEditorControl"/>.
     /// </summary>
-    protected void SetBaseEvents()
+    /// <param name="subscribe">Flag indicating whether the methods will be subscribed or unsubscribed.</param>
+    protected void SetBaseEvents(bool subscribe)
     {
       if (EditorActionsToolStrip == null)
       {
@@ -509,7 +522,15 @@ namespace MySql.Data.VisualStudio.Editors
         var connectButton = EditorActionsToolStrip.Items["ConnectToolStripButton"] as ToolStripButton;
         if (connectButton != null)
         {
-          connectButton.Click += ConnectButtonClick;
+          if (subscribe)
+          {
+            connectButton.Click -= ConnectButtonClick;
+            connectButton.Click += ConnectButtonClick;
+          }
+          else
+          {
+            connectButton.Click -= ConnectButtonClick;
+          }
         }
       }
 
@@ -518,7 +539,15 @@ namespace MySql.Data.VisualStudio.Editors
         var disconnectButton = EditorActionsToolStrip.Items["DisconnectToolStripButton"] as ToolStripButton;
         if (disconnectButton != null)
         {
-          disconnectButton.Click += DisconnectButtonClick;
+          if (subscribe)
+          {
+            disconnectButton.Click -= DisconnectButtonClick;
+            disconnectButton.Click += DisconnectButtonClick;
+          }
+          else
+          {
+            disconnectButton.Click -= DisconnectButtonClick;
+          }
         }
       }
 
@@ -527,7 +556,15 @@ namespace MySql.Data.VisualStudio.Editors
         var switchConnectionButton = EditorActionsToolStrip.Items["SwitchConnectionToolStripDropDownButton"] as ToolStripDropDownButton;
         if (switchConnectionButton != null)
         {
-          switchConnectionButton.DropDownOpening += SwitchConnectionDropDownOpening;
+          if (subscribe)
+          {
+            switchConnectionButton.DropDownOpening -= SwitchConnectionDropDownOpening;
+            switchConnectionButton.DropDownOpening += SwitchConnectionDropDownOpening;
+          }
+          else
+          {
+            switchConnectionButton.DropDownOpening -= SwitchConnectionDropDownOpening;
+          }
         }
       }
     }

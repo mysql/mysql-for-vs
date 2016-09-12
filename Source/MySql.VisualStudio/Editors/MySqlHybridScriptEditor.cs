@@ -110,7 +110,7 @@ namespace MySql.Data.VisualStudio.Editors
       IsHybrid = true;
       EditorActionsToolStrip = EditorToolStrip;
       Package = MySqlDataProviderPackage.Instance;
-      SetBaseEvents();
+      SetBaseEvents(true);
       ClearResults();
       ScriptLanguageType = ScriptLanguageType.JavaScript;
       SetXShellConsoleEditorPromptString();
@@ -301,10 +301,11 @@ namespace MySql.Data.VisualStudio.Editors
       {
         PrintResult(statements[statementIndex], boxedResult);
         statementIndex++;
-        ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
-        CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
-        CodeEditor.Focus();
       }
+
+      ResultsTabControl.Visible = ResultsTabControl.TabPages.Count > 0;
+      CodeEditor.Dock = ResultsTabControl.Visible ? DockStyle.Top : DockStyle.Fill;
+      CodeEditor.Focus();
     }
 
     /// <summary>
