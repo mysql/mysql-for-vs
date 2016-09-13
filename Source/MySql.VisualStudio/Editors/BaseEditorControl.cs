@@ -522,14 +522,10 @@ namespace MySql.Data.VisualStudio.Editors
         var connectButton = EditorActionsToolStrip.Items["ConnectToolStripButton"] as ToolStripButton;
         if (connectButton != null)
         {
+          connectButton.Click -= ConnectButtonClick;
           if (subscribe)
           {
-            connectButton.Click -= ConnectButtonClick;
             connectButton.Click += ConnectButtonClick;
-          }
-          else
-          {
-            connectButton.Click -= ConnectButtonClick;
           }
         }
       }
@@ -539,14 +535,10 @@ namespace MySql.Data.VisualStudio.Editors
         var disconnectButton = EditorActionsToolStrip.Items["DisconnectToolStripButton"] as ToolStripButton;
         if (disconnectButton != null)
         {
+          disconnectButton.Click -= DisconnectButtonClick;
           if (subscribe)
           {
-            disconnectButton.Click -= DisconnectButtonClick;
             disconnectButton.Click += DisconnectButtonClick;
-          }
-          else
-          {
-            disconnectButton.Click -= DisconnectButtonClick;
           }
         }
       }
@@ -556,14 +548,10 @@ namespace MySql.Data.VisualStudio.Editors
         var switchConnectionButton = EditorActionsToolStrip.Items["SwitchConnectionToolStripDropDownButton"] as ToolStripDropDownButton;
         if (switchConnectionButton != null)
         {
+          switchConnectionButton.DropDownOpening -= SwitchConnectionDropDownOpening;
           if (subscribe)
           {
-            switchConnectionButton.DropDownOpening -= SwitchConnectionDropDownOpening;
             switchConnectionButton.DropDownOpening += SwitchConnectionDropDownOpening;
-          }
-          else
-          {
-            switchConnectionButton.DropDownOpening -= SwitchConnectionDropDownOpening;
           }
         }
       }
