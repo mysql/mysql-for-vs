@@ -59,8 +59,7 @@ namespace MySql.Data.VisualStudio
       get
       {
 #if DEBUG
-        //return System.IO.Path.Combine(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v4.0\Release\MySql.Data.dll");
-        return "C:\\Code\\mysql-for-vs\\Dependencies\\v4.0\\Release\\MySql.Data.dll";
+        return Path.Combine(Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v4.0\Release\MySql.Data.dll");
 #else
         return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"PrivateAssemblies\MySql.Data.dll");
 #endif
@@ -89,8 +88,16 @@ namespace MySql.Data.VisualStudio
           return _factory;
         }
 
-        //try to get it from DbProviders table        
-        _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        // Try to get it from DbProviders table
+        try
+        {
+          _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        }
+        catch
+        {
+          // If code reaches here it means Connector/NET is not installed.
+        }
+
         if (_factory == null || (MinConnectorVersion != null &&
               _factory.GetType().Assembly.GetName().Version.CompareTo(MinConnectorVersion) < 0))
         {

@@ -46,6 +46,9 @@
 - Improved the way Result objects from the X Protocol are processed to make the processing faster; and if a result is not a
   BaseResult object and is a collection returned as plain text, process it so it is displayed as a collection instead of an error
   or information text message. (Bug #22983803 - JS OUTPUT RESULTS, SHOWS "UNDEFINED" TEXT WHEN COMMAND HAS NOTHING TO DISPLAY)
+- Fixed the way the MySQL data provider falls back to the provider shipped with MySQL for Visual Studio when Connector/NET is
+  not installed, or the MySQL data provider is not found in the Global Assembly Cache.
+  (Bug #23642010 - [SERVER EXPLORER] RIGHT CLICK ANY TABLE AND SELECT DESIGN, IT RAISE AN ERROR)
 
 
 2.0.3
