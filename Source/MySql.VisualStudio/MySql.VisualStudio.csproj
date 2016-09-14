@@ -1652,10 +1652,10 @@
   4. Copy the "Parser" dependencies to the VS Extensions folder -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
     <Exec Command="rd &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio&quot; /S /Q" />
-    <!-- <Exec Command="IF EXIST &quot;$(VS_Expr_Folder)\Extensions&quot; del /f /s /q &quot;$(VS_Expr_Folder)\Extensions\*&quot;" />
-    <Exec Command="rd /s /q &quot;$(VS_Expr_Folder)\Extensions&quot;" /> -->
+    <Exec Command="IF EXIST &quot;$(VS_Expr_Folder)\Extensions&quot; del /f /s /q &quot;$(VS_Expr_Folder)\Extensions\*&quot;" />
+    <Exec Command="rd /s /q &quot;$(VS_Expr_Folder)\Extensions&quot;" />
     <!-- Reset the experimental instance -->
-    <!-- <Exec Command="&quot;$(VsSDKToolsPath)\CreateExpInstance.exe&quot; /Reset /VSInstance=$(VisualStudioVersion) /RootSuffix=Exp" /> -->
+    <Exec Command="&quot;$(VsSDKToolsPath)\CreateExpInstance.exe&quot; /Reset /VSInstance=$(VisualStudioVersion) /RootSuffix=Exp" />
   </Target>
   <Target Name="AfterBuild">
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
