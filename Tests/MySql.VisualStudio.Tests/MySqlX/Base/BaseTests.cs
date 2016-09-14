@@ -23,10 +23,12 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using MySql.Utility.Classes;
 using MySql.Utility.Classes.MySqlX;
 using MySql.Utility.Enums;
 using MySql.Utility.Tests;
 using Xunit;
+using System.Collections.Generic;
 
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
@@ -37,7 +39,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// SakilaX character table name.
     /// </summary>
-    public const string CHARACTERS_COLLECTION_NAME = "character";
+    public const string CHARACTER_TABLE_NAME = "character";
 
     /// <summary>
     /// SakilaX movies collection name.
@@ -45,24 +47,18 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     public const string MOVIES_COLLECTION_NAME = "movies";
 
     /// <summary>
-    /// Database test name
-    /// </summary>
-    public const string TEMP_TEST_DATABASE_NAME = "temp_test";
-
-    /// <summary>
     /// Test schema name
     /// </summary>
     public const string TEMP_SCHEMA_NAME = "temp_schema";
 
     /// <summary>
-    /// Table test name
+    /// Database test name
     /// </summary>
-    public const string TEST_COLLECTION_NAME = "test";
-
+    public const string TEMP_TEST_DATABASE_NAME = "temp_test";
     /// <summary>
     /// Table test name
     /// </summary>
-    public const string TEST_TABLE_NAME = "test_table";
+    public const string TEST_COLLECTION_NAME = "test";
 
     /// <summary>
     /// SakilaX users collection name.
@@ -81,12 +77,12 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to drop a given database if it exists.
     /// </summary>
-    protected const string DROP_DATABASE_IF_EXISTS = "session.sql('DROP DATABASE IF EXISTS `{0}`;').execute()";
+    public const string DROP_DATABASE_IF_EXISTS = "session.sql('DROP DATABASE IF EXISTS `{0}`;').execute()";
 
     /// <summary>
     /// Statement to drop a given schema if it exists.
     /// </summary>
-    protected const string DROP_SCHEMA_IF_EXISTS = "session.sql('DROP SCHEMA IF EXISTS `{0}`;').execute()";
+    public const string DROP_SCHEMA_IF_EXISTS = "session.sql('DROP SCHEMA IF EXISTS `{0}`;').execute()";
 
     /// <summary>
     /// Search for a created collection index in the information schema. Use: string.format(SEARCH_INDEX_SQL_SYNTAX, "schema", "collectionName", "indexName")
@@ -108,16 +104,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     #region Assert Fail Messages
 
     /// <summary>
-    /// Message to display when a database is not deleted. Usage: string.format(DB_NOT_DELETED, "myDatabase").
-    /// </summary>
-    protected const string DB_NOT_DELETED = "DB {0} was not deleted";
-
-    /// <summary>
-    /// Message to display when a database is not found. Usage: string.format(DB_NOT_FOUND, "myDatabase").
-    /// </summary>
-    protected const string DB_NOT_FOUND = "DB {0} not found";
-
-    /// <summary>
     /// Message to display when a collection is not deleted. Usage: string.format(COLLECTION_NOT_DELETED, "myTable")
     /// </summary>
     protected const string COLLECTION_NOT_DELETED = "Collection {0} was not deleted";
@@ -137,6 +123,15 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     protected const string DATA_NOT_UNIQUE = "Duplicate data found, unique index not working.";
 
+    /// <summary>
+    /// Message to display when a database is not deleted. Usage: string.format(DB_NOT_DELETED, "myDatabase").
+    /// </summary>
+    protected const string DB_NOT_DELETED = "DB {0} was not deleted";
+
+    /// <summary>
+    /// Message to display when a database is not found. Usage: string.format(DB_NOT_FOUND, "myDatabase").
+    /// </summary>
+    protected const string DB_NOT_FOUND = "DB {0} not found";
     /// <summary>
     /// Message to display when a schema is not found. Usage: string.format(INDEX_NOT_FOUND, "indexName")
     /// </summary>
@@ -169,82 +164,30 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 
     #endregion Assert Fail Messages
 
-    #region JavaScript specific
-
-    /// <summary>
-    /// Single line comment in hash format for a first line.
-    /// </summary>
-    protected const string JAVASCRIPT_COMMENT_SINGLE_LINE_1 = "// This is a test JavaScript comment in double-slash format...";
-
-    /// <summary>
-    /// Single line comment in hash format for a second line.
-    /// </summary>
-    protected const string JAVASCRIPT_COMMENT_SINGLE_LINE_2 = "//  which is continued in a second comment line.";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a first line.
-    /// </summary>
-    protected const string JAVASCRIPT_COMMENT_MULTI_LINE_1 = "/* This is a test JavaScript comment using the slash-star format;";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a second line.
-    /// </summary>
-    protected const string JAVASCRIPT_COMMENT_MULTI_LINE_2 = "  the intention is that this spans multiple lines...";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a third line.
-    /// </summary>
-    protected const string JAVASCRIPT_COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. */";
-
-    /// <summary>
-    /// Statement to enable the use of mysqlx within script.
-    /// </summary>
-    protected const string JAVASCRIPT_INCLUDE_MYSQLX = "var mysqlx = require('mysqlx').mysqlx;";
-
-    #endregion JavaScript specific
-
-    #region Python specific
-
-    /// <summary>
-    /// Single line comment in hash format for a first line.
-    /// </summary>
-    protected const string PYTHON_COMMENT_SINGLE_LINE_1 = "# This is a test Python comment in hash format...";
-
-    /// <summary>
-    /// Single line comment in hash format for a second line.
-    /// </summary>
-    protected const string PYTHON_COMMENT_SINGLE_LINE_2 = "#  which is continued in a second comment line.";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a first line.
-    /// </summary>
-    protected const string PYTHON_COMMENT_MULTI_LINE_1 = "\"\"\" This is a test Python comment in triple double quote format;";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a second line.
-    /// </summary>
-    protected const string PYTHON_COMMENT_MULTI_LINE_2 = "  the intention is that this spans multiple lines...";
-
-    /// <summary>
-    /// Multi-line comment in triple double quote format for a third line.
-    /// </summary>
-    protected const string PYTHON_COMMENT_MULTI_LINE_3 = "  and we end it here at the third line. \"\"\"";
-
-    /// <summary>
-    /// Statement to enable the use of mysqlx within script.
-    /// </summary>
-    protected const string PYTHON_INCLUDE_MYSQLX = "import mysqlx";
-
-    #endregion Python specific
-
     #region Fields
 
     /// <summary>
-    /// The command to set the value of the session variable to assign the node session of the X Protocol.
+    /// Gets or sets the <see cref="MySqlXProxy"/> to execute commands using the X Protocol.
     /// </summary>
-    protected string SetSessionVar;
+    private MySqlXProxy _xProxy;
+
+    /// <summary>
+    /// Gets or sets the <see cref="MySqlShellClient"/> to execute commands using the X Protocol.
+    /// </summary>
+    private MySqlShellClient _xShellClient;
 
     #endregion Fields
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseTests"/> class.
+    /// </summary>
+    /// <param name="scriptLanguage">The language used for the tests.</param>
+    /// <param name="xecutor">The type of class that will run X Protocol statements.</param>
+    protected BaseTests(ScriptLanguageType scriptLanguage, XecutorType xecutor)
+    {
+      ScriptLanguage = scriptLanguage;
+      Xecutor = xecutor;
+    }
 
     #region Properties
 
@@ -259,6 +202,11 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     public MySqlConnection Connection { get; protected set; }
 
     /// <summary>
+    /// Gets the language used for the tests.
+    /// </summary>
+    public ScriptLanguageType ScriptLanguage { get; protected set; }
+
+    /// <summary>
     /// Gets the object that stores and accesses the current configuration for the test database.
     /// </summary>
     public SetUpXShell SetUp { get; protected set; }
@@ -269,9 +217,9 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     public string XConnString { get; protected set; }
 
     /// <summary>
-    /// Object to access and execute commands to the current database connection through the mysqlx protocol
+    /// Gets the type of class that will run X Protocol statements.
     /// </summary>
-    public MySqlXProxy XProxy { get; protected set; }
+    public XecutorType Xecutor { get; protected set; }
 
     #endregion Properties
 
@@ -319,6 +267,143 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     }
 
     /// <summary>
+    /// Frees resources on the specified <see cref="Xecutor"/>.
+    /// </summary>
+    protected void DisposeXecutor()
+    {
+      switch (Xecutor)
+      {
+        case XecutorType.XProxy:
+          DisposeXProxy();
+          break;
+
+        case XecutorType.XShell:
+          DisposeXShellClient();
+          break;
+      }
+    }
+
+    /// <summary>
+    /// Executes a query using the specified <see cref="Xecutor"/>.
+    /// </summary>
+    /// <param name="statement">A statement.</param>
+    /// <returns>An object with the result of the execution.</returns>
+    protected object ExecuteQuery(string statement)
+    {
+      switch(Xecutor)
+      {
+        case XecutorType.XProxy:
+          return _xProxy.ExecuteQuery(statement, ScriptLanguage);
+
+        case XecutorType.XShell:
+          switch (ScriptLanguage)
+          {
+            case ScriptLanguageType.JavaScript:
+              return _xShellClient.ExecuteToJavaScript(statement);
+
+            case ScriptLanguageType.Python:
+              return _xShellClient.Execute(statement);
+          }
+
+          break;
+      }
+
+      return null;
+    }
+
+    /// <summary>
+    /// Executes a query using the specified <see cref="Xecutor"/>.
+    /// </summary>
+    /// <param name="statement">A statement.</param>
+    /// <returns>A list of dictionaries with the result of the execution.</returns>
+    protected List<Dictionary<string, object>> ExecuteSingleStatement(string statement)
+    {
+      switch (Xecutor)
+      {
+        case XecutorType.XProxy:
+          return _xProxy.ExecuteSingleStatement(statement, ScriptLanguage);
+
+        case XecutorType.XShell:
+          object result = null;
+          switch (ScriptLanguage)
+          {
+            case ScriptLanguageType.JavaScript:
+              result = _xShellClient.ExecuteToJavaScript(statement);
+              break;
+
+            case ScriptLanguageType.Python:
+              result = _xShellClient.Execute(statement);
+              break;
+          }
+
+          string executionTime;
+          return result.ToDictionariesList(out executionTime);
+      }
+
+      return null;
+    }
+
+    /// <summary>
+    /// Initializes the specified <see cref="Xecutor"/>.
+    /// </summary>
+    protected void InitXecutor()
+    {
+      switch (Xecutor)
+      {
+        case XecutorType.XProxy:
+          InitXProxy();
+          break;
+
+        case XecutorType.XShell:
+          InitXShellClient();
+          break;
+      }
+    }
+
+    /// <summary>
+    /// Frees resources on the <see cref="_xProxy"/>.
+    /// </summary>
+    private void DisposeXProxy()
+    {
+      if (_xProxy != null)
+      {
+        _xProxy.CleanConnection();
+      }
+    }
+
+    /// <summary>
+    /// Frees resources on the <see cref="_xShellClient"/>.
+    /// </summary>
+    private void DisposeXShellClient()
+    {
+      if (_xShellClient != null)
+      {
+        _xShellClient.Dispose();
+      }
+    }
+
+    /// <summary>
+    /// Initializes the <see cref="MySqlXProxy"/> instance with common statements
+    /// </summary>
+    private void InitXProxy()
+    {
+      DisposeXProxy();
+      _xProxy = new MySqlXProxy(XConnString, true, ScriptLanguage);
+    }
+
+    /// <summary>
+    /// Initializes the <see cref="MySqlShellClient"/> instance with common statements.
+    /// </summary>
+    private void InitXShellClient()
+    {
+      DisposeXShellClient();
+      _xShellClient = new MySqlShellClient();
+      _xShellClient.MakeConnection(XConnString);
+      _xShellClient.SwitchMode(ScriptLanguage.ToMode());
+      _xShellClient.AppendAdditionalModulePaths(ScriptLanguage);
+    }
+
+    /// <summary>
     /// Open a MySqlConnection when it is not opened.
     /// </summary>
     protected virtual void OpenConnection()
@@ -328,21 +413,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
         Connection.Open();
       }
     }
-
-    /// <summary>
-    /// Initializes the <see cref="MySqlXProxy"/> instance with common statements
-    /// </summary>
-    protected virtual void InitXProxy(ScriptLanguageType scriptType)
-    {
-      XProxy = new MySqlXProxy(XConnString, true, scriptType);
-    }
-
-    protected virtual void DisposeProxy()
-    {
-      if (XProxy != null)
-      {
-        XProxy.CleanConnection();
-      }
-    }
   }
 }
+

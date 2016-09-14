@@ -128,11 +128,10 @@
   </Target>
   <ItemDefinitionGroup>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)XShellClient\XShell\share\mysqlsh\modules\*.*" "$(OutputPath)modules" /S /Y /I
-Copy /Y "$(SolutionDir)XShellClient\XShell\lib\*.dll" "$(OutputPath)" 
+      <Command>Copy /Y "$(SolutionDir)XShellClient\XShell\lib\*.dll" "$(OutputPath)" 
 Del "$(OutputPath)ShellClient.dll"
 	  </Command>
-      <Message>Copying XShell modules to output path. | Copying XShell dependencies to output path. |
+      <Message>Copying XShell dependencies to output path. |
  Remove unnecessary assemblies from the output path. </Message>
     </PostBuildEvent>
     <ClCompile>

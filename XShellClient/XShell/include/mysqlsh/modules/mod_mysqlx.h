@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,17 +17,33 @@
  * 02110-1301  USA
  */
 
-exports.mysql = {}
+// Interactive session access module for MySQL X sessions
+// Exposed as "session" in the shell
 
-// Connection functions
-exports.mysql.getClassicSession = function(connection_data, password)
+#ifndef _MOD_MYSQLX_H_
+#define _MOD_MYSQLX_H_
+
+#include "shellcore/module_registry.h"
+
+namespace mysh
 {
-  var session;
+  namespace mysqlx
+  {
+    DECLARE_MODULE(Mysqlx, mysqlx);
 
-  if (typeof(password) == 'undefined')
-    session = _F.mysql.ClassicSession(connection_data);
-  else
-    session = _F.mysql.ClassicSession(connection_data, password);
-  
-  return session;
+    DECLARE_FUNCTION(get_session);
+    DECLARE_FUNCTION(get_node_session);
+    DECLARE_FUNCTION(expr);
+    DECLARE_FUNCTION(date_value);
+
+    virtual shcore::Value get_member(const std::string &prop) const;
+
+  private:
+    shcore::Object_bridge_ref _type;
+    shcore::Object_bridge_ref _index_type;
+
+    END_DECLARE_MODULE();
+  }
 }
+
+#endif

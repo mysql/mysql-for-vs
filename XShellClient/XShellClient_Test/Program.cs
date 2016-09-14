@@ -19,12 +19,12 @@ namespace XShellClient_Test
 
     static void Main(string[] args)
     {
-      StringBuilder connString = new StringBuilder("root:guidev!@localhost:33570");
+      StringBuilder connString = new StringBuilder("root:0123@localhost:33570");
 
       // With SSL
-      connString.Append("?ssl_ca=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\ca.pem&");
-      connString.Append("ssl_cert=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\server-cert.pem&");
-      connString.Append("ssl_key=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\server-key.pem");
+      //connString.Append("?ssl_ca=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\ca.pem&");
+      //connString.Append("ssl_cert=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\server-cert.pem&");
+      //connString.Append("ssl_key=C:\\Oracle\\Servers\\mysql-5.7.12-winx64-commercial\\data\\server-key.pem");
 
       object result = string.Empty;
       string query = string.Empty;
@@ -44,49 +44,49 @@ namespace XShellClient_Test
       }
 
       Console.WriteLine(Resources.InstructionsMessages);
-      Console.WriteLine("");
+      Console.WriteLine(string.Empty);
 
-      try
+      while (query != "quit")
       {
-        while (query != "quit")
+        if (mode == Mode.JScript)
         {
-          if (mode == Mode.JScript)
-          {
-            Console.Write("mysql-js> ");
-          }
-          else
-          {
-            Console.Write("mysql-py> ");
-          }
+          Console.Write("mysql-js> ");
+        }
+        else
+        {
+          Console.Write("mysql-py> ");
+        }
 
-          using (var r = new StreamReader(Console.OpenStandardInput(2048)))
+        using (var r = new StreamReader(Console.OpenStandardInput(2048)))
+        {
+          query = r.ReadLine();
+          if (!string.IsNullOrEmpty(query) && query.ToLower() != "quit")
           {
-            query = r.ReadLine();
-
-            if (!string.IsNullOrEmpty(query) && query.ToLower() != "quit")
+            try
             {
               if (query == "\\py")
               {
                 mode = Mode.Python;
                 xShellClient.SwitchMode(mode);
+                continue;
               }
-              else if (query == "\\js")
+
+              if (query == "\\js")
               {
                 mode = Mode.JScript;
                 xShellClient.SwitchMode(mode);
+                continue;
               }
-              else
-              {
-                result = xShellClient.Execute(query);
-                PrintResult(result);
-              }
+
+              result = xShellClient.Execute(query);
+              PrintResult(result);
+            }
+            catch (Exception ex)
+            {
+              Console.WriteLine(ex.Message + Environment.NewLine);
             }
           }
         }
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine(ex.Message);
       }
     }
 

@@ -21,10 +21,7 @@
 #include "msclr\marshal.h"
 #include "msclr\marshal_cppstd.h"
 #include "managed_mysqlx_result.h"
-
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 using namespace MySqlX;
 using namespace System::Runtime::InteropServices;
@@ -40,13 +37,13 @@ Object^ wrap_value(const shcore::Value& val)
   case shcore::Object:
     class_name = val.as_object()->class_name();
     if (class_name == "Result")
-      o = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(val.as_object()));
+      o = gcnew Result(std::static_pointer_cast<mysh::mysqlx::Result>(val.as_object()));
     else if (class_name == "DocResult")
-      o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+		o = gcnew DocResult(std::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
     else if (class_name == "RowResult")
-      o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+      o = gcnew RowResult(std::static_pointer_cast<mysh::mysqlx::RowResult>(val.as_object()));
     else if (class_name == "SqlResult")
-      o = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(val.as_object()));
+      o = gcnew SqlResult(std::static_pointer_cast<mysh::mysqlx::SqlResult>(val.as_object()));
     else
       o = msclr::interop::marshal_as<String^>(val.descr());
     break;
@@ -73,6 +70,7 @@ Object^ wrap_value(const shcore::Value& val)
 
     o = document;
   }
+
   break;
   case shcore::Array:
   {
@@ -89,10 +87,11 @@ Object^ wrap_value(const shcore::Value& val)
   default:
     o = msclr::interop::marshal_as<String^>(val.descr());
   }
+
   return o;
 }
 
-BaseResult::BaseResult(boost::shared_ptr<mysh::mysqlx::BaseResult> result)
+BaseResult::BaseResult(std::shared_ptr<mysh::mysqlx::BaseResult> result)
 {
   _warningCount = gcnew UInt64(result->get_warning_count());
   _executionTime = msclr::interop::marshal_as<String^>(result->get_execution_time());
@@ -104,20 +103,20 @@ BaseResult::BaseResult(boost::shared_ptr<mysh::mysqlx::BaseResult> result)
 
   for (size_t index = 0; index < warnings->size(); index++)
   {
-    boost::shared_ptr<mysh::Row> row = boost::static_pointer_cast<mysh::Row>(warnings->at(index).as_object());
+    std::shared_ptr<mysh::Row> row = std::static_pointer_cast<mysh::Row>(warnings->at(index).as_object());
 
     Dictionary<String^, Object^>^ warning = gcnew Dictionary<String^, Object^>();
 
-    warning->Add(gcnew String("Level"), wrap_value(row->get_member("Level")));
-    warning->Add(gcnew String("Code"), wrap_value(row->get_member("Code")));
-    warning->Add(gcnew String("Message"), wrap_value(row->get_member("Message")));
+    warning->Add(gcnew String("Level"), wrap_value(row->get_member("level")));
+    warning->Add(gcnew String("Code"), wrap_value(row->get_member("code")));
+    warning->Add(gcnew String("Message"), wrap_value(row->get_member("message")));
 
     _warnings->Add(warning);
   }
 }
 
-Result::Result(boost::shared_ptr<mysh::mysqlx::Result> result) :
-  BaseResult(result)
+Result::Result(std::shared_ptr<mysh::mysqlx::Result> result)
+  : BaseResult(result)
 {
   _affectedItemCount = gcnew Int64(result->get_affected_item_count());
   _lastInsertId = gcnew Int64(result->get_auto_increment_value());
@@ -154,117 +153,117 @@ Result::Result(boost::shared_ptr<mysh::mysqlx::Result> result) :
   }
 }
 
-  DocResult::DocResult(boost::shared_ptr<mysh::mysqlx::DocResult> result) :
-    BaseResult(result)
+DocResult::DocResult(std::shared_ptr<mysh::mysqlx::DocResult> result)
+  : BaseResult(result)
+{
+  shcore::Argument_list args;
+  shcore::Value raw_doc;
+
+  _documents = gcnew List<Dictionary<String^, Object^>^>();
+  while (raw_doc = result->fetch_one(args))
   {
-    shcore::Argument_list args;
-    shcore::Value raw_doc;
+    Object^ obj = wrap_value(raw_doc);
+    Dictionary<String^, Object^>^ document = (Dictionary<String^, Object^>^)obj;
 
-    _documents = gcnew List<Dictionary<String^, Object^>^>();
-    while (raw_doc = result->fetch_one(args))
+    _documents->Add(document);
+  }
+}
+
+Dictionary<String^, Object^>^ DocResult::FetchOne()
+{
+  Dictionary<String^, Object^>^ ret_val;
+
+  if (_index < _documents->Count)
+    ret_val = _documents[_index++];
+
+  return ret_val;
+}
+
+List<Dictionary<String^, Object^>^>^ DocResult::FetchAll()
+{
+  return _documents;
+}
+
+RowResult::RowResult(std::shared_ptr<mysh::mysqlx::RowResult> result)
+  : BaseResult(result)
+{
+  _columnCount = gcnew Int64(result->get_column_count());
+
+  shcore::Value::Array_type_ref columns = result->get_columns();
+
+  _columns = gcnew List<Column^>();
+  _columnNames = gcnew List<String^>();
+
+  for (size_t index = 0; index < columns->size(); index++)
+  {
+    std::shared_ptr<mysh::Column> column = std::static_pointer_cast<mysh::Column>(columns->at(index).as_object());
+
+    _columnNames->Add(msclr::interop::marshal_as<String^>(column->get_column_label()));
+
+    _columns->Add(gcnew Column(msclr::interop::marshal_as<String^>(column->get_schema_name()),
+      msclr::interop::marshal_as<String^>(column->get_table_label()),
+      msclr::interop::marshal_as<String^>(column->get_table_name()),
+      msclr::interop::marshal_as<String^>(column->get_column_label()),
+      msclr::interop::marshal_as<String^>(column->get_column_name()),
+      gcnew UInt64(column->get_length()),
+      msclr::interop::marshal_as<String^>(column->get_type().descr()),
+      gcnew UInt64(column->get_fractional_digits()),
+      gcnew Boolean(column->is_number_signed()),
+      msclr::interop::marshal_as<String^>(column->get_collation_name()),
+      msclr::interop::marshal_as<String^>(column->get_character_set_name()),
+      gcnew Boolean(column->is_padded())));
+  }
+
+  _records = gcnew List<array<Object^>^>();
+
+  shcore::Value raw_record;
+  shcore::Argument_list args;
+  while (raw_record = result->fetch_one(args))
+  {
+    std::shared_ptr<mysh::Row> row = std::static_pointer_cast<mysh::Row>(raw_record.as_object());
+
+    if (row)
     {
-      Object^ obj = wrap_value(raw_doc);
-      Dictionary<String^, Object^>^ document = (Dictionary<String^, Object^>^)obj;
+      array<Object^>^ fields;
 
-      _documents->Add(document);
+      size_t length = row->get_length();
+
+      fields = gcnew array<Object^>(length);
+
+      for (size_t index = 0; index < length; index++)
+        fields->SetValue(wrap_value(row->get_member(index)), int(index));
+
+      _records->Add(fields);
     }
   }
+}
 
-  Dictionary<String^, Object^>^ DocResult::FetchOne()
-  {
-    Dictionary<String^, Object^>^ ret_val;
+array<Object^>^ RowResult::FetchOne()
+{
+  array<Object^>^ ret_val;
 
-    if (_index < _documents->Count)
-      ret_val = _documents[_index++];
+  if (_index < _records->Count)
+    ret_val = _records[_index++];
 
-    return ret_val;
-  }
+  return ret_val;
+}
 
-  List<Dictionary<String^, Object^>^>^ DocResult::FetchAll()
-  {
-    return _documents;
-  }
+List<array<Object^>^>^ RowResult::FetchAll()
+{
+  return _records;
+}
 
-  RowResult::RowResult(boost::shared_ptr<mysh::mysqlx::RowResult> result) :
-    BaseResult(result)
-  {
-    _columnCount = gcnew Int64(result->get_column_count());
+SqlResult::SqlResult(std::shared_ptr<mysh::mysqlx::SqlResult> result) :
+  RowResult(result)
+{
+  _affectedRowCount = gcnew Int64(result->get_affected_row_count());
+  _lastInsertId = gcnew Int64(result->get_auto_increment_value());
+  _hasData = gcnew Boolean(result->has_data(shcore::Argument_list()));
+}
 
-    shcore::Value::Array_type_ref columns = result->get_columns();
-
-    _columns = gcnew List<Column^>();
-    _columnNames = gcnew List<String^>();
-
-    for (size_t index = 0; index < columns->size(); index++)
-    {
-      boost::shared_ptr<mysh::Column> column = boost::static_pointer_cast<mysh::Column>(columns->at(index).as_object());
-
-      _columnNames->Add(msclr::interop::marshal_as<String^>(column->get_column_label()));
-
-      _columns->Add(gcnew Column(msclr::interop::marshal_as<String^>(column->get_schema_name()),
-        msclr::interop::marshal_as<String^>(column->get_table_label()),
-        msclr::interop::marshal_as<String^>(column->get_table_name()),
-        msclr::interop::marshal_as<String^>(column->get_column_label()),
-        msclr::interop::marshal_as<String^>(column->get_column_name()),
-        gcnew UInt64(column->get_length()),
-        msclr::interop::marshal_as<String^>(column->get_type().descr()),
-        gcnew UInt64(column->get_fractional_digits()),
-        gcnew Boolean(column->is_number_signed()),
-        msclr::interop::marshal_as<String^>(column->get_collation_name()),
-        msclr::interop::marshal_as<String^>(column->get_character_set_name()),
-        gcnew Boolean(column->is_padded())));
-    }
-
-    _records = gcnew List<array<Object^>^>();
-
-    shcore::Value raw_record;
-    shcore::Argument_list args;
-    while (raw_record = result->fetch_one(args))
-    {
-      boost::shared_ptr<mysh::Row> row = boost::static_pointer_cast<mysh::Row>(raw_record.as_object());
-
-      if (row)
-      {
-        array<Object^>^ fields;
-
-        size_t length = row->get_length();
-
-        fields = gcnew array<Object^>(length);
-
-        for (size_t index = 0; index < length; index++)
-          fields->SetValue(wrap_value(row->get_member(index)), int(index));
-
-        _records->Add(fields);
-      }
-    }
-  }
-
-  array<Object^>^ RowResult::FetchOne()
-  {
-    array<Object^>^ ret_val;
-
-    if (_index < _records->Count)
-      ret_val = _records[_index++];
-
-    return ret_val;
-  }
-
-  List<array<Object^>^>^ RowResult::FetchAll()
-  {
-    return _records;
-  }
-
-  SqlResult::SqlResult(boost::shared_ptr<mysh::mysqlx::SqlResult> result) :
-    RowResult(result)
-  {
-    _affectedRowCount = gcnew Int64(result->get_affected_row_count());
-    _lastInsertId = gcnew Int64(result->get_auto_increment_value());
-    _hasData = gcnew Boolean(result->has_data(shcore::Argument_list()));
-  }
-
-  //Boolean^ SqlResult::NextDataSet()
-  //{
-  //  boost::shared_ptr<mysh::mysqlx::SqlResult> result = boost::static_pointer_cast<mysh::mysqlx::SqlResult>(_inner);
-  //
-  //  return gcnew Boolean(result->next_data_set());
-  //}
+//Boolean^ SqlResult::NextDataSet()
+//{
+//  std::shared_ptr<mysh::mysqlx::SqlResult> result = std::static_pointer_cast<mysh::mysqlx::SqlResult>(_inner);
+//
+//  return gcnew Boolean(result->next_data_set());
+//}

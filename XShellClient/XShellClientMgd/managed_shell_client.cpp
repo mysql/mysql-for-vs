@@ -18,14 +18,9 @@
 */
 
 #include "stdafx.h"
-
 #include "msclr\marshal.h"
 #include "msclr\marshal_cppstd.h"
-
 #include <string>
-
-#include <boost/shared_ptr.hpp>
-
 #include "shellcore/ishell_core.h"
 #include "managed_shell_client.h"
 #include "managed_mysqlx_result.h"
@@ -104,27 +99,24 @@ Object^ ShellClient::Execute(String^ query)
   if (n_result.type == shcore::Object)
   {
     std::string class_name = n_result.as_object()->class_name();
-    String^ className;
-    className = msclr::interop::marshal_as<String^>(class_name);
     if (class_name == "Result")
-      ret_val = gcnew Result(boost::static_pointer_cast<mysh::mysqlx::Result>(n_result.as_object()));
+      ret_val = gcnew Result(std::static_pointer_cast<mysh::mysqlx::Result>(n_result.as_object()));
     else if (class_name == "DocResult")
-      ret_val = gcnew DocResult(boost::static_pointer_cast<mysh::mysqlx::DocResult>(n_result.as_object()));
+      ret_val = gcnew DocResult(std::static_pointer_cast<mysh::mysqlx::DocResult>(n_result.as_object()));
     else if (class_name == "RowResult")
-      ret_val = gcnew RowResult(boost::static_pointer_cast<mysh::mysqlx::RowResult>(n_result.as_object()));
+      ret_val = gcnew RowResult(std::static_pointer_cast<mysh::mysqlx::RowResult>(n_result.as_object()));
     else if (class_name == "SqlResult")
-      ret_val = gcnew SqlResult(boost::static_pointer_cast<mysh::mysqlx::SqlResult>(n_result.as_object()));
+      ret_val = gcnew SqlResult(std::static_pointer_cast<mysh::mysqlx::SqlResult>(n_result.as_object()));
     else
       ret_val = msclr::interop::marshal_as<String^>(n_result.descr(true));
   }
   else
   {
-    String^ result;
-    result = msclr::interop::marshal_as<String^>(n_result.descr(true));
+    String^ result = msclr::interop::marshal_as<String^>(n_result.descr(true));
     // Some queries, like var initialization, are returning "undefined" or "null".
     if (String::Compare(result, "undefined", true) == 0 || String::Compare(result, "null", true) == 0)
     {
-      return "";
+      result = "";
     }
 
     ret_val = result;

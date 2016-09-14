@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -48,8 +48,8 @@ namespace shcore
   class SHCORE_PUBLIC Cpp_function : public Function_base
   {
   public:
-    //TODO make this work with direct function pointers and skip boost::function
-    typedef boost::function<Value(const shcore::Argument_list &)> Function;
+    //TODO make this work with direct function pointers and skip std::function
+    typedef std::function<Value(const shcore::Argument_list &)> Function;
 
     virtual ~Cpp_function() {}
 
@@ -64,13 +64,16 @@ namespace shcore
 
     virtual Value invoke(const Argument_list &args);
 
-    static boost::shared_ptr<Function_base> create(const std::string &name, const Function &func, const char *arg1_name, Value_type arg1_type = Undefined, ...);
+    virtual bool has_var_args() { return _var_args; }
 
-    static boost::shared_ptr<Function_base> create(const std::string &name, const Function &func, const std::vector<std::pair<std::string, Value_type> > &signature);
+    static std::shared_ptr<Function_base> create(const std::string &name, const Function &func, const char *arg1_name, Value_type arg1_type = Undefined, ...);
+
+    static std::shared_ptr<Function_base> create(const std::string &name, const Function &func, const std::vector<std::pair<std::string, Value_type> > &signature);
 
   protected:
     friend class Cpp_object_bridge;
 
+    Cpp_function(const std::string &name, const Function &func, bool var_args);
     Cpp_function(const std::string &name, const Function &func, const char *arg1_name, Value_type arg1_type = Undefined, ...);
     Cpp_function(const std::string &name, const Function &func, const std::vector<std::pair<std::string, Value_type> > &signature);
 
@@ -80,6 +83,7 @@ namespace shcore
 
     std::vector<std::pair<std::string, Value_type> > _signature;
     Value_type _return_type;
+    bool _var_args;
   };
 
   class SHCORE_PUBLIC Cpp_object_bridge : public Object_bridge
@@ -132,11 +136,12 @@ namespace shcore
 
     virtual std::string &append_descr(std::string &s_out, int indent = -1, int quote_strings = 0) const;
     virtual std::string &append_repr(std::string &s_out) const;
-    boost::shared_ptr<ScopedStyle> set_scoped_naming_style(const NamingStyle& style);
+    std::shared_ptr<ScopedStyle> set_scoped_naming_style(const NamingStyle& style);
 
   protected:
     virtual void add_method(const std::string &name, Cpp_function::Function func,
                     const char *arg1_name, Value_type arg1_type = Undefined, ...);
+    virtual void add_varargs_method(const std::string &name, Cpp_function::Function func);
 
     // Constants and properties are not handled through the Cpp_property_name class
     // which supports different naming styles
@@ -148,9 +153,9 @@ namespace shcore
     // Used mostly for errors in function validations
     std::string get_function_name(const std::string& member) const;
 
-    typedef std::pair< std::string, boost::shared_ptr<Cpp_function> > FunctionEntry;
-    std::map<std::string, boost::shared_ptr<Cpp_function> > _funcs;
-    std::vector<boost::shared_ptr<Cpp_property_name> > _properties;
+    typedef std::pair< std::string, std::shared_ptr<Cpp_function> > FunctionEntry;
+    std::map<std::string, std::shared_ptr<Cpp_function> > _funcs;
+    std::vector<std::shared_ptr<Cpp_property_name> > _properties;
 
     // The global active naming style
     NamingStyle naming_style;

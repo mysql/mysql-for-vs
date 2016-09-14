@@ -156,7 +156,15 @@
     <Compile Include="MySqlX\Base\BaseCollectionTests.cs" />
     <Compile Include="MySqlX\Base\BaseTableTests.cs" />
     <Compile Include="MySqlX\Base\BaseTests.cs" />
-    <Compile Include="MySqlX\Base\MyTestXProxy.cs" />
+    <Compile Include="MySqlX\Base\CollectionTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\CollectionTestsPropertiesFactory.cs" />
+    <Compile Include="MySqlX\Base\JsCollectionTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\JsTableTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\PyCollectionTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\PyTableTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\TableTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\TableTestsPropertiesFactory.cs" />
+    <Compile Include="MySqlX\Base\XecutorType.cs" />
     <Compile Include="MySqlX\JsCollectionXShellTests.cs" />
     <Compile Include="DbExportTests.cs" />
     <Compile Include="DependenciesTests.cs" />

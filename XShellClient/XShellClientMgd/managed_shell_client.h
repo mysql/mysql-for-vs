@@ -19,10 +19,9 @@
 
 #include "msclr\marshal_cppstd.h"
 #include <vcclr.h>
+#include "shell_client.h"
 
 #using <mscorlib.dll>
-
-#include "shell_client.h"
 
 using namespace System;
 using namespace System::Collections::Generic;

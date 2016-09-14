@@ -20,9 +20,15 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
+using System.Linq;
+using MySql.Data.MySqlClient;
+using MySql.Utility.Enums;
+using Xunit;
+
 namespace MySql.VisualStudio.Tests.MySqlX.Base
 {
-  public class BaseTableTests : BaseTests
+  public abstract class BaseTableTests : BaseTests
   {
     #region Constant Values
 
@@ -44,7 +50,7 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// The male characters count.
     /// </summary>
-    protected const int CHARACTERS_MALE_COUNT = + 20;
+    protected const int CHARACTERS_MALE_COUNT = 20;
 
     /// <summary>
     /// The number of non-base characters with an age > 30.
@@ -62,6 +68,36 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const int CHARACTERS_SECOND_HIGHEST_AGE = 850;
 
     /// <summary>
+    /// The name of one of the views in schema x_test.
+    /// </summary>
+    protected const string HALO_CHARACTERS_VIEW_NAME = "halo_characters";
+
+    /// <summary>
+    /// The total count in one of the views in schema x_test.
+    /// </summary>
+    protected const int HALO_CHARACTERS_VIEW_ROWS_COUNT = 17;
+
+    /// <summary>
+    /// The name of one of the views in schema x_test.
+    /// </summary>
+    protected const string MASS_EFFECT_CHARACTERS_VIEW_NAME = "mass_effect_characters";
+
+    /// <summary>
+    /// The total count in one of the views in schema x_test.
+    /// </summary>
+    protected const int MASS_EFFECT_CHARACTERS_VIEW_ROWS_COUNT = 10;
+
+    /// <summary>
+    /// The name of one of the views in schema x_test.
+    /// </summary>
+    protected const string SPARTAN_CHARACTERS_VIEW_NAME = "spartan_characters";
+
+    /// <summary>
+    /// The total count in one of the views in schema x_test.
+    /// </summary>
+    protected const int SPARTAN_CHARACTERS_VIEW_ROWS_COUNT = 9;
+
+    /// <summary>
     /// Tali's name on Mass Effect.
     /// </summary>
     protected const string TALI_MASS_EFFECT = "Tali'Zorah nar Rayya";
@@ -76,42 +112,24 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// </summary>
     protected const int TEST_COUNT = 5;
 
+    /// <summary>
+    /// Table test name
+    /// </summary>
+    public const string TEST_TABLE_NAME = "test_table";
+
+    /// <summary>
+    /// The number of tables in schema x_test.
+    /// </summary>
+    protected const int XTEST_TABLES_COUNT = 4;
+
     #endregion Constant Values
-
-    #region JavaScript specific
-
-    /// <summary>
-    /// Statement to insert JSON documents into a table.
-    /// </summary>
-    protected const string JAVASCRIPT_INSERT_JSON_DOCUMENT1 = "table.insert({ age: 28, gender: 'female', name: 'Ashley Williams', universe: 'Mass Effect' }).execute();";
-
-    /// <summary>
-    /// Statement to insert JSON documents into a table.
-    /// </summary>
-    protected const string JAVASCRIPT_INSERT_JSON_DOCUMENT2 = "table.insert({ age: 850, gender: 'female', name: 'Samara', universe: 'Mass Effect 2' }).execute();";
-
-    #endregion JavaScript specific
-
-    #region Python specific
-
-    /// <summary>
-    /// Statement to insert JSON documents into a table.
-    /// </summary>
-    protected const string PYTHON_INSERT_JSON_DOCUMENT1 = "table.insert({ 'age': 28, 'gender': 'female', 'name': 'Ashley Williams', 'universe': 'Mass Effect' }).execute()";
-
-    /// <summary>
-    /// Statement to insert JSON documents into a table.
-    /// </summary>
-    protected const string PYTHON_INSERT_JSON_DOCUMENT2 = "table.insert({ 'age': 850, 'gender': 'female', 'name': 'Samara', 'universe': 'Mass Effect 2' }).execute()";
-
-    #endregion Python specific
 
     #region Common SQL Queries
 
     /// <summary>
     /// Statement to create a database
     /// </summary>
-    protected const string CREATE_DATABASE = "session.sql('CREATE SCHEMA `{0}`;').execute()";
+    public const string CREATE_DATABASE = "session.sql('CREATE SCHEMA `{0}`;').execute()";
 
     /// <summary>
     /// Statement to create the test table
@@ -121,12 +139,12 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// <summary>
     /// Statement to drop a table if it already exists.
     /// </summary>
-    protected const string DROP_TABLE_IF_EXISTS = "session.sql('DROP TABLE IF EXISTS `{0}`;').execute()";
+    public const string DROP_TABLE_IF_EXISTS = "session.sql('DROP TABLE IF EXISTS `{0}`;').execute()";
 
     /// <summary>
     /// Statement to use a database.
     /// </summary>
-    protected const string USE_DATABASE = "session.sql('USE `{0}`;').execute()";
+    public const string USE_DATABASE = "session.sql('USE `{0}`;').execute()";
 
     #endregion Common SQL Queries
 
@@ -141,11 +159,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Statement to delete a record using parameter binding.
     /// </summary>
     protected const string DELETE_SIMPLE_WITH_BINDING = "table.delete().where('name like :param1').bind('param1', 'Tali%').execute()";
-
-    /// <summary>
-    /// Statement to delete a record using parameter binding.
-    /// </summary>
-    protected const string DELETE_WITH_LIMIT = "table.delete().where('age > :param1 and not base').orderBy(['age']).limit(2).bind('param1', 30).execute()";
 
     /// <summary>
     /// Statement to insert a couple of recors specifying the columns as an array.
@@ -203,21 +216,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     protected const string INSERT_TEST_ROW5 = "table.insert().values('Donna', 16, 'female').execute()";
 
     /// <summary>
-    /// Gets the test schema and assigns it to a variable for persistence.
-    /// </summary>
-    protected const string GET_SCHEMA = "schema = session.getSchema('{0}')";
-
-    /// <summary>
-    /// Get a specific table and assign it to a variable for persistence. 
-    /// </summary>
-    protected const string GET_TABLE = "table = session.getSchema('{0}').getTable('{1}')";
-
-    /// <summary>
-    /// Get a specific table and assign it to a variable for persistence. 
-    /// </summary>
-    protected const string GET_TABLE_IN_SCHEMA = "table = schema.getTable('{0}')";
-
-    /// <summary>
     /// Statement to delete the added persons and revert the table back to how it was.
     /// </summary>
     protected const string REVERT_INSERTED_CHARACTERS = "table.delete().where('base = FALSE').execute()";
@@ -236,11 +234,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     /// Statement to get specific fields from all records.
     /// </summary>
     protected const string SELECT_WITH_FIELD_SELECTION = "table.select(['name', 'age']).execute()";
-
-    /// <summary>
-    /// Statement to get all records ordered by a criteria.
-    /// </summary>
-    protected const string SELECT_WITH_ORDER_BY_DESC = "table.select().orderBy(['age DESC']).execute()";
 
     /// <summary>
     /// Statement to select all records with a value of videogames in the from column.
@@ -319,61 +312,543 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
 
     #endregion Common Table Queries
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseTableTests"/> class.
+    /// </summary>
+    /// <param name="scriptLanguage">The language used for the tests.</param>
+    /// <param name="xecutor">The type of class that will run X Protocol statements.</param>
+    protected BaseTableTests(ScriptLanguageType scriptLanguage, XecutorType xecutor)
+      : base (scriptLanguage, xecutor)
+    {
+      TableTestProps = TableTestsPropertiesFactory.GetTableTestsProperties(scriptLanguage);
+    }
+
     #region Properties
 
     /// <summary>
-    /// Statement to create the test database.
+    /// Gets properties used for a specific language.
     /// </summary>
-    public string CreateTestDatabase { get; private set; }
-
-    /// <summary>
-    /// Statement to drop the test database.
-    /// </summary>
-    public string DropTestDatabaseIfExists { get; private set; }
-
-    /// <summary>
-    /// Statement to drop the test table if it already exists.
-    /// </summary>
-    public string DropTestTableIfExists { get; private set; }
-
-    /// <summary>
-    /// Statement to get the database_test schema.
-    /// </summary>
-    public string GetDatabaseTest { get; private set; }
-
-    /// <summary>
-    /// Statement to get the table_test collection from the database_test schema.
-    /// </summary>
-    public string GetDatabaseTestTableTest { get; private set; }
-
-    /// <summary>
-    /// Statement to get the character collection from the SakilaX schema.
-    /// </summary>
-    public string GetTableSakilaXCharacter { get; private set; }
-
-    /// <summary>
-    /// Statement to use the SakilaX database.
-    /// </summary>
-    public string UseSakilaXDatabase { get; private set; }
-
-    /// <summary>
-    /// Statement to use the test database.
-    /// </summary>
-    public string UseTestDatabase { get; private set; }
+    public TableTestsProperties TableTestProps { get; protected set; }
 
     #endregion Properties
 
-    public BaseTableTests()
+    /// <summary>
+    /// Test to create a database.
+    /// </summary>
+    [Fact]
+    public virtual void CreateDatabase()
     {
-      CreateTestDatabase = string.Format(CREATE_DATABASE, TEMP_TEST_DATABASE_NAME);
-      DropTestDatabaseIfExists = string.Format(DROP_DATABASE_IF_EXISTS, TEMP_TEST_DATABASE_NAME);
-      DropTestTableIfExists = string.Format(DROP_TABLE_IF_EXISTS, TEST_TABLE_NAME);
-      GetDatabaseTest = string.Format(GET_SCHEMA, TEMP_TEST_DATABASE_NAME);
-      GetDatabaseTestTableTest = string.Format(GET_TABLE_IN_SCHEMA, TEST_TABLE_NAME);
-      GetTableSakilaXCharacter = string.Format(GET_TABLE, X_TEST_SCHEMA_NAME, CHARACTERS_COLLECTION_NAME);
-      UseSakilaXDatabase = string.Format(USE_DATABASE, X_TEST_SCHEMA_NAME);
-      UseTestDatabase = string.Format(USE_DATABASE, TEMP_TEST_DATABASE_NAME);
+      OpenConnection();
+      MySqlDataReader reader = null;
+
+      try
+      {
+        InitXecutor();
+
+        ExecuteQuery(TableTestProps.DropTestDatabaseIfExists);
+        ExecuteQuery(TableTestProps.CreateTestDatabase);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
+        reader = Command.ExecuteReader();
+        bool success = false;
+
+        while (reader.Read())
+        {
+          var retDb = reader.GetString(0);
+          if (retDb != TEMP_TEST_DATABASE_NAME)
+            continue;
+          success = true;
+          reader.Close();
+          break;
+        }
+
+        Assert.True(success, string.Format(DB_NOT_FOUND, TEMP_TEST_DATABASE_NAME));
+
+        ExecuteQuery(TableTestProps.DropTestDatabaseIfExists);
+        Command = new MySqlCommand(SHOW_DBS_SQL_SYNTAX, Connection);
+        reader = Command.ExecuteReader();
+        while (reader.Read())
+        {
+          var retSchema = reader.GetString(0);
+          if (retSchema != TEMP_TEST_DATABASE_NAME)
+            continue;
+          success = false;
+          reader.Close();
+          break;
+        }
+
+        Assert.True(success, string.Format(DB_NOT_DELETED, TEMP_TEST_DATABASE_NAME));
+      }
+      finally
+      {
+        if (reader != null)
+        {
+          if (!reader.IsClosed)
+          {
+            reader.Close();
+          }
+
+          reader.Dispose();
+        }
+
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+        DisposeXecutor();
+      }
     }
 
+    /// <summary>
+    /// Test to create a table.
+    /// </summary>
+    [Fact]
+    public virtual void CreateTable()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXecutor();
+
+        ExecuteQuery(TableTestProps.DropTestDatabaseIfExists);
+        ExecuteQuery(TableTestProps.CreateTestDatabase);
+        ExecuteQuery(TableTestProps.UseTestDatabase);
+
+        ExecuteQuery(CREATE_TEST_TABLE);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
+
+        ExecuteQuery(TableTestProps.DropTestTableIfExists);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+        DisposeXecutor();
+      }
+    }
+
+    /// <summary>
+    /// Test to delete records in a table.
+    /// </summary>
+    [Fact]
+    public virtual void Delete()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXecutor();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTER_TABLE_NAME, X_TEST_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTER_TABLE_NAME));
+
+        // Create test table
+        ExecuteQuery(TableTestProps.DropTestDatabaseIfExists);
+        ExecuteQuery(TableTestProps.CreateTestDatabase);
+        ExecuteQuery(TableTestProps.UseTestDatabase);
+        ExecuteQuery(CREATE_TEST_TABLE);
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, TEST_TABLE_NAME, TEMP_TEST_DATABASE_NAME), Connection);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, TEST_TABLE_NAME));
+
+        // Insert test table data for delete all
+        ExecuteQuery(TableTestProps.GetDatabaseTest);
+        ExecuteQuery(TableTestProps.GetDatabaseTestTableTest);
+        ExecuteQuery(INSERT_TEST_ROW1);
+        ExecuteQuery(INSERT_TEST_ROW2);
+        ExecuteQuery(INSERT_TEST_ROW3);
+        ExecuteQuery(INSERT_TEST_ROW4);
+        ExecuteQuery(INSERT_TEST_ROW5);
+        var selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null && selectResult.Count == TEST_COUNT, DATA_NOT_MATCH);
+
+        // Delete full
+        ExecuteQuery(DELETE_FULL);
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
+
+        // Insert test character rows
+        ExecuteQuery(TableTestProps.UseXTestDatabase);
+        ExecuteQuery(TableTestProps.GetTableXTestCharacter);
+        ExecuteQuery(INSERT_NO_COLUMN_SPECIFICATION);
+        ExecuteQuery(INSERT_COLUMNS_AS_LIST);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY1);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY2);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY3);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY4);
+        ExecuteQuery(TableTestProps.InsertJsonDocument1);
+        ExecuteQuery(TableTestProps.InsertJsonDocument2);
+        charactersCount += 8;
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Delete simple, using parameter binding
+        ExecuteQuery(DELETE_SIMPLE_WITH_BINDING);
+        selectResult = ExecuteSingleStatement(SELECT_UPDATED_TALI);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == 0, DATA_NOT_MATCH);
+
+        // Delete with limit
+        ExecuteQuery(TableTestProps.DeleteWithLimit);
+        selectResult = ExecuteSingleStatement(SELECT_NON_BASE_AGE_GREATER_THAN_30);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 2, DATA_NOT_MATCH);
+
+        // Delete with limit again
+        ExecuteQuery(TableTestProps.DeleteWithLimit);
+        selectResult = ExecuteSingleStatement(SELECT_NON_BASE_AGE_GREATER_THAN_30);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_NON_BASE_AGE_GREATER_THAN_30_COUNT - 4, DATA_NOT_MATCH);
+
+        // Delete inserted test rows
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+
+        // Drop test table
+        ExecuteQuery(TableTestProps.UseTestDatabase);
+        ExecuteQuery(TableTestProps.DropTestTableIfExists);
+        result = Command.ExecuteScalar();
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count == 0, string.Format(TABLE_NOT_DELETED, TEST_TABLE_NAME));
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        CloseConnection();
+        DisposeXecutor();
+      }
+    }
+
+    /// <summary>
+    /// Test to insert records into a table.
+    /// </summary>
+    [Fact]
+    public virtual void Insert()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXecutor();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTER_TABLE_NAME, X_TEST_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTER_TABLE_NAME));
+
+        // Insert without specifying any columns
+        ExecuteQuery(TableTestProps.GetTableXTestCharacter);
+        ExecuteQuery(INSERT_NO_COLUMN_SPECIFICATION);
+        charactersCount += 2;
+        var selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Insert specifying a comma delimited list of columns
+        ExecuteQuery(INSERT_COLUMNS_AS_LIST);
+        charactersCount += 2;
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Insert specifying columns as an array, also in different lines
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY1);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY2);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY3);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY4);
+        charactersCount += 2;
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Insert JSON documents
+        ExecuteQuery(TableTestProps.InsertJsonDocument1);
+        ExecuteQuery(TableTestProps.InsertJsonDocument2);
+        charactersCount += 2;
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Delete inserted rows
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        CloseConnection();
+        DisposeXecutor();
+      }
+    }
+
+    /// <summary>
+    /// Test to select records in a table.
+    /// </summary>
+    [Fact]
+    public virtual void Select()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXecutor();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTER_TABLE_NAME, X_TEST_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTER_TABLE_NAME));
+
+        // Insert test character rows
+        ExecuteQuery(TableTestProps.GetTableXTestCharacter);
+        ExecuteQuery(INSERT_NO_COLUMN_SPECIFICATION);
+        ExecuteQuery(INSERT_COLUMNS_AS_LIST);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY1);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY2);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY3);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY4);
+        ExecuteQuery(TableTestProps.InsertJsonDocument1);
+        ExecuteQuery(TableTestProps.InsertJsonDocument2);
+        charactersCount += 8;
+
+        // Select all
+        var selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Select female
+        selectResult = ExecuteSingleStatement(SELECT_FEMALE_CHARACTERS);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FEMALE_COUNT, DATA_NOT_MATCH);
+
+        // Select male
+        selectResult = ExecuteSingleStatement(SELECT_MALE_CHARACTERS);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_MALE_COUNT, DATA_NOT_MATCH);
+
+        // Select with field selection
+        selectResult = ExecuteSingleStatement(SELECT_WITH_FIELD_SELECTION);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+        Assert.True(selectResult != null && selectResult.Count > 0 && selectResult[0].Count == 2, DATA_NOT_MATCH);
+
+        // Select with order by descending
+        selectResult = ExecuteSingleStatement(TableTestProps.SelectWithOrderByDesc);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        var singleResult = selectResult.FirstOrDefault();
+        int fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
+        Assert.True(fetchedAge == CHARACTERS_HIGHEST_AGE, DATA_NOT_MATCH);
+        singleResult = selectResult.ElementAtOrDefault(1);
+        fetchedAge = singleResult != null ? Convert.ToInt32(singleResult["age"]) : 0;
+        Assert.True(fetchedAge == CHARACTERS_SECOND_HIGHEST_AGE, DATA_NOT_MATCH);
+
+        // Select by paging (limit + offset)
+        selectResult = ExecuteSingleStatement(SELECT_PAGING1);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
+        selectResult = ExecuteSingleStatement(SELECT_PAGING2);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount - CHARACTERS_PAGE_SIZE, DATA_NOT_MATCH);
+
+        // Delete inserted test rows
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        CloseConnection();
+        DisposeXecutor();
+      }
+    }
+
+    /// <summary>
+    /// Test to update records in a table.
+    /// </summary>
+    [Fact]
+    public virtual void Update()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXecutor();
+
+        Command = new MySqlCommand(string.Format(SEARCH_TABLE_SQL_SYNTAX, CHARACTER_TABLE_NAME, X_TEST_SCHEMA_NAME), Connection);
+        var result = Command.ExecuteScalar();
+        int count;
+        int charactersCount = CHARACTERS_FULL_COUNT;
+        int.TryParse(result.ToString(), out count);
+        Assert.True(count > 0, string.Format(TABLE_NOT_FOUND, CHARACTER_TABLE_NAME));
+
+        // Insert test rows
+        ExecuteQuery(TableTestProps.GetTableXTestCharacter);
+        ExecuteQuery(INSERT_NO_COLUMN_SPECIFICATION);
+        ExecuteQuery(INSERT_COLUMNS_AS_LIST);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY1);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY2);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY3);
+        ExecuteQuery(INSERT_COLUMNS_AS_ARRAY4);
+        ExecuteQuery(TableTestProps.InsertJsonDocument1);
+        ExecuteQuery(TableTestProps.InsertJsonDocument2);
+        charactersCount += 8;
+        var selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Update simple, 1 record 1 value, using parameter binding
+        ExecuteQuery(UPDATE_SIMPLE);
+        selectResult = ExecuteSingleStatement(SELECT_UPDATED_TALI);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        var singleResult = selectResult.FirstOrDefault();
+        Assert.True(singleResult != null && singleResult["universe"].ToString().Equals("Mass Effect 3", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Update a singe value with statements in different lines, using parameter binding
+        ExecuteQuery(UPDATE_IN_SEVERAL_LINES1);
+        ExecuteQuery(UPDATE_IN_SEVERAL_LINES2);
+        ExecuteQuery(UPDATE_IN_SEVERAL_LINES3);
+        ExecuteQuery(UPDATE_IN_SEVERAL_LINES4);
+        selectResult = ExecuteSingleStatement(SELECT_UPDATED_TALI);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        singleResult = selectResult.FirstOrDefault();
+        Assert.True(singleResult != null && singleResult["name"].ToString().Equals(TALI_MASS_EFFECT_3, StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Update using an expression
+        ExecuteQuery(TableTestProps.IncludeMysqlx);
+        ExecuteQuery(UPDATE_WITH_EXPRESSION);
+        selectResult = ExecuteSingleStatement(SELECT_UPDATED_TALI);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        singleResult = selectResult.FirstOrDefault();
+        Assert.True(singleResult != null && singleResult["age"].ToString().Equals("25", StringComparison.InvariantCultureIgnoreCase), DATA_NOT_MATCH);
+
+        // Update with limit
+        ExecuteQuery(UPDATE_WITH_LIMIT);
+        selectResult = ExecuteSingleStatement(SELECT_UPDATED_OLD);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == 2, DATA_NOT_MATCH);
+
+        // Update with limit
+        ExecuteQuery(UPDATE_FULL);
+        selectResult = ExecuteSingleStatement(SELECT_FROM_VIDEOGAMES);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == charactersCount, DATA_NOT_MATCH);
+
+        // Delete inserted test rows
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        selectResult = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(selectResult != null, string.Format(NULL_OBJECT, "selectResult"));
+        Assert.True(selectResult != null && selectResult.Count == CHARACTERS_FULL_COUNT, DATA_NOT_MATCH);
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        ExecuteQuery(REVERT_INSERTED_CHARACTERS);
+        CloseConnection();
+        DisposeXecutor();
+      }
+    }
+
+    /// <summary>
+    /// Test to get views as table objects, check they are actually views, and query data.
+    /// </summary>
+    [Fact]
+    public void Views()
+    {
+      OpenConnection();
+
+      try
+      {
+        InitXecutor();
+
+        // Check that getting tables return views as well
+        var tables = ExecuteSingleStatement(string.Format(TableTestProps.GetTables, X_TEST_SCHEMA_NAME));
+        Assert.True(tables != null && tables.Count == XTEST_TABLES_COUNT);
+
+        // Get first view
+        ExecuteQuery(string.Format(TableTestProps.GetTable, X_TEST_SCHEMA_NAME, HALO_CHARACTERS_VIEW_NAME));
+        var result = ExecuteQuery(TableTestProps.TableIsView);
+        Assert.True(result != null && Convert.ToBoolean(result));
+
+        // Test the rows in first view
+        var results = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(results != null && results.Count == HALO_CHARACTERS_VIEW_ROWS_COUNT);
+
+        // Get second view
+        ExecuteQuery(string.Format(TableTestProps.GetTable, X_TEST_SCHEMA_NAME, MASS_EFFECT_CHARACTERS_VIEW_NAME));
+        result = ExecuteQuery(TableTestProps.TableIsView);
+        Assert.True(result != null && Convert.ToBoolean(result));
+
+        // Test the rows in second view
+        results = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(results != null && results.Count == MASS_EFFECT_CHARACTERS_VIEW_ROWS_COUNT);
+
+        // Get third view
+        ExecuteQuery(string.Format(TableTestProps.GetTable, X_TEST_SCHEMA_NAME, SPARTAN_CHARACTERS_VIEW_NAME));
+        result = ExecuteQuery(TableTestProps.TableIsView);
+        Assert.True(result != null && Convert.ToBoolean(result));
+
+        // Test the rows in third view
+        results = ExecuteSingleStatement(SELECT_ALL_TABLE);
+        Assert.True(results != null && results.Count == SPARTAN_CHARACTERS_VIEW_ROWS_COUNT);
+      }
+      finally
+      {
+        if (Command != null)
+        {
+          Command.Dispose();
+        }
+
+        CloseConnection();
+        DisposeXecutor();
+      }
+    }
   }
 }

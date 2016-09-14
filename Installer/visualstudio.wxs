@@ -1,17 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
-    <!-- XShell Dependencies for AppData folder -->
-    <DirectoryRef Id='xShellModules_AppDataFolder'>
-      <Component Id='xShellModules_AppDataFolder_Component' Guid='1d8ffb8b-f405-4800-bebf-fd2b410639de'>
-        <File Id='mysql.js.AppDataFolder' Name='mysql.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysql.js'/>
-        <File Id='mysqlx.js.AppDataFolder' Name='mysqlx.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
-      </Component>
-    </DirectoryRef>
-    <!-- XShell Dependencies END -->
-
     <!-- Visual Studio 2010 -->
     <DirectoryRef Id='VS10_ExtVersionDir'>
       <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
@@ -71,22 +60,6 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
     </DirectoryRef>
-
-    <!-- XShell Dependencies -->
-    <DirectoryRef Id='VS2010_NgModulesDir'>
-      <Component Id='VS2010_NgModules' Guid='D2562BBB-6D00-4D8A-A813-21B2D6CE6C0A'>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS2010_NgJsDir'>
-      <Component Id='VS2010_NgJs' Guid='0BF38157-2559-4CDC-9C93-58F5DAF4E370'>
-        <File Id='mysqljs' Name='mysql.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysql.js'/>
-        <File Id='mysqlxjs' Name='mysqlx.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
-      </Component>
-    </DirectoryRef>
-    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS10_PrivateAssemblies'>
       <Component Id='VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250F'>
@@ -195,22 +168,6 @@
       </Component>
     </DirectoryRef>
 
-    <!-- XShell Dependencies -->
-    <DirectoryRef Id='VS11_NgModulesDir'>
-      <Component Id='VS2012_NgModules' Guid='46FCE23D-27C7-498A-B6D5-8C4AB5832377'>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS11_NgJsDir'>
-      <Component Id='VS2012_NgJs' Guid='0AFD75C9-F438-4230-A656-BA61D3A87FC2'>
-        <File Id='mysqljs_2012' Name='mysql.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysql.js'/>
-        <File Id='mysqlxjs_2012' Name='mysqlx.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
-      </Component>
-    </DirectoryRef>
-    <!-- XShell Dependencies END -->
-
     <DirectoryRef Id='VS11_PrivateAssemblies'>
       <Component Id='VS2012_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250E'>
         <File Id='VS2012_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
@@ -317,22 +274,6 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
     </DirectoryRef>
-
-    <!-- XShell Dependencies -->
-    <DirectoryRef Id='VS12_NgModulesDir'>
-      <Component Id='VS2013_NgModules' Guid='7484C2FD-759E-4006-9F3A-11052D3D0EB5'>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_NgJsDir'>
-      <Component Id='VS2013_NgJs' Guid='0B38859A-2CED-4D06-A4CF-BA5A0EF7E7F0'>
-        <File Id='mysqljs_2013' Name='mysql.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysql.js'/>
-        <File Id='mysqlxjs_2013' Name='mysqlx.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
-      </Component>
-    </DirectoryRef>
-    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS12_PrivateAssemblies'>
       <Component Id='VS2013_MD.Library' Guid='4D8A38C2-9750-4C35-B89D-FD7FA6789BAC'>
@@ -441,22 +382,6 @@
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
     </DirectoryRef>
-
-    <!-- XShell Dependencies -->
-    <DirectoryRef Id='VS14_NgModulesDir'>
-      <Component Id='VS2015_NgModules' Guid='5712DB9C-6661-4289-B591-8B488A0AE964'>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_NgJsDir'>
-      <Component Id='VS2015_NgJs' Guid='F9DEF8B6-49CC-4E07-B52B-E47D9910CCF8'>
-        <File Id='mysqljs_2015' Name='mysql.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysql.js'/>
-        <File Id='mysqlxjs_2015' Name='mysqlx.js' DiskId='1'
-              Source='..\Dependencies\xShell\modules\js\mysqlx.js'/>
-      </Component>
-    </DirectoryRef>
-    <!-- XShell Dependencies END -->
 
     <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id='VS2015_MD.Library' Guid='3E76F0B9-B63E-4EEB-A7D1-C6CA28DB0CD2'>

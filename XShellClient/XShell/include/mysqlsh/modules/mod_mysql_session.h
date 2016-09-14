@@ -30,8 +30,6 @@
 #include "mysql_connection.h"
 #include "base_session.h"
 
-#include <boost/enable_shared_from_this.hpp>
-
 namespace shcore
 {
   class Shell_core;
@@ -52,7 +50,7 @@ namespace mysh
     *
     * \code{.js}
     * // Establishes the connection.
-    * var mysql = require('mysql').mysql;
+    * var mysql = require('mysql');
     * var session = mysql.getClassicSession("myuser@localhost", pwd);
     *
     * // Getting a schema through the getSchema function
@@ -65,7 +63,7 @@ namespace mysh
     * \sa mysql.getClassicSession(String connectionData, String password)
     * \sa mysql.getClassicSession(Map connectionData, String password)
     */
-    class SHCORE_PUBLIC ClassicSession : public ShellDevelopmentSession, public boost::enable_shared_from_this<ClassicSession>
+    class SHCORE_PUBLIC ClassicSession : public ShellDevelopmentSession, public std::enable_shared_from_this<ClassicSession>
     {
     public:
       ClassicSession();
@@ -88,7 +86,6 @@ namespace mysh
       virtual shcore::Value drop_schema(const shcore::Argument_list &args);
       virtual shcore::Value drop_schema_object(const shcore::Argument_list &args, const std::string& type);
 
-      virtual bool is_connected() const { return _conn ? true : false; }
       virtual shcore::Value get_status(const shcore::Argument_list &args);
 
       virtual shcore::Value get_schema(const shcore::Argument_list &args) const;
@@ -99,7 +96,7 @@ namespace mysh
 
       virtual std::string db_object_exists(std::string &type, const std::string &name, const std::string& owner) const;
 
-      static boost::shared_ptr<shcore::Object_bridge> create(const shcore::Argument_list &args);
+      static std::shared_ptr<shcore::Object_bridge> create(const shcore::Argument_list &args);
 
       Connection *connection();
 
@@ -147,6 +144,16 @@ namespace mysh
       ClassicResult drop_view(str schema, str name);
 #endif
 
+      /**
+      * \brief Verifies if the session is still open.
+      */
+#if DOXYGEN_JS
+      Bool isOpen(){}
+#elif DOXYGEN_PY
+      bool is_open(){}
+#endif
+      virtual bool is_connected() const { return _conn ? true : false; }
+
     protected:
       virtual int get_default_port() { return 3306; };
 
@@ -154,7 +161,7 @@ namespace mysh
       void init();
       std::string _retrieve_current_schema();
       void _remove_schema(const std::string& name);
-      boost::shared_ptr<Connection> _conn;
+      std::shared_ptr<Connection> _conn;
     };
   };
 };

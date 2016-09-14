@@ -20,7 +20,6 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using MySql.Utility.Classes;
 using MySql.Utility.Enums;
 using MySql.Utility.Tests;
 
@@ -37,10 +36,8 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
       SchemaName2 = null;
       SchemaName3 = null;
       DropSchemasOnDispose = false;
-      var sqlScript = Utilities.GetScriptFromResource("MySql.VisualStudio.Tests.Properties.SetupXShell.sql");
-      var jsScript = Utilities.GetScriptFromResource("MySql.VisualStudio.Tests.Properties.SetupXShell.js");
-      ExecuteScriptReplacingSchemas(sqlScript, ScriptLanguageType.Sql);
-      ExecuteScriptReplacingSchemas(jsScript, ScriptLanguageType.JavaScript);
+      ExecuteScriptReplacingSchemas(GetSqlSetupScript(), ScriptLanguageType.Sql);
+      ExecuteScriptReplacingSchemas(GetJavaScriptSetupScript(), ScriptLanguageType.JavaScript);
     }
   }
 }

@@ -33,6 +33,30 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
   public class MySqlShellClient : ShellClient
   {
     /// <summary>
+    /// Set the additional modules paths.
+    /// </summary>
+    /// <param name="scriptType">Type of the script.</param>
+    public void AppendAdditionalModulePaths(ScriptLanguageType scriptType)
+    {
+      string modulesPath = string.Format("{0}{1}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"\Oracle\MySQL For Visual Studio\modules").Replace(@"\", "/");
+      switch (scriptType)
+      {
+        case ScriptLanguageType.Python:
+          // Add modules for Python
+          Execute("import sys");
+          Execute(string.Format("sys.path.append('{0}/python') ", modulesPath));
+          Execute(string.Format("sys.path.append('{0}') ", modulesPath));
+          break;
+
+        case ScriptLanguageType.JavaScript:
+          // Add modules for Javascript
+          Execute(string.Format("shell.js.module_paths[shell.js.module_paths.length] = '{0}/js';", modulesPath));
+          Execute(string.Format("shell.js.module_paths[shell.js.module_paths.length] = '{0}'; ", modulesPath));
+          break;
+      }
+    }
+
+    /// <summary>
     /// Executes a base query converting it first to JavaScript format.
     /// </summary>
     /// <param name="baseQuery"></param>
@@ -81,31 +105,6 @@ namespace MySql.VisualStudio.Tests.MySqlX.Base
     public override void PrintError(string text)
     {
       Console.WriteLine(@"***ERROR***{0}", text);
-    }
-
-    /// <summary>
-    /// Set the additional modules paths.
-    /// </summary>
-    /// <param name="scriptType">Type of the script.</param>
-    public void AppendAdditionalModulePaths(ScriptLanguageType scriptType)
-    {
-
-      string modulesPath = string.Format("{0}{1}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"\Oracle\MySQL For Visual Studio\modules").Replace(@"\", "/");
-
-      switch (scriptType)
-      {
-        case ScriptLanguageType.Python:
-          // Add modules for Python
-          Execute("import sys");
-          Execute(string.Format("sys.path.append('{0}/python') ", modulesPath));
-          Execute(string.Format("sys.path.append('{0}') ", modulesPath));
-          break;
-        case ScriptLanguageType.JavaScript:
-          // Add modules for Javascript
-          ExecuteToJavaScript(string.Format("shell.js.module_paths[shell.js.module_paths.length] = '{0}/js';", modulesPath));
-          ExecuteToJavaScript(string.Format("shell.js.module_paths[shell.js.module_paths.length] = '{0}'; ", modulesPath));
-          break;
-      }
     }
   }
 }
