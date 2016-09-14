@@ -1,4 +1,35 @@
-﻿MySQL for Visual Studio 2.0.3 Release Notes
+﻿MySQL for Visual Studio 2.0.4 Release Notes
+------------------------------------
+Welcome to the release notes for MySQL for Visual Studio 2.0.4.
+This is the third preview release in the 2.0 series, and is not feature complete, has limitations, and should not be used 
+in a production environment.
+
+* Added support for "Optimizer Hints", creating Parser unit tests to validate optimizer hints queries and validating such queries
+  can be executed in MySQL query editor.
+* Dragging a and dropping a table from Visual Studio's Server Explorer to a project would fail with the following error: "Some
+  updating commands could not be generated automatically. The database returned the following error: You have a usable connection
+  already". After clicking OK, Visual Studio would emit the following error "Mouse drag operation failed. Could not retrieve
+  schema information from table or view".
+* Added the ability to fast-switch connections within any of the MySQL script editor windows (SQL, JavaScript or Python), a new
+  drop-down is available next to the "Connect to MySQL..." button (first button in the editor window toolbar) that shows all
+  Server Explorer connections for the MySQL data provider.
+* Added to the SQL editor the ability to check the syntax of a script when it is executed. Before the script's statements are
+  actually sent to the server the syntax check is done; if errors are found the script is not actually executed and the errors
+  are displayed in Visual Studio's Output pane.
+* From the Query Designer, selecting Verify SQL Syntax would always display "Not supported by the provider" instead of verifying
+  the SQL syntax.
+* Enhanced the logic that migrates stored MySQL connections to the MySQL Workbench connections.xml file. In previous versions
+  the migration was offered and if not done at that moment, the dialog to migrate was shown every time the "MySQL Connections
+  Manager" dialog was shown, but there was no way to choose to remain storing MySQL connections in the MySQL for Visual Studio
+  configuration folder instead of merging them with the Workbench ones. Now the connections migration dialog offers a way to
+  postpone the migration 1 hour, 1 day, 1 week, 1 month or indefinitely. If the migration is postponed the dialog is shown again
+  after that time elapses, although if it is postponed indefinitely an option was added to the "MySQL Connections Manager"
+  dialog that permits the migration of connections to be done manually, as long as MySQL Workbench is installed.
+* Other bug fixes (for a full list refer to the CHANGES file).
+
+
+
+MySQL for Visual Studio 2.0.3 Release Notes
 ------------------------------------
 Welcome to the release notes for MySQL for Visual Studio 2.0.3.
 This is the second preview release in the 2.0 series, and is not feature complete, has limitations, and should not be used 
