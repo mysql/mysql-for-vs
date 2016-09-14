@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -21,13 +21,10 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySql;
 
 namespace MySql.Data.VisualStudio.DDEX
 {
@@ -121,10 +118,9 @@ namespace MySql.Data.VisualStudio.DDEX
       }
       catch (Exception ex)
       {
-        string errorMessage = String.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
-        Console.WriteLine("Error on extension method \"MySql.Data.VisualStudio.DDEX.GetStoredProcedureDefinition\". {0}", errorMessage);
-        System.Windows.Forms.MessageBox.Show(String.Format("An error ocurred when trying to execute the reader. \n{0}.", errorMessage), null,
-          System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+        string errorMessage = string.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
+        Console.WriteLine(Resources.DbCommandExtension_GetStoredProcedureDefinitionExtensionError, errorMessage);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.DbCommandExtension_ReaderExecutionError, true);
         return string.Empty;
       }
     }
@@ -153,10 +149,9 @@ namespace MySql.Data.VisualStudio.DDEX
         return string.Empty;
       }
 
-      string selectCommand = string.Empty;
-      int startIndex = sProcDefinition.ToUpper().IndexOf("SELECT");
-      int finalIndex = sProcDefinition.IndexOf(";", startIndex) + 1;
-      selectCommand = sProcDefinition.Substring(startIndex, finalIndex - startIndex);
+      int startIndex = sProcDefinition.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase);
+      int finalIndex = sProcDefinition.IndexOf(";", startIndex, StringComparison.Ordinal) + 1;
+      var selectCommand = sProcDefinition.Substring(startIndex, finalIndex - startIndex);
       selectCommand = OverrideStoredProcedureParameters(cmd, restrictions, selectCommand);
       return selectCommand;
     }
@@ -324,10 +319,9 @@ namespace MySql.Data.VisualStudio.DDEX
       }
       catch (Exception ex)
       {
-        string errorMessage = String.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
-        Console.WriteLine("Error on extension method \"MySql.Data.VisualStudio.DDEX.GetSchemaDataTable\". {0}", errorMessage);
-        System.Windows.Forms.MessageBox.Show(String.Format("An error ocurred when trying to execute the reader. \n{0}.", errorMessage), null,
-          System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+        string errorMessage = string.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
+        Console.WriteLine(Resources.DbCommandExtension_GetSchemaDataTableExtensionError, errorMessage);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.DbCommandExtension_ReaderExecutionError, true);
         return null;
       }
     }

@@ -686,16 +686,22 @@ namespace MySql.Data.VisualStudio
           return;
         }
 
-        if (MessageBox.Show(Resources.MySqlDataProviderPackage_MySqlUtilitiesNotFoundError + Environment.NewLine
-                            + @"To use them you must download and install the utilities package from http://dev.mysql.com/downloads/tools/utilities/" +
-                            Environment.NewLine + Resources.MySqlDataProviderPackage_ClickOkOrCancel, Resources.MySqlDataProviderPackage_Information, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+        var infoResult = InfoDialog.ShowDialog(
+          InfoDialogProperties.GetOkCancelDialogProperties(
+            InfoDialog.InfoType.Warning,
+            Resources.MySqlDataProviderPackage_MySqlUtilitiesNotFoundError,
+            @"To use them you must download and install the utilities package from http://dev.mysql.com/downloads/tools/utilities/",
+            Resources.MySqlDataProviderPackage_ClickOkOrCancel));
+        if (infoResult.DialogResult == DialogResult.OK)
         {
           var browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/tools/utilities/");
           System.Diagnostics.Process.Start(browserInfo);
         }
       }
       else
+      {
         MySqlWorkbench.LaunchUtilitiesShell();
+      }
     }
 
     /// <summary>
@@ -866,9 +872,9 @@ namespace MySql.Data.VisualStudio
         ItemOperations itemOp = env.ItemOperations;
         itemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
       }
-      catch (MySqlException)
+      catch (MySqlException ex)
       {
-        MessageBox.Show(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", Resources.ErrorTitle, MessageBoxButtons.OK);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.VsPkg_AddConnectionErrorTitle, Resources.VsPkg_AddConnectionErrorDetail, true);
         return;
       }
 
@@ -1219,7 +1225,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(Resources.MySqlDataProviderPackage_CreateNewScriptError + ex.Message);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.MySqlDataProviderPackage_CreateNewScriptError, true);
       }
     }
 

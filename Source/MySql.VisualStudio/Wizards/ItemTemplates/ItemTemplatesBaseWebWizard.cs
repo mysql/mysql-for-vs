@@ -40,6 +40,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 using VSLangProj;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
@@ -374,7 +376,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       catch (Exception ex)
       {
         SendToGeneralOutputWindow(string.Format("An error occurred: {0}\n\n {1}", ex.Message, ex.StackTrace));
-        MessageBox.Show("An error occured when generating MVC items. The application is not completed.");
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.ItemTemplatesBaseWebWizard_GenerateMvcItemsError));
       }
 #endif
     }

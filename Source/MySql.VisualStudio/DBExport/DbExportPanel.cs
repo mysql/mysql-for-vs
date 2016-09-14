@@ -33,6 +33,9 @@ using System.IO;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
@@ -350,7 +353,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
       if (schemaNames == null)
       {
-        MessageBox.Show(Resources.dbExportPanel_SchemasLoadError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.dbExportPanel_SchemasLoadError));
         _sourceSchemas.DataSource = null;
         dbSchemasList.Refresh();
         return;
@@ -410,17 +413,18 @@ namespace MySql.Data.VisualStudio.DBExport
         SetConnectionsList();
         if (selected == null)
         {
-          MessageBox.Show(Resources.dbExportPanel_LoadConnectionsError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.dbExportPanel_LoadConnectionsError));
           return;
         }
+
         cmbConnections.SelectedValue = selected.ConnectionString;
         SelectedConnection = selected;
         LoadSchemasForSelectedConnection();
         _windowHandler = windowHandler;
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        MessageBox.Show(Resources.UnableToRetrieveDatabaseList, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.UnableToRetrieveDatabaseList, true);
       }
     }
 
@@ -481,14 +485,14 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         if (Dictionary.Count == 0)
         {
-          MessageBox.Show(Resources.DbExportPanel_NoDbSelectedError, Resources.MySqlDataProviderPackage_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetInformationDialogProperties(Resources.MySqlDataProviderPackage_Information, Resources.DbExportPanel_NoDbSelectedError));
           return;
         }
 
         LockUI();
         if (string.IsNullOrEmpty(mysqlFilePath))
         {
-          MessageBox.Show(Resources.DbExportPathNotProvided, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.DbExportPathNotProvided));
           txtFileName.Focus();
           return;
         }
@@ -501,7 +505,7 @@ namespace MySql.Data.VisualStudio.DBExport
         {
           if (CheckPathIsValid(mysqlFilePath))
           {
-            MessageBox.Show(Resources.PathNotValid, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.PathNotValid));
             return;
           }
           else
@@ -521,7 +525,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
         if (!int.TryParse(max_allowed_packet.Text, out maxAllowedPacket))
         {
-          MessageBox.Show(Resources.InvalidMaxAllowedPacketValue, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.InvalidMaxAllowedPacketValue));
           return;
         }
 
@@ -535,9 +539,9 @@ namespace MySql.Data.VisualStudio.DBExport
             overWriteExistingFile = false;
           }
         }
-        catch
+        catch(Exception ex)
         {
-          MessageBox.Show(Resources.DbExportPanel_ExportFileCreationError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.DbExportPanel_ExportFileCreationError, true);
           return;
         }
 
@@ -992,9 +996,7 @@ namespace MySql.Data.VisualStudio.DBExport
       {
         Invoke((Action)(() =>
         {
-          MessageBox.Show(
-            string.Format("The following error ocurred while exporting: {0}", e.Error.Message),
-            Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, string.Format("The following error ocurred while exporting: {0}", e.Error.Message)));
         }));
       }
       else
@@ -1043,8 +1045,8 @@ namespace MySql.Data.VisualStudio.DBExport
             var completeConnectionString = GetCompleteConnectionString(displayConnectionName, true);
             if (string.IsNullOrEmpty(completeConnectionString))
             {
-              MessageBox.Show(Resources.DbExportPanel_ConnStringNotCorrectlySetError,
-                Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+              InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle,
+                Resources.DbExportPanel_ConnStringNotCorrectlySetError));
               return;
             }
 
@@ -1093,15 +1095,17 @@ namespace MySql.Data.VisualStudio.DBExport
 
             Application.DoEvents();
             _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);
-            MessageBox.Show(Resources.DbExportPanel_SettingsLoadSuccess, Resources.MySqlDataProviderPackage_Information, MessageBoxButtons.OK,
-              MessageBoxIcon.Information);
+            InfoDialog.ShowDialog(InfoDialogProperties.GetInformationDialogProperties(Resources.MySqlDataProviderPackage_Information, Resources.DbExportPanel_SettingsLoadSuccess));
           }
           else
-            MessageBox.Show(Resources.DbExportPanel_ConnectionNotFoundError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK,
-              MessageBoxIcon.Error);
+          {
+            InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.DbExportPanel_ConnectionNotFoundError));
+          }
         }
         else
-          MessageBox.Show(Resources.DbExportPanel_FileNotFoundError);
+        {
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.DbExportPanel_FileNotFoundError));
+        }
       }
     }
 
@@ -1175,7 +1179,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
         if (string.IsNullOrEmpty(connectionStringInUse))
         {
-          MessageBox.Show(Resources.DbExportPanel_NoConnectionSelected, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.DbExportPanel_NoConnectionSelected));
           return;
         }
 
@@ -1189,13 +1193,13 @@ namespace MySql.Data.VisualStudio.DBExport
           saveToFile.WriteSettingsFile(completePath, Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
           Cursor = Cursors.Default;
           _fileSavedSettingsName = Path.Combine(completePath, saveSettingsFileDlg.FileName);
-          MessageBox.Show(Resources.DbExportPanel_SaveSettingSuccess, Resources.MySqlDataProviderPackage_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetInformationDialogProperties(Resources.MySqlDataProviderPackage_Information, Resources.DbExportPanel_SaveSettingSuccess));
           _windowHandler.Caption = Path.GetFileName(saveSettingsFileDlg.FileName);
         }
         catch (Exception ex)
         {
           Cursor = Cursors.Default;
-          MessageBox.Show(Resources.DbExportPanel_SaveSettingsError + ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.DbExportPanel_SaveSettingsError, true);
         }
       }
     }

@@ -23,6 +23,8 @@
 using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySql.Utility.Classes.MySql;
+using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio.DDEX
 {
@@ -43,12 +45,12 @@ namespace MySql.Data.VisualStudio.DDEX
         errorProvider1.Clear();
         if (txtPassword.Text != txtConfirm.Text)
         {
-          errorProvider1.SetError(txtConfirm, Properties.Resources.NewPassword_PasswordNotMatch);
+          errorProvider1.SetError(txtConfirm, Resources.NewPassword_PasswordNotMatch);
           return;
         }
         if (string.IsNullOrEmpty(txtPassword.Text))
         {
-          errorProvider1.SetError(txtPassword, Properties.Resources.NewPassword_ProvideNewPassword);
+          errorProvider1.SetError(txtPassword, Resources.NewPassword_ProvideNewPassword);
           return;
         }
 
@@ -56,14 +58,13 @@ namespace MySql.Data.VisualStudio.DDEX
         cmd.ExecuteNonQuery();
         _connection.Close();
         _connection.Open();
-        this.Close();
+        Close();
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.MySqlNewPasswordDialog_PasswordSetError, true);
       }
     }
-    
 
     private void btnCancel_Click(object sender, EventArgs e)
     {

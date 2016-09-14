@@ -38,6 +38,9 @@ using System.CodeDom.Compiler;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
+using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Wizards
 {
@@ -254,11 +257,11 @@ namespace MySql.Data.VisualStudio.Wizards
       }
     }
 
-    protected void CopyPackageToProject(VSProject vsProj, string projPath, string packagesPath, string FolderName)
+    protected void CopyPackageToProject(VSProject vsProj, string projPath, string packagesPath, string folderName)
     {
       try
       {
-        var destination = Path.Combine(projPath, FolderName);
+        var destination = Path.Combine(projPath, folderName);
 
         if (Directory.Exists(destination))
           Directory.Delete(destination);
@@ -268,11 +271,9 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       catch
       {
-        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet connection.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.BaseWizard_PackageAddErrorTitle, Resources.BaseWizard_PackageAddErrorDetail));
       }
-      
     }
-
 
     private void AddDataEntityArtifactsToProject(EntityFrameworkGenerator gen, string modelName, VSProject vsProj, MySqlConnection con)
     {

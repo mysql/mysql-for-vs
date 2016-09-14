@@ -1,41 +1,39 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Wizards;
+using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
   public partial class TablesSelection : WizardPage
   {
-
     protected BindingList<DbTables> _tables = new BindingList<DbTables>();
     internal BindingSource _sourceTables = new BindingSource();
     private BackgroundWorker _worker;
@@ -46,13 +44,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     public TablesSelection()
     {
-      InitializeComponent();      
-      listTables.CellContentClick +=new DataGridViewCellEventHandler(listTables_CellContentClick);
+      InitializeComponent();
+      listTables.CellContentClick += new DataGridViewCellEventHandler(listTables_CellContentClick);
       chkSelectAllTables.CheckedChanged += chkSelectAllTables_CheckedChanged;
       txtFilter.KeyDown += txtFilter_KeyDown;
 
       listTables.AutoGenerateColumns = false;
-      AddMoreColumns();      
+      AddMoreColumns();
     }
 
     internal virtual void AddMoreColumns()
@@ -75,7 +73,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal virtual void chkSelectAllTables_CheckedChanged(object sender, EventArgs e)
     {
-        _tables.Where(t => t.Selected == !chkSelectAllTables.Checked).ToList().ForEach(t => { t.CheckObject(chkSelectAllTables.Checked); });
+      _tables.Where(t => t.Selected == !chkSelectAllTables.Checked).ToList().ForEach(t => { t.CheckObject(chkSelectAllTables.Checked); });
       listTables.Refresh();
     }
 
@@ -87,15 +85,14 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-
     internal void FillTables(string connectionString)
     {
       LockUI();
       try
       {
         DoWorkEventHandler doWorker = (worker, doWorkerArgs) =>
-        {          
-          Application.DoEvents();          
+        {
+          Application.DoEvents();
           var cnn = new MySqlConnection(connectionString);
           cnn.Open();
           var dtTables = cnn.GetSchema("Tables", new string[] { null, cnn.Database });
@@ -109,7 +106,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
             _sourceTables.DataSource = _tables;
             listTables.DataSource = _sourceTables;
             FormatTablesList();
-            TablesFilled();            
+            TablesFilled();
           }));
         };
         if (_worker != null)
@@ -119,17 +116,16 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           _worker.Dispose();
         }
         _worker = new BackgroundWorker();
-        _worker.WorkerSupportsCancellation = true;        
+        _worker.WorkerSupportsCancellation = true;
         _worker.DoWork += doWorker;
         _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_worker_RunWorkerCompleted);
         _worker.RunWorkerAsync();
       }
-      finally 
+      finally
       {
-        UnlockUI();             
+        UnlockUI();
       }
     }
-    
 
     private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
@@ -137,12 +133,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       {
         this.Invoke((Action)(() =>
         {
-          MessageBox.Show(
-            string.Format("The following error ocurred while exporting: {0}", e.Error.Message),
-            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.TablesSelection_ExportingError, e.Error.Message));
         }));
       }
-      UnlockUI();     
+      UnlockUI();
     }
 
     internal virtual void TablesFilled()
@@ -154,7 +148,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     {
       if (listTables.Rows.Count <= 1 && listTables.Columns.Count == 1)
       {
-        _sourceTables.DataSource = new BindingList<DbTables>();        
+        _sourceTables.DataSource = new BindingList<DbTables>();
         listTables.DataSource = _sourceTables;
         listTables.Update();
       }
@@ -177,11 +171,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
     }
 
-
     internal override void OnStarting(BaseWizardForm wizard)
     {
       _wiz = (BaseWizardForm)wizard;
-      
+
       ConnectionString = _wiz.ConnectionString;
       if (!string.IsNullOrEmpty(_wiz.ConnectionString))
       {
@@ -192,12 +185,18 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
         catch (Exception)
         {
-          DialogResult result = MessageBox.Show(Properties.Resources.ErrorOnConnection, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-          if (result == DialogResult.Cancel)
+          var infoProps = InfoDialogProperties.GetInfoDialogProperties(InfoDialog.InfoType.Error, CommandAreaProperties.ButtonsLayoutType.Generic2Buttons, Resources.ErrorTitle, Resources.ErrorOnConnection);
+          infoProps.CommandAreaProperties.Button1Text = "Retry";
+          infoProps.CommandAreaProperties.Button1DialogResult = DialogResult.Retry;
+          infoProps.CommandAreaProperties.Button2Text = "Cancel";
+          infoProps.CommandAreaProperties.Button2DialogResult = DialogResult.Cancel;
+          var infoResult = InfoDialog.ShowDialog(infoProps);
+          if (infoResult.DialogResult == DialogResult.Cancel)
           {
             listTables.Enabled = false;
           }
         }
+
         FillTables(_wiz.ConnectionString);
       }
     }
@@ -210,21 +209,20 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       else return true;
     }
 
-
     internal void TableSelection_Validating(object sender, CancelEventArgs e)
-    {   
-        if (_tables != null)
+    {
+      if (_tables != null)
+      {
+        if (_tables.Where(t => t.Selected).Count() <= 0)
         {
-          if (_tables.Where(t => t.Selected).Count() <= 0)
-          {
-            e.Cancel = true;
-            errorProvider1.SetError(listTables, "At least a table should be selected");
-          }
+          e.Cancel = true;
+          errorProvider1.SetError(listTables, "At least a table should be selected");
         }
-        else
-        {
-          errorProvider1.SetError(listTables, "");
-        }
+      }
+      else
+      {
+        errorProvider1.SetError(listTables, "");
+      }
     }
 
     internal void txtFilter_KeyDown(object sender, KeyEventArgs e)
@@ -248,7 +246,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
     internal void btnFilter_Click(object sender, EventArgs e)
     {
-      _sourceTables.DataSource = _tables.Where(t => t.Name.StartsWith(txtFilter.Text.Trim())).ToList();   
+      _sourceTables.DataSource = _tables.Where(t => t.Name.StartsWith(txtFilter.Text.Trim())).ToList();
       listTables.DataSource = _sourceTables;
       listTables.Update();
       FormatTablesList();
@@ -271,15 +269,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       btnFilter.Enabled = enabling;
       _wiz.btnFinish.Enabled = enabling;
       _wiz.btnBack.Enabled = enabling;
-      chkSelectAllTables.Enabled = enabling;      
+      chkSelectAllTables.Enabled = enabling;
     }
 
     private void UnlockUI()
     {
       if (!(_worker != null && _worker.IsBusy))
-      {        
+      {
         this.Cursor = _cursor;
-        EnableControls(true);       
+        EnableControls(true);
       }
     }
   }

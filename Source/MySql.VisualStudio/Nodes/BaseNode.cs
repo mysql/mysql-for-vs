@@ -1,4 +1,4 @@
-// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -34,6 +34,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Nodes
 {
@@ -225,12 +228,10 @@ namespace MySql.Data.VisualStudio.Nodes
     private void Drop()
     {
       string typeString = LocalizedTypeString.ToLower(CultureInfo.CurrentCulture);
-      DialogResult result = MessageBox.Show(string.Format(
-          Resources.DropConfirmation, typeString, Name),
-          string.Format(Resources.DropConfirmationCaption, typeString),
-          MessageBoxButtons.YesNo,
-          MessageBoxIcon.Question);
-      if (result == DialogResult.No)
+      var infoResult = InfoDialog.ShowDialog(InfoDialogProperties.GetYesNoDialogProperties(InfoDialog.InfoType.Info,
+          string.Format(Resources.DropConfirmationCaption, typeString), string.Format(
+            Resources.DropConfirmation, typeString, Name)));
+      if (infoResult.DialogResult == DialogResult.No)
       {
         throw new OperationCanceledException();
       }
@@ -245,10 +246,7 @@ namespace MySql.Data.VisualStudio.Nodes
       }
       catch (Exception ex)
       {
-        MessageBox.Show(
-            string.Format(Resources.ErrorAttemptingToDrop,
-            LocalizedTypeString, Name, ex.Message), Resources.ErrorTitle,
-            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.ErrorTitle, string.Format(Resources.ErrorAttemptingToDrop, LocalizedTypeString, Name), true);
         throw new OperationCanceledException();
       }
     }

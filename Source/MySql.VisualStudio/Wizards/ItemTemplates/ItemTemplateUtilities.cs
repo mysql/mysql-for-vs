@@ -31,9 +31,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml.Linq;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySql;
 using VSLangProj;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
@@ -146,7 +146,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.Message, "An error occured obtaining the config file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.ItemTemplateUtilities_ConfigFileGetError, true);
         }
       }
 
@@ -174,7 +174,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "An error occured obtaining the config file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.ItemTemplateUtilities_ConfigFileGetError, true);
       }
 
       // Try to get the config XML from the app.config file.
@@ -296,8 +296,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (MySqlException ex)
       {
-        string errorMessage = string.Format("An error occured executing the MySql Command. {0}.{1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty);
-        MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.ItemTemplateUtilities_RetrieveFkError, true);
       }
 
       // Gather referenceable columns
@@ -312,12 +311,12 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <summary>
     /// Gets the columns from table vanilla.
     /// </summary>
-    /// <param name="TableName">Name of the table.</param>
+    /// <param name="tableName">Name of the table.</param>
     /// <param name="con">The MySql connection.</param>
     /// <returns>A list of string with all the columns from table Vanilla.</returns>
-    private static List<string> GetColumnsFromTableVanilla(string TableName, MySqlConnection con)
+    private static List<string> GetColumnsFromTableVanilla(string tableName, MySqlConnection con)
     {
-      string sql = string.Format(@"select c.column_name from information_schema.columns c  where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, TableName);
+      string sql = string.Format(@"select c.column_name from information_schema.columns c  where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, tableName);
       List<string> columns = new List<string>();
       try
       {
@@ -332,8 +331,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (MySqlException ex)
       {
-        string errorMessage = string.Format("An error occured executing the MySql Command. {0}.{1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty);
-        MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.ItemTemplateUtilities_RetrieveColumnsError, true);
       }
 
       return columns;
@@ -437,8 +435,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (Exception ex)
       {
-        string errorMessage = string.Format("Cannot get Metadata information. {0}.{1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty);
-        MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.ItemTemplateUtilities_RetrieveMetadataError, true);
       }
 
       return dic;
@@ -600,7 +597,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, Resources.ItemTemplateUtilities_SettingsRetrievalError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.ItemTemplateUtilities_RetrieveSettingsError, true);
         return null;
       }
     }

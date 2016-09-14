@@ -46,6 +46,8 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Utility.Classes;
 using System.Diagnostics;
 using MySql.Data.VisualStudio.ServerInstances;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -83,9 +85,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
         catch
         {
-          if (MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
-                        + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
-                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", Resources.WarningText, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+          var infoResult = InfoDialog.ShowDialog(
+          InfoDialogProperties.GetOkCancelDialogProperties(
+            InfoDialog.InfoType.Warning,
+            Resources.MySqlDataProviderPackage_ConnectorNetNotFoundError,
+            @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/",
+            Resources.MySqlDataProviderPackage_ClickOkOrCancel));
+          if (infoResult.DialogResult == DialogResult.OK)
           {
             ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
             System.Diagnostics.Process.Start(browserInfo);
@@ -265,15 +271,15 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           }
           catch (Exception ex)
           {
-            MessageBox.Show(ex.Message, "An error occured when creating user", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.WebWizard_UserCreationError, true);
           }
-
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MySqlSourceTrace.WriteAppErrorToLog(ex, true);
         }
       }
+
       SendToGeneralOutputWindow("Finished project generation.");
       WizardForm.Dispose();
     }
@@ -475,7 +481,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       }
       catch
       {
-        MessageBox.Show("An error occured when generating MVC items. The application is not completed.");
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.ItemTemplatesBaseWebWizard_GenerateMvcItemsError));
       }
 #endif
     }

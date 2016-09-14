@@ -241,6 +241,24 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check your NuGet version or your internet connection..
+        /// </summary>
+        public static string BaseWizard_PackageAddErrorDetail {
+            get {
+                return ResourceManager.GetString("BaseWizard_PackageAddErrorDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error adding jQuery library to the project.
+        /// </summary>
+        public static string BaseWizard_PackageAddErrorTitle {
+            get {
+                return ResourceManager.GetString("BaseWizard_PackageAddErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap batch {
@@ -670,6 +688,35 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error on extension method &quot;MySql.Data.VisualStudio.DDEX.GetSchemaDataTable&quot;
+        ///{0}.
+        /// </summary>
+        public static string DbCommandExtension_GetSchemaDataTableExtensionError {
+            get {
+                return ResourceManager.GetString("DbCommandExtension_GetSchemaDataTableExtensionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error on extension method &quot;MySql.Data.VisualStudio.DDEX.GetStoredProcedureDefinition&quot;:
+        ///{0}.
+        /// </summary>
+        public static string DbCommandExtension_GetStoredProcedureDefinitionExtensionError {
+            get {
+                return ResourceManager.GetString("DbCommandExtension_GetStoredProcedureDefinitionExtensionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error ocurred when trying to execute the reader..
+        /// </summary>
+        public static string DbCommandExtension_ReaderExecutionError {
+            get {
+                return ResourceManager.GetString("DbCommandExtension_ReaderExecutionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection was not found on available connections.
         /// </summary>
         public static string DbExportPanel_ConnectionNotFoundError {
@@ -733,7 +780,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occured when saving the settings file: .
+        ///   Looks up a localized string similar to An error occured when saving the settings file..
         /// </summary>
         public static string DbExportPanel_SaveSettingsError {
             get {
@@ -3002,7 +3049,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to save object with error: .
+        ///   Looks up a localized string similar to Unable to save object because an error occurred..
         /// </summary>
         public static string DocumentNode_UnableToSaveObjectError {
             get {
@@ -3066,7 +3113,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following error occured while attempting to drop the {0} &apos;{1}&apos;: {2}.
+        ///   Looks up a localized string similar to An error occured while attempting to drop the {0} &apos;{1}&apos;..
         /// </summary>
         public static string ErrorAttemptingToDrop {
             get {
@@ -3236,6 +3283,60 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string InvalidValueFieldsMessage {
             get {
                 return ResourceManager.GetString("InvalidValueFieldsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred when generating MVC items. The application is not completed..
+        /// </summary>
+        public static string ItemTemplatesBaseWebWizard_GenerateMvcItemsError {
+            get {
+                return ResourceManager.GetString("ItemTemplatesBaseWebWizard_GenerateMvcItemsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred obtaining the config file..
+        /// </summary>
+        public static string ItemTemplateUtilities_ConfigFileGetError {
+            get {
+                return ResourceManager.GetString("ItemTemplateUtilities_ConfigFileGetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred retrieving columns information..
+        /// </summary>
+        public static string ItemTemplateUtilities_RetrieveColumnsError {
+            get {
+                return ResourceManager.GetString("ItemTemplateUtilities_RetrieveColumnsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred retrieving foreign keys information..
+        /// </summary>
+        public static string ItemTemplateUtilities_RetrieveFkError {
+            get {
+                return ResourceManager.GetString("ItemTemplateUtilities_RetrieveFkError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred retrieving metadata information..
+        /// </summary>
+        public static string ItemTemplateUtilities_RetrieveMetadataError {
+            get {
+                return ResourceManager.GetString("ItemTemplateUtilities_RetrieveMetadataError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred retrieving settings..
+        /// </summary>
+        public static string ItemTemplateUtilities_RetrieveSettingsError {
+            get {
+                return ResourceManager.GetString("ItemTemplateUtilities_RetrieveSettingsError", resourceCulture);
             }
         }
         
@@ -3462,7 +3563,16 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window: .
+        ///   Looks up a localized string similar to The MySQL .NET driver could not be found..
+        /// </summary>
+        public static string MySqlDataProviderPackage_ConnectorNetNotFoundError {
+            get {
+                return ResourceManager.GetString("MySqlDataProviderPackage_ConnectorNetNotFoundError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window..
         /// </summary>
         public static string MySqlDataProviderPackage_CreateNewScriptError {
             get {
@@ -3604,6 +3714,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There was an error setting the password..
+        /// </summary>
+        public static string MySqlNewPasswordDialog_PasswordSetError {
+            get {
+                return ResourceManager.GetString("MySqlNewPasswordDialog_PasswordSetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MySQL Output.
         /// </summary>
         public static string MySqlOutputToolCaptionFrame {
@@ -3613,7 +3732,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window: .
+        ///   Looks up a localized string similar to An error ocurred when trying to launch a MySql Script window..
         /// </summary>
         public static string MySqlScriptWindowLaunchError {
             get {
@@ -3916,11 +4035,20 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to load the stored procedure for editing.
+        ///   Looks up a localized string similar to Unable to load the stored procedure for editing..
         /// </summary>
         public static string StoredProcedureNode_StoredProcedureLoadError {
             get {
                 return ResourceManager.GetString("StoredProcedureNode_StoredProcedureLoadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to save the stored procedure..
+        /// </summary>
+        public static string StoredProcedureNode_StoredProcedureSaveError {
+            get {
+                return ResourceManager.GetString("StoredProcedureNode_StoredProcedureSaveError", resourceCulture);
             }
         }
         
@@ -4089,6 +4217,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exporting error.
+        /// </summary>
+        public static string TablesSelection_ExportingError {
+            get {
+                return ResourceManager.GetString("TablesSelection_ExportingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap tile_view {
@@ -4099,11 +4236,20 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to load object with error: .
+        ///   Looks up a localized string similar to Unable to load trigger..
         /// </summary>
         public static string TriggerNode_UnableToLoadObjectError {
             get {
                 return ResourceManager.GetString("TriggerNode_UnableToLoadObjectError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to save trigger..
+        /// </summary>
+        public static string TriggerNode_UnableToSaveObjectError {
+            get {
+                return ResourceManager.GetString("TriggerNode_UnableToSaveObjectError", resourceCulture);
             }
         }
         
@@ -4273,11 +4419,29 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to load view with error: .
+        ///   Looks up a localized string similar to Unable to load view..
         /// </summary>
         public static string ViewNode_LoadViewError {
             get {
                 return ResourceManager.GetString("ViewNode_LoadViewError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check that the server is running, the database exist and the user credentials are valid..
+        /// </summary>
+        public static string VsPkg_AddConnectionErrorDetail {
+            get {
+                return ResourceManager.GetString("VsPkg_AddConnectionErrorDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error establishing the database connection..
+        /// </summary>
+        public static string VsPkg_AddConnectionErrorTitle {
+            get {
+                return ResourceManager.GetString("VsPkg_AddConnectionErrorTitle", resourceCulture);
             }
         }
         
@@ -4306,6 +4470,24 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string WebConfigConnStrNoEmpty {
             get {
                 return ResourceManager.GetString("WebConfigConnStrNoEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the Entity Framework version..
+        /// </summary>
+        public static string WebConfigDlg_SelectEfVersion {
+            get {
+                return ResourceManager.GetString("WebConfigDlg_SelectEfVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred creating the user..
+        /// </summary>
+        public static string WebWizard_UserCreationError {
+            get {
+                return ResourceManager.GetString("WebWizard_UserCreationError", resourceCulture);
             }
         }
         

@@ -1,23 +1,23 @@
 ﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
-// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
-// MySQL Connectors. There are special exceptions to the terms and 
-// conditions of the GPLv2 as it is applied to this software, see the 
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+// MySQL Connectors. There are special exceptions to the terms and
+// conditions of the GPLv2 as it is applied to this software, see the
 // FLOSS License Exception
 // <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 //
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
 // by the Free Software Foundation; version 2 of the License.
 //
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 // for more details.
 //
-// You should have received a copy of the GNU General Public License along 
-// with this program; if not, write to the Free Software Foundation, Inc., 
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
@@ -33,6 +33,8 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.ServerInstances;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 using VSLangProj;
 using Process = System.Diagnostics.Process;
 
@@ -62,10 +64,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     /// <param name="vsProj"></param>
     /// <param name="columns"></param>
     /// <param name="detailColumns"></param>
-    private void EnsureCodeForDateTimeGridColumn(VSProject vsProj, Dictionary<string,Column> columns, Dictionary<string,Column> detailColumns)
+    private void EnsureCodeForDateTimeGridColumn(VSProject vsProj, Dictionary<string, Column> columns, Dictionary<string, Column> detailColumns)
     {
       bool hasDateColumn = false;
-      foreach(KeyValuePair<string, Column> kvp in columns)
+      foreach (KeyValuePair<string, Column> kvp in columns)
       {
         if (!kvp.Value.IsDateType())
         {
@@ -95,6 +97,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.CS.MyDateTimePickerColumn.cs");
             outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.cs");
             break;
+
           case LanguageGenerator.VBNET:
             stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Data.VisualStudio.Wizards.WindowsForms.Templates.VB.MyDateTimePickerColumn.vb");
             outFilePath = Path.Combine(ProjectPath, "MyDateTimePickerColumn.vb");
@@ -111,7 +114,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           string contents = sr.ReadToEnd();
           File.WriteAllText(outFilePath, contents.Replace("$ProjectNamespace$", ProjectNamespace));
         }
-        
+
         vsProj.Project.ProjectItems.AddFromFile(outFilePath);
       }
 
@@ -136,21 +139,28 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       bool found = false;
       foreach (Reference reference in vsProj.References)
       {
-        if (reference.Name.IndexOf("MySql.Data",StringComparison.CurrentCultureIgnoreCase) >=0 && !String.IsNullOrEmpty(reference.Path))
+        if (reference.Name.IndexOf("MySql.Data", StringComparison.CurrentCultureIgnoreCase) >= 0 && !String.IsNullOrEmpty(reference.Path))
         {
           found = true;
           break;
         }
       }
 
-      if (!found && MessageBox.Show(@"The MySQL .NET driver could not be found." + Environment.NewLine
-                                    + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
-                                    Environment.NewLine + @"Click OK to go to the page or Cancel to continue", Resources.WarningText, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+      if (!found)
       {
-        ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
-        Process.Start(browserInfo);
+        var infoResult = InfoDialog.ShowDialog(
+          InfoDialogProperties.GetOkCancelDialogProperties(
+            InfoDialog.InfoType.Warning,
+            Resources.MySqlDataProviderPackage_ConnectorNetNotFoundError,
+            @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/",
+            Resources.MySqlDataProviderPackage_ClickOkOrCancel));
+        if (infoResult.DialogResult == DialogResult.OK)
+        {
+          ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
+          Process.Start(browserInfo);
+        }
       }
-       
+
       try
       {
         foreach (DbTables t in WizardForm.SelectedTables)
@@ -222,13 +232,13 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
               continue;
             }
 
-            if ( (crud.GuiType == GuiType.MasterDetail) && !TablesIncludedInModel.ContainsKey(crud.DetailTableName))
+            if ((crud.GuiType == GuiType.MasterDetail) && !TablesIncludedInModel.ContainsKey(crud.DetailTableName))
             {
               // If Detail table does not have PK, then you cannot edit details, "degrade" layout from Master Detail to Individual Controls.
               crud.GuiType = GuiType.IndividualControls;
-              SendToGeneralOutputWindow( string.Format(
+              SendToGeneralOutputWindow(string.Format(
                 "Degrading layout for table '{0}' from master detail to single controls (because detail table '{1}' does not have primary key).",
-                crud.TableName, crud.DetailTableName ) );
+                crud.TableName, crud.DetailTableName));
             }
 
             // Create the strategy
@@ -255,7 +265,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         {
           SendToGeneralOutputWindow(string.Format("An error ocurred: {0}\n\n{1}", e.Message, e.StackTrace));
         }
-        
+
         // Now generated the bindings & custom code
         List<string> formNames = new List<string>();
         List<string> tableNames = new List<string>();
@@ -288,18 +298,18 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         RemoveTemplateForm(vsProj);
 
         FixNamespaces();
-        
+
         SendToGeneralOutputWindow("Building Solution...");
         project.DTE.Solution.SolutionBuild.Build(true);
 
         Settings.Default.WinFormsWizardConnection = WizardForm.ConnectionName;
         Settings.Default.Save();
-        
+
         SendToGeneralOutputWindow("Finished project generation.");
 
         if (project.DTE.Solution.SolutionBuild.LastBuildInfo > 0)
         {
-          MessageBox.Show(Resources.WindowsFormsWizard_SolutionBuildFailed, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.WindowsFormsWizard_SolutionBuildFailed));
         }
 
         WizardForm.Dispose();
@@ -311,7 +321,6 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 #else
       throw new NotImplementedException();
 #endif
-
     }
 
     protected override string GetConnectionString()
@@ -332,9 +341,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     private void AddNewForm(Project project, string formName, WindowsFormsCodeGeneratorStrategy strategy)
     {
       //project.ProjectItems.Item(1).Remove();
-      string formFile = Path.Combine( ProjectPath, strategy.GetFormFileName().Replace("Form1", formName) );
-      string formFileDesigner = Path.Combine( ProjectPath,  strategy.GetFormDesignerFileName().Replace("Form1", formName));
-      string formFileResx = Path.Combine( ProjectPath, strategy.GetFormResxFileName().Replace("Form1", formName));
+      string formFile = Path.Combine(ProjectPath, strategy.GetFormFileName().Replace("Form1", formName));
+      string formFileDesigner = Path.Combine(ProjectPath, strategy.GetFormDesignerFileName().Replace("Form1", formName));
+      string formFileResx = Path.Combine(ProjectPath, strategy.GetFormResxFileName().Replace("Form1", formName));
 
       var contents = File.ReadAllText(Path.Combine(ProjectPath, strategy.GetFormFileName()));
       contents = contents.Replace("Form1", formName);
@@ -360,11 +369,11 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     internal void InitializeColumnMappings(Dictionary<string, ForeignKeyColumnInfo> fks)
     {
       foreach (KeyValuePair<string, ForeignKeyColumnInfo> kvp in fks)
-      { 
+      {
         string fkTableName = kvp.Value.ReferencedTableName;
-        if( string.IsNullOrEmpty( fkTableName )) continue;
+        if (string.IsNullOrEmpty(fkTableName)) continue;
         if (ColumnMappings.ContainsKey(fkTableName)) continue;
-        Dictionary<string,Column> dicCols = GetColumnsFromTable(fkTableName, WizardForm.Connection);
+        Dictionary<string, Column> dicCols = GetColumnsFromTable(fkTableName, WizardForm.Connection);
         List<ColumnValidation> myColValidations = ValidationsGrid.GetColumnValidationList(fkTableName, dicCols, null);
         ColumnMappings.Add(fkTableName, myColValidations.ToDictionary(p => { return p.Name; }));
       }
@@ -383,7 +392,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.frmMain", ProjectNamespace),
           string.Format("Me.MainForm = Global.{0}.{0}.frmMain", ProjectNamespace));
       }
-      else { 
+      else
+      {
         contents = contents.Replace(string.Format("Me.MainForm = Global.{0}.frmMain", ProjectNamespace),
           string.Format("Me.MainForm = {0}.frmMain", ProjectNamespace));
       }
@@ -407,8 +417,8 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     protected virtual void WriteMenuHandler(StreamWriter sw, string formName)
     {
     }
-    
-    protected virtual void WriteMenuStripConstruction(StreamWriter sw, string formName) 
+
+    protected virtual void WriteMenuStripConstruction(StreamWriter sw, string formName)
     {
     }
 
@@ -420,15 +430,15 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
     }
 
-    protected virtual void WriteAddRangeBegin( StreamWriter sw )
+    protected virtual void WriteAddRangeBegin(StreamWriter sw)
     {
     }
 
-    protected virtual void WriteAddRangeEnd( StreamWriter sw )
+    protected virtual void WriteAddRangeEnd(StreamWriter sw)
     {
     }
 
-    protected virtual void WriteMenuDeclaration( StreamWriter sw, string formName)
+    protected virtual void WriteMenuDeclaration(StreamWriter sw, string formName)
     {
     }
 
@@ -446,7 +456,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       FileStream fs = new FileStream(path, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
       using (StringReader sr = new StringReader(originalContents))
       {
-        using (  StreamWriter sw = new StreamWriter(fs))
+        using (StreamWriter sw = new StreamWriter(fs))
         {
           string line;
           while ((line = sr.ReadLine()) != null)
@@ -494,7 +504,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
               {
                 string formName = formNames[i];
                 WriteMenuAddRange(sw, formName);
-                if( i < formNames.Count - 1 )
+                if (i < formNames.Count - 1)
                 {
                   sw.Write(", ");
                 }
@@ -518,22 +528,22 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
             }
             else
             {
-              sw.WriteLine( line );
+              sw.WriteLine(line);
             }
           }
         }
       }
     }
 
-    private void AddBindings(VSProject vsProj, WindowsFormsCodeGeneratorStrategy strategy, string frmName, string frmDesignerName )
+    private void AddBindings(VSProject vsProj, WindowsFormsCodeGeneratorStrategy strategy, string frmName, string frmDesignerName)
     {
       string ext = strategy.GetExtension();
-      SendToGeneralOutputWindow(string.Format( "Customizing Form {0} Code...", frmName));
+      SendToGeneralOutputWindow(string.Format("Customizing Form {0} Code...", frmName));
       // Get Form.cs
       ProjectItem item = FindProjectItem(vsProj.Project.ProjectItems, frmName + ext);
       // Get Form.Designer.cs
       ProjectItem itemDesigner = FindProjectItem(item.ProjectItems, frmDesignerName + ext);
-      
+
       AddBindings((string)(item.Properties.Item("FullPath").Value), strategy);
       AddBindings((string)(itemDesigner.Properties.Item("FullPath").Value), strategy);
     }
@@ -542,9 +552,9 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       string originalContents = File.ReadAllText(formPath);
       FileStream fs = new FileStream(formPath, FileMode.Truncate, FileAccess.Write, FileShare.Read, 16284);
-      using(StringReader sr = new StringReader(originalContents))
+      using (StringReader sr = new StringReader(originalContents))
       {
-        using(_sw = new IdentedStreamWriter(fs))
+        using (_sw = new IdentedStreamWriter(fs))
         {
           strategy.Writer = _sw;
           string line;

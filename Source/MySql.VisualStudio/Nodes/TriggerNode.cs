@@ -32,6 +32,7 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySql;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Nodes
@@ -140,9 +141,10 @@ namespace MySql.Data.VisualStudio.Nodes
         }
         catch (Exception ex)
         {
-          MessageBox.Show(Resources.TriggerNode_UnableToLoadObjectError + ex.Message);
+          MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.TriggerNode_UnableToLoadObjectError, true);
         }
       }
+
       _table = GetTargetedTable(_editor.Text);
     }
 
@@ -166,7 +168,7 @@ namespace MySql.Data.VisualStudio.Nodes
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.TriggerNode_UnableToSaveObjectError, true);
         return false;
       }
     }

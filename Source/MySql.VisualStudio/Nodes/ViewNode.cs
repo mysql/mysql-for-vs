@@ -23,7 +23,6 @@
 using System;
 using System.Data;
 using System.Text;
-using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -31,6 +30,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySql;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Nodes
@@ -110,7 +110,7 @@ namespace MySql.Data.VisualStudio.Nodes
         }
         catch (Exception ex)
         {
-          MessageBox.Show(Resources.ViewNode_LoadViewError + ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.ViewNode_LoadViewError, true);
         }
       }
     }

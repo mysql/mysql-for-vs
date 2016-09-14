@@ -28,42 +28,46 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
-    [Guid("4469031d-23e0-483c-8566-ce978f6c9a6f")]
+  [Guid("4469031d-23e0-483c-8566-ce978f6c9a6f")]
   public class DbExportWindowPane : ToolWindowPane, IVsWindowFrameNotify2
+  {
+    public DbExportPanel DbExportPanelControl;
+    public List<IVsDataExplorerConnection> Connections { get; set; }
+    public string SelectedConnectionName { get; set; }
+    public ToolWindowPane WindowHandler { get; set; }
+
+    public DbExportWindowPane() : base(null)
     {
-        public DbExportPanel DbExportPanelControl;
-        public List<IVsDataExplorerConnection> Connections {get; set;}
-        public string SelectedConnectionName { get; set; }
-        public ToolWindowPane WindowHandler { get; set; }
-
-        public DbExportWindowPane() : base(null)
-        {
-          DbExportPanelControl = new DbExportPanel();            
-        }
-
-        public void InitializeDbExportPanel()
-        {
-          DbExportPanelControl.LoadConnections(Connections, SelectedConnectionName, WindowHandler);        
-        }
-
-        public override IWin32Window Window
-        {
-          get { return DbExportPanelControl; }
-        }
-
-        public int OnClose(ref uint pgrfSaveOptions)
-        {
-          if (WindowHandler.Caption.Contains("*"))
-          {
-            if (MessageBox.Show(Resources.SaveSelectedSettingsText, Resources.MySqlDataProviderPackage_Information, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-              DbExportPanelControl.SaveSettings(true);
-            }
-          }
-          return VSConstants.S_OK;
-        }
+      DbExportPanelControl = new DbExportPanel();
     }
+
+    public void InitializeDbExportPanel()
+    {
+      DbExportPanelControl.LoadConnections(Connections, SelectedConnectionName, WindowHandler);
+    }
+
+    public override IWin32Window Window
+    {
+      get { return DbExportPanelControl; }
+    }
+
+    public int OnClose(ref uint pgrfSaveOptions)
+    {
+      if (WindowHandler.Caption.Contains("*"))
+      {
+        var infoResult = InfoDialog.ShowDialog(InfoDialogProperties.GetYesNoDialogProperties(InfoDialog.InfoType.Info, Resources.MySqlDataProviderPackage_Information, Resources.SaveSelectedSettingsText));
+        if (infoResult.DialogResult == DialogResult.Yes)
+        {
+          DbExportPanelControl.SaveSettings(true);
+        }
+      }
+
+      return VSConstants.S_OK;
+    }
+  }
 }

@@ -27,6 +27,8 @@ using System.Windows.Forms;
 using MySql.Data.VisualStudio.DbObjects;
 using MySql.Data.VisualStudio.Nodes;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -92,7 +94,7 @@ namespace MySql.Data.VisualStudio.Editors
           (str1.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)) ||
           (str2.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)))
         {
-          MessageBox.Show(Resources.FkDlgBeforeClose, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.FkDlgBeforeClose));
           return false;
         }
       }
@@ -101,7 +103,7 @@ namespace MySql.Data.VisualStudio.Editors
         ForeignKey fk = ( ForeignKey )o;
         if( fk.Columns.Count == 0 )
         {
-          MessageBox.Show(string.Format(Resources.FkNoColumnsForForeignKey, fk.Name), Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, string.Format(Resources.FkNoColumnsForForeignKey, fk.Name)));
           return false;
         }
       }
@@ -290,7 +292,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       if (bad)
       {
-        MessageBox.Show(Resources.FKColumnsNotMatched, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetInformationDialogProperties(Resources.MySqlDataProviderPackage_Information, Resources.FKColumnsNotMatched));
         e.Cancel = true;
         return;
       }
@@ -298,7 +300,7 @@ namespace MySql.Data.VisualStudio.Editors
         (((ForeignKey)foreignKeyBindingSource.Current).ReferencedTable == tableNode.Table.Name) &&
         ( parent == child ) )
       {
-        MessageBox.Show(Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);       
+        InfoDialog.ShowDialog(InfoDialogProperties.GetInformationDialogProperties(Resources.MySqlDataProviderPackage_Information, Resources.FKSameColumn));
         return;
       }
       FKColumnPair pair = fkColumnsBindingSource.Current as FKColumnPair;

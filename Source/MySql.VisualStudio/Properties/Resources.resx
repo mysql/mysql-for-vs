@@ -408,7 +408,7 @@ Would you like to create it?</value>
     <value>Server</value>
   </data>
   <data name="ErrorAttemptingToDrop" xml:space="preserve">
-    <value>The following error occured while attempting to drop the {0} '{1}': {2}</value>
+    <value>An error occured while attempting to drop the {0} '{1}'.</value>
   </data>
   <data name="Node_UDFs" xml:space="preserve">
     <value>UDFs</value>
@@ -1256,10 +1256,10 @@ Check that the server is running, the database exists and the user Error establi
     <value>Information</value>
   </data>
   <data name="MySqlDataProviderPackage_CreateNewScriptError" xml:space="preserve">
-    <value>An error ocurred when trying to launch a MySql Script window: </value>
+    <value>An error ocurred when trying to launch a MySql Script window.</value>
   </data>
   <data name="MySqlScriptWindowLaunchError" xml:space="preserve">
-    <value>An error ocurred when trying to launch a MySql Script window: </value>
+    <value>An error ocurred when trying to launch a MySql Script window.</value>
   </data>
   <data name="ConnectionsManager" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ConnectionsManager_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -1340,7 +1340,7 @@ Check that the server is running, the database exists and the user Error establi
     <value>All selected settings were saved correctly.</value>
   </data>
   <data name="DbExportPanel_SaveSettingsError" xml:space="preserve">
-    <value>An error occured when saving the settings file: </value>
+    <value>An error occured when saving the settings file.</value>
   </data>
   <data name="DbExportPanel_NoDbSelectedError" xml:space="preserve">
     <value>No database or objects are selected</value>
@@ -1349,16 +1349,16 @@ Check that the server is running, the database exists and the user Error establi
     <value>Do you want to save the selected settings?</value>
   </data>
   <data name="StoredProcedureNode_StoredProcedureLoadError" xml:space="preserve">
-    <value>Unable to load the stored procedure for editing</value>
+    <value>Unable to load the stored procedure for editing.</value>
   </data>
   <data name="DocumentNode_UnableToSaveObjectError" xml:space="preserve">
-    <value>Unable to save object with error: </value>
+    <value>Unable to save object because an error occurred.</value>
   </data>
   <data name="TriggerNode_UnableToLoadObjectError" xml:space="preserve">
-    <value>Unable to load object with error: </value>
+    <value>Unable to load trigger.</value>
   </data>
   <data name="ViewNode_LoadViewError" xml:space="preserve">
-    <value>Unable to load view with error: </value>
+    <value>Unable to load view.</value>
   </data>
   <data name="ItemTemplateUtilities_SettingsRetrievalError" xml:space="preserve">
     <value>An error occured obtaining the connection string settings.</value>
@@ -1533,5 +1533,67 @@ https://dev.mysql.com/doc/internals/en/x-protocol.html</value>
   </data>
   <data name="DetailedResultsetView_LoadData_QueryExecuteError" xml:space="preserve">
     <value>The following error occurred while executing query '{0}': {1}</value>
+  </data>
+  <data name="DbCommandExtension_GetStoredProcedureDefinitionExtensionError" xml:space="preserve">
+    <value>Error on extension method "MySql.Data.VisualStudio.DDEX.GetStoredProcedureDefinition":
+{0}</value>
+  </data>
+  <data name="DbCommandExtension_GetSchemaDataTableExtensionError" xml:space="preserve">
+    <value>Error on extension method "MySql.Data.VisualStudio.DDEX.GetSchemaDataTable"
+{0}</value>
+  </data>
+  <data name="DbCommandExtension_ReaderExecutionError" xml:space="preserve">
+    <value>An error ocurred when trying to execute the reader.</value>
+  </data>
+  <data name="BaseWizard_PackageAddErrorDetail" xml:space="preserve">
+    <value>Check your NuGet version or your internet connection.</value>
+  </data>
+  <data name="BaseWizard_PackageAddErrorTitle" xml:space="preserve">
+    <value>Error adding jQuery library to the project</value>
+  </data>
+  <data name="ItemTemplatesBaseWebWizard_GenerateMvcItemsError" xml:space="preserve">
+    <value>An error occurred when generating MVC items. The application is not completed.</value>
+  </data>
+  <data name="ItemTemplateUtilities_ConfigFileGetError" xml:space="preserve">
+    <value>An error occurred obtaining the config file.</value>
+  </data>
+  <data name="ItemTemplateUtilities_RetrieveColumnsError" xml:space="preserve">
+    <value>An error occurred retrieving columns information.</value>
+  </data>
+  <data name="ItemTemplateUtilities_RetrieveFkError" xml:space="preserve">
+    <value>An error occurred retrieving foreign keys information.</value>
+  </data>
+  <data name="ItemTemplateUtilities_RetrieveMetadataError" xml:space="preserve">
+    <value>An error occurred retrieving metadata information.</value>
+  </data>
+  <data name="ItemTemplateUtilities_RetrieveSettingsError" xml:space="preserve">
+    <value>An error occurred retrieving settings.</value>
+  </data>
+  <data name="MySqlDataProviderPackage_ConnectorNetNotFoundError" xml:space="preserve">
+    <value>The MySQL .NET driver could not be found.</value>
+  </data>
+  <data name="MySqlNewPasswordDialog_PasswordSetError" xml:space="preserve">
+    <value>There was an error setting the password.</value>
+  </data>
+  <data name="StoredProcedureNode_StoredProcedureSaveError" xml:space="preserve">
+    <value>Unable to save the stored procedure.</value>
+  </data>
+  <data name="TablesSelection_ExportingError" xml:space="preserve">
+    <value>Exporting error</value>
+  </data>
+  <data name="TriggerNode_UnableToSaveObjectError" xml:space="preserve">
+    <value>Unable to save trigger.</value>
+  </data>
+  <data name="VsPkg_AddConnectionErrorDetail" xml:space="preserve">
+    <value>Check that the server is running, the database exist and the user credentials are valid.</value>
+  </data>
+  <data name="VsPkg_AddConnectionErrorTitle" xml:space="preserve">
+    <value>Error establishing the database connection.</value>
+  </data>
+  <data name="WebConfigDlg_SelectEfVersion" xml:space="preserve">
+    <value>Please select the Entity Framework version.</value>
+  </data>
+  <data name="WebWizard_UserCreationError" xml:space="preserve">
+    <value>An error occurred creating the user.</value>
   </data>
 </root>

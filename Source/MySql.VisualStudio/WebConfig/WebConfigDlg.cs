@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -22,21 +22,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using EnvDTE80;
 using EnvDTE;
 using MySql.Data.VisualStudio.Properties;
-using System.Web.Security;
-using System.Configuration.Provider;
-using System.Web.Profile;
-using System.Reflection;
-using System.Diagnostics;
-using System.Configuration;
-using System.Data.Common;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
@@ -309,7 +301,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (ArgumentException)
       {
-        MessageBox.Show(this, Resources.ConnectionStringInvalid, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.ConnectionStringInvalid));
       }
     }
 
@@ -575,7 +567,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (ArgumentException)
       {
-        MessageBox.Show(this, Resources.ConnectionStringInvalid, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.ConnectionStringInvalid));
       }
     }
 
@@ -585,7 +577,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         if (useProvider.Checked && !radioBtnEF5.Checked && !radioBtnEF6.Checked)
         {
-          MessageBox.Show(this, "Please select the Entity Framework version.", Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.WebConfigDlg_SelectEfVersion));
           return false;
         }
       }
@@ -595,7 +587,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         {
           if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
           {
-            MessageBox.Show(this, Resources.WebConfigConnStrNoEmpty, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, Resources.WebConfigConnStrNoEmpty));
             return false;
           }
         }
@@ -622,8 +614,7 @@ namespace MySql.Data.VisualStudio.WebConfig
             if (!valid)
             {
               controlsToValidate = (controlsToValidate += ".").Replace(", .", ".");
-              MessageBox.Show(this, string.Format("{0}: {1}", Resources.WrongNetFxVersionMessage, controlsToValidate),
-                                      Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+              InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, string.Format("{0}: {1}", Resources.WrongNetFxVersionMessage, controlsToValidate)));
               return false;
             }
           }

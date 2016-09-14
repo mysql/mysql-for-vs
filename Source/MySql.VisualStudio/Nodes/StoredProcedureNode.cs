@@ -34,6 +34,9 @@ using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Forms;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.Nodes
@@ -150,7 +153,7 @@ namespace MySql.Data.VisualStudio.Nodes
       }
       catch (Exception ex)
       {
-        MessageBox.Show(Resources.StoredProcedureNode_StoredProcedureLoadError, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.StoredProcedureNode_StoredProcedureLoadError, true);
         Debug.WriteLine(ex.Message);
       }
       return sql;
@@ -208,7 +211,7 @@ namespace MySql.Data.VisualStudio.Nodes
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, Resources.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.MessageBoxErrorTitle, Resources.StoredProcedureNode_StoredProcedureSaveError, true);
         return false;
       }
     }
@@ -315,7 +318,7 @@ namespace MySql.Data.VisualStudio.Nodes
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.GetBaseException().Message, "Debugger Error");
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties("Debugger Error", ex.GetBaseException().Message));
       }
       finally
       {

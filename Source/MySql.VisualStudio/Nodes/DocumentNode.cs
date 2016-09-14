@@ -24,12 +24,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySql;
 
 namespace MySql.Data.VisualStudio.Nodes
 {
@@ -40,7 +40,7 @@ namespace MySql.Data.VisualStudio.Nodes
     {
     }
 
-    private uint DocumentCookie;
+    private uint _documentCookie;
 
     protected abstract void Load();
     public abstract string GetSaveSql();
@@ -152,7 +152,7 @@ namespace MySql.Data.VisualStudio.Nodes
 
     public int OnRegisterDocData(uint docCookie, IVsHierarchy pHierNew, uint itemidNew)
     {
-      DocumentCookie = docCookie;
+      _documentCookie = docCookie;
       Debug.Assert(HierarchyAccessor.Hierarchy == pHierNew, "Registration in wrong hierarchy");
       return VSConstants.S_OK;
     }
@@ -181,7 +181,7 @@ namespace MySql.Data.VisualStudio.Nodes
       }
       catch (Exception ex)
       {
-        MessageBox.Show(Resources.DocumentNode_UnableToSaveObjectError + ex.Message);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, Resources.DocumentNode_UnableToSaveObjectError, true);
         return VSConstants.S_OK;
       }
 

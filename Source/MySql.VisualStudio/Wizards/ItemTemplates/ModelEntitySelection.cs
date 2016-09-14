@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -23,17 +23,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using MySql.Data.VisualStudio;
 using MySql.Data.MySqlClient;
 using EnvDTE;
-using MySql.Data.VisualStudio.DBExport;
-using VSLangProj;
-using System.Xml.Linq;
+using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 {
@@ -197,8 +193,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       {
         this.Invoke((Action)(() =>
         {
-          MessageBox.Show(
-            string.Format("{0} {1}", _runWorkerCompletedErrorMessage, e.Error.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorTitle, string.Format("{0} {1}", _runWorkerCompletedErrorMessage, e.Error.Message)));
         }));
       }
 

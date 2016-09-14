@@ -34,6 +34,7 @@ using MySql.Data.VisualStudio.DBExport;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio.ServerInstances
@@ -192,7 +193,7 @@ namespace MySql.Data.VisualStudio.ServerInstances
       }
       catch (Exception ex)
       {
-        MessageBox.Show(string.Format("The connection string is not valid: {0}", ex.Message));
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, "The connection string is not valid.", true);
       }
     }
 

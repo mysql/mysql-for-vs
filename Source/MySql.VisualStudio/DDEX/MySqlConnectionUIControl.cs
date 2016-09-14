@@ -29,6 +29,9 @@ using System.Data.Common;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.DDEX
 {
@@ -57,7 +60,7 @@ namespace MySql.Data.VisualStudio.DDEX
     {
       if (ConnectionProperties == null)
       {
-        MessageBox.Show(Resources.ConnectionPropertiesNull, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.ConnectionPropertiesNull));
         throw new Exception(Resources.ConnectionPropertiesNull);
       }
 
@@ -115,9 +118,9 @@ namespace MySql.Data.VisualStudio.DDEX
         }
         return true;
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        MessageBox.Show(string.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
+        MySqlSourceTrace.WriteAppErrorToLog(ex, null, string.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text), true);
         return false;
       }
       finally
@@ -193,9 +196,9 @@ namespace MySql.Data.VisualStudio.DDEX
           }
         }
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        MessageBox.Show(Resources.UnableToRetrieveDatabaseList, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MySqlSourceTrace.WriteAppErrorToLog(ex, Resources.ErrorTitle, Resources.UnableToRetrieveDatabaseList, true);
       }
     }
 
@@ -227,7 +230,7 @@ namespace MySql.Data.VisualStudio.DDEX
 
       var prompt = string.Format(Resources.UnknownDbPromptCreate, dbList.Text);
       prompt = prompt.Replace(@"\n", @"\n");
-      DialogResult result = MessageBox.Show(prompt, null, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+      var infoResult = InfoDialog.ShowDialog(InfoDialogProperties.GetYesNoDialogProperties(InfoDialog.InfoType.Warning, Resources.WarningText, prompt));
       var parentForm = ParentForm;
       if (parentForm == null)
       {
@@ -235,15 +238,19 @@ namespace MySql.Data.VisualStudio.DDEX
       }
 
       parentForm.DialogResult = DialogResult.None;
-      if (result != DialogResult.Yes)
+      if (infoResult.DialogResult != DialogResult.Yes)
       {
         return;
       }
 
       if (!AttemptToCreateDatabase())
-        MessageBox.Show(string.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
+      {
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, string.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text)));
+      }
       else
+      {
         parentForm.DialogResult = DialogResult.OK;
+      }
     }
 
     private void SavePasswordChanged(object sender, EventArgs e)

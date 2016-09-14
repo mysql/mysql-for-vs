@@ -30,6 +30,8 @@ using Microsoft.VisualStudio.Shell;
 using MySql.Data.VisualStudio.DbObjects;
 using MySql.Data.VisualStudio.Nodes;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -457,7 +459,7 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void AdjustComboBox(ComboBox cb, string type)
     {
-      if (String.IsNullOrEmpty(type)) return;
+      if (string.IsNullOrEmpty(type)) return;
       int index = type.IndexOf("(");
       if (index == -1)
         cb.Items.Add(type);
@@ -480,7 +482,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       if (e.ColumnIndex != 1) return;
       string type = e.FormattedValue as string;
-      if (String.IsNullOrEmpty(type)) return;
+      if (string.IsNullOrEmpty(type)) return;
       if (!TypeColumn.Items.Contains(type))
       {
         var typeToAdd = type.IndexOf('(') >= 0 ? type.Substring(0, type.IndexOf('(')) : type;
@@ -488,11 +490,11 @@ namespace MySql.Data.VisualStudio.Editors
         types.AddRange(Metadata.GetDataTypes(false));
         if (types.Contains(typeToAdd.ToLowerInvariant()))
         {
-          TypeColumn.Items.Add(type);          
+          TypeColumn.Items.Add(type);
         }
         else
         {
-          MessageBox.Show(Resources.InvalidDataType, Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.InvalidDataType));
           columnGrid.CurrentCell.Value = dataTypes[0];
           columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
           columnGrid.CurrentCell.Selected = true;
