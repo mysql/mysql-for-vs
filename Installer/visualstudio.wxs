@@ -35,11 +35,11 @@
         <File Id='vccorlib120' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
         <File Id='base.dll' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
-        <File Id='libglib-2.0-0.dll' Name='libglib-2.0-0.dll' DiskId='1'
+        <File Id='libglib_2.0_0.dll' Name='libglib-2.0-0.dll' DiskId='1'
               Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
         <File Id='libiconv.dll' Name='libiconv.dll' DiskId='1'
               Source='..\Dependencies\Parser\libiconv.dll'/>
-        <File Id='libintl-8.dll' Name='libintl-8.dll' DiskId='1'
+        <File Id='libintl_8.dll' Name='libintl-8.dll' DiskId='1'
               Source='..\Dependencies\Parser\libintl-8.dll'/>
         <File Id='parsers.dll' Name='parsers.dll' DiskId='1'
               Source='..\Dependencies\Parser\parsers.dll'/>
@@ -142,11 +142,11 @@
         <File Id='vccorlib120_2012' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
         <File Id='base.dll_2012' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
-        <File Id='libglib-2.0-0.dll_2012' Name='libglib-2.0-0.dll' DiskId='1'
+        <File Id='libglib_2.0_0.dll_2012' Name='libglib-2.0-0.dll' DiskId='1'
               Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
         <File Id='libiconv.dll_2012' Name='libiconv.dll' DiskId='1'
               Source='..\Dependencies\Parser\libiconv.dll'/>
-        <File Id='libintl-8.dll_2012' Name='libintl-8.dll' DiskId='1'
+        <File Id='libintl_8.dll_2012' Name='libintl-8.dll' DiskId='1'
               Source='..\Dependencies\Parser\libintl-8.dll'/>
         <File Id='parsers.dll_2012' Name='parsers.dll' DiskId='1'
               Source='..\Dependencies\Parser\parsers.dll'/>
@@ -249,11 +249,11 @@
         <File Id='vccorlib120_2013' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
         <File Id='base.dll_2013' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
-        <File Id='libglib-2.0-0.dll_2013' Name='libglib-2.0-0.dll' DiskId='1'
+        <File Id='libglib_2.0_0.dll_2013' Name='libglib-2.0-0.dll' DiskId='1'
               Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
         <File Id='libiconv.dll_2013' Name='libiconv.dll' DiskId='1'
               Source='..\Dependencies\Parser\libiconv.dll'/>
-        <File Id='libintl-8.dll_2013' Name='libintl-8.dll' DiskId='1'
+        <File Id='libintl_8.dll_2013' Name='libintl-8.dll' DiskId='1'
               Source='..\Dependencies\Parser\libintl-8.dll'/>
         <File Id='parsers.dll_2013' Name='parsers.dll' DiskId='1'
               Source='..\Dependencies\Parser\parsers.dll'/>
@@ -357,11 +357,11 @@
         <File Id='vccorlib120_2015' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
         <File Id='base.dll_2015' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
-        <File Id='libglib-2.0-0.dll_2015' Name='libglib-2.0-0.dll' DiskId='1'
+        <File Id='libglib_2.0_0.dll_2015' Name='libglib-2.0-0.dll' DiskId='1'
               Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
         <File Id='libiconv.dll_2015' Name='libiconv.dll' DiskId='1'
               Source='..\Dependencies\Parser\libiconv.dll'/>
-        <File Id='libintl-8.dll_2015' Name='libintl-8.dll' DiskId='1'
+        <File Id='libintl8.dll_2015' Name='libintl-8.dll' DiskId='1'
               Source='..\Dependencies\Parser\libintl-8.dll'/>
         <File Id='parsers.dll_2015' Name='parsers.dll' DiskId='1'
               Source='..\Dependencies\Parser\parsers.dll'/>
@@ -485,8 +485,6 @@
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2010_Extension'/>
       <ComponentRef Id='VS2010_Templates'/>
-      <ComponentRef Id='VS2010_NgModules'/>
-      <ComponentRef Id='VS2010_NgJs'/>
       <ComponentRef Id='VS2010_MD.Library' />
       <!--<ComponentRef Id='VS2010_EF.Library' />-->
       <ComponentRef Id='VS2010_Web.Library' />
@@ -504,16 +502,12 @@
         <ComponentRef Id='VS10_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS10_T4TemplatesVBDir' />
       </Feature>
-      <!-- xShell Modules in AppData folder -->
-      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
     </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
       <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2012_Extension'/>
       <ComponentRef Id='VS2012_Templates'/>
-      <ComponentRef Id='VS2012_NgModules'/>
-      <ComponentRef Id='VS2012_NgJs'/>
       <ComponentRef Id='VS2012_MD.Library' />
       <ComponentRef Id='VS2012_Web.Library' />
       <ComponentRef Id='Remove.VS2012_MD.Library'/>
@@ -530,16 +524,12 @@
         <ComponentRef Id='VS2012_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2012_T4TemplatesVBDir' />
       </Feature>
-      <!-- xShell Modules in AppData folder -->
-      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
     </Feature>
 
     <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
       <Condition Level='0'>Not VS_2013_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2013_Extension'/>
       <ComponentRef Id='VS2013_Templates'/>
-      <ComponentRef Id='VS2013_NgModules'/>
-      <ComponentRef Id='VS2013_NgJs'/>
       <ComponentRef Id='VS2013_MD.Library' />
       <ComponentRef Id='VS2013_Web.Library' />
       <ComponentRef Id='Remove.VS2013_MD.Library'/>
@@ -556,16 +546,12 @@
         <ComponentRef Id='VS2013_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2013_T4TemplatesVBDir' />
       </Feature>
-      <!-- xShell Modules in AppData folder -->
-      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
     </Feature>
 
     <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
       <Condition Level='0'>Not VS_2015_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2015_Extension'/>
       <ComponentRef Id='VS2015_Templates'/>
-      <ComponentRef Id='VS2015_NgModules'/>
-      <ComponentRef Id='VS2015_NgJs'/>
       <ComponentRef Id='VS2015_MD.Library' />
       <ComponentRef Id='VS2015_Web.Library' />
       <ComponentRef Id='Remove.VS2015_MD.Library'/>
@@ -582,8 +568,6 @@
         <ComponentRef Id='VS2015_T4TemplatesCSharpDir' />
         <ComponentRef Id='VS2015_T4TemplatesVBDir' />
       </Feature>
-      <!-- xShell Modules in AppData folder -->
-      <ComponentRef Id='xShellModules_AppDataFolder_Component'/>
     </Feature>
 
     <!-- Visual Studio 2010 installation location -->
