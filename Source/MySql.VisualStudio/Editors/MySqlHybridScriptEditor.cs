@@ -598,7 +598,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="boxedResult">A boxed execution result.</param>
     private void PrintUnknownResult(string statement, object boxedResult)
     {
-      string executionTime = ExtensionMethods.ZERO_EXECUTION_TIME;
+      string executionTime = MySql.Utility.Classes.ExtensionMethods.ZERO_EXECUTION_TIME;
       var dictionariesList = boxedResult.UnknownResultToDictionaryList();
       if (dictionariesList != null)
       {

@@ -61,7 +61,9 @@ namespace MySql.Data.VisualStudio.Editors
           Connection.Dispose();
         }
 
+#if !VS_SDK_2010
         VSColorTheme.ThemeChanged -= VSColorTheme_ThemeChanged;
+#endif
       }
 
       base.Dispose(disposing);
