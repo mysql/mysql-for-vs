@@ -25,7 +25,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 
 namespace MySql.VisualStudio.CustomAction
 {
@@ -88,7 +88,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
+      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL for Visual Studio");
 
       if (string.IsNullOrEmpty(installedPath))
       {
@@ -122,7 +122,7 @@ namespace MySql.VisualStudio.CustomAction
         }
         catch (Exception ex)
         {
-          session.Log("error when calling the method " + ex.Message + " " + ex.InnerException.Message);
+          session.Log("error when calling the method " + ex.Message + " " + (ex.InnerException != null ? ex.InnerException.Message : ex.Message));
           return ActionResult.NotExecuted;
         }
       }
@@ -136,7 +136,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult GetConnectorNetVersion(Session session)
     {
-      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
 
       session["CNETINSTALLED"] = "0";
       session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
