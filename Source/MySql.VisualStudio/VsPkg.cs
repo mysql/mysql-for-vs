@@ -779,7 +779,10 @@ namespace MySql.Data.VisualStudio
         connectionName = BaseEditorControl.UNTITLED_CONNECTION;
       }
 
-      var connection = connectionManager.AddConnection(connectionName, GuidList.Provider, connectionString, false);
+      // Set AllowUserVariables to true
+      var csb = new MySqlConnectionStringBuilder(connectionString) { AllowUserVariables = true };
+
+      var connection = connectionManager.AddConnection(connectionName, GuidList.Provider, csb.ToString(), false);
       connection.Connection.EnsureConnected();
       return connection;
     }
@@ -921,7 +924,9 @@ namespace MySql.Data.VisualStudio
         return null;
       }
 
-      mySqlConnection = new MySqlConnection(mySqlConnection.ConnectionString);
+      var csb = new MySqlConnectionStringBuilder(mySqlConnection.ConnectionString);
+      csb.AllowUserVariables = true;
+      mySqlConnection = new MySqlConnection(csb.ToString());
       // Get settings from current connection to assign them to the SelectedMySqlConnection
       var settingsValue = GetSettingsPropertyFromConnection(mySqlConnection) != null
                           ? GetSettingsPropertyFromConnection(mySqlConnection).GetValue(mySqlConnection, null)

@@ -863,6 +863,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       var csb = (MySqlConnectionStringBuilder)settings.GetValue(connection, null);
+      csb.AllowUserVariables = true;
       return csb.ConnectionString;
     }
 

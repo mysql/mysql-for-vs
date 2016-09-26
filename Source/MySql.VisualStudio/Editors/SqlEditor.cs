@@ -40,12 +40,22 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   internal sealed partial class SqlEditor : BaseEditorControl
   {
+    #region Fields
+
+    /// <summary>
+    /// The <see cref="MySqlCommand"/> used to execute non-select queries.
+    /// </summary>
+    private MySqlCommand _command;
+
+    #endregion Fields
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SqlEditor"/> class.
     /// </summary>
     /// <exception cref="System.Exception">MySql Data Provider is not correctly registered</exception>
     public SqlEditor()
     {
+      _command = null;
       InitializeComponent();
 
       Factory = MySqlClientFactory.Instance;
@@ -103,11 +113,31 @@ namespace MySql.Data.VisualStudio.Editors
       SetConnection(Package.SelectedMySqlConnection, Package.SelectedMySqlConnectionName);
     }
 
+    #region Properties
+
+    /// <summary>
+    /// The <see cref="MySqlCommand"/> used to execute non-select queries.
+    /// </summary>
+    public MySqlCommand Command
+    {
+      get
+      {
+        if (_command == null)
+        {
+          _command = new MySqlCommand(null, Connection as MySqlConnection);
+        }
+
+        return _command;
+      }
+    }
+
     /// <summary>
     /// Gets or sets the pane for the current editor.}
     /// In this case, the pane is from type <see cref="SqlEditorPane"/>.
     /// </summary>
     internal SqlEditorPane Pane { get; set; }
+
+    #endregion Properties
 
     #region Overrides
 
@@ -179,11 +209,11 @@ namespace MySql.Data.VisualStudio.Editors
         return;
       }
 
-      var script = new MySqlScript(Connection as MySqlConnection, sql);
       try
       {
-        int rows = script.Execute();
-        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", rows), MessageType.Information);
+        Command.CommandText = sql;
+        var affectedRows = Command.ExecuteNonQuery();
+        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", affectedRows), MessageType.Information);
       }
       catch (Exception ex)
       {

@@ -46,6 +46,11 @@ namespace MySql.Data.VisualStudio.Editors
           components.Dispose();
         }
 
+        if (_command != null)
+        {
+          _command.Dispose();
+        }
+
         if (Connection != null)
         {
           if (Connection.State != ConnectionState.Closed)
