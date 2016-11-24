@@ -285,6 +285,7 @@ namespace MySql.Data.VisualStudio.Editors
           break;
 
         case ScriptLanguageType.Python:
+          script = script.NormalizeNewLineCharacters();
           statements = script.BreakIntoPythonStatements();
           break;
       }
