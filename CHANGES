@@ -1,3 +1,8 @@
+2.0.5
+- Fixed a problem with the Field Types view which failed to show any fields whenever the executed statement contained table names with a format of "<database_name>.<table_name>" or field names with a format of "<database_name>.<table_name>.<field_name>". (MySQL Bug #82882, Bug #24601948 - FIELD TYPES NOT WORKING FOR QUERIES WHERE SCHEMA IS SPECIFIED)
+- Fixed a problem with the Python Scripts feature in which the execution failed if the line termination sequences included LF instead of CRLF. This scenario may occur when copying code from other editors into the Visual Studio editor. (MySQL Bug #83854, Bug #25107595 - PYTHON SCRIPT NOT GENERATING OUTPUT IN BATCH MODE)
+
+
 2.0.4
 - Enhanced the logic that migrates stored MySQL connections to the MySQL Workbench connections.xml file. In previous versions
   the migration was offered and if not done at that moment, the dialog to migrate was shown every time the "MySQL Connections

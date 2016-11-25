@@ -352,7 +352,8 @@ namespace MySql.Data.VisualStudio.Editors
       var tables = tablesSubstr.Split(new[] { "join" }, StringSplitOptions.None);
       for (int ctr = 0; ctr < tables.Count(); ctr++)
       {
-        result.Append(string.Format("'{0}'", tables[ctr].TrimStart().Split(' ')[0].Trim()));
+        var tableName = tables[ctr].TrimStart().Split(' ')[0].Trim();
+        result.Append(string.Format("'{0}'", tableName.Substring(tableName.LastIndexOf(".",StringComparison.Ordinal) + 1)));
 
         if (ctr + 1 < tables.Length)
         {
@@ -389,10 +390,8 @@ namespace MySql.Data.VisualStudio.Editors
       var columns = colsSubstr.Split(',');
       for (int ctr = 0; ctr < columns.Length; ctr++)
       {
-        var col = columns[ctr];
-        result.Append(!col.Contains(".")
-          ? string.Format("'{0}'", col.Trim())
-          : string.Format("'{0}'", col.Substring(col.IndexOf(".", StringComparison.Ordinal) + 1).Trim()));
+        result.Append(string.Format("'{0}'", columns[ctr].Substring(columns[ctr].LastIndexOf(".", StringComparison.Ordinal) + 1).Trim()));
+
         if (ctr + 1 < columns.Length)
         {
           result.Append(", ");
