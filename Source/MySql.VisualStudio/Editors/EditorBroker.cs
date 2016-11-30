@@ -78,6 +78,20 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Returns the full name of the DTE's active document.
+    /// </summary>
+    /// <returns></returns>
+    internal string GetActiveDocumentFullName()
+    {
+      if (Dte.ActiveDocument == null)
+      {
+        return null;
+      }
+
+      return Dte.ActiveDocument.FullName;
+    }
+
+    /// <summary>
     /// Returns the DbConnection associated with the current mysql editorWindow.
     /// </summary>
     /// <returns></returns>
@@ -141,6 +155,23 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
+    }
+
+    /// <summary>
+    /// Unregisters the editor with the old document path and re-registers the same editor but with an updated document path.
+    /// </summary>
+    /// <param name="oldDocumentPath">Old document path set when the script was first created.</param>
+    /// <param name="newDocumentPath">New document path set when the script was saved for the first time.</param>
+    internal static void UpdateEditorDocumentPath(string oldDocumentPath, string newDocumentPath)
+    {
+      VSCodeEditorWindow editor;
+
+      if (oldDocumentPath!=null && Broker.dic.TryGetValue(oldDocumentPath, out editor))
+      {
+        UnregisterEditor(editor);
+        editor.Parent.Editor.SetDocumentPath(newDocumentPath);
+        RegisterEditor(editor);
+      }
     }
   }
 }

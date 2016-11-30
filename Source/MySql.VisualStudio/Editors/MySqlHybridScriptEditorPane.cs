@@ -30,7 +30,7 @@ namespace MySql.Data.VisualStudio.Editors
   {
     private readonly MySqlHybridScriptEditor _editor;
     internal SqlEditorFactory Factory { get; private set; }
-    internal string DocumentPath { get; private set; }
+    internal string DocumentPath { get; set; }
 
     public MySqlHybridScriptEditorPane(ServiceProvider sp, SqlEditorFactory factory, ScriptLanguageType scriptType = ScriptLanguageType.JavaScript)
       : base(sp)

@@ -333,6 +333,7 @@ namespace MySql.Data.VisualStudio.Editors
             FileName = pszFilename;
             SaveFile(FileName);
             IsDirty = false;
+            EditorBroker.UpdateEditorDocumentPath(EditorBroker.Broker.GetActiveDocumentFullName(), FileName);
           }
           else // --- Else, Save a Copy As
           {
@@ -379,7 +380,15 @@ namespace MySql.Data.VisualStudio.Editors
     /// DocumentPath of the Pane property from a given Editor class, without requiring Editor's
     /// consumers to cast the object to a given type.
     /// </summary>
-    public virtual string GetDocumentPath() { return null; }
+    internal virtual string GetDocumentPath() { return null; }
+
+    /// <summary>
+    /// Intended to be overwriten at inheriting child, this method should allow to update the
+    /// DocumentPath of the Pane property from a given Editor class, without requiring Editor's
+    /// consumers to cast the object to a given type.
+    /// </summary>
+    /// <param name="documentPath">New document path.</param>
+    internal virtual void SetDocumentPath(string documentPath) { }
 
     protected virtual void SaveFile(string newFileName) { }
     protected virtual void LoadFile(string newFileName) { }

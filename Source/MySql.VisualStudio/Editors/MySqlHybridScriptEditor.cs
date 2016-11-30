@@ -207,9 +207,18 @@ namespace MySql.Data.VisualStudio.Editors
     /// Gets the full document path, including file name and extension
     /// </summary>
     /// <returns>The full document path, including file name and extension</returns>
-    public override string GetDocumentPath()
+    internal override string GetDocumentPath()
     {
       return Pane.DocumentPath;
+    }
+
+    /// <summary>
+    /// Sets the document path.
+    /// </summary>
+    /// <param name="documentPath">New document path.</param>
+    internal override void SetDocumentPath(string documentPath)
+    {
+      Pane.DocumentPath = documentPath;
     }
 
     /// <summary>

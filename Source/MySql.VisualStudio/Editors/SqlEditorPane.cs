@@ -29,7 +29,7 @@ namespace MySql.Data.VisualStudio.Editors
   {
     private SqlEditor editor;
     internal SqlEditorFactory Factory { get; private set; }
-    internal string DocumentPath { get; private set; }
+    internal string DocumentPath { get; set; }
 
     public SqlEditorPane(ServiceProvider sp, SqlEditorFactory factory)
       : base(sp)
