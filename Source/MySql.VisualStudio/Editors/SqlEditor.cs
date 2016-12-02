@@ -32,6 +32,8 @@ using MySql.Utility.Classes;
 using MySql.Utility.Classes.MySql;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using MySql.Data.VisualStudio.Properties;
+using System.ComponentModel;
+using System.Data;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -222,11 +224,29 @@ namespace MySql.Data.VisualStudio.Editors
       {
         Command.CommandText = sql;
         var affectedRows = Command.ExecuteNonQuery();
-        Utils.WriteToOutputWindow(string.Format("{0} row(s) affected", affectedRows), MessageType.Information);
+
+        //Get query execution statistics
+        using (var mysqlAdapter = new MySqlDataAdapter(Command))
+        {
+          Command.CommandText = string.Format(new ComponentResourceManager(typeof(SqlEditor)).GetString("baseQueryStatisticsQuery"), sql.Trim().Replace("'", "''"));
+          var data = new DataTable();
+          Command.ExecuteNonQuery();
+          var messageText = string.Empty;
+          string executionTime = null;
+
+          if (mysqlAdapter.Fill(data) > 0)
+          {
+            object val = data.Rows[0]["message_text"];
+            messageText = val is DBNull ? messageText : val.ToString();
+            executionTime = data.Rows[0]["server_execution_time"].ToString();
+          }
+
+          WriteToMySqlOutput(sql, string.Format("{0} row(s) affected {1}", affectedRows, messageText), executionTime, MessageType.Information);
+        }
       }
       catch (Exception ex)
       {
-        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
+        WriteToMySqlOutput(sql, ex.Message, null, MessageType.Error);
         MySqlSourceTrace.WriteAppErrorToLog(ex, false);
       }
     }
@@ -255,10 +275,11 @@ namespace MySql.Data.VisualStudio.Editors
         newResPage.Controls.Add(detailedData);
         ResultsTabControl.TabPages.Add(newResPage);
         ResultsTabControl.Visible = querySuccess;
+        WriteToMySqlOutput(sql, string.Format("{0} row(s) returned",detailedData.AffectedRows),detailedData.ServerExecutionTime, MessageType.Information);
       }
       catch (Exception ex)
       {
-        Utils.WriteToOutputWindow(ex.Message, MessageType.Error);
+        WriteToMySqlOutput(sql, ex.Message, null, MessageType.Error);
         MySqlSourceTrace.WriteAppErrorToLog(ex, false);
       }
       finally
@@ -287,7 +308,7 @@ namespace MySql.Data.VisualStudio.Editors
             // Check syntax
             if (!mySqlParser.CheckSyntax(sqlStmt[sqlIdx]))
             {
-              Utils.WriteToOutputWindow(Resources.SyntaxErrorsFoundMessage + mySqlParser.ErrorMessagesInSingleText, MessageType.Error);
+              WriteToMySqlOutput(sqlStmt[sqlIdx], Resources.SyntaxErrorsFoundMessage + mySqlParser.ErrorMessagesInSingleText, null, MessageType.Error);
               return;
             }
 
@@ -307,6 +328,23 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       StoreCurrentDatabase();
+    }
+
+    /// <summary>
+    /// Writes to the My SQL Output Tool Window.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="duration">The duration.</param>
+    /// <param name="messageType">Type of message.</param>
+    protected override void WriteToMySqlOutput(string action, string message, string duration, MessageType messageType)
+    {
+      if (string.IsNullOrEmpty(duration))
+      {
+       duration = "0.00";
+      }
+
+      base.WriteToMySqlOutput(action, message, string.Format("{0} sec", duration.Length > 4 ? duration.Substring(0, 4) : duration), messageType);
     }
   }
 }

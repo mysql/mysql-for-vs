@@ -1306,8 +1306,8 @@ namespace MySql.Data.VisualStudio
       }
 
       mySqlOutputWindowMenu.Visible = false;
-      // Check if any "MySqlHybridScriptEditor" editor window is visible, in order to show/hide the MySqlOutput menu item
-      if (CountMySqlHybridScriptEditorWindows() > 0)
+      // Check if any "SQLEditor" or "MySqlHybridScriptEditor" editor window is visible, in order to show/hide the MySqlOutput menu item
+      if (CountEditorWindows() > 0)
       {
         mySqlOutputWindowMenu.Visible = true;
         mySqlOutputWindowMenu.Enabled = true;
@@ -1353,8 +1353,8 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public void CloseMySqlOutputWindow()
     {
-      // If we don't have any MySqlHybridScriptEditor window opened, close the current MySqlOutput window (_mySqlOutputWindowCounter - 1)
-      if (CountMySqlHybridScriptEditorWindows() > 0)
+      // If we don't have any MySqlHybridScriptEditor or SQLEditor windows opened, close the current MySqlOutput window (_mySqlOutputWindowCounter - 1)
+      if (CountEditorWindows() > 0)
       {
         return;
       }
@@ -1382,16 +1382,17 @@ namespace MySql.Data.VisualStudio
     }
 
     /// <summary>
-    /// Counts all the opened MySqlHybridScriptEditor editor windows.
+    /// Counts all the opened editor windows.
     /// </summary>
     /// <returns></returns>
-    private int CountMySqlHybridScriptEditorWindows()
+    private int CountEditorWindows()
     {
       EnvDTE80.DTE2 applicationObject = GetDTE2();
       Documents documents = applicationObject.Documents;
       return documents.Cast<Document>().Count(document =>
         document.FullName.Contains(JAVASCRIPT_EXTENSION, StringComparison.InvariantCultureIgnoreCase) ||
-        document.FullName.Contains(PYTHON_EXTENSION, StringComparison.InvariantCultureIgnoreCase));
+        document.FullName.Contains(PYTHON_EXTENSION, StringComparison.InvariantCultureIgnoreCase) ||
+        document.FullName.Contains(SQL_EXTENSION, StringComparison.InvariantCultureIgnoreCase));
     }
 
     /// <summary>

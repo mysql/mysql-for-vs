@@ -72,6 +72,11 @@ namespace MySql.Data.VisualStudio.Editors
     #region Fields
 
     /// <summary>
+    /// Stores the number of affected rows after executing a sql statement.
+    /// </summary>
+    private int _affectedRows;
+
+    /// <summary>
     /// This property stores the query used to configure the Performance_Schema database
     /// </summary>
     private string _basePerformanceSchemaConfigurationQuery;
@@ -106,6 +111,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     private int _serverVersion;
 
+    /// <summary>
+    /// Stores the time in seconds taken to execute a sql statement.
+    /// </summary>
+    private string _serverExecutionTime;
+
     #endregion Fields
 
     /// <summary>
@@ -133,6 +143,17 @@ namespace MySql.Data.VisualStudio.Editors
     #region Properties
 
     /// <summary>
+    /// Gets the the number of affected rows after executing a sql statement.
+    /// </summary>
+    public int AffectedRows
+    {
+      get
+      {
+       return _affectedRows;
+      }
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="MySqlConnection"/> object used to execute the queries.
     /// </summary>
     public MySqlConnection Connection
@@ -146,6 +167,17 @@ namespace MySql.Data.VisualStudio.Editors
       {
         _connection = value;
         _serverVersion = 0;
+      }
+    }
+
+    /// <summary>
+    /// Gets the time in seconds taken to execute a sql statement.
+    /// </summary>
+    public string ServerExecutionTime
+    {
+      get
+      {
+        return _serverExecutionTime;
       }
     }
 
@@ -264,7 +296,7 @@ namespace MySql.Data.VisualStudio.Editors
             }
 
             currentQuery = cmd.CommandText = _queries[QUERY_KEY];
-            mysqlAdapter.Fill(resultDataTable);
+            _affectedRows = mysqlAdapter.Fill(resultDataTable);
 
             if (_queries.ContainsKey(FIELD_TYPE_KEY) && !string.IsNullOrEmpty(_queries[FIELD_TYPE_KEY]))
             {
@@ -276,7 +308,7 @@ namespace MySql.Data.VisualStudio.Editors
             {
               currentQuery = cmd.CommandText = _queries[QUERY_STATISTICS_KEY];
               queryStatisticsDataTable = new DataTable();
-              mysqlAdapter.Fill(queryStatisticsDataTable);
+              _serverExecutionTime = mysqlAdapter.Fill(queryStatisticsDataTable) > 0 ? queryStatisticsDataTable.Rows[0]["server_execution_time"].ToString() : null;
             }
 
             if (_queries.ContainsKey(EXECUTION_PLAN_KEY) && !string.IsNullOrEmpty(_queries[EXECUTION_PLAN_KEY]))

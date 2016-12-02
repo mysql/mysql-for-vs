@@ -188,4 +188,7 @@
         AYAFAAGAAQEBgAUAAYABCQGABQABgAEFAYAFAAGAAQ8BAAEBBAABgAEPAv8FAAE3Av8EAAs=
 </value>
   </data>
+  <data name="baseQueryStatisticsQuery" xml:space="preserve">
+    <value>select (timer_end - timer_start)*10E-12 as `server_execution_time`, MESSAGE_TEXT as 'message_text' from performance_schema.events_statements_history_long where sql_text = '{0}' order by event_id desc limit 1;</value>
+  </data>
 </root>

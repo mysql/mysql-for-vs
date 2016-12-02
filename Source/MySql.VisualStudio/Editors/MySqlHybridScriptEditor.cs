@@ -568,7 +568,7 @@ namespace MySql.Data.VisualStudio.Editors
         var sqlResult = rowResult as SqlResult;
         if (sqlResult != null)
         {
-          resultMessage.AppendFormat("Query OK, {0} rows affected, {1} warning(s)", sqlResult.GetAffectedRowCount(), rowResult.GetWarningCount());
+          resultMessage.AppendFormat("Query OK, {0} row(s) affected, {1} warning(s)", sqlResult.GetAffectedRowCount(), rowResult.GetWarningCount());
         }
         else
         {
@@ -577,7 +577,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       else
       {
-        resultMessage.AppendFormat("{0} rows in set.", count);
+        resultMessage.AppendFormat("{0} row(s) in set.", count);
       }
 
       WriteToMySqlOutput(statement, resultMessage.ToString(), executionTime, MessageType.Information);

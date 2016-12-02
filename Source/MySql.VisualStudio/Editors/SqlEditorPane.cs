@@ -39,6 +39,20 @@ namespace MySql.Data.VisualStudio.Editors
       editor = new SqlEditor(sp, this);
     }
 
+    /// <summary>
+    /// Overrides the Close event, to check whether the MySql Output should be closed as well.
+    /// </summary>
+    protected override void OnClose()
+    {
+      var package = MySqlDataProviderPackage.Instance;
+      if (package != null)
+      {
+        package.CloseMySqlOutputWindow();
+      }
+
+      base.OnClose();
+    }
+
     public override IWin32Window Window
     {
       get { return editor; }
