@@ -1,4 +1,7 @@
 ﻿2.0.5
+- The value of multiple properties would be shown as blank in the Advanced Properties dialog whenever creating/editing a connection
+  through the Server Explorer. The resulting connection string would contain the correct values, however it was misleading not to
+  see them in the Advanced Properties dialog.
 - Enabled the SQL Editor to display execution results information in the "MySQL Output" pane.
 - Fixed a problem which prevented SQL, JavaScript and Python scripts from detecting keyboard input for keys such as Enter,
   Backspace, Arrows, etc. This would only happen after saving the script for the first time.

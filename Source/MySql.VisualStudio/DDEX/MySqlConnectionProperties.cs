@@ -61,6 +61,40 @@ namespace MySql.Data.VisualStudio.DDEX
           throw new ArgumentNullException("propertyName");
         }
 
+        // Update the propertyName to a value which is retrievable using MySqlConnectionStringBuilder.TryGetValue method.
+        switch (propertyName)
+        {
+          case "IntegratedSecurity":
+            propertyName = "Integrated Security";
+            break;
+          case "MaximumPoolSize":
+            propertyName = "MaxPoolSize";
+            break;
+          case "MinimumPoolSize":
+            propertyName = "MinPoolSize";
+            break;
+          case "PipeName":
+            propertyName = "Pipe";
+            break;
+          case "SslCertificationAuthorityFile":
+            propertyName = "sslca";
+            break;
+          case "SslClientCertificateFile":
+            propertyName = "sslcert";
+            break;
+          case "SslKeyFile":
+            propertyName = "sslkey";
+            break;
+          case "UseCompression":
+            propertyName = "Compress";
+            break;
+          case "UserID":
+            propertyName = "User Id";
+            break;
+          default:
+            break;
+        }
+
         object obj;
         if (!ConnectionStringBuilder.TryGetValue(propertyName, out obj))
         {
@@ -69,7 +103,9 @@ namespace MySql.Data.VisualStudio.DDEX
 
         if (ConnectionStringBuilder.ShouldSerialize(propertyName))
         {
-          return ConnectionStringBuilder[propertyName];
+          // A special condition was added to workaround a bug identified in the MySqlConnectionStringBuilder
+          // class which raises a KeyNotFoundException whenever trying to recover the "Integrated Security" key.
+          return propertyName == "Integrated Security" ? obj : ConnectionStringBuilder[propertyName];
         }
 
         return ConnectionStringBuilder[propertyName] ?? DBNull.Value;
