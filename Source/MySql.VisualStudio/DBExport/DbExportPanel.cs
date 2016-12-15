@@ -41,11 +41,6 @@ namespace MySql.Data.VisualStudio.DBExport
 {
   public partial class DbExportPanel : UserControl
   {
-    private const string CANCEL = "Cancel";
-    private const string EXPORT = "Export";
-    private const string SCHEMA = "Schema";
-    private const string START_EXPORT = "Start Export";
-
     private IVsOutputWindowPane _generalPane;
     private List<IVsDataExplorerConnection> _explorerMySqlConnections;
     private string _ownerSchema;
@@ -247,6 +242,7 @@ namespace MySql.Data.VisualStudio.DBExport
         selected.CheckSchema(!selected.Export);
         if (!selected.Export)
         {
+          LoadDbObjects(selected.Name);
           ChangeAllSelectedDbObjects(false);
           Dictionary.Remove(selected.Name);
           return;
@@ -353,7 +349,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
       if (schemaNames == null)
       {
-        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.dbExportPanel_SchemasLoadError));
+        InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.DbExportPanel_SchemasLoadError));
         _sourceSchemas.DataSource = null;
         dbSchemasList.Refresh();
         return;
@@ -384,10 +380,10 @@ namespace MySql.Data.VisualStudio.DBExport
         dbSchemasList.Update();
       }
 
-      dbSchemasList.Columns[0].HeaderText = EXPORT;
+      dbSchemasList.Columns[0].HeaderText = Resources.DbExportPanel_Export;
       dbSchemasList.Columns[0].Width = 45;
 
-      dbSchemasList.Columns[1].HeaderText = SCHEMA;
+      dbSchemasList.Columns[1].HeaderText = Resources.DbExportPanel_Schema;
       dbSchemasList.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       dbSchemasList.Columns[1].ReadOnly = true;
 
@@ -413,7 +409,7 @@ namespace MySql.Data.VisualStudio.DBExport
         SetConnectionsList();
         if (selected == null)
         {
-          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.dbExportPanel_LoadConnectionsError));
+          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.MessageBoxErrorTitle, Resources.DbExportPanel_LoadConnectionsError));
           return;
         }
 
@@ -455,7 +451,7 @@ namespace MySql.Data.VisualStudio.DBExport
       _cursor = Cursor;
       Cursor = Cursors.WaitCursor;
       EnableControls(false);
-      btnExport.Text = CANCEL;
+      btnExport.Text = Resources.DbExportPanel_Cancel;
     }
 
     private void UnlockUI()
@@ -467,12 +463,12 @@ namespace MySql.Data.VisualStudio.DBExport
 
       Cursor = _cursor;
       EnableControls(true);
-      btnExport.Text = START_EXPORT;
+      btnExport.Text = Resources.DbExportPanel_StartExport;
     }
 
     private void btnExport_Click(object sender, EventArgs e)
     {
-      if (btnExport.Text != START_EXPORT && _mysqlDbExport != null)
+      if (btnExport.Text != Resources.DbExportPanel_StartExport && _mysqlDbExport != null)
       {
         _actionCancelled = true;
         CancelExport();
@@ -515,10 +511,6 @@ namespace MySql.Data.VisualStudio.DBExport
         }
 
         mysqlFilePath += ".mysql";
-
-        // pull last version of db objects
-        if (!string.IsNullOrEmpty(_ownerSchema))
-          PullObjectListFromTree(_ownerSchema);
 
         var maxAllowedPacket = 0;
         bool overWriteExistingFile = chkAlwaysCreateNewFile.Checked;
@@ -1002,7 +994,7 @@ namespace MySql.Data.VisualStudio.DBExport
       else
       {
         if (_actionCancelled)
-          _generalPane.OutputString(Environment.NewLine + "Data Export cancelled by the user.");
+          _generalPane.OutputString(Environment.NewLine + Resources.DbExportPanel_ExportCancelledByUser);
         else
           _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, Dictionary.Count()));
 

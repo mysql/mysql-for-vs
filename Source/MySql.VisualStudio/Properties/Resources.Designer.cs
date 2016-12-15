@@ -717,6 +717,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string DbExportPanel_Cancel {
+            get {
+                return ResourceManager.GetString("DbExportPanel_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection was not found on available connections.
         /// </summary>
         public static string DbExportPanel_ConnectionNotFoundError {
@@ -731,6 +740,24 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string DbExportPanel_ConnStringNotCorrectlySetError {
             get {
                 return ResourceManager.GetString("DbExportPanel_ConnStringNotCorrectlySetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string DbExportPanel_Export {
+            get {
+                return ResourceManager.GetString("DbExportPanel_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data Export cancelled by the user..
+        /// </summary>
+        public static string DbExportPanel_ExportCancelledByUser {
+            get {
+                return ResourceManager.GetString("DbExportPanel_ExportCancelledByUser", resourceCulture);
             }
         }
         
@@ -755,9 +782,9 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Error: Cannot find any MySQL connection. Please review your settings..
         /// </summary>
-        public static string dbExportPanel_LoadConnectionsError {
+        public static string DbExportPanel_LoadConnectionsError {
             get {
-                return ResourceManager.GetString("dbExportPanel_LoadConnectionsError", resourceCulture);
+                return ResourceManager.GetString("DbExportPanel_LoadConnectionsError", resourceCulture);
             }
         }
         
@@ -798,11 +825,20 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schema.
+        /// </summary>
+        public static string DbExportPanel_Schema {
+            get {
+                return ResourceManager.GetString("DbExportPanel_Schema", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot retrieve the list of schemas of the selected connection. Verify parameter&apos;s connection..
         /// </summary>
-        public static string dbExportPanel_SchemasLoadError {
+        public static string DbExportPanel_SchemasLoadError {
             get {
-                return ResourceManager.GetString("dbExportPanel_SchemasLoadError", resourceCulture);
+                return ResourceManager.GetString("DbExportPanel_SchemasLoadError", resourceCulture);
             }
         }
         
@@ -812,6 +848,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string DbExportPanel_SettingsLoadSuccess {
             get {
                 return ResourceManager.GetString("DbExportPanel_SettingsLoadSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Export.
+        /// </summary>
+        public static string DbExportPanel_StartExport {
+            get {
+                return ResourceManager.GetString("DbExportPanel_StartExport", resourceCulture);
             }
         }
         

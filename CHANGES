@@ -1,4 +1,7 @@
 ﻿2.0.5
+- Fixed a problem which caused the wrong schema to be exported whenever unselecting schemas from the Schema list.
+- Fixed bug which caused the currently selected schema's db objects to become unselected in the Tree view after unselecting a different schema from the Schema list.
+  (Bug #23666666 - EXPORT TOOL IS EXPORTING THE WRONG SCHEMA)
 - The value of multiple properties would be shown as blank in the Advanced Properties dialog whenever creating/editing a connection
   through the Server Explorer. The resulting connection string would contain the correct values, however it was misleading not to
   see them in the Advanced Properties dialog.

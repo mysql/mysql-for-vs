@@ -1312,10 +1312,10 @@ Check that the server is running, the database exists and the user Error establi
   <data name="WindowsFormsWizard_SolutionBuildFailed" xml:space="preserve">
     <value>Solution build failed. Please check that all project references have been resolved.</value>
   </data>
-  <data name="dbExportPanel_SchemasLoadError" xml:space="preserve">
+  <data name="DbExportPanel_SchemasLoadError" xml:space="preserve">
     <value>Cannot retrieve the list of schemas of the selected connection. Verify parameter's connection.</value>
   </data>
-  <data name="dbExportPanel_LoadConnectionsError" xml:space="preserve">
+  <data name="DbExportPanel_LoadConnectionsError" xml:space="preserve">
     <value>Error: Cannot find any MySQL connection. Please review your settings.</value>
   </data>
   <data name="DbExportPanel_ExportFileCreationError" xml:space="preserve">
@@ -1595,5 +1595,20 @@ https://dev.mysql.com/doc/internals/en/x-protocol.html</value>
   </data>
   <data name="WebWizard_UserCreationError" xml:space="preserve">
     <value>An error occurred creating the user.</value>
+  </data>
+  <data name="DbExportPanel_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DbExportPanel_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="DbExportPanel_ExportCancelledByUser" xml:space="preserve">
+    <value>Data Export cancelled by the user.</value>
+  </data>
+  <data name="DbExportPanel_Schema" xml:space="preserve">
+    <value>Schema</value>
+  </data>
+  <data name="DbExportPanel_StartExport" xml:space="preserve">
+    <value>Start Export</value>
   </data>
 </root>
