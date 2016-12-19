@@ -1,16 +1,19 @@
 ﻿2.0.5
+- Modified code to validate the user provided data types in the Table Designer Editor which provides a more user-friendly
+  experience. (Bug #13477821 - VISUAL STUDIO TABLE DESIGNER SHOWS BIT TYPE AS BIT(10))
 - Fixed a problem which caused the wrong schema to be exported whenever unselecting schemas from the Schema list.
-- Fixed bug which caused the currently selected schema's db objects to become unselected in the Tree view after unselecting a different schema from the Schema list.
-  (Bug #23666666 - EXPORT TOOL IS EXPORTING THE WRONG SCHEMA)
-- The value of multiple properties would be shown as blank in the Advanced Properties dialog whenever creating/editing a connection
-  through the Server Explorer. The resulting connection string would contain the correct values, however it was misleading not to
-  see them in the Advanced Properties dialog.
+- Fixed bug which caused the currently selected schema's db objects to become unselected in the Tree view after unselecting a
+  different schema from the Schema list. (Bug #23666666 - EXPORT TOOL IS EXPORTING THE WRONG SCHEMA)
+- The value of multiple properties would be shown as blank in the Advanced Properties dialog whenever creating/editing a
+  connection through the Server Explorer. The resulting connection string would contain the correct values, however it was
+  misleading not to see them in the Advanced Properties dialog.
 - Enabled the SQL Editor to display execution results information in the "MySQL Output" pane.
 - Fixed a problem which prevented SQL, JavaScript and Python scripts from detecting keyboard input for keys such as Enter,
   Backspace, Arrows, etc. This would only happen after saving the script for the first time.
   (Bug #24751945 - SCRIPT CAN'T GET EDITED AFTER SAVING IT)
 - Fixed a problem with the Field Types view which failed to show any fields whenever the executed statement contained table
-  names with a format of "<database_name>.<table_name>" or field names with a format of "<database_name>.<table_name>.<field_name>".
+  names with a format of "<database_name>.<table_name>" or field names with a format of
+  "<database_name>.<table_name>.<field_name>".
   (MySQL Bug #82882, Bug #24601948 - FIELD TYPES NOT WORKING FOR QUERIES WHERE SCHEMA IS SPECIFIED)
 - Fixed a problem with the Python Scripts feature in which the execution failed if the line termination sequences included LF
   instead of CRLF. This scenario may occur when copying code from other editors into the Visual Studio editor.

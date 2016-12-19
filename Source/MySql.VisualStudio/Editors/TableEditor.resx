@@ -126,4 +126,13 @@
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>52</value>
   </metadata>
+  <data name="DataTypesRegularExpression" xml:space="preserve">
+    <value>^[A-Za-z]+(\(\d+\))?$</value>
+  </data>
+  <data name="EnumSetDataTypesRegularExpression" xml:space="preserve">
+    <value>^(set|enum)\(.+\)$</value>
+  </data>
+  <data name="VarcharDataTypeRegularExpression" xml:space="preserve">
+    <value>varchar\(\d+\)</value>
+  </data>
 </root>

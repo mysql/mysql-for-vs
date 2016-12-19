@@ -3305,7 +3305,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data type is not valid..
+        ///   Looks up a localized string similar to The given data type {0} contains errors and cannot be accepted. The previous value is kept instead..
         /// </summary>
         public static string InvalidDataType {
             get {

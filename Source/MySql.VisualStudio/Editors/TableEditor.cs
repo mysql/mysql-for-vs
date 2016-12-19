@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -69,6 +70,15 @@ namespace MySql.Data.VisualStudio.Editors
       SetupCommands();
     }
 
+    #region Fields
+
+    /// <summary>
+    /// Stores the value of the last used data type.
+    /// </summary>
+    private string _previousDataType;
+
+    #endregion
+
     #region Properties
 
     List<Index> Indexes
@@ -108,10 +118,11 @@ namespace MySql.Data.VisualStudio.Editors
     void columnBindingSource_AddingNew(object sender, AddingNewEventArgs e)
     {
       //Column c = new Column(null);
+      TypeColumn.Items.Add(_previousDataType);
       ColumnWithTypeDescriptor c = new ColumnWithTypeDescriptor();
       c.OwningTable = tableNode.Table;
       e.NewObject = c;
-      c.DataType = "varchar(10)";
+      c.DataType = "varchar(45)";
     }
 
     private void InitializeComponent()
@@ -300,6 +311,7 @@ namespace MySql.Data.VisualStudio.Editors
       ((System.ComponentModel.ISupportInitialize)(this.columnBindingSource)).EndInit();
       this.ResumeLayout(false);
 
+      _previousDataType = "varchar(45)";
     }
 
     #region Command Handling
@@ -422,16 +434,15 @@ namespace MySql.Data.VisualStudio.Editors
         DataGridViewTextBoxEditingControl tec = e.Control as DataGridViewTextBoxEditingControl;
         tec.Multiline = true;
         tec.Dock = DockStyle.Fill;
-        tec.BorderStyle = BorderStyle.Fixed3D;        
+        tec.BorderStyle = BorderStyle.Fixed3D;
         tec.TextChanged += new EventHandler(tbColumnName_TextChanged);
       }
     }
-    
 
     private void tbColumnName_TextChanged(object sender, EventArgs e)
     {
-      if ((string)columnGrid.CurrentCell.Value != ((DataGridViewTextBoxEditingControl)sender).Text)      
-        tableNode.Table.Columns[columnGrid.CurrentRow.Index].ColumnName = ((DataGridViewTextBoxEditingControl)sender).Text;               
+      if ((string)columnGrid.CurrentCell.Value != ((DataGridViewTextBoxEditingControl)sender).Text)
+        tableNode.Table.Columns[columnGrid.CurrentRow.Index].ColumnName = ((DataGridViewTextBoxEditingControl)sender).Text;
     }
 
     private void tbDataType_TextChanged(object sender, EventArgs e)
@@ -456,7 +467,6 @@ namespace MySql.Data.VisualStudio.Editors
       columnProperties.SelectedObject = currentObject;
     }
 
-
     private void AdjustComboBox(ComboBox cb, string type)
     {
       if (string.IsNullOrEmpty(type)) return;
@@ -478,11 +488,60 @@ namespace MySql.Data.VisualStudio.Editors
       }
     }
 
+    /// <summary>
+    /// Validates that the provided data type has a correct syntax.
+    /// </summary>
+    /// <param name="type">The data type.</param>
+    private bool IsValidDataType(string type)
+    {
+      if (string.IsNullOrEmpty(type))
+      {
+        TypeColumn.Items.Add(_previousDataType);
+        return false;
+      }
+
+      type = type.Trim().ToLowerInvariant();
+
+      var resourceManager = new ComponentResourceManager(typeof(TableEditor));
+      var isValid = false;
+      if (type.StartsWith("varchar"))
+      {
+        if (new Regex(@resourceManager.GetString("VarcharDataTypeRegularExpression")).IsMatch(type))
+        {
+          isValid = true;
+        }
+      }
+      else if (type.StartsWith("enum") || type.StartsWith("set"))
+      {
+        if (new Regex(@resourceManager.GetString("EnumSetDataTypesRegularExpression")).IsMatch(type))
+        {
+          isValid = true;
+        }
+      }
+      else if (new Regex(@resourceManager.GetString("DataTypesRegularExpression")).IsMatch(type))
+      {
+          isValid = true;
+      }
+
+      if (!isValid)
+      {
+        TypeColumn.Items.Add(_previousDataType);
+      }
+
+      return isValid;
+    }
+
     private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
     {
       if (e.ColumnIndex != 1) return;
       string type = e.FormattedValue as string;
-      if (string.IsNullOrEmpty(type)) return;
+
+      if (!IsValidDataType(type))
+      {
+        ShowErrorDialog(e.RowIndex, e.ColumnIndex, type, Resources.InvalidDataType);
+        return;
+      }
+
       if (!TypeColumn.Items.Contains(type))
       {
         var typeToAdd = type.IndexOf('(') >= 0 ? type.Substring(0, type.IndexOf('(')) : type;
@@ -491,17 +550,16 @@ namespace MySql.Data.VisualStudio.Editors
         if (types.Contains(typeToAdd.ToLowerInvariant()))
         {
           TypeColumn.Items.Add(type);
+          _previousDataType = type;
         }
         else
         {
-          InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, Resources.InvalidDataType));
-          columnGrid.CurrentCell.Value = dataTypes[0];
-          columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-          columnGrid.CurrentCell.Selected = true;
-          columnGrid.BeginEdit(true);
+          ShowErrorDialog(e.RowIndex, e.ColumnIndex, type, Resources.InvalidDataType);
           return;
         }
-      }      
+      }
+
+      _previousDataType = type;
       columnGrid.CurrentCell.Value = e.FormattedValue;
     }
 
@@ -574,5 +632,17 @@ namespace MySql.Data.VisualStudio.Editors
       }
     }
 
+    /// <summary>
+    /// Shows an error dialog with the specified text message.
+    /// </summary>
+    /// <param name="message"></param>
+    private void ShowErrorDialog(int rowIndex, int columnIndex, string dataType, string message)
+    {
+      InfoDialog.ShowDialog(InfoDialogProperties.GetErrorDialogProperties(Resources.ErrorCaption, string.Format(message, dataType)));
+      columnGrid.CurrentCell.Value = _previousDataType;
+      columnGrid.CurrentCell = columnGrid.Rows[rowIndex].Cells[columnIndex];
+      columnGrid.CurrentCell.Selected = true;
+      columnGrid.BeginEdit(true);
+    }
   }
 }

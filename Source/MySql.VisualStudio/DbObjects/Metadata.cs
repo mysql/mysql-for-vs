@@ -28,6 +28,9 @@ namespace MySql.Data.VisualStudio.DbObjects
 {
   internal class Metadata
   {
+    /// <summary>
+    /// Stores the list of allowed Data Types.
+    /// </summary>
     private static List<string> DataTypes;
 
     public static bool IsStringType(string dataType)
@@ -49,12 +52,17 @@ namespace MySql.Data.VisualStudio.DbObjects
       if (!includeParens)
       {
         for (int i = 0; i < dataTypes.Length; i++)
-          dataTypes[i] = RemoveParens(dataTypes[i]);
+          dataTypes[i] = RemoveParenthesis(dataTypes[i]);
       }
       return dataTypes;
     }
 
-    private static string RemoveParens(string dataType)
+    /// <summary>
+    /// Removes the parenthesis for the specified data type.
+    /// </summary>
+    /// <param name="dataType">The data type.</param>
+    /// <returns></returns>
+    private static string RemoveParenthesis(string dataType)
     {
       int index = dataType.IndexOf('(');
       if (index != -1)
@@ -62,12 +70,15 @@ namespace MySql.Data.VisualStudio.DbObjects
       return dataType;
     }
 
+    /// <summary>
+    /// Populates the DataTypes array.
+    /// </summary>
     private static void PopulateArray()
     {
       DataTypes = new List<string>();
 
       DataTypes.AddRange(new string[] {
-            "bit(10)",
+            "bit()",
             "tinyint",
             "boolean",
             "smallint",
@@ -82,10 +93,10 @@ namespace MySql.Data.VisualStudio.DbObjects
             "timestamp",
             "time",
             "year",
-            "char(10)",
-            "varchar(10)",
-            "binary(10)",
-            "varbinary(10)",
+            "char()",
+            "varchar()",
+            "binary()",
+            "varbinary()",
             "tinyblob",
             "tinytext",
             "blob",
@@ -94,8 +105,8 @@ namespace MySql.Data.VisualStudio.DbObjects
             "mediumtext",
             "longblob",
             "longtext",
-            "enum(x,y,z)",
-            "set(x,y,z)"});
-    }
+            "enum()",
+            "set()"});
+        }
   }
 }
