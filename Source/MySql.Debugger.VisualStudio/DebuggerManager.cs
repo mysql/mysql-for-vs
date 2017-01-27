@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 
 namespace MySql.Debugger.VisualStudio
 {
-  public class DebuggerManager
+    public class DebuggerManager
   {
     public static DebuggerManager Instance;
 

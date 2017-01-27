@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="VS15_Ent_CS_WinForm_ItemTemplate.zip" >
+      <Directory Id="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Name="Resources" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="VS15_Ent_CS_WinForm_ItemTemplate_DirectoryComponents">
+      <Component Id="VS15_Ent_CS_WF_IT" Directory="VS15_Ent_CS_WinForm_ItemTemplate.zip" Guid="B5FBBF18-1257-43AA-8199-32B2A92CE617">
+        <File Id="VS15_Ent_CS_WF_IT_VsTemplate" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\MySQL_WinForm_ItemTemplate.vstemplate" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmp67AF18D1EADC6AF483088F5647F30ACE" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="49AF5832-D027-484B-BFCD-7C0AC10E994D">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_fil5F41CE2508EF28C6486E372862A65836" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorAddNewItem.Image.png" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmpCCE194072C5D13ABA66267E7586BE818" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="7E9B2829-6057-4BAA-81DA-43DFABAD0012">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_filCCCCD5DF3AA4F218AB111DB0CFAB4438" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorDeleteItem.Image.png" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmp05FB4B67016AE4FA4532B6A712DEC9BF" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="FE098697-433A-451E-8ABF-196274990149">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_fil1504DDF368288F41CC4A84128FEC385F" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorMoveFirstItem.Image.png" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmp61FD8D7898B0647AC8D6C0C86B27BA68" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="0A8BCF77-EA79-4D88-8104-B8E59B9F2E46">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_filFF5A420C179DB8AB6964CEA4B0F3BE5C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorMoveLastItem.Image.png" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmpC593E576C55FBC7E9EF2E009BD8FA751" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="7B84ADFF-1149-4A21-9949-C2DD9A67FA88">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_filA08E32847B0C02BDBF2BDD41519BE269" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorMoveNextItem.Image.png" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmp862812777E9DE1B1B2BDA21B015B468E" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="E4221524-BA5B-4649-88BE-1DCB67F049A8">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_filE832F31B8BC1E073E048D7895615677E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorMovePreviousItem.Image.png" />
+      </Component>
+      <Component Id="VS15_Ent_CS_WinForm_ItemTemplate_cmp5FBAE016E0D5F06492A5638E085A2A21" Directory="VS15_Ent_CS_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="391975E9-C097-47C9-8D7E-19E97310CBAF">
+        <File Id="VS15_Ent_CS_WinForm_ItemTemplate_filBFB0EC4E7805778EB6708C8710E0CF9E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_WinForm.zip\Resources\bindingNavigatorSaveItem.Image.png" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

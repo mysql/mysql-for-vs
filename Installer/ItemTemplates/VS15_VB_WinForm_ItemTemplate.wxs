@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="VS15_VB_WinForm_ItemTemplate.zip" >
+      <Directory Id="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Name="Resources" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="VS15_VB_WinForm_ItemTemplate_DirectoryComponents">
+      <Component Id="VS15_VB_WF_IT" Directory="VS15_VB_WinForm_ItemTemplate.zip" Guid="1957EC34-9E0D-48FB-B430-70F4E867F453">
+        <File Id="VS15_VB_WF_IT_VsTemplate" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\MySQL_WinForm_VB_ItemTemplate.vstemplate" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmp67AF18D1EADC6AF483088F5647F30ACE" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="ED655D04-7F7B-49A2-A64A-806268AAB77E">
+        <File Id="VS15_VB_WinForm_ItemTemplate_fil5F41CE2508EF28C6486E372862A65836" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorAddNewItem.Image.png" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmpCCE194072C5D13ABA66267E7586BE818" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="C7E1064D-20D7-47B6-B8B1-AD77C1013C4D">
+        <File Id="VS15_VB_WinForm_ItemTemplate_filCCCCD5DF3AA4F218AB111DB0CFAB4438" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorDeleteItem.Image.png" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmp05FB4B67016AE4FA4532B6A712DEC9BF" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="6346460B-B6B3-4BF8-BB4E-24E20D3D89CF">
+        <File Id="VS15_VB_WinForm_ItemTemplate_fil1504DDF368288F41CC4A84128FEC385F" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMoveFirstItem.Image.png" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmp61FD8D7898B0647AC8D6C0C86B27BA68" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="36A59C30-6FE8-409D-857D-7EF630CE556A">
+        <File Id="VS15_VB_WinForm_ItemTemplate_filFF5A420C179DB8AB6964CEA4B0F3BE5C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMoveLastItem.Image.png" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmpC593E576C55FBC7E9EF2E009BD8FA751" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="95712222-2F87-4A84-A123-5AC5DFFD1A2F">
+        <File Id="VS15_VB_WinForm_ItemTemplate_filA08E32847B0C02BDBF2BDD41519BE269" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMoveNextItem.Image.png" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmp862812777E9DE1B1B2BDA21B015B468E" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="FCD40D65-B11A-4631-A2B9-2F7F393BBA45">
+        <File Id="VS15_VB_WinForm_ItemTemplate_filE832F31B8BC1E073E048D7895615677E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMovePreviousItem.Image.png" />
+      </Component>
+      <Component Id="VS15_VB_WinForm_ItemTemplate_cmp5FBAE016E0D5F06492A5638E085A2A21" Directory="VS15_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="AEC8BEC6-9375-4C3A-91B7-700CA9ABC532">
+        <File Id="VS15_VB_WinForm_ItemTemplate_filBFB0EC4E7805778EB6708C8710E0CF9E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorSaveItem.Image.png" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
