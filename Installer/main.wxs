@@ -40,13 +40,12 @@
     </Property>
     <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
 
-    <!-- Ensure a valid VS version is installed (2010, 2012, 2013, 2015, 2017) -->
-    <PropertyRef Id="VS2010_ROOT_FOLDER"/>
+    <!-- Ensure a valid VS version is installed (2012, 2013, 2015, 2017) -->
     <PropertyRef Id="VS2012_ROOT_FOLDER"/>
     <PropertyRef Id="VS2013_ROOT_FOLDER"/>
     <PropertyRef Id="VS2015_ROOT_FOLDER"/>
-    <Condition Message="Visual Studio version 2010, 2012, 2013, 2015 or 2017 must be installed.">
-      NOT (VS2010_ROOT_FOLDER = "" AND VS2012_ROOT_FOLDER = "" AND VS2013_ROOT_FOLDER = "" AND VS2015_ROOT_FOLDER = "" AND VS_2017_COM_PATH_MAIN = "" AND VS_2017_ENT_PATH_MAIN = "" AND VS_2017_PRO_PATH_MAIN = "")
+    <Condition Message="Visual Studio version 2012, 2013, 2015 or 2017 must be installed.">
+      NOT (VS2012_ROOT_FOLDER = "" AND VS2013_ROOT_FOLDER = "" AND VS2015_ROOT_FOLDER = "" AND VS_2017_COM_PATH_MAIN = "" AND VS_2017_ENT_PATH_MAIN = "" AND VS_2017_PRO_PATH_MAIN = "")
     </Condition>
 
     <!-- now make sure that we don't have an old version that doesn't support upgrades -->
@@ -96,60 +95,6 @@
           <Directory Id="mysqlvs_AppDataFolder" Name='MySQL For Visual Studio'>
             <Directory Id='modules_AppDataFolder' Name='modules'>
               <Directory Id='xShellModules_AppDataFolder' Name='js' />
-            </Directory>
-          </Directory>
-        </Directory>
-      </Directory>
-
-      <!-- VS2010 Extension folders -->
-      <Directory Id="VS_2010_PATH" Name="VSPath">
-        <!-- xShell Modules Dir -->
-        <Directory Id='VS2010_NgModulesDir' Name='modules'>
-          <Directory Id='VS2010_NgJsDir' Name='js' />
-        </Directory>
-        <!--Extensions -->
-        <Directory Id="VS10.T4.ExtensionDir" Name="Extensions">
-          <Directory Id="VS10.T4.MicrosoftDir" Name="Microsoft">
-            <Directory Id="VS10.T4.EFToolsDir" Name="Entity Framework Tools">
-              <Directory Id="VS10_DBGenDir" Name="DBGen"/>
-            </Directory>
-          </Directory>
-          <Directory Id="VS10_OracleDir" Name="Oracle">
-            <Directory Id="VS10_ExtensionDir" Name="MySQL for Visual Studio">
-              <Directory Id="VS10_ExtVersionDir" Name="$(var.Version)">
-                <Directory Id='VS10_TemplatesDir' Name='Templates'/>
-                <Directory Id='VS10_T4TemplatesDir' Name='T4Templates' >
-                  <Directory Id='VS10_T4TemplatesCSharpDir' Name='CSharp' />
-                  <Directory Id='VS10_T4TemplatesVBDir' Name='VisualBasic' />
-                </Directory>
-              </Directory>
-            </Directory>
-          </Directory>
-        </Directory>
-        <!--Private Assemblies -->
-        <Directory Id="VS10_PrivateAssemblies" Name="PrivateAssemblies" />
-        <!--Public Assemblies -->
-        <Directory Id="VS10_PublicAssemblies" Name="PublicAssemblies" />
-        <!--Item Templates-->
-        <Directory Id="VS10_ItemTemplates" Name="ItemTemplates" >
-          <Directory Id="VS10_CSharpIT" Name="CSharp">
-            <Directory Id="VS10_CSharpITMySQL" Name="MySQL"/>
-          </Directory>
-          <Directory Id="VS10_VBIT" Name="VisualBasic">
-            <Directory Id="VS10_VBITMySQL" Name="MySQL"/>
-          </Directory>
-        </Directory>
-        <Directory Id="VS10_ItemTemplatesCache" Name="ItemTemplatesCache">
-          <Directory Id="VS10_CSharpITCache" Name="CSharp">
-            <Directory Id="VS10_CS_IT_MySQLCache" Name="MySQL">
-              <Directory Id="VS10_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
-              <Directory Id="VS10_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
-            </Directory>
-          </Directory>
-          <Directory Id="VS10_VBITCache" Name="VisualBasic">
-            <Directory Id="VS10_VB_IT_MySQLCache" Name="MySQL">
-              <Directory Id="VS10_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
-              <Directory Id="VS10_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
             </Directory>
           </Directory>
         </Directory>
@@ -543,7 +488,6 @@
     <!--<FeatureRef Id="WebProviders"/>-->
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
-      <FeatureRef Id='VS2010Int'/>
       <FeatureRef Id='VS2012Int'/>
       <FeatureRef Id='VS2013Int'/>
       <FeatureRef Id='VS2015Int'/>
@@ -553,7 +497,6 @@
     <Feature Id="EntityFramework"  Title="Entity Framework Designer Integration" Display="expand"
         Description="Support for the entity framework">
       <Condition Level="0">Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
-      <FeatureRef Id="EntityFramework2010"/>
       <FeatureRef Id="EntityFramework2012"/>
       <FeatureRef Id="EntityFramework2013"/>
       <FeatureRef Id="EntityFramework2015"/>
@@ -652,7 +595,6 @@
       <Custom Action="SetRegKeyValuesCreated_VS2017_Pro" After='CreateRegKeyAndExtensionsFile_VS2017_Pro'><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
 
       <RemoveExistingProducts After='InstallExecute' />
-      <Custom Action="SetHLMPath" After="AppSearch"></Custom>
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
 
       <Custom Action="SetDeleteSessionValue_VS2012" Before="VS2012_SetPathProp">(VS2012_REGISTRYFIX_CREATED = 1)</Custom>
@@ -668,15 +610,6 @@
       <Custom Action="SetDeleteSessionValue_VS2017_Pro" After="DeleteRegKeyAndExtensionsFile_VS2017_Ent">(VS2017_PRO_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2017_Pro"  After="SetDeleteSessionValue_VS2017_Pro">(VS2017_PRO_REGISTRYFIX_CREATED = 1)</Custom>
     </InstallExecuteSequence>
-
-    <!-- custom actions for VS2010 help -->
-    <CustomAction Id="SetHLMPath" Property="HelpLibManager" Value="[HLM_LOCATION]HelpLibManager.exe"/>
-    <CustomAction Id="Register2010Help"
-                  ExeCommand ='/product VS /version 100 /locale en-us /brandingPackage Dev10.mshc /sourceMedia "[#MSHA_File]"'
-                  Property='HelpLibManager' Return='check'/>
-    <CustomAction Id="UnRegister2010Help"
-                  ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL for Visual Studio" /productName "MySQL for Visual Studio" > NUL'
-                  Property='HelpLibManager' Return='check'/>
 
     <!-- Setup should not continue if a newer version is installed. -->
     <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed. Setup will now exit.' />

@@ -1,4 +1,5 @@
 ﻿2.0.5
+- Removed support for VS2010.
 - Added support for VS2017.
 - Modified code to validate the user provided data types in the Table Designer Editor which provides a more user-friendly
   experience. (Bug #13477821 - VISUAL STUDIO TABLE DESIGNER SHOWS BIT TYPE AS BIT(10))

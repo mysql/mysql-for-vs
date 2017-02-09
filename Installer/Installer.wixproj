@@ -67,12 +67,6 @@
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
       </PropertyGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '10.0'">
-      <PropertyGroup>
-        <Framework>4.0</Framework>
-        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-      </PropertyGroup>
-    </When>
   </Choose>
   <PropertyGroup>
     <MSBuildExe Condition=" '$(MSBuildExe)'=='' AND Exists('$(MSBuildExtensionsPath)\..\MSBuild\12.0') ">"$(MSBuildExtensionsPath)\..\MSBuild\12.0\Bin\msbuild.exe"</MSBuildExe>
@@ -81,22 +75,18 @@
   <ItemGroup>
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
-    <Compile Include="ItemTemplates\VS14_CS_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_CS_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_VB_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS11_CS_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS11_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS11_VB_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS11_VB_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS10_CS_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS10_CS_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS10_VB_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS10_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS12_VB_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS12_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS12_CS_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS12_CS_WinForm_ItemTemplate.wxs" />
+	<Compile Include="ItemTemplates\VS14_CS_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS14_CS_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS14_VB_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS14_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_Ent_CS_Web_ItemTemplate.wxs" />

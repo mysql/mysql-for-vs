@@ -1,130 +1,23 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
-    <!-- Visual Studio 2010 -->
-    <DirectoryRef Id='VS10_ExtVersionDir'>
-      <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
-        <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySQL.VisualStudio.dll'/>
-        <File Id='MySqlParser.2010' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>
-        <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
-        <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
-        <File Id='VSPkgdef' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
-        <File Id='MySql.Debugger' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
-        <File Id='MySql.Debugger.VisualStudio' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
-        <File Id='MySql.Utility' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-        <File Id='mysqlsh' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
-        <File Id='python27' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
-        <File Id='v8' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
-        <File Id='base.dll' Name='base.dll' DiskId='1'
-              Source='..\Dependencies\Parser\base.dll'/>
-        <File Id='libglib_2.0_0.dll' Name='libglib-2.0-0.dll' DiskId='1'
-              Source='..\Dependencies\Parser\libglib-2.0-0.dll'/>
-        <File Id='libiconv.dll' Name='libiconv.dll' DiskId='1'
-              Source='..\Dependencies\Parser\libiconv.dll'/>
-        <File Id='libintl_8.dll' Name='libintl-8.dll' DiskId='1'
-              Source='..\Dependencies\Parser\libintl-8.dll'/>
-        <File Id='parsers.dll' Name='parsers.dll' DiskId='1'
-              Source='..\Dependencies\Parser\parsers.dll'/>
-        <File Id='ParsingSupport.dll' Name='ParsingSupport.dll' DiskId='1'
-              Source='..\Dependencies\Parser\ParsingSupport.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS10_TemplatesDir'>
-      <Component Id='VS2010_Templates' Guid='BA082C85-9D64-4B79-8910-C6C25655250B'>
-        <File Id='VS2010_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='VS2010_MyJsScriptTemplate' Name='MyJs Script.myjs' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MyJs Script.myjs'/>
-        <File Id='VS2010_MyPyScriptTemplate' Name='MyPy Script.mypy' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MyPy Script.mypy'/>
-        <File Id='VS2010_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS10_PrivateAssemblies'>
-      <Component Id='VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250F'>
-        <File Id='VS2010_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
-      </Component>
-      <Component Id='VS2010_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251B'>
-        <File Id='VS2010_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <!--Item Templates-->
-    <DirectoryRef Id='VS10_CSharpITMySQL'>
-      <Component Id='VS2010_VSIT_DIR' Guid='be68833b-6109-416d-8f77-cbcdadd4e8c2'>
-        <File Id='VS2010_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
-        <File Id='VS2010_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id='VS10_VBITMySQL'>
-      <Component Id='VS2010_VB_VSIT_DIR' Guid='efe939b5-f2b7-40d8-b6a7-897f222a2930'>
-        <File Id='VS2010_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
-        <File Id='VS2010_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS10_T4TemplatesCSharpDir'>
-      <Component Id='VS10_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C25655250D'>
-        <File Id='VS2010_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
-        <File Id='VS2010_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS10_T4TemplatesVBDir' >
-      <Component Id='VS10_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525DD'>
-        <File Id='VS2010_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
-        <File Id='VS2010_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
       <Component Id='VS2012_Extension' Guid='ECB3633C-4169-4074-A527-3FDA825DDB2F'>
         <File Id='MySQL.VisualStudio.2012' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySQL.VisualStudio.dll'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.5\release\MySQL.VisualStudio.dll'/>
         <File Id='MySql.Parser.2012' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.Parser.dll'/>
+          Source='..\Source\MySql.VisualStudio\bin\v4.5\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
               Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\extension.vsixmanifest'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.5\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef.2012' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\v4.0\release\MySql.VisualStudio.pkgdef'/>
+              Source='..\Source\MySql.VisualStudio\bin\v4.5\release\MySql.VisualStudio.pkgdef'/>
         <File Id='MySql.Debugger.2012' Name='MySql.Debugger.dll' DiskId='1'
               Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
         <File Id='MySql.Debugger.VisualStudio.2012' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll'/>
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\v4.5\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2012' Name='mysqlshcore.dll' DiskId='1'
@@ -779,17 +672,6 @@
     </DirectoryRef>
 
     <!--Removing files from Private Assemblies Folders-->
-    <DirectoryRef Id='VS10_PrivateAssemblies'>
-      <Component Id='Remove.VS2010_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C2565525CA'>
-        <RemoveFile Id='RemoveVS2010_MySql.DataLib' Name='MySql.Data.dll' On='uninstall' />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id='Remove.VS2010_Web.Library' Guid='CA082C85-9D64-4B79-8910-C6C2565525CA'>
-        <RemoveFile Id='RemoveVS2010_MySql.Web.Lib' Name='MySql.Web.dll' On='uninstall'/>
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id='VS11_PrivateAssemblies'>
       <Component Id='Remove.VS2012_MD.Library' Guid='AF082C85-9D64-4B79-8910-C6C25655250A'>
         <RemoveFile Id='RemoveVS2012_MySql.DataLib' Name='MySql.Data.dll' On='uninstall'/>
@@ -873,29 +755,6 @@
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
-
-    <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
-      <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
-      <ComponentRef Id='VS2010_Extension'/>
-      <ComponentRef Id='VS2010_Templates'/>
-      <ComponentRef Id='VS2010_MD.Library' />
-      <!--<ComponentRef Id='VS2010_EF.Library' />-->
-      <ComponentRef Id='VS2010_Web.Library' />
-      <ComponentRef Id='Remove.VS2010_MD.Library'/>
-      <ComponentRef Id='Remove.VS2010_Web.Library'/>
-      <ComponentRef Id='AutoLoadPackageVS2010'/>
-      <!--Item Templates-->
-      <Feature Id='VS2010_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
-        <ComponentRef Id='VS2010_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS10_CS_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS10_CS_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2010_VB_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS10_VB_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS10_VB_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS10_T4TemplatesCSharpDir' />
-        <ComponentRef Id='VS10_T4TemplatesVBDir' />
-      </Feature>
-    </Feature>
 
     <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
       <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
@@ -1033,12 +892,6 @@
       </Feature>
     </Feature>
 
-    <!-- Visual Studio 2010 installation location -->
-    <Property Id='VS_2010_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2010_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
-    </Property>
-
     <!-- Visual Studio 2012 installation location -->
     <Property Id='VS_2012_PATH' Secure='yes'>
       <RegistrySearch Id='Find_VS2012_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
@@ -1107,17 +960,6 @@
     <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <!-- Adding AutoLoadPackage option so our connections are available -->
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="AutoLoadPackageVS2010" Guid="*">
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Microsoft\VisualStudio\10.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="AutoLoadPackageVS2012" Guid="*">
         <RegistryKey Root="HKLM"

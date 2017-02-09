@@ -46,18 +46,10 @@
       <ProgressText Action="ManagedWebInstall">Registering web providers in machine.config</ProgressText>
       <ProgressText Action="ManagedWebUnInstall">Unregistering web providers from machine.config</ProgressText>
 
-      <ProgressText Action="VS_2010_SETUP_EXEC">Reconfiguring Visual Studio 2010.  Please wait...</ProgressText>
-
       <ProgressText Action="PMDataCategoryId">Registering performance counters</ProgressText>
 
       <ProgressText Action="RegisterHelp">Registering help collection</ProgressText>
       <ProgressText Action="UnRegisterHelp">Unregistering help collection</ProgressText>
-
-      <ProgressText Action="Register2010Help">Registering help collection with Visual Studio 2010</ProgressText>
-      <ProgressText Action="UnRegister2010Help">Unregistering help collection from Visual Studio 2010</ProgressText>
-
-      <ProgressText Action='VS_2010_INSTALL_EXEC'>Installing Visual Studio 2010 Integration</ProgressText>
-      <ProgressText Action='VS_2010_REMOVE_EXEC'>Removing Visual Studio 2010 Integration</ProgressText>
     </UI>
 
     <UIRef Id="WixUI_Common" />
