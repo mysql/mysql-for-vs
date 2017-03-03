@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -108,7 +108,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.ResultsImageList = new System.Windows.Forms.ImageList(this.components);
       this.CodeEditor = new MySql.Data.VisualStudio.Editors.VSCodeEditorUserControl();
       this.panel1 = new System.Windows.Forms.Panel();
-      this.XShellConsoleEditor = new MySql.Data.VisualStudio.Editors.XShellConsoleEditor();
+      this.BaseShellConsoleEditor = new MySql.Data.VisualStudio.Editors.BaseShellConsoleEditor();
       this.EditorToolStrip.SuspendLayout();
       this.ResultsTabControl.SuspendLayout();
       this.ResultsTabPage.SuspendLayout();
@@ -399,19 +399,19 @@ namespace MySql.Data.VisualStudio.Editors
       this.panel1.Size = new System.Drawing.Size(604, 441);
       this.panel1.TabIndex = 5;
       // 
-      // XShellConsoleEditor
+      // BaseShellConsoleEditor
       // 
-      this.XShellConsoleEditor.Dock = System.Windows.Forms.DockStyle.Top;
-      this.XShellConsoleEditor.Font = new System.Drawing.Font("Courier New", 8F);
-      this.XShellConsoleEditor.IsDirty = false;
-      this.XShellConsoleEditor.Location = new System.Drawing.Point(0, 0);
-      this.XShellConsoleEditor.MinimumSize = new System.Drawing.Size(0, 17);
-      this.XShellConsoleEditor.Name = "XShellConsoleEditor";
-      this.XShellConsoleEditor.PromptColor = System.Drawing.SystemColors.ControlText;
-      this.XShellConsoleEditor.PromptString = ">";
-      this.XShellConsoleEditor.Size = new System.Drawing.Size(604, 437);
-      this.XShellConsoleEditor.TabIndex = 0;
-      this.XShellConsoleEditor.Command += new MySql.Data.VisualStudio.Editors.XShellConsoleEditor.CommandEventHandler(this.XShellConsoleEditor_Command);
+      this.BaseShellConsoleEditor.Dock = System.Windows.Forms.DockStyle.Top;
+      this.BaseShellConsoleEditor.Font = new System.Drawing.Font("Courier New", 8F);
+      this.BaseShellConsoleEditor.IsDirty = false;
+      this.BaseShellConsoleEditor.Location = new System.Drawing.Point(0, 0);
+      this.BaseShellConsoleEditor.MinimumSize = new System.Drawing.Size(0, 17);
+      this.BaseShellConsoleEditor.Name = "BaseShellConsoleEditor";
+      this.BaseShellConsoleEditor.PromptColor = System.Drawing.SystemColors.ControlText;
+      this.BaseShellConsoleEditor.PromptString = ">";
+      this.BaseShellConsoleEditor.Size = new System.Drawing.Size(604, 437);
+      this.BaseShellConsoleEditor.TabIndex = 0;
+      this.BaseShellConsoleEditor.Command += new MySql.Data.VisualStudio.Editors.BaseShellConsoleEditor.CommandEventHandler(this.BaseShellConsoleEditor_Command);
       // 
       // MySqlHybridScriptEditor
       // 
@@ -451,7 +451,7 @@ namespace MySql.Data.VisualStudio.Editors
     private System.Windows.Forms.Label messages;
     private System.Windows.Forms.ImageList ResultsImageList;
     private Panel panel1;
-    private XShellConsoleEditor XShellConsoleEditor;
+    private BaseShellConsoleEditor BaseShellConsoleEditor;
     private ToolStripSeparator toolStripSeparator4;
     private ToolStripDropDownButton ConnectionInfoToolStripDropDownButton;
     private ToolStripMenuItem ConnectionMethodToolStripMenuItem;

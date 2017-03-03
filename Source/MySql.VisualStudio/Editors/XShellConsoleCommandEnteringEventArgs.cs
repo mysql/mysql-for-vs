@@ -26,10 +26,10 @@ using System.ComponentModel;
 namespace MySql.Data.VisualStudio.Editors
 {
   /// <summary>
-  /// XShellConsoleCommandEnteringEventArgs class used to handle the events fired by the command entering event, in the XShell console.
+  /// BaseShellConsoleCommandEnteringEventArgs class used to handle the events fired by the command entering event, in the BaseShell console.
   /// </summary>
   /// <seealso cref="System.EventArgs" />
-  public class XShellConsoleCommandEnteringEventArgs : EventArgs
+  public class BaseShellConsoleCommandEnteringEventArgs : EventArgs
   {
     /// <summary>
     /// The command string.
@@ -37,10 +37,10 @@ namespace MySql.Data.VisualStudio.Editors
     private string _command;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="XShellConsoleCommandEnteringEventArgs"/> class.
+    /// Initializes a new instance of the <see cref="BaseShellConsoleCommandEnteringEventArgs"/> class.
     /// </summary>
     /// <param name="comm">The comm.</param>
-    public XShellConsoleCommandEnteringEventArgs(string comm)
+    public BaseShellConsoleCommandEnteringEventArgs(string comm)
     {
       _command = comm;
     }

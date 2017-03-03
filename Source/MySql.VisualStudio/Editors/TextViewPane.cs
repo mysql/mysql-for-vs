@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -20,17 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySqlX;
-using MySqlX.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -51,15 +42,6 @@ namespace MySql.Data.VisualStudio.Editors
     public void SetData(List<Dictionary<string, object>> dictionaryList)
     {
       txtJsondata.AppendText(dictionaryList.ToJson());
-    }
-
-    /// <summary>
-    /// Set the data received to the text area with a json format
-    /// </summary>
-    /// <param name="document"></param>
-    public void SetData(DocResult document)
-    {
-      txtJsondata.AppendText(document.ToJson());
     }
   }
 }

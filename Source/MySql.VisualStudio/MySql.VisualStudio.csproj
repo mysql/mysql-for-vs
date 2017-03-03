@@ -194,8 +194,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\Parser\ParsingSupport.dll</HintPath>
     </Reference>
-    <Reference Include="XShellClientMgd">
-      <HintPath>..\..\Dependencies\xShell\XShellClientMgd.dll</HintPath>
+    <Reference Include="BaseShell">
+      <HintPath>..\..\Dependencies\BaseShell\BaseShell.dll</HintPath>
     </Reference>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
@@ -319,7 +319,7 @@
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
       <ItemGroup>
         <Reference Include="System.Linq" />
-		<Reference Include="Microsoft.Data.ConnectionUI, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.Data.ConnectionUI, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.Data.ConnectionUI.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -346,9 +346,9 @@
         <Reference Include="Microsoft.VisualStudio.Package.LanguageService.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Package.LanguageService.15.0.dll</HintPath>
         </Reference>
-		<Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" >
-		  <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Shell.Framework.dll</HintPath>
-		</Reference>
+        <Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Shell.Framework.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.15.0.dll</HintPath>
         </Reference>
@@ -1056,7 +1056,7 @@
     <Compile Include="MyInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MySqlX\MySqlShellClient.cs" />
+    <Compile Include="MySqlX\MySqlBaseShell.cs" />
     <Compile Include="MySqlForVisualStudioSettings.cs" />
     <Compile Include="MySqlProviderObjectFactory.cs" />
     <Compile Include="Nodes\BaseNode.cs">
@@ -1670,8 +1670,8 @@
     </When>
   </Choose>
   <!-- Targets when debugging VS
-    1. Clean the experimental instance folder and copy the xShell dependencies to it.
-    2. Copy the xShell modules to the path "%APPDATA%\Oracle\MySQL for Visual Studio"
+    1. Clean the experimental instance folder and copy the BaseShell dependencies to it.
+    2. Copy the BaseShell modules to the path "%APPDATA%\Oracle\MySQL for Visual Studio"
     3. Copy the "Templates" folder to the VS Extensions folder, in order to debug the M4VS custom templates
     4. Copy the "Parser" dependencies to the VS Extensions folder -->
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' ">
@@ -1682,9 +1682,9 @@
     <Exec Command="&quot;$(VsSDKToolsPath)\CreateExpInstance.exe&quot; /Reset /VSInstance=$(VisualStudioVersion) /RootSuffix=Exp" />
   </Target>
   <Target Name="AfterBuild">
-    <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
+    <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\BaseShell\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\Parser\*.*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\&quot; /S /Y /I" />
-    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\xShell\modules\*&quot; &quot;%APPDATA%\Oracle\MySQL for Visual Studio\modules&quot; /S /Y /I" />
+    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\BaseShell\modules\*&quot; &quot;%APPDATA%\Oracle\MySQL for Visual Studio\modules&quot; /S /Y /I" />
     <Exec Condition=" '$(Configuration)' == 'Debug' " Command="start /MIN xcopy &quot;$(SolutionDir)Source\MySql.VisualStudio\Templates\*&quot; &quot;$(VS_Expr_Folder)\Extensions\Oracle, Inc\MySQL for Visual Studio\$(Version)\Templates&quot; /S /Y /I" />
   </Target>
 </Project>

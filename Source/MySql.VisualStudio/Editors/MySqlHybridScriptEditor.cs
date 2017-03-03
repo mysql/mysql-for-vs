@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -44,30 +44,6 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   internal sealed partial class MySqlHybridScriptEditor : BaseEditorControl
   {
-    #region Constants
-
-    /// <summary>
-    /// Constant to hold the MySqlX "Result" string type
-    /// </summary>
-    private const string MYSQL_X_RESULT_TYPE = "mysqlx.result";
-
-    /// <summary>
-    /// Constant to hold the MySqlX "DocResult" string type
-    /// </summary>
-    private const string MYSQL_X_DOC_RESULT_TYPE = "mysqlx.docresult";
-
-    /// <summary>
-    /// Constant to hold the MySqlX "RowResult" string type
-    /// </summary>
-    private const string MYSQL_X_ROW_RESULT_TYPE = "mysqlx.rowresult";
-
-    /// <summary>
-    /// Constant to hold the MySqlX "SqlResult" string type
-    /// </summary>
-    private const string MYSQL_X_SQL_RESULT_TYPE = "mysqlx.sqlresult";
-
-    #endregion Constants
-
     #region Fields
 
     /// <summary>
@@ -113,7 +89,7 @@ namespace MySql.Data.VisualStudio.Editors
       SetBaseEvents(true);
       ClearResults();
       ScriptLanguageType = ScriptLanguageType.JavaScript;
-      SetXShellConsoleEditorPromptString();
+      SetBaseShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
 #if !VS_SDK_2010
       VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
@@ -136,10 +112,10 @@ namespace MySql.Data.VisualStudio.Editors
     {
       Controls.SetColors();
       BackColor = Utils.BackgroundColor;
-      XShellConsoleEditor.Controls.SetColors();
-      XShellConsoleEditor.BackColor = Utils.EditorBackgroundColor;
-      XShellConsoleEditor.PromptColor = Utils.FontColor;
-      XShellConsoleEditor.ForeColor = Utils.FontColor;
+      BaseShellConsoleEditor.Controls.SetColors();
+      BaseShellConsoleEditor.BackColor = Utils.EditorBackgroundColor;
+      BaseShellConsoleEditor.PromptColor = Utils.FontColor;
+      BaseShellConsoleEditor.ForeColor = Utils.FontColor;
 #endif
     }
 
@@ -156,7 +132,7 @@ namespace MySql.Data.VisualStudio.Editors
       ConnectionInfoToolStripDropDownButton.Image = scriptType == ScriptLanguageType.JavaScript
         ? Resources.js_id
         : Resources.py_id;
-      SetXShellConsoleEditorPromptString();
+      SetBaseShellConsoleEditorPromptString();
       Pane = pane;
       ServiceProvider = sp;
       CodeEditor.Init(sp, this);
@@ -299,7 +275,7 @@ namespace MySql.Data.VisualStudio.Editors
           break;
       }
 
-      var boxedResults = _mySqlXProxy.ExecuteStatementsBase(statements.ToArray(), ScriptLanguageType);
+      var boxedResults = _mySqlXProxy.ExecuteStatementsBaseAsResultObject(statements.ToArray(), ScriptLanguageType);
       if (!boxedResults.Any())
       {
         return;
@@ -324,9 +300,10 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="script">The script.</param>
     private void ExecuteConsoleScript(string script)
     {
-      var boxedResult = _mySqlXProxy.ExecuteQuery(script, ScriptLanguageType);
+      var jsonString = _mySqlXProxy.ExecuteQuery(script, ScriptLanguageType);
+      var boxedResult = ExtensionMethods.ToBaseShellResultObject(jsonString);
       PrintResult(script, boxedResult);
-      XShellConsoleEditor.Focus();
+      BaseShellConsoleEditor.Focus();
     }
 
     /// <summary>
@@ -340,7 +317,7 @@ namespace MySql.Data.VisualStudio.Editors
         return;
       }
 
-      // Get elapsed time for xShell results in case an exception is thrown
+      // Get elapsed time for BaseShell results in case an exception is thrown
       Stopwatch sw = new Stopwatch();
       try
       {
@@ -408,8 +385,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="docResult">A <see cref="DocResult"/> instance.</param>
     private void PrintDocResult(string statement, DocResult docResult)
     {
-      string executionTime = docResult.GetExecutionTime();
-      var dictionariesList = docResult.FetchAll();
+      string executionTime = docResult.ExecutionTime;
+      var dictionariesList = docResult.Documents;
       PrintGenericResult(statement, dictionariesList, executionTime);
       PrintWarnings(statement, docResult, executionTime);
     }
@@ -453,7 +430,7 @@ namespace MySql.Data.VisualStudio.Editors
             }
 
             sb.AppendLine("},");
-            XShellConsoleEditor.AddMessage(sb.ToString());
+            BaseShellConsoleEditor.AddMessage(sb.ToString());
           }
 
           break;
@@ -469,28 +446,30 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="boxedResult">A boxed execution result.</param>
     private void PrintResult(string statement, object boxedResult)
     {
-      string type = boxedResult.GetType().ToString().ToLowerInvariant();
-      switch (type)
+      if (boxedResult == null)
       {
-        case MYSQL_X_RESULT_TYPE:
-          PrintResult(statement, (Result)boxedResult);
-          break;
+        return;
+      }
 
-        case MYSQL_X_DOC_RESULT_TYPE:
-          PrintDocResult(statement, (DocResult)boxedResult);
-          break;
-
-        case MYSQL_X_ROW_RESULT_TYPE:
-          PrintRowResult(statement, (RowResult)boxedResult);
-          break;
-
-        case MYSQL_X_SQL_RESULT_TYPE:
-          PrintSqlResult(statement, (SqlResult)boxedResult);
-          break;
-
-        default:
-          PrintUnknownResult(statement, boxedResult);
-          break;
+      if (boxedResult is Result)
+      {
+        PrintResult(statement, (Result)boxedResult);
+      }
+      else if (boxedResult is DocResult)
+      {
+        PrintDocResult(statement, (DocResult)boxedResult);
+      }
+      else if (boxedResult is RowResult)
+      {
+        PrintRowResult(statement, (RowResult)boxedResult);
+      }
+      else if (boxedResult is SqlResult)
+      {
+        PrintSqlResult(statement, (SqlResult)boxedResult);
+      }
+      else
+      {
+        PrintUnknownResult(statement, boxedResult);
       }
     }
 
@@ -502,13 +481,13 @@ namespace MySql.Data.VisualStudio.Editors
     private void PrintResult(string statement, Result result)
     {
       var resultMessage = new StringBuilder("Query OK");
-      long affectedItems = result.GetAffectedItemCount();
+      long affectedItems = result.AffectedItemCount;
       if (affectedItems >= 0)
       {
-        resultMessage.AppendFormat(", {0} items affected", affectedItems);
+        resultMessage.AppendFormat(", {0} item(s) affected", affectedItems);
       }
 
-      var executionTime = result.GetExecutionTime();
+      var executionTime = result.ExecutionTime;
       WriteToMySqlOutput(statement, resultMessage.ToString(), executionTime, MessageType.Information);
       PrintWarnings(statement, result, executionTime);
     }
@@ -520,9 +499,10 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="rowResult">A <see cref="RowResult"/> instance.</param>
     private void PrintRowResult(string statement, RowResult rowResult)
     {
-      string executionTime;
-      var dictionariesList = rowResult.ToDictionariesList(out executionTime);
+      string executionTime = rowResult.ExecutionTime;
+      var dictionariesList = rowResult.Data;
       var count = dictionariesList != null ? dictionariesList.Count : 0;
+
       switch (_executionModeOption)
       {
         case ExecutionModeOption.BatchMode:
@@ -533,7 +513,6 @@ namespace MySql.Data.VisualStudio.Editors
           }
 
           break;
-
         case ExecutionModeOption.ConsoleMode:
           if (dictionariesList == null)
           {
@@ -541,22 +520,34 @@ namespace MySql.Data.VisualStudio.Editors
           }
 
           // Get columns names
-          var columnsList = rowResult.GetColumns();
-          string[] columns = columnsList.Select(c => c.GetColumnName()).ToArray();
+          var columns = rowResult.GetColumnNames();
 
           // Create console table object for output format
-          var table = new ConsoleTable(columns);
+          var table = new ConsoleTable(columns.ToArray());
           foreach (var rowData in dictionariesList)
           {
-            object[] columnValue = rowData.Select(o => o.Value == null ? (object)"null" : o.Value.ToString()).ToArray();
-            table.AddRow(columnValue);
+            object[] columnValues = rowData.Select(o => o.Value == null ? (object)"null" : o.Value.ToString()).ToArray();
+            var formattedColumnValues = new List<Object>();
+
+            //Format values
+            foreach (var value in rowData.Values)
+            {
+              if (value is Dictionary<string,object>)
+              {
+                formattedColumnValues.Add(Utils.GetFormattedValue(value));
+                continue;
+              }
+
+              formattedColumnValues.Add(value);
+            }
+
+            table.AddRow(formattedColumnValues.ToArray());
           }
 
           if (table.Rows.Count > 0)
           {
-            XShellConsoleEditor.AddMessage(table.ToStringAlternative());
+            BaseShellConsoleEditor.AddMessage(table.ToStringAlternative());
           }
-
           break;
       }
 
@@ -568,11 +559,11 @@ namespace MySql.Data.VisualStudio.Editors
         var sqlResult = rowResult as SqlResult;
         if (sqlResult != null)
         {
-          resultMessage.AppendFormat("Query OK, {0} row(s) affected, {1} warning(s)", sqlResult.GetAffectedRowCount(), rowResult.GetWarningCount());
+          resultMessage.AppendFormat("Query OK, {0} row(s) affected, {1} warning(s)", sqlResult.AffectedRowCount, rowResult.WarningCount);
         }
         else
         {
-          resultMessage.AppendFormat("Query OK, {0} warning(s)", rowResult.GetWarningCount());
+          resultMessage.AppendFormat("Query OK, {0} warning(s)", rowResult.WarningCount);
         }
       }
       else
@@ -591,13 +582,13 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="sqlResult">A <see cref="SqlResult"/> instance.</param>
     private void PrintSqlResult(string statement, SqlResult sqlResult)
     {
-      if (sqlResult.HasData())
+      if (sqlResult.HasData)
       {
         PrintRowResult(statement, sqlResult);
       }
       else
       {
-        PrintWarnings(statement, sqlResult, sqlResult.GetExecutionTime());
+        PrintWarnings(statement, sqlResult, sqlResult.ExecutionTime);
       }
     }
 
@@ -608,7 +599,17 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="boxedResult">A boxed execution result.</param>
     private void PrintUnknownResult(string statement, object boxedResult)
     {
-      string executionTime = MySql.Utility.Classes.ExtensionMethods.ZERO_EXECUTION_TIME;
+      string executionTime = ExtensionMethods.ZERO_EXECUTION_TIME;
+      MessageType messageType = MessageType.Information;
+
+      // TODO: Remove this code when Shell bug 25655034 is fixed.
+      var result = ProcessBaseShellBugs(boxedResult.ToString());
+      if (result != null)
+      {
+        WriteToMySqlOutput(statement, result, executionTime, messageType);
+        return;
+      }
+
       var dictionariesList = boxedResult.UnknownResultToDictionaryList();
       if (dictionariesList != null)
       {
@@ -624,7 +625,6 @@ namespace MySql.Data.VisualStudio.Editors
         return;
       }
 
-      MessageType messageType = MessageType.Information;
       if (stringResult.Contains("error", StringComparison.InvariantCultureIgnoreCase))
       {
         messageType = MessageType.Error;
@@ -638,23 +638,39 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="script">The executed command.</param>
     /// <param name="result">The BaseResult execution result.</param>
-    /// <param name = "duration" > The elapsed time for xShell results that doesn't contain the "GetExecutionTime" property.</param>
+    /// <param name = "duration" > The elapsed time for BaseShell results that doesn't contain the "GetExecutionTime" property.</param>
     private void PrintWarnings(string script, BaseResult result, string duration)
     {
-      if (result.GetWarningCount() <= 0)
+      if (result.WarningCount <= 0)
       {
         return;
       }
 
       StringBuilder warningsMessages = new StringBuilder();
-      warningsMessages.AppendFormat(" Warning Count: {0}\n", result.GetWarningCount());
-      List<Dictionary<String, Object>> warnings = result.GetWarnings();
+      warningsMessages.AppendFormat(" Warning Count: {0}\n", result.WarningCount);
+      List<Dictionary<String, Object>> warnings = result.Warnings;
       foreach (Dictionary<String, Object> warning in warnings)
       {
         warningsMessages.AppendFormat("{0} ({1}): {2}\n", warning["Level"], warning["Code"], warning["Message"]);
       }
 
-      WriteToMySqlOutput(script, warningsMessages.ToString(), string.Format("{0} / {1}", duration, result.GetExecutionTime()), MessageType.Warning);
+      WriteToMySqlOutput(script, warningsMessages.ToString(), string.Format("{0} / {1}", duration, result.ExecutionTime), MessageType.Warning);
+    }
+
+    // TODO: Remove this method when Shell bug 25655034 is fixed.
+    /// <summary>
+    /// Processes Base Shell result messages to workaround the known bug 25655034.
+    /// </summary>
+    /// <param name="result">Correct message.</param>
+    /// <returns></returns>
+    private string ProcessBaseShellBugs(string result)
+    {
+      if (result.Contains("Result.getLastDocumentId: document id is not available."))
+      {
+        return "Query Ok";
+      }
+
+      return null;
     }
 
     /// <summary>
@@ -671,20 +687,20 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Set the XShellConsoleEditor prompt string according the ScriptLanguageType the file format list.
+    /// Set the BaseShellConsoleEditor prompt string according the ScriptLanguageType the file format list.
     /// </summary>
-    private void SetXShellConsoleEditorPromptString()
+    private void SetBaseShellConsoleEditorPromptString()
     {
       switch (ScriptLanguageType)
       {
         case ScriptLanguageType.Sql:
-          XShellConsoleEditor.PromptString = "mysql-slq>";
+          BaseShellConsoleEditor.PromptString = "mysql-slq>";
           break;
         case ScriptLanguageType.Python:
-          XShellConsoleEditor.PromptString = "mysql-py>";
+          BaseShellConsoleEditor.PromptString = "mysql-py>";
           break;
         case ScriptLanguageType.JavaScript:
-          XShellConsoleEditor.PromptString = "mysql-js>";
+          BaseShellConsoleEditor.PromptString = "mysql-js>";
           break;
       }
     }
@@ -700,7 +716,7 @@ namespace MySql.Data.VisualStudio.Editors
         panel1.SuspendLayout();
         if (executionMode == ExecutionModeOption.BatchMode)
         {
-          panel1.Controls.Remove(XShellConsoleEditor);
+          panel1.Controls.Remove(BaseShellConsoleEditor);
           panel1.Controls.Add(ResultsTabControl);
           panel1.Controls.Add(splitter1);
           // Register the code editor, to add back its handles and events
@@ -716,10 +732,10 @@ namespace MySql.Data.VisualStudio.Editors
           // Unregister the code editor, to remove its handles and events
           CodeEditor.UnregisterEditor();
           panel1.Controls.Remove(CodeEditor);
-          XShellConsoleEditor.Dock = DockStyle.Fill;
-          panel1.Controls.Add(XShellConsoleEditor);
+          BaseShellConsoleEditor.Dock = DockStyle.Fill;
+          panel1.Controls.Add(BaseShellConsoleEditor);
           RunScriptToolStripButton.Enabled = false;
-          XShellConsoleEditor.Focus();
+          BaseShellConsoleEditor.Focus();
         }
       }
       finally
@@ -762,20 +778,20 @@ namespace MySql.Data.VisualStudio.Editors
       base.WriteToMySqlOutput(action, message, duration, messageType);
       if (_executionModeOption == ExecutionModeOption.ConsoleMode)
       {
-        XShellConsoleEditor.AddMessage(message);
+        BaseShellConsoleEditor.AddMessage(message);
       }
     }
 
     /// <summary>
-    /// Handles the Command event of the xShellConsoleEditor1 control, and execute the command received.
+    /// Handles the Command event of the BaseShellConsoleEditor1 control, and execute the command received.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="XShellConsoleCommandEventArgs"/> instance containing the event data.</param>
-    private void XShellConsoleEditor_Command(object sender, XShellConsoleCommandEventArgs e)
+    /// <param name="e">The <see cref="BaseShellConsoleCommandEventArgs"/> instance containing the event data.</param>
+    private void BaseShellConsoleEditor_Command(object sender, BaseShellConsoleCommandEventArgs e)
     {
       if (e.Command == "cls")
       {
-        XShellConsoleEditor.ClearMessages();
+        BaseShellConsoleEditor.ClearMessages();
         e.Cancel = true;
         return;
       }

@@ -26,10 +26,10 @@ using System.ComponentModel;
 namespace MySql.Data.VisualStudio.Editors
 {
   /// <summary>
-  /// XShellConsoleCommandEventArgs class used to handle the events fired by the command event, in the XShell console.
+  /// BaseShellConsoleCommandEventArgs class used to handle the events fired by the command event, in the BaseShell console.
   /// </summary>
   /// <seealso cref="System.EventArgs" />
-  public class XShellConsoleCommandEventArgs : EventArgs
+  public class BaseShellConsoleCommandEventArgs : EventArgs
   {
     /// <summary>
     /// The _cancel flag.
@@ -47,10 +47,10 @@ namespace MySql.Data.VisualStudio.Editors
     private string _message;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="XShellConsoleCommandEventArgs"/> class.
+    /// Initializes a new instance of the <see cref="BaseShellConsoleCommandEventArgs"/> class.
     /// </summary>
     /// <param name="cmd">The command.</param>
-    public XShellConsoleCommandEventArgs(string cmd)
+    public BaseShellConsoleCommandEventArgs(string cmd)
     {
       _command = cmd;
       _message = "";

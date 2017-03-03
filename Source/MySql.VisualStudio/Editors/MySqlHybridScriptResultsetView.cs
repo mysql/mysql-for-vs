@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -21,12 +21,9 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using Microsoft.VisualStudio.PlatformUI;
-using MySql.Data.MySqlClient;
-using MySqlX.Shell;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using MySqlX;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -102,22 +99,6 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="data">Data to be loaded</param>
     public void LoadData(List<Dictionary<string, object>> data)
-    {
-      if (data == null)
-      {
-        return;
-      }
-
-      ctrlGridView.SetData(data);
-      ctrlTreeView.SetData(data);
-      ctrlTextView.SetData(data);
-    }
-
-    /// <summary>
-    /// Load the data received into the views if it is valid
-    /// </summary>
-    /// <param name="data">Data to be loaded</param>
-    public void LoadData(DocResult data)
     {
       if (data == null)
       {

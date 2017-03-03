@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -54,15 +54,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Load data to the tree view
-    /// </summary>
-    /// <param name="document">Data to load</param>
-    public void SetData(DocResult document)
-    {
-      SetData(document.FetchAll());
-    }
-
-    /// <summary>
     /// Create tree nodes from the data received to add it to the tree view and display the information
     /// </summary>
     /// <param name="rows">Data to generate the tree nodes</param>
@@ -79,13 +70,15 @@ namespace MySql.Data.VisualStudio.Editors
         {
           object value;
           dicItem.TryGetValue(column, out value);
-          if (value != null && value.GetType().Name.Contains("Dictionary"))
+          object formattedValue = Utils.GetFormattedValue(value);
+
+          if (formattedValue != null && formattedValue.GetType().Name.Contains("Dictionary"))
           {
-            dr[column] = string.Format("{0} Fields", (value as Dictionary<string, object>).Count());
+            dr[column] = string.Format("{0} Fields", (formattedValue as Dictionary<string, object>).Count());
           }
           else
           {
-            dr[column] = value;
+            dr[column] = formattedValue;
           }
         }
 

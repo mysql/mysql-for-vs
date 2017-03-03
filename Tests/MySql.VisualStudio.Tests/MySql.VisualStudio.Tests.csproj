@@ -112,9 +112,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
     </Reference>
-    <Reference Include="XShellClientMgd">
-      <HintPath>..\..\Dependencies\xShell\XShellClientMgd.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <!-- References per specific VS version -->
   <Choose>
@@ -155,33 +152,11 @@
     <Compile Include="..\..\Source\MySql.VisualStudio\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="MySqlX\Base\BaseCollectionTests.cs" />
-    <Compile Include="MySqlX\Base\BaseTableTests.cs" />
-    <Compile Include="MySqlX\Base\BaseTests.cs" />
-    <Compile Include="MySqlX\Base\CollectionTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\CollectionTestsPropertiesFactory.cs" />
-    <Compile Include="MySqlX\Base\JsCollectionTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\JsTableTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\PyCollectionTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\PyTableTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\TableTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\TableTestsPropertiesFactory.cs" />
-    <Compile Include="MySqlX\Base\XecutorType.cs" />
-    <Compile Include="MySqlX\JsCollectionXShellTests.cs" />
     <Compile Include="DbExportTests.cs" />
     <Compile Include="DependenciesTests.cs" />
-    <Compile Include="MySqlX\JsCollectionXProxyTests.cs" />
-    <Compile Include="MySqlX\JsTableXProxyTests.cs" />
-    <Compile Include="MySqlX\Base\MySqlShellClient.cs" />
-    <Compile Include="MySqlX\PyCollectionXShellTests.cs" />
-    <Compile Include="MySqlX\PyCollectionXProxyTests.cs" />
-    <Compile Include="MySqlX\PyTableXShellTests.cs" />
-    <Compile Include="MySqlX\PyTableXProxyTests.cs" />
     <Compile Include="SchemaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUpSqlData.cs" />
-    <Compile Include="MySqlX\Base\SetUpXShell.cs" />
-    <Compile Include="MySqlX\JsTableXShellTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Setup.sql">
@@ -207,7 +182,7 @@
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.  -->
   <PropertyGroup>
-    <PostBuildEvent>start /MIN xcopy "$(SolutionDir)Dependencies\xShell\*.*" "$(ProjectDir)$(OutDir)" /Y /S</PostBuildEvent>
+    <PostBuildEvent>start /MIN xcopy "$(SolutionDir)Dependencies\BaseShell\*.*" "$(ProjectDir)$(OutDir)" /Y /S</PostBuildEvent>
   </PropertyGroup>
   <!-- Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

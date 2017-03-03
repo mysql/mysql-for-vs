@@ -22,8 +22,8 @@
 
 namespace MySql.Data.VisualStudio.Editors
 {
-  partial class XShellConsoleEditor
-  {
+  partial class BaseShellConsoleEditor
+    {
     /// <summary>
     /// Required designer variable.
     /// </summary>
@@ -103,7 +103,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.txtInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtInput_KeyDown);
       this.txtInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtInput_KeyPress);
       // 
-      // XShellConsoleEditor
+      // BaseShellConsoleEditor
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -112,7 +112,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.Controls.Add(this.rtbMessages);
       this.Font = new System.Drawing.Font("Courier New", 8F);
       this.MinimumSize = new System.Drawing.Size(0, 17);
-      this.Name = "XShellConsoleEditor";
+      this.Name = "BaseShellConsoleEditor";
       this.Size = new System.Drawing.Size(200, 95);
       this.BackColorChanged += new System.EventHandler(this.Prompt_BackColorChanged);
       this.FontChanged += new System.EventHandler(this.Prompt_FontChanged);

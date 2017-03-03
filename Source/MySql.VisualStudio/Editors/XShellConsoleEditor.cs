@@ -28,10 +28,10 @@ using System.Collections;
 namespace MySql.Data.VisualStudio.Editors
 {
   /// <summary>
-  /// XShellConsoleEditor class, used to mimic a console editor for executing xShell commands, using a textbox and a richtTextBox to accomplish this task.
+  /// BaseShellConsoleEditor class, used to mimic a console editor for executing BaseShell commands, using a textbox and a richtTextBox to accomplish this task.
   /// </summary>
   /// <seealso cref="System.Windows.Forms.UserControl" />
-  public partial class XShellConsoleEditor : UserControl
+  public partial class BaseShellConsoleEditor : UserControl
   {
     #region Fields & Constants
     /// <summary>
@@ -90,9 +90,9 @@ namespace MySql.Data.VisualStudio.Editors
 
     #region Methods
     /// <summary>
-    /// Initializes a new instance of the <see cref="XShellConsoleEditor"/> class.
+    /// Initializes a new instance of the <see cref="BaseShellConsoleEditor"/> class.
     /// </summary>
-    public XShellConsoleEditor()
+    public BaseShellConsoleEditor()
     {
       InitializeComponent();
       rtbMessages.Height = 0;
@@ -172,7 +172,7 @@ namespace MySql.Data.VisualStudio.Editors
           AddCommand(prevPrompt, prevPromptColor, txtInput.Text);
 
           // Raise the command event
-          XShellConsoleCommandEventArgs args = new XShellConsoleCommandEventArgs(txtInput.Text);
+          BaseShellConsoleCommandEventArgs args = new BaseShellConsoleCommandEventArgs(txtInput.Text);
           OnCommand(args);
           if (args.Cancel == false)
           {
@@ -253,15 +253,15 @@ namespace MySql.Data.VisualStudio.Editors
     private void txtInput_TextChanged(object sender, EventArgs e)
     {
       // Fire the CommandEntering event first
-      XShellConsoleCommandEnteringEventArgs commandEnteringArgs = new XShellConsoleCommandEnteringEventArgs(txtInput.Text);
+      BaseShellConsoleCommandEnteringEventArgs commandEnteringArgs = new BaseShellConsoleCommandEnteringEventArgs(txtInput.Text);
       OnCommandEntering(commandEnteringArgs);
     }
 
     /// <summary>
     /// Raises the <see cref="E:Command" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="XShellConsoleCommandEventArgs"/> instance containing the event data.</param>
-    protected virtual void OnCommand(XShellConsoleCommandEventArgs e)
+    /// <param name="e">The <see cref="BaseShellConsoleCommandEventArgs"/> instance containing the event data.</param>
+    protected virtual void OnCommand(BaseShellConsoleCommandEventArgs e)
     {
       if (Command != null)
       {
@@ -272,8 +272,8 @@ namespace MySql.Data.VisualStudio.Editors
     /// <summary>
     /// Raises the <see cref="E:CommandEntering" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="XShellConsoleCommandEnteringEventArgs"/> instance containing the event data.</param>
-    protected virtual void OnCommandEntering(XShellConsoleCommandEnteringEventArgs e)
+    /// <param name="e">The <see cref="BaseShellConsoleCommandEnteringEventArgs"/> instance containing the event data.</param>
+    protected virtual void OnCommandEntering(BaseShellConsoleCommandEnteringEventArgs e)
     {
       if (CommandEntering != null)
       {
@@ -379,16 +379,16 @@ namespace MySql.Data.VisualStudio.Editors
     /// Event raised when the user enters a command and presses the Enter key.
     /// </summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="e">The <see cref="XShellConsoleCommandEventArgs"/> instance containing the event data.</param>
-    public delegate void CommandEventHandler(object sender, XShellConsoleCommandEventArgs e);
+    /// <param name="e">The <see cref="BaseShellConsoleCommandEventArgs"/> instance containing the event data.</param>
+    public delegate void CommandEventHandler(object sender, BaseShellConsoleCommandEventArgs e);
     public event CommandEventHandler Command;
 
     /// <summary>
     /// Event raised on KeyPress in input area.
     /// </summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="e">The <see cref="XShellConsoleCommandEnteringEventArgs"/> instance containing the event data.</param>
-    public delegate void CommandEnteringEventHandler(object sender, XShellConsoleCommandEnteringEventArgs e);
+    /// <param name="e">The <see cref="BaseShellConsoleCommandEnteringEventArgs"/> instance containing the event data.</param>
+    public delegate void CommandEnteringEventHandler(object sender, BaseShellConsoleCommandEnteringEventArgs e);
     public event CommandEnteringEventHandler CommandEntering;
     #endregion
   }

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -34,7 +34,6 @@ using EnvDTE;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
 using MySql.Utility.Classes.MySqlX;
-using MySqlX;
 using Color = System.Drawing.Color;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -118,11 +117,6 @@ namespace MySql.Data.VisualStudio.Editors
   /// </summary>
   internal static class Utils
   {
-    /// <summary>
-    /// Variable declaration in JavaScript.
-    /// </summary>
-    private const string VAR_KEYWORD = "var ";
-
     /// <summary>
     /// Dictionary with the Guid from the default Visual Studio themes and their corresponding enum value.
     /// </summary>
@@ -739,56 +733,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Parse a RowResult to a DataTable object
-    /// </summary>
-    /// <param name="resultSet">RowResult to parse</param>
-    /// <returns>Object parse to DataTable object</returns>
-    public static DataTable ToDataTable(this RowResult resultSet)
-    {
-      DataTable result = new DataTable("Result");
-      foreach (var column in resultSet.GetColumnNames())
-      {
-        result.Columns.Add(column);
-      }
-
-      foreach (object[] row in resultSet.FetchAll())
-      {
-        result.Rows.Add(row);
-      }
-      return result;
-    }
-
-    /// <summary>
-    /// Returns a base Protocol X query that runs in JavaScript, adding var for a variable and semicolon at the end.
-    /// </summary>
-    /// <param name="baseProtocolXQuery">Base Protocol X query, language-agnostic.</param>
-    /// <returns>A base Protocol X query that runs in JavaScript</returns>
-    public static string ToJavaScript(this string baseProtocolXQuery)
-    {
-      if (string.IsNullOrEmpty(baseProtocolXQuery))
-      {
-        return string.Empty;
-      }
-
-      var queryBuilder = new StringBuilder(baseProtocolXQuery.Length + 10);
-      var dotIndex = baseProtocolXQuery.IndexOf(".", StringComparison.InvariantCultureIgnoreCase);
-      var equalsSignIndex = baseProtocolXQuery.IndexOf("=", StringComparison.InvariantCultureIgnoreCase);
-
-      if (equalsSignIndex > 0 && equalsSignIndex < dotIndex && !baseProtocolXQuery.StartsWith(VAR_KEYWORD))
-      {
-        queryBuilder.Append(VAR_KEYWORD);
-      }
-
-      queryBuilder.Append(baseProtocolXQuery);
-      if (!baseProtocolXQuery.EndsWith(";", StringComparison.InvariantCultureIgnoreCase))
-      {
-        queryBuilder.Append(";");
-      }
-
-      return queryBuilder.ToString();
-    }
-
-    /// <summary>
     /// Parse a DocResult object to string with JSON format
     /// </summary>
     /// <param name="list">The document to parse</param>
@@ -804,23 +748,19 @@ namespace MySql.Data.VisualStudio.Editors
         int ctr = 0;
         foreach (KeyValuePair<string, object> kvp in data[idx])
         {
-          sbData.AppendLine(string.Format("    \"{0}\" : \"{1}\"{2}\n", kvp.Key, kvp.Value, (ctr < data[idx].Count - 1) ? "," : ""));
+          var value = kvp.Value;
+          if (value is Dictionary<string,object>)
+          {
+            value = GetFormattedValue(value);
+          }
+
+          sbData.AppendLine(string.Format("    \"{0}\" : \"{1}\"{2}\n", kvp.Key, value, (ctr < data[idx].Count - 1) ? "," : ""));
           ctr++;
         }
         sbData.AppendLine(idx < data.Length - 1 ? "  }," : "  }");
       }
       sbData.AppendLine("}");
       return sbData.ToString();
-    }
-
-    /// <summary>
-    /// Parse a DocResult object to string with JSON format
-    /// </summary>
-    /// <param name="document">The document to parse</param>
-    /// <returns>String with JSON format</returns>
-    public static string ToJson(this DocResult document)
-    {
-      return document.FetchAll().ToJson();
     }
 
     /// <summary>
@@ -865,6 +805,46 @@ namespace MySql.Data.VisualStudio.Editors
       var csb = (MySqlConnectionStringBuilder)settings.GetValue(connection, null);
       csb.AllowUserVariables = true;
       return csb.ConnectionString;
+    }
+
+    /// <summary>
+    /// Tries to identify if the contents of the object matches a known data type by checking its keys.
+    /// </summary>
+    /// <param name="value">Generic object which is expected to be converted to a Dictionary.</param>
+    /// <returns>A boxed object containing the formatted value.</returns>
+    public static object GetFormattedValue(object value)
+    {
+      try
+      {
+        var formattedValue = (Dictionary<string,object>) value;
+
+        //Check if the value is a dateTime.
+        if (formattedValue.ContainsKey("year") &&
+          formattedValue.ContainsKey("month") &&
+          formattedValue.ContainsKey("day") &&
+          formattedValue.ContainsKey("hour") &&
+          formattedValue.ContainsKey("minute") &&
+          formattedValue.ContainsKey("second"))
+        {
+          var seconds = formattedValue["second"].ToString().Contains(".")
+             ? formattedValue["second"].ToString().Split('.')[0]
+             : formattedValue["second"];
+
+          return string.Format("{0}-{1}-{2} {3}:{4}:{5}",
+            formattedValue["year"],
+            formattedValue["month"],
+            formattedValue["day"],
+            formattedValue["hour"],
+            formattedValue["minute"],
+            seconds);
+        }
+      }
+      catch (Exception)
+      {
+        //Do nothing. Ignore the exception.
+      }
+
+      return value;
     }
 
     /// <summary>

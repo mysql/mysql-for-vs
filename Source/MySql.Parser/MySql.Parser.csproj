@@ -233,6 +233,6 @@
 	1. Copy the "Parser" dependencies to the build -->
   <Target Name="AfterBuild">
     <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\Parser\*.*&quot; &quot;$(OutputPath)&quot; /S /Y /I" />
-    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\XShell\*.*&quot; &quot;$(OutputPath)&quot; /S /Y /I" />
+    <Exec Command="start /MIN xcopy &quot;$(SolutionDir)Dependencies\BaseShell\*.*&quot; &quot;$(OutputPath)&quot; /S /Y /I" />
   </Target>
 </Project>

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -64,15 +64,6 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
-    /// Load data to the tree view
-    /// </summary>
-    /// <param name="document">Data to load</param>
-    public void SetData(DocResult document)
-    {
-      SetData(document.FetchAll());
-    }
-
-    /// <summary>
     /// Create tree nodes from the data received to add it to the tree view and display the information
     /// </summary>
     /// <param name="rows">Data to generate the tree nodes</param>
@@ -120,17 +111,18 @@ namespace MySql.Data.VisualStudio.Editors
         return null;
       }
 
+      var formattedColumn = new KeyValuePair<string,object>(column.Key, Utils.GetFormattedValue(column.Value));
       TreeNode parentNode = new TreeNode();
       parentNode.ImageIndex = 0;
-      if (column.Value == null || column.Value.GetType() != typeof(Dictionary<string, object>))
+      if (formattedColumn.Value == null || formattedColumn.Value.GetType() != typeof(Dictionary<string, object>))
       {
-        parentNode.Text = column.Key;
-        parentNode.Tag = new string[] { GetNodeValue(column.Value), GetNodeType(column.Value) };
+        parentNode.Text = formattedColumn.Key;
+        parentNode.Tag = new string[] { GetNodeValue(formattedColumn.Value), GetNodeType(formattedColumn.Value) };
       }
       else
       {
-        var cols = (Dictionary<string, object>)column.Value;
-        parentNode.Text = column.Key;
+        var cols = (Dictionary<string, object>)formattedColumn.Value;
+        parentNode.Text = formattedColumn.Key;
         parentNode.Tag = new string[] { string.Format("{0} Fields", cols.Count), "Object" };
         foreach (KeyValuePair<string, object> col in cols)
         {
