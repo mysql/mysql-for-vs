@@ -23,14 +23,12 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MySql.Utility.Classes;
-using MySqlX;
 using System.Text;
 using ConsoleTables.Core;
 using MySql.Data.VisualStudio.Properties;
@@ -92,7 +90,7 @@ namespace MySql.Data.VisualStudio.Editors
       SetBaseShellConsoleEditorPromptString();
       ToggleEditors(ExecutionModeOption.BatchMode);
 #if !VS_SDK_2010
-      VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+      Microsoft.VisualStudio.PlatformUI.VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
       SetColors();
     }
 
@@ -100,7 +98,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// Responds to the event when Visual Studio theme changed.
     /// </summary>
     /// <param name="e">The <see cref="ThemeChangedEventArgs"/> instance containing the event data.</param>
-    void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+    void VSColorTheme_ThemeChanged(Microsoft.VisualStudio.PlatformUI.ThemeChangedEventArgs e)
     {
       SetColors();
     }

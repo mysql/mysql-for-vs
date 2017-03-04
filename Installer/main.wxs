@@ -89,12 +89,12 @@
         </Directory>
       </Directory>
 
-      <!-- xShell Modules in AppData folder -->
+      <!-- BaseShell Modules in AppData folder -->
       <Directory Id="AppDataFolder">
         <Directory Id="Oracle_AppDataFolder" Name='Oracle'>
           <Directory Id="mysqlvs_AppDataFolder" Name='MySQL For Visual Studio'>
             <Directory Id='modules_AppDataFolder' Name='modules'>
-              <Directory Id='xShellModules_AppDataFolder' Name='js' />
+              <Directory Id='BaseShellModules_AppDataFolder' Name='js' />
             </Directory>
           </Directory>
         </Directory>
@@ -104,7 +104,7 @@
       <Directory Id="VS2012_ROOT_FOLDER">
         <Directory Id="VS11.Common7Folder" Name="Common7">
           <Directory Id="VS11.IDEFolder" Name="IDE">
-            <!-- xShell Modules Dir -->
+            <!-- BaseShell Modules Dir -->
             <Directory Id='VS11_NgModulesDir' Name='modules'>
               <Directory Id='VS11_NgJsDir' Name='js' />
             </Directory>
@@ -162,7 +162,7 @@
       <Directory Id="VS_2013_PATH" Name="VSPath2013">
         <Directory Id="VS12.Common7Folder" Name="Common7">
           <Directory Id="VS12.IDEFolder" Name="IDE">
-            <!-- xShell Modules Dir -->
+            <!-- BaseShell Modules Dir -->
             <Directory Id='VS12_NgModulesDir' Name='modules'>
               <Directory Id='VS12_NgJsDir' Name='js' />
             </Directory>
@@ -220,7 +220,7 @@
       <Directory Id="VS_2015_PATH" Name="VSPath2015">
         <Directory Id="VS14.Common7Folder" Name="Common7">
           <Directory Id="VS14.IDEFolder" Name="IDE">
-            <!-- xShell Modules Dir -->
+            <!-- BaseShell Modules Dir -->
             <Directory Id='VS14_NgModulesDir' Name='modules'>
               <Directory Id='VS14_NgJsDir' Name='js' />
             </Directory>
@@ -278,7 +278,7 @@
       <Directory Id="VS_2017_COM_PATH" Name="VSPath2017">
         <Directory Id="VS15.Common7Folder" Name="Common7">
           <Directory Id="VS15.IDEFolder" Name="IDE">
-            <!-- xShell Modules Dir -->
+            <!-- BaseShell Modules Dir -->
             <Directory Id='VS15_NgModulesDir' Name='modules'>
               <Directory Id='VS15_NgJsDir' Name='js' />
             </Directory>
@@ -339,7 +339,7 @@
       <Directory Id="VS_2017_ENT_PATH" Name="VSPath2017Ent">
         <Directory Id="VS15.Ent.Common7Folder" Name="Common7">
           <Directory Id="VS15.Ent.IDEFolder" Name="IDE">
-            <!-- xShell Modules Dir -->
+            <!-- BaseShell Modules Dir -->
             <Directory Id='VS15_Ent_NgModulesDir' Name='modules'>
               <Directory Id='VS15_Ent_NgJsDir' Name='js' />
             </Directory>
@@ -400,7 +400,7 @@
       <Directory Id="VS_2017_PRO_PATH" Name="VSPath2017Pro">
         <Directory Id="VS15.Pro.Common7Folder" Name="Common7">
           <Directory Id="VS15.Pro.IDEFolder" Name="IDE">
-            <!-- xShell Modules Dir -->
+            <!-- BaseShell Modules Dir -->
             <Directory Id='VS15_Pro_NgModulesDir' Name='modules'>
               <Directory Id='VS15_Pro_NgJsDir' Name='js' />
             </Directory>

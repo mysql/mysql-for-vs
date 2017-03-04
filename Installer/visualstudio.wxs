@@ -21,18 +21,16 @@
         <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2012' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
+              Source='..\Dependencies\BaseShell\mysqlshcore.dll'/>
         <File Id='python27_2012' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client_2012' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2012' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
+              Source='..\Dependencies\BaseShell\python27.dll'/>
+        <File Id='BaseShell_2012' Name='BaseShell.dll' DiskId='1'
+              Source='..\Dependencies\BaseShell\BaseShell.dll'/>
         <File Id='v8_2012' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120_2012' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120_2012' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120_2012' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+              Source='..\Dependencies\BaseShell\v8.dll'/>
+        <File Id='msvcp120_2012' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcp120.dll'/>
+        <File Id='msvcr120_2012' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2012' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\BaseShell\vccorlib120.dll'/>
         <File Id='base.dll_2012' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
         <File Id='libglib_2.0_0.dll_2012' Name='libglib-2.0-0.dll' DiskId='1'
@@ -128,18 +126,16 @@
         <File Id='MySql.Utility_2013' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2013' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
+              Source='..\Dependencies\BaseShell\mysqlshcore.dll'/>
         <File Id='python27_2013' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client_2013' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2013' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
+              Source='..\Dependencies\BaseShell\python27.dll'/>
+        <File Id='BaseShell_2013' Name='BaseShell.dll' DiskId='1'
+              Source='..\Dependencies\BaseShell\BaseShell.dll'/>
         <File Id='v8_2013' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120_2013' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120_2013' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120_2013' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+              Source='..\Dependencies\BaseShell\v8.dll'/>
+        <File Id='msvcp120_2013' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcp120.dll'/>
+        <File Id='msvcr120_2013' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2013' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\BaseShell\vccorlib120.dll'/>
         <File Id='base.dll_2013' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
         <File Id='libglib_2.0_0.dll_2013' Name='libglib-2.0-0.dll' DiskId='1'
@@ -236,18 +232,16 @@
         <File Id='MySql.Utility_2015' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2015' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
+              Source='..\Dependencies\BaseShell\mysqlshcore.dll'/>
         <File Id='python27_2015' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client_2015' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2015' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
+              Source='..\Dependencies\BaseShell\python27.dll'/>
+        <File Id='BaseShell_2015' Name='BaseShell.dll' DiskId='1'
+              Source='..\Dependencies\BaseShell\BaseShell.dll'/>
         <File Id='v8_2015' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120_2015' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120_2015' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120_2015' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+              Source='..\Dependencies\BaseShell\v8.dll'/>
+        <File Id='msvcp120_2015' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcp120.dll'/>
+        <File Id='msvcr120_2015' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2015' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\BaseShell\vccorlib120.dll'/>
         <File Id='base.dll_2015' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
         <File Id='libglib_2.0_0.dll_2015' Name='libglib-2.0-0.dll' DiskId='1'
@@ -346,18 +340,16 @@
         <File Id='MySql.Utility_2017' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2017' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
+              Source='..\Dependencies\BaseShell\mysqlshcore.dll'/>
         <File Id='python27_2017' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client_2017' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2017' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
+              Source='..\Dependencies\BaseShell\python27.dll'/>
+        <File Id='BaseShell_2017' Name='BaseShell.dll' DiskId='1'
+              Source='..\Dependencies\BaseShell\BaseShell.dll'/>
         <File Id='v8_2017' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120_2017' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120_2017' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120_2017' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+              Source='..\Dependencies\BaseShell\v8.dll'/>
+        <File Id='msvcp120_2017' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcp120.dll'/>
+        <File Id='msvcr120_2017' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2017' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\BaseShell\vccorlib120.dll'/>
         <File Id='base.dll_2017' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
         <File Id='libglib_2.0_0.dll_2017' Name='libglib-2.0-0.dll' DiskId='1'
@@ -462,18 +454,16 @@
         <File Id='MySql.Utility_2017_Ent' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2017_Ent' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
+              Source='..\Dependencies\BaseShell\mysqlshcore.dll'/>
         <File Id='python27_2017_Ent' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client_2017_Ent' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2017_Ent' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
+              Source='..\Dependencies\BaseShell\python27.dll'/>
+        <File Id='BaseShell_2017_Ent' Name='BaseShell.dll' DiskId='1'
+              Source='..\Dependencies\BaseShell\BaseShell.dll'/>
         <File Id='v8_2017_Ent' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120_2017_Ent' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120_2017_Ent' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120_2017_Ent' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+              Source='..\Dependencies\BaseShell\v8.dll'/>
+        <File Id='msvcp120_2017_Ent' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcp120.dll'/>
+        <File Id='msvcr120_2017_Ent' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2017_Ent' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\BaseShell\vccorlib120.dll'/>
         <File Id='base.dll_2017_Ent' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
         <File Id='libglib_2.0_0.dll_2017_Ent' Name='libglib-2.0-0.dll' DiskId='1'
@@ -578,18 +568,16 @@
         <File Id='MySql.Utility_2017_Pro' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
         <File Id='mysqlsh_2017_Pro' Name='mysqlshcore.dll' DiskId='1'
-              Source='..\Dependencies\xShell\mysqlshcore.dll'/>
+              Source='..\Dependencies\BaseShell\mysqlshcore.dll'/>
         <File Id='python27_2017_Pro' Name='python27.dll' DiskId='1'
-              Source='..\Dependencies\xShell\python27.dll'/>
-        <File Id='shell_client_2017_Pro' Name='shell_client.dll' DiskId='1'
-              Source='..\Dependencies\xShell\shell_client.dll'/>
-        <File Id='XShellClientMgd_2017_Pro' Name='XShellClientMgd.dll' DiskId='1'
-              Source='..\Dependencies\xShell\XShellClientMgd.dll'/>
+              Source='..\Dependencies\BaseShell\python27.dll'/>
+        <File Id='BaseShell_2017_Pro' Name='BaseShell.dll' DiskId='1'
+              Source='..\Dependencies\BaseShell\BaseShell.dll'/>
         <File Id='v8_2017_Pro' Name='v8.dll' DiskId='1'
-              Source='..\Dependencies\xShell\v8.dll'/>
-        <File Id='msvcp120_2017_Pro' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcp120.dll'/>
-        <File Id='msvcr120_2017_Pro' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\xShell\msvcr120.dll'/>
-        <File Id='vccorlib120_2017_Pro' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\xShell\vccorlib120.dll'/>
+              Source='..\Dependencies\BaseShell\v8.dll'/>
+        <File Id='msvcp120_2017_Pro' Name='msvcp120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcp120.dll'/>
+        <File Id='msvcr120_2017_Pro' Name='msvcr120.dll' DiskId='1' Source='..\Dependencies\BaseShell\msvcr120.dll'/>
+        <File Id='vccorlib120_2017_Pro' Name='vccorlib120.dll' DiskId='1' Source='..\Dependencies\BaseShell\vccorlib120.dll'/>
         <File Id='base.dll_2017_Pro' Name='base.dll' DiskId='1'
               Source='..\Dependencies\Parser\base.dll'/>
         <File Id='libglib_2.0_0.dll_2017_Pro' Name='libglib-2.0-0.dll' DiskId='1'
