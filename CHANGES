@@ -1,6 +1,4 @@
 ﻿2.0.5
-- Updated the JavaScript and Python editors to use the Shell's 1.0.8 version, this allows to make use of the Admin API.
-  Note that the format of some messages is slightly altered since output is now in Json format.
 - Removed support for VS2010.
 - Added support for VS2017.
 - Modified code to validate the user provided data types in the Table Designer Editor which provides a more user-friendly

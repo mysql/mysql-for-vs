@@ -322,6 +322,10 @@
         <Reference Include="Microsoft.Data.ConnectionUI, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.Data.ConnectionUI.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
         </Reference>
@@ -415,6 +419,10 @@
         <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>True</SpecificVersion>
           <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+        </Reference>
+        <Reference Include="NuGet.VisualStudio">
+          <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.VisualStudio.dll</HintPath>
+          <EmbedInteropTypes>True</EmbedInteropTypes>
         </Reference>
       </ItemGroup>
     </When>
