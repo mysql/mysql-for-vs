@@ -13,10 +13,10 @@
 #>
 
 <#@ assembly name="System.Core" #>
-<#@ assembly name="%VS150PROCOMNTOOLS%..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
-<#@ assembly name="%VS150PROCOMNTOOLS%..\IDE\EntityFramework.dll"#>
-<#@ assembly name="%VS150PROCOMNTOOLS%..\IDE\EntityFramework.SqlServer.dll" #>
-<#@ assembly name="%VS150PROCOMNTOOLS%..\IDE\EntityFramework.SqlServerCompact.dll" #>
+<#@ assembly name="$(DevEnvDir)..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
+<#@ assembly name="$(DevEnvDir)..\IDE\EntityFramework.dll"#>
+<#@ assembly name="$(DevEnvDir)..\IDE\EntityFramework.SqlServer.dll" #>
+<#@ assembly name="$(DevEnvDir)..\IDE\EntityFramework.SqlServerCompact.dll" #>
 <#@ assembly name="%MYSQLCONNECTOR_ASSEMBLIESPATH%\MySql.Data.Entity.EF6.dll" #>
 <#@ assembly name="EnvDTE" #>
 <#@ assembly name="System.Configuration.dll" #>
