@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -22,19 +22,21 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Web.Configuration;
-using System.Web.Security;
+using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
-using EnvDTE80;
 using EnvDTE;
+using EnvDTE80;
+#if NET_461_OR_GREATER
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.ComponentModelHost;
+using NuGet.VisualStudio;
+#endif
 using VSLangProj;
-using System.Reflection;
-using System.IO;
-using System.Data.Common;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
@@ -318,8 +320,16 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// <param name="addReference">if set to <c>true</c> then [add reference] to the project.</param>
     private void AddNugetPackage(VSProject VsProj, string projectPath, string NetFxVersion, string PackageName, string Version, bool addReference)
     {
+      DirectoryInfo di = new DirectoryInfo(projectPath);
+      string solPath = di.Parent.FullName;
       try
       {
+#if NET_461_OR_GREATER
+        object componentModelObj = Package.GetGlobalService(typeof(SComponentModel));
+        var componentModel = (IComponentModel) componentModelObj;
+        var packageInstaller = componentModel.GetService<IVsPackageInstaller>();
+        packageInstaller.InstallPackage(null, VsProj.Project, PackageName, Version, true);
+#else
         Assembly nugetAssembly = Assembly.Load("nuget.core");
         Type packageRepositoryFactoryType = nugetAssembly.GetType("NuGet.PackageRepositoryFactory");
         PropertyInfo piDefault = packageRepositoryFactoryType.GetProperty("Default");
@@ -327,8 +337,6 @@ namespace MySql.Data.VisualStudio.WebConfig
         object repo = miCreateRepository.Invoke(piDefault.GetValue(null, null), new object[] { "https://packages.nuget.org/api/v2" });
         Type packageManagerType = nugetAssembly.GetType("NuGet.PackageManager");
         ConstructorInfo ciPackageManger = packageManagerType.GetConstructor(new Type[] { System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.IPackageRepository"), typeof(string) });
-        DirectoryInfo di = new DirectoryInfo(projectPath);
-        string solPath = di.Parent.FullName;
         string installPath = di.Parent.CreateSubdirectory("packages").FullName;
         object packageManager = ciPackageManger.Invoke(new object[] { repo, installPath });
         MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage", new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
@@ -336,6 +344,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
         object semanticVersion = miParse.Invoke(null, new object[] { Version });
         miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
+#endif
         if (addReference)
         {
           AddPackageReference(VsProj, NetFxVersion, solPath, PackageName, Version);

@@ -36,6 +36,11 @@
         <Edition>VSTS</Edition>
         <Edition>VSTD</Edition>
       </VisualStudio>
+	 <VisualStudio Version="15.0">
+        <Edition>Community</Edition>
+        <Edition>Pro</Edition>
+        <Edition>Enterprise</Edition>
+     </VisualStudio>
     </SupportedProducts>
     <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
   </Identifier>

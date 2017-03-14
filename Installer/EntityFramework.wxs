@@ -1,34 +1,8 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='EntityFramework'>
-
-    <!-- Entity framework 4.0 feature -->
-    <DirectoryRef Id='AssembliesDir'>
-      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
-        <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS10_PublicAssemblies'>
-      <Component Id="EF.PA.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C8" DiskId="1">
-        <File Id="MySql.EF.PA.v4" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="VS10_DBGenDir">
-      <Component Id="EF.T4.VS10" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
-        <Condition>VS_2010_PATH</Condition>
-        <File Id="VS10.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\SSDLToMySQL.tt"/>
-        <File Id="VS10.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-               Source="..\Source\MySql.VisualStudio\T4Templates\GenerateMySQL.Utility.ttinclude"/>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id="VS11_DBGenDir">
-      <Component Id="EF.T4.VS11" Guid="6555D339-120C-4D62-B60C-08764D8CA740">              
+      <Component Id="EF.T4.VS11" Guid="6555D339-120C-4D62-B60C-08764D8CA740">
         <File Id="VS11.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\SSDLToMySQL.tt"/>
         <File Id="VS11.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
@@ -60,10 +34,10 @@
     </DirectoryRef>
 
     <DirectoryRef Id="VS14_DBGenDir">
-      <Component Id="EF.T4.VS15" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
-        <File Id="VS15.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+      <Component Id="EF.T4.VS14" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
+        <File Id="VS14.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL.tt"/>
-        <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+        <File Id="VS14.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
       </Component>
     </DirectoryRef>
@@ -75,14 +49,58 @@
       </Component>
     </DirectoryRef>
 
-    <!--Removing files from Public Assemblies Folders-->
-    <DirectoryRef Id='VS10_PublicAssemblies'>
-      <Component Id="Remove.EF.PA.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E8" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA.v4" Name="MySql.Data.Entity.dll" On="uninstall"/>
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+    <!-- Visual Studio 2017 Community -->
+    <DirectoryRef Id="VS15_DBGenDir">
+      <Component Id="EF.T4.VS15" Guid="ED507732-B12D-4B8E-AE91-A231DBE153BE">
+        <File Id="VS15.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL.tt"/>
+        <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='VS15_PrivateAssemblies'>
+      <Component Id="EF.PA15.v45" Guid="37C9ED8D-9FC1-4D5F-9E8E-9BE96BB7D8CA" DiskId="1">
+        <File Id="MySql.EF.PA15.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2017 Enterprise -->
+    <DirectoryRef Id="VS15_Ent_DBGenDir">
+      <Component Id="EF.T4.VS15.ENT" Guid="E11D288F-5CF1-4D51-9756-FEC0833A454A">
+        <File Id="VS15.Ent.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL.tt"/>
+        <File Id="VS15.Ent.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS15_Ent_PrivateAssemblies'>
+      <Component Id="EF.PA15.Ent.v45" Guid="6B72F215-73C3-439C-A8D1-DCEDAEDBC901" DiskId="1">
+        <File Id="MySql.EF.PA15.Ent.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2017 Professional -->
+    <DirectoryRef Id="VS15_Pro_DBGenDir">
+      <Component Id="EF.T4.VS15.PRO" Guid="E73E9892-0FBC-4E85-9736-0DCCA0693074">
+        <File Id="VS15.Pro.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL.tt"/>
+        <File Id="VS15.Pro.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS15_Pro_PrivateAssemblies'>
+      <Component Id="EF.PA15.Pro.v45" Guid="C35DA4C0-0F68-488C-B3E1-D9BA42DB410D" DiskId="1">
+        <File Id="MySql.EF.PA15.Pro.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.Entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <!--Removing files from Public Assemblies Folders-->
     <DirectoryRef Id='VS11_PublicAssemblies'>
       <Component Id="Remove.EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E9" DiskId="1">
         <RemoveFile Id="RemoveMySql.EF.PA11.v4" Name="MySql.Data.Entity.dll" On="uninstall" />
@@ -105,14 +123,29 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id="EntityFramework2010" Level="1" Display="expand" Title="Entity Framework Support for VS 2010"
-                 Description="Support for the entity framework">
-      <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
-      <ComponentRef Id="EF.T4.VS10"/>
-      <ComponentRef Id="EF.PA.v4"/>
-      <ComponentRef Id="EF.v4"/>
-      <ComponentRef Id="Remove.EF.PA.v4"/>
-    </Feature>
+    <!-- Visual Studio 2017 Community -->
+    <DirectoryRef Id='VS15_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA15.v45" Guid="86882299-9C2A-4E6C-8307-E4E7234ECC44" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA15.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2017 Enterprise -->
+    <DirectoryRef Id='VS15_Ent_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA15.Ent.v45" Guid="0904B7B4-B30D-4F74-AE4E-86889CF63BEA" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA15.Ent.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2017 Professional -->
+    <DirectoryRef Id='VS15_Pro_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA15.Pro.v45" Guid="19510125-8E8D-4CAD-B9C5-C0345E007D6C" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA15.Pro.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
 
     <Feature Id="EntityFramework2012" Level="1" Display="expand" Title="Entity Framework Support for VS 2012"
                  Description="Support for the entity framework">
@@ -133,9 +166,32 @@
     <Feature Id="EntityFramework2015" Level="1" Display="expand" Title="Entity Framework Support for VS 2015"
                Description="Support for the entity framework">
       <Condition Level='0'>Not VS_2015_PATH AND Not Installed</Condition>
-      <ComponentRef Id="EF.T4.VS15" />
+      <ComponentRef Id="EF.T4.VS14" />
       <ComponentRef Id="EF.PA14.v45"/>
       <ComponentRef Id="Remove.EF.PA14.v45"/>
+    </Feature>
+
+    <Feature Id="EntityFramework2017" Level="1" Display="expand" Title="Entity Framework Support for VS 2017"
+           Description="Support for the entity framework">
+      <Condition Level='0'>(Not VS_2017_COM_PATH AND Not VS_2017_ENT_PATH AND Not VS_2017_PRO_PATH) AND Not Installed</Condition>
+      <Feature Id='EntityFramework2017Community' Level='1' Title='Community Edition'>
+        <Condition Level='0'>Not VS_2017_COM_PATH AND Not Installed</Condition>
+        <ComponentRef Id="EF.T4.VS15" />
+        <ComponentRef Id="EF.PA15.v45"/>
+        <ComponentRef Id="Remove.EF.PA15.v45"/>
+      </Feature>
+      <Feature Id='EntityFramework2017Enterprise' Level='1' Title='Enterprise Edition'>
+        <Condition Level='0'>Not VS_2017_ENT_PATH AND Not Installed</Condition>
+        <ComponentRef Id="EF.T4.VS15.ENT" />
+        <ComponentRef Id="EF.PA15.Ent.v45"/>
+        <ComponentRef Id="Remove.EF.PA15.Ent.v45"/>
+      </Feature>
+      <Feature Id='EntityFramework2017Professional' Level='1' Title='Professional Edition'>
+        <Condition Level='0'>Not VS_2017_PRO_PATH AND Not Installed</Condition>
+        <ComponentRef Id="EF.T4.VS15.PRO" />
+        <ComponentRef Id="EF.PA15.Pro.v45"/>
+        <ComponentRef Id="Remove.EF.PA15.Pro.v45"/>
+      </Feature>
     </Feature>
   </Fragment>
 </Wix>

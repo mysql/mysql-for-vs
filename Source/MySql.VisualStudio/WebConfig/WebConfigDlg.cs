@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -322,7 +322,9 @@ namespace MySql.Data.VisualStudio.WebConfig
 
       if (page == pages.Length - 1)
       {
+        Cursor.Current = Cursors.WaitCursor;
         Finish();
+        Cursor.Current = Cursors.Default;
       }
       else
       {

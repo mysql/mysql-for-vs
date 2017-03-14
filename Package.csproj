@@ -32,7 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-	  <MSBuildExe Condition=" '$(MSBuildExe)'=='' ">"$(MSBuildExtensionsPath)\..\MSBuild\14.0\Bin\msbuild.exe"</MSBuildExe>
+	  <MSBuildExe Condition=" '$(MSBuildExe)'=='' And '$(VisualStudioVersion)' != '15.0' ">"$(MSBuildExtensionsPath)\..\MSBuild\14.0\Bin\msbuild.exe"</MSBuildExe>
+      <MSBuildExe Condition=" '$(VisualStudioVersion)' == '15.0' ">"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild.exe"</MSBuildExe>
   </PropertyGroup>
   <Choose>
     <When Condition=" '$(NoPackage)' == 'y' ">
@@ -107,25 +108,25 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Targets we care about -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
-    <CallTarget Targets="Build40;Build45;Build451;Build46;BuildInstaller;$(GetPackageVersion)$(PackageClean)$(PackageSigning)$(PackageInstall)$(PackageNoInstall)$(PackageSource)" />
+    <CallTarget Targets="Build45;Build451;Build46;Build461;BuildInstaller;$(GetPackageVersion)$(PackageClean)$(PackageSigning)$(PackageInstall)$(PackageNoInstall)$(PackageSource)" />
     <RemoveDir Directories="**/obj; **/bin" />
   </Target>
   <!-- Build Source Targets -->
-  <Target Name="Build40" Condition=" '$(VisualStudioVersion)' == '10.0' Or '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
-    <Message Text="Building VisualStudioVersion=10.0" Importance="high" />
-    <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=10.0 /t:Clean,Build" />
-  </Target>
-  <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
+  <Target Name="Build45" Condition=" '$(VisualStudioVersion)' == '11.0' Or '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' ">
     <Message Text="Building VisualStudioVersion=11.0" Importance="high" />
     <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=11.0" />
   </Target>
-  <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' ">
+  <Target Name="Build451" Condition=" '$(VisualStudioVersion)' == '12.0' Or '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' ">
     <Message Text="Building VisualStudioVersion=12.0" Importance="high" />
     <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=12.0" />
   </Target>
-  <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' ">
+  <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' ">
     <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
     <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=14.0" />
+  </Target>
+  <Target Name="Build461" Condition=" '$(VisualStudioVersion)' == '15.0' ">
+    <Message Text="Building VisualStudioVersion=15.0" Importance="high" />
+    <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=15.0" />
   </Target>
   <!-- Package Installer Build Targets -->
   <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
@@ -137,7 +138,7 @@
   </Target>
   <!-- Get product version -->
   <Target Name="GetPackageVersion">
-    <GetVersion Assembly="Source\MySql.VisualStudio\bin\v4.0\Release\MySql.VisualStudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="Source\MySql.VisualStudio\bin\v4.5\Release\MySql.VisualStudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="Version" />
     </GetVersion>
   </Target>
@@ -183,16 +184,6 @@
   <Target Name="PackageNoInstall" DependsOnTargets="PackageNoInstallPrepare;PackageNoInstallGPL;$(PackageNoInstallCommercial)" />
   <Target Name="PackageNoInstallPrepare">
     <ItemGroup>
-      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
-      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
-      <V4Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
-      <V4Assemblies Include="Source\MySql.VisualStudio\bin\v4.0\release\mysql.visualstudio.dll" />
-      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\Antlr3.Runtime.dll" />
-      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.dll" />
-      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Parser.dll" />
-      <V4Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.0\release\MySql.Debugger.VisualStudio.dll" />
-    </ItemGroup>
-    <ItemGroup>
       <V45Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
       <V45Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
       <V45Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
@@ -212,6 +203,26 @@
       <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Parser.dll" />
       <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.5.1\release\MySql.Debugger.VisualStudio.dll" />
     </ItemGroup>
+	<ItemGroup>
+      <V46Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
+      <V46Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
+      <V46Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
+      <V46Assemblies Include="Source\MySql.VisualStudio\bin\v4.6\release\mysql.visualstudio.dll" />
+      <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6\release\Antlr3.Runtime.dll" />
+      <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Debugger.dll" />
+      <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Parser.dll" />
+      <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6\release\MySql.Debugger.VisualStudio.dll" />
+    </ItemGroup>
+	<ItemGroup>
+      <V461Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
+      <V461Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
+      <V461Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
+      <V461Assemblies Include="Source\MySql.VisualStudio\bin\v4.6.1\release\mysql.visualstudio.dll" />
+      <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6.1\release\Antlr3.Runtime.dll" />
+      <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6.1\release\MySql.Debugger.dll" />
+      <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6.1\release\MySql.Parser.dll" />
+      <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\v4.6.1\release\MySql.Debugger.VisualStudio.dll" />
+    </ItemGroup>
     <ItemGroup>
       <ReleaseFiles Include="Release Notes.txt" />
       <ReleaseFiles Include="CHANGES" />
@@ -227,9 +238,10 @@
     <RemoveDir Directories="tmp" ContinueOnError="true" />
     <MakeDir Directories="tmp" />
     <Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="tmp" />
-    <Copy SourceFiles="@(V4Assemblies)" DestinationFolder="tmp\v4" />
     <Copy SourceFiles="@(V45Assemblies)" DestinationFolder="tmp\v45" />
     <Copy SourceFiles="@(V451Assemblies)" DestinationFolder="tmp\v451" />
+    <Copy SourceFiles="@(V46Assemblies)" DestinationFolder="tmp\v46" />
+	<Copy SourceFiles="@(V461Assemblies)" DestinationFolder="tmp\v461" />
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="tmp/Documentation" />
     <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="tmp/Documentation/Licenses for Third-Party Components" />
   </Target>
