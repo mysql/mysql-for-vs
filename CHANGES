@@ -1,4 +1,7 @@
 1.2.7
+- Fixed a problem which prevented MySQL scripts from detecting keyboard input for keys such as Enter,
+  Backspace, Arrows, etc. This would only happen after saving the script for the first time.
+  (Bug #25713638 - SCRIPT CAN'T GET EDITED AFTER SAVING IT).
 - Fixed bug which caused the currently selected schema's db objects to become unselected in the Tree view after unselecting
   a different schema from the Schema list. (Bug #25713981 - EXPORT TOOL IS EXPORTING THE WRONG SCHEMA)
 

@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -79,6 +79,20 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     /// <summary>
+    /// Returns the full name of the DTE's active document.
+    /// </summary>
+    /// <returns></returns>
+    internal string GetActiveDocumentFullName()
+    {
+      if (Dte.ActiveDocument == null)
+      {
+        return null;
+      }
+
+      return Dte.ActiveDocument.FullName;
+    }
+
+    /// <summary>
     /// Returns the DbConnection associated with the current mysql editor.
     /// </summary>
     /// <returns></returns>
@@ -132,6 +146,23 @@ namespace MySql.Data.VisualStudio.Editors
         return ((IOleCommandTarget)editor).QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
       else
         return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+    }
+
+    /// <summary>
+    /// Unregisters the editor with the old document path and re-registers the same editor but with an updated document path.
+    /// </summary>
+    /// <param name="oldDocumentPath">Old document path set when the script was first created.</param>
+    /// <param name="newDocumentPath">New document path set when the script was saved for the first time.</param>
+    internal static void UpdateEditorDocumentPath(string oldDocumentPath, string newDocumentPath)
+    {
+      VSCodeEditorWindow editor;
+
+      if (oldDocumentPath!=null && Broker.dic.TryGetValue(oldDocumentPath, out editor))
+      {
+        UnregisterEditor(editor);
+        editor.Parent.SqlEditor.SetDocumentPath(newDocumentPath);
+        RegisterEditor(editor);
+      }
     }
   }
 

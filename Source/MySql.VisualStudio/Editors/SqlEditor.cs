@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -74,6 +74,24 @@ namespace MySql.Data.VisualStudio.Editors
           UpdateButtons();
         }
       }          
+    }
+
+    /// <summary>
+    /// Gets the document path.
+    /// </summary>
+    /// <returns></returns>
+    internal string GetDocumentPath()
+    {
+      return Pane.DocumentPath;
+    }
+
+    /// <summary>
+    /// Sets the document path.
+    /// </summary>
+    /// <param name="documentPath">New document path.</param>
+    internal void SetDocumentPath(string documentPath)
+    {
+      Pane.DocumentPath = documentPath;
     }
 
     #region Overrides

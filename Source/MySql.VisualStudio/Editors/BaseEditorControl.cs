@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -241,6 +241,7 @@ namespace MySql.Data.VisualStudio.Editors
             fileName = pszFilename;
             SaveFile(fileName);
             IsDirty = false;
+            EditorBroker.UpdateEditorDocumentPath(EditorBroker.Broker.GetActiveDocumentFullName(), fileName);
           }
           else // --- Else, Save a Copy As
           {
