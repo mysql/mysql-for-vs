@@ -1,5 +1,9 @@
-1.2.6
+1.2.7
+- Fixed bug which caused the currently selected schema's db objects to become unselected in the Tree view after unselecting
+  a different schema from the Schema list. (Bug #25713981 - EXPORT TOOL IS EXPORTING THE WRONG SCHEMA)
 
+
+1.2.6
 - Fix a bug which prevent users to create a non MySql connection in the Server Explorer pane in VisualStudio 
   after the user create a MySql Connection checking the option "Always use this selection" when selecting 
   the Data Source and Data Provider (MySql Bug #77441, Oracle bug #22122881)
