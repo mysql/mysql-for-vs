@@ -1,4 +1,17 @@
-﻿MySQL for Visual Studio 1.2.6 MR Release Notes
+﻿MySQL for Visual Studio 1.2.7 MR Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL for Visual Studio 1.2.7 MR
+
+* Added support for Visual Studio 2017 with the ability to choose the flavor/s (Community, Professional, Enterprise) on 
+which to perform the installation.
+* Removed support for Visual Studio 2010.
+* Fixed several bugs that would cause inconsistencies  when selecting/unselecting schemas in the Data Export Tool.
+* Script files would stop responding to keyboard input upon saving the file for the first time.
+
+
+
+MySQL for Visual Studio 1.2.6 MR Release Notes
 ------------------------------------
 
 Welcome to the release notes for MySQL for Visual Studio 1.2.6 MR
