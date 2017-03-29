@@ -928,16 +928,16 @@
     <!-- Visual Studio 2017 Community Custom Action -->
     <SetProperty Id="VS15Setup_Custom" Value="&quot;[VS15.IDEFolder]devenv&quot; /setup" Before="VS15Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
-
+    
     <!-- Visual Studio 2017 Enterprise Custom Action (update packages file) -->
     <Binary Id="VS15Ent_PackFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2017_Ent_SetPathProp" Property="VS15_Ent_UpdatePackageFile" Value="VS2017_Ent_PathProp=[VS_2017_ENT_PATH]" Return="check" />
     <CustomAction Id="VS15_Ent_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2017Enterprise" BinaryKey="VS15Ent_PackFile" Execute="deferred" Return="check" Impersonate="no" />
-
+    
     <!-- Visual Studio 2017 Enterprise Custom Action -->
     <SetProperty Id="VS15_Ent_Setup_Custom" Value="&quot;[VS15.Ent.IDEFolder]devenv&quot; /setup" Before="VS15_Ent_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15_Ent_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
-
+    
     <!-- Visual Studio 2017 Professional Custom Action (update packages file) -->
     <Binary Id="VS15Pro_PackFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2017_Pro_SetPathProp" Property="VS15_Pro_UpdatePackageFile" Value="VS2017_Pro_PathProp=[VS_2017_PRO_PATH]" Return="check" />
@@ -946,7 +946,7 @@
     <!-- Visual Studio 2017 Professional Custom Action -->
     <SetProperty Id="VS15_Pro_Setup_Custom" Value="&quot;[VS15.Pro.IDEFolder]devenv&quot; /setup" Before="VS15_Pro_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
-
+    
     <!-- Adding AutoLoadPackage option so our connections are available -->
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="AutoLoadPackageVS2012" Guid="*">
@@ -982,6 +982,7 @@
     </DirectoryRef>
 
     <InstallExecuteSequence>
+      <Custom Action="VS15_SetInstallationPaths" Before="LaunchConditions"></Custom>
       <Custom Action='VS2012_SetPathProp' Before="InstallFinalize">(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action='VS2013_SetPathProp' After='VS2012_SetPathProp'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
       <Custom Action='VS2015_SetPathProp' After='VS2013_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
