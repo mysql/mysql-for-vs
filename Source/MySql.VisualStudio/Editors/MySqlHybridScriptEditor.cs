@@ -32,6 +32,7 @@ using MySql.Utility.Classes;
 using System.Text;
 using ConsoleTables.Core;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.MySqlWorkbench;
 using MySql.Utility.Classes.MySqlX;
 using MySql.Utility.Enums;
 
@@ -324,12 +325,12 @@ namespace MySql.Data.VisualStudio.Editors
           case SessionOption.UseSameSession:
             if (_mySqlXProxy == null)
             {
-              _mySqlXProxy = new MySqlXProxy(Connection.GetXConnectionString(), true, ScriptLanguageType);
+              _mySqlXProxy = new MySqlXProxy(Connection.GetXConnectionString(Package.SelectedMySqlConnectionName), true, ScriptLanguageType);
             }
 
             break;
           case SessionOption.UseNewSession:
-            _mySqlXProxy = new MySqlXProxy(Connection.GetXConnectionString(), false, ScriptLanguageType);
+            _mySqlXProxy = new MySqlXProxy(Connection.GetXConnectionString(Package.SelectedMySqlConnectionName), false, ScriptLanguageType);
             break;
         }
 

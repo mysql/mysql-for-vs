@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -705,7 +705,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
 
       var connectionStringBuilder = connected
-        ? new MySqlConnectionStringBuilder(Connection.ConnectionString)
+        ? new MySqlConnectionStringBuilderWithSslPem(Connection.ConnectionString)
         : null;
       connectionInformationDropDown.Text = connected
         ? (!string.IsNullOrEmpty(ConnectionName) ? ConnectionName : UNTITLED_CONNECTION)
@@ -721,7 +721,7 @@ namespace MySql.Data.VisualStudio.Editors
       connectionInformationDropDown.DropDownItems["ServerVersionToolStripMenuItem"].Text = string.Format(SERVER_VERSION_FORMAT_TEXT, connected ? Connection.ServerVersion : NONE_TEXT);
       connectionInformationDropDown.DropDownItems["UserToolStripMenuItem"].Text = string.Format(USER_FORMAT_TEXT,
         connected
-          ? connectionStringBuilder.UserID
+          ? connectionStringBuilder.UserId
           : NONE_TEXT);
       connectionInformationDropDown.DropDownItems["SchemaToolStripMenuItem"].Text = string.Format(SCHEMA_FORMAT_TEXT,
         connected

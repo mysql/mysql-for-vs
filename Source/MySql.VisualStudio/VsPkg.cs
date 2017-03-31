@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -21,36 +21,37 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using EnvDTE;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Data.Services;
-using System.Linq;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
+using Microsoft.VSDesigner.ServerExplorer;
 using MySql.Data.MySqlClient;
+using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
 using MySql.Data.VisualStudio.DBExport;
+using MySql.Data.VisualStudio.DDEX;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.Wizards;
-using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
-using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
-using MySql.Data.VisualStudio.DDEX;
 using MySql.Utility.Classes;
 using MySql.Utility.Classes.MySql;
 using MySql.Utility.Classes.MySqlWorkbench;
 using MySql.Utility.Enums;
 using MySql.Utility.Forms;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace MySql.Data.VisualStudio
 {
@@ -242,6 +243,11 @@ namespace MySql.Data.VisualStudio
 
     internal List<IVsDataExplorerConnection> MysqlConnectionsList;
 
+    /// <summary>
+    /// Get or sets the list of <see cref="IVsDataExplorerConnection"/> connection names.
+    /// </summary>
+    public List<string> MySqlConnectionsNameList { get; private set; }
+
     /////////////////////////////////////////////////////////////////////////////
     // Overriden Package Implementation
     #region Package Members
@@ -373,6 +379,16 @@ namespace MySql.Data.VisualStudio
           SetEnvironmentVariableValues(mySqlConnectorPath);
         }
       }
+
+      // Register for Server Explorer events
+      IVsServerExplorer serverExplorer = GetGlobalService(typeof(IVsServerExplorer)) as IVsServerExplorer;
+      if (serverExplorer == null) return;
+      IVsUIHierarchy hierarchy = serverExplorer as IVsUIHierarchy;
+      if (hierarchy == null) return;
+      var listener = new ServerExplorerHierarchyEventsListener(hierarchy);
+      uint cookie = 0;
+      hierarchy.AdviseHierarchyEvents(listener, out cookie);
+      UpdateMySqlConnectionNames();
     }
 
     private void SetEnvironmentVariableValues(string mySqlConnectorPath)
@@ -1528,6 +1544,23 @@ namespace MySql.Data.VisualStudio
           element.Name = AssemblyInfo.AssemblyTitle.Replace(" ", string.Empty);
           xdoc.Save(settingsFilePath);
         }
+      }
+    }
+
+    /// <summary>
+    /// Updates the <see cref="MySqlConnectionsNameList"/> property with the current connection's names.
+    /// </summary>
+    public void UpdateMySqlConnectionNames()
+    {
+      if (MysqlConnectionsList == null || MysqlConnectionsList.Count==0)
+      {
+        return;
+      }
+
+      MySqlConnectionsNameList = new List<string>();
+      foreach (var connection in MysqlConnectionsList)
+      {
+        MySqlConnectionsNameList.Add(connection.DisplayName);
       }
     }
 

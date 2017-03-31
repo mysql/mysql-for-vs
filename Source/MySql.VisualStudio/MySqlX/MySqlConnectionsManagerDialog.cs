@@ -1,4 +1,4 @@
-﻿// Copyright © 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2017, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -246,9 +246,28 @@ namespace MySql.Data.VisualStudio.MySqlX
       {
         instanceConnectionDialog.Icon = Resources.__TemplateIcon;
         instanceConnectionDialog.ShowIcon = true;
+        var oldConnectionName = workbenchConnection.Name;
         if (instanceConnectionDialog.ShowIfWorkbenchNotRunning() != DialogResult.OK)
         {
           return;
+        }
+
+        if (workbenchConnection.Name != oldConnectionName)
+        {
+          // Update name in server explorer
+          var package = MySqlDataProviderPackage.Instance;
+          var serverExplorerConnections = package.GetMySqlConnections();
+          foreach (var connection in serverExplorerConnections)
+          {
+            if (connection.DisplayName != oldConnectionName)
+            {
+            continue;
+            }
+
+            connection.DisplayName = workbenchConnection.Name;
+            package.UpdateMySqlConnectionNames();
+            break;
+          }
         }
       }
 

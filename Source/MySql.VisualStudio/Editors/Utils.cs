@@ -20,9 +20,15 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Win32;
+using MySql.Data.MySqlClient;
+using MySql.Utility.Classes.MySql;
+using MySql.Utility.Classes.MySqlWorkbench;
+using MySql.Utility.Classes.MySqlX;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,10 +36,6 @@ using System.Windows.Forms;
 using System.Data;
 using System.Data.Common;
 using System.Drawing;
-using EnvDTE;
-using Microsoft.Win32;
-using MySql.Data.MySqlClient;
-using MySql.Utility.Classes.MySqlX;
 using Color = System.Drawing.Color;
 
 namespace MySql.Data.VisualStudio.Editors
@@ -768,7 +770,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// </summary>
     /// <param name="connection">A <see cref="DbConnection"/> instance.</param>
     /// <returns>The connection string of a <see cref="DbConnection"/> converted to X Protocol format: "user:pass@server:port"</returns>
-    public static string GetXConnectionString(this DbConnection connection)
+    public static string GetXConnectionString(this DbConnection connection, string connectionName)
     {
       var mySqlConnection = connection as MySqlConnection;
       if (mySqlConnection == null)
@@ -776,9 +778,30 @@ namespace MySql.Data.VisualStudio.Editors
         return null;
       }
 
-      var connStrBuilder = !mySqlConnection.ConnectionString.ToLower().Contains("password")
-          ? new MySqlConnectionStringBuilder(mySqlConnection.GetCompleteConnectionString())
-          : new MySqlConnectionStringBuilder(mySqlConnection.ConnectionString);
+      var connString = mySqlConnection.ConnectionString;
+      var connStrBuilder = !connString.ToLower().Contains("password")
+          ? new MySqlConnectionStringBuilderWithSslPem()
+          : new MySqlConnectionStringBuilderWithSslPem(connString);
+
+      // Check if SSL is enabled
+      if (connStrBuilder.SslMode == MySqlSslMode.None)
+      {
+        return connStrBuilder.GetXConnectionString();
+      }
+
+      foreach (var mySqlWorkbenchConnection in MySqlWorkbench.Connections)
+      {
+        if (mySqlWorkbenchConnection.Name != connectionName)
+        {
+          continue;
+        }
+
+        connStrBuilder.SslCertificationAuthorityFile = mySqlWorkbenchConnection.SslCertificationAuthorityFile;
+        connStrBuilder.SslClientCertificateFile = mySqlWorkbenchConnection.SslClientCertificateFile;
+        connStrBuilder.SslKeyFile = mySqlWorkbenchConnection.SslKeyFile;
+        break;
+      }
+
       return connStrBuilder.GetXConnectionString();
     }
 
