@@ -820,6 +820,7 @@
     </DirectoryRef>
 
     <InstallExecuteSequence>
+      <Custom Action="VS15_SetInstallationPaths" Before="LaunchConditions"></Custom>
       <Custom Action='VS2012_SetPathProp' Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action='VS2013_SetPathProp' After='VS2012_SetPathProp'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
       <Custom Action='VS2015_SetPathProp' After='VS2013_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
