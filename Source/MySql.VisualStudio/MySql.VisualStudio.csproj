@@ -419,6 +419,7 @@
         <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>True</SpecificVersion>
           <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+		  <Aliases>ServerExplorer</Aliases>
         </Reference>
         <Reference Include="NuGet.VisualStudio">
           <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.VisualStudio.dll</HintPath>
@@ -534,6 +535,7 @@
         <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>True</SpecificVersion>
           <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+          <Aliases>ServerExplorer</Aliases>
         </Reference>
       </ItemGroup>
     </When>
@@ -639,6 +641,7 @@
         <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>True</SpecificVersion>
           <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_12.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+		  <Aliases>ServerExplorer</Aliases>
         </Reference>
       </ItemGroup>
     </When>
@@ -733,6 +736,7 @@
         <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a,processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_11.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
+		  <Aliases>ServerExplorer</Aliases>
         </Reference>
       </ItemGroup>
     </When>

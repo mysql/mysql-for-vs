@@ -20,6 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+extern alias ServerExplorer;
+
 using EnvDTE;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio;
@@ -27,7 +29,7 @@ using Microsoft.VisualStudio.Data.Services;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
-using Microsoft.VSDesigner.ServerExplorer;
+using ServerExplorer::Microsoft.VSDesigner.ServerExplorer;
 using MySql.Data.MySqlClient;
 using MySqlConnectionStringBuilder = MySql.Data.MySqlClient.MySqlConnectionStringBuilder;
 using MySql.Data.VisualStudio.DBExport;
