@@ -639,7 +639,7 @@
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.TextTemplating.VSHost.12.0.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>True</SpecificVersion>
+          <SpecificVersion>False</SpecificVersion>
           <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_12.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
 		  <Aliases>ServerExplorer</Aliases>
         </Reference>
