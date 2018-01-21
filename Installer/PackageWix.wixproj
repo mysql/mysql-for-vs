@@ -172,7 +172,7 @@
   <ItemGroup>
     <Content Include="ItemTemplates\MySQLforVisualStudio.Item.vstman" />
   </ItemGroup>
-  <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Microsoft\WiX\v3.x\Wix.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <PropertyGroup>
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
