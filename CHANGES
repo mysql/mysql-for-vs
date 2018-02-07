@@ -1,3 +1,8 @@
+1.2.8
+- Fixed a bug that prevented the MySql.Web assembly from being loaded when using the MySQL Website Configuration Tool
+  due to an incorrect way of identifying the assembly version (MySql Bug #89446, Oracle bug Bug #27450530).
+
+
 1.2.7
 - Added support for VS2017.
 - Remove support for VS2010.

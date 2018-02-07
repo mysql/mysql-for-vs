@@ -1,4 +1,4 @@
-﻿// Copyright © 2009, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2009, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -166,11 +166,12 @@ namespace MySql.Data.VisualStudio.WebConfig
        {
          var providerType = machineSettings.Type;
          if (providerType != null)
-         { 
+         {
            var name = providerType.ToString();
            if (name.IndexOf("Version=") != -1)
            {
-             _connectorVerInstalled = name.Substring(name.IndexOf("Version=") + 8, 7);
+             int startIndex = name.IndexOf("Version=") + 8;
+             _connectorVerInstalled = name.Substring(startIndex, name.IndexOf(", Culture") - startIndex);
              Assembly assembly = Assembly.Load(string.Format("MySql.Web, Version={0}, Culture=neutral, PublicKeyToken=c5687fc88969c44d", _connectorVerInstalled));
              if (assembly != null)
              {
