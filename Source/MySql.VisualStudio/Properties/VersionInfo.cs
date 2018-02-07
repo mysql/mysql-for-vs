@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2015 Oracle
+// Copyright (C) 2004-2018 Oracle
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -37,4 +37,4 @@ using System.Security;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.2.7")]
+[assembly: AssemblyVersion("1.2.8")]
