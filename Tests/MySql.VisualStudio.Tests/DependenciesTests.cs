@@ -1,4 +1,4 @@
-﻿// Copyright © 2014, 2016 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -29,8 +29,8 @@ namespace MySql.VisualStudio.Tests
 {
   public static class Dependencies
   {
-    public const string C_NET_VERSIONV40 = "6.7.4.0";
-    public const string C_NET_VERSIONV45= "6.8.3.0";
+    public const string C_NET_VERSIONV40 = "6.9.8.0";
+    public const string C_NET_VERSIONV45= "6.10.6.0";
   }
 
   public class DependenciesTests

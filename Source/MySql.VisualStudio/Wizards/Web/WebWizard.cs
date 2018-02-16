@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -47,7 +47,7 @@ using Microsoft.VisualStudio.TextTemplating;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
 #endif
 using Microsoft.VisualStudio.Shell;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 using System.Diagnostics;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
@@ -296,13 +296,13 @@ namespace MySql.Data.VisualStudio.Wizards.Web
 
       var connectionstringForModel = string.Empty;
 
-      var path = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      var path = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
       Version mysqlDataVersion = null;
 
 
       if (!string.IsNullOrEmpty(path))
       {
-        mysqlDataVersion = new Version(Utility.GetProductVersion(path + @"\Assemblies\v4.0\MySql.Data.dll"));
+        mysqlDataVersion = new Version(Utilities.GetProductVersion(path + @"\Assemblies\v4.0\MySql.Data.dll"));
       }
 
       _fullconnectionstring = WizardForm.connectionStringForAspNetTables;

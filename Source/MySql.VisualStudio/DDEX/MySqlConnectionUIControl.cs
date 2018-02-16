@@ -1,4 +1,4 @@
-// Copyright © 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -53,8 +53,8 @@ namespace MySql.Data.VisualStudio
     {
       if (ConnectionProperties == null)
       {
-        MessageBox.Show(Resources.ConnectionPropertiesNull, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        throw new Exception(Resources.ConnectionPropertiesNull);
+        MessageBox.Show(Properties.Resources.ConnectionPropertiesNull, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        throw new Exception(Properties.Resources.ConnectionPropertiesNull);
       }
 
       Button okButton = this.ParentForm.AcceptButton as Button;
@@ -96,14 +96,14 @@ namespace MySql.Data.VisualStudio
       bool exists = DatabaseExists();
       if (exists) return;
 
-      String prompt = String.Format(Resources.UnknownDbPromptCreate, dbList.Text);
+      String prompt = String.Format(Properties.Resources.UnknownDbPromptCreate, dbList.Text);
       prompt = prompt.Replace(@"\n", @"\n");
       DialogResult result = MessageBox.Show(prompt, null, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       this.ParentForm.DialogResult = DialogResult.None;
       if (result == DialogResult.Yes)
       {
         if (!AttemptToCreateDatabase())
-          MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
+          MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text));
         else
           this.ParentForm.DialogResult = DialogResult.OK;
       }
@@ -205,7 +205,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(Properties.Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
@@ -254,7 +254,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
+        MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text));
         return false;
       }
       finally

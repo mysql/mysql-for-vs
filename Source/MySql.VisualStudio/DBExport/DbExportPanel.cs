@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -113,10 +113,10 @@ namespace MySql.Data.VisualStudio.DBExport
       void sourceSchemas_ListChanged(object sender, ListChangedEventArgs e)
       {
         if (_windowHandler == null) return;
-       
-        if (_windowHandler.Caption.Equals(Resources.DbExportToolCaptionFrame))
+
+        if (_windowHandler.Caption.Equals(Properties.Resources.DbExportToolCaptionFrame))
         {
-          _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);            
+          _windowHandler.Caption = String.Format("DBExportDoc_{0:MMddyyyyhmmss}.dumps", DateTime.Now);
         }
         if (_fileSavedSettingsName != String.Empty)
         {
@@ -411,12 +411,12 @@ namespace MySql.Data.VisualStudio.DBExport
           cmbConnections.SelectedValue = selected.ConnectionString;
           SelectedConnection = selected;
           LoadSchemasForSelectedConnection();
-          _windowHandler = windowHandler;             
+          _windowHandler = windowHandler;
         }
         catch (Exception)
         {
-          MessageBox.Show(Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK);
-        }        
+          MessageBox.Show(Properties.Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK);
+        }
       }
 
       private void EnableControls(bool enabled)
@@ -482,11 +482,11 @@ namespace MySql.Data.VisualStudio.DBExport
             MessageBox.Show("No database or objects are selected" , "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
           }
-          
+
           LockUI();
           if (String.IsNullOrEmpty(mysqlFilePath))
           {
-            MessageBox.Show(Resources.DbExportPathNotProvided, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(Properties.Resources.DbExportPathNotProvided, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             txtFileName.Focus();
             return;
           }
@@ -499,7 +499,7 @@ namespace MySql.Data.VisualStudio.DBExport
           {
             if (CheckPathIsValid(mysqlFilePath))
             {
-              MessageBox.Show(Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+              MessageBox.Show(Properties.Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
               return;
             }
             else
@@ -515,7 +515,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
           if (!int.TryParse(max_allowed_packet.Text, out maxAllowedPacket))
           {
-            MessageBox.Show(Resources.InvalidMaxAllowedPacketValue, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(Properties.Resources.InvalidMaxAllowedPacketValue, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
           }
 
@@ -1007,7 +1007,7 @@ namespace MySql.Data.VisualStudio.DBExport
           if (_actionCancelled)
             _generalPane.OutputString(Environment.NewLine + string.Format("Data Export cancelled by the user."));
           else
-            _generalPane.OutputString(Environment.NewLine + string.Format(Resources.MySqlDumpSummary, dictionary.Count()));
+            _generalPane.OutputString(Environment.NewLine + string.Format(Properties.Resources.MySqlDumpSummary, dictionary.Count()));
 
           _generalPane.Activate();
         }

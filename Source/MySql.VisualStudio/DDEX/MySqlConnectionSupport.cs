@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -130,7 +130,7 @@ namespace MySql.Data.VisualStudio
         // If can't prompt user for new authentication data, re-throw exception
         if (string.IsNullOrEmpty(base.Connection.ConnectionString))
           // If missing server & user, throw a more friendly error message
-          throw new Exception( Resources.MissingServerAndUser, ex );
+          throw new Exception(Properties.Resources.MissingServerAndUser, ex );
         throw;
       }
 

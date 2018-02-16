@@ -1,4 +1,4 @@
-﻿// Copyright © 2015, 2017, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2015, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -71,8 +71,8 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string EF5Version = "5.0.0";
     private const string EF6Version = "6.1.3";
     private const string mySQLData = "MySql.Data";
-    private const string mySQLEF = "MySql.Data.Entity";
     private const string mySQLEF5Version = "6.7.8";
+    private string mySQLEF = "MySql.Data.Entity";
     private string _mySQLEF6Version;
 
     /// <summary>
@@ -87,6 +87,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       _mySQLEF6Version = factory != null
         ? factory.GetType().Assembly.GetName().Version.ToString(3)
         : mySQLEF5Version;
+      if (_mySQLEF6Version.StartsWith("8")) mySQLEF = "MySql.Data.EntityFramework";
     }
 
     /// <summary>
@@ -222,21 +223,32 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         activeProj = (Project)activeProjects.GetValue(0);
         vsProj = activeProj.Object as VSProject;
+
+        // Remove reference to MySql.Data.
         if (vsProj.References.Find(mySQLData) != null)
         {
           vsProj.References.Find(mySQLData).Remove();
         }
 
+        // Remove reference to MySql.Data.Entity.EF5.
         if (vsProj.References.Find(string.Format("{0}.EF5", mySQLEF)) != null)
         {
           vsProj.References.Find(string.Format("{0}.EF5", mySQLEF)).Remove();
         }
 
+        // Remove reference to MySql.Data.Entity.EF6.
         if (vsProj.References.Find(string.Format("{0}.EF6", mySQLEF)) != null)
         {
           vsProj.References.Find(string.Format("{0}.EF6", mySQLEF)).Remove();
         }
 
+        // Remove reference to MySql.Data.EntityFramework.
+        if (vsProj.References.Find(mySQLEF) != null)
+        {
+          vsProj.References.Find(mySQLEF).Remove();
+        }
+
+        // Remove EF references.
         if (removeEFReferences)
         {
           if (vsProj.References.Find("EntityFramework") != null)
@@ -370,13 +382,24 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", PackageName, Version));
       string packagePath = Path.Combine(BasePath, efPath);
+
       if (NetFxVersion.StartsWith("4.5"))
       {
-        packagePath = Path.Combine(packagePath, "net45");
+        // If .NET version is greater than 4.5 then extract the version numnber from NetFxVersion variable.
+        packagePath = Path.Combine(
+          packagePath,
+          "net" + ((PackageName==mySQLData || PackageName==mySQLEF) && Version==_mySQLEF6Version ?
+                      NetFxVersion.Replace(".", "") :
+                      "45"));
       }
       else if (NetFxVersion.StartsWith("4.0"))
       {
-        packagePath = Path.Combine(packagePath, "net40");
+        // If .NET version is greater than 4.0 then extract the version numnber from NetFxVersion variable.
+        packagePath = Path.Combine(
+          packagePath,
+          "net" + ((PackageName==mySQLData || PackageName==mySQLEF) && Version==_mySQLEF6Version ?
+                      NetFxVersion.Replace(".", "") :
+                      "40"));
       }
       else
       {
@@ -384,7 +407,8 @@ namespace MySql.Data.VisualStudio.WebConfig
                               NetFxVersion));
       }
 
-      if (PackageName.Contains(mySQLEF))
+      // Applies for MySql.Data.Entity.EF5 and EF6 packages.
+      if (PackageName == "MySql.Data.Entity")
       {
         if (Version == mySQLEF5Version)
         {
@@ -396,6 +420,7 @@ namespace MySql.Data.VisualStudio.WebConfig
           packagePath = Path.Combine(packagePath, PackageName + ".EF6.dll");
         }
       }
+      // Applies for MySql.Data.Entity.Framework and EF packages.
       else
       {
         packagePath = Path.Combine(packagePath, PackageName + ".dll");

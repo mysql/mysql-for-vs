@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,11 +22,10 @@
 
 
 using Microsoft.Win32;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
-using System.Text;
 using System.Linq;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.DBExport;
@@ -61,19 +60,19 @@ namespace MySql.Data.VisualStudio
 
     private MySqlStartupParameters GetStartupParameters()
     {
-      
+
       parameters.PipeName = "mysql";
 
       // get our host information
       parameters.HostName = winService.MachineName == "." ? "localhost" : winService.MachineName;
-      parameters.HostIPv4 = Utility.GetIPv4ForHostName(parameters.HostName);
+      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(parameters.HostName);
 
       RegistryKey key = Registry.LocalMachine.OpenSubKey(String.Format(@"SYSTEM\CurrentControlSet\Services\{0}", winService.ServiceName));
       string imagepath = (string)key.GetValue("ImagePath", null);
       key.Close();
       if (imagepath == null) return parameters;
 
-      string[] args = Utility.SplitArgs(imagepath);
+      string[] args = Utilities.SplitArgs(imagepath);
       realMySqlService = IsRealMySQLService(args[0]);
 
       // Parse our command line args

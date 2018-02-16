@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -232,9 +232,9 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, database.Text));
+        MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, database.Text));
         return false;
-      }      
+      }
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

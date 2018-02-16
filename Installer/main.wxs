@@ -22,9 +22,8 @@
     <PropertyRef Id="VS2012_ROOT_FOLDER" />
 
     <!-- First make sure that .NET is installed -->
-    <PropertyRef Id="NETFRAMEWORK20"/>
-    <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    <Condition Message="The .NET Framework 2.0 or 4.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20 OR NETFRAMEWORK40FULL</Condition>
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED"/>
+    <Condition Message="The .NET Framework 4.5.2 or later must be installed before installing this package.">Installed OR WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Condition>
 
     <!--now make sure that we don't have an old version still around-->
     <Property Id="OLDVERSION">
@@ -457,7 +456,7 @@
 
     <Feature Id="EntityFramework"  Title="Entity Framework Designer Integration" Display="expand"
         Description="Support for the entity framework">
-      <Condition Level="0">Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
+      <Condition Level="0">Not WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Condition>
       <FeatureRef Id="EntityFramework2012"/>
       <FeatureRef Id="EntityFramework2013"/>
       <FeatureRef Id="EntityFramework2015"/>

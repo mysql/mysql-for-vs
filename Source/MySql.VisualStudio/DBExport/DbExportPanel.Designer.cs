@@ -64,7 +64,6 @@
       this.insert_ignore = new System.Windows.Forms.CheckBox();
       this.disable_keys = new System.Windows.Forms.CheckBox();
       this.extended_insert = new System.Windows.Forms.CheckBox();
-      this.delayed_insert = new System.Windows.Forms.CheckBox();
       this.complete_insert = new System.Windows.Forms.CheckBox();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.events = new System.Windows.Forms.CheckBox();
@@ -404,11 +403,10 @@
       this.groupBox8.Controls.Add(this.insert_ignore);
       this.groupBox8.Controls.Add(this.disable_keys);
       this.groupBox8.Controls.Add(this.extended_insert);
-      this.groupBox8.Controls.Add(this.delayed_insert);
       this.groupBox8.Controls.Add(this.complete_insert);
       this.groupBox8.Location = new System.Drawing.Point(13, 333);
       this.groupBox8.Name = "groupBox8";
-      this.groupBox8.Size = new System.Drawing.Size(767, 114);
+      this.groupBox8.Size = new System.Drawing.Size(767, 97);
       this.groupBox8.TabIndex = 16;
       this.groupBox8.TabStop = false;
       this.groupBox8.Text = "Insert Options";
@@ -428,7 +426,7 @@
       // 
       this.insert_ignore.AutoSize = true;
       this.insert_ignore.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "insert_ignore", true));
-      this.insert_ignore.Location = new System.Drawing.Point(14, 85);
+      this.insert_ignore.Location = new System.Drawing.Point(14, 63);
       this.insert_ignore.Name = "insert_ignore";
       this.insert_ignore.Size = new System.Drawing.Size(233, 17);
       this.insert_ignore.TabIndex = 12;
@@ -450,23 +448,12 @@
       // 
       this.extended_insert.AutoSize = true;
       this.extended_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "extended_insert", true));
-      this.extended_insert.Location = new System.Drawing.Point(14, 63);
+      this.extended_insert.Location = new System.Drawing.Point(14, 41);
       this.extended_insert.Name = "extended_insert";
       this.extended_insert.Size = new System.Drawing.Size(342, 17);
-      this.extended_insert.TabIndex = 11;
+      this.extended_insert.TabIndex = 10;
       this.extended_insert.Text = "Use multiple-row INSERT syntax that include several VALUES lists.";
       this.extended_insert.UseVisualStyleBackColor = true;
-      // 
-      // delayed_insert
-      // 
-      this.delayed_insert.AutoSize = true;
-      this.delayed_insert.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.mySqlDbExportOptionsBindingSource, "delayed_insert", true));
-      this.delayed_insert.Location = new System.Drawing.Point(14, 41);
-      this.delayed_insert.Name = "delayed_insert";
-      this.delayed_insert.Size = new System.Drawing.Size(241, 17);
-      this.delayed_insert.TabIndex = 10;
-      this.delayed_insert.Text = "Use INSERT DELAYED rather than INSERT.";
-      this.delayed_insert.UseVisualStyleBackColor = true;
       // 
       // complete_insert
       // 
@@ -766,7 +753,6 @@
         private System.Windows.Forms.CheckBox insert_ignore;
         private System.Windows.Forms.CheckBox disable_keys;
         private System.Windows.Forms.CheckBox extended_insert;
-        private System.Windows.Forms.CheckBox delayed_insert;
         private System.Windows.Forms.CheckBox complete_insert;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.CheckBox events;

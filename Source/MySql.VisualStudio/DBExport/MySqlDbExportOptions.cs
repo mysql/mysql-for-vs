@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -45,7 +45,6 @@ namespace MySql.Data.VisualStudio.DBExport
     private string _database;
     private bool _databases;
     private string _default_character_set;
-    private bool _delayed_insert;
     private bool _disable_keys;
     private bool _events;
     private bool _extended_insert;
@@ -220,18 +219,6 @@ namespace MySql.Data.VisualStudio.DBExport
       }
     }
 
-    public bool delayed_insert
-    {
-      get
-      {
-        return _delayed_insert;
-      }
-      set
-      {
-        _delayed_insert = value;
-        NotifyPropertyChanged("delayed_insert");
-      }
-    }
     public bool disable_keys
     {
       get
@@ -563,7 +550,6 @@ namespace MySql.Data.VisualStudio.DBExport
       dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.database), "");
       dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.databases), "--databases");
       dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.default_character_set), "--default-character-set");
-      dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.delayed_insert), "--delayed-insert");
       dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.disable_keys), "--disable-keys");
       dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.events), "--events");
       dictionary.Add(TypedReflection<MySqlDbExportOptions>.GetPropertyInfo(p => p.extended_insert), "--extended-insert");

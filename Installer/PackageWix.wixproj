@@ -138,7 +138,7 @@
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
-    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\v4.5\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\11.0v4.5.2\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
     </GetVersion>
     <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">

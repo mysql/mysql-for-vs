@@ -1,4 +1,4 @@
-﻿// Copyright © 2014, 2017 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -27,7 +27,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Setup.Configuration;
 using Microsoft.Win32;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 
 namespace MySql.VisualStudio.CustomAction
 {
@@ -182,7 +182,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
+      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL for Visual Studio");
 
       if (string.IsNullOrEmpty(installedPath))
       {
@@ -230,7 +230,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult GetConnectorNetVersion(Session session)
     {
-      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
 
       session["CNETINSTALLED"] = "0";
       session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
