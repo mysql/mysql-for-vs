@@ -72,7 +72,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string EF6Version = "6.1.3";
     private const string mySQLData = "MySql.Data";
     private const string mySQLEF5Version = "6.7.8";
-    private string mySQLEF = "MySql.Data.Entity";
+    private string _mySQLEF = "MySql.Data.Entity";
     private string _mySQLEF6Version;
 
     /// <summary>
@@ -87,7 +87,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       _mySQLEF6Version = factory != null
         ? factory.GetType().Assembly.GetName().Version.ToString(3)
         : mySQLEF5Version;
-      if (_mySQLEF6Version.StartsWith("8")) mySQLEF = "MySql.Data.EntityFramework";
+      if (_mySQLEF6Version.StartsWith("8")) _mySQLEF = "MySql.Data.EntityFramework";
     }
 
     /// <summary>
@@ -231,21 +231,21 @@ namespace MySql.Data.VisualStudio.WebConfig
         }
 
         // Remove reference to MySql.Data.Entity.EF5.
-        if (vsProj.References.Find(string.Format("{0}.EF5", mySQLEF)) != null)
+        if (vsProj.References.Find(string.Format("{0}.EF5", _mySQLEF)) != null)
         {
-          vsProj.References.Find(string.Format("{0}.EF5", mySQLEF)).Remove();
+          vsProj.References.Find(string.Format("{0}.EF5", _mySQLEF)).Remove();
         }
 
         // Remove reference to MySql.Data.Entity.EF6.
-        if (vsProj.References.Find(string.Format("{0}.EF6", mySQLEF)) != null)
+        if (vsProj.References.Find(string.Format("{0}.EF6", _mySQLEF)) != null)
         {
-          vsProj.References.Find(string.Format("{0}.EF6", mySQLEF)).Remove();
+          vsProj.References.Find(string.Format("{0}.EF6", _mySQLEF)).Remove();
         }
 
         // Remove reference to MySql.Data.EntityFramework.
-        if (vsProj.References.Find(mySQLEF) != null)
+        if (vsProj.References.Find(_mySQLEF) != null)
         {
-          vsProj.References.Find(mySQLEF).Remove();
+          vsProj.References.Find(_mySQLEF).Remove();
         }
 
         // Remove EF references.
@@ -286,10 +286,10 @@ namespace MySql.Data.VisualStudio.WebConfig
         switch (EFVersion)
         {
           case EF5Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, mySQLEF5Version, true);
+            AddNugetPackage(vsProj, projectPath, NetFxVersion, _mySQLEF, mySQLEF5Version, true);
             break;
           case EF6Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, _mySQLEF6Version, true);
+            AddNugetPackage(vsProj, projectPath, NetFxVersion, _mySQLEF, _mySQLEF6Version, true);
             break;
           default:
             throw new Exception("Not supported Entity Framework version.");
@@ -388,7 +388,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         // If .NET version is greater than 4.5 then extract the version numnber from NetFxVersion variable.
         packagePath = Path.Combine(
           packagePath,
-          "net" + ((PackageName==mySQLData || PackageName==mySQLEF) && Version==_mySQLEF6Version ?
+          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version ?
                       NetFxVersion.Replace(".", "") :
                       "45"));
       }
@@ -397,7 +397,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         // If .NET version is greater than 4.0 then extract the version numnber from NetFxVersion variable.
         packagePath = Path.Combine(
           packagePath,
-          "net" + ((PackageName==mySQLData || PackageName==mySQLEF) && Version==_mySQLEF6Version ?
+          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version ?
                       NetFxVersion.Replace(".", "") :
                       "40"));
       }
