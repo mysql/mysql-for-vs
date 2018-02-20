@@ -285,8 +285,10 @@
   </Target>
   <Target Name="PackageSourceCommercial">
     <Delete Files="tmp/README" />
+	<Delete Files="tmp/LICENSE" />
     <Copy SourceFiles="@(CommercialOnlyFiles)" DestinationFolder="tmp\%(RecursiveDir)" />
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
+	<Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
     <ItemGroup>
       <FilesToZipCommercial Include="tmp\**\*.*" />
     </ItemGroup>
