@@ -1,6 +1,6 @@
 1.2.8
 - Added support for MySQL 8 server features.
-  Upgraded MySQL for Visual Studio to require .NET 4.5.2 when installed (WL11578).
+- Upgraded MySQL for Visual Studio to require .NET 4.5.2 when installed.
 
  
 1.2.7
