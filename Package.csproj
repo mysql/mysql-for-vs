@@ -230,11 +230,6 @@
     <ItemGroup>
       <DocFiles Include="Documentation\Output\MySqlForVisualStudio.chm" />
     </ItemGroup>
-    <ItemGroup>
-      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-us-secure-hash.html" />
-      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-zlib.html" />
-      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-zlib-net.html" />
-    </ItemGroup>
     <RemoveDir Directories="tmp" ContinueOnError="true" />
     <MakeDir Directories="tmp" />
     <Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="tmp" />
@@ -243,12 +238,11 @@
     <Copy SourceFiles="@(V46Assemblies)" DestinationFolder="tmp\v46" />
 	<Copy SourceFiles="@(V461Assemblies)" DestinationFolder="tmp\v461" />
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="tmp/Documentation" />
-    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="tmp/Documentation/Licenses for Third-Party Components" />
   </Target>
   <Target Name="PackageNoInstallGPL">
     <ItemGroup>
-      <OtherGplFiles Include="COPYING" />
       <OtherGplFiles Include="README" />
+      <OtherGplFiles Include="LICENSE" />
     </ItemGroup>
     <Copy SourceFiles="@(OtherGplFiles)" DestinationFolder="tmp" />
     <ItemGroup>
@@ -259,12 +253,12 @@
   <Target Name="PackageNoInstallCommercial">
     <ItemGroup>
       <OtherCommercialFiles Include="README-Commercial" />
-      <OtherCommercialFiles Include="License.MYSQL" />
+      <OtherCommercialFiles Include="LICENSE-Commercial" />
     </ItemGroup>
-    <Delete Files="tmp/COPYING" TreatErrorsAsWarnings="true" />
     <Delete Files="tmp/README" TreatErrorsAsWarnings="true" />
     <Copy SourceFiles="@(OtherCommercialFiles)" DestinationFolder="tmp" />
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
+	<Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
     <ItemGroup>
       <ZipFilesCommercial Include="tmp\**\*.*" />
     </ItemGroup>
@@ -276,10 +270,10 @@
     <RemoveDir Directories="tmp" ContinueOnError="true" />
     <MakeDir Directories="tmp" />
     <ItemGroup>
-	  <CommercialOnlyFiles Include="**/Readme-Commercial;**/License.MYSQL" />
+	  <CommercialOnlyFiles Include="**/README-Commercial;**/LICENSE-Commercial" />
 	</ItemGroup>
     <ItemGroup>
-      <SourceCodeFiles Include="**/**" Exclude="@(CommercialOnlyFiles);**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;*-banner.txt;**/installer/**;**/Package.csproj;**/Package.sln;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/UpgradeLog*.*;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
+      <SourceCodeFiles Include="**/**" Exclude="@(CommercialOnlyFiles);**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;**/installer/**;**/Package.csproj;**/Package.sln;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/UpgradeLog*.*;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
     </ItemGroup>
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="tmp/%(RecursiveDir)" />
   </Target>
@@ -290,13 +284,9 @@
     <Zip ZipFileName="packages/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" Files="@(FilesToZipGPL)" WorkingDirectory="tmp" />
   </Target>
   <Target Name="PackageSourceCommercial">
-    <Delete Files="tmp/COPYING;tmp/README" />
+    <Delete Files="tmp/README" />
     <Copy SourceFiles="@(CommercialOnlyFiles)" DestinationFolder="tmp\%(RecursiveDir)" />
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
-    <ItemGroup>
-      <ReplaceGplBannerFiles Include="tmp/**/*.cs" />
-    </ItemGroup>
-    <ReplaceText HeaderFile="Installer\GPL-Banner.txt" NewHeaderFile="Installer\Commercial-Banner.txt" Files="@(ReplaceGplBannerFiles)" />
     <ItemGroup>
       <FilesToZipCommercial Include="tmp\**\*.*" />
     </ItemGroup>
