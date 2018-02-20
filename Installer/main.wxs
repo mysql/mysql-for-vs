@@ -75,7 +75,6 @@
               <Directory Id='PFTemplatesDir' Name='Templates'/>
             </Directory>
             <Directory Id='DocsDir' Name='Documentation'>
-              <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
             </Directory>
             <Directory Id='SampleDir' Name='Samples'/>
             <Directory Id='Dependencies' Name='Dependencies' />
@@ -436,15 +435,6 @@
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id="LicensesDir">
-      <Component Id="Licenses" Guid="F1314965-1B59-4c0f-B168-5DFAA4EB35BC">
-        <File Id="SecureHash" Name="license-us-secure-hash.html" Source="..\Documentation\Licenses for Third-Party Components\license-us-secure-hash.html" DiskId="1"/>
-        <File Id="Zlib" Name="license-zlib.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib.html" DiskId="1"/>
-        <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib-net.html" DiskId="1"/>
-        <File Id="Antlr" Name="license-antlr.html" Source="..\Documentation\Licenses for Third-Party Components\license-antlr.html" DiskId="1"/>
-      </Component>
-    </DirectoryRef>
-
     <FeatureRef Id='Core.Feature'/>
     <!--<FeatureRef Id="WebProviders"/>-->
     <Feature Id='VSIntegration' Level='1' Display='10'
@@ -466,7 +456,6 @@
 
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
       <ComponentRef Id='Docs'/>
-      <ComponentRef Id='Licenses'/>
     </Feature>
 
     <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>

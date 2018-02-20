@@ -1,45 +1,16 @@
-MySQL for Visual Studio 1.2
+Copyright (c) 2004, 2018, Oracle and/or its affiliates. All rights reserved.
 
-This is a release of MySQL for Visual Studio, Oracle's dual-
-license MySQL extensions for Visual Studio. For the avoidance of
-doubt, this particular copy of the software is released
-under the version 2 of the GNU General Public License.
-MySQL for Visual Studio is brought to you by Oracle.
+This is a release of MySQL for Visual Studio, MySQL for Visual Studio provides access to MySQL objects and data without forcing your developers to leave Visual Studio. Designed and developed as a Visual Studio package, MySQL for Visual Studio integrates directly into Server Explorer providing a seamless experience for setting up new connections and working with database objects.
 
-Copyright (c) 2004 - 2015, Oracle and/or its affiliates. All rights reserved.
+License information can be found in the LICENSE file.
 
-License information can be found in the COPYING file.
+This distribution may include materials developed by third parties. 
+For license and attribution notices for these materials, please refer to the LICENSE file. 
 
-MySQL FOSS License Exception
-We want free and open source software applications under 
-certain licenses to be able to use the GPL-licensed MySQL for Visual Studio
-(specified GPL-licensed MySQL client libraries)
-despite the fact that not all such FOSS licenses are 
-compatible with version 2 of the GNU General Public License.
-Therefore there are special exceptions to the terms and
-conditions of the GPLv2 as applied to these client libraries, 
-which are identified and described in more detail in the 
-FOSS License Exception at
-<http://www.mysql.com/about/legal/licensing/foss-exception.html>
+For more information on MySQL for Visual Studio, visit 
+  http://dev.mysql.com/doc/visual-studio/en/
 
-This distribution may include materials developed by third
-parties. For license and attribution notices for these
-materials, please refer to the documentation that accompanies
-this distribution (see the "Licenses for Third-Party Components"
-appendix) or view the online documentation at 
-<http://dev.mysql.com/doc/>
+For additional downloads and the source of MySQL for Visual Studio, visit
+  http://dev.mysql.com/downloads
 
-The accompanying documentation currently exists in MSDN help 
-format and is located in the 'doc' directory.
-
-GPLv2 Disclaimer
-For the avoidance of doubt, except that if any license choice
-other than GPL or LGPL is available it will apply instead, 
-Oracle elects to use only the General Public License version 2 
-(GPLv2) at this time for any software where a choice of GPL 
-license versions is made available with the language indicating 
-that GPLv2 or any later version may be used, or where a choice 
-of which version of the GPL is applied is otherwise unspecified.
-
-This software is OSI Certified Open Source Software.
-OSI Certified is a certification mark of the Open Source Initiative.
+MySQL for Visual Studio is brought to you by the MySQL team at Oracle.
