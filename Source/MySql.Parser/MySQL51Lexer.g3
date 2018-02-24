@@ -1,4 +1,4 @@
-﻿// Copyright © 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -36,6 +36,7 @@ options {
    eventually we need to gate all these with a predicate (see nextTokenIsID) to allow the "word following a '.' character is always an identifier" rule
  */
 ACCESSIBLE	:	'ACCESSIBLE';
+ACCOUNT : 'ACCOUNT' { $type = checkIDperVersion( 5.7, $type, MySQL51Lexer.ID ); };
 ADD	:	'ADD';
 ALL	:	'ALL';
 ALTER	:	'ALTER';
@@ -52,6 +53,7 @@ BETWEEN	:	'BETWEEN';
 BINARY	:	'BINARY';
 BOTH	:	'BOTH';
 BY	:	'BY';
+CACHING_SHA2_PASSWORD : 'CACHING_SHA2_PASSWORD';
 CALL	:	'CALL';
 CASCADE	:	'CASCADE';
 CASE	:	'CASE';
@@ -127,6 +129,7 @@ GOTO	:	'GOTO';
 GRANT	:	'GRANT';
 GROUP	:	'GROUP';
 HAVING	:	'HAVING';
+HISTORY : 'HISTORY' { $type = checkIDperVersion( 8.0, $type, MySQL51Lexer.ID ); };
 HIGH_PRIORITY	:	'HIGH_PRIORITY';
 HOUR_MICROSECOND	:	'HOUR_MICROSECOND';
 HOUR_MINUTE	:	'HOUR_MINUTE';
@@ -182,6 +185,7 @@ MINUTE_SECOND	:	'MINUTE_SECOND';
 MOD	:	'MOD' {$type = checkFunctionAsID($type);};
 MODIFIES	:	'MODIFIES';
 MYSQL_ERRNO : 'MYSQL_ERRNO' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
+MYSQL_NATIVE_PASSWORD : 'MYSQL_NATIVE_PASSWORD';
 NATURAL	:	'NATURAL';
 NOT	:	'NOT';
 NO_WRITE_TO_BINLOG	:	'NO_WRITE_TO_BINLOG';
@@ -222,8 +226,10 @@ RESIGNAL : 'RESIGNAL' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID )
 RESTRICT	:	'RESTRICT';
 RETURN	:	'RETURN';
 RETURNED_SQLSTATE : 'RETURNED_SQLSTATE';
+REUSE : 'REUSE' { $type = checkIDperVersion( 8.0, $type, MySQL51Lexer.ID ); };
 REVOKE	:	'REVOKE';
 RLIKE	:	'RLIKE';
+ROLE : 'ROLE' { $type = checkIDperVersion( 8.0, $type, MySQL51Lexer.ID ); };
 ROW_COUNT : 'ROW_COUNT' { $type = checkFunctionasIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 SCHEDULER : 'SCHEDULER';
 SCHEMA	:	'SCHEMA';
@@ -234,6 +240,7 @@ SENSITIVE	:	'SENSITIVE';
 SEPARATOR	:	'SEPARATOR';
 SET	:	'SET';
 SCHEMA_NAME : 'SCHEMA_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
+SHA256_PASSWORD : 'SHA256_PASSWORD';
 SHOW	:	'SHOW';
 SIGNAL  : 'SIGNAL' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 SPATIAL	:	'SPATIAL';
@@ -324,7 +331,7 @@ PREPARE	:	'PREPARE';
 REMOVE	:	'REMOVE';            
 REPAIR	:	'REPAIR';                
 RESET	:	'RESET';             
-RESTORE	:	'RESTORE';           
+RESTORE	:	'RESTORE';
 ROLLBACK	:	'ROLLBACK';          
 SAVEPOINT	:	'SAVEPOINT';         
 SECURITY	:	'SECURITY';          

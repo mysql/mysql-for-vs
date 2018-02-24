@@ -1,4 +1,4 @@
-﻿// Copyright © 2013 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -70,6 +70,50 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, false, out sb);
+    }
+
+    [Fact]
+    public void CreateUser()
+    {
+      // Test all auth plugins.
+      MySQL51Parser.program_return r = null;
+      r = ParseSqlFor80(@"CREATE USER IF NOT EXISTS 'rootnative'@'localhost'");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH mysql_native_password BY 'guidev!'");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH sha256_password BY 'guidev!'");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'guidev!'");
+      Assert.Throws<Xunit.Sdk.EqualException>(() => ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH caching_sha2_passwords BY 'guidev!'"));
+
+      // Other allowed syntax.
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED BY 'guidev!'");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED BY PASSWORD 'guidev!'");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH caching_sha2_password");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH mysql_native_password BY 'guidev!'");
+      r = ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED WITH mysql_native_password AS 'guidev!'");
+
+      // Non-allowed syntax.
+      Assert.Throws<Xunit.Sdk.EqualException>(() => ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' IDENTIFIED BY caching_sha2_passwords WITH 'guidev!'"));
+      Assert.Throws<Xunit.Sdk.EqualException>(() => ParseSqlFor80(@"CREATE USER 'rootnative'@'localhost' WITH caching_sha2_passwords"));
+
+      // Variants.
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'new_password' PASSWORD EXPIRE DEFAULT");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'new_password' PASSWORD EXPIRE");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' IDENTIFIED WITH sha256_password BY 'new_password' PASSWORD EXPIRE INTERVAL 180 DAY");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' IDENTIFIED WITH mysql_native_password BY 'new_password1', 'jeanne'@'localhost' IDENTIFIED WITH sha256_password BY 'new_password2' REQUIRE X509 WITH MAX_QUERIES_PER_HOUR 60 ACCOUNT LOCK");
+      r = ParseSqlFor80(@"CREATE USER 'joe'@'10.0.0.1' DEFAULT ROLE 'administrator', 'developer'");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' REQUIRE NONE");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' REQUIRE SSL");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' REQUIRE ISSUER '/C=SE/ST=Stockholm/L=Stockholm/O=MySQL/CN=CA/emailAddress=ca@example.com'");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' REQUIRE CIPHER 'EDH-RSA-DES-CBC3-SHA'");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' REQUIRE SUBJECT '/C=SE/ST=Stockholm/L=Stockholm/O=MySQL demo client certificate/CN=client/emailAddress=client@example.com' AND ISSUER '/C=SE/ST=Stockholm/L=Stockholm/O=MySQL/CN=CA/emailAddress=ca@example.com' AND CIPHER 'EDH-RSA-DES-CBC3-SHA'");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' WITH MAX_QUERIES_PER_HOUR 500 MAX_UPDATES_PER_HOUR 100");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' PASSWORD HISTORY 6");
+      r = ParseSqlFor80(@"CREATE USER 'jeffrey'@'localhost' PASSWORD REUSE INTERVAL 360 DAY");
+    }
+
+    public MySQL51Parser.program_return ParseSqlFor80(string sql)
+    {
+      StringBuilder sb = null;
+      return Utility.ParseSql(sql, false, out sb, new Version(8,0));
     }
     
     [Fact]

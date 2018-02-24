@@ -1,4 +1,4 @@
-﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -180,10 +180,10 @@ namespace MySql.Parser.Tests
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql( "call", true, out sb );
-      //Assert.True(sb.ToString().EndsWith("no viable alternative at input '<EOF>'\r\n"));
-      string expectedToken =
-          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
-      Assert.True(expectedToken == "proc_name");
+      Assert.True(sb.ToString().EndsWith("no viable alternative at input '<EOF>'\r\n"));
+      //string expectedToken =
+      //    new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      //Assert.True(expectedToken == "proc_name");
       //Assert.True(((CommonErrorNode)r.Tree).Text == "call");
     }
 

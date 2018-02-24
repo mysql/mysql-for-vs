@@ -1,4 +1,4 @@
-﻿// Copyright © 2011, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2011, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -106,6 +106,7 @@ namespace MySql.Data.VisualStudio
       TokenMap.Add(MySQL51Lexer.EOF, MySqlTokenType.Text);
       TokenMap.Add(MySQL51Lexer.ACCESSIBLE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.ACTION, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.ACCOUNT, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.ADD, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.ADDDATE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.AFTER, MySqlTokenType.Keyword);
@@ -158,6 +159,7 @@ namespace MySql.Data.VisualStudio
       TokenMap.Add(MySQL51Lexer.BTREE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.BY, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.BYTE, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.CACHING_SHA2_PASSWORD, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.CACHE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.CALL, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.CASCADE, MySqlTokenType.Keyword);
@@ -344,6 +346,7 @@ namespace MySql.Data.VisualStudio
       TokenMap.Add(MySQL51Lexer.HELP, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.HEXA_VALUE, MySqlTokenType.Literal);
       TokenMap.Add(MySQL51Lexer.HIGH_PRIORITY, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.HISTORY, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.HOST, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.HOSTS, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.HOUR, MySqlTokenType.Keyword);
@@ -488,6 +491,7 @@ namespace MySql.Data.VisualStudio
       TokenMap.Add(MySQL51Lexer.MUTEX, MySqlTokenType.Keyword);
       //TokenMap.Add(MySQL51Lexer.MYISAM, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.MYSQL_ERRNO, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.MYSQL_NATIVE_PASSWORD, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.NAME, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.NAMES, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.NATIONAL, MySqlTokenType.Keyword);
@@ -604,10 +608,12 @@ namespace MySql.Data.VisualStudio
       TokenMap.Add(MySQL51Lexer.RETURN, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.RETURNED_SQLSTATE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.RETURNS, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.REUSE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.REVOKE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.RIGHT, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.RIGHT_SHIFT, MySqlTokenType.Operator);
       TokenMap.Add(MySQL51Lexer.RLIKE, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.ROLE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.ROLLBACK, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.ROLLUP, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.ROUTINE, MySqlTokenType.Keyword);
@@ -636,6 +642,7 @@ namespace MySql.Data.VisualStudio
       TokenMap.Add(MySQL51Lexer.SESSION, MySqlTokenType.Keyword);
       //TokenMap.Add(MySQL51Lexer.SESSION_USER, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.SET, MySqlTokenType.Keyword);
+      TokenMap.Add(MySQL51Lexer.SHA256_PASSWORD, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.SHARE, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.SHARED, MySqlTokenType.Keyword);
       TokenMap.Add(MySQL51Lexer.SHOW, MySqlTokenType.Keyword);

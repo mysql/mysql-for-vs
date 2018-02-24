@@ -1,9 +1,14 @@
-﻿DROP DATABASE IF EXISTS {0};
-CREATE DATABASE {0};
-USE {0};
+﻿DROP DATABASE IF EXISTS mytest;
+CREATE DATABASE mytest;
+USE mytest;
 
-GRANT ALL ON `{0}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL ON `{0}`.* to 'test'@'%' IDENTIFIED BY 'test';
+DROP USER IF EXISTS test@localhost;
+DROP USER IF EXISTS test@'%';
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON mytest.* to 'test'@'localhost';
+CREATE USER 'test'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON mytest.* to 'test'@'%';
 
 FLUSH PRIVILEGES;
 
@@ -54,12 +59,17 @@ INSERT INTO items VALUES(null, 'Icecream', 'Vanilla', 2.99, 1);
 
 INSERT INTO employees VALUES(null, 'EmployeeName', 1, true);
 
-DROP DATABASE IF EXISTS {1};
-CREATE DATABASE {1};
-USE {1};
+DROP DATABASE IF EXISTS mytest2;
+CREATE DATABASE mytest2;
+USE mytest2;
 
-GRANT ALL ON `{1}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL ON `{1}`.* to 'test'@'%' IDENTIFIED BY 'test';
+DROP USER IF EXISTS test@localhost;
+DROP USER IF EXISTS test@'%';
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON mytest2.* to 'test'@'localhost';
+CREATE USER 'test'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON mytest2.* to 'test'@'%';
 
 FLUSH PRIVILEGES;
 
@@ -92,12 +102,17 @@ INSERT INTO mylines VALUES(null, 'line name', 'OwnMark');
 -- Third database
 
 
-DROP DATABASE IF EXISTS {2};
-CREATE DATABASE {2};
-USE {2};
+DROP DATABASE IF EXISTS mytest3;
+CREATE DATABASE mytest3;
+USE mytest3;
 
-GRANT ALL ON `{2}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL ON `{2}`.* to 'test'@'%' IDENTIFIED BY 'test';
+DROP USER IF EXISTS test@localhost;
+DROP USER IF EXISTS test@'%';
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON mytest3.* to 'test'@'localhost';
+CREATE USER 'test'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON mytest3.* to 'test'@'%';
 
 FLUSH PRIVILEGES;
 

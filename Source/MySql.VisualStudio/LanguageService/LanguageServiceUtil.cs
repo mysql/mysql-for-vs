@@ -1,4 +1,4 @@
-﻿// Copyright © 2014, 2016 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -263,10 +263,12 @@ namespace MySql.Data.VisualStudio
     /// <param name="sql"></param>
     /// <param name="con"></param>
     /// <returns></returns>
-    public static bool DoesStmtReturnResults( string sql, MySqlConnection con )
+    public static bool? DoesStmtReturnResults( string sql, MySqlConnection con, out StringBuilder sb )
     {
-      StringBuilder sb = new StringBuilder();
       MySQL51Parser.program_return t = LanguageServiceUtil.ParseSql( sql, false, out sb, con.ServerVersion );
+      if (t == null)
+        return null;
+
       ITree tree = t.Tree as ITree;
       if (tree.IsNil)
       {
