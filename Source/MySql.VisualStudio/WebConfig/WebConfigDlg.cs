@@ -70,6 +70,9 @@ namespace MySql.Data.VisualStudio.WebConfig
                                                               { "txtUserTable", "User Table" },
                                                               { "txtUserIdCol", "User Id Column" },
                                                               { "txtUserNameCol", "User Name Column" } };
+
+    private Version _connectorVersion;
+
     private bool IsSimpleMembershipPage
     {
       get { return page == SimpleMembershipIndex; }
@@ -82,6 +85,8 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     public WebConfigDlg()
     {
+      var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(6,9,12);
       InitializeComponent();
       CreateStepsLabels();
       SetSelectedStepLabel(pagesDescription[0]);
@@ -406,6 +411,8 @@ namespace MySql.Data.VisualStudio.WebConfig
         EntityFrameworkOptions options = ((EntityFrameworkConfig)pages[ENTITYFRAMEWORK_INDEX].ProviderConfig).EntityFrameworkOptions;
         radioBtnEF5.Checked = options.EF5;
         radioBtnEF6.Checked = options.EF6;
+        if (_connectorVersion >= new Version(6, 10))
+          radioBtnEF5.Enabled = false;
       }
       else
       {

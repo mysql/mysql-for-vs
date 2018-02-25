@@ -54,6 +54,8 @@ namespace MySql.Data.VisualStudio.WebConfig
   /// </summary>
   internal enum TargetFramework
   {
+    Fx461 = 262406,
+    Fx46 = 262150,
     Fx452 = 262661,
     Fx451 = 262405,
     Fx45 = 262149,
@@ -71,7 +73,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string EF5Version = "5.0.0";
     private const string EF6Version = "6.1.3";
     private const string mySQLData = "MySql.Data";
-    private const string mySQLEF5Version = "6.7.8";
+    private const string mySQLEF5Version = "6.9.12";
     private string _mySQLEF = "MySql.Data.Entity";
     private string _mySQLEF6Version;
 
@@ -286,7 +288,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         switch (EFVersion)
         {
           case EF5Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, _mySQLEF, mySQLEF5Version, true);
+            AddNugetPackage(vsProj, projectPath, NetFxVersion, "MySql.Data.Entity", mySQLEF5Version, true);
             break;
           case EF6Version:
             AddNugetPackage(vsProj, projectPath, NetFxVersion, _mySQLEF, _mySQLEF6Version, true);
@@ -316,6 +318,8 @@ namespace MySql.Data.VisualStudio.WebConfig
         case TargetFramework.Fx45: return "4.5";
         case TargetFramework.Fx451: return "4.5.1";
         case TargetFramework.Fx452: return "4.5.2";
+        case TargetFramework.Fx46: return "4.6";
+        case TargetFramework.Fx461: return "4.6.1";
       }
 
       return string.Empty;
@@ -354,6 +358,13 @@ namespace MySql.Data.VisualStudio.WebConfig
         MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage", new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
         string packageID = PackageName;
         MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
+
+        // Special condition to handle NuGet package suffixes
+        if (PackageName.StartsWith("MySql.Data"))
+        {
+          if (Version == "8.0.10") Version += "-rc";
+        }
+
         object semanticVersion = miParse.Invoke(null, new object[] { Version });
         miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
 #endif
@@ -383,13 +394,17 @@ namespace MySql.Data.VisualStudio.WebConfig
       string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", PackageName, Version));
       string packagePath = Path.Combine(BasePath, efPath);
 
-      if (NetFxVersion.StartsWith("4.5"))
+      // Remove suffix from Version if it has one.
+      int suffixStartIndex = Version.IndexOf('-');
+      if (suffixStartIndex != -1) Version = Version.Substring(0, suffixStartIndex);
+
+      if (NetFxVersion.StartsWith("4.5") || NetFxVersion.StartsWith("4.6"))
       {
         // If .NET version is greater than 4.5 then extract the version numnber from NetFxVersion variable.
         packagePath = Path.Combine(
           packagePath,
-          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version ?
-                      NetFxVersion.Replace(".", "") :
+          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version && !Version.StartsWith("6.9") ?
+                      "452" :
                       "45"));
       }
       else if (NetFxVersion.StartsWith("4.0"))
@@ -397,7 +412,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         // If .NET version is greater than 4.0 then extract the version numnber from NetFxVersion variable.
         packagePath = Path.Combine(
           packagePath,
-          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version ?
+          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version && !Version.StartsWith("6.9") ?
                       NetFxVersion.Replace(".", "") :
                       "40"));
       }
