@@ -59,10 +59,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         _connectorVersion = new Version(connectorVersion);
         if (_connectorVersion >= new Version(8,0))
-        {
-          _defaultConnectionFactoryEF6TypeValue = _defaultConnectionFactoryEF6TypeValue.Replace("Entity", "EntityFramework");
-          _defaultConnectionFactoryEF6TypeValue = _defaultConnectionFactoryEF6TypeValue.Replace(".EF6", "");
-        }
+          _defaultConnectionFactoryEF6TypeValue = "MySql.Data.EntityFramework.MySqlConnectionFactory, MySql.Data.EntityFramework";
 
         XElement webConfig = XElement.Load(Path.Combine(projectPath, webConfigFileName));
         RemoveEFSettings(webConfig);
