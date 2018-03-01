@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2017, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -99,7 +99,16 @@ namespace MySql.Data.VisualStudio.Editors
     internal DbConnection GetCurrentConnection()
     {
       VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null) return null;
+      try
+      {
+        if (Dte.ActiveDocument == null)
+          return null;
+      }
+      catch (Exception)
+      {
+        return null;
+      }
+
       dic.TryGetValue(Dte.ActiveDocument.FullName, out editor);
       // Null here means No connection opened for the current mysql editor, or current active window not a mysql editor.
       if (editor == null) return null;
@@ -129,8 +138,16 @@ namespace MySql.Data.VisualStudio.Editors
     public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
     {
       VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null) 
+      try
+      {
+        if (Dte.ActiveDocument == null)
+          return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      }
+      catch (Exception)
+      {
         return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      }
+
       if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
         return ((IOleCommandTarget)editor).Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
       else
@@ -140,8 +157,16 @@ namespace MySql.Data.VisualStudio.Editors
     public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
     {
       VSCodeEditorWindow editor;
-      if (Dte.ActiveDocument == null)
+      try
+      {
+        if (Dte.ActiveDocument == null)
+          return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      }
+      catch (Exception)
+      {
         return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      }
+
       if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
         return ((IOleCommandTarget)editor).QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
       else
