@@ -765,7 +765,7 @@
 
     <!-- Visual Studio 2017 Community Custom Action -->
     <SetProperty Id="VS15Setup_Custom" Value="&quot;[VS15.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15Setup_Custom" Sequence="execute" />
-    <CustomAction Id="VS15Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="VS15Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <!-- Visual Studio 2017 Enterprise Custom Action (update packages file) -->
     <Binary Id="VS15Ent_PackFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
@@ -774,7 +774,7 @@
 
     <!-- Visual Studio 2017 Enterprise Custom Action -->
     <SetProperty Id="VS15_Ent_Setup_Custom" Value="&quot;[VS15.Ent.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15_Ent_Setup_Custom" Sequence="execute" />
-    <CustomAction Id="VS15_Ent_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="VS15_Ent_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <!-- Visual Studio 2017 Professional Custom Action (update packages file) -->
     <Binary Id="VS15Pro_PackFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
@@ -783,7 +783,7 @@
 
     <!-- Visual Studio 2017 Professional Custom Action -->
     <SetProperty Id="VS15_Pro_Setup_Custom" Value="&quot;[VS15.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15_Pro_Setup_Custom" Sequence="execute" />
-    <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <!-- Adding AutoLoadPackage option so our connections are available -->
     <DirectoryRef Id="INSTALLDIR">
