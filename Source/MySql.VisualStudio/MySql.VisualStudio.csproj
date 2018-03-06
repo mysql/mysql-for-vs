@@ -1366,8 +1366,7 @@
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
   <Import Project="ImportProjects4.6.1.targets" Condition="'$(Framework)' == '4.6.1'" />
   <Import Project="ImportProjects4.6.targets" Condition="'$(Framework)' == '4.6'" />
-  <Import Project="ImportProjects4.5.1.targets" Condition="'$(Framework)' == '4.5.1'" />
-  <Import Project="ImportProjects4.5.targets" Condition="'$(Framework)' == '4.5'" />
+  <Import Project="ImportProjects4.5.2.targets" Condition="'$(Framework)' == '4.5.2'" />
   <Choose>
     <When Condition=" '$(VisualStudioVersion)' == '11.0' AND $(Configuration) == 'Debug'">
       <PropertyGroup>
