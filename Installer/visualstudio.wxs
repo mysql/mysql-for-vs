@@ -837,7 +837,7 @@
       <Custom Action='VS15Setup_Custom' After='VS2015Setup'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
       <Custom Action='VS15_Ent_Setup_Custom' After='VS15Setup_Custom'>(&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3)</Custom>
       <Custom Action='VS15_Pro_Setup_Custom' After='VS15_Ent_Setup_Custom'>(&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3)</Custom>
-	  <Custom Action="Win7_ShowWarning" After="VS15_Pro_Setup_Custom"><![CDATA[VersionNT = 601]]></Custom>
+	  <Custom Action="Win7_ShowWarning" After="InstallFinalize"><![CDATA[VersionNT = 601]]></Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
