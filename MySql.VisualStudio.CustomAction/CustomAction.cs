@@ -72,6 +72,9 @@ namespace MySql.VisualStudio.CustomAction
     private static string _vs2017ProfessionalInstallationPath;
     private static string _VS2017ProfessionalX64ExtensionsFilePath;
     private static string _VS2017ProfessionalX86ExtensionsFilePath;
+    private static string _vs2017CommunityInstanceId;
+    private static string _vs2017EnterpriseInstanceId;
+    private static string _vs2017ProfessionalInstanceId;
     #endregion
 
     /// <summary>
@@ -330,9 +333,44 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult ShowInstallationWarning(Session session)
     {
-      string message = "Due to a known issue MySQL for Visual Studio may fail to load the first time. If you encounter this issue close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool.\n\nRefer to MySQL for Visual Studio's documentation for additional details.";
-      session.Log(message);
-      session.Message(InstallMessage.Warning, new Record { FormatString = message });
+      bool showWarning = false;
+
+      // Attempt to retrieve the ActivityLog from the user's AppData folder.
+      try
+      {
+        var activityLog = "";
+        // Read entries for any ACCESS_DENIED errors.
+        if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
+        {
+          session.Log("Community: " + _vs2017CommunityInstanceId);
+        }
+
+        if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
+        {
+          session.Log("Enterprise: " + _vs2017EnterpriseInstanceId);
+        }
+
+        if (!string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
+        {
+          session.Log("Professional: " + _vs2017ProfessionalInstanceId);
+        }
+
+        session.Log("AppDataFolder: " + session["AppDataFolder"]);
+
+        showWarning = true;
+      }
+      catch (Exception)
+      {
+        showWarning = true;
+      }
+
+      if (showWarning)
+      {
+        string message = "Due to a known issue MySQL for Visual Studio may fail to load the first time. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. \n\nRefer to this product's documentation for additional details.";
+        //session.Log(message));
+        session.Message(InstallMessage.Warning, new Record { FormatString = message });
+      }
+
       return ActionResult.Success;
     }
 
@@ -598,16 +636,19 @@ namespace MySql.VisualStudio.CustomAction
               if (flavor == "Microsoft.VisualStudio.Product.Community" && string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
               {
                 _vs2017CommunityInstallationPath = vsInstance.GetInstallationPath();
+                _vs2017CommunityInstanceId = vsInstance.GetInstanceId();
               }
 
               if (flavor == "Microsoft.VisualStudio.Product.Enterprise" && string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
               {
                 _vs2017EnterpriseInstallationPath = vsInstance.GetInstallationPath();
+                _vs2017EnterpriseInstanceId = vsInstance.GetInstanceId();
               }
 
               if (flavor == "Microsoft.VisualStudio.Product.Professional" && string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
               {
                 _vs2017ProfessionalInstallationPath = vsInstance.GetInstallationPath();
+                _vs2017ProfessionalInstanceId = vsInstance.GetInstanceId();
               }
             }
           }
