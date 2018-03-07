@@ -339,6 +339,12 @@ namespace MySql.VisualStudio.CustomAction
       try
       {
         var activityLog = "";
+
+        if (File.Exists(activityLog))
+        {
+        }
+        else showWarning = true;
+
         // Read entries for any ACCESS_DENIED errors.
         if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
         {
@@ -356,8 +362,6 @@ namespace MySql.VisualStudio.CustomAction
         }
 
         session.Log("AppDataFolder: " + session["AppDataFolder"]);
-
-        showWarning = true;
       }
       catch (Exception)
       {
