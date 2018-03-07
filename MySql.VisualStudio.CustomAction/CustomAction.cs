@@ -338,17 +338,18 @@ namespace MySql.VisualStudio.CustomAction
       // Attempt to retrieve the ActivityLog from the user's AppData folder.
       try
       {
-        var activityLog = "";
-
-        if (File.Exists(activityLog))
-        {
-        }
-        else showWarning = true;
-
         // Read entries for any ACCESS_DENIED errors.
         if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
         {
           session.Log("Community: " + _vs2017CommunityInstanceId);
+
+          var activityLog = string.Format("{0}..\\Roaming\\Microsoft\\VisualStudio\\15_{1}", session["LocalAppDataFolder"], _vs2017CommunityInstanceId) ;
+
+          if (File.Exists(activityLog))
+          {
+            session.Log("ActivityLog found.");
+          }
+          else showWarning = true;
         }
 
         if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
@@ -361,7 +362,8 @@ namespace MySql.VisualStudio.CustomAction
           session.Log("Professional: " + _vs2017ProfessionalInstanceId);
         }
 
-        session.Log("AppDataFolder: " + session["AppDataFolder"]);
+        session.Log("LocalAppDataFolder: " + session["LocalAppDataFolder"]);
+        showWarning = true;
       }
       catch (Exception)
       {
@@ -370,7 +372,7 @@ namespace MySql.VisualStudio.CustomAction
 
       if (showWarning)
       {
-        string message = "Due to a known issue MySQL for Visual Studio may fail to load the first time. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. \n\nRefer to this product's documentation for additional details.";
+        string message = "Due to a known issue MySQL for Visual Studio may fail to load the first time. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
         //session.Log(message));
         session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
