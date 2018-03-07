@@ -785,6 +785,10 @@
     <SetProperty Id="VS15_Pro_Setup_Custom" Value="&quot;[VS15.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15_Pro_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
+	<!-- Show warning message for Windows 7 users -->
+	<Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
+	<CustomAction Id="Win7_ShowWarning" DllEntry="ShowInstallationWarning" BinaryKey="Win7Installation" Execute="deferred" Return="ignore" Impersonate="no" />
+
     <!-- Adding AutoLoadPackage option so our connections are available -->
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="AutoLoadPackageVS2012" Guid="*">
@@ -833,6 +837,7 @@
       <Custom Action='VS15Setup_Custom' After='VS2015Setup'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
       <Custom Action='VS15_Ent_Setup_Custom' After='VS15Setup_Custom'>(&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3)</Custom>
       <Custom Action='VS15_Pro_Setup_Custom' After='VS15_Ent_Setup_Custom'>(&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3)</Custom>
+	  <Custom Action="Win7Installation" After="VS15_Pro_Setup_Custom"><![CDATA[VersionNT = 601]]></Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
