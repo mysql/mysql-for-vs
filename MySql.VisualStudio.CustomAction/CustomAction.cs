@@ -323,13 +323,15 @@ namespace MySql.VisualStudio.CustomAction
     #endregion
 
     /// <summary>
-    /// 
+    /// Displays a warning message for Win7 users.
     /// </summary>
-    /// <param name="session"></param>
-    /// <returns></returns>
+    /// <param name="session">The session object containing the parameters sent by Wix.</param>
+    /// <returns>Will return Failure status in case of any errors. Otherwise, Success</returns>
+    [CustomAction]
     public static ActionResult ShowInstallationWarning(Session session)
     {
-      string message = "[WARNING]: If Visual Studio fails to load MySQL for Visual Studio proceed to manually execute the \"devenv /updateconfiguration\" command in the \"Developer Command Prompt for VS<year>\". Refer to MySQL for Visual Studio's documentation for additional details.";
+      //string message = "[WARNING]: If Visual Studio fails to load MySQL for Visual Studio proceed to manually execute the \"devenv /updateconfiguration\" command in the \"Developer Command Prompt for VS<year>\". Refer to MySQL for Visual Studio's documentation for additional details.";
+      string message = "test";
       session.Log(message);
       //session.Message(InstallMessage.Warning, new Record { FormatString = message });
       return ActionResult.Success;
