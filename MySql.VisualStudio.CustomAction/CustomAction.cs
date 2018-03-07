@@ -330,10 +330,9 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult ShowInstallationWarning(Session session)
     {
-      //string message = "[WARNING]: If Visual Studio fails to load MySQL for Visual Studio proceed to manually execute the \"devenv /updateconfiguration\" command in the \"Developer Command Prompt for VS<year>\". Refer to MySQL for Visual Studio's documentation for additional details.";
-      string message = "test";
+      string message = "[WARNING]: If Visual Studio fails to load MySQL for Visual Studio proceed to manually execute the \"devenv /updateconfiguration\" command in the \"Developer Command Prompt for VS<year>\". Refer to MySQL for Visual Studio's documentation for additional details.";
       session.Log(message);
-      //session.Message(InstallMessage.Warning, new Record { FormatString = message });
+      session.Message(InstallMessage.Warning, new Record { FormatString = message });
       return ActionResult.Success;
     }
 
