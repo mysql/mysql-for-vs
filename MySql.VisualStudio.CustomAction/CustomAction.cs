@@ -336,8 +336,6 @@ namespace MySql.VisualStudio.CustomAction
     {
       bool showWarning = false;
 
-      session.Log("Community: " + _vs2017CommunityInstallationPath);
-      
       // Read the ActivityLog from the user's AppData folder.
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
       {
@@ -354,7 +352,7 @@ namespace MySql.VisualStudio.CustomAction
 
       if (showWarning)
       {
-        string message = "Due to a known issue MySQL for Visual Studio may fail to load in VS. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
+        string message = "Due to a known issue, MySQL for Visual Studio may fail to load in VS. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
         session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
 
@@ -369,15 +367,13 @@ namespace MySql.VisualStudio.CustomAction
     /// <returns>True if the warning message should be displayed or if an error prevented from reading the ActivityLog, false otherwise.</returns>
     private static bool ReadActivityLog(string vs2017InstanceId, string appDataFolder, Session session)
     {
-      session.Log("Instance id: " + vs2017InstanceId);
-      session.Log("AppData folder: " + appDataFolder);
       try
       {
         var activityLog = string.Format("{0}Microsoft\\VisualStudio\\15.0_{1}\\ActivityLog.xml", appDataFolder, vs2017InstanceId);
-        session.Log("Activity log: " + activityLog);
+        session.Log("ActivityLog path: " + activityLog);
+
         if (File.Exists(activityLog))
         {
-          session.Log("File exists");
           var file = File.ReadAllText(activityLog);
           var document = new XmlDocument();
           document.LoadXml(file);
@@ -392,7 +388,7 @@ namespace MySql.VisualStudio.CustomAction
             var hrText = item.SelectSingleNode("hr").InnerText;
             if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESSDENIED"))
             {
-              session.Log("Error found: " + vs2017InstanceId);
+              session.Log("Error found in the ActivityLog. Warning message will be displayed for instance: " + vs2017InstanceId);
               return true;
             }
           }
@@ -403,7 +399,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       catch (Exception ex)
       {
-        session.Log("Exception: " + ex.Message);
+        session.Log("An exception was raised when attempting to read the ActivityLog: " + ex.Message);
         return true;
       }
     }
