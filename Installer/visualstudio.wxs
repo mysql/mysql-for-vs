@@ -787,7 +787,7 @@
 
 	<!-- Show warning message for Windows 7 users -->
 	<Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-	<CustomAction Id="Win7_ShowWarning" DllEntry="ShowInstallationWarning" BinaryKey="Win7Installation" Execute="deferred" Return="ignore" Impersonate="no" />
+	<CustomAction Id="Win7_ShowWarning" DllEntry="ShowInstallationWarning" BinaryKey="Win7Installation" Execute="immediate" Return="ignore" Impersonate="no" />
 
     <!-- Adding AutoLoadPackage option so our connections are available -->
     <DirectoryRef Id="INSTALLDIR">
