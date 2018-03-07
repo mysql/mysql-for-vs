@@ -1,4 +1,4 @@
-// Copyright (c) 2014, 2017, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -321,6 +321,19 @@ namespace MySql.VisualStudio.CustomAction
       return CreateDeleteRegKeyAndExtensionsFile(session, true) ? ActionResult.Success : ActionResult.Failure;
     }
     #endregion
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="session"></param>
+    /// <returns></returns>
+    public static ActionResult ShowInstallationWarning(Session session)
+    {
+      string message = "[WARNING]: If Visual Studio fails to load MySQL for Visual Studio proceed to manually execute the \"devenv /updateconfiguration\" command in the \"Developer Command Prompt for VS<year>\". Refer to MySQL for Visual Studio's documentation for additional details.";
+      session.Log(message);
+      session.Message(InstallMessage.Warning, new Record { FormatString = message });
+      return ActionResult.Success;
+    }
 
     /// <summary>
     /// Method to handle the registry key and the extensions file deletion, for all the supported Visual Studio versions.
