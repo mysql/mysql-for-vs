@@ -390,7 +390,7 @@ namespace MySql.VisualStudio.CustomAction
             if (errorNode.InnerText != "Error") continue;
 
             var hrText = item.SelectSingleNode("hr").InnerText;
-            if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESS_DENIED"))
+            if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESSDENIED"))
             {
               session.Log("Error found: " + vs2017InstanceId);
               return true;
