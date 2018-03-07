@@ -336,6 +336,8 @@ namespace MySql.VisualStudio.CustomAction
     {
       bool showWarning = false;
 
+      session.Log("Community: " + _vs2017CommunityInstallationPath);
+      
       // Read the ActivityLog from the user's AppData folder.
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
       {
