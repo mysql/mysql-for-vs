@@ -26,14 +26,15 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using Microsoft.Deployment.WindowsInstaller;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Setup.Configuration;
 using Microsoft.Win32;
 using MySQL.Utility.Classes;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Xml;
 
 namespace MySql.VisualStudio.CustomAction
 {
@@ -326,7 +327,7 @@ namespace MySql.VisualStudio.CustomAction
     #endregion
 
     /// <summary>
-    /// Displays a warning message for Win7 users.
+    /// Displays a warning message for Win7 users if the devenv /updateconfiguration command failed to execute.
     /// </summary>
     /// <param name="session">The session object containing the parameters sent by Wix.</param>
     /// <returns>Will return Failure status in case of any errors. Otherwise, Success</returns>
@@ -335,49 +336,61 @@ namespace MySql.VisualStudio.CustomAction
     {
       bool showWarning = false;
 
-      // Attempt to retrieve the ActivityLog from the user's AppData folder.
-      try
-      {
-        // Read entries for any ACCESS_DENIED errors.
-        if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
-        {
-          session.Log("Community: " + _vs2017CommunityInstanceId);
-
-          var activityLog = string.Format("{0}..\\Roaming\\Microsoft\\VisualStudio\\15_{1}", session["LocalAppDataFolder"], _vs2017CommunityInstanceId) ;
-
-          if (File.Exists(activityLog))
-          {
-            session.Log("ActivityLog found.");
-          }
-          else showWarning = true;
-        }
-
-        if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
-        {
-          session.Log("Enterprise: " + _vs2017EnterpriseInstanceId);
-        }
-
-        if (!string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
-        {
-          session.Log("Professional: " + _vs2017ProfessionalInstanceId);
-        }
-
-        session.Log("LocalAppDataFolder: " + session["LocalAppDataFolder"]);
-        showWarning = true;
-      }
-      catch (Exception)
-      {
-        showWarning = true;
-      }
+      // Read the ActivityLog from the user's AppData folder.
+      if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
+        showWarning = ReadActivityLog(_vs2017CommunityInstanceId, session["AppDataFolder"]);
+      else if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
+        showWarning = ReadActivityLog(_vs2017EnterpriseInstanceId, session["AppDataFolder"]);
+      else if (!string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
+        showWarning = ReadActivityLog(_vs2017ProfessionalInstanceId, session["AppDataFolder"]);
 
       if (showWarning)
       {
-        string message = "Due to a known issue MySQL for Visual Studio may fail to load the first time. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
-        //session.Log(message));
+        string message = "Due to a known issue MySQL for Visual Studio may fail to load in VS. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
         session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
 
       return ActionResult.Success;
+    }
+
+    /// <summary>
+    /// Reads the ActivityLog of the specified VS2017 instance.
+    /// </summary>
+    /// <param name="vs2017InstanceId">The instance id.</param>
+    /// <param name="appDataFolder">The path to the user's app data folder.</param>
+    /// <returns>True if the warning message should be displayed or if an error prevented from reading the ActivityLog, false otherwise.</returns>
+    private static bool ReadActivityLog(string vs2017InstanceId, string appDataFolder)
+    {
+      try
+      {
+        var activityLog = string.Format("{0}Microsoft\\VisualStudio\\15.0_{1}\\ActivityLog.xml", appDataFolder, vs2017InstanceId);
+ 
+        if (File.Exists(activityLog))
+        {
+          var file = File.ReadAllText(activityLog);
+          var document = new XmlDocument();
+          document.LoadXml(file);
+          var entries = document.DocumentElement.SelectNodes("/activity/entry");
+
+          // Read entries for ACCESS_DENIED errors.
+          foreach (XmlNode item in entries)
+          {
+            var errorNode = item.SelectSingleNode("type");
+            if (errorNode.InnerText != "Error") continue;
+
+            var hrText = item.SelectSingleNode("hr").InnerText;
+            if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESS_DENIED"))
+              return true;
+          }
+        }
+        else return true;
+
+        return false;
+      }
+      catch (Exception)
+      {
+        return true;
+      }
     }
 
     /// <summary>
