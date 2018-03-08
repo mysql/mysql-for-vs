@@ -1,4 +1,7 @@
 1.2.8
+- Fixed a bug in which the installation would roll back when Visual Studio 2017 failed to execute devenv commands. This is a
+  known issue in Windows 7 environments caused by faulty user permissions. The installer was modified to display a warning message
+  in such cases with instructions on how to proceed (MySql Bug #87902, Oracle bug Bug #27365261).
 - Fixed a bug that prevented the MySql.Web assembly from being loaded when using the MySQL Website Configuration Tool
   due to an incorrect way of identifying the assembly version (MySql Bug #89446, Oracle bug Bug #27450530).
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, 2017, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,14 +26,15 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using Microsoft.Deployment.WindowsInstaller;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Setup.Configuration;
 using Microsoft.Win32;
 using MySQL.Utility.Classes;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Xml;
 
 namespace MySql.VisualStudio.CustomAction
 {
@@ -72,6 +73,9 @@ namespace MySql.VisualStudio.CustomAction
     private static string _vs2017ProfessionalInstallationPath;
     private static string _VS2017ProfessionalX64ExtensionsFilePath;
     private static string _VS2017ProfessionalX86ExtensionsFilePath;
+    private static string _vs2017CommunityInstanceId;
+    private static string _vs2017EnterpriseInstanceId;
+    private static string _vs2017ProfessionalInstanceId;
     #endregion
 
     /// <summary>
@@ -321,6 +325,84 @@ namespace MySql.VisualStudio.CustomAction
       return CreateDeleteRegKeyAndExtensionsFile(session, true) ? ActionResult.Success : ActionResult.Failure;
     }
     #endregion
+
+    /// <summary>
+    /// Displays a warning message for Win7 users if the devenv /updateconfiguration command failed to execute.
+    /// </summary>
+    /// <param name="session">The session object containing the parameters sent by Wix.</param>
+    /// <returns>An <see cref="ActionResult.Success"> object since the results of the code executed in this method are irrelevant to the overall installation process."</returns>
+    [CustomAction]
+    public static ActionResult ShowInstallationWarning(Session session)
+    {
+      bool showWarning = false;
+
+      // Read the ActivityLog from the user's AppData folder.
+      if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
+      {
+        showWarning = ReadActivityLog(_vs2017CommunityInstanceId, session["AppDataFolder"], session);
+      }
+      else if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
+      {
+        showWarning = ReadActivityLog(_vs2017EnterpriseInstanceId, session["AppDataFolder"], session);
+      }
+      else if (!string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
+      {
+        showWarning = ReadActivityLog(_vs2017ProfessionalInstanceId, session["AppDataFolder"], session);
+      }
+
+      if (showWarning)
+      {
+        string message = "WARNING: The \"devenv /updateconfiguration\" command may have failed to execute succesfully preventing Visual Studio from registering changes done to MySQL for Visual Studio. To continue, run the command manually using \"Developer Command Prompt for VS\". For additional details, see the product documentation.";
+        session.Message(InstallMessage.Warning, new Record { FormatString = message });
+      }
+
+      return ActionResult.Success;
+    }
+
+    /// <summary>
+    /// Reads the ActivityLog of the specified VS2017 instance.
+    /// </summary>
+    /// <param name="vs2017InstanceId">The instance id.</param>
+    /// <param name="appDataFolder">The path to the user's app data folder.</param>
+    /// <returns><c>True</c> if the warning message should be displayed or if an error prevented from reading the ActivityLog; otherwise, <c>false</c>.</returns>
+    private static bool ReadActivityLog(string vs2017InstanceId, string appDataFolder, Session session)
+    {
+      try
+      {
+        var activityLog = string.Format("{0}Microsoft\\VisualStudio\\15.0_{1}\\ActivityLog.xml", appDataFolder, vs2017InstanceId);
+        session.Log("ActivityLog path: " + activityLog);
+
+        if (File.Exists(activityLog))
+        {
+          var file = File.ReadAllText(activityLog);
+          var document = new XmlDocument();
+          document.LoadXml(file);
+          var entries = document.DocumentElement.SelectNodes("/activity/entry");
+
+          // Read entries for ACCESS_DENIED errors.
+          foreach (XmlNode item in entries)
+          {
+            var errorNode = item.SelectSingleNode("type");
+            if (errorNode.InnerText != "Error") continue;
+
+            var hrText = item.SelectSingleNode("hr").InnerText;
+            if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESSDENIED"))
+            {
+              session.Log("Error found in the ActivityLog. Warning message will be displayed for instance: 15.0_" + vs2017InstanceId);
+              return true;
+            }
+          }
+        }
+        else return true;
+
+        return false;
+      }
+      catch (Exception ex)
+      {
+        session.Log("An exception was raised when attempting to read the ActivityLog: " + ex.Message);
+        return true;
+      }
+    }
 
     /// <summary>
     /// Method to handle the registry key and the extensions file deletion, for all the supported Visual Studio versions.
@@ -584,16 +666,19 @@ namespace MySql.VisualStudio.CustomAction
               if (flavor == "Microsoft.VisualStudio.Product.Community" && string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
               {
                 _vs2017CommunityInstallationPath = vsInstance.GetInstallationPath();
+                _vs2017CommunityInstanceId = vsInstance.GetInstanceId();
               }
 
               if (flavor == "Microsoft.VisualStudio.Product.Enterprise" && string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
               {
                 _vs2017EnterpriseInstallationPath = vsInstance.GetInstallationPath();
+                _vs2017EnterpriseInstanceId = vsInstance.GetInstanceId();
               }
 
               if (flavor == "Microsoft.VisualStudio.Product.Professional" && string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
               {
                 _vs2017ProfessionalInstallationPath = vsInstance.GetInstallationPath();
+                _vs2017ProfessionalInstanceId = vsInstance.GetInstanceId();
               }
             }
           }
