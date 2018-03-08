@@ -330,7 +330,7 @@ namespace MySql.VisualStudio.CustomAction
     /// Displays a warning message for Win7 users if the devenv /updateconfiguration command failed to execute.
     /// </summary>
     /// <param name="session">The session object containing the parameters sent by Wix.</param>
-    /// <returns>Will return Failure status in case of any errors. Otherwise, Success</returns>
+    /// <returns>An <see cref="ActionResult.Success"> object since the results of the code executed in this method are irrelevant to the overall installation process."</returns>
     [CustomAction]
     public static ActionResult ShowInstallationWarning(Session session)
     {
@@ -352,7 +352,7 @@ namespace MySql.VisualStudio.CustomAction
 
       if (showWarning)
       {
-        string message = "Due to a known issue, MySQL for Visual Studio may fail to load in VS. If this is the case close VS and proceed to manually execute the \"devenv /updateconfiguration\" command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
+        string message = "[WARNING]: The \"devenv /updateconfiguration\" command may have failed to execute succesfully, this may prevent VS from registering changes done to MySQL for Visual Studio. We recommend to manually run the command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
         session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
 
@@ -364,7 +364,7 @@ namespace MySql.VisualStudio.CustomAction
     /// </summary>
     /// <param name="vs2017InstanceId">The instance id.</param>
     /// <param name="appDataFolder">The path to the user's app data folder.</param>
-    /// <returns>True if the warning message should be displayed or if an error prevented from reading the ActivityLog, false otherwise.</returns>
+    /// <returns><c>True</c> if the warning message should be displayed or if an error prevented from reading the ActivityLog; otherwise, <c>false</c>.</returns>
     private static bool ReadActivityLog(string vs2017InstanceId, string appDataFolder, Session session)
     {
       try
