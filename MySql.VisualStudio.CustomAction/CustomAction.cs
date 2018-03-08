@@ -352,7 +352,7 @@ namespace MySql.VisualStudio.CustomAction
 
       if (showWarning)
       {
-        string message = "WARNING: The \"devenv /updateconfiguration\" command may have failed to execute succesfully preventing VS from registering changes done to MySQL for Visual Studio. It's recommended to manually run the command using the \"Developer Command Prompt for VS\". Refer to this product's documentation for additional details.";
+        string message = "WARNING: The \"devenv /updateconfiguration\" command may have failed to execute succesfully preventing Visual Studio from registering changes done to MySQL for Visual Studio. To continue, run the command manually using \"Developer Command Prompt for VS\". For additional details, see the product documentation.";
         session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
 
