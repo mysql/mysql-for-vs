@@ -352,7 +352,7 @@ namespace MySql.VisualStudio.CustomAction
 
       if (showWarning)
       {
-        string message = "[WARNING]: The \"devenv /updateconfiguration\" command may have failed to execute succesfully, this may prevent VS from registering changes done to MySQL for Visual Studio. We recommend to manually run the command using the \"Developer Command Prompt for VS\" tool. Refer to this product's documentation for additional details.";
+        string message = "WARNING: The \"devenv /updateconfiguration\" command may have failed to execute succesfully, this may prevent VS from registering changes done to MySQL for Visual Studio. We recommend to manually run the command using the \"Developer Command Prompt for VS\". Refer to this product's documentation for additional details.";
         session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
 
@@ -388,7 +388,7 @@ namespace MySql.VisualStudio.CustomAction
             var hrText = item.SelectSingleNode("hr").InnerText;
             if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESSDENIED"))
             {
-              session.Log("Error found in the ActivityLog. Warning message will be displayed for instance: " + vs2017InstanceId);
+              session.Log("Error found in the ActivityLog. Warning message will be displayed for instance: 15.0_" + vs2017InstanceId);
               return true;
             }
           }
