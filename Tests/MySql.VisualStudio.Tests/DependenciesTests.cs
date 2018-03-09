@@ -36,7 +36,7 @@ namespace MySql.VisualStudio.Tests
   public static class Dependencies
   {
     public const string C_NET_VERSIONV40 = "6.9.8.0";
-    public const string C_NET_VERSIONV45= "6.10.6.0";
+    public const string C_NET_VERSIONV45= "6.10.7.0";
   }
 
   public class DependenciesTests
