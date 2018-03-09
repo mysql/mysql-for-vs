@@ -29,7 +29,7 @@
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.Setup.Configuration;
 using Microsoft.Win32;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 using System;
 using System.IO;
 using System.Reflection;
@@ -192,7 +192,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL for Visual Studio");
+      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL for Visual Studio");
 
       if (string.IsNullOrEmpty(installedPath))
       {
@@ -240,7 +240,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult GetConnectorNetVersion(Session session)
     {
-      var installedPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
 
       session["CNETINSTALLED"] = "0";
       session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
