@@ -186,7 +186,7 @@
     <Reference Include="MySql.Web, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\..\Dependencies\v4.0\Release\MySql.Web.dll</HintPath>
     </Reference>
-    <Reference Include="MySQL.Utility, Version=7.4.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+    <Reference Include="MySQL.Utility, Version=7.0.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
     </Reference>
