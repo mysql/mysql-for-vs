@@ -19,8 +19,10 @@
 
     <DirectoryRef Id="VS12_DBGenDir">
       <Component Id="EF.T4.VS12" Guid="6555D339-120C-4D62-B60C-08764D8CA741">
-        <File Id="VS12.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL.tt"/>
+        <File Id="VS12.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL6.tt"/>
+	    <File Id="VS12.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL8.tt"/>
         <File Id="VS12.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\GenerateMySQL.Utility.ttinclude"/>
       </Component>
@@ -35,8 +37,10 @@
 
     <DirectoryRef Id="VS14_DBGenDir">
       <Component Id="EF.T4.VS14" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
-        <File Id="VS14.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL.tt"/>
+        <File Id="VS14.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL6.tt"/>
+	    <File Id="VS14.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL8.tt"/>
         <File Id="VS14.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
       </Component>
@@ -52,8 +56,10 @@
     <!-- Visual Studio 2017 Community -->
     <DirectoryRef Id="VS15_DBGenDir">
       <Component Id="EF.T4.VS15" Guid="ED507732-B12D-4B8E-AE91-A231DBE153BE">
-        <File Id="VS15.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL.tt"/>
+        <File Id="VS15.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
+	    <File Id="VS15.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
       </Component>
@@ -69,8 +75,10 @@
     <!-- Visual Studio 2017 Enterprise -->
     <DirectoryRef Id="VS15_Ent_DBGenDir">
       <Component Id="EF.T4.VS15.ENT" Guid="E11D288F-5CF1-4D51-9756-FEC0833A454A">
-        <File Id="VS15.Ent.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL.tt"/>
+        <File Id="VS15.Ent.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
+	    <File Id="VS15.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.Ent.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
       </Component>
@@ -86,8 +94,10 @@
     <!-- Visual Studio 2017 Professional -->
     <DirectoryRef Id="VS15_Pro_DBGenDir">
       <Component Id="EF.T4.VS15.PRO" Guid="E73E9892-0FBC-4E85-9736-0DCCA0693074">
-        <File Id="VS15.Pro.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL.tt"/>
+        <File Id="VS15.Pro.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
+	    <File Id="VS15.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.Pro.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
       </Component>

@@ -202,7 +202,7 @@ namespace MySql.Data.VisualStudio
 
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
 #if NET_45_OR_GREATER
-      string mySqlConnectorAssembliesVersion = "v4.5";
+      string mySqlConnectorAssembliesVersion = "v4.5.2";
 #else
       string mySqlConnectorAssembliesVersion = "v4.0";
 #endif
