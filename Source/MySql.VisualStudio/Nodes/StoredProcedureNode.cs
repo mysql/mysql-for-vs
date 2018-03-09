@@ -181,7 +181,17 @@ namespace MySql.Data.VisualStudio
       try
       {
         DbCommand cmd = MySqlProviderObjectFactory.Factory.CreateCommand();
-        cmd.Connection = conn;
+        try
+        {
+          cmd.Connection = conn;
+        }
+        catch (InvalidCastException)
+        {
+          cmd.Connection = MySqlProviderObjectFactory.Factory.CreateConnection();
+          cmd.Connection.ConnectionString = conn.ConnectionString;
+          if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
+        }
+
         cmd.CommandText = sql;
         using (DbDataReader reader = cmd.ExecuteReader())
         {
@@ -189,6 +199,7 @@ namespace MySql.Data.VisualStudio
           sql_mode = reader.GetString(1);
           body = reader.GetString(2);
         }
+
         return body;
       }
       finally
