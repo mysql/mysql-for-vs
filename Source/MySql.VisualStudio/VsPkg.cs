@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -40,7 +40,7 @@ using System.Reflection;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
 using MySql.Data.VisualStudio.Editors;
-using MySQL.Utility;
+using MySql.Utility;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.Services;
 using Microsoft.VisualStudio.Data.Interop;
@@ -54,8 +54,8 @@ using MySql.Data.MySqlClient;
 using System.Text;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.DBExport;
-using MySQL.Utility.Classes;
-using MySQL.Utility.Classes.MySQLWorkbench;
+using MySql.Utility.Classes;
+using MySql.Utility.Classes.MySqlWorkbench;
 using System.IO;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Wizards;
@@ -206,7 +206,7 @@ namespace MySql.Data.VisualStudio
 #else
       string mySqlConnectorAssembliesVersion = "v4.0";
 #endif
-      string mySqlConnectorPath = Utility.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      string mySqlConnectorPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
       mySqlConnectorPath = !string.IsNullOrEmpty(mySqlConnectorPath)
                             ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
                             : string.Empty;
@@ -290,7 +290,7 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
 
       ////this feature can be shown only if Connector/Net is installed too
-      if (String.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Connector/Net")))
+      if (String.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
         return;
 
       DTE dte = GetService(typeof(DTE)) as DTE;
@@ -353,7 +353,7 @@ namespace MySql.Data.VisualStudio
             if (window == null || window.Frame == null)
               throw new Exception("Cannot create a new window for data export");
 
-            window.Caption = Resources.DbExportToolCaptionFrame;
+            window.Caption = Properties.Resources.DbExportToolCaptionFrame;
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
 
@@ -385,9 +385,9 @@ namespace MySql.Data.VisualStudio
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      if (String.IsNullOrEmpty(Utility.GetMySqlAppInstallLocation("MySQL Utilities")))
+      if (String.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Utilities")))
       {
-        var pathWorkbench = Utility.GetMySqlAppInstallLocation("Workbench");
+        var pathWorkbench = Utilities.GetMySqlAppInstallLocation("Workbench");
         var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
 
         if (!Directory.Exists(pathUtilities))
@@ -616,7 +616,7 @@ namespace MySql.Data.VisualStudio
       var parameters = new ConnectionParameters();
       parameters.UserId = connStringBuilder.UserID;
       parameters.HostName = connStringBuilder.Server;
-      parameters.HostIPv4 = Utility.GetIPv4ForHostName(connStringBuilder.Server);
+      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(connStringBuilder.Server);
       parameters.Port = Convert.ToInt32(connStringBuilder.Port);
       parameters.DataBaseName = connStringBuilder.Database;
       parameters.NamedPipesEnabled = String.IsNullOrEmpty(connStringBuilder.PipeName) ? false : true;
@@ -633,24 +633,24 @@ namespace MySql.Data.VisualStudio
       {
         foreach (MySqlWorkbenchConnection c in filteredConnections)
         {
-          switch (c.DriverType)
+          switch (c.ConnectionMethod)
           {
 
-            case MySqlWorkbenchConnectionType.NamedPipes:
-              if (!parameters.NamedPipesEnabled || String.Compare(c.Socket, parameters.PipeName, true) != 0) continue;
+            case MySqlWorkbenchConnection.ConnectionMethodType.LocalUnixSocketOrWindowsPipe:
+              if (!parameters.NamedPipesEnabled || String.Compare(c.UnixSocketOrWindowsPipe, parameters.PipeName, true) != 0) continue;
               break;
-            case MySqlWorkbenchConnectionType.Ssh:
+            case MySqlWorkbenchConnection.ConnectionMethodType.Ssh:
               continue;
-            case MySqlWorkbenchConnectionType.Tcp:
+            case MySqlWorkbenchConnection.ConnectionMethodType.Tcp:
               if (c.Port != parameters.Port) continue;
               break;
-            case MySqlWorkbenchConnectionType.Unknown:
+            case MySqlWorkbenchConnection.ConnectionMethodType.Unknown:
               continue;
           }
 
-          if (!Utility.IsValidIpAddress(c.Host)) //matching connections by Ip
+          if (!Utilities.IsValidIpAddress(c.Host)) //matching connections by Ip
           {
-            if (Utility.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
+            if (Utilities.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
           }
           else
           {
@@ -729,13 +729,13 @@ namespace MySql.Data.VisualStudio
 
     int IVsInstalledProduct.OfficialName(out string pbstrName)
     {
-      pbstrName = Resources.ProductName;
+      pbstrName = Properties.Resources.ProductName;
       return VSConstants.S_OK;
     }
 
     int IVsInstalledProduct.ProductDetails(out string pbstrProductDetails)
     {
-      pbstrProductDetails = Resources.ProductDetails;
+      pbstrProductDetails = Properties.Resources.ProductDetails;
       return VSConstants.S_OK;
     }
 

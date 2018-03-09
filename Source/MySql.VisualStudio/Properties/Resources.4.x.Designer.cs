@@ -3182,6 +3182,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to parse SQL script. See below for additional details: {0}.
+        /// </summary>
+        public static string UnableToParseScript {
+            get {
+                return ResourceManager.GetString("UnableToParseScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to retrieve the list of databases.
         /// </summary>
         public static string UnableToRetrieveDatabaseList {

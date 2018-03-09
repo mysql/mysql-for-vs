@@ -2,8 +2,13 @@
 CREATE DATABASE {0};
 USE {0};
 
-GRANT ALL ON `{0}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL ON `{0}`.* to 'test'@'%' IDENTIFIED BY 'test';
+DROP USER IF EXISTS test@localhost;
+DROP USER IF EXISTS test@'%';
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON {0}.* to 'test'@'localhost';
+CREATE USER 'test'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON {0}.* to 'test'@'%';
 
 FLUSH PRIVILEGES;
 
@@ -58,8 +63,13 @@ DROP DATABASE IF EXISTS {1};
 CREATE DATABASE {1};
 USE {1};
 
-GRANT ALL ON `{1}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL ON `{1}`.* to 'test'@'%' IDENTIFIED BY 'test';
+DROP USER IF EXISTS test@localhost;
+DROP USER IF EXISTS test@'%';
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON {1}.* to 'test'@'localhost';
+CREATE USER 'test'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON {1}.* to 'test'@'%';
 
 FLUSH PRIVILEGES;
 
@@ -96,8 +106,13 @@ DROP DATABASE IF EXISTS {2};
 CREATE DATABASE {2};
 USE {2};
 
-GRANT ALL ON `{2}`.* to 'test'@'localhost' IDENTIFIED BY 'test';
-GRANT ALL ON `{2}`.* to 'test'@'%' IDENTIFIED BY 'test';
+DROP USER IF EXISTS test@localhost;
+DROP USER IF EXISTS test@'%';
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+GRANT ALL ON {2}.* to 'test'@'localhost';
+CREATE USER 'test'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON {2}.* to 'test'@'%';
 
 FLUSH PRIVILEGES;
 

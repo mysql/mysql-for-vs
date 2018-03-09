@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -499,12 +499,12 @@ namespace MySql.Data.VisualStudio
         List<string> types = new List<string>(dataTypes.Length);
         types.AddRange(Metadata.GetDataTypes(false));
         if (types.Contains(typeToAdd.ToLowerInvariant()))
-        {
-          TypeColumn.Items.Add(type);          
+        {        
+          TypeColumn.Items.Add(type);
         }
         else
         {
-          MessageBox.Show(Resources.InvalidDataType, Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+          MessageBox.Show(Properties.Resources.InvalidDataType, Properties.Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
           columnGrid.CurrentCell.Value = dataTypes[0];
           columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
           columnGrid.CurrentCell.Selected = true;

@@ -60,14 +60,14 @@
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '12.0'">
       <PropertyGroup>
-        <Framework>4.5.1</Framework>
-        <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+        <Framework>4.5.2</Framework>
+        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup>
-        <Framework>4.5</Framework>
-        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+        <Framework>4.5.2</Framework>
+        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
       </PropertyGroup>
     </When>
   </Choose>

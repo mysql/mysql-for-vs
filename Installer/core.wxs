@@ -55,7 +55,17 @@
         <File Id="MySqldumpx86File" Name="mysqldump.exe"
               Source="..\Dependencies\MySql\mysqldump.exe" DiskId="1"/>
         <RemoveFile Id="MySqldumpx86File" Name="mysqldump.exe" On="uninstall"/>
-      </Component>      
+      </Component>
+	  <Component Id="Libeay32" Guid="415B798F-9B11-4BC9-BE09-9B9EB31E45E0" >
+        <File Id="libeay32File" Name="libeay32.dll"
+              Source="..\Dependencies\MySql\libeay32.dll" DiskId="1"/>
+        <RemoveFile Id="Libeay32File" Name="libeay32.dll" On="uninstall"/>
+      </Component>
+      <Component Id="Ssleay32" Guid="1FB3BE11-0C4C-4653-A975-48D1A4361FBE" >
+        <File Id="Ssleay32File" Name="ssleay32.dll"
+              Source="..\Dependencies\MySql\ssleay32.dll" DiskId="1"/>
+        <RemoveFile Id="Ssleay32File" Name="ssleay32.dll" On="uninstall"/>
+      </Component>
     </DirectoryRef>
 
     <!-- Start menu junk -->
@@ -89,6 +99,8 @@
       <ComponentRef Id="RegistryInstallFlag32"/> -->
       <ComponentRef Id="PerfMon"/>
       <ComponentRef Id="MySqldumpx86"/>
+	  <ComponentRef Id="Libeay32"/>
+	  <ComponentRef Id="Ssleay32"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
 

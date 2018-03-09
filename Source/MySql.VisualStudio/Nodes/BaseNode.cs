@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -166,14 +166,14 @@ namespace MySql.Data.VisualStudio
 
     public virtual string SchemaCollection
     {
-      get { return NodeId + "s"; }
+      get{ return NodeId!="UDF" ? NodeId + "s" : NodeId; }
     }
 
     public virtual string LocalizedTypeString
     {
       get
       {
-        return Resources.ResourceManager.GetString("Type_" + NodeId);
+        return Properties.Resources.ResourceManager.GetString("Type_" + NodeId);
       }
     }
 
@@ -259,8 +259,8 @@ namespace MySql.Data.VisualStudio
       string typeString = LocalizedTypeString.ToLower(CultureInfo.CurrentCulture);
 
       DialogResult result = MessageBox.Show(String.Format(
-          Resources.DropConfirmation, typeString, Name),
-          String.Format(Resources.DropConfirmationCaption, typeString),
+          Properties.Resources.DropConfirmation, typeString, Name),
+          String.Format(Properties.Resources.DropConfirmationCaption, typeString),
           MessageBoxButtons.YesNo,
           MessageBoxIcon.Question);
       if (result == DialogResult.No)
@@ -277,8 +277,8 @@ namespace MySql.Data.VisualStudio
       catch (Exception ex)
       {
         MessageBox.Show(
-            String.Format(Resources.ErrorAttemptingToDrop,
-            LocalizedTypeString, Name, ex.Message), Resources.ErrorTitle,
+            String.Format(Properties.Resources.ErrorAttemptingToDrop,
+            LocalizedTypeString, Name, ex.Message), Properties.Resources.ErrorTitle,
             MessageBoxButtons.OK, MessageBoxIcon.Error);
         throw new OperationCanceledException();
       }

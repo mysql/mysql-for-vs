@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -32,7 +32,6 @@ using Microsoft.VisualStudio.Data.AdoDotNet;
 using Microsoft.VisualStudio.Data;
 using System.Data.Common;
 using Microsoft.Win32;
-using MySQL.Utility;
 using System.Reflection;
 using System.IO;
 
@@ -72,8 +71,7 @@ namespace MySql.Data.VisualStudio
       get
       {
 #if DEBUG
-        //return System.IO.Path.Combine(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v4.0\Release\MySql.Data.dll");
-        return "C:\\Code\\mysql-for-vs\\Dependencies\\v4.0\\Release\\MySql.Data.dll";
+        return System.IO.Path.Combine(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..")), @"Dependencies\v4.0\Release\MySql.Data.dll");
 #else
         return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"PrivateAssemblies\MySql.Data.dll");
 #endif

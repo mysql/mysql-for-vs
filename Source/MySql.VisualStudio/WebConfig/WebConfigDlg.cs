@@ -1,4 +1,4 @@
-// Copyright (c) 2009, 2017, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2009, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -76,6 +76,9 @@ namespace MySql.Data.VisualStudio.WebConfig
                                                               { "txtUserTable", "User Table" },
                                                               { "txtUserIdCol", "User Id Column" },
                                                               { "txtUserNameCol", "User Name Column" } };
+
+    private Version _connectorVersion;
+
     private bool IsSimpleMembershipPage
     {
       get { return page == SimpleMembershipIndex; }
@@ -88,6 +91,8 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     public WebConfigDlg()
     {
+      var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(6,9,12);
       InitializeComponent();
       CreateStepsLabels();
       SetSelectedStepLabel(pagesDescription[0]);
@@ -315,7 +320,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (ArgumentException)
       {
-        MessageBox.Show(this, Resources.ConnectionStringInvalid, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(this, Properties.Resources.ConnectionStringInvalid, Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
@@ -412,6 +417,8 @@ namespace MySql.Data.VisualStudio.WebConfig
         EntityFrameworkOptions options = ((EntityFrameworkConfig)pages[ENTITYFRAMEWORK_INDEX].ProviderConfig).EntityFrameworkOptions;
         radioBtnEF5.Checked = options.EF5;
         radioBtnEF6.Checked = options.EF6;
+        if (_connectorVersion >= new Version(6, 10))
+          radioBtnEF5.Enabled = false;
       }
       else
       {
@@ -583,7 +590,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (ArgumentException)
       {
-        MessageBox.Show(this, Resources.ConnectionStringInvalid, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(this, Properties.Resources.ConnectionStringInvalid, Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
     }
 
@@ -593,7 +600,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         if (useProvider.Checked && !radioBtnEF5.Checked && !radioBtnEF6.Checked)
         {
-          MessageBox.Show(this, "Please select the Entity Framework version.", Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(this, "Please select the Entity Framework version.", Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
           return false;
         }
       }
@@ -603,7 +610,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         {
           if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
           {
-            MessageBox.Show(this, Resources.WebConfigConnStrNoEmpty, Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, Properties.Resources.WebConfigConnStrNoEmpty, Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
           }
         }
@@ -630,8 +637,8 @@ namespace MySql.Data.VisualStudio.WebConfig
             if (!valid)
             {
               controlsToValidate = (controlsToValidate += ".").Replace(", .", ".");
-              MessageBox.Show(this, string.Format("{0}: {1}", Resources.WrongNetFxVersionMessage, controlsToValidate),
-                                      Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+              MessageBox.Show(this, string.Format("{0}: {1}", Properties.Resources.WrongNetFxVersionMessage, controlsToValidate),
+                                      Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
               return false;
             }
           }

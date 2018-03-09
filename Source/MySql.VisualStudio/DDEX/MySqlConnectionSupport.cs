@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -136,7 +136,7 @@ namespace MySql.Data.VisualStudio
         // If can't prompt user for new authentication data, re-throw exception
         if (string.IsNullOrEmpty(base.Connection.ConnectionString))
           // If missing server & user, throw a more friendly error message
-          throw new Exception( Resources.MissingServerAndUser, ex );
+          throw new Exception(Properties.Resources.MissingServerAndUser, ex );
         throw;
       }
 

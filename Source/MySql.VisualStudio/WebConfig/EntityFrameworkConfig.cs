@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -60,6 +60,8 @@ namespace MySql.Data.VisualStudio.WebConfig
   /// </summary>
   internal enum TargetFramework
   {
+    Fx461 = 262406,
+    Fx46 = 262150,
     Fx452 = 262661,
     Fx451 = 262405,
     Fx45 = 262149,
@@ -77,8 +79,8 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string EF5Version = "5.0.0";
     private const string EF6Version = "6.1.3";
     private const string mySQLData = "MySql.Data";
-    private const string mySQLEF = "MySql.Data.Entity";
-    private const string mySQLEF5Version = "6.7.8";
+    private const string mySQLEF5Version = "6.9.12";
+    private string _mySQLEF = "MySql.Data.Entity";
     private string _mySQLEF6Version;
 
     /// <summary>
@@ -93,6 +95,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       _mySQLEF6Version = factory != null
         ? factory.GetType().Assembly.GetName().Version.ToString(3)
         : mySQLEF5Version;
+      if (_mySQLEF6Version.StartsWith("8")) _mySQLEF = "MySql.Data.EntityFramework";
     }
 
     /// <summary>
@@ -228,21 +231,32 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         activeProj = (Project)activeProjects.GetValue(0);
         vsProj = activeProj.Object as VSProject;
+
+        // Remove reference to MySql.Data.
         if (vsProj.References.Find(mySQLData) != null)
         {
           vsProj.References.Find(mySQLData).Remove();
         }
 
-        if (vsProj.References.Find(string.Format("{0}.EF5", mySQLEF)) != null)
+        // Remove reference to MySql.Data.Entity.EF5.
+        if (vsProj.References.Find(string.Format("{0}.EF5", _mySQLEF)) != null)
         {
-          vsProj.References.Find(string.Format("{0}.EF5", mySQLEF)).Remove();
+          vsProj.References.Find(string.Format("{0}.EF5", _mySQLEF)).Remove();
         }
 
-        if (vsProj.References.Find(string.Format("{0}.EF6", mySQLEF)) != null)
+        // Remove reference to MySql.Data.Entity.EF6.
+        if (vsProj.References.Find(string.Format("{0}.EF6", _mySQLEF)) != null)
         {
-          vsProj.References.Find(string.Format("{0}.EF6", mySQLEF)).Remove();
+          vsProj.References.Find(string.Format("{0}.EF6", _mySQLEF)).Remove();
         }
 
+        // Remove reference to MySql.Data.EntityFramework.
+        if (vsProj.References.Find(_mySQLEF) != null)
+        {
+          vsProj.References.Find(_mySQLEF).Remove();
+        }
+
+        // Remove EF references.
         if (removeEFReferences)
         {
           if (vsProj.References.Find("EntityFramework") != null)
@@ -280,10 +294,10 @@ namespace MySql.Data.VisualStudio.WebConfig
         switch (EFVersion)
         {
           case EF5Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, mySQLEF5Version, true);
+            AddNugetPackage(vsProj, projectPath, NetFxVersion, "MySql.Data.Entity", mySQLEF5Version, true);
             break;
           case EF6Version:
-            AddNugetPackage(vsProj, projectPath, NetFxVersion, mySQLEF, _mySQLEF6Version, true);
+            AddNugetPackage(vsProj, projectPath, NetFxVersion, _mySQLEF, _mySQLEF6Version, true);
             break;
           default:
             throw new Exception("Not supported Entity Framework version.");
@@ -310,6 +324,8 @@ namespace MySql.Data.VisualStudio.WebConfig
         case TargetFramework.Fx45: return "4.5";
         case TargetFramework.Fx451: return "4.5.1";
         case TargetFramework.Fx452: return "4.5.2";
+        case TargetFramework.Fx46: return "4.6";
+        case TargetFramework.Fx461: return "4.6.1";
       }
 
       return string.Empty;
@@ -348,6 +364,13 @@ namespace MySql.Data.VisualStudio.WebConfig
         MethodInfo miInstallPackage = packageManagerType.GetMethod("InstallPackage", new Type[] { typeof(string), System.Reflection.Assembly.Load("nuget.core").GetType("NuGet.SemanticVersion") });
         string packageID = PackageName;
         MethodInfo miParse = nugetAssembly.GetType("NuGet.SemanticVersion").GetMethod("Parse");
+
+        // Special condition to handle NuGet package suffixes
+        if (PackageName.StartsWith("MySql.Data"))
+        {
+          if (Version == "8.0.10") Version += "-rc";
+        }
+
         object semanticVersion = miParse.Invoke(null, new object[] { Version });
         miInstallPackage.Invoke(packageManager, new object[] { packageID, semanticVersion });
 #endif
@@ -376,13 +399,28 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       string efPath = Path.Combine("packages", string.Format("{0}.{1}\\lib", PackageName, Version));
       string packagePath = Path.Combine(BasePath, efPath);
-      if (NetFxVersion.StartsWith("4.5"))
+
+      // Remove suffix from Version if it has one.
+      int suffixStartIndex = Version.IndexOf('-');
+      if (suffixStartIndex != -1) Version = Version.Substring(0, suffixStartIndex);
+
+      if (NetFxVersion.StartsWith("4.5") || NetFxVersion.StartsWith("4.6"))
       {
-        packagePath = Path.Combine(packagePath, "net45");
+        // If .NET version is greater than 4.5 then extract the version numnber from NetFxVersion variable.
+        packagePath = Path.Combine(
+          packagePath,
+          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version && !Version.StartsWith("6.9") ?
+                      "452" :
+                      "45"));
       }
       else if (NetFxVersion.StartsWith("4.0"))
       {
-        packagePath = Path.Combine(packagePath, "net40");
+        // If .NET version is greater than 4.0 then extract the version numnber from NetFxVersion variable.
+        packagePath = Path.Combine(
+          packagePath,
+          "net" + ((PackageName==mySQLData || PackageName==_mySQLEF) && Version==_mySQLEF6Version && !Version.StartsWith("6.9") ?
+                      NetFxVersion.Replace(".", "") :
+                      "40"));
       }
       else
       {
@@ -390,7 +428,8 @@ namespace MySql.Data.VisualStudio.WebConfig
                               NetFxVersion));
       }
 
-      if (PackageName.Contains(mySQLEF))
+      // Applies for MySql.Data.Entity.EF5 and EF6 packages.
+      if (PackageName == "MySql.Data.Entity")
       {
         if (Version == mySQLEF5Version)
         {
@@ -402,6 +441,7 @@ namespace MySql.Data.VisualStudio.WebConfig
           packagePath = Path.Combine(packagePath, PackageName + ".EF6.dll");
         }
       }
+      // Applies for MySql.Data.Entity.Framework and EF packages.
       else
       {
         packagePath = Path.Combine(packagePath, PackageName + ".dll");

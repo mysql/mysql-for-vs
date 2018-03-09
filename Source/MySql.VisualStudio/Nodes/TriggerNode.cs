@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -196,7 +196,7 @@ namespace MySql.Data.VisualStudio
       if (table != null && newTable != null &&
           newTable.ToLowerInvariant() != table.ToLowerInvariant())
         throw new InvalidOperationException(
-            String.Format(Resources.AlterTriggerOnWrongTable, Name, newTable));
+            String.Format(Properties.Resources.AlterTriggerOnWrongTable, Name, newTable));
     }
 
     private string GetTargetedTable(string sql)
@@ -235,7 +235,7 @@ namespace MySql.Data.VisualStudio
       int index = sql.IndexOf(' ');
       string startingCommand = sql.Substring(0, index).ToUpperInvariant();
       if (startingCommand != "CREATE" && startingCommand != "ALTER")
-        throw new Exception(Resources.UnableToExecuteProcScript);
+        throw new Exception(Properties.Resources.UnableToExecuteProcScript);
       return type + sql.Substring(index);
     }
 

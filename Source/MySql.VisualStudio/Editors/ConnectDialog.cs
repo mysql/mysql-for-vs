@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -238,9 +238,9 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, database.Text));
-        return false;
-      }      
+        MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, database.Text));
+        return false;    
+      }
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -40,7 +40,7 @@ using EnvDTE;
 using VSLangProj;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
-using MySQL.Utility.Classes;
+using MySql.Utility.Classes;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using Microsoft.VisualStudio.Shell.Interop;

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -93,7 +93,7 @@ namespace MySql.VisualStudio.Tests
         _isoStore.DeleteFile("Testfile.cnf");
         _isoStore.Close();
 
-        string expected = @"--add-drop-database  --add-drop-table  --add-locks=false  --all-databases=false  --allow-keywords  --comments  --compact=false  --complete-insert=false  --create-options  --databases  --default-character-set=utf8 --delayed-insert=false  --disable-keys  --events=false  --extended-insert  --flush-logs=false  --hex-blob=false  --ignore-table=nameoftable --insert-ignore  --lock-tables  --no-data  --no-create-info=false  --max_allowed_packet=1G --order-by-primary=false  --port=3305 --quote-names  --replace=false  --routines  --single-transaction=false  --set-gtid-purged=OFF  """;
+        string expected = @"--add-drop-database  --add-drop-table=false  --add-locks=false  --all-databases=false  --allow-keywords  --comments  --compact=false  --complete-insert=false  --create-options  --databases  --default-character-set=utf8 --disable-keys  --events=false  --extended-insert  --flush-logs=false  --hex-blob=false  --ignore-table=nameoftable --insert-ignore  --lock-tables  --no-data  --no-create-info=false  --max_allowed_packet=1G --order-by-primary=false  --port=3306 --quote-names  --replace=false  --routines  --single-transaction=false  --column_statistics=false  --set-gtid-purged=OFF --protocol=TCP  """;
         var value = arguments.GetValue(mysqldumpFacade);
         Assert.True(value.ToString().Contains(expected));
       }
@@ -171,9 +171,9 @@ namespace MySql.VisualStudio.Tests
       mysqldump._dumpFilePath = Path.GetFullPath(@"..\..\..\..\..\Dependencies\MySql\mysqldump.exe");
 
       mysqldump.ProcessRequest(saveToFile);
-      
-      var errors = mysqldump.ErrorsOutput.ToString();
-      Assert.True(errors.Contains("mysqldump: Got error: 1044: Access denied for user 'test'@'localhost' to database 'unknown' when selecting the database"));      
+
+      var errors = mysqldump.ErrorsOutput.ToString();    
+      Assert.True(errors.Contains("mysqldump: Got error: 1049: Unknown database 'unknown' when selecting the database"));
     }
 
 

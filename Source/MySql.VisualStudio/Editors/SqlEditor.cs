@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2017, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,6 +36,7 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Globalization;
 using System.IO;
@@ -160,11 +161,20 @@ Check that the server is running, the database exist and the user credentials ar
     private void runSqlButton_Click(object sender, EventArgs e)
     {
       string sql = codeEditor.Text.Trim();
-      bool isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection);
-      if (isResultSet)
+      StringBuilder sb;
+      bool? isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection, out sb);
+
+      if (isResultSet == null)
+      {
+        tabControl1.TabPages.Clear();
+        messages.Text = string.Format(Properties.Resources.UnableToParseScript, Environment.NewLine + sb.ToString()) ;
+        tabControl1.TabPages.Add(messagesPage);
+      }
+      else if (isResultSet == true)
         ExecuteSelect(sql);
       else
         ExecuteScript(sql);
+
       StoreCurrentDatabase();
     }
 

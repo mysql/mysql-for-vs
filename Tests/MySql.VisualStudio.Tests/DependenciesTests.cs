@@ -1,4 +1,4 @@
-// Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -35,8 +35,8 @@ namespace MySql.VisualStudio.Tests
 {
   public static class Dependencies
   {
-    public const string C_NET_VERSIONV40 = "6.7.4.0";
-    public const string C_NET_VERSIONV45= "6.8.3.0";
+    public const string C_NET_VERSIONV40 = "6.9.8.0";
+    public const string C_NET_VERSIONV45= "6.10.6.0";
   }
 
   public class DependenciesTests

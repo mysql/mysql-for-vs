@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -40,14 +40,18 @@ namespace MySql.Data.VisualStudio.WebConfig
   {
     private const string EF5Version = "5.0.0";
     private const string EF6Version = "6.1.3";
-    private const string defaultConnectionFactoryEF5TypeValue = "MySql.Data.Entity.MySqlConnectionFactory, MySql.Data.Entity.EF5";
-    private const string defaultConnectionFactoryEF6TypeValue = "MySql.Data.Entity.MySqlConnectionFactory, MySql.Data.Entity.EF6";
+
     private const string EF5SectionTypeValue = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
     private const string EF6SectionTypeValue = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-    private const string EF5MySQLProviderTypeValue = "MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF5, Version=6.7.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d";
+    private const string defaultConnectionFactoryEF5TypeValue = "MySql.Data.Entity.MySqlConnectionFactory, MySql.Data.Entity.EF5";
+    private const string EF5MySqlClientFactoryTypeValue = "MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d";
+    private const string EF5MySQLProviderTypeValue = "MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF5, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d";
     private const string SQLServerProviderTypeValue = "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer";
-    private const string EF5MySqlClientFactoryTypeValue = "MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data, Version=6.7.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d";
     private const string webConfigFileName = "web.config";
+
+    private static Version _connectorVersion;
+    private static string _defaultConnectionFactoryEF6TypeValue = "MySql.Data.Entity.MySqlConnectionFactory, MySql.Data.Entity.EF6";
+    
 
     /// <summary>
     /// Transforms a config file in order to add the Entity Framework settings to it.
@@ -60,9 +64,13 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       if (!string.IsNullOrEmpty(projectPath) && File.Exists(Path.Combine(projectPath, webConfigFileName)))
       {
+        _connectorVersion = new Version(connectorVersion);
+        if (_connectorVersion >= new Version(8,0))
+          _defaultConnectionFactoryEF6TypeValue = "MySql.Data.EntityFramework.MySqlConnectionFactory, MySql.Data.EntityFramework";
+
         XElement webConfig = XElement.Load(Path.Combine(projectPath, webConfigFileName));
         RemoveEFSettings(webConfig);
-        ConfigureEntityFrameworkSection(webConfig, EFVersion, mySQLVersion, connectorVersion);
+        ConfigureEntityFrameworkSection(webConfig, EFVersion, mySQLVersion);
         ConfigureSystemDataSection(webConfig, EFVersion, mySQLVersion, connectorVersion);
         webConfig.Save(Path.Combine(projectPath, webConfigFileName));
       }
@@ -139,7 +147,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// <param name="EFVersion">The Entity Framework version.</param>
     /// <param name="mySqlVersion">The My SQL version.</param>
     /// <param name="connectorVersion">The version of the connector/net assembly installed.</param>
-    private static void ConfigureEntityFrameworkSection(XElement webConfig, string EFVersion, string mySqlVersion, string connectorVersion)
+    private static void ConfigureEntityFrameworkSection(XElement webConfig, string EFVersion, string mySqlVersion)
     {
       if (webConfig != null)
       {
@@ -153,7 +161,7 @@ namespace MySql.Data.VisualStudio.WebConfig
 
         if (EFVersion == EF6Version)
         {
-          defaultConnectionFactory.Add(new XAttribute("type", defaultConnectionFactoryEF6TypeValue));
+          defaultConnectionFactory.Add(new XAttribute("type", _defaultConnectionFactoryEF6TypeValue));
         }
 
         XElement parameters = new XElement("parameters");
@@ -167,7 +175,7 @@ namespace MySql.Data.VisualStudio.WebConfig
           XElement providers = new XElement("providers");
           entityFrameworkSection.Add(providers);
           webConfig.Add(entityFrameworkSection);
-          CreateEFProvidersSection(webConfig, EFVersion, mySqlVersion, true, connectorVersion);
+          CreateEFProvidersSection(webConfig, EFVersion, mySqlVersion, true);
         }
         else
         {
@@ -217,7 +225,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// <param name="mySqlVersion">The My SQL version.</param>
     /// <param name="addSqlServerProvider">if set to <c>true</c> [add SQL server provider].</param>
     /// <param name="connectorVersion">The version of the connector/net assembly installed.</param>
-    private static void CreateEFProvidersSection(XElement webConfig, string EFVersion, string mySqlVersion, bool addSqlServerProvider, string connectorVersion)
+    private static void CreateEFProvidersSection(XElement webConfig, string EFVersion, string mySqlVersion, bool addSqlServerProvider)
     {
       if (webConfig != null)
       {
@@ -231,7 +239,9 @@ namespace MySql.Data.VisualStudio.WebConfig
 
         if (EFVersion == EF6Version)
         {
-          string EF6MySQLProviderTypeValue = string.Format("MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF6, Version={0}, Culture=neutral, PublicKeyToken=c5687fc88969c44d", connectorVersion);
+          string EF6MySQLProviderTypeValue = string.Format("MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.{0}, Version={1}, Culture=neutral, PublicKeyToken=c5687fc88969c44d",
+                                               _connectorVersion >= new Version(8,0) ? "EntityFramework" : "Entity.EF6",
+                                               _connectorVersion.ToString());
           typeValue = string.Format(EF6MySQLProviderTypeValue, mySqlVersion);
         }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -101,7 +101,7 @@ namespace MySql.Data.VisualStudio.Editors
           (str1.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)) ||
           (str2.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)))
         {
-          MessageBox.Show(Resources.FkDlgBeforeClose, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(Properties.Resources.FkDlgBeforeClose, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
           return false;
         }
       }
@@ -110,7 +110,7 @@ namespace MySql.Data.VisualStudio.Editors
         ForeignKey fk = ( ForeignKey )o;
         if( fk.Columns.Count == 0 )
         {
-          MessageBox.Show(string.Format(Resources.FkNoColumnsForForeignKey, fk.Name), Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          MessageBox.Show(string.Format(Properties.Resources.FkNoColumnsForForeignKey, fk.Name), Properties.Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
           return false;
         }
       }
@@ -288,26 +288,26 @@ namespace MySql.Data.VisualStudio.Editors
       if ((String.IsNullOrEmpty(parent) || parent == None) &&
           (!String.IsNullOrEmpty(child) && child != None))
       {
-        parentCell.ErrorText = Resources.FKNeedColumn;
+        parentCell.ErrorText = Properties.Resources.FKNeedColumn;
         bad = true;
       }
       else if ((String.IsNullOrEmpty(child) || child == None) &&
           (!String.IsNullOrEmpty(parent) && parent != None))
       {
-        childCell.ErrorText = Resources.FKNeedColumn;
+        childCell.ErrorText = Properties.Resources.FKNeedColumn;
         bad = true;
       }
       if (bad)
       {
-        MessageBox.Show(Resources.FKColumnsNotMatched, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBox.Show(Properties.Resources.FKColumnsNotMatched, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
         e.Cancel = true;
         return;
       }
       else if(
         (((ForeignKey)foreignKeyBindingSource.Current).ReferencedTable == tableNode.Table.Name) &&
         ( parent == child ) )
-      {
-        MessageBox.Show(Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);       
+      {  
+        MessageBox.Show(Properties.Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
         return;
       }
       FKColumnPair pair = fkColumnsBindingSource.Current as FKColumnPair;

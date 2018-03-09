@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -241,6 +241,10 @@ statement options { backtrack=true; memoize=true; }
 		|	case_stmt
 		|	alter_database
 		|	alter_event
+		|   auth_option
+		|   auth_plugin
+		|   password_lock_option
+		|   password_option
 		)
 	;
 
@@ -2768,8 +2772,16 @@ user
 	;
 
 create_user
-	:	CREATE user user_specification_list
-		-> ^( CREATE ^( user user_specification_list ))
+	:	CREATE user ( IF NOT EXISTS )? user_specification_list
+        ( DEFAULT ROLE STRING_LEX ( COMMA STRING_LEX )* )?
+	    ( REQUIRE ( NONE | ( sslopt+=ssl_option ( AND sslopt+=ssl_option )* )) )?
+		( WITH withopt+=with_option ( withopt+=with_option )* )?
+		password_lock_option?
+		-> ^( CREATE ^( user user_specification_list )) 
+		   ^( DEFAULT ROLE STRING_LEX ( COMMA STRING_LEX )* )?
+		   ^( REQUIRE NONE? $sslopt? )? 
+		   ^( WITH $withopt? )?
+		   password_lock_option?
 	;
 
 user_specification_list
@@ -2778,9 +2790,36 @@ user_specification_list
 	;
 
 user_specification
-	:	user_host_or_id_or_string ( IDENTIFIED BY ( PASSWORD )? STRING_LEX )?
-		-> ^( user_host_or_id_or_string ( PASSWORD? STRING_LEX )? )
+	:	user_host_or_id_or_string ( auth_option )?
+	    -> ^( user_host_or_id_or_string auth_option? )
+    ;
+
+auth_option
+    :
+	IDENTIFIED BY STRING_LEX
+	| IDENTIFIED WITH auth_plugin
+	| IDENTIFIED WITH auth_plugin BY STRING_LEX
+	| IDENTIFIED WITH auth_plugin AS STRING_LEX
+	| IDENTIFIED BY PASSWORD STRING_LEX
 	;
+
+auth_plugin
+    :
+	MYSQL_NATIVE_PASSWORD
+	| SHA256_PASSWORD
+	| CACHING_SHA2_PASSWORD;
+
+password_lock_option
+    :
+	ACCOUNT (LOCK | UNLOCK)
+	| PASSWORD password_option
+	;
+
+password_option:
+    EXPIRE ( DEFAULT | NEVER | INTERVAL INT_NUMBER DAY)?
+	| HISTORY ( DEFAULT | INT_NUMBER )
+	| REUSE INTERVAL ( DEFAULT | INT_NUMBER DAY)
+    ;
 
 user_host
 	: AT1 (ID | STRING_LEX)	-> ^( USER_HOST ID? STRING_LEX? )
