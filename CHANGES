@@ -1,12 +1,12 @@
 1.2.8
 - Added support for MySQL 8 server features.
-- Upgraded MySQL for Visual Studio to require .NET 4.5.2 when installed.
 - Fixed a bug in which the installation would roll back when Visual Studio 2017 failed to execute devenv commands. This is a
   known issue in Windows 7 environments caused by faulty user permissions. The installer was modified to display a warning
   message in such cases with instructions on how to proceed (MySql Bug #87902, Oracle bug Bug #27365261).
 - Fixed a bug that prevented the MySql.Web assembly from being loaded when using the MySQL Website Configuration Tool
   due to an incorrect way of identifying the version of the assembly (MySql Bug #89446, Oracle bug Bug #27450530).
 - Fixed a bug in which the "Alter Routine" option failed to retrieve the definition of a Store Procedure (Oracle bug Bug #27669339).
+- Upgraded MySQL for Visual Studio to require .NET 4.5.2 or greater when installed.
 
 
 1.2.7

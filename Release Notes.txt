@@ -4,7 +4,7 @@
 Welcome to the release notes for MySQL for Visual Studio 1.2.8 MR
 
 * Added support for MySQL 8 server features.
-* Added support for Connector/NET 6.9.12, 6.10.7 and 8.0.11.
+* Added support for Connector/NET 8.0.11.
 * Fixed a bug in the msi installer which caused the installation/uninstallation to roll back whenever Visual Studio
   failed to execute the "devenv /updateconfiguration" command. Now a warning is displayed to users with instructions
   on how to proceed.
