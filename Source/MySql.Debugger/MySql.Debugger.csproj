@@ -86,7 +86,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
         </Reference>
-        <Reference Include="MySql.Data, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
         </Reference>
@@ -105,7 +105,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
         </Reference>
-        <Reference Include="MySql.Data, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
         </Reference>
@@ -124,7 +124,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
         </Reference>
-        <Reference Include="MySql.Data, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
         </Reference>
@@ -143,7 +143,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
         </Reference>
-        <Reference Include="MySql.Data, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
         </Reference>

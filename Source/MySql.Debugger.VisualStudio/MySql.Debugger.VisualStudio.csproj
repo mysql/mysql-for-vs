@@ -86,7 +86,7 @@
 	<Reference Include="Microsoft.CSharp" />
 	<Reference Include="System.Data" />
 	<Reference Include="System.Xml" />
-	<Reference Include="MySql.Data, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+	<Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
 	  <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
 	</Reference>
