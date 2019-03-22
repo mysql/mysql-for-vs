@@ -1,4 +1,12 @@
-﻿MySQL for Visual Studio 1.2.8 MR Release Notes
+﻿MySQL for Visual Studio 1.2.9 MR Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL for Visual Studio 1.2.9 MR
+
+
+
+
+MySQL for Visual Studio 1.2.8 MR Release Notes
 ------------------------------------
 
 Welcome to the release notes for MySQL for Visual Studio 1.2.8 MR
@@ -8,6 +16,8 @@ Welcome to the release notes for MySQL for Visual Studio 1.2.8 MR
 * Fixed a bug in the msi installer which caused the installation/uninstallation to roll back whenever Visual Studio
   failed to execute the "devenv /updateconfiguration" command. Now a warning is displayed to users with instructions
   on how to proceed.
+
+
 
 
 MySQL for Visual Studio 1.2.7 MR Release Notes
@@ -20,6 +30,7 @@ which to perform the installation.
 * Removed support for Visual Studio 2010.
 * Fixed several bugs that would cause inconsistencies when selecting/unselecting schemas in the Data Export Tool.
 * Script files would stop responding to keyboard input upon saving the file for the first time.
+
 
 
 
@@ -38,6 +49,7 @@ Welcome to the release notes for MySQL for Visual Studio 1.2.6 MR
 * Fixed the bug that was preventing users to create a non MySql connection in the Server Explorer pane in VisualStudio, 
   once the user created a MySql Connection checking the option "Always use this selection" when selecting the
   Data Source and Data Provider, causing Visual Studio to crash.
+
 
 
 
@@ -103,7 +115,6 @@ Known Issues
 --------------------
 * A bug exists where the product cannot be uninstalled if a Visual Studio version where the plugin was installed is removed. 
   A workaround for this can be found in the product forum.
-
 
 
 
