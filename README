@@ -1,4 +1,4 @@
-Copyright (c) 2004, 2018, Oracle and/or its affiliates. All rights reserved.
+Copyright (c) 2004, 2019, Oracle and/or its affiliates. All rights reserved.
 
 This is a release of MySQL for Visual Studio, MySQL for Visual Studio provides access to MySQL objects and data without forcing your developers to leave Visual Studio. Designed and developed as a Visual Studio package, MySQL for Visual Studio integrates directly into Server Explorer providing a seamless experience for setting up new connections and working with database objects.
 

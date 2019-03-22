@@ -1,4 +1,4 @@
-// Copyright (c) 2004, 2018, Oracle and/or its affiliates.  All rights reserved.
+// Copyright (c) 2004, 2019, Oracle and/or its affiliates.  All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -39,7 +39,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright (c) 2004, 2018, Oracle and/or its affiliates. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (c) 2004, 2019, Oracle and/or its affiliates. All rights reserved.")]
 [assembly: AssemblyTitle("MySql.Parser.Tests")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

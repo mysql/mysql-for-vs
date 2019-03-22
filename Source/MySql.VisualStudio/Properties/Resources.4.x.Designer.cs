@@ -2843,7 +2843,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2007-2015 Oracle, Inc..
+        ///   Looks up a localized string similar to Data design and management tools for MySQL. Copyright (c) 2007, 2019, Oracle and/or its affiliates. All rights reserved..
         /// </summary>
         public static string ProductDetails {
             get {

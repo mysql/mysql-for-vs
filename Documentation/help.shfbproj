@@ -44,7 +44,7 @@
     <RootNamespaceTitle>Reference</RootNamespaceTitle>
     <HelpTitle>MySQL for Visual Studio</HelpTitle>
     <CopyrightHref>http://www.mysql.com</CopyrightHref>
-    <CopyrightText>Copyright (c) 2004, 2018, Oracle and/or its affiliates.  All rights reserved.</CopyrightText>
+    <CopyrightText>Copyright (c) 2004, 2019, Oracle and/or its affiliates.  All rights reserved.</CopyrightText>
     <FeedbackEMailAddress>support%40oracle.com</FeedbackEMailAddress>
     <PresentationStyle>VS2013</PresentationStyle>
     <NamingMethod>MemberName</NamingMethod>
