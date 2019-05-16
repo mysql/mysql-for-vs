@@ -113,11 +113,11 @@
     <RemoveDir Directories="**/obj; **/bin" />
   </Target>
   <!-- Build Source Targets -->
-  <Target Name="Build14_46" Condition=" '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' ">
+  <Target Name="Build14_46" Condition=" '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0' ">
     <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
     <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=14.0" />
   </Target>
-  <Target Name="Build15_461" Condition=" '$(VisualStudioVersion)' == '15.0' ">
+  <Target Name="Build15_461" Condition=" '$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0' ">
     <Message Text="Building VisualStudioVersion=15.0" Importance="high" />
     <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=15.0" />
   </Target>
