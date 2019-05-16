@@ -2,9 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion" />
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0'">Community</VisualStudioFlavor>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or $(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
+    <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{27261AC3-7564-4CD9-A13B-95315B72D49B}</ProjectGuid>
@@ -115,14 +116,6 @@
     <Compile Include="ItemTemplates\VS14_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS14_VB_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS14_VB_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS11_CS_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS11_CS_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS11_VB_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS11_VB_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS12_VB_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS12_VB_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS12_CS_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS12_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_Ent_CS_Web_ItemTemplate.wxs" />
@@ -135,13 +128,25 @@
     <Compile Include="ItemTemplates\VS15_Pro_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_VB_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_VB_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_CS_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_CS_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Ent_CS_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Ent_CS_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Ent_VB_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Ent_VB_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Pro_CS_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Pro_CS_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Pro_VB_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_Pro_VB_WinForm_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_VB_Web_ItemTemplate.wxs" />
+    <Compile Include="ItemTemplates\VS16_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="main.wxs" />
     <Compile Include="ui.wxs" />
     <Compile Include="visualstudio.wxs" />
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
-    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\11.0v4.5.2\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\14.0v4.6\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
     </GetVersion>
     <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">

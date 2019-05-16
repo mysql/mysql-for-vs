@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -59,7 +59,7 @@ using MySql.Utility.Classes.MySqlWorkbench;
 using System.IO;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Wizards;
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
 #endif
 
@@ -201,7 +201,7 @@ namespace MySql.Data.VisualStudio
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
 
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
-#if NET_45_OR_GREATER
+#if NET_46_OR_GREATER
       string mySqlConnectorAssembliesVersion = "v4.5.2";
 #else
       string mySqlConnectorAssembliesVersion = "v4.0";

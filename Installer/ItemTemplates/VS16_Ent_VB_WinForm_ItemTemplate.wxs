@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="VS16_Ent_VB_WinForm_ItemTemplate.zip" >
+      <Directory Id="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Name="Resources" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="VS16_Ent_VB_WinForm_ItemTemplate_DirectoryComponents">
+      <Component Id="VS16_Ent_VB_WF_IT" Directory="VS16_Ent_VB_WinForm_ItemTemplate.zip" Guid="65AED193-E523-4CBB-A04D-B2DC2AEDFB6B">
+        <File Id="VS16_Ent_VB_WF_IT_VsTemplate" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\MySQL_WinForm_VB_ItemTemplate.vstemplate" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmp67AF18D1EADC6AF483088F5647F30ACE" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="4B757C7F-97AF-4FA0-ADFF-95A73BA06F61">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_fil5F41CE2508EF28C6486E372862A65836" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorAddNewItem.Image.png" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmpCCE194072C5D13ABA66267E7586BE818" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="06CC5AAF-8A5B-4A00-A640-EF809929E6C8">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_filCCCCD5DF3AA4F218AB111DB0CFAB4438" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorDeleteItem.Image.png" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmp05FB4B67016AE4FA4532B6A712DEC9BF" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="11BDF798-2179-498F-82E1-DFA13BCDE03A">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_fil1504DDF368288F41CC4A84128FEC385F" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMoveFirstItem.Image.png" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmp61FD8D7898B0647AC8D6C0C86B27BA68" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="F8B0A483-303C-4F1A-A321-95D0676AAE04">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_filFF5A420C179DB8AB6964CEA4B0F3BE5C" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMoveLastItem.Image.png" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmpC593E576C55FBC7E9EF2E009BD8FA751" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="2C499DE8-439B-4495-913A-732CCDC062CF">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_filA08E32847B0C02BDBF2BDD41519BE269" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMoveNextItem.Image.png" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmp862812777E9DE1B1B2BDA21B015B468E" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="F6A34C51-DC59-4179-855A-E4FCC1A1B3F5">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_filE832F31B8BC1E073E048D7895615677E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorMovePreviousItem.Image.png" />
+      </Component>
+      <Component Id="VS16_Ent_VB_WinForm_ItemTemplate_cmp5FBAE016E0D5F06492A5638E085A2A21" Directory="VS16_Ent_VB_WinForm_ItemTemplate_6E8D3B7215BF9A7193BEBF636375B3C1" Guid="01A0BC31-6D0E-48C1-BD6F-B95E30C4F68A">
+        <File Id="VS16_Ent_VB_WinForm_ItemTemplate_filBFB0EC4E7805778EB6708C8710E0CF9E" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip\Resources\bindingNavigatorSaveItem.Image.png" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

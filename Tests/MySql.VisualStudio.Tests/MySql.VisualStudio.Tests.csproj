@@ -2,9 +2,10 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <PropertyGroup>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0'">Community</VisualStudioFlavor>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+	<VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{145AC246-EA7E-43E6-8698-E394B80B0A8D}</ProjectGuid>
@@ -20,13 +21,22 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
   </PropertyGroup>
   <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '16.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.7.2</Framework>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER;NET_472_OR_GREATER</DefineConstants>
+      </PropertyGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.6.1</Framework>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
+        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '14.0'">
@@ -35,25 +45,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.6</Framework>
         <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;NET_46_OR_GREATER</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '12.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.5.2</Framework>
-        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.5.2</Framework>
-        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;</DefineConstants>
+        <DefineConstants>NET_46_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
   </Choose>
@@ -102,6 +94,14 @@
   </ItemGroup>
   <!-- References per specific VS version -->
   <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '16.0'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Services.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
       <ItemGroup>
         <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -115,22 +115,6 @@
         <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>$(MSBuildExtensionsPath)\..\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Services.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '12.0'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>$(MSBuildExtensionsPath)\..\Microsoft Visual Studio 12.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Services.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>$(MSBuildExtensionsPath)\..\Microsoft Visual Studio 11.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Services.dll</HintPath>
         </Reference>
       </ItemGroup>
     </When>
@@ -163,8 +147,9 @@
       <Name>MySql.VisualStudio</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' " />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' And '$(VisualStudioVersion)' != '16.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
+  <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

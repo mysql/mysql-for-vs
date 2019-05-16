@@ -15,15 +15,13 @@
 
     <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
-    <Condition Message="You must have Administrative rights on this machine to install [ProductName].">
+    <Condition Message="You must have Administrative privileges on this computer to install [ProductName].">
       <![CDATA[ Privileged  ]]>
     </Condition>
 
-    <PropertyRef Id="VS2012_ROOT_FOLDER" />
-
     <!-- First make sure that .NET is installed -->
-    <PropertyRef Id="WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED"/>
-    <Condition Message="The .NET Framework 4.5.2 or later must be installed before installing this package.">Installed OR WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Condition>
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED"/>
+    <Condition Message=".NET Framework 4.6 or later must be installed before installing this package.">Installed OR WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED</Condition>
 
     <!--now make sure that we don't have an old version still around-->
     <Property Id="OLDVERSION">
@@ -37,28 +35,26 @@
       <RegistrySearch Id="Ver501" Key="Software\MySQL AB\MySQL Connector/Net 5.0.1" Name="Location" Root="HKLM" Type="raw"/>
       <RegistrySearch Id="Ver500" Key="Software\MySQL AB\MySQL Connector/Net 5.0.0" Name="Location" Root="HKLM" Type="raw"/>
     </Property>
-    <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
+    <Condition Message="A previous version of Connector/NET 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
 
-    <!-- Ensure a valid VS version is installed (2012, 2013, 2015, 2017) -->
-    <PropertyRef Id="VS2012_ROOT_FOLDER"/>
-    <PropertyRef Id="VS2013_ROOT_FOLDER"/>
+    <!-- Ensure a valid VS version is installed (2015, 2017, 2019) -->
     <PropertyRef Id="VS2015_ROOT_FOLDER"/>
-    <Condition Message="Visual Studio version 2012, 2013, 2015 or 2017 must be installed.">
-      NOT (VS2012_ROOT_FOLDER = "" AND VS2013_ROOT_FOLDER = "" AND VS2015_ROOT_FOLDER = "" AND VS_2017_COM_PATH_MAIN = "" AND VS_2017_ENT_PATH_MAIN = "" AND VS_2017_PRO_PATH_MAIN = "")
+    <Condition Message="Visual Studio version 2015, 2017 or 2019 must be installed.">
+      NOT (VS2015_ROOT_FOLDER = "" AND VS_2017_COM_PATH_MAIN = "" AND VS_2017_ENT_PATH_MAIN = "" AND VS_2017_PRO_PATH_MAIN = "" AND VS_2019_COM_PATH_MAIN = "" AND VS_2019_ENT_PATH_MAIN = "" AND VS_2019_PRO_PATH_MAIN = "")
     </Condition>
 
     <!-- now make sure that we don't have an old version that doesn't support upgrades -->
     <Property Id="PREUPGRADEVERSION">
       <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
     </Property>
-    <Condition Message="A previous version of Connector/Net 6.3 or higher is already installed.  Please uninstall that version first.">Not PREUPGRADEVERSION</Condition>
+    <Condition Message="A previous version of Connector/NET 6.3 or higher is already installed.  Please uninstall that version first.">Not PREUPGRADEVERSION</Condition>
 
     <!-- handle 6.3.8 or 6.4.4 that allowed upgraded but was per-user and we are now per-machine -->
     <Property Id="PERUSERINSTALL">
       <RegistrySearch Id="Reg638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{E720BB76-38AA-43EF-A638-508DDE124FE0}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
       <RegistrySearch Id="Reg644" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{2DDC7E93-29AB-4260-A9DB-697F7FA88157}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
     </Property>
-    <Condition Message="A previous version of Connector/Net is installed that cannot be automatically uninstalled.  You will need to remove it manually first.">Not PERUSERINSTALL</Condition>
+    <Condition Message="A previous version of Connector/NET is installed that cannot be automatically uninstalled.  You will need to remove it manually first.">Not PERUSERINSTALL</Condition>
 
     <Property Id="HLM_LOCATION">
       <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
@@ -84,112 +80,6 @@
       <Directory Id="ProgramMenuFolder" Name="PMFolder">
         <Directory Id='PMCompanyDir' Name='MySQL'>
           <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>
-        </Directory>
-      </Directory>
-
-      <!-- VS2012 Extension folders -->
-      <Directory Id="VS2012_ROOT_FOLDER">
-        <Directory Id="VS11.Common7Folder" Name="Common7">
-          <Directory Id="VS11.IDEFolder" Name="IDE">
-            <Directory Id="VS11.T4.ExtensionDir" Name="Extensions">
-              <Directory Id="VS11.T4.MicrosoftDir" Name="Microsoft">
-                <Directory Id="VS11.T4.EFToolsDir" Name="Entity Framework Tools">
-                  <Directory Id="VS11_DBGenDir" Name="DBGen"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS11_OracleDir" Name="Oracle">
-                <Directory Id="VS11_ExtensionDir" Name="MySQL for Visual Studio ">
-                  <Directory Id="VS11_ExtVersionDir" Name="$(var.Version)">
-                    <Directory Id='VS11_TemplatesDir' Name='Templates'/>
-                    <Directory Id='VS11_T4TemplatesDir' Name='T4Templates' >
-                      <Directory Id='VS11_T4TemplatesCSharpDir' Name='CSharp' />
-                      <Directory Id='VS11_T4TemplatesVBDir' Name='VisualBasic' />
-                    </Directory>
-                  </Directory>
-                </Directory>
-              </Directory>
-            </Directory>
-            <Directory Id="VS11_PrivateAssemblies" Name="PrivateAssemblies" />
-            <Directory Id="VS11_PublicAssemblies" Name="PublicAssemblies" />
-
-            <!--Item Templates-->
-            <Directory Id="VS11_ItemTemplates" Name="ItemTemplates" >
-              <Directory Id="VS11_CSharpIT" Name="CSharp">
-                <Directory Id="VS11_CSharpITMySQL" Name="MySQL"/>
-              </Directory>
-              <Directory Id="VS11_VBIT" Name="VisualBasic">
-                <Directory Id="VS11_VBITMySQL" Name="MySQL"/>
-              </Directory>
-            </Directory>
-            <Directory Id="VS11_ItemTemplatesCache" Name="ItemTemplatesCache">
-              <Directory Id="VS11_CSharpITCache" Name="CSharp">
-                <Directory Id="VS11_CS_IT_MySQLCache" Name="MySQL">
-                  <Directory Id="VS11_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
-                  <Directory Id="VS11_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS11_VBITCache" Name="VisualBasic">
-                <Directory Id="VS11_VB_IT_MySQLCache" Name="MySQL">
-                  <Directory Id="VS11_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
-                  <Directory Id="VS11_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
-                </Directory>
-              </Directory>
-            </Directory>
-
-          </Directory>
-        </Directory>
-      </Directory>
-
-      <!-- VS2013 Extension folders -->
-      <Directory Id="VS_2013_PATH" Name="VSPath2013">
-        <Directory Id="VS12.Common7Folder" Name="Common7">
-          <Directory Id="VS12.IDEFolder" Name="IDE">
-            <Directory Id="VS12.T4.ExtensionDir" Name="Extensions">
-              <Directory Id="VS12.T4.MicrosoftDir" Name="Microsoft">
-                <Directory Id="VS12.T4.EFToolsDir" Name="Entity Framework Tools">
-                  <Directory Id="VS12_DBGenDir" Name="DBGen"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS12_OracleDir" Name="Oracle">
-                <Directory Id="VS12_ExtensionDir" Name="MySQL for Visual Studio ">
-                  <Directory Id="VS12_ExtVersionDir" Name="$(var.Version)">
-                    <Directory Id='VS12_TemplatesDir' Name='Templates'/>
-                    <Directory Id='VS12_T4TemplatesDir' Name='T4Templates' >
-                      <Directory Id='VS12_T4TemplatesCSharpDir' Name='CSharp' />
-                      <Directory Id='VS12_T4TemplatesVBDir' Name='VisualBasic' />
-                    </Directory>
-                  </Directory>
-                </Directory>
-              </Directory>
-            </Directory>
-            <Directory Id="VS12_PrivateAssemblies" Name="PrivateAssemblies" />
-            <Directory Id="VS12_PublicAssemblies" Name="PublicAssemblies" />
-
-            <!--Item Templates-->
-            <Directory Id="VS12_ItemTemplates" Name="ItemTemplates" >
-              <Directory Id="VS12_CSharpIT" Name="CSharp">
-                <Directory Id="VS12_CSharpITMySQL" Name="MySQL"/>
-              </Directory>
-              <Directory Id="VS12_VBIT" Name="VisualBasic">
-                <Directory Id="VS12_VBITMySQL" Name="MySQL"/>
-              </Directory>
-            </Directory>
-            <Directory Id="VS12_ItemTemplatesCache" Name="ItemTemplatesCache">
-              <Directory Id="VS12_CSharpITCache" Name="CSharp">
-                <Directory Id="VS12_CS_IT_MySQLCache" Name="MySQL">
-                  <Directory Id="VS12_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
-                  <Directory Id="VS12_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
-                </Directory>
-              </Directory>
-              <Directory Id="VS12_VBITCache" Name="VisualBasic">
-                <Directory Id="VS12_VB_IT_MySQLCache" Name="MySQL">
-                  <Directory Id="VS12_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
-                  <Directory Id="VS12_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
-                </Directory>
-              </Directory>
-            </Directory>
-
-          </Directory>
         </Directory>
       </Directory>
 
@@ -415,6 +305,177 @@
           </Directory>
         </Directory>
       </Directory>
+
+	  <!-- VS2019 Community Extension folders -->
+      <Directory Id="VS_2019_COM_PATH" Name="VSPath2019">
+        <Directory Id="VS16.Common7Folder" Name="Common7">
+          <Directory Id="VS16.IDEFolder" Name="IDE">
+            <!--Extensions -->
+            <Directory Id="VS16.T4.ExtensionDir" Name="Extensions">
+              <Directory Id="VS16.T4.MicrosoftDir" Name="Microsoft">
+                <Directory Id="VS16.T4.EFToolsDir" Name="Entity Framework Tools">
+                  <Directory Id="VS16_DBGenDir" Name="DBGen"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS16_OracleDir" Name="Oracle">
+                <Directory Id="VS16_ExtensionDir" Name="MySQL for Visual Studio ">
+                  <Directory Id="VS16_ExtVersionDir" Name="$(var.Version)">
+                    <Directory Id='VS16_TemplatesDir' Name='Templates'/>
+                    <Directory Id='VS16_T4TemplatesDir' Name='T4Templates' >
+                      <Directory Id='VS16_T4TemplatesCSharpDir' Name='CSharp' />
+                      <Directory Id='VS16_T4TemplatesVBDir' Name='VisualBasic' />
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <!--Private Assemblies -->
+            <Directory Id="VS16_PrivateAssemblies" Name="PrivateAssemblies" />
+            <!--Public Assemblies -->
+            <Directory Id="VS16_PublicAssemblies" Name="PublicAssemblies" />
+            <!--Item Templates-->
+            <Directory Id="VS16_ItemTemplates" Name="ItemTemplates" >
+              <Directory Id="VS16_CSharpIT" Name="CSharp">
+                <Directory Id="VS16_CSharpITMySQL" Name="MySQL"/>
+              </Directory>
+              <Directory Id="VS16_VBIT" Name="VisualBasic">
+                <Directory Id="VS16_VBITMySQL" Name="MySQL"/>
+              </Directory>
+            </Directory>
+            <Directory Id="VS16_ItemTemplatesCache" Name="ItemTemplatesCache">
+              <Directory Id="VS16_CSharpITCache" Name="CSharp">
+                <Directory Id="VS16_CS_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS16_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+                  <Directory Id="VS16_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS16_VBITCache" Name="VisualBasic">
+                <Directory Id="VS16_VB_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS16_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+                  <Directory Id="VS16_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+          <!-- Tools folder -->
+          <Directory Id="VS16_ToolsFolder" Name="Tools">
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <!-- VS2019 Enterprise Extension folders -->
+      <Directory Id="VS_2019_ENT_PATH" Name="VSPath2019Ent">
+        <Directory Id="VS16.Ent.Common7Folder" Name="Common7">
+          <Directory Id="VS16.Ent.IDEFolder" Name="IDE">
+            <!--Extensions -->
+            <Directory Id="VS16.Ent.T4.ExtensionDir" Name="Extensions">
+              <Directory Id="VS16.Ent.T4.MicrosoftDir" Name="Microsoft">
+                <Directory Id="VS16.Ent.T4.EFToolsDir" Name="Entity Framework Tools">
+                  <Directory Id="VS16_Ent_DBGenDir" Name="DBGen"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS16_Ent_OracleDir" Name="Oracle">
+                <Directory Id="VS16_Ent_ExtensionDir" Name="MySQL for Visual Studio ">
+                  <Directory Id="VS16_Ent_ExtVersionDir" Name="$(var.Version)">
+                    <Directory Id='VS16_Ent_TemplatesDir' Name='Templates'/>
+                    <Directory Id='VS16_Ent_T4TemplatesDir' Name='T4Templates' >
+                      <Directory Id='VS16_Ent_T4TemplatesCSharpDir' Name='CSharp' />
+                      <Directory Id='VS16_Ent_T4TemplatesVBDir' Name='VisualBasic' />
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <!--Private Assemblies -->
+            <Directory Id="VS16_Ent_PrivateAssemblies" Name="PrivateAssemblies" />
+            <!--Public Assemblies -->
+            <Directory Id="VS16_Ent_PublicAssemblies" Name="PublicAssemblies" />
+            <!--Item Templates-->
+            <Directory Id="VS16_Ent_ItemTemplates" Name="ItemTemplates" >
+              <Directory Id="VS16_Ent_CSharpIT" Name="CSharp">
+                <Directory Id="VS16_Ent_CSharpITMySQL" Name="MySQL"/>
+              </Directory>
+              <Directory Id="VS16_ENT_VBIT" Name="VisualBasic">
+                <Directory Id="VS16_Ent_VBITMySQL" Name="MySQL"/>
+              </Directory>
+            </Directory>
+            <Directory Id="VS16_Ent_ItemTemplatesCache" Name="ItemTemplatesCache">
+              <Directory Id="VS16_Ent_CSharpITCache" Name="CSharp">
+                <Directory Id="VS16_Ent_CS_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS16_Ent_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+                  <Directory Id="VS16_Ent_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS16_Ent_VBITCache" Name="VisualBasic">
+                <Directory Id="VS16_Ent_VB_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS16_Ent_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+                  <Directory Id="VS16_Ent_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+          <!-- Tools folder -->
+          <Directory Id="VS16_Ent_ToolsFolder" Name="Tools">
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <!-- VS2019 Professional Extension folders -->
+      <Directory Id="VS_2019_PRO_PATH" Name="VSPath2019Pro">
+        <Directory Id="VS16.Pro.Common7Folder" Name="Common7">
+          <Directory Id="VS16.Pro.IDEFolder" Name="IDE">
+            <!--Extensions -->
+            <Directory Id="VS16.Pro.T4.ExtensionDir" Name="Extensions">
+              <Directory Id="VS16.Pro.T4.MicrosoftDir" Name="Microsoft">
+                <Directory Id="VS16.Pro.T4.EFToolsDir" Name="Entity Framework Tools">
+                  <Directory Id="VS16_Pro_DBGenDir" Name="DBGen"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS16_Pro_OracleDir" Name="Oracle">
+                <Directory Id="VS16_Pro_ExtensionDir" Name="MySQL for Visual Studio ">
+                  <Directory Id="VS16_Pro_ExtVersionDir" Name="$(var.Version)">
+                    <Directory Id='VS16_Pro_TemplatesDir' Name='Templates'/>
+                    <Directory Id='VS16_Pro_T4TemplatesDir' Name='T4Templates' >
+                      <Directory Id='VS16_Pro_T4TemplatesCSharpDir' Name='CSharp' />
+                      <Directory Id='VS16_Pro_T4TemplatesVBDir' Name='VisualBasic' />
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <!--Private Assemblies -->
+            <Directory Id="VS16_Pro_PrivateAssemblies" Name="PrivateAssemblies" />
+            <!--Public Assemblies -->
+            <Directory Id="VS16_Pro_PublicAssemblies" Name="PublicAssemblies" />
+            <!--Item Templates-->
+            <Directory Id="VS16_Pro_ItemTemplates" Name="ItemTemplates" >
+              <Directory Id="VS16_Pro_CSharpIT" Name="CSharp">
+                <Directory Id="VS16_Pro_CSharpITMySQL" Name="MySQL"/>
+              </Directory>
+              <Directory Id="VS16_PRO_VBIT" Name="VisualBasic">
+                <Directory Id="VS16_Pro_VBITMySQL" Name="MySQL"/>
+              </Directory>
+            </Directory>
+            <Directory Id="VS16_Pro_ItemTemplatesCache" Name="ItemTemplatesCache">
+              <Directory Id="VS16_Pro_CSharpITCache" Name="CSharp">
+                <Directory Id="VS16_Pro_CS_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS16_Pro_CS_WinForm_ItemTemplate.zip" Name="MySQL_CS_WinForm.zip"/>
+                  <Directory Id="VS16_Pro_CS_Web_ItemTemplate.zip" Name="MySQL_CS_Web.zip"/>
+                </Directory>
+              </Directory>
+              <Directory Id="VS16_Pro_VBITCache" Name="VisualBasic">
+                <Directory Id="VS16_Pro_VB_IT_MySQLCache" Name="MySQL">
+                  <Directory Id="VS16_Pro_VB_WinForm_ItemTemplate.zip" Name="MySQL_VB_WinForm.zip"/>
+                  <Directory Id="VS16_Pro_VB_Web_ItemTemplate.zip" Name="MySQL_VB_Web.zip"/>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+          <!-- Tools folder -->
+          <Directory Id="VS16_Pro_ToolsFolder" Name="Tools">
+          </Directory>
+        </Directory>
+      </Directory>
     </Directory>
 
     <!-- Docs -->
@@ -438,19 +499,17 @@
     <!--<FeatureRef Id="WebProviders"/>-->
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
-      <FeatureRef Id='VS2012Int'/>
-      <FeatureRef Id='VS2013Int'/>
       <FeatureRef Id='VS2015Int'/>
       <FeatureRef Id='VS2017Int'/>
+      <FeatureRef Id='VS2019Int'/>
     </Feature>
 
-    <Feature Id="EntityFramework"  Title="Entity Framework Designer Integration" Display="expand"
+    <Feature Id="EntityFramework"  Title="Entity Framework Designer Integration" Display="10"
         Description="Support for the entity framework">
-      <Condition Level="0">Not WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Condition>
-      <FeatureRef Id="EntityFramework2012"/>
-      <FeatureRef Id="EntityFramework2013"/>
+      <Condition Level="0">Not WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED</Condition>
       <FeatureRef Id="EntityFramework2015"/>
       <FeatureRef Id="EntityFramework2017"/>
+      <FeatureRef Id="EntityFramework2019"/>
     </Feature>
 
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
@@ -468,40 +527,18 @@
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
 
-    <!-- Visual Studio 2012 installation location -->
-    <Property Id='VS_2012_PATH_MAIN' Secure='yes'>
-      <RegistrySearch Id='Find_VS2012_Path_Main' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
-    </Property>
-
-    <!--Visual Studio 2013 installation location-->
-    <Property Id='VS_2013_PATH_MAIN' Secure='yes'>
-      <RegistrySearch Id='Find_VS2013_Path_Main' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\12.0\'
-          Name='ShellFolder' Type='raw'/>
-    </Property>
-
     <!--Visual Studio 2015 installation location-->
     <Property Id='VS_2015_PATH_MAIN' Secure='yes'>
       <RegistrySearch Id='Find_VS2015_Path_Main' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\14.0\'
           Name='ShellFolder' Type='raw'/>
     </Property>
 
-    <!-- Custom Actions for setting VS2017's installation paths -->
+    <!-- Custom Actions for setting VS2017+ installation paths -->
     <Binary Id="SetGlobalVariables" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="SetInstallationPaths_VS2017" DllEntry="SetVS2017InstallationPaths" BinaryKey="SetGlobalVariables" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="SetInstallationPaths_VS2017" DllEntry="SetVSInstallationPaths" BinaryKey="SetGlobalVariables" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Custom Actions for Visual Studio registry key validations -->
     <Binary Id="ValidateVSRegKey" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="SetSessionValue_VS2012" Property="CreateRegKeyAndExtensionsFile_VS2012" Value="VSVersion=VS2012" Return="check" />
-    <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2012" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
-    <CustomAction Id="SetRegKeyValuesCreated_VS2012" Property="VS2012_REGISTRYFIX_CREATED" Value="1" />
-    <CustomAction Id="SetDeleteSessionValue_VS2012" Property="DeleteRegKeyAndExtensionsFile_VS2012" Value="VSVersion=VS2012" Return="check" />
-    <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2012" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
-    <CustomAction Id="SetSessionValue_VS2013" Property="CreateRegKeyAndExtensionsFile_VS2013" Value="VSVersion=VS2013" Return="check" />
-    <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2013" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
-    <CustomAction Id="SetRegKeyValuesCreated_VS2013" Property="VS2013_REGISTRYFIX_CREATED" Value="1" />
-    <CustomAction Id="SetDeleteSessionValue_VS2013" Property="DeleteRegKeyAndExtensionsFile_VS2013" Value="VSVersion=VS2013" Return="check" />
-    <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2013" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
     <CustomAction Id="SetSessionValue_VS2015" Property="CreateRegKeyAndExtensionsFile_VS2015" Value="VSVersion=VS2015" Return="check" />
     <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2015" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
     <CustomAction Id="SetRegKeyValuesCreated_VS2015" Property="VS2015_REGISTRYFIX_CREATED" Value="1" />
@@ -522,15 +559,24 @@
     <CustomAction Id="SetRegKeyValuesCreated_VS2017_Pro" Property="VS2017_PRO_REGISTRYFIX_CREATED" Value="1" />
     <CustomAction Id="SetDeleteSessionValue_VS2017_Pro" Property="DeleteRegKeyAndExtensionsFile_VS2017_Pro" Value="VSVersion=VS2017Professional" Return="check" />
     <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2017_Pro" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
+	<CustomAction Id="SetSessionValue_VS2019" Property="CreateRegKeyAndExtensionsFile_VS2019" Value="VSVersion=VS2019Community" Return="check" />
+    <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2019" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="SetRegKeyValuesCreated_VS2019" Property="VS2019_REGISTRYFIX_CREATED" Value="1" />
+    <CustomAction Id="SetDeleteSessionValue_VS2019" Property="DeleteRegKeyAndExtensionsFile_VS2019" Value="VSVersion=VS2019Community" Return="check" />
+    <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2019" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="SetSessionValue_VS2019_Ent" Property="CreateRegKeyAndExtensionsFile_VS2019_Ent" Value="VSVersion=VS2019Enterprise" Return="check" />
+    <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2019_Ent" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="SetRegKeyValuesCreated_VS2019_Ent" Property="VS2019_ENT_REGISTRYFIX_CREATED" Value="1" />
+    <CustomAction Id="SetDeleteSessionValue_VS2019_Ent" Property="DeleteRegKeyAndExtensionsFile_VS2019_Ent" Value="VSVersion=VS2019Enterprise" Return="check" />
+    <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2019_Ent" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="SetSessionValue_VS2019_Pro" Property="CreateRegKeyAndExtensionsFile_VS2019_Pro" Value="VSVersion=VS2019Professional" Return="check" />
+    <CustomAction Id="CreateRegKeyAndExtensionsFile_VS2019_Pro" DllEntry="CreateRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
+    <CustomAction Id="SetRegKeyValuesCreated_VS2019_Pro" Property="VS2019_PRO_REGISTRYFIX_CREATED" Value="1" />
+    <CustomAction Id="SetDeleteSessionValue_VS2019_Pro" Property="DeleteRegKeyAndExtensionsFile_VS2019_Pro" Value="VSVersion=VS2019Professional" Return="check" />
+    <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2019_Pro" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
 
     <InstallExecuteSequence>
-      <Custom Action="SetSessionValue_VS2012" After="InstallInitialize"><![CDATA[NOT VS_2012_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2012" After="SetSessionValue_VS2012"><![CDATA[NOT VS_2012_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2012" After='CreateRegKeyAndExtensionsFile_VS2012'><![CDATA[NOT VS_2012_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2013" After="SetRegKeyValuesCreated_VS2012"><![CDATA[NOT VS_2013_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2013" After="SetSessionValue_VS2013"><![CDATA[NOT VS_2013_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2013" After='CreateRegKeyAndExtensionsFile_VS2013'><![CDATA[NOT VS_2013_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2015" After="SetRegKeyValuesCreated_VS2013"><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetSessionValue_VS2015" After="InstallInitialize"><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
       <Custom Action="CreateRegKeyAndExtensionsFile_VS2015" After="SetSessionValue_VS2015"><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
       <Custom Action="SetRegKeyValuesCreated_VS2015" After='CreateRegKeyAndExtensionsFile_VS2015'><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
       <Custom Action="SetSessionValue_VS2017" After="SetRegKeyValuesCreated_VS2015"><![CDATA[NOT VS_2017_COM_PATH_MAIN >< "Program Files"]]></Custom>
@@ -542,15 +588,20 @@
       <Custom Action="SetSessionValue_VS2017_Pro" After="SetRegKeyValuesCreated_VS2017_Ent"><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
       <Custom Action="CreateRegKeyAndExtensionsFile_VS2017_Pro" After="SetSessionValue_VS2017_Pro"><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
       <Custom Action="SetRegKeyValuesCreated_VS2017_Pro" After='CreateRegKeyAndExtensionsFile_VS2017_Pro'><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetSessionValue_VS2019" After="SetRegKeyValuesCreated_VS2017_Pro"><![CDATA[NOT VS_2019_COM_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019" After="SetSessionValue_VS2019"><![CDATA[NOT VS_2019_COM_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2019" After='CreateRegKeyAndExtensionsFile_VS2019'><![CDATA[NOT VS_2019_COM_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetSessionValue_VS2019_Ent" After="SetRegKeyValuesCreated_VS2019"><![CDATA[NOT VS_2019_ENT_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019_Ent" After="SetSessionValue_VS2019_Ent"><![CDATA[NOT VS_2019_ENT_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2019_Ent" After='CreateRegKeyAndExtensionsFile_VS2019_Ent'><![CDATA[NOT VS_2019_ENT_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetSessionValue_VS2019_Pro" After="SetRegKeyValuesCreated_VS2019_Ent"><![CDATA[NOT VS_2019_PRO_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019_Pro" After="SetSessionValue_VS2019_Pro"><![CDATA[NOT VS_2019_PRO_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2019_Pro" After='CreateRegKeyAndExtensionsFile_VS2019_Pro'><![CDATA[NOT VS_2019_PRO_PATH_MAIN >< "Program Files"]]></Custom>
 
       <RemoveExistingProducts After='InstallExecute' />
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
 
-      <Custom Action="SetDeleteSessionValue_VS2012" Before="VS2012_SetPathProp">(VS2012_REGISTRYFIX_CREATED = 1)</Custom>
-      <Custom Action="DeleteRegKeyAndExtensionsFile_VS2012"  After="SetDeleteSessionValue_VS2012">(VS2012_REGISTRYFIX_CREATED = 1)</Custom>
-      <Custom Action="SetDeleteSessionValue_VS2013" After="DeleteRegKeyAndExtensionsFile_VS2012">(VS2013_REGISTRYFIX_CREATED = 1)</Custom>
-      <Custom Action="DeleteRegKeyAndExtensionsFile_VS2013"  After="SetDeleteSessionValue_VS2013">(VS2013_REGISTRYFIX_CREATED = 1)</Custom>
-      <Custom Action="SetDeleteSessionValue_VS2015" After="DeleteRegKeyAndExtensionsFile_VS2013">(VS2015_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="SetDeleteSessionValue_VS2015" Before="VS2012_SetPathProp">(VS2015_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2015"  After="SetDeleteSessionValue_VS2015">(VS2015_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="SetDeleteSessionValue_VS2017" After="DeleteRegKeyAndExtensionsFile_VS2015">(VS2017_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2017"  After="SetDeleteSessionValue_VS2017">(VS2017_REGISTRYFIX_CREATED = 1)</Custom>
@@ -558,6 +609,12 @@
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2017_Ent"  After="SetDeleteSessionValue_VS2017_Ent">(VS2017_ENT_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="SetDeleteSessionValue_VS2017_Pro" After="DeleteRegKeyAndExtensionsFile_VS2017_Ent">(VS2017_PRO_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2017_Pro"  After="SetDeleteSessionValue_VS2017_Pro">(VS2017_PRO_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="SetDeleteSessionValue_VS2019" After="DeleteRegKeyAndExtensionsFile_VS2017_Pro">(VS2019_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="DeleteRegKeyAndExtensionsFile_VS2019"  After="SetDeleteSessionValue_VS2019">(VS2019_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="SetDeleteSessionValue_VS2019_Ent" After="DeleteRegKeyAndExtensionsFile_VS2019">(VS2019_ENT_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="DeleteRegKeyAndExtensionsFile_VS2019_Ent"  After="SetDeleteSessionValue_VS2019_Ent">(VS2019_ENT_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="SetDeleteSessionValue_VS2019_Pro" After="DeleteRegKeyAndExtensionsFile_VS2019_Ent">(VS2019_PRO_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="DeleteRegKeyAndExtensionsFile_VS2019_Pro"  After="SetDeleteSessionValue_VS2019_Pro">(VS2019_PRO_REGISTRYFIX_CREATED = 1)</Custom>
     </InstallExecuteSequence>
 
     <!-- Setup should not continue is a newer version is installed. -->

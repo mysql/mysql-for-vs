@@ -1,163 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
-    <!-- Visual Studio 2012 -->
-    <DirectoryRef Id='VS11_ExtVersionDir'>
-      <Component Id='VS2012_Extension' Guid='ECB3633C-4169-4074-A527-3FDA825DDB2F'>
-        <File Id='MySQL.VisualStudio.2012' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\11.0v4.5.2\release\MySQL.VisualStudio.dll'/>
-        <File Id='MySql.Parser.2012' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\11.0v4.5.2\release\MySql.Parser.dll'/>
-        <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
-        <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\15.0v4.6.1\release\extension.vsixmanifest'/>
-        <File Id='VSPkgdef.2012' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\11.0v4.5.2\release\MySql.VisualStudio.pkgdef'/>
-        <File Id='MySql.Debugger.2012' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
-        <File Id='MySql.Debugger.VisualStudio.2012' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\11.0v4.5.2\release\MySql.Debugger.VisualStudio.dll'/>
-        <File Id='MySql.Utility_2012' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS11_TemplatesDir'>
-      <Component Id='VS2012_Templates' Guid='260283FF-817E-408E-8D87-7A4BF99BA818'>
-        <File Id='VS2012_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='VS2012_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS11_PrivateAssemblies'>
-      <Component Id='VS2012_MD.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655250E'>
-        <File Id='VS2012_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
-      </Component>
-      <Component Id='VS2012_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251E'>
-        <File Id='VS2012_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <!--Item Templates-->
-    <DirectoryRef Id='VS11_CSharpITMySQL'>
-      <Component Id='VS2012_VSIT_DIR' Guid='53498d20-e60d-4b46-8c94-27fa2a4333ea'>
-        <File Id='VS2012_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
-        <File Id='VS2012_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id='VS11_VBITMySQL'>
-      <Component Id='VS2012_VB_VSIT_DIR' Guid='dfb29060-0564-4851-b771-b5873a92ec90'>
-        <File Id='VS2012_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
-        <File Id='VS2012_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS11_T4TemplatesCSharpDir'>
-      <Component Id='VS2012_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C2565525FF'>
-        <File Id='VS2012_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
-        <File Id='VS2012_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS11_T4TemplatesVBDir' >
-      <Component Id='VS2012_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525AA'>
-        <File Id='VS2012_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
-        <File Id='VS2012_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
-    <!-- Visual Studio 2013 -->
-    <DirectoryRef Id='VS12_ExtVersionDir'>
-      <Component Id='VS2013_Extension' Guid='AFD7D38E-D166-4256-B1A5-637E7B33134B'>
-        <File Id='MySQL.VisualStudio.2013' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\12.0v4.5.2\release\MySQL.VisualStudio.dll'/>
-        <File Id='MySql.Parser.2013' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\12.0v4.5.2\release\MySql.Parser.dll'/>
-        <File Id='Antlr3.Runtime.2013' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
-        <File Id='VsixManifest.2013' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\15.0v4.6.1\release\extension.vsixmanifest'/>
-        <File Id='VSPkgdef.2013' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\12.0v4.5.2\release\MySql.VisualStudio.pkgdef'/>
-        <File Id='MySql.Debugger.2013' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
-        <File Id='MySql.Debugger.VisualStudio.2013' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\12.0v4.5.2\release\MySql.Debugger.VisualStudio.dll'/>
-        <File Id='MySql.Utility_2013' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_TemplatesDir'>
-      <Component Id='VS2013_Templates' Guid='299BAC3E-82EB-4FC2-9ECA-4E1C0F50F34C'>
-        <File Id='VS2013_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='VS2013_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_PrivateAssemblies'>
-      <Component Id='VS2013_MD.Library' Guid='4D8A38C2-9750-4C35-B89D-FD7FA6789BAC'>
-        <File Id='VS2013_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
-      </Component>
-      <Component Id='VS2013_Web.Library' Guid='0707943C-D00B-4D81-8722-E10CB4F77558'>
-        <File Id='VS2013_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <!--Item Templates-->
-    <DirectoryRef Id='VS12_CSharpITMySQL'>
-      <Component Id='VS2013_VSIT_DIR' Guid='7C09EF65-F8D0-4BE8-9F0A-030933EF1F05'>
-        <File Id='VS2013_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
-        <File Id='VS2013_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id='VS12_VBITMySQL'>
-      <Component Id='VS2013_VB_VSIT_DIR' Guid='a20f84dd-fe3a-4ab4-a0f9-bd346c660fbe'>
-        <File Id='VS2013_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
-        <File Id='VS2013_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
-      </Component>
-    </DirectoryRef>
-
-
-    <DirectoryRef Id='VS12_T4TemplatesCSharpDir'>
-      <Component Id='VS2013_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C2565525CC'>
-        <File Id='VS2013_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
-        <File Id='VS2013_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_T4TemplatesVBDir' >
-      <Component Id='VS2013_T4TemplatesVBDir' Guid='BA082C85-9D64-1079-8910-C6C2565525BB'>
-        <File Id='VS2013_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
-        <File Id='VS2013_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
     <!-- Visual Studio 2015 -->
     <DirectoryRef Id='VS14_ExtVersionDir'>
       <Component Id='VS2015_Extension' Guid='D7EE5F2F-5F1D-48F0-B7E6-E6D731B599F0'>
@@ -497,32 +340,268 @@
       </Component>
     </DirectoryRef>
 
+	<!-- Visual Studio 2019 Community -->
+    <DirectoryRef Id='VS16_ExtVersionDir'>
+      <Component Id='VS2019_Com_EVars' Guid='5CE140F1-67F3-4088-99D2-4201BA4712B4'>
+        <Environment Id="VS160COMCOMNTOOLS" Name="VS160COMCOMNTOOLS" Value="[VS16_ToolsFolder]" Permanent="no" Part="all" Action="set" System="yes" />
+      </Component>
+      <Component Id='VS2019_Extension' Guid='0D40451A-EEE4-4132-8050-8764AA6FF0AE'>
+        <File Id='MySQL.VisualStudio.2019' Name='MySQL.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySQL.VisualStudio.dll'/>
+        <File Id='MySql.Parser.2019' Name='MySql.Parser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySql.Parser.dll'/>
+        <File Id='Antlr3.Runtime.2019' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
+        <File Id='VsixManifest.2019' Name='extension.vsixmanifest' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\extension.vsixmanifest'/>
+        <File Id='VSPkgdef.2019' Name='MySql.VisualStudio.pkgdef' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySql.VisualStudio.pkgdef'/>
+        <File Id='MySql.Debugger.2019' Name='MySql.Debugger.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+        <File Id='MySql.Debugger.VisualStudio.2019' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySql.Utility_2019' Name='MySql.Utility.dll' DiskId='1'
+              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_TemplatesDir'>
+      <Component Id='VS2019_Templates' Guid='4F6DE1B0-F851-4B5C-906F-08550AEAFDD8'>
+        <File Id='VS2019_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2019_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id='VS2019_MD.Library' Guid='C47CD409-E60F-4A6A-90C8-873F38556092'>
+        <File Id='VS2019_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+      <Component Id='VS2019_Web.Library' Guid='47948DCA-C317-4FA7-9BD6-801002F5B8EB'>
+        <File Id='VS2019_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <!--Item Templates-->
+    <DirectoryRef Id='VS16_ItemTemplates'>
+      <Component Id='VS2019_VSIT_ROOT_DIR' Guid='72125D22-0E77-4522-99B5-8AFDF3F6E3EA'>
+        <File Id='VS2019_VSCS_ItemTemplate' Name='MySQLforVisualStudio.Item.vstman' DiskId='1'
+              Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id='VS16_CSharpITMySQL'>
+      <Component Id='VS2019_VSIT_DIR' Guid='02AA076C-FF8F-4B0E-9AC7-2BBAEAD8722D'>
+        <File Id='VS2019_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
+        <File Id='VS2019_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id='VS16_VBITMySQL'>
+      <Component Id='VS2019_VB_VSIT_DIR' Guid='94616205-7193-43FC-8E3D-7904EFB30BD8'>
+        <File Id='VS2019_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
+        <File Id='VS2019_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_T4TemplatesCSharpDir'>
+      <Component Id='VS2019_T4TemplatesCSharpDir' Guid='C0371057-9F0C-431E-AE3A-B3488C607F99'>
+        <File Id='VS2019_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
+        <File Id='VS2019_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_T4TemplatesVBDir' >
+      <Component Id='VS2019_T4TemplatesVBDir' Guid='C6F509C7-438F-493C-8B71-128D1B54155C'>
+        <File Id='VS2019_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+        <File Id='VS2019_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Enterprise -->
+    <DirectoryRef Id='VS16_Ent_ExtVersionDir'>
+      <Component Id='VS2019_Ent_EVars' Guid='2BC94ED6-2BDB-4620-ABC5-6585C1B8A117'>
+        <Environment Id="VS160ENTCOMNTOOLS" Name="VS160ENTCOMNTOOLS" Value="[VS16_Ent_ToolsFolder]" Permanent="no" Part="all" Action="set" System="yes" />
+      </Component>
+      <Component Id='VS2019_Ent_Extension' Guid='BFD794A7-C9DA-42C2-A2D0-DD17483E38AA'>
+        <File Id='MySQL.VisualStudio.2019_Ent' Name='MySQL.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySQL.VisualStudio.dll'/>
+        <File Id='MySql.Parser.2019_Ent' Name='MySql.Parser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySql.Parser.dll'/>
+        <File Id='Antlr3.Runtime.2019_Ent' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
+        <File Id='VsixManifest.2019_Ent' Name='extension.vsixmanifest' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\extension.vsixmanifest'/>
+        <File Id='VSPkgdef.2019_Ent' Name='MySql.VisualStudio.pkgdef' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySql.VisualStudio.pkgdef'/>
+        <File Id='MySql.Debugger.2019_Ent' Name='MySql.Debugger.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+        <File Id='MySql.Debugger.VisualStudio.2019_Ent' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySql.Utility_2019_Ent' Name='MySql.Utility.dll' DiskId='1'
+              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Ent_TemplatesDir'>
+      <Component Id='VS2019_Ent_Templates' Guid='D7BD86CC-4805-4ED3-B1A2-7DA19BBE4722'>
+        <File Id='VS2019_Ent_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2019_Ent_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
+      <Component Id='VS2019_Ent_MD.Library' Guid='7059E37E-AD4B-43E3-97B4-46030232C916'>
+        <File Id='VS2019_Ent_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+      <Component Id='VS2019_Ent_Web.Library' Guid='94601352-0FBC-462D-B635-3C0252E430CF'>
+        <File Id='VS2019_Ent_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <!--Item Templates-->
+    <DirectoryRef Id='VS16_Ent_ItemTemplates'>
+      <Component Id='VS2019_ENT_VSIT_ROOT_DIR' Guid='ACA62D23-3372-4AE5-AFB2-DEA2B7FC596D'>
+        <File Id='VS2019_Ent_VSCS_ItemTemplate' Name='MySQLforVisualStudio.Item.vstman' DiskId='1'
+              Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id='VS16_Ent_CSharpITMySQL'>
+      <Component Id='VS2019_ENT_VSIT_DIR' Guid='3C88CC33-3774-449E-82F7-FEC8414E64D5'>
+        <File Id='VS2019_Ent_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
+        <File Id='VS2019_Ent_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id='VS16_Ent_VBITMySQL'>
+      <Component Id='VS2019_ENT_VB_VSIT_DIR' Guid='0988AFBF-352B-439E-9B6A-7E0DD4ED77B1'>
+        <File Id='VS2019_Ent_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
+        <File Id='VS2019_Ent_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Ent_T4TemplatesCSharpDir'>
+      <Component Id='VS2019_Ent_T4TemplatesCSharpDir' Guid='DD68735B-3726-4855-8356-8DD912D79C83'>
+        <File Id='VS2019_Ent_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
+        <File Id='VS2019_Ent_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Ent_T4TemplatesVBDir' >
+      <Component Id='VS2019_Ent_T4TemplatesVBDir' Guid='3A3F871A-6FC2-42F2-AE0E-DAEFC2EB33D3'>
+        <File Id='VS2017_Ent_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+        <File Id='VS2019_Ent_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Professional -->
+    <DirectoryRef Id='VS16_Pro_ExtVersionDir'>
+      <Component Id='VS2019_Pro_EVars' Guid='5A3BA31A-BC65-422D-B82A-C2D7D1802383'>
+        <Environment Id="VS160PROCOMNTOOLS" Name="VS160PROCOMNTOOLS" Value="[VS16_Pro_ToolsFolder]" Permanent="no" Part="all" Action="set" System="yes" />
+      </Component>
+      <Component Id='VS2019_Pro_Extension' Guid='A58D84EB-FA3D-4763-8E33-0388F3AD716A'>
+        <File Id='MySQL.VisualStudio.2019_Pro' Name='MySQL.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySQL.VisualStudio.dll'/>
+        <File Id='MySql.Parser.2019_Pro' Name='MySql.Parser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySql.Parser.dll'/>
+        <File Id='Antlr3.Runtime.2019_Pro' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
+        <File Id='VsixManifest.2019_Pro' Name='extension.vsixmanifest' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\extension.vsixmanifest'/>
+        <File Id='VSPkgdef.2019_Pro' Name='MySql.VisualStudio.pkgdef' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\16.0v4.7.2\release\MySql.VisualStudio.pkgdef'/>
+        <File Id='MySql.Debugger.2019_Pro' Name='MySql.Debugger.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+        <File Id='MySql.Debugger.VisualStudio.2019_Pro' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySql.Utility_2019_Pro' Name='MySql.Utility.dll' DiskId='1'
+              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Pro_TemplatesDir'>
+      <Component Id='VS2019_Pro_Templates' Guid='076BDDB1-4EB7-46B3-8891-BD4106C4D129'>
+        <File Id='VS2019_Pro_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2019_Pro_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
+      <Component Id='VS2019_Pro_MD.Library' Guid='2EBDC544-7C18-47FC-8E17-E3F3A082683B'>
+        <File Id='VS2019_Pro_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+      <Component Id='VS2019_Pro_Web.Library' Guid='944B886C-A589-46B8-9E89-0FA1EE01D490'>
+        <File Id='VS2019_Pro_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+    </DirectoryRef>
+
+    <!--Item Templates-->
+    <DirectoryRef Id='VS16_Pro_ItemTemplates'>
+      <Component Id='VS2019_PRO_VSIT_ROOT_DIR' Guid='6B5CF305-063D-4235-9C46-4BE95CD3D197'>
+        <File Id='VS2019_Pro_VSCS_ItemTemplate' Name='MySQLforVisualStudio.Item.vstman' DiskId='1'
+              Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id='VS16_Pro_CSharpITMySQL'>
+      <Component Id='VS2019_PRO_VSIT_DIR' Guid='61F25464-ADCA-4E98-B4DD-00B618B73A21'>
+        <File Id='VS2019_Pro_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
+        <File Id='VS2019_Pro_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id='VS16_Pro_VBITMySQL'>
+      <Component Id='VS2019_PRO_VB_VSIT_DIR' Guid='190295E1-5139-4486-9236-19368FC4A3CE'>
+        <File Id='VS2019_Pro_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
+        <File Id='VS2019_Pro_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
+              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Pro_T4TemplatesCSharpDir'>
+      <Component Id='VS2019_Pro_T4TemplatesCSharpDir' Guid='966DE929-77B7-4932-92E7-9BF23C6A9756'>
+        <File Id='VS2019_Pro_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
+        <File Id='VS2019_Pro_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Pro_T4TemplatesVBDir' >
+      <Component Id='VS2019_Pro_T4TemplatesVBDir' Guid='93B03BAB-C5EE-4032-9096-DDD18E6E63D8'>
+        <File Id='VS2019_Pro_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
+        <File Id='VS2019_Pro_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
+           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
+      </Component>
+    </DirectoryRef>
+
     <!--Removing files from Private Assemblies Folders-->
-    <DirectoryRef Id='VS11_PrivateAssemblies'>
-      <Component Id='Remove.VS2012_MD.Library' Guid='AF082C85-9D64-4B79-8910-C6C25655250A'>
-        <RemoveFile Id='RemoveVS2012_MySql.DataLib' Name='MySql.Data.dll' On='uninstall'/>
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id='Remove.VS2012_Web.Library' Guid='BA082C85-9D64-4B79-8910-C6C25655251A'>
-        <RemoveFile Id='RemoveVS2012_MySql.Web.Lib' Name='MySql.Web.dll' On='uninstall'/>
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_PrivateAssemblies'>
-      <Component Id="Remove.VS2013_MD.Library" Guid="4D8A38C2-9750-4C35-B89D-FD7FA6789BAA" DiskId="1">
-        <RemoveFile Id="RemoveVS2013_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_PrivateAssemblies'>
-      <Component Id="Remove.VS2013_Web.Library" Guid="0707943C-D00B-4D81-8722-E10CB4F7755A" DiskId="1">
-        <RemoveFile Id="RemoveVS2013_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id="Remove.VS2015_MD.Library" Guid="DDF7A0E8-55AD-4379-9B23-7C57078C34A5" DiskId="1">
         <RemoveFile Id="RemoveVS2015_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
@@ -582,49 +661,50 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
-      <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
-      <ComponentRef Id='VS2012_Extension'/>
-      <ComponentRef Id='VS2012_Templates'/>
-      <ComponentRef Id='VS2012_MD.Library' />
-      <ComponentRef Id='VS2012_Web.Library' />
-      <ComponentRef Id='Remove.VS2012_MD.Library'/>
-      <ComponentRef Id='Remove.VS2012_Web.Library'/>
-      <ComponentRef Id='AutoLoadPackageVS2012'/>
-      <!--Item Templates-->
-      <Feature Id='VS2012_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
-        <ComponentRef Id='VS2012_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS11_CS_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS11_CS_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2012_VB_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS11_VB_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS11_VB_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2012_T4TemplatesCSharpDir' />
-        <ComponentRef Id='VS2012_T4TemplatesVBDir' />
-      </Feature>
-    </Feature>
+	<!-- Visual Studio 2019 Community -->
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_MD.Library" Guid="C9EDF583-8420-40DF-AF88-7A4B88CCE188" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
 
-    <Feature Id='VS2013Int' Level='1' Title='Visual Studio 2013'>
-      <Condition Level='0'>Not VS_2013_PATH AND Not Installed</Condition>
-      <ComponentRef Id='VS2013_Extension'/>
-      <ComponentRef Id='VS2013_Templates'/>
-      <ComponentRef Id='VS2013_MD.Library' />
-      <ComponentRef Id='VS2013_Web.Library' />
-      <ComponentRef Id='Remove.VS2013_MD.Library'/>
-      <ComponentRef Id='Remove.VS2013_Web.Library'/>
-      <ComponentRef Id='AutoLoadPackageVS2013'/>
-      <!--Item Templates-->
-      <Feature Id='VS2013_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden'>
-        <ComponentRef Id='VS2013_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS12_CS_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS12_CS_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2013_VB_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS12_VB_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS12_VB_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2013_T4TemplatesCSharpDir' />
-        <ComponentRef Id='VS2013_T4TemplatesVBDir' />
-      </Feature>
-    </Feature>
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_Web.Library" Guid="D5B51AD1-669F-4B54-940D-B4B878C51990" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Enterprise -->
+    <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_Ent_MD.Library" Guid="68F99A67-CDDB-4FC3-978C-2AB0FFD5B40C" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_Ent_Web.Library" Guid="F6D7B715-937C-458B-83D1-CF14125AF990" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Professional -->
+    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_Pro_MD.Library" Guid="1CD92E02-9CD5-479D-8715-B056A61954D0" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Pro_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_Pro_Web.Library" Guid="2129DA94-7E0D-43D8-B1BC-5E4C284B390B" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Pro_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
 
     <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
       <Condition Level='0'>Not VS_2015_PATH AND Not Installed</Condition>
@@ -718,18 +798,75 @@
       </Feature>
     </Feature>
 
-    <!-- Visual Studio 2012 installation location -->
-    <Property Id='VS_2012_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2012_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
-    </Property>
-
-    <!-- Visual Studio 2013 installation location -->
-    <!-- way to get VS2013 is clumsy due to Wix not currently having VS2013 support -->
-    <Property Id='VS_2013_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2013_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\12.0\'
-          Name='ShellFolder' Type='raw'/>
-    </Property>
+	<Feature Id='VS2019Int' Level='1' Title='Visual Studio 2019' Display='expand'>
+      <Condition Level='0'>(Not VS_2019_COM_PATH AND Not VS_2019_ENT_PATH AND Not VS_2019_PRO_PATH) AND Not Installed</Condition>
+      <Feature Id='VS2019CommunityInt' Level='1' Title='Visual Studio 2019 Community'>
+        <Condition Level='0'>Not VS_2019_COM_PATH AND Not Installed</Condition>
+        <ComponentRef Id='VS2019_Extension'/>
+        <ComponentRef Id='VS2019_Templates'/>
+        <ComponentRef Id='VS2019_MD.Library' />
+        <ComponentRef Id='VS2019_Web.Library' />
+        <ComponentRef Id='Remove.VS2019_MD.Library'/>
+        <ComponentRef Id='Remove.VS2019_Web.Library'/>
+        <ComponentRef Id='VS2019_Com_EVars'/>
+        <!--Item Templates-->
+        <Feature Id='VS2019_AddItemTemplate' Title='ItemTemplates' Level='1'>
+          <ComponentRef Id='VS2019_VSIT_ROOT_DIR'/>
+          <ComponentRef Id='VS2019_VSIT_DIR'/>
+          <ComponentGroupRef Id='VS16_CS_WinForm_ItemTemplate_DirectoryComponents'/>
+          <ComponentGroupRef Id='VS16_CS_Web_ItemTemplate_DirectoryComponents'/>
+          <ComponentRef Id='VS2019_VB_VSIT_DIR'/>
+          <ComponentGroupRef Id='VS16_VB_WinForm_ItemTemplate_DirectoryComponents'/>
+          <ComponentGroupRef Id='VS16_VB_Web_ItemTemplate_DirectoryComponents'/>
+          <ComponentRef Id='VS2019_T4TemplatesCSharpDir' />
+          <ComponentRef Id='VS2019_T4TemplatesVBDir' />
+        </Feature>
+      </Feature>
+      <Feature Id='VS2019EnterpriseInt' Level='1' Title='Visual Studio 2019 Enterprise'>
+        <Condition Level='0'>Not VS_2019_ENT_PATH AND Not Installed</Condition>
+        <ComponentRef Id='VS2019_Ent_Extension'/>
+        <ComponentRef Id='VS2019_Ent_Templates'/>
+        <ComponentRef Id='VS2019_Ent_MD.Library' />
+        <ComponentRef Id='VS2019_Ent_Web.Library' />
+        <ComponentRef Id='Remove.VS2019_Ent_MD.Library'/>
+        <ComponentRef Id='Remove.VS2019_Ent_Web.Library'/>
+        <ComponentRef Id='VS2019_Ent_EVars'/>
+        <!--Item Templates-->
+        <Feature Id='VS2019_Ent_AddItemTemplate' Title='ItemTemplates' Level='1'>
+          <ComponentRef Id='VS2019_ENT_VSIT_ROOT_DIR'/>
+          <ComponentRef Id='VS2019_ENT_VSIT_DIR'/>
+          <ComponentGroupRef Id='VS16_Ent_CS_WinForm_ItemTemplate_DirectoryComponents'/>
+          <ComponentGroupRef Id='VS16_Ent_CS_Web_ItemTemplate_DirectoryComponents'/>
+          <ComponentRef Id='VS2019_ENT_VB_VSIT_DIR'/>
+          <ComponentGroupRef Id='VS16_Ent_VB_WinForm_ItemTemplate_DirectoryComponents'/>
+          <ComponentGroupRef Id='VS16_Ent_VB_Web_ItemTemplate_DirectoryComponents'/>
+          <ComponentRef Id='VS2019_Ent_T4TemplatesCSharpDir' />
+          <ComponentRef Id='VS2019_Ent_T4TemplatesVBDir' />
+        </Feature>
+      </Feature>
+      <Feature Id='VS2019ProfessionalInt' Level='1' Title='Visual Studio 2017 Professional'>
+        <Condition Level='0'>Not VS_2019_PRO_PATH AND Not Installed</Condition>
+        <ComponentRef Id='VS2019_Pro_Extension'/>
+        <ComponentRef Id='VS2019_Pro_Templates'/>
+        <ComponentRef Id='VS2019_Pro_MD.Library' />
+        <ComponentRef Id='VS2019_Pro_Web.Library' />
+        <ComponentRef Id='Remove.VS2019_Pro_MD.Library'/>
+        <ComponentRef Id='Remove.VS2019_Pro_Web.Library'/>
+        <ComponentRef Id='VS2019_Pro_EVars'/>
+        <!--Item Templates-->
+        <Feature Id='VS2019_Pro_AddItemTemplate' Title='ItemTemplates' Level='1'>
+          <ComponentRef Id='VS2019_PRO_VSIT_ROOT_DIR'/>
+          <ComponentRef Id='VS2019_PRO_VSIT_DIR'/>
+          <ComponentGroupRef Id='VS16_Pro_CS_WinForm_ItemTemplate_DirectoryComponents'/>
+          <ComponentGroupRef Id='VS16_Pro_CS_Web_ItemTemplate_DirectoryComponents'/>
+          <ComponentRef Id='VS2019_PRO_VB_VSIT_DIR'/>
+          <ComponentGroupRef Id='VS16_Pro_VB_WinForm_ItemTemplate_DirectoryComponents'/>
+          <ComponentGroupRef Id='VS16_Pro_VB_Web_ItemTemplate_DirectoryComponents'/>
+          <ComponentRef Id='VS2019_Pro_T4TemplatesCSharpDir' />
+          <ComponentRef Id='VS2019_Pro_T4TemplatesVBDir' />
+        </Feature>
+      </Feature>
+    </Feature>
 
     <!-- Visual Studio 2015 installation location -->
     <Property Id='VS_2015_PATH' Secure='yes'>
@@ -743,15 +880,11 @@
     <Property Id='VS_2017_ENT_PATH' Secure='yes' />
     <Property Id='VS_2017_PRO_PATH' Secure='yes' />
 
-    <!-- Visual Studio 2012 Custom Action (update packages file) -->
-    <Binary Id="VS11_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
-    <CustomAction Id="VS11_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2012" BinaryKey="VS11_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
-
-    <!-- Visual Studio 2013 Custom Action (update packages file) -->
-    <Binary Id="VS12_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="VS2013_SetPathProp" Property="VS12_UpdatePackageFile" Value="VS2013_PathProp=[VS_2013_PATH]" Return="check" />
-    <CustomAction Id="VS12_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2013" BinaryKey="VS12_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+    <!-- Visual Studio 2019 installation locations -->
+    <!-- Value is calculated at runtime using the Setup Configuration API. -->
+    <Property Id='VS_2019_COM_PATH' Secure='yes' />
+    <Property Id='VS_2019_ENT_PATH' Secure='yes' />
+    <Property Id='VS_2019_PRO_PATH' Secure='yes' />
 
     <!-- Visual Studio 2015 Custom Action (update packages file) -->
     <Binary Id="VS14_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
@@ -785,33 +918,38 @@
     <SetProperty Id="VS15_Pro_Setup_Custom" Value="&quot;[VS15.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15_Pro_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
-    <!-- Show warning message for Windows 7 users -->
+    <!-- Visual Studio 2019 Community Custom Action (update packages file) -->
+    <Binary Id="VS16_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
+    <CustomAction Id="VS2019_SetPathProp" Property="VS16_UpdatePackageFile" Value="VS2019_PathProp=[VS_2019_COM_PATH]" Return="check" />
+    <CustomAction Id="VS16_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2019" BinaryKey="VS16_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
+
+    <!-- Visual Studio 2019 Community Custom Action -->
+    <SetProperty Id="VS16Setup_Custom" Value="&quot;[VS16.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS16Setup_Custom" Sequence="execute" />
+    <CustomAction Id="VS16Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <!-- Visual Studio 2019 Enterprise Custom Action (update packages file) -->
+    <Binary Id="VS16Ent_PackFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
+    <CustomAction Id="VS2019_Ent_SetPathProp" Property="VS16_Ent_UpdatePackageFile" Value="VS2019_Ent_PathProp=[VS_2019_ENT_PATH]" Return="check" />
+    <CustomAction Id="VS16_Ent_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2019Enterprise" BinaryKey="VS16Ent_PackFile" Execute="deferred" Return="check" Impersonate="no" />
+
+    <!-- Visual Studio 2019 Enterprise Custom Action -->
+    <SetProperty Id="VS16_Ent_Setup_Custom" Value="&quot;[VS16.Ent.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS16_Ent_Setup_Custom" Sequence="execute" />
+    <CustomAction Id="VS16_Ent_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <!-- Visual Studio 2019 Professional Custom Action (update packages file) -->
+    <Binary Id="VS16Pro_PackFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
+    <CustomAction Id="VS2019_Pro_SetPathProp" Property="VS16_Pro_UpdatePackageFile" Value="VS2019_Pro_PathProp=[VS_2019_PRO_PATH]" Return="check" />
+    <CustomAction Id="VS16_Pro_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2019Professional" BinaryKey="VS16Pro_PackFile" Execute="deferred" Return="check" Impersonate="no" />
+
+    <!-- Visual Studio 2019 Professional Custom Action -->
+    <SetProperty Id="VS16_Pro_Setup_Custom" Value="&quot;[VS16.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS16_Pro_Setup_Custom" Sequence="execute" />
+    <CustomAction Id="VS16_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <!-- Show warning message for Windows 7 users installing in VS2017 and VS2019 -->
     <Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="Win7_ShowWarning" DllEntry="ShowInstallationWarning" BinaryKey="Win7Installation" Execute="immediate" Return="ignore" Impersonate="no" />
+    <CustomAction Id="Win7_ShowVSWarning" DllEntry="ShowWindows7InstallationWarning" BinaryKey="Win7Installation" Execute="immediate" Return="ignore" Impersonate="no" />
 
-    <!-- Adding AutoLoadPackage option so our connections are available -->
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="AutoLoadPackageVS2012" Guid="*">
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Microsoft\VisualStudio\11.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="AutoLoadPackageVS2013" Guid="*">
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Microsoft\VisualStudio\12.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
+	<!-- Adding AutoLoadPackage option so our connections are available -->
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="AutoLoadPackageVS2015" Guid="*">
         <RegistryKey Root="HKLM"
@@ -824,20 +962,19 @@
     </DirectoryRef>
 
     <InstallExecuteSequence>
-      <Custom Action="VS15_SetInstallationPaths" Before="LaunchConditions"></Custom>
-      <Custom Action='VS2012_SetPathProp' Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action='VS2013_SetPathProp' After='VS2012_SetPathProp'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
-      <Custom Action='VS2015_SetPathProp' After='VS2013_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
+      <Custom Action="VS15_16_SetVSInstallationPaths" Before="LaunchConditions"></Custom>
+      <Custom Action='VS2015_SetPathProp' Before='InstallFinalize'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action="VS11_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action="VS12_UpdatePackageFile" After='VS11_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
       <Custom Action="VS14_UpdatePackageFile" After='VS12_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action='VS2012Setup' After='VS14_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action='VS2013Setup' After='VS2012Setup'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
-      <Custom Action='VS2015Setup' After='VS2013Setup'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
+      <Custom Action='VS2015Setup' After='VS14_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action='VS15Setup_Custom' After='VS2015Setup'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
       <Custom Action='VS15_Ent_Setup_Custom' After='VS15Setup_Custom'>(&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3)</Custom>
       <Custom Action='VS15_Pro_Setup_Custom' After='VS15_Ent_Setup_Custom'>(&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3)</Custom>
-      <Custom Action="Win7_ShowWarning" After="InstallFinalize"><![CDATA[VersionNT = 601]]></Custom>
+      <Custom Action='VS16Setup_Custom' After='VS15_Pro_Setup_Custom'>(&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3)</Custom>
+      <Custom Action='VS16_Ent_Setup_Custom' After='VS16Setup_Custom'>(&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3)</Custom>
+      <Custom Action='VS16_Pro_Setup_Custom' After='VS16_Ent_Setup_Custom'>(&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3)</Custom>
+      <Custom Action="Win7_ShowVSWarning" After="InstallFinalize"><![CDATA[VersionNT = 601]]></Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>

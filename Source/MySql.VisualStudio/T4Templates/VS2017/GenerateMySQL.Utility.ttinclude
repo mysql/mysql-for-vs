@@ -44,7 +44,7 @@ private StoreItemCollection MySQLStore
         {
             string ssdl = this.GetInput<string>(EdmConstants.ssdlOutputName);
             Version targetVersion = this.GetInput<Version>(EdmParameterBag.ParameterName.TargetVersion.ToString());
-			var resolver = new MySqlDependencyResolver();
+            var resolver = new MySqlDependencyResolver();
             _mysqlstore = EdmExtension.CreateAndValidateStoreItemCollection(ssdl, targetVersion, resolver, false);
         }
         return _mysqlstore;
@@ -61,7 +61,7 @@ private bool InitializeAndValidateMySQLExistingStore()
     string ssdl = this.GetInput<string>(EdmConstants.existingSsdlInputName);
     Version targetVersion = this.GetInput<Version>(EdmParameterBag.ParameterName.TargetVersion.ToString());
     IList<EdmSchemaError> existingSsdlErrors;
-	var resolver = new MySqlDependencyResolver();
+    var resolver = new MySqlDependencyResolver();
     _mysqlexistingStore = EdmExtension.CreateStoreItemCollection(ssdl, targetVersion, resolver, out existingSsdlErrors);
     return (existingSsdlErrors.Count == 0);
 }

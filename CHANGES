@@ -1,4 +1,6 @@
 1.2.9
+- Added support for VS2019.
+- Removed support for VS2012 and VS2013.
 - Fixed a bug that prevented the generation of TableAdapters due to a null reference exception
   (MySql bug #90390, Oracle bug #27857627).
 
@@ -16,7 +18,7 @@
 
 1.2.7
 - Added support for VS2017.
-- Remove support for VS2010.
+- Removed support for VS2010.
 - Fixed a problem which prevented MySQL scripts from detecting keyboard input for keys such as Enter,
   Backspace, Arrows, etc. This would only happen after saving the script for the first time.
   (Bug #25713638 - SCRIPT CAN'T GET EDITED AFTER SAVING IT).

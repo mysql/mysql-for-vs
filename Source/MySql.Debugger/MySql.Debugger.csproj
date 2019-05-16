@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0'">Community</VisualStudioFlavor>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' >= '15.0'">Community</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+	<VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1969DE06-EC8C-41CE-AAEE-F54B27D309BA}</ProjectGuid>
@@ -14,13 +15,22 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '16.0'">
+      <PropertyGroup>
+        <ProductVersion>9.0.30729</ProductVersion>
+        <SchemaVersion>2.0</SchemaVersion>
+        <Framework>4.7.2</Framework>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER;NET_472_OR_GREATER</DefineConstants>
+      </PropertyGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.6.1</Framework>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
+        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '14.0'">
@@ -29,25 +39,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.6</Framework>
         <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;NET_46_OR_GREATER</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '12.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.5.2</Framework>
-        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;NET_451_OR_GREATER;</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.5.2</Framework>
-        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-        <DefineConstants>NET_40_OR_GREATER;NET_45_OR_GREATER;</DefineConstants>
+        <DefineConstants>NET_46_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
     <Otherwise>
@@ -80,6 +72,25 @@
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <Choose>
+    <When Condition=" '$(VisualStudioVersion)' == '16.0'">
+      <ItemGroup>
+        <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+      </ItemGroup>
+    </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
       <ItemGroup>
         <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
@@ -100,44 +111,6 @@
       </ItemGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-      </ItemGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '12.0'">
-      <ItemGroup>
-        <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="MySql.Data, Version=6.10.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-      </ItemGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '11.0'">
       <ItemGroup>
         <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
@@ -187,8 +160,9 @@
       <Name>MySql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' " />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' And '$(VisualStudioVersion)' != '16.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
+  <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

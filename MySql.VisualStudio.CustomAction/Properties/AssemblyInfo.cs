@@ -1,4 +1,4 @@
-// Copyright (c) 2012, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2012, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Oracle Corporation")]
 [assembly: AssemblyProduct("MySql.VisualStudio.CustomAction")]
-[assembly: AssemblyCopyright("Copyright (c) Oracle Corporation 2012, 2018")]
+[assembly: AssemblyCopyright("Copyright (c) Oracle Corporation 2012, 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

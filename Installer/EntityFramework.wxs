@@ -1,40 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='EntityFramework'>
-    <DirectoryRef Id="VS11_DBGenDir">
-      <Component Id="EF.T4.VS11" Guid="6555D339-120C-4D62-B60C-08764D8CA740">
-        <File Id="VS11.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\SSDLToMySQL.tt"/>
-        <File Id="VS11.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\GenerateMySQL.Utility.ttinclude"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS11_PublicAssemblies'>
-      <Component Id="EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C9" DiskId="1">
-        <File Id="MySql.EF.PA11.v4" Name="MySql.Data.Entity.dll"
-              Source="..\Dependencies\v4.0\Release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="VS12_DBGenDir">
-      <Component Id="EF.T4.VS12" Guid="6555D339-120C-4D62-B60C-08764D8CA741">
-        <File Id="VS12.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL6.tt"/>
-	    <File Id="VS12.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL8.tt"/>
-        <File Id="VS12.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\GenerateMySQL.Utility.ttinclude"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS12_PrivateAssemblies'>
-      <Component Id="EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C1" DiskId="1">
-        <File Id="MySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id="VS14_DBGenDir">
       <Component Id="EF.T4.VS14" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
         <File Id="VS14.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
@@ -110,22 +76,64 @@
       </Component>
     </DirectoryRef>
 
+	<!-- Visual Studio 2019 Community -->
+    <DirectoryRef Id="VS16_DBGenDir">
+      <Component Id="EF.T4.VS16" Guid="8A955332-238C-4536-B2F1-D7C36DE97A29">
+        <File Id="VS16.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL6.tt"/>
+	    <File Id="VS16.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL8.tt"/>
+        <File Id="VS16.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id="EF.PA15.v45" Guid="4B03BEE8-78E0-4C8F-8921-BFE060EA7A05" DiskId="1">
+        <File Id="MySql.EF.PA15.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Enterprise -->
+    <DirectoryRef Id="VS16_Ent_DBGenDir">
+      <Component Id="EF.T4.VS16.ENT" Guid="19B45D76-EC97-413E-9DB2-697100BB5572">
+        <File Id="VS16.Ent.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL6.tt"/>
+	    <File Id="VS16.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL8.tt"/>
+        <File Id="VS16.Ent.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
+      <Component Id="EF.PA16.Ent.v45" Guid="B3022D57-118F-449A-A865-9451AB576452" DiskId="1">
+        <File Id="MySql.EF.PA16.Ent.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Professional -->
+    <DirectoryRef Id="VS16_Pro_DBGenDir">
+      <Component Id="EF.T4.VS16.PRO" Guid="4AA27184-3A37-4D9C-A967-78C5F61CBE5D">
+        <File Id="VS16.Pro.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL6.tt"/>
+	    <File Id="VS16.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL8.tt"/>
+        <File Id="VS16.Pro.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
+      <Component Id="EF.PA16.Pro.v45" Guid="4510B9A3-9BA7-4694-AF3E-48735B4FD7F3" DiskId="1">
+        <File Id="MySql.EF.PA16.Pro.v45" Name="MySql.Data.Entity.EF6.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.Entity.EF6.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
     <!--Removing files from Public Assemblies Folders-->
-    <DirectoryRef Id='VS11_PublicAssemblies'>
-      <Component Id="Remove.EF.PA11.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61E9" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA11.v4" Name="MySql.Data.Entity.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
-    <!--Removing files from Private Assemblies Folders-->
-    <DirectoryRef Id='VS12_PrivateAssemblies'>
-      <Component Id="Remove.EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61A9" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id="Remove.EF.PA14.v45" Guid="29548C71-81EE-4585-858C-E5E84E3F0C31" DiskId="1">
         <RemoveFile Id="RemoveMySql.EF.PA14.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
@@ -157,21 +165,29 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id="EntityFramework2012" Level="1" Display="expand" Title="Entity Framework Support for VS 2012"
-                 Description="Support for the entity framework">
-    <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
-    <ComponentRef Id="EF.T4.VS11"/>
-    <ComponentRef Id="EF.PA11.v4"/>
-    <ComponentRef Id="Remove.EF.PA11.v4"/>
-    </Feature>
+	<!-- Visual Studio 2019 Community -->
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA16.v45" Guid="B5A8AE59-537C-40A5-9B31-D71F8B558232" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA16.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
 
-    <Feature Id="EntityFramework2013" Level="1" Display="expand" Title="Entity Framework Support for VS 2013"
-               Description="Support for the entity framework">
-      <Condition Level='0'>Not VS_2013_PATH AND Not Installed</Condition>
-      <ComponentRef Id="EF.T4.VS12" />
-      <ComponentRef Id="EF.PA12.v45"/>
-      <ComponentRef Id="Remove.EF.PA12.v45"/>
-    </Feature>
+    <!-- Visual Studio 2019 Enterprise -->
+    <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA16.Ent.v45" Guid="542BC2AC-AAE2-4FFA-8B27-57AADD8F16A0" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA16.Ent.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Professional -->
+    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
+      <Component Id="Remove.EF.PA16.Pro.v45" Guid="8E551575-7615-4503-9705-488C6320225C" DiskId="1">
+        <RemoveFile Id="RemoveMySql.EF.PA16.Pro.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
 
     <Feature Id="EntityFramework2015" Level="1" Display="expand" Title="Entity Framework Support for VS 2015"
                Description="Support for the entity framework">
@@ -201,6 +217,29 @@
         <ComponentRef Id="EF.T4.VS15.PRO" />
         <ComponentRef Id="EF.PA15.Pro.v45"/>
         <ComponentRef Id="Remove.EF.PA15.Pro.v45"/>
+      </Feature>
+    </Feature>
+
+	<Feature Id="EntityFramework2019" Level="1" Display="expand" Title="Entity Framework Support for VS 2019"
+           Description="Support for the entity framework">
+      <Condition Level='0'>(Not VS_2019_COM_PATH AND Not VS_2019_ENT_PATH AND Not VS_2019_PRO_PATH) AND Not Installed</Condition>
+      <Feature Id='EntityFramework2019Community' Level='1' Title='Community Edition'>
+        <Condition Level='0'>Not VS_2019_COM_PATH AND Not Installed</Condition>
+        <ComponentRef Id="EF.T4.VS16" />
+        <ComponentRef Id="EF.PA16.v45"/>
+        <ComponentRef Id="Remove.EF.PA16.v45"/>
+      </Feature>
+      <Feature Id='EntityFramework2019Enterprise' Level='1' Title='Enterprise Edition'>
+        <Condition Level='0'>Not VS_2019_ENT_PATH AND Not Installed</Condition>
+        <ComponentRef Id="EF.T4.VS16.ENT" />
+        <ComponentRef Id="EF.PA16.Ent.v45"/>
+        <ComponentRef Id="Remove.EF.PA16.Ent.v45"/>
+      </Feature>
+      <Feature Id='EntityFramework2019Professional' Level='1' Title='Professional Edition'>
+        <Condition Level='0'>Not VS_2019_PRO_PATH AND Not Installed</Condition>
+        <ComponentRef Id="EF.T4.VS16.PRO" />
+        <ComponentRef Id="EF.PA16.Pro.v45"/>
+        <ComponentRef Id="Remove.EF.PA16.Pro.v45"/>
       </Feature>
     </Feature>
   </Fragment>

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -89,7 +89,7 @@ namespace MySql.Data.VisualStudio.Wizards
 
       filters.Add(new EntityStoreSchemaFilterEntry(null, null, "%", EntityStoreSchemaFilterObjectTypes.View, EntityStoreSchemaFilterEffect.Exclude));
       Version entityVersion = new Version(2, 0, 0, 0);
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
       errors = essg.GenerateStoreMetadata(filters, entityVersion);
 #else
       errors = essg.GenerateStoreMetadata(filters);
@@ -113,7 +113,7 @@ namespace MySql.Data.VisualStudio.Wizards
       string csdlEntityContainerName = _modelName + "Entities";
 
       EntityModelSchemaGenerator emsg = new EntityModelSchemaGenerator(essg.EntityContainer, csdlNamespace, csdlEntityContainerName);
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
       emsg.GenerateForeignKeyProperties = true;
 
       errors = emsg.GenerateMetadata(entityVersion);
