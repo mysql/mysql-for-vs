@@ -81,7 +81,7 @@
 
       <InstallUISequence>
         <Custom Action="CheckCNet" Before="LaunchConditions">NOT Installed AND WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED</Custom>
-        <Custom Action="VS15_16_SetVSInstallationPaths" After="CheckCNet">WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED</Custom>
+        <Custom Action="VS15_16_SetVSInstallationPaths" After="CheckCNet">WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED</Custom>
         <Show Dialog="MySQL_ExitDialog" OnExit="success" />
       </InstallUISequence>
 
