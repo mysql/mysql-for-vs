@@ -340,7 +340,7 @@
       </Component>
     </DirectoryRef>
 
-	<!-- Visual Studio 2019 Community -->
+    <!-- Visual Studio 2019 Community -->
     <DirectoryRef Id='VS16_ExtVersionDir'>
       <Component Id='VS2019_Com_EVars' Guid='5CE140F1-67F3-4088-99D2-4201BA4712B4'>
         <Environment Id="VS160COMCOMNTOOLS" Name="VS160COMCOMNTOOLS" Value="[VS16_ToolsFolder]" Permanent="no" Part="all" Action="set" System="yes" />
@@ -507,7 +507,7 @@
 
     <DirectoryRef Id='VS16_Ent_T4TemplatesVBDir' >
       <Component Id='VS2019_Ent_T4TemplatesVBDir' Guid='3A3F871A-6FC2-42F2-AE0E-DAEFC2EB33D3'>
-        <File Id='VS2017_Ent_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
+        <File Id='VS2019_Ent_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
             Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
         <File Id='VS2019_Ent_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
@@ -661,7 +661,7 @@
       </Component>
     </DirectoryRef>
 
-	<!-- Visual Studio 2019 Community -->
+    <!-- Visual Studio 2019 Community -->
     <DirectoryRef Id='VS16_PrivateAssemblies'>
       <Component Id="Remove.VS2019_MD.Library" Guid="C9EDF583-8420-40DF-AF88-7A4B88CCE188" DiskId="1">
         <RemoveFile Id="RemoveVS2019_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
@@ -798,7 +798,7 @@
       </Feature>
     </Feature>
 
-	<Feature Id='VS2019Int' Level='1' Title='Visual Studio 2019' Display='expand'>
+    <Feature Id='VS2019Int' Level='1' Title='Visual Studio 2019' Display='expand'>
       <Condition Level='0'>(Not VS_2019_COM_PATH AND Not VS_2019_ENT_PATH AND Not VS_2019_PRO_PATH) AND Not Installed</Condition>
       <Feature Id='VS2019CommunityInt' Level='1' Title='Visual Studio 2019 Community'>
         <Condition Level='0'>Not VS_2019_COM_PATH AND Not Installed</Condition>
@@ -964,9 +964,7 @@
     <InstallExecuteSequence>
       <Custom Action="VS15_16_SetVSInstallationPaths" Before="LaunchConditions"></Custom>
       <Custom Action='VS2015_SetPathProp' Before='InstallFinalize'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action="VS11_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
-      <Custom Action="VS12_UpdatePackageFile" After='VS11_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
-      <Custom Action="VS14_UpdatePackageFile" After='VS12_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
+      <Custom Action="VS14_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action='VS2015Setup' After='VS14_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action='VS15Setup_Custom' After='VS2015Setup'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
       <Custom Action='VS15_Ent_Setup_Custom' After='VS15Setup_Custom'>(&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3)</Custom>

@@ -306,7 +306,7 @@
         </Directory>
       </Directory>
 
-	  <!-- VS2019 Community Extension folders -->
+      <!-- VS2019 Community Extension folders -->
       <Directory Id="VS_2019_COM_PATH" Name="VSPath2019">
         <Directory Id="VS16.Common7Folder" Name="Common7">
           <Directory Id="VS16.IDEFolder" Name="IDE">
@@ -601,7 +601,7 @@
       <RemoveExistingProducts After='InstallExecute' />
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
 
-      <Custom Action="SetDeleteSessionValue_VS2015" Before="VS2012_SetPathProp">(VS2015_REGISTRYFIX_CREATED = 1)</Custom>
+      <Custom Action="SetDeleteSessionValue_VS2015" Before="VS2015_SetPathProp">(VS2015_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2015"  After="SetDeleteSessionValue_VS2015">(VS2015_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="SetDeleteSessionValue_VS2017" After="DeleteRegKeyAndExtensionsFile_VS2015">(VS2017_REGISTRYFIX_CREATED = 1)</Custom>
       <Custom Action="DeleteRegKeyAndExtensionsFile_VS2017"  After="SetDeleteSessionValue_VS2017">(VS2017_REGISTRYFIX_CREATED = 1)</Custom>

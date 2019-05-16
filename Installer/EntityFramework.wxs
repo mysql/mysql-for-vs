@@ -5,7 +5,7 @@
       <Component Id="EF.T4.VS14" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
         <File Id="VS14.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL6.tt"/>
-	    <File Id="VS14.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS14.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL8.tt"/>
         <File Id="VS14.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
@@ -24,7 +24,7 @@
       <Component Id="EF.T4.VS15" Guid="ED507732-B12D-4B8E-AE91-A231DBE153BE">
         <File Id="VS15.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
-	    <File Id="VS15.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS15.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
@@ -43,7 +43,7 @@
       <Component Id="EF.T4.VS15.ENT" Guid="E11D288F-5CF1-4D51-9756-FEC0833A454A">
         <File Id="VS15.Ent.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
-	    <File Id="VS15.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS15.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.Ent.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
@@ -62,7 +62,7 @@
       <Component Id="EF.T4.VS15.PRO" Guid="E73E9892-0FBC-4E85-9736-0DCCA0693074">
         <File Id="VS15.Pro.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
-	    <File Id="VS15.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS15.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.Pro.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
@@ -76,12 +76,12 @@
       </Component>
     </DirectoryRef>
 
-	<!-- Visual Studio 2019 Community -->
+    <!-- Visual Studio 2019 Community -->
     <DirectoryRef Id="VS16_DBGenDir">
       <Component Id="EF.T4.VS16" Guid="8A955332-238C-4536-B2F1-D7C36DE97A29">
         <File Id="VS16.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL6.tt"/>
-	    <File Id="VS16.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS16.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL8.tt"/>
         <File Id="VS16.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\GenerateMySQL.Utility.ttinclude"/>
@@ -89,8 +89,8 @@
     </DirectoryRef>
 
     <DirectoryRef Id='VS16_PrivateAssemblies'>
-      <Component Id="EF.PA15.v45" Guid="4B03BEE8-78E0-4C8F-8921-BFE060EA7A05" DiskId="1">
-        <File Id="MySql.EF.PA15.v45" Name="MySql.Data.Entity.EF6.dll"
+      <Component Id="EF.PA16.v45" Guid="4B03BEE8-78E0-4C8F-8921-BFE060EA7A05" DiskId="1">
+        <File Id="MySql.EF.PA16.v45" Name="MySql.Data.Entity.EF6.dll"
               Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
@@ -100,7 +100,7 @@
       <Component Id="EF.T4.VS16.ENT" Guid="19B45D76-EC97-413E-9DB2-697100BB5572">
         <File Id="VS16.Ent.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL6.tt"/>
-	    <File Id="VS16.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS16.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL8.tt"/>
         <File Id="VS16.Ent.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\GenerateMySQL.Utility.ttinclude"/>
@@ -119,7 +119,7 @@
       <Component Id="EF.T4.VS16.PRO" Guid="4AA27184-3A37-4D9C-A967-78C5F61CBE5D">
         <File Id="VS16.Pro.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL6.tt"/>
-	    <File Id="VS16.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS16.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\SSDLToMySQL8.tt"/>
         <File Id="VS16.Pro.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2019\GenerateMySQL.Utility.ttinclude"/>
@@ -165,7 +165,7 @@
       </Component>
     </DirectoryRef>
 
-	<!-- Visual Studio 2019 Community -->
+    <!-- Visual Studio 2019 Community -->
     <DirectoryRef Id='VS16_PrivateAssemblies'>
       <Component Id="Remove.EF.PA16.v45" Guid="B5A8AE59-537C-40A5-9B31-D71F8B558232" DiskId="1">
         <RemoveFile Id="RemoveMySql.EF.PA16.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
@@ -220,7 +220,7 @@
       </Feature>
     </Feature>
 
-	<Feature Id="EntityFramework2019" Level="1" Display="expand" Title="Entity Framework Support for VS 2019"
+    <Feature Id="EntityFramework2019" Level="1" Display="expand" Title="Entity Framework Support for VS 2019"
            Description="Support for the entity framework">
       <Condition Level='0'>(Not VS_2019_COM_PATH AND Not VS_2019_ENT_PATH AND Not VS_2019_PRO_PATH) AND Not Installed</Condition>
       <Feature Id='EntityFramework2019Community' Level='1' Title='Community Edition'>
