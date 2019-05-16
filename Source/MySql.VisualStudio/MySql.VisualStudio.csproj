@@ -1227,8 +1227,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <VSToolsPath Condition="'$(VSToolsPath)' == '' ">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <VSToolsPath Condition="'$(VSToolsPath)' == '' And '$(VisualStudioVersion)' == '15.0' ">$(ProgramFiles)\Microsoft Visual Studio\2017\$(VisualStudioFlavor)\MSBuild\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-	<VSToolsPath Condition="'$(VSToolsPath)' == '' And '$(VisualStudioVersion)' == '16.0' ">$(ProgramFiles)\Microsoft Visual Studio\2019\$(VisualStudioFlavor)\MSBuild\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <VSToolsPath Condition="'$(VSToolsPath)' == '' And '$(Framework)' == '4.6.1' ">$(ProgramFiles)\Microsoft Visual Studio\2017\$(VisualStudioFlavor)\MSBuild\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <VSToolsPath Condition="'$(VSToolsPath)' == '' And '$(Framework)' == '4.7.2' ">$(ProgramFiles)\Microsoft Visual Studio\2019\$(VisualStudioFlavor)\MSBuild\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' != '15.0' And '$(VisualStudioVersion)' != '16.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
