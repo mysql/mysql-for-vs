@@ -3,6 +3,8 @@
 - Removed support for VS2012 and VS2013.
 - Fixed a bug that prevented the generation of TableAdapters due to a null reference exception
   (MySql bug #90390, Oracle bug #27857627).
+- Added validation to prevent Visual Studio from closing unexpectedly when the user attempted to execute a MySQL script
+  associated with a closed connection in the Server Explorer (Oracle bug #29797340).
 
 
 1.2.8

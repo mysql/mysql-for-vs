@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -32,18 +32,9 @@
 
 using System;
 using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Reflection;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
-using System.Globalization;
-using MySql.Data.VisualStudio.Properties;
-using System.Text;
-using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using Microsoft.VisualStudio.Data.Services;
-using Microsoft.VisualStudio.Data.Services.SupportEntities;
 
 namespace MySql.Data.VisualStudio
 {
@@ -59,10 +50,12 @@ namespace MySql.Data.VisualStudio
     public override void Initialize(object providerObj)
     {
       if (providerObj == null)
+      {
         providerObj = new MySqlConnection();
+      }
+
       base.Initialize(providerObj);
     }
-
 
     /// <summary>
     /// Retrieves a service of the specified type. Following services are 
@@ -90,22 +83,28 @@ namespace MySql.Data.VisualStudio
         return new MySqlDataSourceInformation(Site as DataConnection);
       }
       else if (serviceType == typeof(DataObjectIdentifierConverter))
+      {
         return new MySqlDataObjectIdentifierConverter(Site as DataConnection);
+      }
       else
+      {
         return base.GetServiceImpl(serviceType);
+      }
     }
 
     public override bool Open(bool doPromptCheck)
     {
-      // Open connection
+      // Open connection.
       try
       {
-        // Call base method first
+        // Call base method first.
         if (!base.Open(doPromptCheck))
+        {
           return false;
+        }
 
-        // Validates expired password
-        MySqlClient.MySqlConnection connection = base.Connection as MySqlClient.MySqlConnection;
+        // Validates expired password.
+        MySqlConnection connection = base.Connection as MySqlConnection;
         if (connection.IsPasswordExpired)
         {
           MySqlNewPasswordDialog newPasswordDialog = new MySqlNewPasswordDialog(connection);
@@ -133,27 +132,33 @@ namespace MySql.Data.VisualStudio
           }
         }
 
-        // If can't prompt user for new authentication data, re-throw exception
+        // If can't prompt user for new authentication data, re-throw exception.
         if (string.IsNullOrEmpty(base.Connection.ConnectionString))
-          // If missing server & user, throw a more friendly error message
-          throw new Exception(Properties.Resources.MissingServerAndUser, ex );
+        {
+          // If missing server & user, throw a more friendly error message.
+          throw new Exception(Properties.Resources.MissingServerAndUser, ex);
+        }
+
         throw;
       }
 
-      // TODO: check server version compatibility
+      // TODO: check server version compatibility.
 
-      // Rreturn true if everything is ok
+      // Rreturn true if everything is ok.
       if (sourceInformation != null)
+      {
         sourceInformation.Refresh();
+      }
+
       return true;
     }
 
-    public override Microsoft.VisualStudio.Data.DataParameter CreateParameter()
+    public override DataParameter CreateParameter()
     {
       return new AdoDotNetParameter("MySql.Data.MySqlClient", MySqlClientFactory.Instance.CreateParameter());
     }
 
-    public override Microsoft.VisualStudio.Data.DataReader Execute(string command, int commandType, Microsoft.VisualStudio.Data.DataParameter[] parameters, int commandTimeout)
+    public override DataReader Execute(string command, int commandType, Microsoft.VisualStudio.Data.DataParameter[] parameters, int commandTimeout)
     {
       MySqlCommand cmd = DoExecute(command, commandType, parameters, commandTimeout);
       MySqlDataReader r = cmd.ExecuteReader();
@@ -174,7 +179,11 @@ namespace MySql.Data.VisualStudio
       cmd.Transaction = (MySqlTransaction)this.Transaction;
       cmd.CommandType = (CommandType)commandType;
       cmd.CommandTimeout = commandTimeout;
-      if( parameters == null ) return cmd;
+      if (parameters == null)
+      {
+        return cmd;
+      }
+
       for (int i = 0; i < parameters.Length; i++)
       {
         DataParameter p = parameters[i];
@@ -193,6 +202,7 @@ namespace MySql.Data.VisualStudio
         par.Size = p.Size;
         cmd.Parameters.Add(par);
       }
+
       return cmd;
     }
   }

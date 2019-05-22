@@ -263,6 +263,25 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error establishing the database connection. Validate that the connection is open..
+        /// </summary>
+        public static string ConnectionNotOpenError {
+            get {
+                return ResourceManager.GetString("ConnectionNotOpenError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error establishing the database connection.
+        ///Check that the server is running, the database exists, and the user credentials are valid..
+        /// </summary>
+        public static string ConnectionOpeningError {
+            get {
+                return ResourceManager.GetString("ConnectionOpeningError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred that is normally caused by not having for Visual Studio properly installed..
         /// </summary>
         public static string ConnectionPropertiesNull {
@@ -2554,6 +2573,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string ErrorDuringLoad {
             get {
                 return ResourceManager.GetString("ErrorDuringLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string ErrorMessageTitle {
+            get {
+                return ResourceManager.GetString("ErrorMessageTitle", resourceCulture);
             }
         }
         

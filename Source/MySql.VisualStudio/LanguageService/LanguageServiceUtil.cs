@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -263,24 +263,27 @@ namespace MySql.Data.VisualStudio
     }
 
     /// <summary>
-    /// Returns true is the first SQL statement in the string returns a result set 
-    /// (after parsing comments and other noise).
+    /// Checks if the first SQL statement returns a result set. 
     /// </summary>
-    /// <param name="sql"></param>
-    /// <param name="con"></param>
-    /// <returns></returns>
-    public static bool? DoesStmtReturnResults( string sql, MySqlConnection con, out StringBuilder sb )
+    /// <param name="sql">The SQL statements to parse.</param>
+    /// <param name="connection">The connection used to get the server version.</param>
+    /// <returns><c>null</c> if the an error ocurred parsing the SQL statements.
+    /// <c>true</c> if the first SQL statement in the string returns a result set; otherwise, <c>false</c>.</returns>
+    public static bool? DoesStmtReturnResults(string sql, MySqlConnection connection, out StringBuilder builder)
     {
-      MySQL51Parser.program_return t = LanguageServiceUtil.ParseSql( sql, false, out sb, con.ServerVersion );
-      if (t == null)
+      MySQL51Parser.program_return programReturn = ParseSql(sql, false, out builder, connection.ServerVersion);
+      if (programReturn == null)
+      {
         return null;
+      }
 
-      ITree tree = t.Tree as ITree;
+      ITree tree = programReturn.Tree as ITree;
       if (tree.IsNil)
       {
         tree = tree.GetChild(0);
       }
-      return _keywords4ResultSets.ContainsKey( tree.Text );
+
+      return _keywords4ResultSets.ContainsKey(tree.Text);
     }
   }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -148,9 +148,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       catch (MySqlException)
       {
-        MessageBox.Show(
-@"Error establishing the database connection.
-Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
+        MessageBox.Show(Properties.Resources.ConnectionOpeningError, Properties.Resources.ErrorMessageTitle, MessageBoxButtons.OK);
       }
       finally
       {
@@ -160,20 +158,30 @@ Check that the server is running, the database exist and the user credentials ar
 
     private void runSqlButton_Click(object sender, EventArgs e)
     {
+      if (connection?.State != ConnectionState.Open)
+      {
+        MessageBox.Show(Properties.Resources.ConnectionNotOpenError, Properties.Resources.ErrorMessageTitle, MessageBoxButtons.OK);
+        return;
+      }
+
       string sql = codeEditor.Text.Trim();
-      StringBuilder sb;
-      bool? isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection, out sb);
+      StringBuilder builder;
+      bool? isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection, out builder);
 
       if (isResultSet == null)
       {
         tabControl1.TabPages.Clear();
-        messages.Text = string.Format(Properties.Resources.UnableToParseScript, Environment.NewLine + sb.ToString()) ;
+        messages.Text = string.Format(Properties.Resources.UnableToParseScript, $"{Environment.NewLine}{builder.ToString()}");
         tabControl1.TabPages.Add(messagesPage);
       }
       else if (isResultSet == true)
+      {
         ExecuteSelect(sql);
+      }
       else
+      {
         ExecuteScript(sql);
+      }
 
       StoreCurrentDatabase();
     }
