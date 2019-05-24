@@ -635,11 +635,12 @@
         <RemoveFile Id="RemoveVS2015_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id="Remove.VS2015_Web.Library" Guid="1DB36478-2940-4202-97FD-BFBC2B2DF8C7" DiskId="1">
         <RemoveFile Id="RemoveVS2015_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2015_Ext_BouncyCastle.Library" Guid="1951D284-34EA-4D36-8487-756F50D139CD" DiskId="1">
+        <RemoveFile Id="RemoveVS2015_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
