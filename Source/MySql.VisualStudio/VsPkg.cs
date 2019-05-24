@@ -244,19 +244,19 @@ namespace MySql.Data.VisualStudio
       Array selectedItems = (Array)uih.SelectedItems;
 
       if (selectedItems != null)
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      if (GetConnection(ConnectionName) != null)
       {
-        if (MySqlWorkbench.IsInstalled)
-          openUtilities.Visible = openUtilities.Enabled = true;
-        else
-        {
-          openUtilities.Enabled = false;
-          openUtilities.Visible = true;
-        }
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      }
+
+      if (MySqlWorkbench.IsInstalled)
+      {
+        openUtilities.Visible = openUtilities.Enabled = true;
       }
       else
-        openUtilities.Visible = openUtilities.Enabled = false;
+      {
+        openUtilities.Enabled = false;
+        openUtilities.Visible = true;
+      }
     }
 
     void cmdLaunchWB_BeforeQueryStatus(object sender, EventArgs e)
@@ -268,20 +268,19 @@ namespace MySql.Data.VisualStudio
       Array selectedItems = (Array)uih.SelectedItems;
 
       if (selectedItems != null)
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-
-      if (GetConnection(ConnectionName) != null)
       {
-        if (MySqlWorkbench.IsInstalled)
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      }
+
+      if (MySqlWorkbench.IsInstalled)
+      {
           launchWBbtn.Visible = launchWBbtn.Enabled = true;
-        else
-        {
-          launchWBbtn.Enabled = false;
-          launchWBbtn.Visible = true;
-        }
       }
       else
-        launchWBbtn.Visible = launchWBbtn.Enabled = false;
+      {
+        launchWBbtn.Enabled = false;
+        launchWBbtn.Visible = true;
+      }
     }
 
     void configWizard_BeforeQueryStatus(object sender, EventArgs e)
@@ -314,7 +313,6 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand cmd = sender as OleMenuCommand;
       cmd.Visible = false;
     }
-
 
     void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
     {
@@ -412,10 +410,14 @@ namespace MySql.Data.VisualStudio
       IVsDataExplorerConnection connection = GetConnection(ConnectionName);
       if (connection != null)
       {
-        var connList = MySqlWorkbench.Connections;
-        var connStr = connection.Connection.DisplayConnectionString;
-        ConnectionParameters parameters = ParseConnectionString(connStr);
+        var connectionList = MySqlWorkbench.Connections;
+        var connectionString = connection.Connection.DisplayConnectionString;
+        ConnectionParameters parameters = ParseConnectionString(connectionString);
         MySqlWorkbench.LaunchSqlEditor(FindMathchingWorkbenchConnection(parameters));
+      }
+      else
+      {
+        MySqlWorkbench.LaunchSqlEditor(null);
       }
     }
 
@@ -477,8 +479,6 @@ namespace MySql.Data.VisualStudio
       }
       MysqlConnectionSelected = null;
     }
-
-
 
     public string GetCurrentConnectionName()
     {
@@ -557,8 +557,6 @@ namespace MySql.Data.VisualStudio
       return new List<IVsDataExplorerConnection>();
     }
 
-
-
     public string GetConnectionStringBasedOnNode(string name)
     {
       try
@@ -608,19 +606,17 @@ namespace MySql.Data.VisualStudio
 
     }
 
-
-    public ConnectionParameters ParseConnectionString(string connStr)
+    public ConnectionParameters ParseConnectionString(string connectionString)
     {
-
-      var connStringBuilder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(connStr);
+      var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString);
       var parameters = new ConnectionParameters();
-      parameters.UserId = connStringBuilder.UserID;
-      parameters.HostName = connStringBuilder.Server;
-      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(connStringBuilder.Server);
-      parameters.Port = Convert.ToInt32(connStringBuilder.Port);
-      parameters.DataBaseName = connStringBuilder.Database;
-      parameters.NamedPipesEnabled = String.IsNullOrEmpty(connStringBuilder.PipeName) ? false : true;
-      parameters.PipeName = connStringBuilder.PipeName;
+      parameters.UserId = connectionStringBuilder.UserID;
+      parameters.HostName = connectionStringBuilder.Server;
+      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(connectionStringBuilder.Server);
+      parameters.Port = Convert.ToUInt32(connectionStringBuilder.Port);
+      parameters.DataBaseName = connectionStringBuilder.Database;
+      parameters.NamedPipesEnabled = string.IsNullOrEmpty(connectionStringBuilder.PipeName) ? false : true;
+      parameters.PipeName = connectionStringBuilder.PipeName;
 
       return parameters;
     }
@@ -631,35 +627,46 @@ namespace MySql.Data.VisualStudio
 
       if (filteredConnections != null)
       {
-        foreach (MySqlWorkbenchConnection c in filteredConnections)
+        foreach (MySqlWorkbenchConnection connection in filteredConnections)
         {
-          switch (c.ConnectionMethod)
+          switch (connection.ConnectionMethod)
           {
 
             case MySqlWorkbenchConnection.ConnectionMethodType.LocalUnixSocketOrWindowsPipe:
-              if (!parameters.NamedPipesEnabled || String.Compare(c.UnixSocketOrWindowsPipe, parameters.PipeName, true) != 0) continue;
+              if (!parameters.NamedPipesEnabled || string.Compare(connection.UnixSocketOrWindowsPipe, parameters.PipeName, true) != 0)
+              {
+                continue;
+              }
+
               break;
             case MySqlWorkbenchConnection.ConnectionMethodType.Ssh:
               continue;
             case MySqlWorkbenchConnection.ConnectionMethodType.Tcp:
-              if (c.Port != parameters.Port) continue;
+              if (connection.Port != parameters.Port)
+              {
+                continue;
+              }
+
               break;
             case MySqlWorkbenchConnection.ConnectionMethodType.Unknown:
               continue;
           }
 
-          if (!Utilities.IsValidIpAddress(c.Host)) //matching connections by Ip
+          // Matching connections by IP.
+          if (!Utilities.IsValidIpAddress(connection.Host) && Utilities.GetIPv4ForHostName(connection.Host) != parameters.HostIPv4)
           {
-            if (Utilities.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
+            continue;
           }
-          else
+          else if (connection.Host != parameters.HostIPv4)
           {
-            if (c.Host != parameters.HostIPv4) continue;
+            continue;
           }
-          return c.Name;
+
+          return connection.Name;
         }
       }
-      return String.Empty;
+
+      return string.Empty;
     }
 
     private void CreateNewMySqlProject(string projectType)
@@ -706,7 +713,7 @@ namespace MySql.Data.VisualStudio
     {
       public string HostName;
       public string HostIPv4;
-      public int Port;
+      public uint Port;
       public string PipeName;
       public bool NamedPipesEnabled;
       public string UserId;

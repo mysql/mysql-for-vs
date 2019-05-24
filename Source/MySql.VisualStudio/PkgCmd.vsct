@@ -313,8 +313,6 @@
       </Button>
 	  
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>  
         <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
@@ -323,8 +321,6 @@
       </Button>
 	  <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
 	    <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>  
         <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
@@ -333,8 +329,6 @@
       </Button>
 	 	  
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">	  
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
@@ -343,8 +337,6 @@
       </Button>
 	  <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
 		<Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>

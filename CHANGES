@@ -5,6 +5,8 @@
   (MySql bug #90390, Oracle bug #27857627).
 - Added validation to prevent Visual Studio from closing unexpectedly when the user attempted to execute a MySQL script
   associated with a closed connection in the Server Explorer (Oracle bug #29797340).
+- The MySQL Workbench and MySQL Utilities buttons located in the MySQL toolbar are now always enabled, instead of being
+  enabled only when a connection was selected in the Server Explorer (Oracle bug #29797355).
 
 
 1.2.8

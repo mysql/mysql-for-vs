@@ -41,6 +41,10 @@
         <File Id='VS2015_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
+      <Component Id='VS2015_Ext_BouncyCastle.Library' Guid='A0170186-72EA-464E-82A3-63C06116A470'>
+        <File Id='VS2015_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -121,6 +125,10 @@
       <Component Id='VS2017_Web.Library' Guid='C63A0350-536C-4ED0-A28A-0E41CFA67C87'>
         <File Id='VS2017_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+      <Component Id='VS2017_Ext_BouncyCastle.Library' Guid='063FBE9D-E27C-45A5-B1DA-FB6CCA649515'>
+        <File Id='VS2017_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -209,6 +217,10 @@
         <File Id='VS2017_Ent_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
+      <Component Id='VS2017_Ent_Ext_BouncyCastle.Library' Guid='153BE379-E55E-4B87-A050-F0A61DB2EB35'>
+        <File Id='VS2017_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -295,6 +307,10 @@
       <Component Id='VS2017_Pro_Web.Library' Guid='E94BCEE5-E67F-4B81-A34C-82A7A7EBF055'>
         <File Id='VS2017_Pro_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+      <Component Id='VS2017_Pro_Ext_BouncyCastle.Library' Guid='4A03CA70-5DAB-4DD4-94B1-9EEBEF2EF2E9'>
+        <File Id='VS2017_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -383,6 +399,10 @@
         <File Id='VS2019_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
+      <Component Id='VS2019_Ext_BouncyCastle.Library' Guid='0CDF733A-DA29-4AFF-97C8-9CE9F679561B'>
+        <File Id='VS2019_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -469,6 +489,10 @@
       <Component Id='VS2019_Ent_Web.Library' Guid='94601352-0FBC-462D-B635-3C0252E430CF'>
         <File Id='VS2019_Ent_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+      <Component Id='VS2019_Ent_Ext_BouncyCastle.Library' Guid='9C9F735E-F677-4915-8690-BA5EF02E9CBB'>
+        <File Id='VS2019_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -557,6 +581,10 @@
         <File Id='VS2019_Pro_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
+      <Component Id='VS2019_Pro_Ext_BouncyCastle.Library' Guid='2CE44705-C428-40D5-AB06-1D6CDE5B2408'>
+        <File Id='VS2019_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -622,11 +650,12 @@
         <RemoveFile Id="RemoveVS2017_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS15_PrivateAssemblies'>
       <Component Id="Remove.VS2017_Web.Library" Guid="7FEAD011-A809-42D8-84A3-7B4DE7F9909A" DiskId="1">
         <RemoveFile Id="RemoveVS2017_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2017_Ext_BouncyCastle.Library" Guid="82A1F8E2-DEDC-4D72-BB5D-212C80A7DEA6" DiskId="1">
+        <RemoveFile Id="RemoveVS2017_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -637,11 +666,12 @@
         <RemoveFile Id="RemoveVS2017_Ent_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS15_Ent_PrivateAssemblies'>
       <Component Id="Remove.VS2017_Ent_Web.Library" Guid="1F36C4A0-C4A4-461A-90AC-9625DA47B51D" DiskId="1">
         <RemoveFile Id="RemoveVS2017_Ent_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2017_Ent_Ext_BouncyCastle.Library" Guid="8ED78EBB-212C-48C0-8EAA-A4EF019F7A27" DiskId="1">
+        <RemoveFile Id="RemoveVS2017_Ent_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -652,11 +682,12 @@
         <RemoveFile Id="RemoveVS2017_Pro_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS15_Pro_PrivateAssemblies'>
       <Component Id="Remove.VS2017_Pro_Web.Library" Guid="74EACE76-6414-432D-8937-04278E364DF5" DiskId="1">
         <RemoveFile Id="RemoveVS2017_Pro_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2017_Pro_Ext_BouncyCastle.Library" Guid="9747BBAD-1083-4BA0-9FE0-312C17DFFBFB" DiskId="1">
+        <RemoveFile Id="RemoveVS2017_Pro_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -667,11 +698,12 @@
         <RemoveFile Id="RemoveVS2019_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS16_PrivateAssemblies'>
       <Component Id="Remove.VS2019_Web.Library" Guid="D5B51AD1-669F-4B54-940D-B4B878C51990" DiskId="1">
         <RemoveFile Id="RemoveVS2019_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ext_BouncyCastle.Library" Guid="B94E63B0-5B87-4305-B5DE-C914447BCA08" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -682,11 +714,12 @@
         <RemoveFile Id="RemoveVS2019_Ent_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
       <Component Id="Remove.VS2019_Ent_Web.Library" Guid="F6D7B715-937C-458B-83D1-CF14125AF990" DiskId="1">
         <RemoveFile Id="RemoveVS2019_Ent_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ent_Ext_BouncyCastle.Library" Guid="0F1ED827-0F73-48CD-8F65-3A8CD7EEB3A3" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -697,11 +730,12 @@
         <RemoveFile Id="RemoveVS2019_Pro_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
       <Component Id="Remove.VS2019_Pro_Web.Library" Guid="2129DA94-7E0D-43D8-B1BC-5E4C284B390B" DiskId="1">
         <RemoveFile Id="RemoveVS2019_Pro_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Pro_Ext_BouncyCastle.Library" Guid="83463201-6098-4D59-B17F-FB565832CA0E" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Pro_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -712,8 +746,10 @@
       <ComponentRef Id='VS2015_Templates'/>
       <ComponentRef Id='VS2015_MD.Library' />
       <ComponentRef Id='VS2015_Web.Library' />
+      <ComponentRef Id='VS2015_Ext_BouncyCastle.Library' />
       <ComponentRef Id='Remove.VS2015_MD.Library'/>
       <ComponentRef Id='Remove.VS2015_Web.Library'/>
+      <ComponentRef Id='Remove.VS2015_Ext_BouncyCastle.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2015'/>
       <!--Item Templates-->
       <Feature Id='VS2015_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden' >
@@ -736,8 +772,10 @@
         <ComponentRef Id='VS2017_Templates'/>
         <ComponentRef Id='VS2017_MD.Library' />
         <ComponentRef Id='VS2017_Web.Library' />
+        <ComponentRef Id='VS2017_Ext_BouncyCastle.Library' />
         <ComponentRef Id='Remove.VS2017_MD.Library'/>
         <ComponentRef Id='Remove.VS2017_Web.Library'/>
+        <ComponentRef Id='Remove.VS2017_Ext_BouncyCastle.Library'/>
         <ComponentRef Id='VS2017_Com_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2017_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -758,8 +796,10 @@
         <ComponentRef Id='VS2017_Ent_Templates'/>
         <ComponentRef Id='VS2017_Ent_MD.Library' />
         <ComponentRef Id='VS2017_Ent_Web.Library' />
+        <ComponentRef Id='VS2017_Ent_Ext_BouncyCastle.Library' />
         <ComponentRef Id='Remove.VS2017_Ent_MD.Library'/>
         <ComponentRef Id='Remove.VS2017_Ent_Web.Library'/>
+        <ComponentRef Id='Remove.VS2017_Ent_Ext_BouncyCastle.Library'/>
         <ComponentRef Id='VS2017_Ent_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2017_Ent_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -780,8 +820,10 @@
         <ComponentRef Id='VS2017_Pro_Templates'/>
         <ComponentRef Id='VS2017_Pro_MD.Library' />
         <ComponentRef Id='VS2017_Pro_Web.Library' />
+        <ComponentRef Id='VS2017_Pro_Ext_BouncyCastle.Library' />
         <ComponentRef Id='Remove.VS2017_Pro_MD.Library'/>
         <ComponentRef Id='Remove.VS2017_Pro_Web.Library'/>
+        <ComponentRef Id='Remove.VS2017_Pro_Ext_BouncyCastle.Library'/>
         <ComponentRef Id='VS2017_Pro_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2017_Pro_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -806,8 +848,10 @@
         <ComponentRef Id='VS2019_Templates'/>
         <ComponentRef Id='VS2019_MD.Library' />
         <ComponentRef Id='VS2019_Web.Library' />
+        <ComponentRef Id='VS2019_Ext_BouncyCastle.Library' />
         <ComponentRef Id='Remove.VS2019_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Web.Library'/>
+        <ComponentRef Id='Remove.VS2019_Ext_BouncyCastle.Library'/>
         <ComponentRef Id='VS2019_Com_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -828,8 +872,10 @@
         <ComponentRef Id='VS2019_Ent_Templates'/>
         <ComponentRef Id='VS2019_Ent_MD.Library' />
         <ComponentRef Id='VS2019_Ent_Web.Library' />
+        <ComponentRef Id='VS2019_Ent_Ext_BouncyCastle.Library' />
         <ComponentRef Id='Remove.VS2019_Ent_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Ent_Web.Library'/>
+        <ComponentRef Id='Remove.VS2019_Ent_Ext_BouncyCastle.Library'/>
         <ComponentRef Id='VS2019_Ent_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_Ent_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -850,8 +896,10 @@
         <ComponentRef Id='VS2019_Pro_Templates'/>
         <ComponentRef Id='VS2019_Pro_MD.Library' />
         <ComponentRef Id='VS2019_Pro_Web.Library' />
+        <ComponentRef Id='VS2019_Pro_Ext_BouncyCastle.Library' />
         <ComponentRef Id='Remove.VS2019_Pro_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Pro_Web.Library'/>
+        <ComponentRef Id='Remove.VS2019_Pro_Ext_BouncyCastle.Library'/>
         <ComponentRef Id='VS2019_Pro_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_Pro_AddItemTemplate' Title='ItemTemplates' Level='1'>

@@ -37,7 +37,7 @@ using System.Reflection;
 namespace MySql.Data.VisualStudio
 {
   [RunInstaller(true)]
-  public class MyInstaller : Installer
+  public class MyInstaller : System.Configuration.Install.Installer
   {
     private string GetRoot()
     {
