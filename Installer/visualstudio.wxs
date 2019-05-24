@@ -219,7 +219,7 @@
       </Component>
       <Component Id='VS2017_Ent_Ext_BouncyCastle.Library' Guid='153BE379-E55E-4B87-A050-F0A61DB2EB35'>
         <File Id='VS2017_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -310,7 +310,7 @@
       </Component>
       <Component Id='VS2017_Pro_Ext_BouncyCastle.Library' Guid='4A03CA70-5DAB-4DD4-94B1-9EEBEF2EF2E9'>
         <File Id='VS2017_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -492,7 +492,7 @@
       </Component>
       <Component Id='VS2019_Ent_Ext_BouncyCastle.Library' Guid='9C9F735E-F677-4915-8690-BA5EF02E9CBB'>
         <File Id='VS2019_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -583,7 +583,7 @@
       </Component>
       <Component Id='VS2019_Pro_Ext_BouncyCastle.Library' Guid='2CE44705-C428-40D5-AB06-1D6CDE5B2408'>
         <File Id='VS2019_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.5.2\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
