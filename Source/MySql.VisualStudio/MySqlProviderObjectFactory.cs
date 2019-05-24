@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -34,7 +34,7 @@ using System.Data.Common;
 using Microsoft.Win32;
 using System.Reflection;
 using System.IO;
-
+using MySql.Utility.Classes;
 
 namespace MySql.Data.VisualStudio
 {
@@ -100,8 +100,12 @@ namespace MySql.Data.VisualStudio
           return _factory;
         }
 
-        //try to get it from DbProviders table        
-        _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        // Try to get it from DbProviders table.
+        if (!string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
+        {
+          _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        }
+
         if (_factory == null || (MinConnectorVersion != null &&
               _factory.GetType().Assembly.GetName().Version.CompareTo(MinConnectorVersion) < 0))
         {
