@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -97,15 +97,22 @@ namespace MySql.Data.VisualStudio
 
     public override bool Open(bool doPromptCheck)
     {
-      // Open connection
+      // Open connection.
       try
       {
-        // Call base method first
+        // Call base method first.
         if (!base.Open(doPromptCheck))
+        {
           return false;
+        }
 
-        // Validates expired password
-        MySqlClient.MySqlConnection connection = base.Connection as MySqlClient.MySqlConnection;
+        // Validates expired password.
+        var connection = base.Connection as MySqlConnection ?? new MySqlConnection(base.Connection.ConnectionString);
+        if (connection.State != ConnectionState.Open)
+        {
+          connection.Open();
+        }
+
         if (connection.IsPasswordExpired)
         {
           MySqlNewPasswordDialog newPasswordDialog = new MySqlNewPasswordDialog(connection);
@@ -133,18 +140,24 @@ namespace MySql.Data.VisualStudio
           }
         }
 
-        // If can't prompt user for new authentication data, re-throw exception
+        // If can't prompt user for new authentication data, re-throw exception.
         if (string.IsNullOrEmpty(base.Connection.ConnectionString))
-          // If missing server & user, throw a more friendly error message
+        {
+          // If missing server & user, throw a more friendly error message.
           throw new Exception(Properties.Resources.MissingServerAndUser, ex );
+        }
+
         throw;
       }
 
-      // TODO: check server version compatibility
+      // TODO: check server version compatibility.
 
-      // Rreturn true if everything is ok
+      // Rreturn true if everything is ok.
       if (sourceInformation != null)
+      {
         sourceInformation.Refresh();
+      }
+
       return true;
     }
 
