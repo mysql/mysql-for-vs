@@ -148,10 +148,12 @@ namespace MySql.Data.VisualStudio
       : base()
     {
       if (Instance != null)
+      {
         throw new Exception("Creating second instance of package");
-      Instance = this;
+      }
 
-      Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME);
+      Instance = this;
+      Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME, true);
       Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
     }
 
