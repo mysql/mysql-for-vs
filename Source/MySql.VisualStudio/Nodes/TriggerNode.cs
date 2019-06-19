@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -45,6 +45,7 @@ using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Data.MySqlClient;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -153,7 +154,7 @@ namespace MySql.Data.VisualStudio
         }
         catch (Exception ex)
         {
-          MessageBox.Show("Unable to load object with error: " + ex.Message);
+          Logger.LogError($"Unable to load object with error: {ex.Message}", true);
         }
       }
       table = GetTargetedTable(editor.Text);
@@ -179,7 +180,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(ex.Message, true);
         return false;
       }
     }

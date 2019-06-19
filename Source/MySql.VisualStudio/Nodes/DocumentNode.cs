@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -42,6 +42,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Package;
 using MySql.Data.VisualStudio.Editors;
 using Microsoft.VisualStudio.Shell;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -193,7 +194,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show("Unable to save object with error: " + ex.Message);
+        Logger.LogError($"Unable to save object with error: {ex.Message}", true);
         return VSConstants.S_OK;
       }
 

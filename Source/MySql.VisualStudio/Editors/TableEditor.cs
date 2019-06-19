@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -42,6 +42,7 @@ using System.Reflection;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -504,7 +505,7 @@ namespace MySql.Data.VisualStudio
         }
         else
         {
-          MessageBox.Show(Properties.Resources.InvalidDataType, Properties.Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+          Logger.LogError(Properties.Resources.InvalidDataType, true);
           columnGrid.CurrentCell.Value = dataTypes[0];
           columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
           columnGrid.CurrentCell.Selected = true;

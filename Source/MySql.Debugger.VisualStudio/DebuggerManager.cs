@@ -1,4 +1,4 @@
-// Copyright (c) 2004, 2016, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2004, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -37,6 +37,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Debugger.VisualStudio
 {
@@ -103,7 +104,7 @@ namespace MySql.Debugger.VisualStudio
       }
       catch (Exception ex)
       {
-        Trace.WriteLine(ex.ToString());
+        Logger.LogException(ex);
       }
     }
 
@@ -118,7 +119,9 @@ namespace MySql.Debugger.VisualStudio
 
       if (string.IsNullOrEmpty(_node.ConnectionString))
       {
-        throw new Exception( "Debugger expected a non-null connection string" );
+        var message = "Debugger expected a non-null connection string";
+        Logger.LogError(message);
+        throw new Exception(message);
       }
       
       _connection = new MySqlConnection(_node.ConnectionString);
@@ -225,13 +228,13 @@ namespace MySql.Debugger.VisualStudio
       }
       catch (DebuggerException dse)
       {
-        MessageBox.Show(_node.ParentWindow, dse.GetBaseException().Message, "Debugger Error");
+        Logger.LogError($"{_node.ParentWindow}. {dse.GetBaseException().Message}", true);
         _debugger.RaiseEndDebugger();
         return;
       }
       catch (Exception ex)
       {
-        MessageBox.Show(_node.ParentWindow, ex.GetBaseException().Message, "Debugger Error");
+        Logger.LogError($"{_node.ParentWindow}. {ex.GetBaseException().Message} ", true);
         _debugger.RaiseEndDebugger();
         return;
       }
@@ -286,7 +289,7 @@ namespace MySql.Debugger.VisualStudio
       catch (ThreadAbortException) { }
       catch (Exception ex)
       {
-        MessageBox.Show(_node.ParentWindow, string.Format("Error while debugging: {0}", ex.GetBaseException().Message), "Debugger Error");
+        Logger.LogError($"Error while debugging: {ex.GetBaseException().Message}", true);
         _events.ProgramDestroyed(_node);
       }
     }

@@ -21,7 +21,7 @@
       <Component Id="EF.T4.VS12" Guid="6555D339-120C-4D62-B60C-08764D8CA741">
         <File Id="VS12.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL6.tt"/>
-	    <File Id="VS12.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS12.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\SSDLToMySQL8.tt"/>
         <File Id="VS12.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2013\GenerateMySQL.Utility.ttinclude"/>
@@ -30,8 +30,8 @@
 
     <DirectoryRef Id='VS12_PrivateAssemblies'>
       <Component Id="EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C1" DiskId="1">
-        <File Id="MySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA12.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -39,7 +39,7 @@
       <Component Id="EF.T4.VS14" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
         <File Id="VS14.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL6.tt"/>
-	    <File Id="VS14.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS14.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL8.tt"/>
         <File Id="VS14.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
@@ -48,8 +48,8 @@
 
     <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id="EF.PA14.v45" Guid="45F17AF0-0EF0-4343-824A-9F450EC93F54" DiskId="1">
-        <File Id="MySql.EF.PA14.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA14.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -58,7 +58,7 @@
       <Component Id="EF.T4.VS15" Guid="ED507732-B12D-4B8E-AE91-A231DBE153BE">
         <File Id="VS15.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
-	    <File Id="VS15.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS15.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
@@ -67,8 +67,8 @@
 
     <DirectoryRef Id='VS15_PrivateAssemblies'>
       <Component Id="EF.PA15.v45" Guid="37C9ED8D-9FC1-4D5F-9E8E-9BE96BB7D8CA" DiskId="1">
-        <File Id="MySql.EF.PA15.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA15.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -77,7 +77,7 @@
       <Component Id="EF.T4.VS15.ENT" Guid="E11D288F-5CF1-4D51-9756-FEC0833A454A">
         <File Id="VS15.Ent.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
-	    <File Id="VS15.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS15.Ent.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.Ent.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
@@ -86,8 +86,8 @@
 
     <DirectoryRef Id='VS15_Ent_PrivateAssemblies'>
       <Component Id="EF.PA15.Ent.v45" Guid="6B72F215-73C3-439C-A8D1-DCEDAEDBC901" DiskId="1">
-        <File Id="MySql.EF.PA15.Ent.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA15.Ent.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -96,7 +96,7 @@
       <Component Id="EF.T4.VS15.PRO" Guid="E73E9892-0FBC-4E85-9736-0DCCA0693074">
         <File Id="VS15.Pro.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL6.tt"/>
-	    <File Id="VS15.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
+        <File Id="VS15.Pro.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\SSDLToMySQL8.tt"/>
         <File Id="VS15.Pro.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.VisualStudio\T4Templates\VS2017\GenerateMySQL.Utility.ttinclude"/>
@@ -105,8 +105,8 @@
 
     <DirectoryRef Id='VS15_Pro_PrivateAssemblies'>
       <Component Id="EF.PA15.Pro.v45" Guid="C35DA4C0-0F68-488C-B3E1-D9BA42DB410D" DiskId="1">
-        <File Id="MySql.EF.PA15.Pro.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.Entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA15.Pro.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -121,14 +121,14 @@
     <!--Removing files from Private Assemblies Folders-->
     <DirectoryRef Id='VS12_PrivateAssemblies'>
       <Component Id="Remove.EF.PA12.v45" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61A9" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA12.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA12.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
 
     <DirectoryRef Id='VS14_PrivateAssemblies'>
       <Component Id="Remove.EF.PA14.v45" Guid="29548C71-81EE-4585-858C-E5E84E3F0C31" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA14.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA14.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -136,7 +136,7 @@
     <!-- Visual Studio 2017 Community -->
     <DirectoryRef Id='VS15_PrivateAssemblies'>
       <Component Id="Remove.EF.PA15.v45" Guid="86882299-9C2A-4E6C-8307-E4E7234ECC44" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA15.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA15.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -144,7 +144,7 @@
     <!-- Visual Studio 2017 Enterprise -->
     <DirectoryRef Id='VS15_Ent_PrivateAssemblies'>
       <Component Id="Remove.EF.PA15.Ent.v45" Guid="0904B7B4-B30D-4F74-AE4E-86889CF63BEA" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA15.Ent.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA15.Ent.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -152,7 +152,7 @@
     <!-- Visual Studio 2017 Professional -->
     <DirectoryRef Id='VS15_Pro_PrivateAssemblies'>
       <Component Id="Remove.EF.PA15.Pro.v45" Guid="19510125-8E8D-4CAD-B9C5-C0345E007D6C" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA15.Pro.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA15.Pro.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>

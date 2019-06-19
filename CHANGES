@@ -1,4 +1,6 @@
 1.2.9
+- Added support for SSL connections with PEM certificates.
+- Added support for SSH tunnel connections.
 - Fixed a bug that prevented the generation of table adapters due to a null reference exception
   (MySql bug #90390, Oracle bug #27857627).
 - Fixed a bug that prevented the creation of data sources due to a failure during the generation of a connection object

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -32,6 +32,7 @@ using System.Drawing.Design;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Collections.Generic;
 using System.ComponentModel;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -129,7 +130,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       if (e.ColumnIndex != 0) return;
 
-      System.Diagnostics.Trace.WriteLine("Validate starting");
+      Logger.LogInformation("Validation starting...");
       DataGridViewComboBoxCell colCell =
           (DataGridViewComboBoxCell)indexGrid.Rows[e.RowIndex].Cells[0];
       DataGridViewComboBoxCell sortCell =

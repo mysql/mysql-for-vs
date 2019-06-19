@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -41,6 +41,7 @@ using EnvDTE;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Text.RegularExpressions;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -189,7 +190,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(string.Format("The connection string is not valid: {0}", ex.Message));
+        Logger.LogError($"The connection string is not valid: {ex.Message}", true);
       }      
     }
 

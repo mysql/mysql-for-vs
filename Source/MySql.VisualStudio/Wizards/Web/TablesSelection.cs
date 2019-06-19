@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,6 +36,7 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Wizards;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -143,9 +144,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       {
         this.Invoke((Action)(() =>
         {
-          MessageBox.Show(
-            string.Format("The following error ocurred while exporting: {0}", e.Error.Message),
-            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError($"The following error ocurred while exporting: {e.Error.Message}", true);
         }));
       }
       UnlockUI();     

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -46,7 +46,7 @@ using System.CodeDom.Compiler;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
-
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Wizards
 {
@@ -278,7 +278,7 @@ namespace MySql.Data.VisualStudio.Wizards
       }
       catch
       {
-        MessageBox.Show("An error occured when adding the jquery library to the project. Check your nuget version or your internet connection.","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError("An error occured when adding the jquery library to the project. Check your nuget version or your internet connection.", true);
       }
       
     }

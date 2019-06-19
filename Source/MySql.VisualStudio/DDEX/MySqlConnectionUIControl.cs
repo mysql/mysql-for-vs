@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,6 +36,7 @@ using Microsoft.VisualStudio.Data.AdoDotNet;
 using MySql.Data.VisualStudio.Properties;
 using System.Data.Common;
 using Microsoft.VisualStudio.Data;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -59,7 +60,7 @@ namespace MySql.Data.VisualStudio
     {
       if (ConnectionProperties == null)
       {
-        MessageBox.Show(Properties.Resources.ConnectionPropertiesNull, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(Properties.Resources.ConnectionPropertiesNull, true);
         throw new Exception(Properties.Resources.ConnectionPropertiesNull);
       }
 
@@ -93,25 +94,32 @@ namespace MySql.Data.VisualStudio
     /// <param name="e"></param>
     void okButton_Click(object sender, EventArgs e)
     {
-      //verify if the connection is a MySql connection
+      // Verify if the connection is a MySql connection.
       if (!IsMySqlConnection())
       {
         return;
       }
 
       bool exists = DatabaseExists();
-      if (exists) return;
+      if (exists)
+      {
+        return;
+      }
 
-      String prompt = String.Format(Properties.Resources.UnknownDbPromptCreate, dbList.Text);
+      var prompt = string.Format(Properties.Resources.UnknownDbPromptCreate, dbList.Text);
       prompt = prompt.Replace(@"\n", @"\n");
       DialogResult result = MessageBox.Show(prompt, null, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
       this.ParentForm.DialogResult = DialogResult.None;
       if (result == DialogResult.Yes)
       {
         if (!AttemptToCreateDatabase())
-          MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text));
+        {
+          Logger.LogError(string.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text), true);
+        }
         else
+        {
           this.ParentForm.DialogResult = DialogResult.OK;
+        }
       }
     }
 
@@ -211,16 +219,14 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(Properties.Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(Properties.Resources.UnableToRetrieveDatabaseList, true);
       }
     }
 
     private bool DatabaseExists()
     {
-      MySqlConnectionProperties prop =
-          (ConnectionProperties as MySqlConnectionProperties);
+      MySqlConnectionProperties prop = ConnectionProperties as MySqlConnectionProperties;
       DbConnectionStringBuilder cb = prop.ConnectionStringBuilder;
-
       try
       {
         using (MySqlConnectionSupport conn = new MySqlConnectionSupport())
@@ -229,13 +235,25 @@ namespace MySql.Data.VisualStudio
           conn.ConnectionString = cb.ConnectionString;
           conn.Open(false);
         }
+
         return true;
       }
-      catch (DbException ex)
+      catch (DbException exception)
       {
-        string msg = ex.Message.ToLowerInvariant();
-        if (msg.ToLower().Contains("unknown database")) return false;
-        throw;
+        string msg = exception.Message.ToLowerInvariant();
+        if (msg.ToLower().Contains("unknown database"))
+        {
+          return false;
+        }
+
+        if (exception.InnerException == null)
+        {
+          throw exception;
+        }
+
+        var throwException = Common.Utilities.GetExceptionWithFullNestedMessage(exception);
+        Logger.LogException(throwException);
+        throw throwException;
       }
     }
 
@@ -260,7 +278,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text));
+        Logger.LogError(string.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text), true);
         return false;
       }
       finally

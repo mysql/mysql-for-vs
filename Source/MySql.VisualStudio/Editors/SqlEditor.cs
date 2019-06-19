@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -40,7 +40,7 @@ using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Globalization;
 using System.IO;
-
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -148,9 +148,9 @@ namespace MySql.Data.VisualStudio.Editors
       }
       catch (MySqlException)
       {
-        MessageBox.Show(
+        Logger.LogError(
 @"Error establishing the database connection.
-Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
+Check that the server is running, the database exist and the user credentials are valid.", true);
       }
       finally
       {

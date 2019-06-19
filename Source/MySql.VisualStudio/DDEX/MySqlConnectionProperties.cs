@@ -36,6 +36,8 @@ using Microsoft.VisualStudio.Data;
 using MySql.Data.MySqlClient;
 using System.Collections;
 using System.ComponentModel;
+using MySql.Utility.Classes.Logging;
+using System.Text;
 
 namespace MySql.Data.VisualStudio
 {
@@ -116,24 +118,30 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public override void Test()
     {
-      // Create connection support
+      // Create connection support.
       MySqlConnectionSupport conn = new MySqlConnectionSupport();
       try
       {
-        // Initializes it with empty provider
+        // Initializes it with empty provider.
         conn.Initialize(null);
-        // Set connection string
+
         conn.ConnectionString = ConnectionStringBuilder.ConnectionString;
-        // Try to open
-        conn.Open(false);
-        // Close after open
+        conn.Open(false);        
         conn.Close();
+      }
+      catch(Exception exception)
+      {
+        exception = Common.Utilities.GetExceptionWithFullNestedMessage(exception);
+        Logger.LogException(exception);
+        throw exception;
       }
       finally
       {
-        // In any case dispose connection support
+        // In any case dispose connection support.
         if (conn != null)
+        {
           conn.Dispose();
+        }
       }
     }
 

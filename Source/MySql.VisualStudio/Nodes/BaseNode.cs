@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -46,6 +46,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using MySql.Data.VisualStudio.Editors;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -276,10 +277,9 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(
-            String.Format(Properties.Resources.ErrorAttemptingToDrop,
-            LocalizedTypeString, Name, ex.Message), Properties.Resources.ErrorTitle,
-            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(
+            string.Format(Properties.Resources.ErrorAttemptingToDrop,
+            LocalizedTypeString, Name, ex.Message), true);
         throw new OperationCanceledException();
       }
     }

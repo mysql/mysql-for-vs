@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -29,6 +29,7 @@
 using EnvDTE;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
+using MySql.Utility.Classes.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -153,7 +154,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.Message, "An error occured obtaining the config file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError($"An error occured obtaining the config file. {ex.Message}", true);
         }
       }
 
@@ -181,7 +182,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "An error occured obtaining the config file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError($"An error occured obtaining the config file. {ex.Message}", true);
       }
 
       // Try to get the config XML from the app.config file.
@@ -304,7 +305,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       catch (MySqlException ex)
       {
         string errorMessage = string.Format("An error occured executing the MySql Command. {0}.{1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty);
-        MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError($"{errorMessage}. {ex.Message}", true);
       }
 
       // Gather referenceable columns
@@ -340,7 +341,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       catch (MySqlException ex)
       {
         string errorMessage = string.Format("An error occured executing the MySql Command. {0}.{1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty);
-        MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError($"{errorMessage}. {ex.Message}", true);
       }
 
       return columns;
@@ -445,7 +446,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       catch (Exception ex)
       {
         string errorMessage = string.Format("Cannot get Metadata information. {0}.{1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty);
-        MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError($"{errorMessage}. {ex.Message}", true);
       }
 
       return dic;
@@ -600,7 +601,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "An error occured obtaining the connection string settings.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError($"An error occured obtaining the connection string settings. {ex.Message}", true);
         return null;
       }
     }

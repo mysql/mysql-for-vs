@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -43,7 +43,7 @@ using MySql.Data.VisualStudio.Wizards;
 using MySql.Data.VisualStudio.Properties;
 using System.Diagnostics;
 using System.Collections;
-
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
@@ -296,7 +296,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
         if (project.DTE.Solution.SolutionBuild.LastBuildInfo > 0)
         {
-          MessageBox.Show("Solution build failed. Please check that all project references have been resolved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError("Solution build failed. Please check that all project references have been resolved.", true);
         }
 
         WizardForm.Dispose();

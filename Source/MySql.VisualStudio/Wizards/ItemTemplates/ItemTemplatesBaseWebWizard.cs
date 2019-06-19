@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -38,6 +38,7 @@ using MySql.Data.VisualStudio.Properties;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.Wizards.Web;
 using MySql.Data.VisualStudio.Wizards.WindowsForms;
+using MySql.Utility.Classes.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -380,7 +381,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       catch (Exception ex)
       {
         SendToGeneralOutputWindow(string.Format("An error occurred: {0}\n\n {1}", ex.Message, ex.StackTrace));
-        MessageBox.Show("An error occured when generating MVC items. The application is not completed.");
+        Logger.LogError("An error occured when generating MVC items. The application is not completed.", true);
       }
 #endif
     }

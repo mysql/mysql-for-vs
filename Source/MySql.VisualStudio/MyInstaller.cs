@@ -32,12 +32,13 @@ using System.ComponentModel;
 using System.Configuration.Install;
 using Microsoft.Win32;
 using System.Reflection;
+using Install = System.Configuration.Install;
 
 
 namespace MySql.Data.VisualStudio
 {
   [RunInstaller(true)]
-  public class MyInstaller : Installer
+  public class MyInstaller : Install.Installer
   {
     private string GetRoot()
     {

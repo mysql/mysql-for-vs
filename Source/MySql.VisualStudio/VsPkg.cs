@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -59,6 +59,7 @@ using MySql.Utility.Classes.MySqlWorkbench;
 using System.IO;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Wizards;
+using MySql.Utility.Classes.Logging;
 #if NET_40_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
 #endif
@@ -112,7 +113,29 @@ namespace MySql.Data.VisualStudio
   {
     public static MySqlDataProviderPackage Instance;
     public MySqlConnection MysqlConnectionSelected;
+    private string _appDataPath;
+    internal List<IVsDataExplorerConnection> _mysqlConnectionsList;
+
     private const string _mySqlConnectorEnvironmentVariable = "MYSQLCONNECTOR_ASSEMBLIESPATH";
+    private const string APPLICATION_NAME = "MySQL For Visual Studio";
+
+    internal string ConnectionName { get; set; }
+
+    /// <summary>
+    /// Gets the path for this application relative to the user's application data folder where settings can be saved.
+    /// </summary>
+    internal string AppDataPath
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(_appDataPath))
+        {
+          _appDataPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\MySQL\{APPLICATION_NAME}\";
+        }
+
+        return _appDataPath;
+      }
+    }
 
     /// <summary>
     /// Default constructor of the package.
@@ -127,14 +150,11 @@ namespace MySql.Data.VisualStudio
       if (Instance != null)
         throw new Exception("Creating second instance of package");
       Instance = this;
-      Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
+
+      Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME);
+      Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
     }
 
-    internal string ConnectionName { get; set; }
-
-    internal List<IVsDataExplorerConnection> _mysqlConnectionsList;
-
-    /////////////////////////////////////////////////////////////////////////////
     // Overriden Package Implementation
     #region Package Members
 
@@ -144,8 +164,7 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     protected override void Initialize()
     {
-      Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-
+      Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
       MySqlProviderObjectFactory factory = new MySqlProviderObjectFactory();
 
       ((IServiceContainer)this).AddService(
@@ -315,7 +334,6 @@ namespace MySql.Data.VisualStudio
       cmd.Visible = false;
     }
 
-
     void cmdMenuDbExport_BeforeQueryStatus(object sender, EventArgs e)
     {
       OleMenuCommand dbExportButton = sender as OleMenuCommand;
@@ -472,13 +490,11 @@ namespace MySql.Data.VisualStudio
       }
       catch (MySqlException)
       {
-        MessageBox.Show(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);
+        Logger.LogError(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", true);
         return;
       }
       MysqlConnectionSelected = null;
     }
-
-
 
     public string GetCurrentConnectionName()
     {
@@ -557,8 +573,6 @@ namespace MySql.Data.VisualStudio
       return new List<IVsDataExplorerConnection>();
     }
 
-
-
     public string GetConnectionStringBasedOnNode(string name)
     {
       try
@@ -607,7 +621,6 @@ namespace MySql.Data.VisualStudio
       return null;
 
     }
-
 
     public ConnectionParameters ParseConnectionString(string connStr)
     {

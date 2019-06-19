@@ -184,40 +184,52 @@
   <Target Name="PackageNoInstall" DependsOnTargets="PackageNoInstallPrepare;PackageNoInstallGPL;$(PackageNoInstallCommercial)" />
   <Target Name="PackageNoInstallPrepare">
     <ItemGroup>
-      <V45Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
-      <V45Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
-      <V45Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
-      <V45Assemblies Include="Source\MySql.VisualStudio\bin\11.0v4.5.2\release\mysql.visualstudio.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V45Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
+      <V45Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V45Assemblies Include="Source\MySql.VisualStudio\bin\11.0v4.5.2\release\MySql.VisualStudio.dll" />
       <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\11.0v4.5.2\release\Antlr3.Runtime.dll" />
       <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\11.0v4.5.2\release\MySql.Debugger.dll" />
       <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\11.0v4.5.2\release\MySql.Parser.dll" />
       <V45Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\11.0v4.5.2\release\MySql.Debugger.VisualStudio.dll" />
     </ItemGroup>
     <ItemGroup>
-      <V451Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
-      <V451Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
-      <V451Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
-      <V451Assemblies Include="Source\MySql.VisualStudio\bin\12.0v4.5.2\release\mysql.visualstudio.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V451Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
+      <V451Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V451Assemblies Include="Source\MySql.VisualStudio\bin\12.0v4.5.2\release\MySql.VisualStudio.dll" />
       <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\12.0v4.5.2\release\Antlr3.Runtime.dll" />
       <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\12.0v4.5.2\release\MySql.Debugger.dll" />
       <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\12.0v4.5.2\release\MySql.Parser.dll" />
       <V451Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\12.0v4.5.2\release\MySql.Debugger.VisualStudio.dll" />
     </ItemGroup>
-	<ItemGroup>
-      <V46Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
-      <V46Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
-      <V46Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
-      <V46Assemblies Include="Source\MySql.VisualStudio\bin\14.0v4.6\release\mysql.visualstudio.dll" />
+    <ItemGroup>
+      <V46Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
+      <V46Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
+      <V46Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V46Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
+      <V46Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
+      <V46Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V46Assemblies Include="Source\MySql.VisualStudio\bin\14.0v4.6\release\MySql.VisualStudio.dll" />
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\Antlr3.Runtime.dll" />
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\MySql.Debugger.dll" />
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\MySql.Parser.dll" />
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\MySql.Debugger.VisualStudio.dll" />
     </ItemGroup>
-	<ItemGroup>
-      <V461Assemblies Include="Dependencies\v4.0\Release\mysql.data.dll" />
-      <V461Assemblies Include="Dependencies\v4.0\Release\mysql.web.dll" />
-      <V461Assemblies Include="Dependencies\v4.0\Release\mysql.data.entity.dll" />
-      <V461Assemblies Include="Source\MySql.VisualStudio\bin\15.0v4.6.1\release\mysql.visualstudio.dll" />
+    <ItemGroup>
+      <V461Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
+      <V461Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
+      <V461Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V461Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
+      <V461Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
+      <V461Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V461Assemblies Include="Source\MySql.VisualStudio\bin\15.0v4.6.1\release\MySql.VisualStudio.dll" />
       <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\Antlr3.Runtime.dll" />
       <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Debugger.dll" />
       <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Parser.dll" />
@@ -236,7 +248,7 @@
     <Copy SourceFiles="@(V45Assemblies)" DestinationFolder="tmp\11.0v452" />
     <Copy SourceFiles="@(V451Assemblies)" DestinationFolder="tmp\12.0v452" />
     <Copy SourceFiles="@(V46Assemblies)" DestinationFolder="tmp\14.0v46" />
-	<Copy SourceFiles="@(V461Assemblies)" DestinationFolder="tmp\15.0v461" />
+    <Copy SourceFiles="@(V461Assemblies)" DestinationFolder="tmp\15.0v461" />
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="tmp/Documentation" />
   </Target>
   <Target Name="PackageNoInstallGPL">
@@ -258,7 +270,7 @@
     <Delete Files="tmp/README" TreatErrorsAsWarnings="true" />
     <Copy SourceFiles="@(OtherCommercialFiles)" DestinationFolder="tmp" />
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
-	<Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
+    <Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
     <ItemGroup>
       <ZipFilesCommercial Include="tmp\**\*.*" />
     </ItemGroup>
@@ -270,8 +282,8 @@
     <RemoveDir Directories="tmp" ContinueOnError="true" />
     <MakeDir Directories="tmp" />
     <ItemGroup>
-	  <CommercialOnlyFiles Include="**/README-Commercial;**/LICENSE-Commercial" />
-	</ItemGroup>
+      <CommercialOnlyFiles Include="**/README-Commercial;**/LICENSE-Commercial" />
+    </ItemGroup>
     <ItemGroup>
       <SourceCodeFiles Include="**/**" Exclude="@(CommercialOnlyFiles);**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;**/installer/**;**/Package.csproj;**/Package.sln;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/UpgradeLog*.*;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
     </ItemGroup>
@@ -285,10 +297,10 @@
   </Target>
   <Target Name="PackageSourceCommercial">
     <Delete Files="tmp/README" />
-	<Delete Files="tmp/LICENSE" />
+    <Delete Files="tmp/LICENSE" />
     <Copy SourceFiles="@(CommercialOnlyFiles)" DestinationFolder="tmp\%(RecursiveDir)" />
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
-	<Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
+    <Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
     <ItemGroup>
       <FilesToZipCommercial Include="tmp\**\*.*" />
     </ItemGroup>

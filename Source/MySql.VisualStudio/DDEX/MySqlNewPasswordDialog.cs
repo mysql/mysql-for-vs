@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -29,6 +29,7 @@
 using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -66,7 +67,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(ex.Message, true);
       }
     }
     

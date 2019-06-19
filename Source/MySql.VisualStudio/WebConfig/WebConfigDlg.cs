@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2009, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -43,6 +43,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Configuration;
 using System.Data.Common;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
@@ -320,7 +321,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (ArgumentException)
       {
-        MessageBox.Show(this, Properties.Resources.ConnectionStringInvalid, Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(Properties.Resources.ConnectionStringInvalid, true);
       }
     }
 
@@ -590,7 +591,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (ArgumentException)
       {
-        MessageBox.Show(this, Properties.Resources.ConnectionStringInvalid, Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError(Properties.Resources.ConnectionStringInvalid, true);
       }
     }
 
@@ -600,7 +601,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         if (useProvider.Checked && !radioBtnEF5.Checked && !radioBtnEF6.Checked)
         {
-          MessageBox.Show(this, "Please select the Entity Framework version.", Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError("Please select the Entity Framework version.", true);
           return false;
         }
       }
@@ -610,7 +611,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         {
           if (useProvider.Checked && connectionString.Text.Trim().Length == 0)
           {
-            MessageBox.Show(this, Properties.Resources.WebConfigConnStrNoEmpty, Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError(Properties.Resources.WebConfigConnStrNoEmpty, true);
             return false;
           }
         }
@@ -637,8 +638,7 @@ namespace MySql.Data.VisualStudio.WebConfig
             if (!valid)
             {
               controlsToValidate = (controlsToValidate += ".").Replace(", .", ".");
-              MessageBox.Show(this, string.Format("{0}: {1}", Properties.Resources.WrongNetFxVersionMessage, controlsToValidate),
-                                      Properties.Resources.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+              Logger.LogError($"{Properties.Resources.WrongNetFxVersionMessage}: {controlsToValidate}", true);
               return false;
             }
           }

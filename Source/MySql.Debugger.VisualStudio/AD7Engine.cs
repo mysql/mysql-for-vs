@@ -1,4 +1,4 @@
-// Copyright (c) 2004, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2004, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -35,6 +35,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Microsoft.VisualStudio;
 using System.Windows.Forms;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Debugger.VisualStudio
 {
@@ -59,7 +60,7 @@ namespace MySql.Debugger.VisualStudio
       if (( DebuggerManager.Instance != null ) && ( DebuggerManager.Instance.Debugger.IsRunning))
       {
         // If already running, abort.
-        MessageBox.Show("Cannot start MySql Debugger. A MySql Debug session is already running", "Error");
+        Logger.LogError("Cannot start MySql Debugger. A MySql Debug session is already running", true);
         return HRESULT.E_ATTACH_FAILED_ABORT_SILENTLY;
       }
 
@@ -77,7 +78,7 @@ namespace MySql.Debugger.VisualStudio
       }
       catch (Exception ex)
       {
-        MessageBox.Show(_node.ParentWindow, ex.GetBaseException().Message, "Debugger Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        Logger.LogError($"{_node.ParentWindow}. {ex.GetBaseException().Message}", true);
         return HRESULT.E_ATTACH_FAILED_ABORT_SILENTLY;
       }
 

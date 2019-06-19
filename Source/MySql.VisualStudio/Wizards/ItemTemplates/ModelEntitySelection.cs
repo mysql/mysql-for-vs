@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -40,6 +40,7 @@ using EnvDTE;
 using MySql.Data.VisualStudio.DBExport;
 using VSLangProj;
 using System.Xml.Linq;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 {
@@ -203,8 +204,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       {
         this.Invoke((Action)(() =>
         {
-          MessageBox.Show(
-            string.Format("{0} {1}", _runWorkerCompletedErrorMessage, e.Error.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError($"{_runWorkerCompletedErrorMessage}. {e.Error.Message}", true);
         }));
       }
 

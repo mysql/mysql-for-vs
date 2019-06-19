@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -46,7 +46,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
 using EnvDTE;
-
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
@@ -353,7 +353,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
         if (schemaNames == null)
         {
-           MessageBox.Show("Cannot retrieve the list of schemas of the selected connection. Verify parameter's connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+           Logger.LogError("Cannot retrieve the list of schemas of the selected connection. Verify parameter's connection.", true);
            sourceSchemas.DataSource = null;
            dbSchemasList.Refresh();
            return;
@@ -412,7 +412,7 @@ namespace MySql.Data.VisualStudio.DBExport
           SetConnectionsList();
           if (selected == null)
           {
-            MessageBox.Show("Error: Cannot found any MySQL connection. Please review your settings.", "Error", MessageBoxButtons.OK);
+            Logger.LogError("Error: Cannot find any MySQL connection. Please review your settings.", true);
             return;
           }
           cmbConnections.SelectedValue = selected.ConnectionString;
@@ -422,7 +422,7 @@ namespace MySql.Data.VisualStudio.DBExport
         }
         catch (Exception)
         {
-          MessageBox.Show(Properties.Resources.UnableToRetrieveDatabaseList, "Error", MessageBoxButtons.OK);
+          Logger.LogError(Properties.Resources.UnableToRetrieveDatabaseList, true);
         }
       }
 
@@ -486,14 +486,14 @@ namespace MySql.Data.VisualStudio.DBExport
         {
           if (dictionary.Count == 0)
           {
-            MessageBox.Show("No database or objects are selected" , "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Logger.LogInformation("No database or objects are selected", true);
             return;
           }
 
           LockUI();
           if (String.IsNullOrEmpty(mysqlFilePath))
           {
-            MessageBox.Show(Properties.Resources.DbExportPathNotProvided, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError(Properties.Resources.DbExportPathNotProvided, true);
             txtFileName.Focus();
             return;
           }
@@ -506,7 +506,7 @@ namespace MySql.Data.VisualStudio.DBExport
           {
             if (CheckPathIsValid(mysqlFilePath))
             {
-              MessageBox.Show(Properties.Resources.PathNotValid, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+              Logger.LogError(Properties.Resources.PathNotValid, true);
               return;
             }
             else
@@ -522,7 +522,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
           if (!int.TryParse(max_allowed_packet.Text, out maxAllowedPacket))
           {
-            MessageBox.Show(Properties.Resources.InvalidMaxAllowedPacketValue, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError(Properties.Resources.InvalidMaxAllowedPacketValue, true);
             return;
           }
 
@@ -538,7 +538,7 @@ namespace MySql.Data.VisualStudio.DBExport
           }
           catch 
           {
-            MessageBox.Show("An error occured when creating a new file for the Export operation. File is locked.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError("An error occured when creating a new file for the Export operation. File is locked.", true);
             return;
           }
 
@@ -1004,9 +1004,7 @@ namespace MySql.Data.VisualStudio.DBExport
         {
           this.Invoke((Action)(() =>
           {
-            MessageBox.Show(
-              string.Format("The following error ocurred while exporting: {0}", e.Error.Message),
-              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError(string.Format("The following error ocurred while exporting: {0}", e.Error.Message), true);
           }));
         }
         else
@@ -1055,7 +1053,7 @@ namespace MySql.Data.VisualStudio.DBExport
                 completeConnectionString = GetCompleteConnectionString(DisplayConnectionName, true);
                 if (String.IsNullOrEmpty(completeConnectionString))
                 {
-                  MessageBox.Show("The saved connection string was not correctly set. No Database objects are loaded", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                  Logger.LogError("The saved connection string was not correctly set. No Database objects are loaded", true);
                   return;
                 }
 
@@ -1100,14 +1098,14 @@ namespace MySql.Data.VisualStudio.DBExport
                 
                 Application.DoEvents();
                 _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);
-                MessageBox.Show("The saved settings were loaded correctly", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Logger.LogError("The saved settings were loaded correctly", true);
               }
               else
-                MessageBox.Show("Connection was not found on available connections", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.LogError("Connection was not found on available connections", true);
             }
           }
           else
-            MessageBox.Show("File was not found. Please check the path.");
+            Logger.LogError("File was not found. Please check the path.", true);
         }
       }
 
@@ -1183,7 +1181,7 @@ namespace MySql.Data.VisualStudio.DBExport
 
           if (String.IsNullOrEmpty(connectionStringInUse))
           {
-            MessageBox.Show("No connection is selected. Please select one to continue.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError("No connection is selected. Please select one to continue.", true);
             return;
           }
 
@@ -1198,13 +1196,13 @@ namespace MySql.Data.VisualStudio.DBExport
             saveToFile.WriteSettingsFile(completePath, Path.GetFileNameWithoutExtension(saveSettingsFileDlg.FileName));
             this.Cursor = Cursors.Default;
             _fileSavedSettingsName = Path.Combine(completePath, saveSettingsFileDlg.FileName);
-            MessageBox.Show("All selected settings were saved correctly.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Logger.LogInformation("All selected settings were saved correctly.", true);
             _windowHandler.Caption = Path.GetFileName(saveSettingsFileDlg.FileName);
           }
           catch (Exception ex)
           {
             this.Cursor = Cursors.Default;
-            MessageBox.Show("An error occured when saving the settings file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Logger.LogError($"An error occured when saving the settings file: {ex.Message}", true);
           }
         }      
       }

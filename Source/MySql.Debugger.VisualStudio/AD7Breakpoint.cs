@@ -1,4 +1,4 @@
-// Copyright (c) 2004, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2004, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,6 +36,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MySql.Debugger;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Debugger.VisualStudio
 {
@@ -124,7 +125,7 @@ namespace MySql.Debugger.VisualStudio
       }
       catch (DebuggerException e)
       {
-        MessageBox.Show(e.Message, "Error when setting condition breakpoint", MessageBoxButtons.OK);
+        Logger.LogError($"Error when setting condition breakpoint. {e.Message}", true);
         return VSConstants.E_FAIL;
       }
       return VSConstants.S_OK;

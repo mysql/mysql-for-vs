@@ -956,6 +956,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Common\Utilities.cs" />
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>

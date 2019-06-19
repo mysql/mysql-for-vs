@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,6 +26,7 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using MySql.Utility.Classes.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -127,10 +128,8 @@ namespace MySql.Data.VisualStudio.DDEX
       }
       catch (Exception ex)
       {
-        string errorMessage = String.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
-        Console.WriteLine("Error on extension method \"MySql.Data.VisualStudio.DDEX.GetStoredProcedureDefinition\". {0}", errorMessage);
-        System.Windows.Forms.MessageBox.Show(String.Format("An error ocurred when trying to execute the reader. \n{0}.", errorMessage), null,
-          System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+        string errorMessage = string.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
+        Logger.LogError($"An error ocurred when trying to execute the reader. \n{errorMessage}.", true);
         return string.Empty;
       }
     }
@@ -331,9 +330,7 @@ namespace MySql.Data.VisualStudio.DDEX
       catch (Exception ex)
       {
         string errorMessage = String.Format("{0}{1}", ex.Message, ex.InnerException != null ? string.Format(". {0}", ex.InnerException.Message) : string.Empty);
-        Console.WriteLine("Error on extension method \"MySql.Data.VisualStudio.DDEX.GetSchemaDataTable\". {0}", errorMessage);
-        System.Windows.Forms.MessageBox.Show(String.Format("An error ocurred when trying to execute the reader. \n{0}.", errorMessage), null,
-          System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+        Logger.LogError($"An error ocurred when trying to execute the reader. \n{errorMessage}.", true);
         return null;
       }
     }

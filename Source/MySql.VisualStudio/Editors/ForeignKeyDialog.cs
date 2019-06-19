@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,6 +36,7 @@ using System.Windows.Forms;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Collections;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -101,7 +102,7 @@ namespace MySql.Data.VisualStudio.Editors
           (str1.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)) ||
           (str2.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)))
         {
-          MessageBox.Show(Properties.Resources.FkDlgBeforeClose, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError(Properties.Resources.FkDlgBeforeClose, true);
           return false;
         }
       }
@@ -110,7 +111,7 @@ namespace MySql.Data.VisualStudio.Editors
         ForeignKey fk = ( ForeignKey )o;
         if( fk.Columns.Count == 0 )
         {
-          MessageBox.Show(string.Format(Properties.Resources.FkNoColumnsForForeignKey, fk.Name), Properties.Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Logger.LogError(string.Format(Properties.Resources.FkNoColumnsForForeignKey, fk.Name), true);
           return false;
         }
       }
@@ -299,7 +300,7 @@ namespace MySql.Data.VisualStudio.Editors
       }
       if (bad)
       {
-        MessageBox.Show(Properties.Resources.FKColumnsNotMatched, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        Logger.LogInformation(Properties.Resources.FKColumnsNotMatched, true);
         e.Cancel = true;
         return;
       }
@@ -307,7 +308,7 @@ namespace MySql.Data.VisualStudio.Editors
         (((ForeignKey)foreignKeyBindingSource.Current).ReferencedTable == tableNode.Table.Name) &&
         ( parent == child ) )
       {  
-        MessageBox.Show(Properties.Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        Logger.LogInformation(Properties.Resources.FKSameColumn, true);
         return;
       }
       FKColumnPair pair = fkColumnsBindingSource.Current as FKColumnPair;

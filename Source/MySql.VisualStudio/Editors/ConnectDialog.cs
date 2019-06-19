@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,6 +36,7 @@ using System.Windows.Forms;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
 {
@@ -193,7 +194,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (MySqlException ex)
       {
-        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+        Logger.LogError(ex.Message, true);
       }      
     }
 
@@ -238,7 +239,7 @@ namespace MySql.Data.VisualStudio
       }
       catch (Exception)
       {
-        MessageBox.Show(String.Format(Properties.Resources.ErrorAttemptingToCreateDB, database.Text));
+        Logger.LogError(string.Format(Properties.Resources.ErrorAttemptingToCreateDB, database.Text), true);
         return false;    
       }
     }
@@ -256,7 +257,7 @@ namespace MySql.Data.VisualStudio
         }
         catch (MySqlException mysqlexception)
         {
-          MessageBox.Show(mysqlexception.Message, "Error", MessageBoxButtons.OK);          
+          Logger.LogError(mysqlexception.Message, true);          
           return false;
         }        
       }           
