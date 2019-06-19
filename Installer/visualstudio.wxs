@@ -127,7 +127,6 @@
         <File Id='VS2013_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
       </Component>
-      </Component>
       <Component Id='VS2013_Ext_BouncyCastle.Library' Guid='CA630733-A51C-4C19-A6A3-E4D98182272E'>
         <File Id='VS2013_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
