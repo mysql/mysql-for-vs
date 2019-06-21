@@ -263,6 +263,42 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not ask me again.
+        /// </summary>
+        public static string ConfigurationUpdateToolAskCheckBox {
+            get {
+                return ResourceManager.GetString("ConfigurationUpdateToolAskCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A change in the installation of Connector/NET has been identified. Do you want to execute the Configuration Update Tool now?.
+        /// </summary>
+        public static string ConfigurationUpdateToolDialogDetail {
+            get {
+                return ResourceManager.GetString("ConfigurationUpdateToolDialogDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failure to execute the tool may result in errors when using features that have a dependency on Connector/NET..
+        /// </summary>
+        public static string ConfigurationUpdateToolDialogSubDetail {
+            get {
+                return ResourceManager.GetString("ConfigurationUpdateToolDialogSubDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MySQL for Visual Studio configuration update required.
+        /// </summary>
+        public static string ConfigurationUpdateToolDialogTitle {
+            get {
+                return ResourceManager.GetString("ConfigurationUpdateToolDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred that is normally caused by not having for Visual Studio properly installed..
         /// </summary>
         public static string ConnectionPropertiesNull {
@@ -2748,6 +2784,16 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string MySqlDumpSummary {
             get {
                 return ResourceManager.GetString("MySqlDumpSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MySQLforVisualStudio {
+            get {
+                object obj = ResourceManager.GetObject("MySQLforVisualStudio", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

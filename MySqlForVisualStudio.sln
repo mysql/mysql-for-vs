@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Parser", "Source\MySq
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio.Tests", "Tests\MySql.VisualStudio.Tests\MySql.VisualStudio.Tests.csproj", "{145AC246-EA7E-43E6-8698-E394B80B0A8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio.Updater", "Source\MySql.VisualStudio.Updater\MySql.VisualStudio.Updater.csproj", "{8F9717FD-2949-48DF-AD2E-96664B67A12C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio.CustomAction", "MySql.VisualStudio.CustomAction\MySql.VisualStudio.CustomAction.csproj", "{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,8 +116,43 @@ Global
 		{145AC246-EA7E-43E6-8698-E394B80B0A8D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{145AC246-EA7E-43E6-8698-E394B80B0A8D}.Release|x64.ActiveCfg = Release|Any CPU
 		{145AC246-EA7E-43E6-8698-E394B80B0A8D}.Release|x86.ActiveCfg = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|x64.Build.0 = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Debug|x86.Build.0 = Debug|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x64.ActiveCfg = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x64.Build.0 = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x86.ActiveCfg = Release|Any CPU
+		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x86.Build.0 = Release|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x86.ActiveCfg = Debug|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x86.Build.0 = Debug|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Mixed Platforms.Build.0 = Release|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x64.Build.0 = Release|Any CPU
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x86.ActiveCfg = Release|x86
+		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4E54C7A-2634-4157-A0AC-E4A460B11C8F}
 	EndGlobalSection
 EndGlobal

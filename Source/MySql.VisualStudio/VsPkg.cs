@@ -41,6 +41,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Utility;
+using MySql.Utility.Forms;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.Services;
 using Microsoft.VisualStudio.Data.Interop;
@@ -59,7 +60,13 @@ using MySql.Utility.Classes.MySqlWorkbench;
 using System.IO;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Wizards;
+using MySql.Utility.Enums;
+using Process = System.Diagnostics.Process;
 using MySql.Utility.Classes.Logging;
+using MySql.VisualStudio.CustomAction;
+using System.Drawing;
+using System.Resources;
+using MySql.VisualStudio.CustomAction.Enums;
 #if NET_40_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
 #endif
@@ -109,20 +116,41 @@ namespace MySql.Data.VisualStudio
   [ProvideAutoLoad("ADFC4E64-0397-11D1-9F4E-00A0C911004F")]
   // This attribute registers a tool window exposed by this package.
   [Guid(GuidStrings.Package)]
-  public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
+  public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct, IDisposable
   {
-    public static MySqlDataProviderPackage Instance;
-    public MySqlConnection MysqlConnectionSelected;
-    private string _appDataPath;
-    internal List<IVsDataExplorerConnection> _mysqlConnectionsList;
-
-    private const string _mySqlConnectorEnvironmentVariable = "MYSQLCONNECTOR_ASSEMBLIESPATH";
-    private const string APPLICATION_NAME = "MySQL For Visual Studio";
-
-    internal string ConnectionName { get; set; }
+    #region Fields
 
     /// <summary>
-    /// Gets the path for this application relative to the user's application data folder where settings can be saved.
+    /// The app data path for this application.
+    /// </summary>
+    private string _appDataPath;
+
+    /// <summary>
+    /// The installation path for Connector/NET.
+    /// </summary>
+    private string _connectorNETInstallationPath;
+
+    /// <summary>
+    /// A monitor to detect changes in the Windows registry for Connector/NET.
+    /// </summary>
+    private RegistryMonitor _registryMonitor;
+
+    /// <summary>
+    /// The settings for MySQL for VisualStudio.
+    /// </summary>
+    private PluginSettings _settings;
+
+    /// <summary>
+    /// The path for the settings file.
+    /// </summary>
+    private string _settingsFilePath;
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Gets the path for this application relative to the application data folder of the user where settings can be saved.
     /// </summary>
     internal string AppDataPath
     {
@@ -130,12 +158,48 @@ namespace MySql.Data.VisualStudio
       {
         if (string.IsNullOrEmpty(_appDataPath))
         {
-          _appDataPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\MySQL\{APPLICATION_NAME}\";
+          _appDataPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\MySQL\\{APPLICATION_NAME}\\";
         }
 
         return _appDataPath;
       }
     }
+
+    /// <summary>
+    /// Gets the path to the location of the settings.xml file.
+    /// </summary>
+    internal string SettingsFilePath
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(_settingsFilePath))
+        {
+          _settingsFilePath = $"{AppDataPath}settings.xml";
+        }
+
+        return _settingsFilePath;
+      }
+    }
+
+    public static MySqlDataProviderPackage Instance;
+
+    public MySqlConnection MysqlConnectionSelected;
+
+    internal string ConnectionName { get; set; }
+
+    internal List<IVsDataExplorerConnection> _mysqlConnectionsList;
+
+    #endregion
+
+    #region Constants
+
+    private const string APPLICATION_NAME = "MySQL for Visual Studio";
+    private const string CONNECTOR_NET_ENVIRONMENT_VARIABLE = "MYSQLCONNECTOR_ASSEMBLIESPATH";
+    private const string CONNECTOR_NET_REGISTRY_KEY = "Software\\Wow6432Node\\MySQL AB\\MySQL Connector/Net";
+    private const string MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY = "Software\\Wow6432Node\\MySQL AB\\MySQL for Visual Studio";
+    private const string DEPENDENCIES_FOLDER = @"..\..\..\..\..\Dependencies\v4.0\Release\";
+
+    #endregion    /// <summary>
 
     /// <summary>
     /// Default constructor of the package.
@@ -176,10 +240,10 @@ namespace MySql.Data.VisualStudio
 
       RegisterEditorFactory(new SqlEditorFactory());
 
-      // load our connections
+      // Load our connections.
       _mysqlConnectionsList = GetMySqlConnections();
 
-      // Add our command handlers for menu (commands must exist in the .vsct file)
+      // Add our command handlers for menu (commands must exist in the .vsct file).
       OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
       if (null != mcs)
@@ -228,33 +292,80 @@ namespace MySql.Data.VisualStudio
       string mySqlConnectorAssembliesVersion = "v4.0";
 #endif
       string mySqlConnectorPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
-      mySqlConnectorPath = !string.IsNullOrEmpty(mySqlConnectorPath)
+      _connectorNETInstallationPath = !string.IsNullOrEmpty(mySqlConnectorPath)
                             ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
                             : string.Empty;
+
       // If the environment variable doesn't exist, create it.
-      string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, EnvironmentVariableTarget.User);
+      string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_connectorNETInstallationPath, EnvironmentVariableTarget.User);
       if (mySqlConnectorEnvironmentVariableValue == null)
       {
-        if (!string.IsNullOrEmpty(mySqlConnectorPath))
+        if (!string.IsNullOrEmpty(_connectorNETInstallationPath))
         {
-          SetEnvironmentVariableValues(mySqlConnectorPath);
+          SetEnvironmentVariableValues(_connectorNETInstallationPath);
         }
       }
       else
       {
-        // If already exists, check if its original value has changed
-        if (!mySqlConnectorEnvironmentVariableValue.Contains(mySqlConnectorPath, StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(mySqlConnectorPath))
+        // If already exists, check if its original value has changed.
+        if (!mySqlConnectorEnvironmentVariableValue.Contains(_connectorNETInstallationPath, StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(_connectorNETInstallationPath))
         {
-          SetEnvironmentVariableValues(mySqlConnectorPath);
+          SetEnvironmentVariableValues(_connectorNETInstallationPath);
         }
       }
+
+      // Create program data directory.
+      if (!Directory.Exists(AppDataPath))
+      {
+        try
+        {
+          Directory.CreateDirectory(AppDataPath);
+        }
+        catch (Exception exception)
+        {
+          Logger.LogError($"Failed to create the folder {AppDataPath} with message: {exception.Message}");
+        }
+      }
+
+      // Execute if a change in Connector/NET installation was identified.
+      _settings = PluginSettings.LoadFromFile(SettingsFilePath);
+      if (!_settings.AskToExecuteConfigurationUpdateTool)
+      {
+        return;
+      }
+
+      // Initialize and start the Connector/NET registry monitor.
+      _registryMonitor = new RegistryMonitor(RegistryHive.LocalMachine, CONNECTOR_NET_REGISTRY_KEY)
+      {
+        RegistryChangeNotifyFilter = RegistryChangeNotifyFilter.Value | RegistryChangeNotifyFilter.Key
+      };
+      _registryMonitor.RegistryChanged += ConnectorNETRegistryKeyChanged;
+      _registryMonitor.Error += ConnectorNETRegistryKeyMonitorError;
+      _registryMonitor?.Start();
+
+      var mysqlForVisualStudioVersion = AssemblyName.GetAssemblyName(this.GetType().Assembly.Location).Version;
+      var installedMySqlDataVersionString = GetVersionStringFromRegistry(CONNECTOR_NET_REGISTRY_KEY);
+      Version.TryParse(installedMySqlDataVersionString, out var installedMySqlDataVersion);
+      Version internalMySqlDataVersion = null;
+#if DEBUG
+      internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
+#else
+      internalMySqlDataVersion = new Version(GetVersionStringFromRegistry(MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY));
+#endif
+      if (!CustomActions.IsConfigurationUpdateRequired(mysqlForVisualStudioVersion, installedMySqlDataVersion, internalMySqlDataVersion))
+      {
+        return;
+      }
+
+      ConnectorNETRegistryKeyChanged(this, EventArgs.Empty);
     }
+
     #endregion
 
     private void SetEnvironmentVariableValues(string mySqlConnectorPath)
     {
-      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.User);
-      Environment.SetEnvironmentVariable(_mySqlConnectorEnvironmentVariable, mySqlConnectorPath, EnvironmentVariableTarget.Process);
+      Environment.SetEnvironmentVariable(CONNECTOR_NET_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.User);
+      Environment.SetEnvironmentVariable(CONNECTOR_NET_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.Process);
     }
 
     void cmdOpenUtilitiesPrompt_BeforeQueryStatus(object sender, EventArgs e)
@@ -328,6 +439,46 @@ namespace MySql.Data.VisualStudio
           break;
         }
       }
+    }
+
+    /// <summary>
+    /// Event delegate method fired when the registry key associated with Connector/NET changes.
+    /// </summary>
+    /// <param name="sender">The sender object.</param>
+    /// <param name="e">The event arguments.</param>
+    private void ConnectorNETRegistryKeyChanged(object sender, EventArgs e)
+    {
+      var infoDialogProperties = InfoDialogProperties.GetYesNoDialogProperties(
+        InfoDialog.InfoType.Warning,
+        Properties.Resources.ConfigurationUpdateToolDialogTitle,
+        Properties.Resources.ConfigurationUpdateToolDialogDetail,
+        Properties.Resources.ConfigurationUpdateToolDialogSubDetail);
+      infoDialogProperties.FitTextStrategy = InfoDialog.FitTextsAction.IncreaseDialogWidth;
+      infoDialogProperties.CommandAreaProperties.LeftAreaControl = CommandAreaProperties.LeftAreaControlType.InfoCheckBox;
+      infoDialogProperties.CommandAreaProperties.LeftAreaCheckBoxText = Properties.Resources.ConfigurationUpdateToolAskCheckBox;
+      infoDialogProperties.LogoImage = Properties.Resources.MySQLforVisualStudio;
+      using (var yesNoDialog = new InfoDialog(infoDialogProperties))
+      {
+        var dialogResult = yesNoDialog.ShowDialog();
+        _settings.AskToExecuteConfigurationUpdateTool = !yesNoDialog.InfoCheckBoxChecked;
+        PluginSettings.SaveObjectToXml(_settings, SettingsFilePath);
+        if (dialogResult != DialogResult.Yes)
+        {
+          return;
+        }
+
+        ExecuteMySqlForVisualStudioConfigurationUpdateTool();
+      }
+    }
+
+    /// <summary>
+    /// Event delegate method fired when an error occurs while monitoring changes to the registry key associated with Connector/NET.
+    /// </summary>
+    /// <param name="sender">The sender object.</param>
+    /// <param name="e">The event arguments.</param>
+    private void ConnectorNETRegistryKeyMonitorError(object sender, ErrorEventArgs e)
+    {
+      Logger.LogException(e.GetException());
     }
 
     void GenDbScript_BeforeQueryStatus(object sender, EventArgs e)
@@ -417,7 +568,7 @@ namespace MySql.Data.VisualStudio
                           Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Information", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
           {
             ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/tools/utilities/");
-            System.Diagnostics.Process.Start(browserInfo);
+            Process.Start(browserInfo);
           }
           else
             return;
@@ -717,6 +868,86 @@ namespace MySql.Data.VisualStudio
       sol.AddFromTemplate(templatePath, solutionPath, dlg.ProjectName, dlg.CreateNewSolution);
     }
 
+    /// <summary>
+    /// Executes the Configuration Update Tool that updates PKGDEF files.
+    /// </summary>
+    private void ExecuteMySqlForVisualStudioConfigurationUpdateTool()
+    {
+      var mysqlForVisualStudioVersion = AssemblyName.GetAssemblyName(this.GetType().Assembly.Location).Version;
+      var installedMySqlDataVersionString = GetVersionStringFromRegistry(CONNECTOR_NET_REGISTRY_KEY);
+#if DEBUG
+      var internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
+      var fileName = @"..\..\..\..\MySql.VisualStudio.Updater\bin\Debug\";
+#else
+      var internalMySqlDataVersion = new Version(GetVersionStringFromRegistry(MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY));
+      var fileName = $@"{GetValueFromRegistry(MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY, "Location")}\Dependencies\";
+#endif
+
+      try
+      {
+        var startInfo = new ProcessStartInfo
+        {
+          FileName = $"{fileName}MySql.VisualStudio.Updater.exe",
+          Arguments = $"{mysqlForVisualStudioVersion.ToString()} {internalMySqlDataVersion.ToString()} {installedMySqlDataVersionString}",
+          Verb = "runas"
+        };
+
+        Process.Start(startInfo);
+      }
+      catch (Exception exception)
+      {
+        Logger.LogException(exception);
+      }
+    }
+
+    /// <summary>
+    /// Gets the value of the specified Windows registry key.
+    /// </summary>
+    /// <param name="registryKeyPath">The path to registry key to check for.</param>
+    /// <param name="keyName">The name of the key to check for.</param>
+    /// <returns>The value of the specified registry key.</returns>
+    public string GetValueFromRegistry(string registryKeyPath, string keyName)
+    {
+      RegistryKey key = null;
+      string stringValue = null;
+      try
+      {
+        key = RegistryHive.LocalMachine.OpenRegistryKey(registryKeyPath);
+        var value = key?.GetValue(keyName);
+        if (value != null)
+        {
+          stringValue = value.ToString();
+        }
+      }
+      catch (Exception ex)
+      {
+        Logger.LogException(ex);
+      }
+      finally
+      {
+        key?.Close();
+      }
+
+      return stringValue;
+    }
+
+    /// <summary>
+    /// Gets the version number of the specified product from the Windows registry.
+    /// </summary>
+    /// <param name="registryKey">The registry key to check for.</param>
+    /// <returns>The version number as a string.</returns>
+    public string GetVersionStringFromRegistry(string registryKey)
+    {
+      var version = GetValueFromRegistry(registryKey, "Version");
+
+      if (version != null)
+      {
+        return $"{version}.0";
+      }
+
+      return null;
+    }
+
     public struct ConnectionParameters
     {
       public string HostName;
@@ -728,7 +959,7 @@ namespace MySql.Data.VisualStudio
       public string DataBaseName;
     }
 
-    #region IVsInstalledProduct Members
+#region IVsInstalledProduct Members
 
     int IVsInstalledProduct.IdBmpSplash(out uint pIdBmp)
     {
@@ -762,6 +993,21 @@ namespace MySql.Data.VisualStudio
 
       pbstrPID = String.Format("{0}.{1}.{2}", versionParts[0], versionParts[1], versionParts[2]);
       return VSConstants.S_OK;
+    }
+
+    /// <summary>
+    /// Disposes unused items.
+    /// </summary>
+    public void Dispose()
+    {
+      // Stop registry monitor and dispose of it.
+      if (_registryMonitor != null)
+      {
+        _registryMonitor.Stop();
+        _registryMonitor.RegistryChanged -= ConnectorNETRegistryKeyChanged;
+        _registryMonitor.Error -= ConnectorNETRegistryKeyMonitorError;
+        _registryMonitor.Dispose();
+      }
     }
 
     #endregion

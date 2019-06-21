@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
+
     <!-- Visual Studio 2012 -->
     <DirectoryRef Id='VS11_ExtVersionDir'>
       <Component Id='VS2012_Extension' Guid='ECB3633C-4169-4074-A527-3FDA825DDB2F'>
@@ -60,6 +61,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS11_VBITMySQL'>
       <Component Id='VS2012_VB_VSIT_DIR' Guid='dfb29060-0564-4851-b771-b5873a92ec90'>
         <File Id='VS2012_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -146,6 +148,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS12_VBITMySQL'>
       <Component Id='VS2013_VB_VSIT_DIR' Guid='a20f84dd-fe3a-4ab4-a0f9-bd346c660fbe'>
         <File Id='VS2013_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -154,7 +157,6 @@
               Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
       </Component>
     </DirectoryRef>
-
 
     <DirectoryRef Id='VS12_T4TemplatesCSharpDir'>
       <Component Id='VS2013_T4TemplatesCSharpDir' Guid='BA082C85-9D64-1079-8910-C6C2565525CC'>
@@ -233,6 +235,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS14_VBITMySQL'>
       <Component Id='VS2015_VB_VSIT_DIR' Guid='b0f00be9-2298-469f-b269-fd42263c2432'>
         <File Id='VS2015_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -320,6 +323,7 @@
               Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS15_CSharpITMySQL'>
       <Component Id='VS2017_VSIT_DIR' Guid='579849BF-FEE7-450C-A740-22613C7FED20'>
         <File Id='VS2017_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
@@ -328,6 +332,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS15_VBITMySQL'>
       <Component Id='VS2017_VB_VSIT_DIR' Guid='052AAF4F-0F8A-4148-A475-64057080C57D'>
         <File Id='VS2017_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -415,6 +420,7 @@
               Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS15_Ent_CSharpITMySQL'>
       <Component Id='VS2017_ENT_VSIT_DIR' Guid='8D1C3C66-DBCD-4F91-AFC0-BDBD349103E3'>
         <File Id='VS2017_Ent_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
@@ -423,6 +429,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS15_Ent_VBITMySQL'>
       <Component Id='VS2017_ENT_VB_VSIT_DIR' Guid='BDC3A9E4-C2B2-4337-A343-A97F09666431'>
         <File Id='VS2017_Ent_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -510,6 +517,7 @@
               Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS15_Pro_CSharpITMySQL'>
       <Component Id='VS2017_PRO_VSIT_DIR' Guid='636E2CE3-AB29-4FDA-84BA-1BB327AC46AD'>
         <File Id='VS2017_Pro_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
@@ -518,6 +526,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS15_Pro_VBITMySQL'>
       <Component Id='VS2017_PRO_VB_VSIT_DIR' Guid='9007C05E-36C3-4D52-AB3A-C6825C04C8B8'>
         <File Id='VS2017_Pro_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -848,6 +857,13 @@
     <Property Id='VS_2017_ENT_PATH' Secure='yes' />
     <Property Id='VS_2017_PRO_PATH' Secure='yes' />
 
+    <!-- Additional properties -->
+    <Property Id='CNETVERSION' Secure='yes' />
+    <Property Id='VS2015INSTALL' Secure='yes' />
+    <Property Id='VS2017COMINSTALL' Secure='yes' />
+    <Property Id='VS2017ENTINSTALL' Secure='yes' />
+    <Property Id='VS2017PROINSTALL' Secure='yes' />
+
     <!-- Visual Studio 2012 Custom Action (update packages file) -->
     <Binary Id="VS11_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="VS2012_SetPathProp" Property="VS11_UpdatePackageFile" Value="VS2012_PathProp=[VS_2012_PATH]" Return="check" />
@@ -889,6 +905,11 @@
     <!-- Visual Studio 2017 Professional Custom Action -->
     <SetProperty Id="VS15_Pro_Setup_Custom" Value="&quot;[VS15.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15_Pro_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <!-- Custom Action for updating the pkdef file -->
+    <Binary Id="AfterInstallActions" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
+    <CustomAction Id="UpdatePkgdefFileParameters" Property="UpdatePkgdefFile" Value="MySqlForVisualStudioVersion=$(var.Version);ConnectorVersion=[CNETVERSION];VS2015Path=[VS_2015_PATH];VS2017ComPath=[VS_2017_COM_PATH];VS2017EntPath=[VS_2017_ENT_PATH];VS2017ProPath=[VS_2017_PRO_PATH];VS2015Install=[VS2015INSTALL];VS2017ComInstall=[VS2017COMINSTALL];VS2017EntInstall=[VS2017ENTINSTALL];VS2017ProInstall=[VS2017PROINSTALL]" Return="check" />
+    <CustomAction Id="UpdatePkgdefFile" DllEntry="AddRedirectEntries" BinaryKey="AfterInstallActions" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Show warning message for Windows 7 users -->
     <Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
@@ -936,7 +957,9 @@
       <Custom Action="VS11_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action="VS12_UpdatePackageFile" After='VS11_UpdatePackageFile'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
       <Custom Action="VS14_UpdatePackageFile" After='VS12_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action='VS2012Setup' After='VS14_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action='UpdatePkgdefFileParameters' After='VS14_UpdatePackageFile'>CNETINSTALLED = "Yes" AND ((&amp;VS2015Int=2) OR (&amp;VS2015Int=3) OR (&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3))</Custom>
+      <Custom Action='UpdatePkgdefFile' After='UpdatePkgdefFileParameters'>CNETINSTALLED = "Yes" AND ((&amp;VS2015Int=2) OR (&amp;VS2015Int=3) OR (&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3))</Custom>
+      <Custom Action='VS2012Setup' After='UpdatePkgdefFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
       <Custom Action='VS2013Setup' After='VS2012Setup'>(&amp;VS2013Int=2) OR (&amp;VS2013Int=3)</Custom>
       <Custom Action='VS2015Setup' After='VS2013Setup'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action='VS15Setup_Custom' After='VS2015Setup'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>

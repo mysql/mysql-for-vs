@@ -10,7 +10,7 @@
         <File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
         <?if $(var.IsGPL) = 1 ?>
         <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
-		<File Id="LICENSE" Name="LICENSE" Source="..\LICENSE" DiskId="1"/>
+        <File Id="LICENSE" Name="LICENSE" Source="..\LICENSE" DiskId="1"/>
         <?else?>
         <File Id="README2" Name="README" Source="..\README-Commercial" DiskId="1"/>
         <File Id="LICENSE2" Name="LICENSE" Source="..\LICENSE-Commercial" DiskId="1"/>
@@ -56,7 +56,7 @@
               Source="..\Dependencies\MySql\mysqldump.exe" DiskId="1"/>
         <RemoveFile Id="MySqldumpx86File" Name="mysqldump.exe" On="uninstall"/>
       </Component>
-	  <Component Id="Libeay32" Guid="415B798F-9B11-4BC9-BE09-9B9EB31E45E0" >
+      <Component Id="Libeay32" Guid="415B798F-9B11-4BC9-BE09-9B9EB31E45E0" >
         <File Id="libeay32File" Name="libeay32.dll"
               Source="..\Dependencies\MySql\libeay32.dll" DiskId="1"/>
         <RemoveFile Id="Libeay32File" Name="libeay32.dll" On="uninstall"/>
@@ -66,6 +66,16 @@
               Source="..\Dependencies\MySql\ssleay32.dll" DiskId="1"/>
         <RemoveFile Id="Ssleay32File" Name="ssleay32.dll" On="uninstall"/>
       </Component>
+      <Component Id="MySql.VisualStudio.Updater" Guid="8A408C68-2496-4F74-A496-DC3D5C720F1A" >
+        <File Id="MySql.VisualStudio.UpdaterFile" Name="MySql.VisualStudio.Updater.exe"
+              Source="..\Dependencies\MySql\MySql.VisualStudio.Updater.exe" DiskId="1"/>
+        <RemoveFile Id="MySql.VisualStudio.UpdaterFile" Name="MySql.VisualStudio.Updater.exe" On="uninstall"/>
+      </Component>
+      <Component Id="MySql.VisualStudio.CustomAction" Guid="63B25D69-8519-4AD0-BFEA-008885E572AF" >
+        <File Id="MySql.VisualStudio.CustomActionFile" Name="MySql.VisualStudio.CustomAction.dll"
+              Source="..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll" DiskId="1"/>
+        <RemoveFile Id="MySql.VisualStudio.CustomAction" Name="MySql.VisualStudio.CustomAction.dll" On="uninstall"/>
+      </Component>
     </DirectoryRef>
 
     <!-- Start menu junk -->
@@ -74,7 +84,7 @@
         <CreateFolder/>
         <!-- Clear ICE18 error -->
         <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for [ProductName]"
-					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
+                  Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
         <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for [ProductName]"
                   Directory="ShortCutDir" Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
         <Shortcut Id="S102" Name="Release Notes" Description="Release notes"
@@ -99,8 +109,10 @@
       <ComponentRef Id="RegistryInstallFlag32"/> -->
       <ComponentRef Id="PerfMon"/>
       <ComponentRef Id="MySqldumpx86"/>
-	  <ComponentRef Id="Libeay32"/>
-	  <ComponentRef Id="Ssleay32"/>
+      <ComponentRef Id="Libeay32"/>
+      <ComponentRef Id="Ssleay32"/>
+      <ComponentRef Id="MySql.VisualStudio.Updater"/>
+      <ComponentRef Id="MySql.VisualStudio.CustomAction"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
 

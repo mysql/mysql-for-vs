@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -30,40 +30,52 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.VisualStudio.Setup.Configuration;
 using Microsoft.Win32;
 using MySql.Utility.Classes;
+using MySql.Utility.Classes.Logging;
+using MySql.VisualStudio.CustomAction.Enums;
+using MySql.VisualStudio.CustomAction.Properties;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Xml;
 
 namespace MySql.VisualStudio.CustomAction
 {
   public class CustomActions
   {
-    /// <summary>
-    /// Enum used to list the supported Visual Studio versions that execute the "UpdateFlagPackagesFile" methods.
-    /// </summary>
-    enum SupportedVsVersions
-    {
-      Vs2012, Vs2013, Vs2015, Vs2017Community, Vs2017Enterprise, Vs2017Professional
-    }
+    #region Constants
 
-    #region [Constants]
+    private const string APPLICATION_NAME = "MySQL for Visual Studio";
+    private const string BINDING_REDIRECT_ROOT_KEY = @"[$RootKey$\RuntimeConfiguration\dependentAssembly\bindingRedirection\{EE3E8305-3E91-51CD-0B2D-8E8EFFDD081C}]";
+    private const string EXTENSION_FILE_NAME = "extensions.configurationchanged";
+    private const int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
+    private const string VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\";
+
     private const string VS2012_VERSION_NUMBER = "11.0";
     private const string VS2013_VERSION_NUMBER = "12.0";
     private const string VS2015_VERSION_NUMBER = "14.0";
     private const string VS2017_VERSION_NUMBER = "15.0";
+
     private const string VS2012_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\";
     private const string VS2012_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE\";
     private const string VS2013_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 12.0\";
     private const string VS2013_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 12.0\";
     private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
     private const string VS2015_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 14.0\";
-    private const string EXTENSION_FILE_NAME = "extensions.configurationchanged";
-    private const int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
+
+    private const string VS2015_INSTALL_FEATURE = "VS2015Install";
+    private const string VS2017_COMMUNITY_INSTALL_FEATURE = "VS2017ComInstall";
+    private const string VS2017_ENTERPRISE_INSTALL_FEATURE = "VS2017EntInstall";
+    private const string VS2017_PROFESSIONAL_INSTALL_FEATURE = "VS2017ProInstall";
+
     #endregion
 
-    #region [Fields]
+    #region Fields
+
+    private static Version _internalMySqlDataVersion = new Version("8.0.16.0");
     private static string _vs2017CommunityInstallationPath;
     private static string _VS2017CommunityX64ExtensionsFilePath;
     private static string _VS2017CommunityX86ExtensionsFilePath;
@@ -76,6 +88,26 @@ namespace MySql.VisualStudio.CustomAction
     private static string _vs2017CommunityInstanceId;
     private static string _vs2017EnterpriseInstanceId;
     private static string _vs2017ProfessionalInstanceId;
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// The installation path for Visual Studio 2017 Community edition.
+    /// </summary>
+    public static string VS2017CommunityInstallationPath => _vs2017CommunityInstallationPath;
+
+    /// <summary>
+    /// The installation path for Visual Studio 2017 Enteprise edition.
+    /// </summary>
+    public static string VS2017EnterpriseInstallationPath => _vs2017EnterpriseInstallationPath;
+
+    /// <summary>
+    /// The installation path for Visual Studio 2017 Professional edition.
+    /// </summary>
+    public static string VS2017ProfessionalInstallationPath => _vs2017ProfessionalInstallationPath;
+
     #endregion
 
     /// <summary>
@@ -92,7 +124,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       else
       {
-        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\";
+        var partialPath = $@"{VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH}Community\";
         _VS2017CommunityX64ExtensionsFilePath = partialPath;
         _VS2017CommunityX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
@@ -104,7 +136,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       else
       {
-        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\";
+        var partialPath = $@"{VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH}Enterprise\";
         _VS2017EnterpriseX64ExtensionsFilePath = partialPath;
         _VS2017EnterpriseX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
@@ -116,20 +148,28 @@ namespace MySql.VisualStudio.CustomAction
       }
       else
       {
-        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\";
+        var partialPath = $@"{VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH}Professional\";
         _VS2017ProfessionalX64ExtensionsFilePath = partialPath;
         _VS2017ProfessionalX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
     }
 
     #region Custom Actions
+
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2012(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       string vsPath = Path.Combine(session.CustomActionData["VS2012_PathProp"], @"Extensions\extensions.configurationchanged");
 
       if (File.Exists(vsPath))
+      {
         File.WriteAllText(vsPath, string.Empty);
+      }
 
       return ActionResult.Success;
     }
@@ -137,10 +177,17 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2013(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       string vsPath = Path.Combine(session.CustomActionData["VS2013_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
       if (File.Exists(vsPath))
+      {
         File.WriteAllText(vsPath, string.Empty);
+      }
 
       return ActionResult.Success;
     }
@@ -148,10 +195,18 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2015(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       string vsPath = Path.Combine(session.CustomActionData["VS2015_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
       if (File.Exists(vsPath))
+      {
         File.WriteAllText(vsPath, string.Empty);
+        session["VS2015INSTALL"] = "1";
+      }
 
       return ActionResult.Success;
     }
@@ -159,10 +214,17 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2017(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       string vsPath = Path.Combine(session.CustomActionData["VS2017_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
       if (File.Exists(vsPath))
+      {
         File.WriteAllText(vsPath, string.Empty);
+      }
 
       return ActionResult.Success;
     }
@@ -170,10 +232,17 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2017Enterprise(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       string vsPath = Path.Combine(session.CustomActionData["VS2017_Ent_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
       if (File.Exists(vsPath))
+      {
         File.WriteAllText(vsPath, string.Empty);
+      }
 
       return ActionResult.Success;
     }
@@ -181,10 +250,17 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2017Professional(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       string vsPath = Path.Combine(session.CustomActionData["VS2017_Pro_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
       if (File.Exists(vsPath))
+      {
         File.WriteAllText(vsPath, string.Empty);
+      }
 
       return ActionResult.Success;
     }
@@ -192,18 +268,22 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult UpdateMachineConfigFile(Session session)
     {
-      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL for Visual Studio");
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
 
+      var installedPath = MySql.Utility.Classes.Utilities.GetMySqlAppInstallLocation(APPLICATION_NAME);
       if (string.IsNullOrEmpty(installedPath))
       {
-        session.Log("UpdateMachineConfig: not found installed file");
+        session.Log(string.Format(Resources.ProductNotInstalled, "MySQL for Visual Studio"));
         return ActionResult.NotExecuted;
       }
 
-      installedPath = Path.Combine(installedPath, @"Assemblies\MySql.data.dll");
+      installedPath = Path.Combine(installedPath, @"Assemblies\MySql.Data.dll");
       if (!File.Exists(installedPath))
       {
-        session.Log("UpdateMachineConfig: MySql.data.dll does not exists.");
+        session.Log(Resources.MySqlDataNotFound);
         return ActionResult.NotExecuted;
       }
 
@@ -214,65 +294,97 @@ namespace MySql.VisualStudio.CustomAction
       {
         try
         {
-          session.Log("about to invoke method on customInstallerType");
+          session.Log(Resources.InvokingMethodOnCustomInstaller);
           var method = customInstallerType.GetMethod("AddProviderToMachineConfig", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
 
           if (method != null)
+          {
             method.Invoke(null, null);
+          }
           else
-            session.Log("Method information was null ");
+          {
+            session.Log(Resources.MethodNullInformation);
+          }
 
           return ActionResult.Success;
         }
         catch (Exception ex)
         {
-          session.Log("error when calling the method " + ex.Message + " " + ex.InnerException.Message);
+          session.Log(string.Format(Resources.CallingMethodError, ex.Message, ex.InnerException.Message));
           return ActionResult.NotExecuted;
         }
       }
       else
       {
-        session.Log("Assembly wasn't loaded correctly");
+        session.Log(string.Format(Resources.FailedToLoadAssembly, string.Empty));
         return ActionResult.NotExecuted;
       }
     }
 
+    /// <summary>
+    /// Identifies if Connector/NET is installed and its version number.
+    /// </summary>
+    /// <param name="session">The session object containing the parameters sent by Wix.</param>
+    /// <returns>An <see cref="ActionResult"/> object set with a success status if no errors were found; otherwise, a failure status is reported.</returns>
     [CustomAction]
-    public static ActionResult GetConnectorNetVersion(Session session)
+    public static ActionResult GetConnectorNETVersion(Session session)
     {
-      var installedPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
 
-      session["CNETINSTALLED"] = "0";
-      session.Log("Executing GetConnectorNetVersion " + session["CNETINSTALLED"]);
+      const string CONNECTOR_NET_INSTALLED_VARIABLE_NAME = "CNETINSTALLED";
+      const string CONNECTOR_NET_VERSION_VARIABLE_NAME = "CNETVERSION";
+      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(GetConnectorNETVersion)));
+      session[CONNECTOR_NET_INSTALLED_VARIABLE_NAME] = "No";
+      session[CONNECTOR_NET_VERSION_VARIABLE_NAME] = "0";
 
       try
       {
+        var installedPath = MySql.Utility.Classes.Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
         if (string.IsNullOrEmpty(installedPath))
-          return ActionResult.Success;
-
-        installedPath = Path.Combine(installedPath, @"Assemblies\v4.0\MySql.data.dll");
-        if (!File.Exists(installedPath))
-          return ActionResult.Success;
-
-        var a = Assembly.LoadFile(installedPath);
-        if (a != null)
         {
-          var version = a.GetName().Version;
-          if (version >= new Version(6, 7))
-            return ActionResult.Success;
+          session.Log(string.Format(Resources.ProductNotInstalled, "Connector/NET"));
+          return ActionResult.Success;
+        }
 
-          session["CNETINSTALLED"] = "1";
-          session.Log("Cnet Installed is 1");
+        installedPath = Path.Combine(installedPath, @"Assemblies\v4.5.2\MySql.Data.dll");
+        if (!File.Exists(installedPath))
+        {
+          session.Log(Resources.MySqlDataNotFound);
+          return ActionResult.Success;
+        }
+
+        var assembly = Assembly.LoadFile(installedPath);
+        if (assembly != null)
+        {
+          session.Log(string.Format(Resources.AssemblyFoundAt, "MySql.Data", installedPath));
+          var version = assembly.GetName().Version;
+
+          // Checks if an integrated version of Connector/NET is installed and needs to be removed first.
+          if (version < new Version(6, 7, 4))
+          {
+            session[CONNECTOR_NET_INSTALLED_VARIABLE_NAME] = "Unsupported";
+            return ActionResult.Success;
+          }
+
+          session[CONNECTOR_NET_INSTALLED_VARIABLE_NAME] = "Yes";
+          session[CONNECTOR_NET_VERSION_VARIABLE_NAME] = version.ToString();
+          session.Log($"Connector/NET version {session[CONNECTOR_NET_VERSION_VARIABLE_NAME]} is installed.");
+
           return ActionResult.Success;
         }
         else
-          session.Log("Error - Assembly of Connector Net not found");
+        {
+          session.Log(string.Format(Resources.FailedToLoadAssembly, "Connector/NET"));
+        }
 
         return ActionResult.Success;
       }
       catch (Exception ex)
       {
-        session.Log("An exception has been caught " + ex.Message);
+        session.Log($"{Resources.ConnectorNETGeneralError}: {ex.Message}");
         return ActionResult.Failure;
       }
     }
@@ -285,19 +397,74 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult SetVS2017InstallationPaths(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
+      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(SetVS2017InstallationPaths)));
+
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
       {
         session["VS_2017_COM_PATH_MAIN"] = session["VS_2017_COM_PATH"] = _vs2017CommunityInstallationPath;
+        session["VS2017COMINSTALL"] = "1";
       }
 
       if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
       {
         session["VS_2017_ENT_PATH_MAIN"] = session["VS_2017_ENT_PATH"] = _vs2017EnterpriseInstallationPath;
+        session["VS2017ENTINSTALL"] = "1";
       }
 
       if (!string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
       {
         session["VS_2017_PRO_PATH_MAIN"] = session["VS_2017_PRO_PATH"] = _vs2017ProfessionalInstallationPath;
+        session["VS2017PROINSTALL"] = "1";
+      }
+
+      return ActionResult.Success;
+    }
+
+    /// <summary>
+    /// Adds binding redirection entries to the PKGDEF file based on the version of Connector/NET installed (if any).
+    /// </summary>
+    /// <param name="session">The session object containing the parameters sent by Wix.</param>
+    /// <returns>An <see cref="ActionResult"/> object set with a success status if no errors were found; otherwise, a failure status is reported.</returns>
+    [CustomAction]
+    public static ActionResult AddRedirectEntries(Session session)
+    {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
+      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(AddRedirectEntries)));
+
+      var customActionData = session.CustomActionData;
+      var installedMySqlDataVersion = new Version(customActionData["ConnectorVersion"]);
+      if (installedMySqlDataVersion <= new Version(0, 0))
+      {
+        session.Log(string.Format(Resources.ProductNotInstalled, "Connector/NET"));
+        return ActionResult.Success;
+      }
+
+      var mysqlForVisualStudioVersion = customActionData["MySqlForVisualStudioVersion"];
+      session.Log(string.Format(Resources.InstalledMySqlDataVersion, installedMySqlDataVersion.ToString()));
+      session.Log(string.Format(Resources.InternalMySqlDataVersion, _internalMySqlDataVersion.ToString()));
+      if (installedMySqlDataVersion == _internalMySqlDataVersion)
+      {
+        session.Log(Resources.MySqlDataVersionsMatch);
+        return ActionResult.Success;
+      }
+
+      // Find affected Visual Studio versions.
+      string[] features = { VS2015_INSTALL_FEATURE, VS2017_COMMUNITY_INSTALL_FEATURE, VS2017_ENTERPRISE_INSTALL_FEATURE, VS2017_PROFESSIONAL_INSTALL_FEATURE };
+      foreach (var feature in features)
+      {
+        if (!UpdatePkgdefFileForVersion(session, feature, mysqlForVisualStudioVersion, installedMySqlDataVersion, _internalMySqlDataVersion))
+        {
+          return ActionResult.Failure;
+        }
       }
 
       return ActionResult.Success;
@@ -311,6 +478,11 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult CreateRegKeyAndExtensionsFile(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       return CreateDeleteRegKeyAndExtensionsFile(session, false) ? ActionResult.Success : ActionResult.Failure;
     }
 
@@ -322,8 +494,14 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult DeleteRegKeyAndExtensionsFile(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       return CreateDeleteRegKeyAndExtensionsFile(session, true) ? ActionResult.Success : ActionResult.Failure;
     }
+
     #endregion
 
     /// <summary>
@@ -334,6 +512,11 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult ShowInstallationWarning(Session session)
     {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
       bool showWarning = false;
 
       // Read the ActivityLog from the user's AppData folder.
@@ -352,8 +535,7 @@ namespace MySql.VisualStudio.CustomAction
 
       if (showWarning)
       {
-        string message = "WARNING: The \"devenv /updateconfiguration\" command may have failed to execute succesfully preventing Visual Studio 2017 from registering/unregistering MySQL for Visual Studio. If affected, run the command manually using \"Developer Command Prompt for VS\". For additional details, see the product documentation.";
-        session.Message(InstallMessage.Warning, new Record { FormatString = message });
+        session.Message(InstallMessage.Warning, new Record { FormatString = Resources.FailedToRefreshExtensions });
       }
 
       return ActionResult.Success;
@@ -388,7 +570,7 @@ namespace MySql.VisualStudio.CustomAction
             var hrText = item.SelectSingleNode("hr").InnerText;
             if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESSDENIED"))
             {
-              session.Log("Error found in the ActivityLog. Warning message will be displayed for instance: 15.0_" + vs2017InstanceId);
+              session.Log(string.Format(Resources.ActivityLogAccessDeniedError, vs2017InstanceId));
               return true;
             }
           }
@@ -399,7 +581,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       catch (Exception ex)
       {
-        session.Log("An exception was raised when attempting to read the ActivityLog: " + ex.Message);
+        session.Log(string.Format(Resources.FailedToReadActivityLog, ex.Message));
         return true;
       }
     }
@@ -420,7 +602,7 @@ namespace MySql.VisualStudio.CustomAction
           return false;
         }
 
-        SupportedVsVersions vsVersion;
+        SupportedVisualStudioVersions vsVersion;
         if (Enum.TryParse(sVsVersion, true, out vsVersion))
         {
           string vsVersionNumber;
@@ -428,48 +610,48 @@ namespace MySql.VisualStudio.CustomAction
           string vsRootPath;
           switch (vsVersion)
           {
-            case SupportedVsVersions.Vs2012:
+            case SupportedVisualStudioVersions.Vs2012:
               vsPath = Environment.Is64BitOperatingSystem ? VS2012_X64_EXTENSIONS_FILE_PATH : VS2012_X86_EXTENSIONS_FILE_PATH;
               vsVersionNumber = VS2012_VERSION_NUMBER;
               break;
-            case SupportedVsVersions.Vs2013:
+            case SupportedVisualStudioVersions.Vs2013:
               vsPath = Environment.Is64BitOperatingSystem ? VS2013_X64_EXTENSIONS_FILE_PATH : VS2013_X86_EXTENSIONS_FILE_PATH;
               vsVersionNumber = VS2013_VERSION_NUMBER;
               break;
-            case SupportedVsVersions.Vs2015:
+            case SupportedVisualStudioVersions.Vs2015:
               vsPath = Environment.Is64BitOperatingSystem ? VS2015_X64_EXTENSIONS_FILE_PATH : VS2015_X86_EXTENSIONS_FILE_PATH;
               vsVersionNumber = VS2015_VERSION_NUMBER;
               break;
-            case SupportedVsVersions.Vs2017Community:
+            case SupportedVisualStudioVersions.Vs2017Community:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017CommunityX64ExtensionsFilePath : _VS2017CommunityX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
               break;
-            case SupportedVsVersions.Vs2017Enterprise:
+            case SupportedVisualStudioVersions.Vs2017Enterprise:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017EnterpriseX64ExtensionsFilePath : _VS2017EnterpriseX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
               break;
-            case SupportedVsVersions.Vs2017Professional:
+            case SupportedVisualStudioVersions.Vs2017Professional:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017ProfessionalX64ExtensionsFilePath : _VS2017ProfessionalX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
               break;
             default:
-              throw new Exception("Could not parse parameter VSVersion to a valid 'SupportedVSVersions' value.");
+              throw new Exception(Resources.FailedToParseVSVersion);
           }
 
-          // Registry key handling
-          string keyPath = GetRegKeyPath(vsVersionNumber, vsVersion == SupportedVsVersions.Vs2012);
-          string keyName = vsVersion == SupportedVsVersions.Vs2012 ? "EnvironmentDirectory" : "ShellFolder";
+          // Registry key handling.
+          string keyPath = GetRegKeyPath(vsVersionNumber, vsVersion == SupportedVisualStudioVersions.Vs2012);
+          string keyName = vsVersion == SupportedVisualStudioVersions.Vs2012 ? "EnvironmentDirectory" : "ShellFolder";
           var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
           if (!isDeleting)
           {
-            session.Log(string.Format("Creating Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+            session.Log(string.Format(Resources.CreatingRegistryKey, keyPath, keyName));
             if (key == null)
             {
               key = Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
               if (key != null)
               {
                 key.SetValue(keyName, vsPath, RegistryValueKind.String);
-                session.Log(string.Format("Created Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+                session.Log(string.Format(Resources.CreatedRegistryKey, keyPath, keyName));
               }
             }
             else
@@ -478,31 +660,31 @@ namespace MySql.VisualStudio.CustomAction
               if (keyValue == null)
               {
                 key.SetValue(keyName, vsPath, RegistryValueKind.String);
-                session.Log(string.Format("Created Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+                session.Log(string.Format(Resources.CreatedRegistryKey, keyPath, keyName));
               }
               key.Close();
             }
           }
           else
           {
-            session.Log(string.Format("Deleting Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+            session.Log(string.Format(Resources.DeletingRegistryKey, keyPath, keyName));
             if (key != null)
             {
               var keyValue = key.GetValue(keyName);
               if (keyValue != null)
               {
                 key.DeleteValue(keyName);
-                session.Log(string.Format("Deleted Registry key. keyPath = '{0}'. keyName='{1}'", keyPath, keyName));
+                session.Log(string.Format(Resources.DeletedRegistryKey, keyPath, keyName));
               }
               key.Close();
             }
           }
 
-          // "extensions.configurationchanged" file handling
+          // "extensions.configurationchanged" file handling.
           vsRootPath = vsPath;
           string extensionsDirectory = string.Format(@"{0}{1}",
             vsPath,
-            vsVersion == SupportedVsVersions.Vs2012
+            vsVersion == SupportedVisualStudioVersions.Vs2012
               ? @"Extensions"
               : @"Common7\IDE\Extensions");
           string extensionsFile = Path.Combine(extensionsDirectory, EXTENSION_FILE_NAME);
@@ -516,10 +698,10 @@ namespace MySql.VisualStudio.CustomAction
             if (!File.Exists(extensionsFile))
             {
               File.Create(extensionsFile);
-              session.Log(string.Format("Extensions file created for {0}.", vsVersion));
+              session.Log(string.Format(Resources.ExtensionsFileCreated, vsVersion));
 
-              //Remove leftover folders.
-              if (vsVersion == SupportedVsVersions.Vs2017Community || vsVersion == SupportedVsVersions.Vs2017Enterprise || vsVersion == SupportedVsVersions.Vs2017Professional)
+              // Remove leftover folders.
+              if (vsVersion == SupportedVisualStudioVersions.Vs2017Community || vsVersion == SupportedVisualStudioVersions.Vs2017Enterprise || vsVersion == SupportedVisualStudioVersions.Vs2017Professional)
               {
                 DeleteEmptyFolders(vsRootPath);
               }
@@ -530,7 +712,7 @@ namespace MySql.VisualStudio.CustomAction
             if (File.Exists(extensionsFile))
             {
               File.Delete(extensionsFile);
-              session.Log(string.Format("File deleted for {0}_EXTENSIONSFILE_CREATED.", vsVersion));
+              session.Log(string.Format(Resources.ExtensionsFileDeleted, vsVersion));
             }
           }
 
@@ -538,12 +720,13 @@ namespace MySql.VisualStudio.CustomAction
         }
         else
         {
-          throw new Exception("Could not parse parameter VSVersion to a valid 'SupportedVSVersions' value.");
+          session.Log(Resources.FailedToParseVSVersion);
+          return false;
         }
       }
       catch (Exception ex)
       {
-        session.Log(string.Format("Error executing 'CreateDeleteRegKeyAndExtensionsFile'. {0}. {1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty));
+        session.Log(string.Format(Resources.FailedToExecuteCustomAction, nameof(CreateDeleteRegKeyAndExtensionsFile), ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty));
         return false;
       }
     }
@@ -572,7 +755,7 @@ namespace MySql.VisualStudio.CustomAction
         }
         catch (Exception ex)
         {
-          throw new Exception(string.Format("Error executing '" + nameof(DeleteEmptyFolders) + "'. {0}. {1}", ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty));
+          throw new Exception(string.Format(Resources.FailedToExecuteCustomAction, nameof(DeleteEmptyFolders), ex.Message, ex.InnerException != null ? ex.InnerException.ToString() : string.Empty));
         }
       }
     }
@@ -585,6 +768,11 @@ namespace MySql.VisualStudio.CustomAction
     /// <returns>The key path for the specified Visual Studio version</returns>
     private static string GetRegKeyPath(string vsVersion, bool isVs2012)
     {
+      if (string.IsNullOrEmpty(vsVersion))
+      {
+        return null;
+      }
+
       string keyPath;
       if (Environment.Is64BitOperatingSystem)
       {
@@ -629,16 +817,16 @@ namespace MySql.VisualStudio.CustomAction
     /// <param name="session">The session object to interact with the installer variables.</param>
     /// <param name="sessionName">The name of the session to set the value.</param>
     /// <param name="value">The value to be set.</param>
-    public static void SetSessionValue(Session session, string sessionName, string value)
+    private static void SetSessionValue(Session session, string sessionName, string value)
     {
-      session.Log("Set session value. " + sessionName + " - value = " + value);
+      session.Log(string.Format(Resources.SetSessionVariableValue, sessionName, value));
       session[sessionName] = value;
     }
 
     /// <summary>
     /// Sets the installation paths for all VS2017 flavors.
     /// </summary>
-    private static void SetVS2017InstallationPaths()
+    public static void SetVS2017InstallationPaths()
     {
       try
       {
@@ -688,6 +876,339 @@ namespace MySql.VisualStudio.CustomAction
        catch (Exception) {}
     }
 
+    /// <summary>
+    /// Updates the the PKGDEF file for the specified Visual Studio version.
+    /// </summary>
+    /// <param name="session">The session object to interact with the installer variables.</param>
+    /// <param name="feature">The MSI user selected feature.</param>
+    /// <param name="mysqlForVisualStudioVersion">The version number of MySQL for Visual Studio.</param>
+    /// <param name="installedMySqlDataVersion">The version number of the MySql.Data library found in the Connector/NET installation.</param>
+    /// <param name="internalMySqlDataVersion">The version number of the MySql.Data included in this MySQL for Visual Studio installlation.</param>
+    private static bool UpdatePkgdefFileForVersion(Session session, string feature, string mysqlForVisualStudioVersion, Version installedMySqlDataVersion, Version internalMySqlDataVersion)
+    {
+      session.Log(string.Format(Resources.UpdatingPkgdefFileForFeature, feature));
+      if (!string.Equals(session.CustomActionData[feature], "1"))
+      {
+        session.Log(Resources.VisualStudioVersionNotSelected);
+        return true;
+      }
+
+      string visualStudioInstallationPath = null;
+      switch (feature)
+      {
+        case VS2015_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2015Path"];
+          break;
+
+        case VS2017_COMMUNITY_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2017ComPath"];
+          break;
+
+        case VS2017_ENTERPRISE_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2017EntPath"];
+          break;
+
+        case VS2017_PROFESSIONAL_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2017ProPath"];
+          break;
+
+        default:
+          session.Log(string.Format(Resources.FeatureNotSupported, feature));
+          return false;
+      }
+
+      if (!string.IsNullOrEmpty(visualStudioInstallationPath))
+      {
+        session.Log(string.Format(Resources.ProductInstallationPath, "Visual Studio", visualStudioInstallationPath));
+        if (UpdatePkgdefFile(visualStudioInstallationPath, new Version(mysqlForVisualStudioVersion), installedMySqlDataVersion, internalMySqlDataVersion, out var logMessage, Encoding.Unicode))
+        {
+          session.Log(logMessage);
+        }
+        else
+        {
+          session.Log(string.Format(Resources.PkgdefFileUpdateFailedForFeature, feature, logMessage));
+        }
+      }
+      else
+      {
+        session.Log(Resources.VisualStudioInstallationPathNotFound);
+        return false;
+      }
+
+      return true;
+    }
+
+    /// <summary>
+    /// Updated the PKGDEF file located in the MySQL for Visual Studio extensions folder for the specified Visual Studio version.
+    /// </summary>
+    /// <param name="visualStudioInstallationPath">The installation path for the Visual Studio version where the PKGDEF file exists.</param>
+    /// <param name="mysqlForVisualStudioVersion">The version number of MySQL for Visual Studio.</param>
+    /// <param name="installedMySqlDataVersion">The version number of the MySql.Data library found in the Connector/NET installation.</param>
+    /// <param name="internalMySqlDataVersion">The version number of the MySql.Data included in this MySQL for Visual Studio installlation.</param>
+    /// <param name="encoding">The encoding to use when updating the PKGDEF file.</param>
+    /// <returns></returns>
+    public static bool UpdatePkgdefFile(string visualStudioInstallationPath, Version mySqlForVisualStudioVersion, Version installedMySqlDataVersion, Version internalMySqlDataVersion, out string logData, Encoding encoding = null)
+    {
+      if (string.IsNullOrEmpty(visualStudioInstallationPath) || mySqlForVisualStudioVersion == null || internalMySqlDataVersion == null)
+      {
+        logData = "Invalid parameters.";
+        return false;
+      }
+
+      var logBuilder = new StringBuilder();
+      var pkgdefFilePath = Utility.Utilities.GetPkgdefFilePath(visualStudioInstallationPath, mySqlForVisualStudioVersion);
+      if (!File.Exists(pkgdefFilePath))
+      {
+        logBuilder.AppendLine(Resources.MySQLForVisualStudioNotInstalledNoUpdateRequired);
+        logData = logBuilder.ToString();
+        return true;
+      }
+
+      if (installedMySqlDataVersion != null && installedMySqlDataVersion == internalMySqlDataVersion)
+      {
+        logBuilder.AppendLine(Resources.MySqlDataVersionsMatchNoUpdateRequired);
+        logData = logBuilder.ToString();
+        return true;
+      }
+
+      try
+      {
+        // Remove any existing binding redirect entries in the PKGDEF file.
+        var builder = new StringBuilder();
+        using (var reader = new StreamReader(pkgdefFilePath))
+        {
+          string line;
+          bool omitLine = false;
+          while ((line = reader.ReadLine()) != null)
+          {
+            if (!omitLine && line.Equals(BINDING_REDIRECT_ROOT_KEY))
+            {
+              omitLine = true;
+              continue;
+            }
+            else if (omitLine && line.StartsWith("[$RootKey$"))
+            {
+              omitLine = false;
+            }
+            else if (omitLine)
+            {
+              continue;
+            }
+
+            builder.AppendLine(line);
+          }
+        }
+
+        // Update PKGDEF file without including binding redirect entries added by MySQL for Visual Studio.
+        if (!Utility.Utilities.WriteAllText(pkgdefFilePath, false, builder.ToString(), encoding))
+        {
+          logBuilder.Append(Resources.FailedToWriteToPkgdefFile);
+          logData = logBuilder.ToString();
+          return false;
+        }
+
+        logBuilder.AppendLine(Resources.BindingRedirectEntriesRemoved);
+
+        // If Connector/NET is not installed then removing binding redirect entries should suffice.
+        if (installedMySqlDataVersion == null)
+        {
+          logBuilder.Append(Resources.PkgdefFileUpdated);
+          logData = logBuilder.ToString();
+          return true;
+        }
+
+        // Update PKGDEF file with binding redirect updated entries.
+        string bindingRedirectionEntry = $"{Environment.NewLine}{Environment.NewLine}{BINDING_REDIRECT_ROOT_KEY}{Environment.NewLine}\"Name\" = \"MySql.Data\"{Environment.NewLine}\"PublicKeyToken\" = \"c5687fc88969c44d\"{Environment.NewLine}\"Culture\" = \"neutral\"{Environment.NewLine}";
+        if (installedMySqlDataVersion < internalMySqlDataVersion)
+        {
+          if (!Utility.Utilities.WriteAllText(pkgdefFilePath, true, $"{bindingRedirectionEntry}\"OldVersion\" = \"6.7.4.0 - {internalMySqlDataVersion.Major}.{internalMySqlDataVersion.Minor}.{internalMySqlDataVersion.Build - 1}.{internalMySqlDataVersion.Revision}\"{Environment.NewLine}\"NewVersion\" = \"{internalMySqlDataVersion.ToString()}\"", encoding))
+          {
+            logBuilder.Append(Resources.FailedToWriteToPkgdefFile);
+            logData = logBuilder.ToString();
+            return false;
+          }
+        }
+        else if (installedMySqlDataVersion > internalMySqlDataVersion)
+        {
+          if (!Utility.Utilities.WriteAllText(pkgdefFilePath, true, bindingRedirectionEntry + $"\"OldVersion\" = \"{internalMySqlDataVersion.ToString()}\"" + Environment.NewLine + $"\"NewVersion\" = \"{installedMySqlDataVersion.ToString()}\"", encoding))
+          {
+            logBuilder.Append(Resources.FailedToWriteToPkgdefFile);
+            logData = logBuilder.ToString();
+            return false;
+          }
+        }
+
+        logBuilder.AppendLine(Resources.PkgdefFileUpdated);
+      }
+      catch (Exception exception)
+      {
+        logBuilder.AppendLine(exception.Message);
+        logData = logBuilder.ToString();
+        return false;
+      }
+
+      logData = logBuilder.ToString();
+      return true;
+    }
+
+    /// <summary>
+    /// Identifies the type of binding redirect entry (if any) found in the PKGDEF file for the specified MySQL for Visual Studio installation. 
+    /// </summary>
+    /// <param name="visualStudioVersion">The version of Visual Studio where the PKGDEF file will be searched for.</param>
+    /// <param name="mysqlForVisualStudioVersion">The version number of the installed MySQL for Visual Studio product.</param>
+    /// <returns>The status of the PKGDEF file.</returns>
+    private static PkgdefFileStatus GetPkgdefFileStatus(SupportedVisualStudioVersions visualStudioVersion, Version mysqlForVisualStudioVersion)
+    {
+      string visualStudioInstallationPath = null;
+      if (visualStudioVersion > SupportedVisualStudioVersions.Vs2015)
+      {
+        SetVS2017InstallationPaths();
+      }
+
+      switch (visualStudioVersion)
+      {
+        case SupportedVisualStudioVersions.Vs2015:
+          visualStudioInstallationPath = Utility.Utilities.GetVisualStudio2015InstallationPath();
+          break;
+
+        case SupportedVisualStudioVersions.Vs2017Community:
+          visualStudioInstallationPath = _vs2017CommunityInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2017Enterprise:
+          visualStudioInstallationPath = _vs2017EnterpriseInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2017Professional:
+          visualStudioInstallationPath = _vs2017ProfessionalInstallationPath;
+          break;
+
+        default:
+          throw new NotSupportedException(Resources.VisualStudioVersionNotSupported);
+      }
+
+      if (string.IsNullOrEmpty(visualStudioInstallationPath))
+      {
+        return PkgdefFileStatus.Unknown;
+      }
+
+      var pkgdefFilePath = Utility.Utilities.GetPkgdefFilePath(visualStudioInstallationPath, mysqlForVisualStudioVersion);
+      if (!File.Exists(pkgdefFilePath))
+      {
+        return PkgdefFileStatus.Unknown;
+      }
+
+      try
+      {
+        using (var reader = new StreamReader(pkgdefFilePath))
+        {
+          string line;
+          bool lookForVersionEntries = false;
+          while ((line = reader.ReadLine()) != null)
+          {
+            if (lookForVersionEntries)
+            {
+              if (line.StartsWith("\"OldVersion"))
+              {
+                var versionString = Utility.Utilities.SanitizePkgdegFileVersionEntry(line);
+                if (string.IsNullOrEmpty(versionString))
+                {
+                  Logger.LogError(string.Format(Resources.FailedToParseOldVersionEntry, line, visualStudioVersion.GetDescription()));
+                  return PkgdefFileStatus.Unknown;
+                }
+
+                if (!Version.TryParse(versionString, out var version))
+                {
+                  return PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry;
+                }
+
+                if (_internalMySqlDataVersion != version)
+                {
+                  Logger.LogError(string.Format(Resources.IncorrectReferenceInOldVersionEntry, _internalMySqlDataVersion.ToString()));
+                  return PkgdefFileStatus.Unknown;
+                }
+
+                return PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry;
+              }
+
+              continue;
+            }
+            else if (line.StartsWith(BINDING_REDIRECT_ROOT_KEY))
+            {
+              lookForVersionEntries = true;
+            }
+          }
+
+          return PkgdefFileStatus.NoBindingRedirectEntries;
+        }
+      }
+      catch (Exception)
+      {
+        Logger.LogError(string.Format(Resources.FailedToReadThePkgdefFile, visualStudioVersion.GetDescription(), pkgdefFilePath));
+        return PkgdefFileStatus.Unknown;
+      }
+    }
+
+    /// <summary>
+    /// Gets the status for all supported versions of Visual Studio.
+    /// </summary>
+    /// <param name="mysqlForVisualStudioVersion">The version number of the installed MySQL for Visual Studio product.</param>
+    /// <returns>A tuple list with the status of the PKGDEF files where MySQL for Visual Studio is installed.</returns>
+    public static List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>> GetPkgdefFileStatuses(Version mysqlForVisualStudioVersion)
+    {
+      var list = new List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>>();
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2015, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2015, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Enterprise, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Professional, mysqlForVisualStudioVersion)));
+
+      return list;
+    }
+
+    /// <summary>
+    /// Checks if any of the PKGDEF files need to be updated.
+    /// </summary>
+    public static bool IsConfigurationUpdateRequired(Version mysqlForVisualStudioVersion, Version installedMySqlDataVersion, Version internalMySqlDataVersion)
+    {
+      if (mysqlForVisualStudioVersion== null || internalMySqlDataVersion == null)
+      {
+        return false;
+      }
+
+      // Get PKGDEF file status.  
+      var pkgdefFileStatuses = GetPkgdefFileStatuses(mysqlForVisualStudioVersion);
+
+      // Connector/NET is not installed.
+      if (installedMySqlDataVersion == null)
+      {
+        // PKGDEF files have no binding redirect entries.
+        if (pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry
+                                                   || o.Item2 == PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry))
+        {
+          return true;
+        }
+
+        return false;
+      }
+
+      // Connector/NET is installed.
+      if ((internalMySqlDataVersion == installedMySqlDataVersion
+          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries))
+          ||
+          (internalMySqlDataVersion > installedMySqlDataVersion
+           && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry
+                                          || o.Item2 == PkgdefFileStatus.NoBindingRedirectEntries))
+          ||
+          (internalMySqlDataVersion < installedMySqlDataVersion
+           && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry
+                                          || o.Item2 == PkgdefFileStatus.NoBindingRedirectEntries)))
+      {
+        return true;
+      }
+
+      return false;
+    }
+
     #region External Methods
     /// <summary>
     /// External method included in the <see cref="Setup.Configuration.Native.dll"/> used to get VS2017's setup configuration.
@@ -697,6 +1218,6 @@ namespace MySql.VisualStudio.CustomAction
     /// <returns>An <see cref="ISetupConfiguration"/> instance via an out parameter.</returns>
     [DllImport("Microsoft.VisualStudio.Setup.Configuration.Native.dll", ExactSpelling = true, PreserveSig = true)]
     private static extern int GetSetupConfiguration([MarshalAs(UnmanagedType.Interface), Out] out ISetupConfiguration configuration,IntPtr reserved);
-    #endregion
+#endregion
   }
 }

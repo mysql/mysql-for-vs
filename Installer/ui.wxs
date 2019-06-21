@@ -54,12 +54,12 @@
 
     <UIRef Id="WixUI_Common" />
 
-    <!-- make sure a connector net integrated version is not installed -->
+    <!-- Make sure a Connector/NET integrated version is not installed -->
     <Binary Id="ConnectorInstalled" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="CheckCNet" DllEntry="GetConnectorNetVersion" BinaryKey="ConnectorInstalled" Execute="immediate"  Return="check" Impersonate="no" />
+    <CustomAction Id="CheckConnectorNETIsInstalled" DllEntry="GetConnectorNETVersion" BinaryKey="ConnectorInstalled" Execute="immediate"  Return="check" Impersonate="no" />
 
-    <Condition Message="An integrated version of Connector/Net is installed in the system and should be remove it manually first. Please uninstall it before proceeding.">
-      Not (CNETINSTALLED = "1" AND Not Installed)
+    <Condition Message="An integrated version of Connector/NET is installed in the system and should be removed manually first. Please uninstall it before proceeding.">
+      Not (CNETINSTALLED = "Unsupported" AND Not Installed)
     </Condition>
 
     <!-- Set VS2017's installation paths to determine which features to make available for the user to install -->
@@ -80,8 +80,8 @@
       </Dialog>
 
       <InstallUISequence>
-        <Custom Action="CheckCNet" Before="LaunchConditions">NOT Installed AND WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Custom>
-        <Custom Action="VS15_SetInstallationPaths" After="CheckCNet">WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Custom>
+        <Custom Action="CheckConnectorNETIsInstalled" Before="LaunchConditions">NOT Installed AND WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Custom>
+        <Custom Action="VS15_SetInstallationPaths" After="CheckConnectorNETIsInstalled">WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Custom>
         <Show Dialog="MySQL_ExitDialog" OnExit="success" />
       </InstallUISequence>
 

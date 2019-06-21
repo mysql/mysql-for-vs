@@ -1189,4 +1189,19 @@ Check that the server is running, the database exists and the user Error establi
   <data name="UnableToParseScript" xml:space="preserve">
     <value>Unable to parse SQL script. See below for additional details: {0}</value>
   </data>
+  <data name="MySQLforVisualStudio" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MySQLforVisualStudio.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConfigurationUpdateToolAskCheckBox" xml:space="preserve">
+    <value>Do not ask me again</value>
+  </data>
+  <data name="ConfigurationUpdateToolDialogDetail" xml:space="preserve">
+    <value>A change in the installation of Connector/NET has been identified. Do you want to execute the Configuration Update Tool now?</value>
+  </data>
+  <data name="ConfigurationUpdateToolDialogSubDetail" xml:space="preserve">
+    <value>Failure to execute the tool may result in errors when using features that have a dependency on Connector/NET.</value>
+  </data>
+  <data name="ConfigurationUpdateToolDialogTitle" xml:space="preserve">
+    <value>MySQL for Visual Studio configuration update required</value>
+  </data>
 </root>

@@ -5,6 +5,10 @@
   (MySql bug #90390, Oracle bug #27857627).
 - Fixed a bug that prevented the creation of data sources due to a failure during the generation of a connection object
   when MySQL Connector/NET 6.10.9+ is installed (MySql bug #91136, Oracle bug #28148998).
+- Fixed a bug that prevented the generation of table adapters when Connector/NET was installed due to a conflict
+  with the MySql.Data library. This issue also affected other operations such as attempting to edit a table from the Server
+  Explorer. Additional to that, the Configuration Update Tool was added which monitors changes in the installation of Connector/NET
+  and when launched, updates MySQL for Visual Studio to be compatible (MySql bug #82617, Oracle bug #29884031).
 
 
 1.2.8

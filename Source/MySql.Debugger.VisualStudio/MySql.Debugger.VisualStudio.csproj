@@ -90,10 +90,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="MySql.Data">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
     </Reference>
     <ProjectReference Include="..\MySql.Debugger\MySql.Debugger.csproj">
-      <Project>{1969DE06-EC8C-41CE-AAEE-F54B27D309BA}</Project>
+    <Project>{1969DE06-EC8C-41CE-AAEE-F54B27D309BA}</Project>
       <Name>MySql.Debugger</Name>
     </ProjectReference>
   </ItemGroup>
