@@ -183,6 +183,10 @@
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="MySql.VisualStudio.CustomAction, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Web, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\..\Dependencies\v4.0\Release\MySql.Web.dll</HintPath>
     </Reference>
@@ -208,10 +212,6 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <ProjectReference Include="..\..\MySql.VisualStudio.CustomAction\MySql.VisualStudio.CustomAction.csproj">
-      <Project>{cdb0903e-ac9c-409d-b5fe-3d30f31e14eb}</Project>
-      <Name>MySql.VisualStudio.CustomAction</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
       <Project>{06163AD1-3F06-43AE-A4F9-967F7F6432C3}</Project>
       <Name>MySql.Parser</Name>

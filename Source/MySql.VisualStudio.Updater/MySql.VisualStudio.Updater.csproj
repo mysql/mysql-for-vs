@@ -36,6 +36,10 @@
     <Reference Include="MySQL.Utility">
       <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.VisualStudio.CustomAction, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -86,12 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\MySQLforVisualStudio.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\MySql.VisualStudio.CustomAction\MySql.VisualStudio.CustomAction.csproj">
-      <Project>{cdb0903e-ac9c-409d-b5fe-3d30f31e14eb}</Project>
-      <Name>MySql.VisualStudio.CustomAction</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

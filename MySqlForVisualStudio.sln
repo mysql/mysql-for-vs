@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio.Updater", "Source\MySql.VisualStudio.Updater\MySql.VisualStudio.Updater.csproj", "{8F9717FD-2949-48DF-AD2E-96664B67A12C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio.CustomAction", "MySql.VisualStudio.CustomAction\MySql.VisualStudio.CustomAction.csproj", "{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,22 +130,6 @@ Global
 		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x64.Build.0 = Release|Any CPU
 		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x86.ActiveCfg = Release|Any CPU
 		{8F9717FD-2949-48DF-AD2E-96664B67A12C}.Release|x86.Build.0 = Release|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x64.Build.0 = Debug|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x86.ActiveCfg = Debug|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Debug|x86.Build.0 = Debug|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|Mixed Platforms.Build.0 = Release|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x64.ActiveCfg = Release|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x64.Build.0 = Release|Any CPU
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x86.ActiveCfg = Release|x86
-		{CDB0903E-AC9C-409D-B5FE-3D30F31E14EB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
