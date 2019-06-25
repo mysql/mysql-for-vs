@@ -929,7 +929,7 @@ namespace MySql.Data.VisualStudio
       var internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
       var fileName = @"..\..\..\..\MySql.VisualStudio.Updater\bin\Debug\";
 #else
-      var internalMySqlDataVersion = AssemblyName.GetAssemblyName(@"..\..\..\..\PrivateAssemblies\MySql.Data.dll).Version";
+      var internalMySqlDataVersion = AssemblyName.GetAssemblyName(@"..\..\..\..\PrivateAssemblies\MySql.Data.dll").Version;
       var fileName = $@"{GetValueFromRegistry(MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY, "Location")}\Dependencies\";
 #endif
 
