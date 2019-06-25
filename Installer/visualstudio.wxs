@@ -987,10 +987,6 @@
     <CustomAction Id="UpdatePkgdefFileParameters" Property="UpdatePkgdefFile" Value="MySqlForVisualStudioVersion=$(var.Version);ConnectorVersion=[CNETVERSION];VS2015Path=[VS_2015_PATH];VS2017ComPath=[VS_2017_COM_PATH];VS2017EntPath=[VS_2017_ENT_PATH];VS2017ProPath=[VS_2017_PRO_PATH];VS2019ComPath=[VS_2019_COM_PATH];VS2019EntPath=[VS_2019_ENT_PATH];VS2019ProPath=[VS_2019_PRO_PATH];VS2015Install=[VS2015INSTALL];VS2017ComInstall=[VS2017COMINSTALL];VS2017EntInstall=[VS2017ENTINSTALL];VS2017ProInstall=[VS2017PROINSTALL];VS2019ComInstall=[VS2019COMINSTALL];VS2019EntInstall=[VS2019ENTINSTALL];VS2019ProInstall=[VS2019PROINSTALL]" Return="check" />
     <CustomAction Id="UpdatePkgdefFile" DllEntry="AddRedirectEntries" BinaryKey="AfterInstallActions" Execute="deferred" Return="check" Impersonate="no" />
 
-    <!-- Show warning message for Windows 7 users -->
-    <Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="Win7_ShowWarning" DllEntry="ShowInstallationWarning" BinaryKey="Win7Installation" Execute="immediate" Return="ignore" Impersonate="no" />
-
     <!-- Visual Studio 2019 Community Custom Action -->
     <SetProperty Id="VS16Setup_Custom" Value="&quot;[VS16.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS16Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS16Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
