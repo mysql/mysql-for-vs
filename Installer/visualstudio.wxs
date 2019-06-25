@@ -1031,6 +1031,12 @@
     <Property Id='VS_2019_COM_PATH' Secure='yes' />
     <Property Id='VS_2019_ENT_PATH' Secure='yes' />
     <Property Id='VS_2019_PRO_PATH' Secure='yes' />
+    <Property Id='VS_2017_COM_PATH_MAIN' Secure='yes' />
+    <Property Id='VS_2017_ENT_PATH_MAIN' Secure='yes' />
+    <Property Id='VS_2017_PRO_PATH_MAIN' Secure='yes' />
+    <Property Id='VS_2019_COM_PATH_MAIN' Secure='yes' />
+    <Property Id='VS_2019_ENT_PATH_MAIN' Secure='yes' />
+    <Property Id='VS_2019_PRO_PATH_MAIN' Secure='yes' />
 
     <!-- Additional properties -->
     <Property Id='CNETVERSION' Secure='yes' />
@@ -1118,12 +1124,13 @@
     </DirectoryRef>
 
     <InstallExecuteSequence>
-
       <Custom Action="VS15_16_SetVSInstallationPaths" Before="LaunchConditions"></Custom>
       <Custom Action='VS2015_SetPathProp' Before='InstallFinalize'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action="VS14_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
       <Custom Action='VS2015Setup' After='VS14_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action='VS15Setup_Custom' After='VS2015Setup'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
+      <Custom Action='UpdatePkgdefFileParameters' After='VS2015Setup'>CNETINSTALLED = "Yes" AND ((&amp;VS2015Int=2) OR (&amp;VS2015Int=3) OR (&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3) OR (&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3) OR (&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3) OR (&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3))</Custom>
+      <Custom Action='UpdatePkgdefFile' After='UpdatePkgdefFileParameters'>CNETINSTALLED = "Yes" AND ((&amp;VS2015Int=2) OR (&amp;VS2015Int=3) OR (&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3) OR (&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3) OR (&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3) OR (&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3))</Custom>
+      <Custom Action='VS15Setup_Custom' After='UpdatePkgdefFile'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
       <Custom Action='VS15_Ent_Setup_Custom' After='VS15Setup_Custom'>(&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3)</Custom>
       <Custom Action='VS15_Pro_Setup_Custom' After='VS15_Ent_Setup_Custom'>(&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3)</Custom>
       <Custom Action='VS16Setup_Custom' After='VS15_Pro_Setup_Custom'>(&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3)</Custom>
