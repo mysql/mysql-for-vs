@@ -401,22 +401,33 @@
         <File Id='MySql.Utility_2019' Name='MySql.Utility.dll' DiskId='1'
               Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
       </Component>
-      <Component Id="Remove.VS2012_Ext_BouncyCastle.Library" Guid="41E0983E-66F0-4F7E-81D1-D1F0B7D60A2A" DiskId="1">
-        <RemoveFile Id="RemoveVS2012_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id="Remove.VS2012_Ext_SshNet.Library" Guid="239DFC00-0C5B-453D-BB48-00C35A3DD215" DiskId="1">
-        <RemoveFile Id="RemoveVS2012_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id='VS16_TemplatesDir'>
-      <Component Id='VS2019_Templates' Guid='4F6DE1B0-F851-4B5C-906F-08550AEAFDD8'>
+      <Component Id='VS2019_Templates' Guid='55651674-6E72-408B-8390-DFFC1D462266'>
         <File Id='VS2019_MySqlScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='VS2019_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id='VS2019_MD.Library' Guid='4B8A4563-33BF-4F4C-B394-875EDA70054E'>
+        <File Id='VS2019_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+      </Component>
+      <Component Id='VS2019_Web.Library' Guid='D1915760-C97E-4390-BB24-4135DBEEC1C1'>
+        <File Id='VS2019_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+      </Component>
+      <Component Id='VS2019_Ext_BouncyCastle.Library' Guid='4A8DE2DD-68BB-4AA1-9798-0A3F5788F680'>
+        <File Id='VS2019_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
+      <Component Id='VS2019_Ext_SshNet.Library' Guid='F8969880-AB48-43E6-90EF-2657B07F2BB3'>
+        <File Id='VS2019_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -427,6 +438,7 @@
               Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS16_CSharpITMySQL'>
       <Component Id='VS2019_VSIT_DIR' Guid='02AA076C-FF8F-4B0E-9AC7-2BBAEAD8722D'>
         <File Id='VS2019_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
@@ -435,6 +447,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS16_VBITMySQL'>
       <Component Id='VS2019_VB_VSIT_DIR' Guid='94616205-7193-43FC-8E3D-7904EFB30BD8'>
         <File Id='VS2019_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -507,7 +520,11 @@
       </Component>
       <Component Id='VS2019_Ent_Ext_BouncyCastle.Library' Guid='9C9F735E-F677-4915-8690-BA5EF02E9CBB'>
         <File Id='VS2019_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
+      <Component Id='VS2019_Ent_Ext_SshNet.Library' Guid='07F604FD-3161-4900-B7C9-D51755A6B9AB'>
+        <File Id='VS2019_Ent_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -518,6 +535,7 @@
               Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS16_Ent_CSharpITMySQL'>
       <Component Id='VS2019_ENT_VSIT_DIR' Guid='3C88CC33-3774-449E-82F7-FEC8414E64D5'>
         <File Id='VS2019_Ent_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
@@ -526,6 +544,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS16_Ent_VBITMySQL'>
       <Component Id='VS2019_ENT_VB_VSIT_DIR' Guid='0988AFBF-352B-439E-9B6A-7E0DD4ED77B1'>
         <File Id='VS2019_Ent_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -598,7 +617,11 @@
       </Component>
       <Component Id='VS2019_Pro_Ext_BouncyCastle.Library' Guid='2CE44705-C428-40D5-AB06-1D6CDE5B2408'>
         <File Id='VS2019_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+      </Component>
+      <Component Id='VS2019_Pro_Ext_SshNet.Library' Guid='F29E140A-2061-4F2E-BD57-DE3A39EEC243'>
+        <File Id='VS2019_Pro_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
+             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -609,6 +632,7 @@
               Source='..\Installer\ItemTemplates\MySQLforVisualStudio.Item.vstman' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS16_Pro_CSharpITMySQL'>
       <Component Id='VS2019_PRO_VSIT_DIR' Guid='61F25464-ADCA-4E98-B4DD-00B618B73A21'>
         <File Id='VS2019_Pro_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
@@ -617,6 +641,7 @@
               Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
       </Component>
     </DirectoryRef>
+
     <DirectoryRef Id='VS16_Pro_VBITMySQL'>
       <Component Id='VS2019_PRO_VB_VSIT_DIR' Guid='190295E1-5139-4486-9236-19368FC4A3CE'>
         <File Id='VS2019_Pro_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
@@ -724,6 +749,46 @@
       </Component>
     </DirectoryRef>
 
+    <!-- Visual Studio 2019 Community -->
+    <DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_MD.Library" Guid="45F4FF82-A57B-427C-AE3C-1D0289B8A211" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Web.Library" Guid="B5F9129D-8A88-4969-86B9-E08E2E9E7C25" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ext_BouncyCastle.Library" Guid="06F959BA-7423-4A32-9564-D672647DD09F" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ext_SshNet.Library" Guid="48CBDC69-6D8A-4F8A-AE85-0B894B023EC8" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Visual Studio 2019 Enterprise -->
+    <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
+      <Component Id="Remove.VS2019_Ent_MD.Library" Guid="898216E1-EE42-46E3-B64B-E7EE859E28D3" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ent_Web.Library" Guid="D4F32777-DF8F-45B3-9B91-2ADD663C53C5" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ent_Ext_BouncyCastle.Library" Guid="33633A97-F577-40FC-B260-0CE9740C34F0" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Ent_Ext_SshNet.Library" Guid="A4E24C00-18F6-41FE-82BA-607DDD24A613" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Ent_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+    </DirectoryRef>
+
     <!-- Visual Studio 2019 Professional -->
     <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
       <Component Id="Remove.VS2019_Pro_MD.Library" Guid="1CD92E02-9CD5-479D-8715-B056A61954D0" DiskId="1">
@@ -736,6 +801,10 @@
       </Component>
       <Component Id="Remove.VS2019_Pro_Ext_BouncyCastle.Library" Guid="83463201-6098-4D59-B17F-FB565832CA0E" DiskId="1">
         <RemoveFile Id="RemoveVS2019_Pro_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
+        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
+      </Component>
+      <Component Id="Remove.VS2019_Pro_Ext_SshNet.Library" Guid="CB0CA816-A165-4502-A413-DE9415D8F736" DiskId="1">
+        <RemoveFile Id="RemoveVS2019_Pro_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -794,6 +863,7 @@
           <ComponentRef Id='VS2017_T4TemplatesVBDir' />
         </Feature>
       </Feature>
+
       <Feature Id='VS2017EnterpriseInt' Level='1' Title='Visual Studio 2017 Enterprise'>
         <Condition Level='0'>Not VS_2017_ENT_PATH AND Not Installed</Condition>
         <ComponentRef Id='VS2017_Ent_Extension'/>
@@ -820,6 +890,7 @@
           <ComponentRef Id='VS2017_Ent_T4TemplatesVBDir' />
         </Feature>
       </Feature>
+
       <Feature Id='VS2017ProfessionalInt' Level='1' Title='Visual Studio 2017 Professional'>
         <Condition Level='0'>Not VS_2017_PRO_PATH AND Not Installed</Condition>
         <ComponentRef Id='VS2017_Pro_Extension'/>
@@ -857,9 +928,11 @@
         <ComponentRef Id='VS2019_MD.Library' />
         <ComponentRef Id='VS2019_Web.Library' />
         <ComponentRef Id='VS2019_Ext_BouncyCastle.Library' />
+        <ComponentRef Id='VS2019_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2019_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Web.Library'/>
         <ComponentRef Id='Remove.VS2019_Ext_BouncyCastle.Library'/>
+        <ComponentRef Id='Remove.VS2019_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2019_Com_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -874,6 +947,7 @@
           <ComponentRef Id='VS2019_T4TemplatesVBDir' />
         </Feature>
       </Feature>
+
       <Feature Id='VS2019EnterpriseInt' Level='1' Title='Visual Studio 2019 Enterprise'>
         <Condition Level='0'>Not VS_2019_ENT_PATH AND Not Installed</Condition>
         <ComponentRef Id='VS2019_Ent_Extension'/>
@@ -881,9 +955,11 @@
         <ComponentRef Id='VS2019_Ent_MD.Library' />
         <ComponentRef Id='VS2019_Ent_Web.Library' />
         <ComponentRef Id='VS2019_Ent_Ext_BouncyCastle.Library' />
+        <ComponentRef Id='VS2019_Ent_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2019_Ent_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Ent_Web.Library'/>
         <ComponentRef Id='Remove.VS2019_Ent_Ext_BouncyCastle.Library'/>
+        <ComponentRef Id='Remove.VS2019_Ent_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2019_Ent_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_Ent_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -898,6 +974,7 @@
           <ComponentRef Id='VS2019_Ent_T4TemplatesVBDir' />
         </Feature>
       </Feature>
+
       <Feature Id='VS2019ProfessionalInt' Level='1' Title='Visual Studio 2017 Professional'>
         <Condition Level='0'>Not VS_2019_PRO_PATH AND Not Installed</Condition>
         <ComponentRef Id='VS2019_Pro_Extension'/>
@@ -905,9 +982,11 @@
         <ComponentRef Id='VS2019_Pro_MD.Library' />
         <ComponentRef Id='VS2019_Pro_Web.Library' />
         <ComponentRef Id='VS2019_Pro_Ext_BouncyCastle.Library' />
+        <ComponentRef Id='VS2019_Pro_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2019_Pro_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Pro_Web.Library'/>
         <ComponentRef Id='Remove.VS2019_Pro_Ext_BouncyCastle.Library'/>
+        <ComponentRef Id='Remove.VS2019_Pro_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2019_Pro_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_Pro_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -924,7 +1003,6 @@
       </Feature>
     </Feature>
 
-
     <!-- Visual Studio 2015 installation location -->
     <Property Id='VS_2015_PATH' Secure='yes'>
       <RegistrySearch Id='Find_VS2015_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\14.0\'
@@ -936,7 +1014,7 @@
     <Property Id='VS_2017_COM_PATH' Secure='yes' />
     <Property Id='VS_2017_ENT_PATH' Secure='yes' />
     <Property Id='VS_2017_PRO_PATH' Secure='yes' />
-	<Property Id='VS_2019_COM_PATH' Secure='yes' />
+    <Property Id='VS_2019_COM_PATH' Secure='yes' />
     <Property Id='VS_2019_ENT_PATH' Secure='yes' />
     <Property Id='VS_2019_PRO_PATH' Secure='yes' />
 
@@ -946,7 +1024,7 @@
     <Property Id='VS2017COMINSTALL' Secure='yes' />
     <Property Id='VS2017ENTINSTALL' Secure='yes' />
     <Property Id='VS2017PROINSTALL' Secure='yes' />
-	<Property Id='VS2019COMINSTALL' Secure='yes' />
+    <Property Id='VS2019COMINSTALL' Secure='yes' />
     <Property Id='VS2019ENTINSTALL' Secure='yes' />
     <Property Id='VS2019PROINSTALL' Secure='yes' />
 
@@ -982,11 +1060,6 @@
     <SetProperty Id="VS15_Pro_Setup_Custom" Value="&quot;[VS15.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS15_Pro_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS15_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
 
-    <!-- Custom Action for updating the pkdef file -->
-    <Binary Id="AfterInstallActions" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="UpdatePkgdefFileParameters" Property="UpdatePkgdefFile" Value="MySqlForVisualStudioVersion=$(var.Version);ConnectorVersion=[CNETVERSION];VS2015Path=[VS_2015_PATH];VS2017ComPath=[VS_2017_COM_PATH];VS2017EntPath=[VS_2017_ENT_PATH];VS2017ProPath=[VS_2017_PRO_PATH];VS2019ComPath=[VS_2019_COM_PATH];VS2019EntPath=[VS_2019_ENT_PATH];VS2019ProPath=[VS_2019_PRO_PATH];VS2015Install=[VS2015INSTALL];VS2017ComInstall=[VS2017COMINSTALL];VS2017EntInstall=[VS2017ENTINSTALL];VS2017ProInstall=[VS2017PROINSTALL];VS2019ComInstall=[VS2019COMINSTALL];VS2019EntInstall=[VS2019ENTINSTALL];VS2019ProInstall=[VS2019PROINSTALL]" Return="check" />
-    <CustomAction Id="UpdatePkgdefFile" DllEntry="AddRedirectEntries" BinaryKey="AfterInstallActions" Execute="deferred" Return="check" Impersonate="no" />
-
     <!-- Visual Studio 2019 Community Custom Action -->
     <SetProperty Id="VS16Setup_Custom" Value="&quot;[VS16.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS16Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS16Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
@@ -1008,6 +1081,11 @@
     <!-- Visual Studio 2019 Professional Custom Action -->
     <SetProperty Id="VS16_Pro_Setup_Custom" Value="&quot;[VS16.Pro.IDEFolder]devenv&quot; /updateconfiguration /log" Before="VS16_Pro_Setup_Custom" Sequence="execute" />
     <CustomAction Id="VS16_Pro_Setup_Custom" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+
+    <!-- Custom Action for updating the pkdef file -->
+    <Binary Id="AfterInstallActions" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
+    <CustomAction Id="UpdatePkgdefFileParameters" Property="UpdatePkgdefFile" Value="MySqlForVisualStudioVersion=$(var.Version);ConnectorVersion=[CNETVERSION];VS2015Path=[VS_2015_PATH];VS2017ComPath=[VS_2017_COM_PATH];VS2017EntPath=[VS_2017_ENT_PATH];VS2017ProPath=[VS_2017_PRO_PATH];VS2019ComPath=[VS_2019_COM_PATH];VS2019EntPath=[VS_2019_ENT_PATH];VS2019ProPath=[VS_2019_PRO_PATH];VS2015Install=[VS2015INSTALL];VS2017ComInstall=[VS2017COMINSTALL];VS2017EntInstall=[VS2017ENTINSTALL];VS2017ProInstall=[VS2017PROINSTALL];VS2019ComInstall=[VS2019COMINSTALL];VS2019EntInstall=[VS2019ENTINSTALL];VS2019ProInstall=[VS2019PROINSTALL]" Return="check" />
+    <CustomAction Id="UpdatePkgdefFile" DllEntry="AddRedirectEntries" BinaryKey="AfterInstallActions" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Show warning message for Windows 7 users installing in VS2017 and VS2019 -->
     <Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
