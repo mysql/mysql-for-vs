@@ -233,7 +233,7 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     protected override void Initialize()
     {
-      _internalMySqlDataVersion = new Version(8, 0, 16, 0);
+      _internalMySqlDataVersion = new Version(8, 0, 17, 0);
 
       // Initialize settings related to InfoDialog.
       CustomizeUtilityDialogs();
