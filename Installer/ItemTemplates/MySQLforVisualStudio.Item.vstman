@@ -7,8 +7,8 @@
         <Name>MySQL New MVC Item</Name>
         <Description>An item template for creating a new MVC item with MySQL connectivity.</Description>
         <Icon>icon.png</Icon>
-		<ProjectType>CSharp</ProjectType>
-		<RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <ProjectType>CSharp</ProjectType>
+        <RequiredFrameworkVersion>4.6</RequiredFrameworkVersion>
         <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
         <DefaultName>MySQL New MVC Item</DefaultName>
       </TemplateData>
@@ -22,9 +22,9 @@
         <Name>MySQL New Windows Form</Name>
         <Description>An item template for creating a new Windows Form with MySQL connectivity.</Description>
         <Icon>icon.png</Icon>
-		<ProjectType>CSharp</ProjectType>
-		<TemplateID>191c2d4b-7cd1-46cb-9d89-850e54e91b55</TemplateID>
-		<RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <ProjectType>CSharp</ProjectType>
+        <TemplateID>191c2d4b-7cd1-46cb-9d89-850e54e91b55</TemplateID>
+        <RequiredFrameworkVersion>4.6</RequiredFrameworkVersion>
         <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
         <DefaultName>WinForm</DefaultName>
       </TemplateData>
@@ -38,9 +38,9 @@
         <Name>MySQL New MVC Item</Name>
         <Description>An item template for creating a new MVC item with MySQL connectivity.</Description>
         <Icon>icon.png</Icon>
-		<ProjectType>VisualBasic</ProjectType>
-		<TemplateID>1E9377D6-5851-410D-BEA8-B58063607F27</TemplateID>
-		<RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <ProjectType>VisualBasic</ProjectType>
+        <TemplateID>1E9377D6-5851-410D-BEA8-B58063607F27</TemplateID>
+        <RequiredFrameworkVersion>4.6</RequiredFrameworkVersion>
         <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
         <DefaultName>MySQL New MVC Item</DefaultName>
       </TemplateData>
@@ -54,9 +54,9 @@
         <Name>MySQL New Windows Form</Name>
         <Description>An item template for creating a new Windows Form with MySQL connectivity.</Description>
         <Icon>icon.png</Icon>
-		<ProjectType>VisualBasic</ProjectType>
-		<TemplateID>93EC3458-C0FA-46DE-B6F8-81E42C43091A</TemplateID>
-		<RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <ProjectType>VisualBasic</ProjectType>
+        <TemplateID>93EC3458-C0FA-46DE-B6F8-81E42C43091A</TemplateID>
+        <RequiredFrameworkVersion>4.6</RequiredFrameworkVersion>
         <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
         <DefaultName>WinForm</DefaultName>
       </TemplateData>

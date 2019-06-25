@@ -252,27 +252,32 @@ namespace MySql.Data.VisualStudio
 
     public virtual string GetDropSQL()
     {
-      return String.Format("DROP {0} `{1}`.`{2}`", NodeId, Database, Name);
+      return string.Format("DROP {0} `{1}`.`{2}`", NodeId, Database, Name);
     }
 
     private void Drop()
     {
       string typeString = LocalizedTypeString.ToLower(CultureInfo.CurrentCulture);
 
-      DialogResult result = MessageBox.Show(String.Format(
-          Properties.Resources.DropConfirmation, typeString, Name),
-          String.Format(Properties.Resources.DropConfirmationCaption, typeString),
-          MessageBoxButtons.YesNo,
-          MessageBoxIcon.Question);
-      if (result == DialogResult.No)
-        throw new OperationCanceledException();
-
+      using (var yesNoDialog = Common.Utilities.GetYesNoInfoDialog(
+                                 Utility.Forms.InfoDialog.InfoType.Info,
+                                 false,
+                                 string.Format(Properties.Resources.DropConfirmationCaption, typeString),
+                                 string.Format(Properties.Resources.DropConfirmation, typeString, Name)
+      ))
+      {
+        if (yesNoDialog.ShowDialog() == DialogResult.No)
+        {
+          throw new OperationCanceledException();
+        }
+      }
+ 
       string sql = GetDropSQL();
       try
       {
         ExecuteSQL(sql);
 
-        // now we drop the node from the hierarchy
+        // Now we drop the node from the hierarchy.
         HierarchyAccessor.DropObjectNode(ItemId);
       }
       catch (Exception ex)

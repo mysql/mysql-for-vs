@@ -149,8 +149,7 @@ namespace MySql.Data.VisualStudio.Editors
       catch (MySqlException)
       {
         Logger.LogError(
-@"Error establishing the database connection.
-Check that the server is running, the database exist and the user credentials are valid.", true);
+          @"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", true);
       }
       finally
       {
@@ -160,20 +159,30 @@ Check that the server is running, the database exist and the user credentials ar
 
     private void runSqlButton_Click(object sender, EventArgs e)
     {
+      if (connection?.State != ConnectionState.Open)
+      {
+        Logger.LogError(Properties.Resources.ConnectionNotOpenError, true);
+        return;
+      }
+
       string sql = codeEditor.Text.Trim();
-      StringBuilder sb;
-      bool? isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection, out sb);
+      StringBuilder builder;
+      bool? isResultSet = LanguageServiceUtil.DoesStmtReturnResults(sql, (MySqlConnection)connection, out builder);
 
       if (isResultSet == null)
       {
         tabControl1.TabPages.Clear();
-        messages.Text = string.Format(Properties.Resources.UnableToParseScript, Environment.NewLine + sb.ToString()) ;
+        messages.Text = string.Format(Properties.Resources.UnableToParseScript, $"{Environment.NewLine}{builder.ToString()}");
         tabControl1.TabPages.Add(messagesPage);
       }
       else if (isResultSet == true)
+      {
         ExecuteSelect(sql);
+      }
       else
+      {
         ExecuteScript(sql);
+      }
 
       StoreCurrentDatabase();
     }

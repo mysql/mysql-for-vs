@@ -282,7 +282,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         return;
       }
 
-#if CLR4 || NET_40_OR_GREATER
+#if CLR4 || NET_46_OR_GREATER
       IServiceProvider serviceProvider = new Microsoft.VisualStudio.Shell.ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte);
       Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplating t4 = serviceProvider.GetService(typeof(STextTemplating)) as ITextTemplating;
       ITextTemplatingSessionHost sessionHost = t4 as ITextTemplatingSessionHost;

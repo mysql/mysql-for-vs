@@ -67,7 +67,7 @@ using MySql.VisualStudio.CustomAction;
 using System.Drawing;
 using System.Resources;
 using MySql.VisualStudio.CustomAction.Enums;
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
 #endif
 
@@ -217,6 +217,7 @@ namespace MySql.Data.VisualStudio
       }
 
       Instance = this;
+
       Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME);
       Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
     }
@@ -239,6 +240,9 @@ namespace MySql.Data.VisualStudio
       base.Initialize();
 
       RegisterEditorFactory(new SqlEditorFactory());
+
+      // Initialize settings related to InfoDialog.
+      CustomizeUtilityDialogs();
 
       // Load our connections.
       _mysqlConnectionsList = GetMySqlConnections();
@@ -286,7 +290,7 @@ namespace MySql.Data.VisualStudio
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
 
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
-#if NET_45_OR_GREATER
+#if NET_46_OR_GREATER
       string mySqlConnectorAssembliesVersion = "v4.5.2";
 #else
       string mySqlConnectorAssembliesVersion = "v4.0";
@@ -362,6 +366,20 @@ namespace MySql.Data.VisualStudio
 
     #endregion
 
+    /// <summary>
+    /// Customizes the looks of some dialogs found in the MySQL.Utility for MySQL for Visual Studio.
+    /// </summary>
+    private void CustomizeUtilityDialogs()
+    {
+      InfoDialog.ApplicationName = AssemblyInfo.AssemblyTitle;
+      InfoDialog.SuccessLogo = Properties.Resources.MySQLforVisualStudio_Success;
+      InfoDialog.ErrorLogo = Properties.Resources.MySQLforVisualStudio_Error;
+      InfoDialog.WarningLogo = Properties.Resources.MySQLforVisualStudio_Warning;
+      InfoDialog.InformationLogo = Properties.Resources.MySQLforVisualStudio;
+      PasswordDialog.ApplicationIcon = Properties.Resources.__TemplateIcon;
+      PasswordDialog.SecurityLogo = Properties.Resources.MySQLforVisualStudio_Security;
+    }
+
     private void SetEnvironmentVariableValues(string mySqlConnectorPath)
     {
       Environment.SetEnvironmentVariable(CONNECTOR_NET_ENVIRONMENT_VARIABLE, mySqlConnectorPath, EnvironmentVariableTarget.User);
@@ -376,19 +394,19 @@ namespace MySql.Data.VisualStudio
       Array selectedItems = (Array)uih.SelectedItems;
 
       if (selectedItems != null)
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-      if (GetConnection(ConnectionName) != null)
       {
-        if (MySqlWorkbench.IsInstalled)
-          openUtilities.Visible = openUtilities.Enabled = true;
-        else
-        {
-          openUtilities.Enabled = false;
-          openUtilities.Visible = true;
-        }
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      }
+
+      if (MySqlWorkbench.IsInstalled)
+      {
+        openUtilities.Visible = openUtilities.Enabled = true;
       }
       else
-        openUtilities.Visible = openUtilities.Enabled = false;
+      {
+        openUtilities.Enabled = false;
+        openUtilities.Visible = true;
+      }
     }
 
     void cmdLaunchWB_BeforeQueryStatus(object sender, EventArgs e)
@@ -400,20 +418,20 @@ namespace MySql.Data.VisualStudio
       Array selectedItems = (Array)uih.SelectedItems;
 
       if (selectedItems != null)
-        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
-
-      if (GetConnection(ConnectionName) != null)
       {
-        if (MySqlWorkbench.IsInstalled)
-          launchWBbtn.Visible = launchWBbtn.Enabled = true;
-        else
-        {
-          launchWBbtn.Enabled = false;
-          launchWBbtn.Visible = true;
-        }
+        ConnectionName = ((UIHierarchyItem)selectedItems.GetValue(0)).Name;
+      }
+
+      if (MySqlWorkbench.IsInstalled)
+      {
+        launchWBbtn.Enabled = true;
+        launchWBbtn.Visible = true;
       }
       else
-        launchWBbtn.Visible = launchWBbtn.Enabled = false;
+      {
+        launchWBbtn.Enabled = false;
+        launchWBbtn.Visible = true;
+      }
     }
 
     void configWizard_BeforeQueryStatus(object sender, EventArgs e)
@@ -421,9 +439,11 @@ namespace MySql.Data.VisualStudio
       OleMenuCommand configButton = sender as OleMenuCommand;
       configButton.Visible = false;
 
-      ////this feature can be shown only if Connector/Net is installed too
-      if (String.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
+      // This feature can be shown only if Connector/Net is installed too.
+      if (string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
+      {
         return;
+      }
 
       DTE dte = GetService(typeof(DTE)) as DTE;
       Array a = (Array)dte.ActiveSolutionProjects;
@@ -448,16 +468,12 @@ namespace MySql.Data.VisualStudio
     /// <param name="e">The event arguments.</param>
     private void ConnectorNETRegistryKeyChanged(object sender, EventArgs e)
     {
-      var infoDialogProperties = InfoDialogProperties.GetYesNoDialogProperties(
-        InfoDialog.InfoType.Warning,
-        Properties.Resources.ConfigurationUpdateToolDialogTitle,
-        Properties.Resources.ConfigurationUpdateToolDialogDetail,
-        Properties.Resources.ConfigurationUpdateToolDialogSubDetail);
-      infoDialogProperties.FitTextStrategy = InfoDialog.FitTextsAction.IncreaseDialogWidth;
-      infoDialogProperties.CommandAreaProperties.LeftAreaControl = CommandAreaProperties.LeftAreaControlType.InfoCheckBox;
-      infoDialogProperties.CommandAreaProperties.LeftAreaCheckBoxText = Properties.Resources.ConfigurationUpdateToolAskCheckBox;
-      infoDialogProperties.LogoImage = Properties.Resources.MySQLforVisualStudio;
-      using (var yesNoDialog = new InfoDialog(infoDialogProperties))
+      using (var yesNoDialog = Common.Utilities.GetYesNoInfoDialog(
+                                 InfoDialog.InfoType.Warning,
+                                 true,
+                                 Properties.Resources.ConfigurationUpdateToolDialogTitle,
+                                 Properties.Resources.ConfigurationUpdateToolDialogDetail,
+                                 Properties.Resources.ConfigurationUpdateToolDialogSubDetail))
       {
         var dialogResult = yesNoDialog.ShowDialog();
         _settings.AskToExecuteConfigurationUpdateTool = !yesNoDialog.InfoCheckBoxChecked;
@@ -522,7 +538,9 @@ namespace MySql.Data.VisualStudio
           {
             var window = (ToolWindowPane)this.CreateToolWindow(typeof(DbExportWindowPane), i);
             if (window == null || window.Frame == null)
+            {
               throw new Exception("Cannot create a new window for data export");
+            }
 
             window.Caption = Properties.Resources.DbExportToolCaptionFrame;
 
@@ -531,7 +549,9 @@ namespace MySql.Data.VisualStudio
             DbExportWindowPane windowPanel = (DbExportWindowPane)window;
 
             if (_mysqlConnectionsList == null || _mysqlConnectionsList.Count <= 0)
+            {
               _mysqlConnectionsList = GetMySqlConnections();
+            }
 
             windowPanel.Connections = _mysqlConnectionsList;
             windowPanel.SelectedConnectionName = currentConnectionName;
@@ -542,9 +562,11 @@ namespace MySql.Data.VisualStudio
 
             object currentFrameMode;
             windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, out currentFrameMode);
-            // switch to dock mode.                  
+            // Switch to dock mode.                  
             if ((VSFRAMEMODE)currentFrameMode == VSFRAMEMODE.VSFM_Float)
+            {
               windowFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_Dock);
+            }
 
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
@@ -556,26 +578,35 @@ namespace MySql.Data.VisualStudio
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      if (String.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Utilities")))
+      if (string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Utilities")))
       {
         var pathWorkbench = Utilities.GetMySqlAppInstallLocation("Workbench");
         var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
-
         if (!Directory.Exists(pathUtilities))
         {
-          if (MessageBox.Show("The command line MySQL Utilities could not be found." + Environment.NewLine
-                         + @"To use them you must download and install the utilities package from http://dev.mysql.com/downloads/tools/utilities/" +
-                          Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Information", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+          using (var okCancelDialog = Common.Utilities.GetOkCancelInfoDialog(
+                                        InfoDialog.InfoType.Info,
+                                        "The command line MySQL Utilities could not be found",
+                                        $@"To use them you must download and install the utilities package from http://dev.mysql.com/downloads/tools/utilities/",
+                                        "Click OK to go to the page or Cancel to continue."
+          ))
           {
-            ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/tools/utilities/");
-            Process.Start(browserInfo);
+            if (okCancelDialog.ShowDialog() == DialogResult.OK)
+            {
+              ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/tools/utilities/");
+              Process.Start(browserInfo);
+            }
+            else
+            {
+              return;
+            }
           }
-          else
-            return;
         }
       }
       else
+      {
         MySqlWorkbench.LaunchUtilitiesShell();
+      }
     }
 
     private void LaunchWBCallback(object sender, EventArgs e)
@@ -583,10 +614,14 @@ namespace MySql.Data.VisualStudio
       IVsDataExplorerConnection connection = GetConnection(ConnectionName);
       if (connection != null)
       {
-        var connList = MySqlWorkbench.Connections;
-        var connStr = connection.Connection.DisplayConnectionString;
-        ConnectionParameters parameters = ParseConnectionString(connStr);
+        var connectionList = MySqlWorkbench.Connections;
+        var connectionString = connection.Connection.DisplayConnectionString;
+        ConnectionParameters parameters = ParseConnectionString(connectionString);
         MySqlWorkbench.LaunchSqlEditor(FindMathchingWorkbenchConnection(parameters));
+      }
+      else
+      {
+        MySqlWorkbench.LaunchSqlEditor(null);
       }
     }
 
@@ -772,21 +807,19 @@ namespace MySql.Data.VisualStudio
       { }
 
       return null;
-
     }
 
-    public ConnectionParameters ParseConnectionString(string connStr)
+    public ConnectionParameters ParseConnectionString(string connectionString)
     {
-
-      var connStringBuilder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(connStr);
+      var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString);
       var parameters = new ConnectionParameters();
-      parameters.UserId = connStringBuilder.UserID;
-      parameters.HostName = connStringBuilder.Server;
-      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(connStringBuilder.Server);
-      parameters.Port = Convert.ToInt32(connStringBuilder.Port);
-      parameters.DataBaseName = connStringBuilder.Database;
-      parameters.NamedPipesEnabled = String.IsNullOrEmpty(connStringBuilder.PipeName) ? false : true;
-      parameters.PipeName = connStringBuilder.PipeName;
+      parameters.UserId = connectionStringBuilder.UserID;
+      parameters.HostName = connectionStringBuilder.Server;
+      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(connectionStringBuilder.Server);
+      parameters.Port = Convert.ToUInt32(connectionStringBuilder.Port);
+      parameters.DataBaseName = connectionStringBuilder.Database;
+      parameters.NamedPipesEnabled = string.IsNullOrEmpty(connectionStringBuilder.PipeName) ? false : true;
+      parameters.PipeName = connectionStringBuilder.PipeName;
 
       return parameters;
     }
@@ -797,35 +830,46 @@ namespace MySql.Data.VisualStudio
 
       if (filteredConnections != null)
       {
-        foreach (MySqlWorkbenchConnection c in filteredConnections)
+        foreach (MySqlWorkbenchConnection connection in filteredConnections)
         {
-          switch (c.ConnectionMethod)
+          switch (connection.ConnectionMethod)
           {
 
             case MySqlWorkbenchConnection.ConnectionMethodType.LocalUnixSocketOrWindowsPipe:
-              if (!parameters.NamedPipesEnabled || String.Compare(c.UnixSocketOrWindowsPipe, parameters.PipeName, true) != 0) continue;
+              if (!parameters.NamedPipesEnabled || string.Compare(connection.UnixSocketOrWindowsPipe, parameters.PipeName, true) != 0)
+              {
+                continue;
+              }
+
               break;
             case MySqlWorkbenchConnection.ConnectionMethodType.Ssh:
               continue;
             case MySqlWorkbenchConnection.ConnectionMethodType.Tcp:
-              if (c.Port != parameters.Port) continue;
+              if (connection.Port != parameters.Port)
+              {
+                continue;
+              }
+
               break;
             case MySqlWorkbenchConnection.ConnectionMethodType.Unknown:
               continue;
           }
 
-          if (!Utilities.IsValidIpAddress(c.Host)) //matching connections by Ip
+          // Matching connections by IP.
+          if (!Utilities.IsValidIpAddress(connection.Host) && Utilities.GetIPv4ForHostName(connection.Host) != parameters.HostIPv4)
           {
-            if (Utilities.GetIPv4ForHostName(c.Host) != parameters.HostIPv4) continue;
+            continue;
           }
-          else
+          else if (connection.Host != parameters.HostIPv4)
           {
-            if (c.Host != parameters.HostIPv4) continue;
+            continue;
           }
-          return c.Name;
+
+          return connection.Name;
         }
       }
-      return String.Empty;
+
+      return string.Empty;
     }
 
     private void CreateNewMySqlProject(string projectType)
@@ -952,7 +996,7 @@ namespace MySql.Data.VisualStudio
     {
       public string HostName;
       public string HostIPv4;
-      public int Port;
+      public uint Port;
       public string PipeName;
       public bool NamedPipesEnabled;
       public string UserId;

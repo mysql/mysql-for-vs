@@ -133,9 +133,10 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(25);
-      Thread.Sleep(1000);
-      CustomActions.SetVS2017InstallationPaths();
+      SetProgress(10);
+      CustomActions.SetVSInstallationPaths();
+
+      // Perform update for each version of Visual Studio that is supported.
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2017Community, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2017Community.ToString()));
@@ -143,8 +144,7 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(50);
-      Thread.Sleep(1000);
+      SetProgress(25);
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2017Enterprise, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2017Enterprise.ToString()));
@@ -152,8 +152,7 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(75);
-      Thread.Sleep(1000);
+      SetProgress(40);
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2017Professional, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2017Professional.ToString()));
@@ -161,8 +160,31 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
+      SetProgress(55);
+      if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2019Community, _mySqlForVisualStudioVersion))
+      {
+        SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2019Community.ToString()));
+        return;
+      }
+
+      SetStatusText();
+      SetProgress(70);
+      if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2019Enterprise, _mySqlForVisualStudioVersion))
+      {
+        SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2019Enterprise.ToString()));
+        return;
+      }
+
+      SetStatusText();
+      SetProgress(85);
+      if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2019Professional, _mySqlForVisualStudioVersion))
+      {
+        SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2019Professional.ToString()));
+        return;
+      }
+
+      SetStatusText();
       SetProgress(100);
-      Thread.Sleep(1000);
       SetStatusText(Properties.Resources.PkgdefFilesUpdateCompleted);
     }
 
@@ -192,6 +214,18 @@ namespace MySql.VisualStudio.Updater
 
         case SupportedVisualStudioVersions.Vs2017Professional:
           visualStudioInstallationPath = CustomActions.VS2017ProfessionalInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2019Community:
+          visualStudioInstallationPath = CustomActions.VS2019CommunityInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2019Enterprise:
+          visualStudioInstallationPath = CustomActions.VS2019EnterpriseInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2019Professional:
+          visualStudioInstallationPath = CustomActions.VS2019ProfessionalInstallationPath;
           break;
 
         default:

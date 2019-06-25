@@ -796,7 +796,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <returns></returns>
     internal protected static string GetVisualStudioVersion(DTE _dte)
     {
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
       if (_dte != null)
       {
         return _dte.Version;

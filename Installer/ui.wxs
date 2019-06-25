@@ -62,9 +62,9 @@
       Not (CNETINSTALLED = "Unsupported" AND Not Installed)
     </Condition>
 
-    <!-- Set VS2017's installation paths to determine which features to make available for the user to install -->
+    <!-- Set VS2017+ installation paths to determine which features to make available for the user to install -->
     <Binary Id="InstallationPaths" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="VS15_SetInstallationPaths" DllEntry="SetVS2017InstallationPaths" BinaryKey="InstallationPaths" Execute="firstSequence" Return="check" Impersonate="no" />
+    <CustomAction Id="VS15_16_SetVSInstallationPaths" DllEntry="SetVSInstallationPaths" BinaryKey="InstallationPaths" Execute="firstSequence" Return="check" Impersonate="no" />
 
     <UI>
       <Dialog Id="MySQL_ExitDialog" Width="370" Height="270" Title="!(loc.ExitDialog_Title)">
@@ -80,8 +80,8 @@
       </Dialog>
 
       <InstallUISequence>
-        <Custom Action="CheckConnectorNETIsInstalled" Before="LaunchConditions">NOT Installed AND WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Custom>
-        <Custom Action="VS15_SetInstallationPaths" After="CheckConnectorNETIsInstalled">WIX_IS_NETFRAMEWORK_452_OR_LATER_INSTALLED</Custom>
+        <Custom Action="CheckConnectorNETIsInstalled" Before="LaunchConditions">NOT Installed AND WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED</Custom>
+        <Custom Action="VS15_16_SetVSInstallationPaths" After="CheckConnectorNETIsInstalled">WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED</Custom>
         <Show Dialog="MySQL_ExitDialog" OnExit="success" />
       </InstallUISequence>
 

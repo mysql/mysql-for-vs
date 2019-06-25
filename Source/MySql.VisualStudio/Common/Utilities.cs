@@ -26,8 +26,11 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 using System;
 using System.Text;
+using static MySql.Utility.Forms.InfoDialog;
 
 namespace MySql.Data.VisualStudio.Common
 {
@@ -62,6 +65,50 @@ namespace MySql.Data.VisualStudio.Common
       }
 
       return new Exception(builder.ToString());
+    }
+
+    public static InfoDialog GetYesNoInfoDialog(InfoType infoType, bool includeDoNotAskAgainCheckBox, string title = null, string detail = null, string subDetail = null)
+    {
+      var infoDialogProperties = InfoDialogProperties.GetYesNoDialogProperties(
+        infoType,
+        title,
+        detail,
+        subDetail);
+      infoDialogProperties.FitTextStrategy = FitTextsAction.IncreaseDialogWidth;
+      if (includeDoNotAskAgainCheckBox)
+      {
+        infoDialogProperties.CommandAreaProperties.LeftAreaControl = CommandAreaProperties.LeftAreaControlType.InfoCheckBox;
+        infoDialogProperties.CommandAreaProperties.LeftAreaCheckBoxText = Properties.Resources.ConfigurationUpdateToolAskCheckBox;
+      }
+
+      return new InfoDialog(infoDialogProperties);
+    }
+
+    public static InfoDialog GetOkCancelInfoDialog(InfoType infoType, string title = null, string detail = null, string subDetail = null)
+    {
+      var infoDialogProperties = InfoDialogProperties.GetOkCancelDialogProperties(
+        infoType,
+        title,
+        detail,
+        subDetail);
+      infoDialogProperties.FitTextStrategy = FitTextsAction.IncreaseDialogWidth;
+      
+      return new InfoDialog(infoDialogProperties);
+    }
+
+    public static InfoDialog GetDualButtonInfoDialog(InfoType infoType, string button1Text, string button2Text, string title = null, string detail = null, string subDetail = null)
+    {
+      var infoDialogProperties = InfoDialogProperties.GetOkCancelDialogProperties(
+        infoType,
+        title,
+        detail,
+        subDetail);
+      infoDialogProperties.FitTextStrategy = FitTextsAction.IncreaseDialogWidth;
+
+      var dialog = new InfoDialog(infoDialogProperties);
+      dialog.Button1Text = button1Text;
+      dialog.Button2Text = button2Text;
+      return dialog;
     }
   }
 }

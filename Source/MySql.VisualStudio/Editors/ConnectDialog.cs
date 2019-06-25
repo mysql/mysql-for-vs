@@ -201,9 +201,9 @@ namespace MySql.Data.VisualStudio
     private void connectButton_Click(object sender, EventArgs e)
     {
       int port;
-      // Ensure all data is populated into the connection string builder
-      connectionStringBuilder["server"] = serverName.Text.Trim() == String.Empty ? "localhost" : serverName.Text.Trim();
-      connectionStringBuilder["userid"] = userId.Text.Trim() == String.Empty ? "root" : userId.Text.Trim();
+      // Ensure all data is populated into the connection string builder.
+      connectionStringBuilder["server"] = serverName.Text.Trim() == string.Empty ? "localhost" : serverName.Text.Trim();
+      connectionStringBuilder["userid"] = userId.Text.Trim() == string.Empty ? "root" : userId.Text.Trim();
       connectionStringBuilder["database"] = database.Text.Trim() == string.Empty ? "test" : database.Text.Trim();
       connectionStringBuilder["port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
       password_Leave(serverName, EventArgs.Empty);
@@ -277,24 +277,35 @@ namespace MySql.Data.VisualStudio
           if (((System.Exception)(mysqlException).InnerException) != null)
           {
             var messageInnerException = ((System.Exception)(mysqlException).InnerException).Message;
-            if (String.Compare(messageInnerException, String.Format("Unknown database '{0}'", database.Text), StringComparison.InvariantCultureIgnoreCase) == 0)
+            if (string.Compare(messageInnerException, string.Format("Unknown database '{0}'", database.Text), StringComparison.InvariantCultureIgnoreCase) == 0)
             {
-              if (askToCreate && MessageBox.Show(String.Format("The database '{0}' doesn't exist or you don't have permission to see it." + "\n\r" + "Would you like to create it?", database.Text), "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+              using (var yesNoDialog = Common.Utilities.GetYesNoInfoDialog(
+                                         Utility.Forms.InfoDialog.InfoType.Info,
+                                         false,
+                                         "Create database",
+                                         $"The database '{database.Text}' doesn't exist or you don't have permission to see it.",
+                                         "Would you like to create it?"
+              ))
               {
-                try
+                if (askToCreate && yesNoDialog.ShowDialog() == DialogResult.Yes)
                 {
-                  if (AttemptToCreateDatabase(c.ConnectionString))
-                    c.Open();
+                  try
+                  {
+                    if (AttemptToCreateDatabase(c.ConnectionString))
+                    {
+                      c.Open();
+                    }
+                  }
+                  catch
+                  {
+                    throw;
+                  }
                 }
-                catch
+                else
                 {
-                  throw;
-                }
-              }
-              else
-              {
-                DialogResult = System.Windows.Forms.DialogResult.Cancel;
-                return null;
+                  DialogResult = DialogResult.Cancel;
+                  return null;
+                } 
               }
             }
            else

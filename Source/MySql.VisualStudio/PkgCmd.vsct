@@ -188,7 +188,7 @@
           <ButtonText>Create View</ButtonText>
         </Strings>
       </Button>     
-	  <!--<Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySqlScript" type="Button" priority="0x103">
+      <!--<Button guid="guidMySqlProviderCmdSet" id="cmdidNewMySqlScript" type="Button" priority="0x103">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />                
         <Icon guid="guidImages" id="bmpMySqlScript" />
         <Strings>
@@ -301,8 +301,8 @@
           <ButtonText>&amp;MySQL Data Export</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button" priority ="0x207">
-	   <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDBExport" type="Button" priority ="0x207">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Icon guid="guidImages" id="bmpDbExport" />
@@ -311,40 +311,32 @@
           <ButtonText>MySQL Data Export</ButtonText>
         </Strings>
       </Button>
-	  
+      
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>  
         <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
-	    <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>  
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
         <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
-	 	  
+
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">	  
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
           <ButtonText>&amp;Launch MySQL Workbench</ButtonText>
         </Strings>
       </Button>
-	  <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
-		<Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>        
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>

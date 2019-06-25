@@ -118,7 +118,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 
     public override void ProjectFinishedGenerating(Project project)
     {
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
       //Dictionary<string,object> dic = GetAllProperties(project.Properties);      
       
       VSProject vsProj = project.Object as VSProject;
@@ -139,13 +139,19 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
         }
       }
 
-      if (!found && MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
-                       + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
-                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
-       {
-           ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
-           System.Diagnostics.Process.Start(browserInfo);
-       }
+      using (var okCancelDialog = Common.Utilities.GetOkCancelInfoDialog(
+                                    Utility.Forms.InfoDialog.InfoType.Warning,
+                                    "The MySQL .NET driver could not be found",
+                                    @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/",
+                                    "Click OK to go to the page or Cancel to continue."
+      ))
+      {
+        if (!found && okCancelDialog.ShowDialog() == DialogResult.OK)
+        {
+          ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
+          System.Diagnostics.Process.Start(browserInfo);
+        }
+      }
        
       try
       {

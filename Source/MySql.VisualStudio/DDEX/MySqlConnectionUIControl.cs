@@ -108,18 +108,26 @@ namespace MySql.Data.VisualStudio
 
       var prompt = string.Format(Properties.Resources.UnknownDbPromptCreate, dbList.Text);
       prompt = prompt.Replace(@"\n", @"\n");
-      DialogResult result = MessageBox.Show(prompt, null, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-      this.ParentForm.DialogResult = DialogResult.None;
-      if (result == DialogResult.Yes)
+      using (var yesNoDialog = Common.Utilities.GetYesNoInfoDialog(
+                                 Utility.Forms.InfoDialog.InfoType.Info,
+                                 false,
+                                 "Create database",
+                                 prompt
+      ))
       {
-        if (!AttemptToCreateDatabase())
+        if (yesNoDialog.ShowDialog() == DialogResult.Yes)
         {
-          Logger.LogError(string.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text), true);
+          if (!AttemptToCreateDatabase())
+          {
+            Logger.LogError(string.Format(Properties.Resources.ErrorAttemptingToCreateDB, dbList.Text), true);
+          }
+          else
+          {
+            this.ParentForm.DialogResult = DialogResult.OK;
+          }
         }
-        else
-        {
-          this.ParentForm.DialogResult = DialogResult.OK;
-        }
+
+        this.ParentForm.DialogResult = DialogResult.None;
       }
     }
 

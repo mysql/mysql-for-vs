@@ -51,6 +51,15 @@ namespace MySql.VisualStudio.CustomAction
     Vs2017Enterprise,
 
     [Description("Visual Studio 2017 Professional")]
-    Vs2017Professional
+    Vs2017Professional,
+
+    [Description("Visual Studio 2019 Community")]
+    Vs2019Community,
+
+    [Description("Visual Studio 2019 Enterprise")]
+    Vs2019Enterprise,
+
+    [Description("Visual Studio 2019 Professional")]
+    Vs2019Professional
   }
 }

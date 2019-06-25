@@ -1,57 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-  <Identifier Id="79A115C9-B133-4891-9E7B-242509DAD272">
-    <Name>MySQL for Visual Studio</Name>
-    <Author>Oracle, Inc.</Author>
-    <Version>1.2.9</Version>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="79A115C9-B133-4891-9E7B-242509DAD272" Version="1.2.9" Language="en-US" Publisher="Oracle, Inc." />
+    <DisplayName>MySQL for Visual Studio</DisplayName>
     <Description xml:space="preserve">Database design tools for MySQL</Description>
-    <Locale>1033</Locale>
-    <InstalledByMsi>true</InstalledByMsi>
-    <SupportedProducts>
-      <VisualStudio Version="10.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-        <Edition>VSTS</Edition>
-        <Edition>VSTD</Edition>
-      </VisualStudio>
-      <VisualStudio Version="11.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-        <Edition>VSTS</Edition>
-        <Edition>VSTD</Edition>
-      </VisualStudio>
-      <VisualStudio Version="12.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-        <Edition>VSTS</Edition>
-        <Edition>VSTD</Edition>
-      </VisualStudio>
-     <VisualStudio Version="14.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-        <Edition>VSTS</Edition>
-        <Edition>VSTD</Edition>
-      </VisualStudio>
-	 <VisualStudio Version="15.0">
-        <Edition>Community</Edition>
-        <Edition>Pro</Edition>
-        <Edition>Enterprise</Edition>
-     </VisualStudio>
-    </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
-  </Identifier>
-  <References>
-    <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
-      <Name>Visual Studio MPF</Name>
-    </Reference>
-  </References>
-  <Content>
-    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
-    <VsPackage>MySql.VisualStudio.pkgdef</VsPackage>
-	<MefComponent>|%CurrentProject%|</MefComponent>
-  </Content>
-</Vsix>
+    <MoreInfo>https://dev.mysql.com/doc/visual-studio/en/</MoreInfo>
+    <ReleaseNotes>Release Notes.txt</ReleaseNotes>
+  </Metadata>
+  <Installation InstalledByMsi="true" AllUsers="true" SystemComponent="false" Scope="ProductExtension">
+    <InstallationTarget Id="Microsoft.VisualStudio.Ultimate" Version="[14.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Premium" Version="[14.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.VSTS" Version="[14.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.VSTD" Version="[14.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0,17.0)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[15.0,17.0)" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.6,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0,17.0)" />
+    <Dependency d:Source="Installed" Id="EDDCB5BE-3C18-444E-8E50-AE06CD345872" DisplayName="C#, Visual Basic and F# project systems" Version="[3.0.0.6382007,4.0)" />
+    <Dependency d:Source="Installed" Id="1D7A611D-F1E7-4E23-91D6-C64426EBE6B5" DisplayName="Microsoft ASP.NET and Web Tools" Version="[14.0,17.0)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+      <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="MySql.VisualStudio.pkgdef" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,17.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.Net.Component.4.6.TargetingPack" Version="[14.0,17.0)" DisplayName=".NET Framework 4.6 targeting pack" />
+    <Prerequisite Id="Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions" Version="[14.0,17.0)" DisplayName="ASP.NET and web development" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[14.0,17.0)" DisplayName="C# and Visual Basic" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.EntityFramework" Version="[14.0,17.0)" DisplayName="Entity Framework 6 tools" />
+  </Prerequisites>
+</PackageManifest>

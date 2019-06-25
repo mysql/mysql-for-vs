@@ -48,7 +48,7 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio.Data.Services;
 using MySql.Data.VisualStudio.DBExport;
 using MySql.Data.VisualStudio.Properties;
-#if CLR4 || NET_40_OR_GREATER
+#if CLR4 || NET_46_OR_GREATER
 using Microsoft.VisualStudio.TextTemplating;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
 #endif
@@ -93,12 +93,19 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
         catch
         {
-          if (MessageBox.Show("The MySQL .NET driver could not be found." + Environment.NewLine
-                        + @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/" +
-                         Environment.NewLine + "Click OK to go to the page or Cancel to continue", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+          using (var yesNoDialog = Common.Utilities.GetYesNoInfoDialog(
+                                     Utility.Forms.InfoDialog.InfoType.Warning,
+                                     false,
+                                     "The MySQL .NET driver could not be found",
+                                     @"To use it you must download and install the MySQL Connector/Net package from http://dev.mysql.com/downloads/connector/net/",
+                                     "Click OK to go to the page or Cancel to continue."
+          ))
           {
-            ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
-            System.Diagnostics.Process.Start(browserInfo);
+            if (yesNoDialog.ShowDialog() == DialogResult.OK)
+            {
+              ProcessStartInfo browserInfo = new ProcessStartInfo("http://dev.mysql.com/downloads/connector/net/");
+              System.Diagnostics.Process.Start(browserInfo);
+            }
           }
         }
 
@@ -131,7 +138,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           vsProj.References.Add("System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL");
           vsProj.References.Add("System.Web.Razor");
 
-#if NET_40_OR_GREATER
+#if NET_46_OR_GREATER
           vsProj.Project.Save();
 #endif
 
@@ -380,7 +387,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
       if (WizardForm.selectedTables == null || WizardForm.selectedTables.Count == 0)
         return;
 
-#if CLR4 || NET_40_OR_GREATER
+#if CLR4 || NET_46_OR_GREATER
       IServiceProvider serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)Dte);
       ITextTemplating t4 = serviceProvider.GetService(typeof(STextTemplating)) as ITextTemplating;
       ITextTemplatingSessionHost sessionHost = t4 as ITextTemplatingSessionHost;
@@ -555,7 +562,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
     }
   }
 
-#if CLR4 || NET_40_OR_GREATER
+#if CLR4 || NET_46_OR_GREATER
   public class T4Callback : ITextTemplatingCallback
   {
     public List<string> errorMessages = new List<string>();

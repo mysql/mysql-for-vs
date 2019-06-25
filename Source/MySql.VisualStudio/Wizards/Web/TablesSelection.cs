@@ -197,10 +197,18 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         }
         catch (Exception)
         {
-          DialogResult result = MessageBox.Show(Properties.Resources.ErrorOnConnection, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-          if (result == DialogResult.Cancel)
+          using (var dialog = Common.Utilities.GetDualButtonInfoDialog(
+            Utility.Forms.InfoDialog.InfoType.Error,
+            "Retry",
+            "Cancel",
+            "Failed connection",
+            Properties.Resources.ErrorOnConnection
+          ))
           {
-            listTables.Enabled = false;
+            if (dialog.ShowDialog() == DialogResult.Cancel)
+            {
+              listTables.Enabled = false;
+            }
           }
         }
         FillTables(_wiz.ConnectionString);

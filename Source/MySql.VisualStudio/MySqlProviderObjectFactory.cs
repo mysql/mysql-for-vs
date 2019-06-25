@@ -34,7 +34,7 @@ using System.Data.Common;
 using Microsoft.Win32;
 using System.Reflection;
 using System.IO;
-
+using MySql.Utility.Classes;
 
 namespace MySql.Data.VisualStudio
 {
@@ -58,7 +58,6 @@ namespace MySql.Data.VisualStudio
 
         // Try to get it from DbProviders table.
         _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-
         return _factory;
       }
     }

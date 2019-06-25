@@ -53,23 +53,18 @@ namespace MySql.VisualStudio.CustomAction
     private const string EXTENSION_FILE_NAME = "extensions.configurationchanged";
     private const int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
     private const string VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\";
-
-    private const string VS2012_VERSION_NUMBER = "11.0";
-    private const string VS2013_VERSION_NUMBER = "12.0";
     private const string VS2015_VERSION_NUMBER = "14.0";
     private const string VS2017_VERSION_NUMBER = "15.0";
-
-    private const string VS2012_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\";
-    private const string VS2012_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE\";
-    private const string VS2013_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 12.0\";
-    private const string VS2013_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 12.0\";
-    private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
+    private const string VS2019_VERSION_NUMBER = "16.0";    private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
     private const string VS2015_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 14.0\";
 
     private const string VS2015_INSTALL_FEATURE = "VS2015Install";
     private const string VS2017_COMMUNITY_INSTALL_FEATURE = "VS2017ComInstall";
     private const string VS2017_ENTERPRISE_INSTALL_FEATURE = "VS2017EntInstall";
     private const string VS2017_PROFESSIONAL_INSTALL_FEATURE = "VS2017ProInstall";
+    private const string VS2019_COMMUNITY_INSTALL_FEATURE = "VS2019ComInstall";
+    private const string VS2019_ENTERPRISE_INSTALL_FEATURE = "VS2019EntInstall";
+    private const string VS2019_PROFESSIONAL_INSTALL_FEATURE = "VS2019ProInstall";
 
     #endregion
 
@@ -89,6 +84,18 @@ namespace MySql.VisualStudio.CustomAction
     private static string _vs2017EnterpriseInstanceId;
     private static string _vs2017ProfessionalInstanceId;
 
+    private static string _vs2019CommunityInstallationPath;
+    private static string _VS2019CommunityX64ExtensionsFilePath;
+    private static string _VS2019CommunityX86ExtensionsFilePath;
+    private static string _vs2019EnterpriseInstallationPath;
+    private static string _VS2019EnterpriseX64ExtensionsFilePath;
+    private static string _VS2019EnterpriseX86ExtensionsFilePath;
+    private static string _vs2019ProfessionalInstallationPath;
+    private static string _VS2019ProfessionalX64ExtensionsFilePath;
+    private static string _VS2019ProfessionalX86ExtensionsFilePath;
+    private static string _vs2019CommunityInstanceId;
+    private static string _vs2019EnterpriseInstanceId;
+    private static string _vs2019ProfessionalInstanceId;
     #endregion
 
     #region Properties
@@ -108,14 +115,29 @@ namespace MySql.VisualStudio.CustomAction
     /// </summary>
     public static string VS2017ProfessionalInstallationPath => _vs2017ProfessionalInstallationPath;
 
+    /// <summary>
+    /// The installation path for Visual Studio 2019 Community edition.
+    /// </summary>
+    public static string VS2019CommunityInstallationPath => _vs2019CommunityInstallationPath;
+
+    /// <summary>
+    /// The installation path for Visual Studio 2019 Enteprise edition.
+    /// </summary>
+    public static string VS2019EnterpriseInstallationPath => _vs2019EnterpriseInstallationPath;
+
+    /// <summary>
+    /// The installation path for Visual Studio 2019 Professional edition.
+    /// </summary>
+    public static string VS2019ProfessionalInstallationPath => _vs2019ProfessionalInstallationPath;
+
     #endregion
 
     /// <summary>
-    /// Static constructor that initializes VS2017's paths for all VS2017 flavors.
+    /// Static constructor that initializes VS2017/2019's paths for all VS2017/2019 flavors.
     /// </summary>
     static CustomActions()
     {
-      SetVS2017InstallationPaths();
+      SetVSInstallationPaths();
 
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
       {
@@ -152,45 +174,45 @@ namespace MySql.VisualStudio.CustomAction
         _VS2017ProfessionalX64ExtensionsFilePath = partialPath;
         _VS2017ProfessionalX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
+
+      if (!string.IsNullOrEmpty(_vs2019CommunityInstallationPath))
+      {
+        _VS2019CommunityX64ExtensionsFilePath = _vs2019CommunityInstallationPath + @"\";
+        _VS2019CommunityX86ExtensionsFilePath = _vs2019CommunityInstallationPath.Replace(" (86)","") + @"\";
+      }
+      else
+      {
+        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\";
+        _VS2019CommunityX64ExtensionsFilePath = partialPath;
+        _VS2019CommunityX86ExtensionsFilePath = partialPath.Replace(" (86)","");
+      }
+
+      if (!string.IsNullOrEmpty(_vs2019EnterpriseInstallationPath))
+      {
+        _VS2019EnterpriseX64ExtensionsFilePath = _vs2019EnterpriseInstallationPath + @"\";
+        _VS2019EnterpriseX86ExtensionsFilePath = _vs2019EnterpriseInstallationPath.Replace(" (86)","") + @"\";
+      }
+      else
+      {
+        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\";
+        _VS2019EnterpriseX64ExtensionsFilePath = partialPath;
+        _VS2019EnterpriseX86ExtensionsFilePath = partialPath.Replace(" (86)","");
+      }
+
+      if (!string.IsNullOrEmpty(_vs2019ProfessionalInstallationPath))
+      {
+        _VS2019ProfessionalX64ExtensionsFilePath = _vs2019ProfessionalInstallationPath + @"\";
+        _VS2019ProfessionalX86ExtensionsFilePath = _vs2019ProfessionalInstallationPath.Replace(" (86)","") + @"\";
+      }
+      else
+      {
+        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\";
+        _VS2019ProfessionalX64ExtensionsFilePath = partialPath;
+        _VS2019ProfessionalX86ExtensionsFilePath = partialPath.Replace(" (86)","");
+      }
     }
 
     #region Custom Actions
-
-    [CustomAction]
-    public static ActionResult UpdateFlagPackagesFileForVs2012(Session session)
-    {
-      if (session == null)
-      {
-        return ActionResult.Failure;
-      }
-
-      string vsPath = Path.Combine(session.CustomActionData["VS2012_PathProp"], @"Extensions\extensions.configurationchanged");
-
-      if (File.Exists(vsPath))
-      {
-        File.WriteAllText(vsPath, string.Empty);
-      }
-
-      return ActionResult.Success;
-    }
-
-    [CustomAction]
-    public static ActionResult UpdateFlagPackagesFileForVs2013(Session session)
-    {
-      if (session == null)
-      {
-        return ActionResult.Failure;
-      }
-
-      string vsPath = Path.Combine(session.CustomActionData["VS2013_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
-
-      if (File.Exists(vsPath))
-      {
-        File.WriteAllText(vsPath, string.Empty);
-      }
-
-      return ActionResult.Success;
-    }
 
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2015(Session session)
@@ -201,7 +223,6 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       string vsPath = Path.Combine(session.CustomActionData["VS2015_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
-
       if (File.Exists(vsPath))
       {
         File.WriteAllText(vsPath, string.Empty);
@@ -220,7 +241,6 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       string vsPath = Path.Combine(session.CustomActionData["VS2017_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
-
       if (File.Exists(vsPath))
       {
         File.WriteAllText(vsPath, string.Empty);
@@ -238,7 +258,6 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       string vsPath = Path.Combine(session.CustomActionData["VS2017_Ent_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
-
       if (File.Exists(vsPath))
       {
         File.WriteAllText(vsPath, string.Empty);
@@ -257,6 +276,57 @@ namespace MySql.VisualStudio.CustomAction
 
       string vsPath = Path.Combine(session.CustomActionData["VS2017_Pro_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
 
+      if (File.Exists(vsPath))
+      {
+        File.WriteAllText(vsPath, string.Empty);
+      }
+
+      return ActionResult.Success;
+    }
+
+    [CustomAction]
+    public static ActionResult UpdateFlagPackagesFileForVs2019(Session session)
+    {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
+      string vsPath = Path.Combine(session.CustomActionData["VS2019_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
+      if (File.Exists(vsPath))
+      {
+        File.WriteAllText(vsPath, string.Empty);
+      }
+
+      return ActionResult.Success;
+    }
+
+    [CustomAction]
+    public static ActionResult UpdateFlagPackagesFileForVs2019Enterprise(Session session)
+    {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
+      string vsPath = Path.Combine(session.CustomActionData["VS2019_Ent_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
+      if (File.Exists(vsPath))
+      {
+        File.WriteAllText(vsPath, string.Empty);
+      }
+
+      return ActionResult.Success;
+    }
+
+    [CustomAction]
+    public static ActionResult UpdateFlagPackagesFileForVs2019Professional(Session session)
+    {
+      if (session == null)
+      {
+        return ActionResult.Failure;
+      }
+
+      string vsPath = Path.Combine(session.CustomActionData["VS2019_Pro_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
       if (File.Exists(vsPath))
       {
         File.WriteAllText(vsPath, string.Empty);
@@ -390,19 +460,19 @@ namespace MySql.VisualStudio.CustomAction
     }
 
     /// <summary>
-    /// Sets the installation paths for all VS2017 flavors.
+    /// Sets the installation paths for all VS2017+ flavors.
     /// </summary>
     /// <param name="session">The session object containing the parameters sent by Wix.</param>
     /// <returns>Always returns ActionResult.Success since its return value isn't relevant.</returns>
     [CustomAction]
-    public static ActionResult SetVS2017InstallationPaths(Session session)
+    public static ActionResult SetVSInstallationPaths(Session session)
     {
       if (session == null)
       {
         return ActionResult.Failure;
       }
 
-      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(SetVS2017InstallationPaths)));
+      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(SetVSInstallationPaths)));
 
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
       {
@@ -420,6 +490,24 @@ namespace MySql.VisualStudio.CustomAction
       {
         session["VS_2017_PRO_PATH_MAIN"] = session["VS_2017_PRO_PATH"] = _vs2017ProfessionalInstallationPath;
         session["VS2017PROINSTALL"] = "1";
+      }
+
+      if (!string.IsNullOrEmpty(_vs2019CommunityInstallationPath))
+      {
+        session["VS_2019_COM_PATH_MAIN"] = session["VS_2019_COM_PATH"] = _vs2019CommunityInstallationPath;
+        session["VS2019COMINSTALL"] = "1";
+      }
+
+      if (!string.IsNullOrEmpty(_vs2019EnterpriseInstallationPath))
+      {
+        session["VS_2019_ENT_PATH_MAIN"] = session["VS_2019_ENT_PATH"] = _vs2019EnterpriseInstallationPath;
+        session["VS2019ENTINSTALL"] = "1";
+      }
+
+      if (!string.IsNullOrEmpty(_vs2019ProfessionalInstallationPath))
+      {
+        session["VS_2019_PRO_PATH_MAIN"] = session["VS_2019_PRO_PATH"] = _vs2019ProfessionalInstallationPath;
+        session["VS2019PROINSTALL"] = "1";
       }
 
       return ActionResult.Success;
@@ -458,7 +546,16 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       // Find affected Visual Studio versions.
-      string[] features = { VS2015_INSTALL_FEATURE, VS2017_COMMUNITY_INSTALL_FEATURE, VS2017_ENTERPRISE_INSTALL_FEATURE, VS2017_PROFESSIONAL_INSTALL_FEATURE };
+      string[] features =
+      {
+        VS2015_INSTALL_FEATURE,
+        VS2017_COMMUNITY_INSTALL_FEATURE,
+        VS2017_ENTERPRISE_INSTALL_FEATURE,
+        VS2017_PROFESSIONAL_INSTALL_FEATURE,
+        VS2019_COMMUNITY_INSTALL_FEATURE,
+        VS2019_ENTERPRISE_INSTALL_FEATURE,
+        VS2019_PROFESSIONAL_INSTALL_FEATURE
+      };
       foreach (var feature in features)
       {
         if (!UpdatePkgdefFileForVersion(session, feature, mysqlForVisualStudioVersion, installedMySqlDataVersion, _internalMySqlDataVersion))
@@ -510,7 +607,7 @@ namespace MySql.VisualStudio.CustomAction
     /// <param name="session">The session object containing the parameters sent by Wix.</param>
     /// <returns>An <see cref="ActionResult.Success"> object since the results of the code executed in this method are irrelevant to the overall installation process."</returns>
     [CustomAction]
-    public static ActionResult ShowInstallationWarning(Session session)
+    public static ActionResult ShowWindows7InstallationWarning(Session session)
     {
       if (session == null)
       {
@@ -522,36 +619,50 @@ namespace MySql.VisualStudio.CustomAction
       // Read the ActivityLog from the user's AppData folder.
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
       {
-        showWarning = ReadActivityLog(_vs2017CommunityInstanceId, session["AppDataFolder"], session);
+        showWarning = ReadActivityLog(_vs2017CommunityInstanceId, 15, session["AppDataFolder"], session);
       }
       else if (!string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
       {
-        showWarning = ReadActivityLog(_vs2017EnterpriseInstanceId, session["AppDataFolder"], session);
+        showWarning = ReadActivityLog(_vs2017EnterpriseInstanceId, 15, session["AppDataFolder"], session);
       }
       else if (!string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
       {
-        showWarning = ReadActivityLog(_vs2017ProfessionalInstanceId, session["AppDataFolder"], session);
+        showWarning = ReadActivityLog(_vs2017ProfessionalInstanceId, 15, session["AppDataFolder"], session);
+      }
+      else if (!string.IsNullOrEmpty(_vs2019CommunityInstallationPath))
+      {
+        showWarning = ReadActivityLog(_vs2019CommunityInstanceId, 16, session["AppDataFolder"], session);
+      }
+      else if (!string.IsNullOrEmpty(_vs2019EnterpriseInstallationPath))
+      {
+        showWarning = ReadActivityLog(_vs2019EnterpriseInstanceId, 16, session["AppDataFolder"], session);
+      }
+      else if (!string.IsNullOrEmpty(_vs2019ProfessionalInstallationPath))
+      {
+        showWarning = ReadActivityLog(_vs2019ProfessionalInstanceId, 16, session["AppDataFolder"], session);
       }
 
       if (showWarning)
       {
-        session.Message(InstallMessage.Warning, new Record { FormatString = Resources.FailedToRefreshExtensions });
+        string message = "WARNING: The \"devenv /updateconfiguration\" command may have failed to execute succesfully preventing Visual Studio from registering/unregistering MySQL for Visual Studio. If affected, run the command manually using \"Developer Command Prompt for VS\". For additional details, see the product documentation.";
+        session.Message(InstallMessage.Warning, new Record { FormatString = message });
       }
 
       return ActionResult.Success;
     }
 
     /// <summary>
-    /// Reads the ActivityLog of the specified VS2017 instance.
+    /// Reads the ActivityLog of the specified VS instance.
     /// </summary>
-    /// <param name="vs2017InstanceId">The instance id.</param>
+    /// <param name="vsInstanceId">The instance id.</param>
+    /// <param name="vsVersion">The Visual Studio version for which to read the activity log.</param>
     /// <param name="appDataFolder">The path to the user's app data folder.</param>
     /// <returns><c>True</c> if the warning message should be displayed or if an error prevented from reading the ActivityLog; otherwise, <c>false</c>.</returns>
-    private static bool ReadActivityLog(string vs2017InstanceId, string appDataFolder, Session session)
+    private static bool ReadActivityLog(string vsInstanceId, int vsVersion, string appDataFolder, Session session)
     {
       try
       {
-        var activityLog = string.Format("{0}Microsoft\\VisualStudio\\15.0_{1}\\ActivityLog.xml", appDataFolder, vs2017InstanceId);
+        var activityLog = string.Format("{0}Microsoft\\VisualStudio\\{1}.0_{2}\\ActivityLog.xml", appDataFolder, vsVersion, vsInstanceId);
         session.Log("ActivityLog path: " + activityLog);
 
         if (File.Exists(activityLog))
@@ -570,7 +681,7 @@ namespace MySql.VisualStudio.CustomAction
             var hrText = item.SelectSingleNode("hr").InnerText;
             if (!string.IsNullOrEmpty(hrText) && hrText.Contains("E_ACCESSDENIED"))
             {
-              session.Log(string.Format(Resources.ActivityLogAccessDeniedError, vs2017InstanceId));
+              session.Log(string.Format(Resources.ActivityLogAccessDeniedError, vsInstanceId));
               return true;
             }
           }
@@ -610,14 +721,6 @@ namespace MySql.VisualStudio.CustomAction
           string vsRootPath;
           switch (vsVersion)
           {
-            case SupportedVisualStudioVersions.Vs2012:
-              vsPath = Environment.Is64BitOperatingSystem ? VS2012_X64_EXTENSIONS_FILE_PATH : VS2012_X86_EXTENSIONS_FILE_PATH;
-              vsVersionNumber = VS2012_VERSION_NUMBER;
-              break;
-            case SupportedVisualStudioVersions.Vs2013:
-              vsPath = Environment.Is64BitOperatingSystem ? VS2013_X64_EXTENSIONS_FILE_PATH : VS2013_X86_EXTENSIONS_FILE_PATH;
-              vsVersionNumber = VS2013_VERSION_NUMBER;
-              break;
             case SupportedVisualStudioVersions.Vs2015:
               vsPath = Environment.Is64BitOperatingSystem ? VS2015_X64_EXTENSIONS_FILE_PATH : VS2015_X86_EXTENSIONS_FILE_PATH;
               vsVersionNumber = VS2015_VERSION_NUMBER;
@@ -634,13 +737,25 @@ namespace MySql.VisualStudio.CustomAction
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017ProfessionalX64ExtensionsFilePath : _VS2017ProfessionalX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
               break;
+            case SupportedVisualStudioVersions.Vs2019Community:
+              vsPath = Environment.Is64BitOperatingSystem ? _VS2019CommunityX64ExtensionsFilePath : _VS2019CommunityX86ExtensionsFilePath;
+              vsVersionNumber = VS2019_VERSION_NUMBER;
+              break;
+            case SupportedVisualStudioVersions.Vs2019Enterprise:
+              vsPath = Environment.Is64BitOperatingSystem ? _VS2019EnterpriseX64ExtensionsFilePath : _VS2019EnterpriseX86ExtensionsFilePath;
+              vsVersionNumber = VS2019_VERSION_NUMBER;
+              break;
+            case SupportedVisualStudioVersions.Vs2019Professional:
+              vsPath = Environment.Is64BitOperatingSystem ? _VS2019ProfessionalX64ExtensionsFilePath : _VS2019ProfessionalX86ExtensionsFilePath;
+              vsVersionNumber = VS2019_VERSION_NUMBER;
+              break;
             default:
               throw new Exception(Resources.FailedToParseVSVersion);
           }
 
           // Registry key handling.
-          string keyPath = GetRegKeyPath(vsVersionNumber, vsVersion == SupportedVisualStudioVersions.Vs2012);
-          string keyName = vsVersion == SupportedVisualStudioVersions.Vs2012 ? "EnvironmentDirectory" : "ShellFolder";
+          string keyPath = GetRegKeyPath(vsVersionNumber);
+          string keyName = "ShellFolder";
           var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
           if (!isDeleting)
           {
@@ -682,11 +797,7 @@ namespace MySql.VisualStudio.CustomAction
 
           // "extensions.configurationchanged" file handling.
           vsRootPath = vsPath;
-          string extensionsDirectory = string.Format(@"{0}{1}",
-            vsPath,
-            vsVersion == SupportedVisualStudioVersions.Vs2012
-              ? @"Extensions"
-              : @"Common7\IDE\Extensions");
+          string extensionsDirectory = string.Format(@"{0}{1}", vsPath, @"Common7\IDE\Extensions");
           string extensionsFile = Path.Combine(extensionsDirectory, EXTENSION_FILE_NAME);
           if (!isDeleting)
           {
@@ -700,8 +811,13 @@ namespace MySql.VisualStudio.CustomAction
               File.Create(extensionsFile);
               session.Log(string.Format(Resources.ExtensionsFileCreated, vsVersion));
 
-              // Remove leftover folders.
-              if (vsVersion == SupportedVisualStudioVersions.Vs2017Community || vsVersion == SupportedVisualStudioVersions.Vs2017Enterprise || vsVersion == SupportedVisualStudioVersions.Vs2017Professional)
+              //Remove leftover folders.
+              if (vsVersion == SupportedVisualStudioVersions.Vs2017Community
+                  || vsVersion == SupportedVisualStudioVersions.Vs2017Enterprise
+                  || vsVersion == SupportedVisualStudioVersions.Vs2017Professional
+                  || vsVersion == SupportedVisualStudioVersions.Vs2019Community
+                  || vsVersion == SupportedVisualStudioVersions.Vs2019Enterprise
+                  || vsVersion == SupportedVisualStudioVersions.Vs2019Professional)
               {
                 DeleteEmptyFolders(vsRootPath);
               }
@@ -764,9 +880,8 @@ namespace MySql.VisualStudio.CustomAction
     /// Generates the reg key path for the specified Visual Studio version.
     /// </summary>
     /// <param name="vsVersion">The Visual Studio version.</param>
-    /// <param name="isVs2012">Flag used to differentiate whether the registry key is for Visual Studio 2012, in which case should be handled differently.</param>
     /// <returns>The key path for the specified Visual Studio version</returns>
-    private static string GetRegKeyPath(string vsVersion, bool isVs2012)
+    private static string GetRegKeyPath(string vsVersion)
     {
       if (string.IsNullOrEmpty(vsVersion))
       {
@@ -783,19 +898,14 @@ namespace MySql.VisualStudio.CustomAction
         keyPath = string.Format(@"Software\Microsoft\VisualStudio\{0}", vsVersion);
       }
 
-      if (isVs2012)
-      {
-        keyPath += @"\Setup\VS";
-      }
-
       return keyPath;
     }
 
     /// <summary>
-    /// Gets VS2017's setup configuration.
+    /// Gets Visual Studio's setup configuration.
     /// </summary>
-    /// <returns>An <see cref="ISetupConfiguration"/> instance with information about VS2017's instances.</returns>
-    private static ISetupConfiguration GetVS2017SetupConfiguration()
+    /// <returns>An <see cref="ISetupConfiguration"/> instance with information about VS2017+ instances.</returns>
+    private static ISetupConfiguration GetVSSetupConfiguration()
     {
       try
       {
@@ -824,13 +934,13 @@ namespace MySql.VisualStudio.CustomAction
     }
 
     /// <summary>
-    /// Sets the installation paths for all VS2017 flavors.
+    /// Sets the installation paths for all VS2017+ flavors.
     /// </summary>
-    public static void SetVS2017InstallationPaths()
+    public static void SetVSInstallationPaths()
     {
       try
       {
-        var setupConfiguration = GetVS2017SetupConfiguration();
+        var setupConfiguration = GetVSSetupConfiguration();
         if (setupConfiguration == null)
         {
           return;
@@ -846,27 +956,54 @@ namespace MySql.VisualStudio.CustomAction
           {
             var vsInstance = (ISetupInstance2)setupInstance[0];
             var state = vsInstance.GetState();
+            const string FLAVOR_COMMUNITY = "Microsoft.VisualStudio.Product.Community";
+            const string FLAVOR_ENTERPRISE = "Microsoft.VisualStudio.Product.Enterprise";
+            const string FLAVOR_PROFESSIONAL = "Microsoft.VisualStudio.Product.Professional";
             if ((state & InstanceState.Local) == InstanceState.Local)
             {
               //Determine the instance's flavor.
               var flavor = vsInstance.GetProduct().GetId();
+              var version = vsInstance.GetInstallationVersion();
 
-              if (flavor == "Microsoft.VisualStudio.Product.Community" && string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
+              if (version.StartsWith("15"))
               {
-                _vs2017CommunityInstallationPath = vsInstance.GetInstallationPath();
-                _vs2017CommunityInstanceId = vsInstance.GetInstanceId();
+                if (flavor == FLAVOR_COMMUNITY && string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
+                {
+                  _vs2017CommunityInstallationPath = vsInstance.GetInstallationPath();
+                  _vs2017CommunityInstanceId = vsInstance.GetInstanceId();
+                }
+
+                if (flavor == FLAVOR_ENTERPRISE && string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
+                {
+                  _vs2017EnterpriseInstallationPath = vsInstance.GetInstallationPath();
+                  _vs2017EnterpriseInstanceId = vsInstance.GetInstanceId();
+                }
+
+                if (flavor == FLAVOR_PROFESSIONAL && string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
+                {
+                  _vs2017ProfessionalInstallationPath = vsInstance.GetInstallationPath();
+                  _vs2017ProfessionalInstanceId = vsInstance.GetInstanceId();
+                }
               }
-
-              if (flavor == "Microsoft.VisualStudio.Product.Enterprise" && string.IsNullOrEmpty(_vs2017EnterpriseInstallationPath))
+              else if (version.StartsWith("16"))
               {
-                _vs2017EnterpriseInstallationPath = vsInstance.GetInstallationPath();
-                _vs2017EnterpriseInstanceId = vsInstance.GetInstanceId();
-              }
+                if (flavor == FLAVOR_COMMUNITY && string.IsNullOrEmpty(_vs2019CommunityInstallationPath))
+                {
+                  _vs2019CommunityInstallationPath = vsInstance.GetInstallationPath();
+                  _vs2019CommunityInstanceId = vsInstance.GetInstanceId();
+                }
 
-              if (flavor == "Microsoft.VisualStudio.Product.Professional" && string.IsNullOrEmpty(_vs2017ProfessionalInstallationPath))
-              {
-                _vs2017ProfessionalInstallationPath = vsInstance.GetInstallationPath();
-                _vs2017ProfessionalInstanceId = vsInstance.GetInstanceId();
+                if (flavor == FLAVOR_ENTERPRISE && string.IsNullOrEmpty(_vs2019EnterpriseInstallationPath))
+                {
+                  _vs2019EnterpriseInstallationPath = vsInstance.GetInstallationPath();
+                  _vs2019EnterpriseInstanceId = vsInstance.GetInstanceId();
+                }
+
+                if (flavor == FLAVOR_PROFESSIONAL && string.IsNullOrEmpty(_vs2019ProfessionalInstallationPath))
+                {
+                  _vs2019ProfessionalInstallationPath = vsInstance.GetInstallationPath();
+                  _vs2019ProfessionalInstanceId = vsInstance.GetInstanceId();
+                }
               }
             }
           }
@@ -910,6 +1047,18 @@ namespace MySql.VisualStudio.CustomAction
 
         case VS2017_PROFESSIONAL_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2017ProPath"];
+          break;
+
+        case VS2019_COMMUNITY_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2019ComPath"];
+          break;
+
+        case VS2019_ENTERPRISE_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2019EntPath"];
+          break;
+
+        case VS2019_PROFESSIONAL_INSTALL_FEATURE:
+          visualStudioInstallationPath = session.CustomActionData["VS2019ProPath"];
           break;
 
         default:
@@ -1062,7 +1211,7 @@ namespace MySql.VisualStudio.CustomAction
       string visualStudioInstallationPath = null;
       if (visualStudioVersion > SupportedVisualStudioVersions.Vs2015)
       {
-        SetVS2017InstallationPaths();
+        SetVSInstallationPaths();
       }
 
       switch (visualStudioVersion)
@@ -1081,6 +1230,18 @@ namespace MySql.VisualStudio.CustomAction
 
         case SupportedVisualStudioVersions.Vs2017Professional:
           visualStudioInstallationPath = _vs2017ProfessionalInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2019Community:
+          visualStudioInstallationPath = _vs2019CommunityInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2019Enterprise:
+          visualStudioInstallationPath = _vs2019EnterpriseInstallationPath;
+          break;
+
+        case SupportedVisualStudioVersions.Vs2019Professional:
+          visualStudioInstallationPath = _vs2019ProfessionalInstallationPath;
           break;
 
         default:
@@ -1161,6 +1322,9 @@ namespace MySql.VisualStudio.CustomAction
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Enterprise, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Professional, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Community, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Enterprise, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Professional, mysqlForVisualStudioVersion)));
 
       return list;
     }
@@ -1211,13 +1375,13 @@ namespace MySql.VisualStudio.CustomAction
 
     #region External Methods
     /// <summary>
-    /// External method included in the <see cref="Setup.Configuration.Native.dll"/> used to get VS2017's setup configuration.
+    /// External method included in the <see cref="Setup.Configuration.Native.dll"/> used to get VS2017+'s setup configuration.
     /// </summary>
     /// <param name="configuration"><see cref="ISetupConfiguration"/> instance to hold the return value of the method.</param>
     /// <param name="reserved">Pointer object.</param>
     /// <returns>An <see cref="ISetupConfiguration"/> instance via an out parameter.</returns>
     [DllImport("Microsoft.VisualStudio.Setup.Configuration.Native.dll", ExactSpelling = true, PreserveSig = true)]
     private static extern int GetSetupConfiguration([MarshalAs(UnmanagedType.Interface), Out] out ISetupConfiguration configuration,IntPtr reserved);
-#endregion
+    #endregion
   }
 }

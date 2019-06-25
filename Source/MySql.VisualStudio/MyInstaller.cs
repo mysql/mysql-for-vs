@@ -45,43 +45,75 @@ namespace MySql.Data.VisualStudio
 
       bool ranu = false;
       if (Context.Parameters["RANU"] == "true")
+      {
         ranu = true;
+      }
 
-      if (Context.Parameters["version"] == "VS2005")
+      switch (Context.Parameters["version"])
       {
-        if (ranu)
-          throw new NotSupportedException("RANU not supported for Visual Studio 2005");
-        root = "8.0";
+        case "VS2005":
+          if (ranu)
+          {
+            throw new NotSupportedException("RANU not supported for Visual Studio 2005");
+          }
+
+          root = "8.0";
+          break;
+        case "VS2008":
+          if (ranu)
+          {
+            throw new NotSupportedException("RANU not supported for Visual Studio 2008");
+          }
+
+          root = "9.0";
+          break;
+        case "VS2010":
+          if (ranu)
+          {
+            throw new NotSupportedException("RANU not supported for Visual Studio 2010");
+          }
+
+          root = "10.0";
+          break;
+        case "VS2012":
+          if (ranu)
+          {
+            throw new NotSupportedException("RANU not supported for Visual Studio 2012");
+          }
+
+          root = "11.0";
+          break;
+        case "VS2013":
+          if (ranu)
+          {
+            throw new NotSupportedException("RANU not supported for Visual Studio 2013");
+          }
+
+          root = "12.0";
+          break;
+        case "VS2015":
+          root = "14.0";
+          break;
+        case "VS2017":
+          root = "15.0";
+          break;
+        case "VS2019":
+          root = "16.0";
+          break;
+        default:
+          throw new NotSupportedException();
       }
-      else if (Context.Parameters["version"] == "VS2008")
-      {
-        if (ranu)
-          throw new NotSupportedException("RANU not supported for Visual Studio 2008");
-        root = "9.0";
-      }
-      else if (Context.Parameters["version"] == "VS2010")
-      {
-        if (ranu)
-        {
-          throw new NotSupportedException("RANU not supported for Visual Studio 2010");
-        }
-        root = "10.0";
-      }
-      else if (Context.Parameters["version"] == "VS2012")
-        root = "11.0";
-      else if (Context.Parameters["version"] == "VS2013")
-        root = "12.0";
-      else if (Context.Parameters["version"] == "VS2015")
-        root = "14.0";
-      else if (Context.Parameters["version"] == "VS2017")
-        root = "15.0";
-      else
-        throw new NotSupportedException();
 
       if (Context.Parameters["debug"] == "true")
+      {
         root += "Exp";
+      }
+
       if (ranu)
+      {
         root += @"_Config";
+      }
+
       return root;
     }
 

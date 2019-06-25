@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="VS16_Pro_VB_Web_ItemTemplate.zip" />
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="VS16_Pro_VB_Web_ItemTemplate_DirectoryComponents">
+      <Component Id="VS16_Pro_VB_Web_IT" Directory="VS16_Pro_VB_Web_ItemTemplate.zip" Guid="BDAE4815-128A-4CE2-9FF2-36217644F0AD">
+        <File Id="VS16_Pro_VB_Web_IT_VsTemplate" KeyPath="yes" Source="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_Web.zip\MySQL_Web_VB_ItemTemplate.vstemplate" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
