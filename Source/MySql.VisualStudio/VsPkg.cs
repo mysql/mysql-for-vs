@@ -131,6 +131,11 @@ namespace MySql.Data.VisualStudio
     private string _connectorNETInstallationPath;
 
     /// <summary>
+    /// The version of the MySql.Data library included in this version of MySQL for Visual Studio.
+    /// </summary>
+    private Version _internalMySqlDataVersion;
+
+    /// <summary>
     /// A monitor to detect changes in the Windows registry for Connector/NET.
     /// </summary>
     private RegistryMonitor _registryMonitor;
@@ -228,6 +233,8 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     protected override void Initialize()
     {
+      _internalMySqlDataVersion = new Version(8, 0, 16, 0);
+
       // Initialize settings related to InfoDialog.
       CustomizeUtilityDialogs();
 
@@ -360,7 +367,7 @@ namespace MySql.Data.VisualStudio
 #if DEBUG
       internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
 #else
-      internalMySqlDataVersion = new Version(GetVersionStringFromRegistry(MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY));
+      internalMySqlDataVersion = _internalMySqlDataVersion;
 #endif
       if (!CustomActions.IsConfigurationUpdateRequired(mysqlForVisualStudioVersion, installedMySqlDataVersion, internalMySqlDataVersion))
       {
@@ -929,7 +936,7 @@ namespace MySql.Data.VisualStudio
       var internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
       var fileName = @"..\..\..\..\MySql.VisualStudio.Updater\bin\Debug\";
 #else
-      var internalMySqlDataVersion = AssemblyName.GetAssemblyName(@"..\..\..\..\PrivateAssemblies\MySql.Data.dll").Version;
+      var internalMySqlDataVersion = _internalMySqlDataVersion;
       var fileName = $@"{GetValueFromRegistry(MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY, "Location")}\Dependencies\";
 #endif
 
