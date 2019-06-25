@@ -217,9 +217,6 @@ namespace MySql.Data.VisualStudio
       }
 
       Instance = this;
-
-      Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME);
-      Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
     }
 
     // Overriden Package Implementation
@@ -231,7 +228,32 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     protected override void Initialize()
     {
+      // Initialize settings related to InfoDialog.
+      CustomizeUtilityDialogs();
+
+      // Create program data directory.
+      if (!Directory.Exists(AppDataPath))
+      {
+        try
+        {
+          Directory.CreateDirectory(AppDataPath);
+        }
+        catch (Exception exception)
+        {
+          var properties = new InfoDialogProperties();
+          properties.InfoType = InfoDialog.InfoType.Error;
+          properties.TitleText = "Failed to create the appdata folder";
+          properties.DetailText = $"Failed to create the folder {AppDataPath} with message: {exception.Message}";
+          using (var dialog = new InfoDialog(properties))
+          {
+            dialog.ShowDialog();
+          }
+        }
+      }
+
+      Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME);
       Logger.LogInformation(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+
       MySqlProviderObjectFactory factory = new MySqlProviderObjectFactory();
 
       ((IServiceContainer)this).AddService(
@@ -240,9 +262,6 @@ namespace MySql.Data.VisualStudio
       base.Initialize();
 
       RegisterEditorFactory(new SqlEditorFactory());
-
-      // Initialize settings related to InfoDialog.
-      CustomizeUtilityDialogs();
 
       // Load our connections.
       _mysqlConnectionsList = GetMySqlConnections();
@@ -315,19 +334,6 @@ namespace MySql.Data.VisualStudio
         if (!mySqlConnectorEnvironmentVariableValue.Contains(_connectorNETInstallationPath, StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrEmpty(_connectorNETInstallationPath))
         {
           SetEnvironmentVariableValues(_connectorNETInstallationPath);
-        }
-      }
-
-      // Create program data directory.
-      if (!Directory.Exists(AppDataPath))
-      {
-        try
-        {
-          Directory.CreateDirectory(AppDataPath);
-        }
-        catch (Exception exception)
-        {
-          Logger.LogError($"Failed to create the folder {AppDataPath} with message: {exception.Message}");
         }
       }
 
