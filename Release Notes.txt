@@ -3,6 +3,14 @@
 
 Welcome to the release notes for MySQL for Visual Studio 1.2.9 MR
 
+* Added support for Visual Studio 2019 with the ability to choose the flavor/s (Community, Professional, Enterprise) on 
+which to perform the installation.
+* Removed support for Visual Studio 2013.
+* Removed support for Visual Studio 2012.
+* Added the Configuration Update Tool which monitors installations of Connector/NET and updates the configuration of
+  MySQL for Visual Studio to always use the latest version of the MySql.Data library.
+* Fixed multiple bugs that prevented the generation of table adapters and data sets.
+
 
 
 
