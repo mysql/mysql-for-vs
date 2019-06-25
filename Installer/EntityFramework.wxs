@@ -87,6 +87,13 @@
       </Component>
     </DirectoryRef>
 
+	<DirectoryRef Id='VS16_PrivateAssemblies'>
+      <Component Id="EF.PA16.v45" Guid="92859C95-8717-423C-8E63-39A7EA557F39" DiskId="1">
+        <File Id="MySql.EF.PA16.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+
     <!-- Visual Studio 2019 Enterprise -->
     <DirectoryRef Id="VS16_Ent_DBGenDir">
       <Component Id="EF.T4.VS16.ENT" Guid="19B45D76-EC97-413E-9DB2-697100BB5572">
@@ -101,8 +108,8 @@
 
     <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
       <Component Id="EF.PA16.Ent.v45" Guid="B3022D57-118F-449A-A865-9451AB576452" DiskId="1">
-        <File Id="MySql.EF.PA16.Ent.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA16.Ent.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -120,8 +127,8 @@
 
     <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
       <Component Id="EF.PA16.Pro.v45" Guid="4510B9A3-9BA7-4694-AF3E-48735B4FD7F3" DiskId="1">
-        <File Id="MySql.EF.PA16.Pro.v45" Name="MySql.Data.Entity.EF6.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.Entity.EF6.dll" DiskId="1"/>
+        <File Id="MySql.EF.PA16.Pro.v45" Name="MySql.Data.EntityFramework.dll"
+              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -160,7 +167,7 @@
     <!-- Visual Studio 2019 Community -->
     <DirectoryRef Id='VS16_PrivateAssemblies'>
       <Component Id="Remove.EF.PA16.v45" Guid="B5A8AE59-537C-40A5-9B31-D71F8B558232" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA16.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA16.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -168,7 +175,7 @@
     <!-- Visual Studio 2019 Enterprise -->
     <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
       <Component Id="Remove.EF.PA16.Ent.v45" Guid="542BC2AC-AAE2-4FFA-8B27-57AADD8F16A0" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA16.Ent.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA16.Ent.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -176,7 +183,7 @@
     <!-- Visual Studio 2019 Professional -->
     <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
       <Component Id="Remove.EF.PA16.Pro.v45" Guid="8E551575-7615-4503-9705-488C6320225C" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA16.Pro.v45" Name="MySql.Data.Entity.EF6.dll" On="uninstall" />
+        <RemoveFile Id="RemoveMySql.EF.PA16.Pro.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
