@@ -313,7 +313,8 @@
       </Button>
       
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button">
-        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>&amp;Open MySQL Utilities Console</ButtonText>
@@ -321,14 +322,16 @@
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidOpenUtilitiesPrompt" type="Button" priority="0x209">
         <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
-        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />		
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidImages" id="bmpOpenUtilitiesPromptToolBar" />
         <Strings>
           <CommandName>cmdidOpenUtilitiesPrompt</CommandName>
           <ButtonText>Open MySQL Utilities Console</ButtonText>
         </Strings>
       </Button>
 
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">	  
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>
@@ -336,7 +339,8 @@
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidLaunchWorkbench" type="Button" priority="0x208">
-        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />	  
+        <Parent guid="guidIDEToolbarCmdSet" id="ToolbarGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Icon guid="guidImages" id="bmpLaunchWorkbenchToolBar" />
         <Strings>
           <CommandName>cmdidLaunchWorkbench</CommandName>

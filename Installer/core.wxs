@@ -49,7 +49,7 @@
       -->
     </DirectoryRef>
     
-    <!-- Dependencies with mysqldump -->
+    <!-- Dependencies -->
     <DirectoryRef Id='Dependencies'>
       <Component Id="MySqldumpx86" Guid="C66D3DF6-A151-4F29-B388-A9803C89131D" >
         <File Id="MySqldumpx86File" Name="mysqldump.exe"
@@ -75,6 +75,11 @@
         <File Id="MySql.VisualStudio.CustomActionFile" Name="MySql.VisualStudio.CustomAction.dll"
               Source="..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll" DiskId="1"/>
         <RemoveFile Id="MySql.VisualStudio.CustomAction" Name="MySql.VisualStudio.CustomAction.dll" On="uninstall"/>
+      </Component>
+      <Component Id="MySql.Utility" Guid="D37C08DB-C953-42E6-A676-11D4091F3966" >
+        <File Id="MySql.UtilityFile" Name="MySQL.Utility.dll"
+              Source="..\Dependencies\v4.0\Release\MySQL.Utility.dll" DiskId="1"/>
+        <RemoveFile Id="MySql.Utility" Name="MySQL.Utility.dll" On="uninstall"/>
       </Component>
     </DirectoryRef>
 
@@ -113,6 +118,7 @@
       <ComponentRef Id="Ssleay32"/>
       <ComponentRef Id="MySql.VisualStudio.Updater"/>
       <ComponentRef Id="MySql.VisualStudio.CustomAction"/>
+      <ComponentRef Id="MySql.Utility"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
 
