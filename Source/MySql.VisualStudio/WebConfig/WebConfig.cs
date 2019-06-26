@@ -1,4 +1,4 @@
-// Copyright (c) 2009, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -86,8 +86,8 @@ namespace MySql.Data.VisualStudio.WebConfig
 
       foreach (XmlNode node in el.ChildNodes)
       {
-        if (String.Compare(node.Name, "remove", true) == 0 ||
-            String.Compare(node.Name, "clear", true) == 0) continue;
+        if (string.Compare(node.Name, "remove", true) == 0 ||
+            string.Compare(node.Name, "clear", true) == 0) continue;
         if (node.Attributes != null && node.Attributes.Count > 0)
         {
           string typeName = node.Attributes["type"].Value;

@@ -269,7 +269,7 @@
         <Icon guid="guidImages" id="bmpConfig" />
         <Strings> 
           <CommandName>cmdidConfig</CommandName>
-          <ButtonText>MySQL Website Configuration</ButtonText>
+          <ButtonText>MySQL Project Configuration</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMySqlProviderCmdSet" id="cmdidDebugRoutine" type="Button" priority="0x204">

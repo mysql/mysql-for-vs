@@ -37,6 +37,7 @@ using System.Xml;
 using System.Xml.Linq;
 using EnvDTE;
 using EnvDTE80;
+using MySql.Utility.Classes.Logging;
 #if NET_461_OR_GREATER
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -60,6 +61,7 @@ namespace MySql.Data.VisualStudio.WebConfig
   /// </summary>
   internal enum TargetFramework
   {
+    Fx472 = 262663,
     Fx461 = 262406,
     Fx46 = 262150,
     Fx452 = 262661,
@@ -326,6 +328,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         case TargetFramework.Fx452: return "4.5.2";
         case TargetFramework.Fx46: return "4.6";
         case TargetFramework.Fx461: return "4.6.1";
+        case TargetFramework.Fx472: return "4.7.2";
       }
 
       return string.Empty;
@@ -381,8 +384,8 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (Exception ex)
       {
-        string message = string.Format("AddNugetPackage error. -> {0}", ex.Message);
-        Debug.WriteLine(string.Format("{0} installation package failure." + Environment.NewLine + "Please check that you have the latest Nuget version and that you have an internet connection." + Environment.NewLine + "{1}", PackageName, ex.Message));
+        Logger.LogError($"AddNugetPackage error. -> {ex.Message}");
+        Logger.LogError($"{PackageName} installation package failure.{Environment.NewLine}Please check that you have the latest Nuget version and that you have an internet connection.{Environment.NewLine}{ex.Message}");
         return;
       }
     }
@@ -404,7 +407,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       int suffixStartIndex = Version.IndexOf('-');
       if (suffixStartIndex != -1) Version = Version.Substring(0, suffixStartIndex);
 
-      if (NetFxVersion.StartsWith("4.5") || NetFxVersion.StartsWith("4.6"))
+      if (NetFxVersion.StartsWith("4.5") || NetFxVersion.StartsWith("4.6") || NetFxVersion.StartsWith("4.7"))
       {
         // If .NET version is greater than 4.5 then extract the version numnber from NetFxVersion variable.
         packagePath = Path.Combine(
@@ -424,8 +427,9 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       else
       {
-        throw new Exception(string.Format("{0} (received version {0})", MySql.Data.VisualStudio.Properties.Resources.WrongNetFxVersionMessage,
-                              NetFxVersion));
+        var message = $"{Properties.Resources.WrongNetFxVersionMessage} (received version {NetFxVersion})";
+        Logger.LogError(message);
+        throw new Exception(message);
       }
 
       // Applies for MySql.Data.Entity.EF5 and EF6 packages.

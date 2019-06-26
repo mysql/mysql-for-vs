@@ -860,11 +860,11 @@
     <Compile Include="WebConfig\SiteMapConfig.cs" />
     <Compile Include="WebConfig\WebConfig.cs">
     </Compile>
-    <Compile Include="WebConfig\WebConfigDlg.cs">
+    <Compile Include="WebConfig\AppConfigDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WebConfig\WebConfigDlg.Designer.cs">
-      <DependentUpon>WebConfigDlg.cs</DependentUpon>
+    <Compile Include="WebConfig\AppConfigDlg.Designer.cs">
+      <DependentUpon>AppConfigDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="WebConfig\WebConfigTools.cs" />
     <Compile Include="Wizards\BaseWizard.cs" />
@@ -1117,8 +1117,8 @@
     <EmbeddedResource Include="WebConfig\MembershipOptionsDlg.resx">
       <DependentUpon>MembershipOptionsDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WebConfig\WebConfigDlg.resx">
-      <DependentUpon>WebConfigDlg.cs</DependentUpon>
+    <EmbeddedResource Include="WebConfig\AppConfigDlg.resx">
+      <DependentUpon>AppConfigDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\BaseWizardForm.resx">
       <DependentUpon>BaseWizardForm.cs</DependentUpon>

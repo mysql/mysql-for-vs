@@ -462,14 +462,15 @@ namespace MySql.Data.VisualStudio
       Array a = (Array)dte.ActiveSolutionProjects;
       if (a.Length != 1) return;
 
-      Project p = (Project)a.GetValue(0);
+      // Enable the Configuration Tool for all projects with a web or app config file.
+      Project project = (Project)a.GetValue(0);
       configButton.Visible = false;
-      foreach (Property prop in p.Properties)
+      foreach (ProjectItem items in project.ProjectItems)
       {
-        if (prop.Name == "WebSiteType" || prop.Name.StartsWith("WebApplication", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(items.Name, "web.config", StringComparison.InvariantCultureIgnoreCase)
+            || string.Equals(items.Name, "app.config", StringComparison.InvariantCultureIgnoreCase))
         {
           configButton.Visible = true;
-          break;
         }
       }
     }
@@ -640,7 +641,7 @@ namespace MySql.Data.VisualStudio
 
     private void ConfigCallback(object sender, EventArgs e)
     {
-      WebConfig.WebConfigDlg w = new WebConfig.WebConfigDlg();
+      WebConfig.AppConfigDlg w = new WebConfig.AppConfigDlg();
       w.ShowDialog();
     }
 
