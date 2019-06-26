@@ -226,7 +226,7 @@ namespace MySql.VisualStudio.CustomAction
       if (File.Exists(vsPath))
       {
         File.WriteAllText(vsPath, string.Empty);
-        session["VS2015INSTALL"] = "1";
+        session.CustomActionData[VS2015_INSTALL_FEATURE] = "1";
       }
 
       return ActionResult.Success;
