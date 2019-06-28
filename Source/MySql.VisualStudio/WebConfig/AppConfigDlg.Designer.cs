@@ -458,7 +458,7 @@
       // 
       // pictureBox2
       // 
-      this.pictureBox2.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_WebsiteConfig;
+      this.pictureBox2.Image = global::MySql.Data.VisualStudio.Properties.Resources.mysql_AppConfig;
       this.pictureBox2.Location = new System.Drawing.Point(12, 12);
       this.pictureBox2.Name = "pictureBox2";
       this.pictureBox2.Size = new System.Drawing.Size(160, 52);
@@ -487,7 +487,7 @@
       this.MinimizeBox = false;
       this.Name = "WebConfigDlg";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-      this.Text = "MySQL Website Configuration";
+      this.Text = "MySQL Application Configuration";
       this.configPanel.ResumeLayout(false);
       this.configPanel.PerformLayout();
       this.pnlSimpleMembership.ResumeLayout(false);

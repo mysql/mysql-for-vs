@@ -1177,9 +1177,6 @@ Check that the server is running, the database exists and the user Error establi
   <data name="mysql_ItemTemplate_wizard" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mysql_ItemTemplate_wizard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mysql_WebsiteConfig" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mysql_WebsiteConfig.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="WrongNetFxVersionMessage" xml:space="preserve">
     <value>Only .NET versions 4.0/4.5/4.5.1 are supported</value>
   </data>
@@ -1228,5 +1225,8 @@ Check that the server is running, the database exists, and the user credentials 
   </data>
   <data name="__TemplateIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\__TemplateIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mysql_AppConfig" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mysql_AppConfig.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
