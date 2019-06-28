@@ -292,4 +292,14 @@
   <Target Name="PackageSourceClean">
     <RemoveDir Directories="tmp" ContinueOnError="true" />
   </Target>
+  <Choose>
+    <When Condition="('$(ClientPath)' != '' AND Exists($(ClientPath)) AND '$(SigningServer)' != '' AND '$(SigningUser)' != '' AND '$(SigningGuid)' != '' AND '$(SigningFile)' != '')">
+      <PropertyGroup>
+        <PreBuildEvent>
+          set CODESIGNBUREAU_CREDFILE=$(SigningFile)
+          java -Xmx1024m -jar "$(ClientPath)" sign -file_to_sign "$(SolutionDir)Dependencies\MySql\MySql.VisualStudio.Updater.exe" -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location "$(SolutionDir)common" -sign_method microsoft
+        </PreBuildEvent>
+      </PropertyGroup>
+    </When>
+  </Choose>
 </Project>
