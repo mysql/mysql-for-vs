@@ -1183,6 +1183,7 @@
     <None Include="Resources\MySQLforVisualStudio-Success.png" />
     <None Include="Resources\MySQLforVisualStudio-Warning.png" />
     <Content Include="Resources\MySQLforVisualStudio.png" />
+    <None Include="Resources\mysql_AppConfig.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">
