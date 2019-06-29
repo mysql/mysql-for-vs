@@ -1113,13 +1113,6 @@ namespace MySql.VisualStudio.CustomAction
         return true;
       }
 
-      if (installedMySqlDataVersion != null && installedMySqlDataVersion == internalMySqlDataVersion)
-      {
-        logBuilder.AppendLine(Resources.MySqlDataVersionsMatchNoUpdateRequired);
-        logData = logBuilder.ToString();
-        return true;
-      }
-
       try
       {
         // Remove any existing binding redirect entries in the PKGDEF file.
