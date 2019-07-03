@@ -382,6 +382,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       {
         SendToGeneralOutputWindow(string.Format("An error occurred: {0}\n\n {1}", ex.Message, ex.StackTrace));
         Logger.LogError("An error occured when generating MVC items. The application is not completed.", true);
+        Logger.LogException(ex);
       }
 #endif
     }
