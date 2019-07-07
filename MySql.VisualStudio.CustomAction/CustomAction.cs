@@ -1350,7 +1350,7 @@ namespace MySql.VisualStudio.CustomAction
 
       // Connector/NET is installed.
       if ((internalMySqlDataVersion == installedMySqlDataVersion
-          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries))
+          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries && o.Item2 != PkgdefFileStatus.Unknown))
           ||
           (internalMySqlDataVersion > installedMySqlDataVersion
            && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry

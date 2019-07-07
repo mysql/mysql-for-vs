@@ -509,6 +509,7 @@ namespace MySql.Data.VisualStudio
     private void ConnectorNETRegistryKeyMonitorError(object sender, ErrorEventArgs e)
     {
       Logger.LogException(e.GetException());
+      DisposeRegistryMonitor();
     }
 
     void GenDbScript_BeforeQueryStatus(object sender, EventArgs e)
@@ -1058,7 +1059,14 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     public void Dispose()
     {
-      // Stop registry monitor and dispose of it.
+      DisposeRegistryMonitor();
+    }
+
+    /// <summary>
+    /// Stop registry monitor and dispose of it.
+    /// </summary>
+    private void DisposeRegistryMonitor()
+    {
       if (_registryMonitor != null)
       {
         _registryMonitor.Stop();
