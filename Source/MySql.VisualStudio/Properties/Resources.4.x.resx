@@ -1229,4 +1229,13 @@ Check that the server is running, the database exists, and the user credentials 
   <data name="mysql_AppConfig" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mysql_AppConfig.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ShowViewPermissionMissing" xml:space="preserve">
+    <value>Unable to load view. Check that the user has been granted permissions to the view definition.</value>
+  </data>
+  <data name="UnableToLoadViewWithError" xml:space="preserve">
+    <value>Unable to load view with error: {0}.</value>
+  </data>
+  <data name="ViewNotFound" xml:space="preserve">
+    <value>There is no view with the name '{0}'.</value>
+  </data>
 </root>

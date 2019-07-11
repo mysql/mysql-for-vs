@@ -40,7 +40,7 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                      global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.VisualStudio.Properties.Resources", typeof(Resources).Assembly);
-                   resourceMan = temp;
+                    resourceMan = temp;
                 }
                 return resourceMan;
             }
@@ -3012,6 +3012,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to load view. Check that the user has been granted permissions to the view definition..
+        /// </summary>
+        public static string ShowViewPermissionMissing {
+            get {
+                return ResourceManager.GetString("ShowViewPermissionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap sql_editor_banner {
@@ -3306,6 +3315,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to load view with error: {0}..
+        /// </summary>
+        public static string UnableToLoadViewWithError {
+            get {
+                return ResourceManager.GetString("UnableToLoadViewWithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to parse SQL script. See below for additional details: {0}.
         /// </summary>
         public static string UnableToParseScript {
@@ -3376,6 +3394,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Value_String {
             get {
                 return ResourceManager.GetString("Value_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no view with the name &apos;{0}&apos;..
+        /// </summary>
+        public static string ViewNotFound {
+            get {
+                return ResourceManager.GetString("ViewNotFound", resourceCulture);
             }
         }
         
