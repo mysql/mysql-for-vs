@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -38,6 +38,7 @@ using System.Xml.Linq;
 using EnvDTE;
 using EnvDTE80;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Wizards.Web;
 #if NET_461_OR_GREATER
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -86,11 +87,17 @@ namespace MySql.Data.VisualStudio.WebConfig
     private string _mySQLEF6Version;
 
     /// <summary>
+    /// The name of the configuration file for the current project.
+    /// </summary>
+    private string _configFileName;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="EntityFrameworkConfig"/> class.
     /// </summary>
-    public EntityFrameworkConfig()
+    public EntityFrameworkConfig(string configFileName)
       : base()
     {
+      _configFileName = configFileName;
       typeName = "MySQLEntityFrameworkProvider";
       sectionName = "entityFramework";
       var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
@@ -125,7 +132,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// Initializes the specified web config object, setting the Entity Framework section and the config section of the config file.
     /// </summary>
     /// <param name="wc">The Webconfig object.</param>
-    public override void Initialize(WebConfig wc)
+    public override void Initialize(AppConfig wc)
     {
       _entityFrameworkEnabled = false;
       XmlElement entityFramework = wc.GetProviderSection("entityFramework");
@@ -174,7 +181,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// Saves the specified WebConfig object.
     /// </summary>
     /// <param name="wc">The WebConfig object.</param>
-    public override void Save(WebConfig wc)
+    public override void Save(AppConfig wc)
     {
       if (!Enabled && OriginallyEnabled)
       {
@@ -384,8 +391,12 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
       catch (Exception ex)
       {
-        Logger.LogError($"AddNugetPackage error. -> {ex.Message}");
         Logger.LogError($"{PackageName} installation package failure.{Environment.NewLine}Please check that you have the latest Nuget version and that you have an internet connection.{Environment.NewLine}{ex.Message}");
+        // The inner exception contains the error message that actually informs of the error.
+        if (ex.InnerException != null)
+        {
+          Logger.LogException(ex.InnerException);
+        }
         return;
       }
     }
@@ -475,8 +486,8 @@ namespace MySql.Data.VisualStudio.WebConfig
       {
         activeProj = (Project)activeProjects.GetValue(0);
         vsProj = activeProj.Object as VSProject;
-        string projectPath = System.IO.Path.GetDirectoryName(activeProj.FullName);
-        WebConfigTools.EFWebConfigTransformation(projectPath, EFVersion, mySqlVersion, _mySQLEF6Version);
+        string projectPath = Path.GetDirectoryName(activeProj.FullName);
+        AppConfigTools.EFWebConfigTransformation(projectPath, EFVersion, mySqlVersion, _mySQLEF6Version, _configFileName);
       }
     }
 
@@ -494,7 +505,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         activeProj = (Project)activeProjects.GetValue(0);
         vsProj = activeProj.Object as VSProject;
         string projectPath = System.IO.Path.GetDirectoryName(activeProj.FullName);
-        WebConfigTools.RemoveEFWebConfig(projectPath);
+        AppConfigTools.RemoveEFWebConfig(projectPath, _configFileName);
       }
     }
   }

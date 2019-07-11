@@ -185,7 +185,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           File.WriteAllText(indexPath, contents);
         }
 
-        var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
+        var webConfig = new MySql.Data.VisualStudio.WebConfig.AppConfig(ProjectPath + @"\web.config");
         SendToGeneralOutputWindow("Starting provider configuration...");
         try
         {

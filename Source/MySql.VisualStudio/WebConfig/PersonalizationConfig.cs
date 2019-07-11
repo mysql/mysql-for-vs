@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -59,12 +59,12 @@ namespace MySql.Data.VisualStudio.WebConfig
       foreach (ProviderSettings item in p.Providers)
       {
         if (item.Type.Contains(typeName))
-          return item;        
+          return item;
       }
       return null;
     }
 
-    public override void Initialize(WebConfig wc)
+    public override void Initialize(AppConfig wc)
     {
       GetDefaults();
       values = defaults;
@@ -90,10 +90,10 @@ namespace MySql.Data.VisualStudio.WebConfig
         return;
 
       var personalizationNode = e.FirstChild as XmlElement;  // move to the <personalization> element
-		    
+
       if (personalizationNode == null || personalizationNode.FirstChild == null)
-        return;			
-		
+        return;
+
       string defaultProvider = personalizationNode.GetAttribute("defaultProvider");
 
      
@@ -116,10 +116,10 @@ namespace MySql.Data.VisualStudio.WebConfig
           values.AutoGenSchema = GetBoolValue(e.GetAttribute("autogenerateschema"), false);        
       }
       values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
-     
+
     }
 
-    public override void Save(WebConfig wc)
+    public override void Save(AppConfig wc)
     {
 
       if (!_membershipEnabled)

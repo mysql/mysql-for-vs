@@ -1,4 +1,4 @@
-// Copyright (c) 2009, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -101,7 +101,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       return defaultValue;
     }
 
-    public virtual void Initialize(WebConfig wc)
+    public virtual void Initialize(AppConfig wc)
     {
       // first load up the defaults
       GetDefaults();
@@ -166,7 +166,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       provider.SetAttribute("enableExpireCallback", values.EnableExpireCallback.ToString());
     }
 
-    public virtual void Save(WebConfig wc)
+    public virtual void Save(AppConfig wc)
     {
       if (OriginallyEnabled)
         wc.RemoveProvider(sectionName, defaults.ProviderName, values.ProviderName);

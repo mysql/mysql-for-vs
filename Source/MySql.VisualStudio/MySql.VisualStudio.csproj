@@ -858,7 +858,7 @@
     </Compile>
     <Compile Include="WebConfig\SimpleMembershipConfig.cs" />
     <Compile Include="WebConfig\SiteMapConfig.cs" />
-    <Compile Include="WebConfig\WebConfig.cs">
+    <Compile Include="WebConfig\AppConfig.cs">
     </Compile>
     <Compile Include="WebConfig\AppConfigDlg.cs">
       <SubType>Form</SubType>
@@ -866,7 +866,7 @@
     <Compile Include="WebConfig\AppConfigDlg.Designer.cs">
       <DependentUpon>AppConfigDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebConfig\WebConfigTools.cs" />
+    <Compile Include="WebConfig\AppConfigTools.cs" />
     <Compile Include="Wizards\BaseWizard.cs" />
     <Compile Include="Wizards\BaseWizardForm.cs">
       <SubType>Form</SubType>
