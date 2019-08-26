@@ -2723,6 +2723,42 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generating Entity Framework model....
+        /// </summary>
+        public static string ItemTemplatesMVCGeneratingEFModel {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCGeneratingEFModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tables have been selected by the user..
+        /// </summary>
+        public static string ItemTemplatesMVCNoAction {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCNoAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished MVC item generation..
+        /// </summary>
+        public static string ItemTemplatesMVCProjectGenerationFinished {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCProjectGenerationFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting project generation....
+        /// </summary>
+        public static string ItemTemplatesMVCProjectGenerationStarted {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCProjectGenerationStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Key {

@@ -125,7 +125,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         dte = automationObject as DTE;
         Array activeProjects = (Array)dte.ActiveSolutionProjects;
         Project activeProj = (Project)activeProjects.GetValue(0);
-        _projectPath = System.IO.Path.GetDirectoryName(activeProj.FullName);
+        _projectPath = Path.GetDirectoryName(activeProj.FullName);
         _projectNamespace = activeProj.Properties.Item("DefaultNamespace").Value.ToString();
         _NetFxVersion = replacementsDictionary["$targetframeworkversion$"];
         _itemTemplateTempPath = customParams[0].ToString().Substring(0, customParams[0].ToString().LastIndexOf("\\"));
@@ -179,11 +179,11 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         _generalPane.Activate();
       }
 
-      SendToGeneralOutputWindow("Starting project generation...");
       if (_selectedTables != null && _dataAccessTechnology != DataAccessTechnology.None)
       {
+        SendToGeneralOutputWindow(Resources.ItemTemplatesMVCProjectGenerationStarted);
         _selectedTables.ForEach(t => tables.Add(t.Name));
-        SendToGeneralOutputWindow("Generating Entity Framework model...");
+        SendToGeneralOutputWindow(Resources.ItemTemplatesMVCGeneratingEFModel);
         if (tables.Count > 0)
         {
           if (_dataAccessTechnology == DataAccessTechnology.EntityFramework5)
@@ -197,17 +197,20 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 
           if (string.IsNullOrEmpty(_projectPath))
           {
-            _projectPath = System.IO.Path.GetDirectoryName(project.FullName);
+            _projectPath = Path.GetDirectoryName(project.FullName);
           }
 
           string modelPath = Path.Combine(_projectPath, "Models");
           ItemTemplateUtilities.GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(_connectionString), _selectedModel, tables,
               modelPath, "1", _language, ColumnMappings, ref TablesIncludedInModel);
           GenerateMVCItems(vsProj);
+          SendToGeneralOutputWindow(Resources.ItemTemplatesMVCProjectGenerationFinished);
+
+          return;
         }
       }
 
-      SendToGeneralOutputWindow("Finished MVC item generation.");
+      SendToGeneralOutputWindow(Resources.ItemTemplatesMVCNoAction);
     }
 
     /// <summary>
@@ -269,8 +272,8 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <summary>
     /// Creates the MVC item and add it to the MVC project.
     /// </summary>
-    /// <param name="vsProj">The Visual Studio project.</param>
-    private void GenerateMVCItems(VSProject vsProj)
+    /// <param name="visualStudioProject">The Visual Studio project.</param>
+    private void GenerateMVCItems(VSProject visualStudioProject)
     {
       if (string.IsNullOrEmpty(_connectionString))
       {
@@ -283,16 +286,15 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       }
 
 #if CLR4 || NET_46_OR_GREATER
-      IServiceProvider serviceProvider = new Microsoft.VisualStudio.Shell.ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte);
-      Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplating t4 = serviceProvider.GetService(typeof(STextTemplating)) as ITextTemplating;
-      ITextTemplatingSessionHost sessionHost = t4 as ITextTemplatingSessionHost;
+      var serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte);
+      var t4 = serviceProvider.GetService(typeof(STextTemplating)) as ITextTemplating;
+      var sessionHost = t4 as ITextTemplatingSessionHost;
       var controllerClassPath = string.Empty;
       var IndexFilePath = string.Empty;
       var fileExtension = string.Empty;
-      Version productVersion = Assembly.GetExecutingAssembly().GetName().Version;
-      var version = String.Format("{0}.{1}.{2}", productVersion.Major, productVersion.Minor, productVersion.Build);
-      double visualStudioVersion;
-      double.TryParse(ItemTemplateUtilities.GetVisualStudioVersion(dte), out visualStudioVersion);
+      var productVersion = Assembly.GetExecutingAssembly().GetName().Version;
+      var version = string.Format("{0}.{1}.{2}", productVersion.Major, productVersion.Minor, productVersion.Build);
+      double.TryParse(ItemTemplateUtilities.GetVisualStudioVersion(dte), out double visualStudioVersion);
       if (_language == LanguageGenerator.CSharp)
       {
         controllerClassPath = Path.GetFullPath(string.Format("{0}{1}{2}", T4Templates_Path, version, cSharpControllerClass_FileName));
@@ -306,10 +308,9 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         fileExtension = "vb";
       }
 
-      StringBuilder catalogs = new StringBuilder();
+      var catalogs = new StringBuilder();
       catalogs = new StringBuilder("<h3> Catalog list</h3>");
       catalogs.AppendLine();
-
       foreach (var table in TablesIncludedInModel)
       {
         catalogs.AppendLine(string.Format(@"<div> @Html.ActionLink(""{0}"",""Index"", ""{0}"")</div>",
@@ -320,7 +321,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       {
         foreach (var table in TablesIncludedInModel)
         {
-          // creating controller file
+          // Creating controller file.
           sessionHost.Session = sessionHost.CreateSession();
           sessionHost.Session["namespaceParameter"] = string.Format("{0}.Controllers", _projectNamespace);
           sessionHost.Session["applicationNamespaceParameter"] = string.Format("{0}.Models", _projectNamespace);
@@ -355,9 +356,9 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
             }
           }
 
-          T4Callback cb = new T4Callback();
-          StringBuilder resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));
-          string controllerFilePath = string.Format(@"{0}\Controllers\{1}Controller.{2}", _projectPath,
+          var cb = new T4Callback();
+          var resultControllerFile = new StringBuilder(t4.ProcessTemplate(controllerClassPath, File.ReadAllText(controllerClassPath), cb));
+          var controllerFilePath = string.Format(@"{0}\Controllers\{1}Controller.{2}", _projectPath,
                                                       table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1), fileExtension);
           File.WriteAllText(controllerFilePath, resultControllerFile.ToString());
           if (cb.errorMessages.Count > 0)
@@ -365,7 +366,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
             File.AppendAllLines(controllerFilePath, cb.errorMessages);
           }
 
-          vsProj.Project.ProjectItems.AddFromFile(controllerFilePath);
+          visualStudioProject.Project.ProjectItems.AddFromFile(controllerFilePath);
           var viewPath = Path.GetFullPath(_projectPath + string.Format(@"\Views\{0}", table.Key[0].ToString().ToUpperInvariant() + table.Key.Substring(1)));
           Directory.CreateDirectory(viewPath);
           string resultViewFile = t4.ProcessTemplate(IndexFilePath, File.ReadAllText(IndexFilePath), cb);
@@ -375,7 +376,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
             File.AppendAllLines(controllerFilePath, cb.errorMessages);
           }
 
-          vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));
+          visualStudioProject.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));
         }
       }
       catch (Exception ex)

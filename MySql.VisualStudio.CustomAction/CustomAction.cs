@@ -70,7 +70,7 @@ namespace MySql.VisualStudio.CustomAction
 
     #region Fields
 
-    private static Version _internalMySqlDataVersion = new Version("8.0.17.0");
+    private static Version _internalMySqlDataVersion = new Version("8.0.18.0");
     private static string _vs2017CommunityInstallationPath;
     private static string _VS2017CommunityX64ExtensionsFilePath;
     private static string _VS2017CommunityX86ExtensionsFilePath;

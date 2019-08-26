@@ -90,7 +90,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     public AppConfigDlg()
     {
       var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(8,0,17);
+      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(8, 0, 18);
       InitializeComponent();
       dte = MySqlDataProviderPackage.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
       if (dte != null)

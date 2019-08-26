@@ -471,11 +471,11 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       if (project != null)
       {
         string projectNamespace = project.Properties.Item("DefaultNamespace").Value.ToString();
-        string ns = ItemTemplateUtilities.GetCanonicalIdentifier(projectNamespace);
+        string ns = GetCanonicalIdentifier(projectNamespace);
         EntityFrameworkGenerator gen = new EntityFrameworkGenerator(connection, modelName, tables, modelPath, ns, currentEntityFrameworkVersion, language, vsProj, columnMappings);
         vsProj = project.Object as VSProject;
         project.DTE.Solution.SolutionBuild.Build(true);
-        string projectPath = System.IO.Path.GetDirectoryName(project.FullName);
+        string projectPath = Path.GetDirectoryName(project.FullName);
         gen.GenerateItemTemplates(projectPath, modelName);
         if (gen.TablesInModel.Count() > 0)
         {

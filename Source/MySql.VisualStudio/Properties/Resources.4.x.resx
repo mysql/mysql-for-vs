@@ -1238,4 +1238,16 @@ Check that the server is running, the database exists, and the user credentials 
   <data name="ViewNotFound" xml:space="preserve">
     <value>There is no view with the name '{0}'.</value>
   </data>
+  <data name="ItemTemplatesMVCGeneratingEFModel" xml:space="preserve">
+    <value>Generating Entity Framework model...</value>
+  </data>
+  <data name="ItemTemplatesMVCNoAction" xml:space="preserve">
+    <value>No tables have been selected by the user.</value>
+  </data>
+  <data name="ItemTemplatesMVCProjectGenerationFinished" xml:space="preserve">
+    <value>Finished MVC item generation.</value>
+  </data>
+  <data name="ItemTemplatesMVCProjectGenerationStarted" xml:space="preserve">
+    <value>Starting project generation...</value>
+  </data>
 </root>
