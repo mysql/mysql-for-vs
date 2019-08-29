@@ -576,27 +576,27 @@
     <CustomAction Id="DeleteRegKeyAndExtensionsFile_VS2019_Pro" DllEntry="DeleteRegKeyAndExtensionsFile" BinaryKey="ValidateVSRegKey" Execute="deferred" Return="check" Impersonate="no" />
 
     <InstallExecuteSequence>
-      <Custom Action="SetSessionValue_VS2015" After="InstallInitialize"><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2015" After="SetSessionValue_VS2015"><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2015" After='CreateRegKeyAndExtensionsFile_VS2015'><![CDATA[NOT VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2017" After="SetRegKeyValuesCreated_VS2015"><![CDATA[NOT VS_2017_COM_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2017" After="SetSessionValue_VS2017"><![CDATA[NOT VS_2017_COM_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2017" After='CreateRegKeyAndExtensionsFile_VS2017'><![CDATA[NOT VS_2017_COM_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2017_Ent" After="SetRegKeyValuesCreated_VS2017"><![CDATA[NOT VS_2017_ENT_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2017_Ent" After="SetSessionValue_VS2017_Ent"><![CDATA[NOT VS_2017_ENT_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2017_Ent" After='CreateRegKeyAndExtensionsFile_VS2017_Ent'><![CDATA[NOT VS_2017_ENT_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2017_Pro" After="SetRegKeyValuesCreated_VS2017_Ent"><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2017_Pro" After="SetSessionValue_VS2017_Pro"><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2017_Pro" After='CreateRegKeyAndExtensionsFile_VS2017_Pro'><![CDATA[NOT VS_2017_PRO_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2019" After="SetRegKeyValuesCreated_VS2017_Pro"><![CDATA[NOT VS_2019_COM_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019" After="SetSessionValue_VS2019"><![CDATA[NOT VS_2019_COM_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2019" After='CreateRegKeyAndExtensionsFile_VS2019'><![CDATA[NOT VS_2019_COM_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2019_Ent" After="SetRegKeyValuesCreated_VS2019"><![CDATA[NOT VS_2019_ENT_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019_Ent" After="SetSessionValue_VS2019_Ent"><![CDATA[NOT VS_2019_ENT_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2019_Ent" After='CreateRegKeyAndExtensionsFile_VS2019_Ent'><![CDATA[NOT VS_2019_ENT_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetSessionValue_VS2019_Pro" After="SetRegKeyValuesCreated_VS2019_Ent"><![CDATA[NOT VS_2019_PRO_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019_Pro" After="SetSessionValue_VS2019_Pro"><![CDATA[NOT VS_2019_PRO_PATH_MAIN >< "Program Files"]]></Custom>
-      <Custom Action="SetRegKeyValuesCreated_VS2019_Pro" After='CreateRegKeyAndExtensionsFile_VS2019_Pro'><![CDATA[NOT VS_2019_PRO_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetSessionValue_VS2015" After="InstallInitialize"><![CDATA[VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2015" After="SetSessionValue_VS2015"><![CDATA[VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2015" After='CreateRegKeyAndExtensionsFile_VS2015'><![CDATA[VS_2015_PATH_MAIN >< "Program Files"]]></Custom>
+      <Custom Action="SetSessionValue_VS2017" After="SetRegKeyValuesCreated_VS2015"><![CDATA[VS2017COMINSTALL = 1]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2017" After="SetSessionValue_VS2017"><![CDATA[VS2017COMINSTALL = 1]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2017" After='CreateRegKeyAndExtensionsFile_VS2017'><![CDATA[VS2017COMINSTALL = 1]]></Custom>
+      <Custom Action="SetSessionValue_VS2017_Ent" After="SetRegKeyValuesCreated_VS2017"><![CDATA[VS2017ENTINSTALL = 1]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2017_Ent" After="SetSessionValue_VS2017_Ent"><![CDATA[VS2017ENTINSTALL = 1]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2017_Ent" After='CreateRegKeyAndExtensionsFile_VS2017_Ent'><![CDATA[VS2017ENTINSTALL = 1]]></Custom>
+      <Custom Action="SetSessionValue_VS2017_Pro" After="SetRegKeyValuesCreated_VS2017_Ent"><![CDATA[VS2017PROINSTALL = 1]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2017_Pro" After="SetSessionValue_VS2017_Pro"><![CDATA[VS2017PROINSTALL = 1]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2017_Pro" After='CreateRegKeyAndExtensionsFile_VS2017_Pro'><![CDATA[VS2017PROINSTALL = 1]]></Custom>
+      <Custom Action="SetSessionValue_VS2019" After="SetRegKeyValuesCreated_VS2017_Pro"><![CDATA[VS2019COMINSTALL = 1]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019" After="SetSessionValue_VS2019"><![CDATA[VS2019COMINSTALL = 1]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2019" After='CreateRegKeyAndExtensionsFile_VS2019'><![CDATA[VS2019COMINSTALL = 1]]></Custom>
+      <Custom Action="SetSessionValue_VS2019_Ent" After="SetRegKeyValuesCreated_VS2019"><![CDATA[VS2019ENTINSTALL = 1]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019_Ent" After="SetSessionValue_VS2019_Ent"><![CDATA[VS2019ENTINSTALL = 1]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2019_Ent" After='CreateRegKeyAndExtensionsFile_VS2019_Ent'><![CDATA[VS2019ENTINSTALL = 1]]></Custom>
+      <Custom Action="SetSessionValue_VS2019_Pro" After="SetRegKeyValuesCreated_VS2019_Ent"><![CDATA[VS2019PROINSTALL = 1]]></Custom>
+      <Custom Action="CreateRegKeyAndExtensionsFile_VS2019_Pro" After="SetSessionValue_VS2019_Pro"><![CDATA[VS2019PROINSTALL = 1]]></Custom>
+      <Custom Action="SetRegKeyValuesCreated_VS2019_Pro" After='CreateRegKeyAndExtensionsFile_VS2019_Pro'><![CDATA[VS2019PROINSTALL = 1]]></Custom>
 
       <RemoveExistingProducts After='InstallExecute' />
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>

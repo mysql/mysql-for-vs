@@ -181,9 +181,9 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 
       if (_selectedTables != null && _dataAccessTechnology != DataAccessTechnology.None)
       {
-        SendToGeneralOutputWindow(Resources.ItemTemplatesMVCProjectGenerationStarted);
+        SendToGeneralOutputWindow(Properties.Resources.ItemTemplatesMVCProjectGenerationStarted);
         _selectedTables.ForEach(t => tables.Add(t.Name));
-        SendToGeneralOutputWindow(Resources.ItemTemplatesMVCGeneratingEFModel);
+        SendToGeneralOutputWindow(Properties.Resources.ItemTemplatesMVCGeneratingEFModel);
         if (tables.Count > 0)
         {
           if (_dataAccessTechnology == DataAccessTechnology.EntityFramework5)
@@ -204,13 +204,13 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
           ItemTemplateUtilities.GenerateEntityFrameworkModel(project, vsProj, new MySqlConnection(_connectionString), _selectedModel, tables,
               modelPath, "1", _language, ColumnMappings, ref TablesIncludedInModel);
           GenerateMVCItems(vsProj);
-          SendToGeneralOutputWindow(Resources.ItemTemplatesMVCProjectGenerationFinished);
+          SendToGeneralOutputWindow(Properties.Resources.ItemTemplatesMVCProjectGenerationFinished);
 
           return;
         }
       }
 
-      SendToGeneralOutputWindow(Resources.ItemTemplatesMVCNoAction);
+      SendToGeneralOutputWindow(Properties.Resources.ItemTemplatesMVCNoAction);
     }
 
     /// <summary>
