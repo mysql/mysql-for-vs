@@ -441,7 +441,10 @@ namespace MySql.Data.VisualStudio.WebConfig
         radioBtnEF5.Checked = options.EF5;
         radioBtnEF6.Checked = options.EF6;
         if (_connectorVersion >= new Version(6, 10))
+        {
           radioBtnEF5.Enabled = false;
+          radioBtnEF5.Visible = false;
+        }
       }
       else
       {
