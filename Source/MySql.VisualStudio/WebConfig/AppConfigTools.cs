@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -36,7 +36,7 @@ using System.Xml.Linq;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
-  public static class WebConfigTools
+  public static class AppConfigTools
   {
     private const string EF5Version = "5.0.0";
     private const string EF6Version = "6.1.3";
@@ -47,11 +47,10 @@ namespace MySql.Data.VisualStudio.WebConfig
     private const string EF5MySqlClientFactoryTypeValue = "MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d";
     private const string EF5MySQLProviderTypeValue = "MySql.Data.MySqlClient.MySqlProviderServices, MySql.Data.Entity.EF5, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d";
     private const string SQLServerProviderTypeValue = "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer";
-    private const string webConfigFileName = "web.config";
 
     private static Version _connectorVersion;
     private static string _defaultConnectionFactoryEF6TypeValue = "MySql.Data.Entity.MySqlConnectionFactory, MySql.Data.Entity.EF6";
-    
+
 
     /// <summary>
     /// Transforms a config file in order to add the Entity Framework settings to it.
@@ -60,19 +59,20 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// <param name="EFVersion">The Entity Framework version.</param>
     /// <param name="mySQLVersion">The My SQL version.</param>
     /// <param name="connectorVersion">The version of the connector/net assembly installed.</param>
-    public static void EFWebConfigTransformation(string projectPath, string EFVersion, string mySQLVersion, string connectorVersion)
+    /// <param name="configFileName">The name of the configuration file of the current project.</param>
+    public static void EFWebConfigTransformation(string projectPath, string EFVersion, string mySQLVersion, string connectorVersion, string configFileName)
     {
-      if (!string.IsNullOrEmpty(projectPath) && File.Exists(Path.Combine(projectPath, webConfigFileName)))
+      if (!string.IsNullOrEmpty(projectPath) && File.Exists(Path.Combine(projectPath, configFileName)))
       {
         _connectorVersion = new Version(connectorVersion);
         if (_connectorVersion >= new Version(8,0))
           _defaultConnectionFactoryEF6TypeValue = "MySql.Data.EntityFramework.MySqlConnectionFactory, MySql.Data.EntityFramework";
 
-        XElement webConfig = XElement.Load(Path.Combine(projectPath, webConfigFileName));
+        XElement webConfig = XElement.Load(Path.Combine(projectPath, configFileName));
         RemoveEFSettings(webConfig);
         ConfigureEntityFrameworkSection(webConfig, EFVersion, mySQLVersion);
         ConfigureSystemDataSection(webConfig, EFVersion, mySQLVersion, connectorVersion);
-        webConfig.Save(Path.Combine(projectPath, webConfigFileName));
+        webConfig.Save(Path.Combine(projectPath, configFileName));
       }
     }
 
@@ -80,11 +80,12 @@ namespace MySql.Data.VisualStudio.WebConfig
     /// Removes all the Entity Framework configuration from a config file.
     /// </summary>
     /// <param name="projectPath">The project path.</param>
-    public static void RemoveEFWebConfig(string projectPath)
+    /// <param name="configFileName">The name of the configuration file of the current project.</param>
+    public static void RemoveEFWebConfig(string projectPath, string configFileName)
     {
-      if (!string.IsNullOrEmpty(projectPath) && File.Exists(Path.Combine(projectPath, webConfigFileName)))
+      if (!string.IsNullOrEmpty(projectPath) && File.Exists(Path.Combine(projectPath, configFileName)))
       {
-        XElement webConfig = XElement.Load(Path.Combine(projectPath, webConfigFileName));
+        XElement webConfig = XElement.Load(Path.Combine(projectPath, configFileName));
         var mySQLDBProviderFactories = webConfig.Elements("system.data").Elements("DbProviderFactories").Elements()
                                         .Where(a => a.Attribute("invariant") != null && a.Attribute("invariant").Value == "MySql.Data.MySqlClient");
         if (mySQLDBProviderFactories != null)
@@ -106,7 +107,7 @@ namespace MySql.Data.VisualStudio.WebConfig
           mySQLEFProvider.Remove();
         }
 
-        webConfig.Save(Path.Combine(projectPath, webConfigFileName));
+        webConfig.Save(Path.Combine(projectPath, configFileName));
       }
     }
 

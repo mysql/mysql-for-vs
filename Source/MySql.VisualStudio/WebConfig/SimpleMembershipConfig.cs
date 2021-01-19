@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2009, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -66,10 +66,10 @@ namespace MySql.Data.VisualStudio.WebConfig
       set { values = value; }
     }
 
-    public override void Initialize(WebConfig wc)
+    public override void Initialize(AppConfig wc)
     {
-      base.Initialize(wc);      
-      
+      base.Initialize(wc);
+
       XmlElement e = wc.GetProviderSection(sectionName);
       if (e != null)
       {

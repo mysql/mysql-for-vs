@@ -177,6 +177,7 @@
     </Reference>
     <Reference Include="MySql.Data">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -858,7 +859,7 @@
     </Compile>
     <Compile Include="WebConfig\SimpleMembershipConfig.cs" />
     <Compile Include="WebConfig\SiteMapConfig.cs" />
-    <Compile Include="WebConfig\WebConfig.cs">
+    <Compile Include="WebConfig\AppConfig.cs">
     </Compile>
     <Compile Include="WebConfig\AppConfigDlg.cs">
       <SubType>Form</SubType>
@@ -866,7 +867,7 @@
     <Compile Include="WebConfig\AppConfigDlg.Designer.cs">
       <DependentUpon>AppConfigDlg.cs</DependentUpon>
     </Compile>
-    <Compile Include="WebConfig\WebConfigTools.cs" />
+    <Compile Include="WebConfig\AppConfigTools.cs" />
     <Compile Include="Wizards\BaseWizard.cs" />
     <Compile Include="Wizards\BaseWizardForm.cs">
       <SubType>Form</SubType>
@@ -1183,6 +1184,7 @@
     <None Include="Resources\MySQLforVisualStudio-Success.png" />
     <None Include="Resources\MySQLforVisualStudio-Warning.png" />
     <Content Include="Resources\MySQLforVisualStudio.png" />
+    <None Include="Resources\mysql_AppConfig.png" />
     <Content Include="Resources\sql_editor_disconnect.png">
     </Content>
     <Content Include="Resources\sql_editor_executionplan.png">

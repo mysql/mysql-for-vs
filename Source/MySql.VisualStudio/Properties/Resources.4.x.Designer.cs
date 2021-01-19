@@ -40,7 +40,7 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                      global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.VisualStudio.Properties.Resources", typeof(Resources).Assembly);
-                   resourceMan = temp;
+                    resourceMan = temp;
                 }
                 return resourceMan;
             }
@@ -2723,6 +2723,42 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generating Entity Framework model....
+        /// </summary>
+        public static string ItemTemplatesMVCGeneratingEFModel {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCGeneratingEFModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tables have been selected by the user..
+        /// </summary>
+        public static string ItemTemplatesMVCNoAction {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCNoAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished MVC item generation..
+        /// </summary>
+        public static string ItemTemplatesMVCProjectGenerationFinished {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCProjectGenerationFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting project generation....
+        /// </summary>
+        public static string ItemTemplatesMVCProjectGenerationStarted {
+            get {
+                return ResourceManager.GetString("ItemTemplatesMVCProjectGenerationStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Key {
@@ -2753,6 +2789,16 @@ namespace MySql.Data.VisualStudio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap mysql_AppConfig {
+            get {
+                object obj = ResourceManager.GetObject("mysql_AppConfig", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap mysql_ItemTemplate_wizard {
             get {
                 object obj = ResourceManager.GetObject("mysql_ItemTemplate_wizard", resourceCulture);
@@ -2766,16 +2812,6 @@ namespace MySql.Data.VisualStudio.Properties {
         public static System.Drawing.Bitmap mysql_project_wizard {
             get {
                 object obj = ResourceManager.GetObject("mysql_project_wizard", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap mysql_WebsiteConfig {
-            get {
-                object obj = ResourceManager.GetObject("mysql_WebsiteConfig", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -3008,6 +3044,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Provider_ShortDisplayName {
             get {
                 return ResourceManager.GetString("Provider_ShortDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to load view. Check that the user has been granted permissions to the view definition..
+        /// </summary>
+        public static string ShowViewPermissionMissing {
+            get {
+                return ResourceManager.GetString("ShowViewPermissionMissing", resourceCulture);
             }
         }
         
@@ -3306,6 +3351,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to load view with error: {0}..
+        /// </summary>
+        public static string UnableToLoadViewWithError {
+            get {
+                return ResourceManager.GetString("UnableToLoadViewWithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to parse SQL script. See below for additional details: {0}.
         /// </summary>
         public static string UnableToParseScript {
@@ -3376,6 +3430,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Value_String {
             get {
                 return ResourceManager.GetString("Value_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no view with the name &apos;{0}&apos;..
+        /// </summary>
+        public static string ViewNotFound {
+            get {
+                return ResourceManager.GetString("ViewNotFound", resourceCulture);
             }
         }
         

@@ -47,7 +47,10 @@ namespace MySql.Data.VisualStudio.WebConfig
       public GenericConfig ProviderConfig;
     }
 
-    private string configFileName;
+    /// <summary>
+    /// The name of the configuration file for the current project.
+    /// </summary>
+    private string _configFileName;
     private DTE2 dte;
     private Solution2 solution;
     private Project project;
@@ -87,7 +90,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     public AppConfigDlg()
     {
       var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(8,0,17);
+      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(8, 0, 18);
       InitializeComponent();
       dte = MySqlDataProviderPackage.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
       if (dte != null)
@@ -96,8 +99,8 @@ namespace MySql.Data.VisualStudio.WebConfig
       }
 
       FindCurrentProject();
-      EnsureConfigFile();      
-      if (configFileName.EndsWith(APP_CONFIG_FILE_NAME, StringComparison.InvariantCultureIgnoreCase))
+      EnsureConfigFile();
+      if (_configFileName.EndsWith(APP_CONFIG_FILE_NAME, StringComparison.InvariantCultureIgnoreCase))
       {
         pages = new WizardPage[1];
         pagesDescription = new string[1] { "Entity Framework" };
@@ -202,28 +205,28 @@ namespace MySql.Data.VisualStudio.WebConfig
           continue;
         }
 
-        configFileName = items.get_FileNames(1);
+        _configFileName = items.get_FileNames(1);
         break;
       }
 
-      if (configFileName == null)
+      if (_configFileName == null)
       {
         string template = solution.GetProjectItemTemplate("WebConfig.zip", "Web/CSharp");
         ProjectItem item = project.ProjectItems.AddFromTemplate(template, WEB_CONFIG_FILE_NAME);
-        configFileName = item.get_FileNames(1);
+        _configFileName = item.get_FileNames(1);
       }
     }
 
     private void LoadInitialState()
     {
-      if (configFileName == null)
+      if (_configFileName == null)
       {
         return;
       }
 
-      WebConfig wc = new WebConfig(configFileName);
+      AppConfig wc = new AppConfig(_configFileName);
       LoadInitialEntityFrameworkState();
-      if (configFileName.EndsWith(WEB_CONFIG_FILE_NAME, StringComparison.InvariantCultureIgnoreCase))
+      if (_configFileName.EndsWith(WEB_CONFIG_FILE_NAME, StringComparison.InvariantCultureIgnoreCase))
       {
         LoadInitialMembershipState();
         LoadInitialSimpleMembershipState();
@@ -251,7 +254,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       pages[ENTITYFRAMEWORK_INDEX].Title = "Entity Framework";
       pages[ENTITYFRAMEWORK_INDEX].Description = "Set options for use with Entity Framework";
       pages[ENTITYFRAMEWORK_INDEX].EnabledString = "Use MySQL with Entity Framework";
-      pages[ENTITYFRAMEWORK_INDEX].ProviderConfig = new EntityFrameworkConfig();
+      pages[ENTITYFRAMEWORK_INDEX].ProviderConfig = new EntityFrameworkConfig(_configFileName);
     }
 
     private void LoadInitialMembershipState()
@@ -438,7 +441,10 @@ namespace MySql.Data.VisualStudio.WebConfig
         radioBtnEF5.Checked = options.EF5;
         radioBtnEF6.Checked = options.EF6;
         if (_connectorVersion >= new Version(6, 10))
+        {
           radioBtnEF5.Enabled = false;
+          radioBtnEF5.Visible = false;
+        }
       }
       else
       {
@@ -515,9 +521,9 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     private void Finish()
     {
-      if (configFileName.EndsWith(WEB_CONFIG_FILE_NAME, StringComparison.InvariantCultureIgnoreCase))
+      if (_configFileName.EndsWith(WEB_CONFIG_FILE_NAME, StringComparison.InvariantCultureIgnoreCase))
       {
-        WebConfig w = new WebConfig(configFileName);
+        AppConfig w = new AppConfig(_configFileName);
 
         //If Membership is selected then save Simple Membership first, because these providers are in the same section,
         //so if any is removed but called second place it will remove the entire section
@@ -539,8 +545,8 @@ namespace MySql.Data.VisualStudio.WebConfig
         pages[PERSONALIZATION_INDEX].ProviderConfig.Save(w);
         w.Save();
       }
-      
-      WebConfig webConfig = new WebConfig(configFileName);
+
+      AppConfig webConfig = new AppConfig(_configFileName);
       pages[ENTITYFRAMEWORK_INDEX].ProviderConfig.Save(webConfig);
       project.DTE.Solution.SolutionBuild.Build(true);
       Close();

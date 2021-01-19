@@ -185,7 +185,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           File.WriteAllText(indexPath, contents);
         }
 
-        var webConfig = new MySql.Data.VisualStudio.WebConfig.WebConfig(ProjectPath + @"\web.config");
+        var webConfig = new MySql.Data.VisualStudio.WebConfig.AppConfig(ProjectPath + @"\web.config");
         SendToGeneralOutputWindow("Starting provider configuration...");
         try
         {
@@ -492,9 +492,10 @@ namespace MySql.Data.VisualStudio.Wizards.Web
           vsProj.Project.ProjectItems.AddFromFile(string.Format(viewPath + @"\Index.{0}html", fileExtension));
         }
       }
-      catch
+      catch(Exception ex)
       {
         Logger.LogError("An error occured when generating MVC items. The application is not completed.", true);
+        Logger.LogException(ex);
       }
 #endif
     }

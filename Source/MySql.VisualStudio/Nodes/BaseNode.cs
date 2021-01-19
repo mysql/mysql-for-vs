@@ -429,6 +429,11 @@ namespace MySql.Data.VisualStudio
       {
         return conn.GetSchema(schemaName, restrictions);
       }
+      catch (Exception ex)
+      {
+        Logger.LogException(ex);
+        return null;
+      }
       finally
       {
         ReleaseHierarchyAccessorConnection();

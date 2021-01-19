@@ -190,7 +190,7 @@
 
     <Feature Id="EntityFramework2015" Level="1" Display="expand" Title="Entity Framework Support for VS 2015"
                Description="Support for the entity framework">
-      <Condition Level='0'>Not VS_2015_PATH AND Not Installed</Condition>
+      <Condition Level='0'>NOT VS_2015_PATH</Condition>
       <ComponentRef Id="EF.T4.VS14" />
       <ComponentRef Id="EF.PA14.v45"/>
       <ComponentRef Id="Remove.EF.PA14.v45"/>
@@ -198,21 +198,21 @@
 
     <Feature Id="EntityFramework2017" Level="1" Display="expand" Title="Entity Framework Support for VS 2017"
            Description="Support for the entity framework">
-      <Condition Level='0'>(Not VS_2017_COM_PATH AND Not VS_2017_ENT_PATH AND Not VS_2017_PRO_PATH) AND Not Installed</Condition>
+      <Condition Level='0'>NOT VS2017COMINSTALL AND NOT VS2017ENTINSTALL AND NOT VS2017PROINSTALL</Condition>
       <Feature Id='EntityFramework2017Community' Level='1' Title='Community Edition'>
-        <Condition Level='0'>Not VS_2017_COM_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2017COMINSTALL</Condition>
         <ComponentRef Id="EF.T4.VS15" />
         <ComponentRef Id="EF.PA15.v45"/>
         <ComponentRef Id="Remove.EF.PA15.v45"/>
       </Feature>
       <Feature Id='EntityFramework2017Enterprise' Level='1' Title='Enterprise Edition'>
-        <Condition Level='0'>Not VS_2017_ENT_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2017ENTINSTALL</Condition>
         <ComponentRef Id="EF.T4.VS15.ENT" />
         <ComponentRef Id="EF.PA15.Ent.v45"/>
         <ComponentRef Id="Remove.EF.PA15.Ent.v45"/>
       </Feature>
       <Feature Id='EntityFramework2017Professional' Level='1' Title='Professional Edition'>
-        <Condition Level='0'>Not VS_2017_PRO_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2017PROINSTALL</Condition>
         <ComponentRef Id="EF.T4.VS15.PRO" />
         <ComponentRef Id="EF.PA15.Pro.v45"/>
         <ComponentRef Id="Remove.EF.PA15.Pro.v45"/>
@@ -221,21 +221,21 @@
 
     <Feature Id="EntityFramework2019" Level="1" Display="expand" Title="Entity Framework Support for VS 2019"
            Description="Support for the entity framework">
-      <Condition Level='0'>(Not VS_2019_COM_PATH AND Not VS_2019_ENT_PATH AND Not VS_2019_PRO_PATH) AND Not Installed</Condition>
+      <Condition Level='0'>NOT VS2019COMINSTALL AND NOT VS2019ENTINSTALL AND NOT VS2019PROINSTALL</Condition>
       <Feature Id='EntityFramework2019Community' Level='1' Title='Community Edition'>
-        <Condition Level='0'>Not VS_2019_COM_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2019COMINSTALL</Condition>
         <ComponentRef Id="EF.T4.VS16" />
         <ComponentRef Id="EF.PA16.v45"/>
         <ComponentRef Id="Remove.EF.PA16.v45"/>
       </Feature>
       <Feature Id='EntityFramework2019Enterprise' Level='1' Title='Enterprise Edition'>
-        <Condition Level='0'>Not VS_2019_ENT_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2019ENTINSTALL</Condition>
         <ComponentRef Id="EF.T4.VS16.ENT" />
         <ComponentRef Id="EF.PA16.Ent.v45"/>
         <ComponentRef Id="Remove.EF.PA16.Ent.v45"/>
       </Feature>
       <Feature Id='EntityFramework2019Professional' Level='1' Title='Professional Edition'>
-        <Condition Level='0'>Not VS_2019_PRO_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2019PROINSTALL</Condition>
         <ComponentRef Id="EF.T4.VS16.PRO" />
         <ComponentRef Id="EF.PA16.Pro.v45"/>
         <ComponentRef Id="Remove.EF.PA16.Pro.v45"/>

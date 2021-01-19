@@ -2,27 +2,29 @@
 - Added support for VS2019.
 - Removed support for VS2012 and VS2013.
 - Fixed a bug that prevented the generation of TableAdapters due to a null reference exception
-  (MySql bug #90390, Oracle bug #27857627).
+  (MySql bug #90390, Oracle Bug #27857627).
 - Fixed a bug that prevented the creation of data sources due to a failure during the generation of a connection object
-  when MySQL Connector/NET 6.10.9+ is installed (MySql bug #91136, Oracle bug #28148998).
+  when MySQL Connector/NET 6.10.9+ is installed (MySql bug #91136, Oracle Bug #28148998).
 - Fixed a bug that prevented the generation of table adapters when Connector/NET was installed due to a conflict
   with the MySql.Data library. This issue also affected other operations such as attempting to edit a table from the Server
   Explorer. Additional to that, the Configuration Update Tool was added which monitors changes in the installation of Connector/NET
-  and when launched, updates MySQL for Visual Studio to be compatible (MySql bug #82617, Oracle bug #29884031).
+  and when launched, updates MySQL for Visual Studio to be compatible (MySql Bug #82617, Oracle bug #29884031).
 - Added validation to prevent Visual Studio from closing unexpectedly when the user attempted to execute a MySQL script
-  associated with a closed connection in the Server Explorer (Oracle bug #29797340).
+  associated with a closed connection in the Server Explorer (Oracle Bug #29797340).
 - The MySQL Workbench and MySQL Utilities buttons located in the MySQL toolbar are now always enabled, instead of being
-  enabled only when a connection was selected in the Server Explorer (Oracle bug #29797355).
+  enabled only when a connection was selected in the Server Explorer (Oracle Bug #29797355).
+- Fixed a bug where attempting to modify the existing installation using the MSI would allow users to target the installation to
+  versions of Visual Studio that are not actually installed (MySql Bug #96576, Oracle Bug #30225436).
 
 
 1.2.8
 - Added support for MySQL 8 server features.
 - Fixed a bug in which the installation would roll back when Visual Studio 2017 failed to execute devenv commands. This is a
   known issue in Windows 7 environments caused by faulty user permissions. The installer was modified to display a warning
-  message in such cases with instructions on how to proceed (MySql Bug #87902, Oracle bug Bug #27365261).
+  message in such cases with instructions on how to proceed (MySql Bug #87902, Oracle Bug #27365261).
 - Fixed a bug that prevented the MySql.Web assembly from being loaded when using the MySQL Website Configuration Tool
-  due to an incorrect way of identifying the version of the assembly (MySql Bug #89446, Oracle bug Bug #27450530).
-- Fixed a bug in which the "Alter Routine" option failed to retrieve the definition of a Store Procedure (Oracle bug Bug #27669339).
+  due to an incorrect way of identifying the version of the assembly (MySql Bug #89446, Oracle Bug #27450530).
+- Fixed a bug in which the "Alter Routine" option failed to retrieve the definition of a Store Procedure (Oracle Bug #27669339).
 - Upgraded MySQL for Visual Studio to require .NET 4.5.2 or greater when installed.
 
 

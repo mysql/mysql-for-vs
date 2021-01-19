@@ -132,7 +132,6 @@ namespace MySql.Data.VisualStudio.DBExport
         _windowHandler.Caption = !_windowHandler.Caption.Contains("*") ? _windowHandler.Caption += "*" : _windowHandler.Caption;        
       }
       
-
       void dbSchemasList_RowEnter(object sender, DataGridViewCellEventArgs e)
       {
         if (e.ColumnIndex == 1)
@@ -1018,7 +1017,6 @@ namespace MySql.Data.VisualStudio.DBExport
         }
       }
 
-
       private void btnLoadSettingsFile_Click(object sender, EventArgs e)
       {
         string settingsFile = string.Empty;
@@ -1098,7 +1096,7 @@ namespace MySql.Data.VisualStudio.DBExport
                 
                 Application.DoEvents();
                 _windowHandler.Caption = Path.GetFileName(_fileSavedSettingsName);
-                Logger.LogError("The saved settings were loaded correctly", true);
+                Logger.LogInformation("The saved settings were loaded correctly", true);
               }
               else
                 Logger.LogError("Connection was not found on available connections", true);

@@ -55,7 +55,8 @@ namespace MySql.VisualStudio.CustomAction
     private const string VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\";
     private const string VS2015_VERSION_NUMBER = "14.0";
     private const string VS2017_VERSION_NUMBER = "15.0";
-    private const string VS2019_VERSION_NUMBER = "16.0";    private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
+    private const string VS2019_VERSION_NUMBER = "16.0";
+    private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
     private const string VS2015_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 14.0\";
 
     private const string VS2015_INSTALL_FEATURE = "VS2015Install";
@@ -70,7 +71,7 @@ namespace MySql.VisualStudio.CustomAction
 
     #region Fields
 
-    private static Version _internalMySqlDataVersion = new Version("8.0.17.0");
+    private static Version _internalMySqlDataVersion = new Version("8.0.18.0");
     private static string _vs2017CommunityInstallationPath;
     private static string _VS2017CommunityX64ExtensionsFilePath;
     private static string _VS2017CommunityX86ExtensionsFilePath;
@@ -226,7 +227,7 @@ namespace MySql.VisualStudio.CustomAction
       if (File.Exists(vsPath))
       {
         File.WriteAllText(vsPath, string.Empty);
-        session["VS2015INSTALL"] = "1";
+        session.CustomActionData[VS2015_INSTALL_FEATURE] = "1";
       }
 
       return ActionResult.Success;
@@ -575,6 +576,7 @@ namespace MySql.VisualStudio.CustomAction
     [CustomAction]
     public static ActionResult CreateRegKeyAndExtensionsFile(Session session)
     {
+      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(CreateRegKeyAndExtensionsFile)));
       if (session == null)
       {
         return ActionResult.Failure;
@@ -705,6 +707,7 @@ namespace MySql.VisualStudio.CustomAction
     /// <returns>Will return false in case of any errors. True in case of success.</returns>
     private static bool CreateDeleteRegKeyAndExtensionsFile(Session session, bool isDeleting)
     {
+      session.Log(string.Format(Resources.ExecutingCustomAction, nameof(CreateDeleteRegKeyAndExtensionsFile)));
       try
       {
         string sVsVersion = session.CustomActionData["VSVersion"];
@@ -961,7 +964,7 @@ namespace MySql.VisualStudio.CustomAction
             const string FLAVOR_PROFESSIONAL = "Microsoft.VisualStudio.Product.Professional";
             if ((state & InstanceState.Local) == InstanceState.Local)
             {
-              //Determine the instance's flavor.
+              // Determine the instance's flavor.
               var flavor = vsInstance.GetProduct().GetId();
               var version = vsInstance.GetInstallationVersion();
 
@@ -1109,13 +1112,6 @@ namespace MySql.VisualStudio.CustomAction
       if (!File.Exists(pkgdefFilePath))
       {
         logBuilder.AppendLine(Resources.MySQLForVisualStudioNotInstalledNoUpdateRequired);
-        logData = logBuilder.ToString();
-        return true;
-      }
-
-      if (installedMySqlDataVersion != null && installedMySqlDataVersion == internalMySqlDataVersion)
-      {
-        logBuilder.AppendLine(Resources.MySqlDataVersionsMatchNoUpdateRequired);
         logData = logBuilder.ToString();
         return true;
       }
@@ -1357,7 +1353,7 @@ namespace MySql.VisualStudio.CustomAction
 
       // Connector/NET is installed.
       if ((internalMySqlDataVersion == installedMySqlDataVersion
-          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries))
+          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries && o.Item2 != PkgdefFileStatus.Unknown))
           ||
           (internalMySqlDataVersion > installedMySqlDataVersion
            && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry

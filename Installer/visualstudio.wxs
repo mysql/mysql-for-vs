@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment Id='VSFragment'>    <!-- Visual Studio 2015 -->
+  <Fragment Id='VSFragment'>
+    <!-- Visual Studio 2015 -->
     <DirectoryRef Id='VS14_ExtVersionDir'>
       <Component Id='VS2015_Extension' Guid='D7EE5F2F-5F1D-48F0-B7E6-E6D731B599F0'>
         <File Id='MySQL.VisualStudio.2015' Name='MySQL.VisualStudio.dll' DiskId='1'
@@ -824,7 +825,7 @@
     </DirectoryRef>
 
     <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
-      <Condition Level='0'>Not VS_2015_PATH AND Not Installed</Condition>
+      <Condition Level='0'>NOT VS_2015_PATH</Condition>
       <ComponentRef Id='VS2015_Extension'/>
       <ComponentRef Id='VS2015_Templates'/>
       <ComponentRef Id='VS2015_MD.Library' />
@@ -850,9 +851,9 @@
     </Feature>
 
     <Feature Id='VS2017Int' Level='1' Title='Visual Studio 2017' Display='expand'>
-      <Condition Level='0'>(Not VS_2017_COM_PATH AND Not VS_2017_ENT_PATH AND Not VS_2017_PRO_PATH) AND Not Installed</Condition>
+      <Condition Level='0'>NOT VS2017COMINSTALL AND NOT VS2017ENTINSTALL AND NOT VS2017PROINSTALL</Condition>
       <Feature Id='VS2017CommunityInt' Level='1' Title='Visual Studio 2017 Community'>
-        <Condition Level='0'>Not VS_2017_COM_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2017COMINSTALL</Condition>
         <ComponentRef Id='VS2017_Extension'/>
         <ComponentRef Id='VS2017_Templates'/>
         <ComponentRef Id='VS2017_MD.Library' />
@@ -879,7 +880,7 @@
       </Feature>
 
       <Feature Id='VS2017EnterpriseInt' Level='1' Title='Visual Studio 2017 Enterprise'>
-        <Condition Level='0'>Not VS_2017_ENT_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2017ENTINSTALL</Condition>
         <ComponentRef Id='VS2017_Ent_Extension'/>
         <ComponentRef Id='VS2017_Ent_Templates'/>
         <ComponentRef Id='VS2017_Ent_MD.Library' />
@@ -906,7 +907,7 @@
       </Feature>
 
       <Feature Id='VS2017ProfessionalInt' Level='1' Title='Visual Studio 2017 Professional'>
-        <Condition Level='0'>Not VS_2017_PRO_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2017PROINSTALL</Condition>
         <ComponentRef Id='VS2017_Pro_Extension'/>
         <ComponentRef Id='VS2017_Pro_Templates'/>
         <ComponentRef Id='VS2017_Pro_MD.Library' />
@@ -934,9 +935,9 @@
     </Feature>
 
     <Feature Id='VS2019Int' Level='1' Title='Visual Studio 2019' Display='expand'>
-      <Condition Level='0'>(Not VS_2019_COM_PATH AND Not VS_2019_ENT_PATH AND Not VS_2019_PRO_PATH) AND Not Installed</Condition>
+      <Condition Level='0'>NOT VS2019COMINSTALL AND NOT VS2019ENTINSTALL AND NOT VS2019PROINSTALL</Condition>
       <Feature Id='VS2019CommunityInt' Level='1' Title='Visual Studio 2019 Community'>
-        <Condition Level='0'>Not VS_2019_COM_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2019COMINSTALL</Condition>
         <ComponentRef Id='VS2019_Extension'/>
         <ComponentRef Id='VS2019_Templates'/>
         <ComponentRef Id='VS2019_MD.Library' />
@@ -963,7 +964,7 @@
       </Feature>
 
       <Feature Id='VS2019EnterpriseInt' Level='1' Title='Visual Studio 2019 Enterprise'>
-        <Condition Level='0'>Not VS_2019_ENT_PATH AND Not Installed</Condition>
+        <Condition Level='0'>NOT VS2019ENTINSTALL</Condition>
         <ComponentRef Id='VS2019_Ent_Extension'/>
         <ComponentRef Id='VS2019_Ent_Templates'/>
         <ComponentRef Id='VS2019_Ent_MD.Library' />
@@ -989,8 +990,8 @@
         </Feature>
       </Feature>
 
-      <Feature Id='VS2019ProfessionalInt' Level='1' Title='Visual Studio 2017 Professional'>
-        <Condition Level='0'>Not VS_2019_PRO_PATH AND Not Installed</Condition>
+      <Feature Id='VS2019ProfessionalInt' Level='1' Title='Visual Studio 2019 Professional'>
+        <Condition Level='0'>NOT VS2019PROINSTALL</Condition>
         <ComponentRef Id='VS2019_Pro_Extension'/>
         <ComponentRef Id='VS2019_Pro_Templates'/>
         <ComponentRef Id='VS2019_Pro_MD.Library' />

@@ -96,7 +96,9 @@ namespace MySql.Data.VisualStudio
     protected override void Load()
     {
       if (IsNew)
+      {
         editor.Text = GetNewViewText();
+      }
       else
       {
         try
@@ -106,17 +108,24 @@ namespace MySql.Data.VisualStudio
           restrictions[2] = Name;
           DataTable views = this.GetSchema("Views", restrictions);
           if (views.Rows.Count != 1)
-            throw new Exception(String.Format("There is no view with the name '{0}'", Name));
-          editor.Text = String.Format("CREATE VIEW `{0}` AS \r\n{1}",
-              Name, views.Rows[0]["VIEW_DEFINITION"].ToString());
-          OldObjectDefinition = String.Format("CREATE VIEW `{0}` AS \r\n{1}",
-              Name, views.Rows[0]["VIEW_DEFINITION"].ToString());
+          {
+            Logger.LogError(string.Format(Properties.Resources.ViewNotFound, Name), true);
+          }
+
+          var viewDefinition = views.Rows[0]["VIEW_DEFINITION"].ToString();
+          if (string.IsNullOrEmpty(viewDefinition))
+          {
+            Logger.LogError(Properties.Resources.ShowViewPermissionMissing, true);
+          }
+
+          editor.Text = string.Format("CREATE VIEW `{0}` AS \r\n{1}", Name, viewDefinition);
+          OldObjectDefinition = string.Format("CREATE VIEW `{0}` AS \r\n{1}", Name, viewDefinition);
           Dirty = false;
           OnDataLoaded();
         }
         catch (Exception ex)
         {
-          Logger.LogError($"Unable to load view with error: {ex.Message}", true);
+          Logger.LogError(string.Format(Properties.Resources.UnableToLoadViewWithError, ex.Message), true);
         }
       }
     }
