@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -37,9 +37,9 @@ namespace MySql.Debugger.Tests
 {
   public class TestUtils
   {
-    public static readonly string CONNECTION_STRING = "server=localhost;User Id=root;database=test;Port=3305;Allow User Variables=true;Pooling=false;Allow Zero DateTime=true;";
-    public static readonly string CONNECTION_STRING_SAKILA = "server=localhost;User Id=root;database=sakila;Port=3305;Allow User Variables=true;Pooling=false;Allow Zero DateTime=true;";
-    public static readonly string CONNECTION_STRING_WITHOUT_DB = "server=localhost;User Id=root;Port=3305;Allow User Variables=true;Pooling=false;Allow Zero DateTime=true;";
+    public static readonly string CONNECTION_STRING = "server=localhost;User Id=root;password=test;database=test;Port=3306;Allow User Variables=true;Pooling=false;Allow Zero DateTime=true;";
+    public static readonly string CONNECTION_STRING_SAKILA = "server=localhost;User Id=root;password=test;database=sakila;Port=3306;Allow User Variables=true;Pooling=false;Allow Zero DateTime=true;";
+    public static readonly string CONNECTION_STRING_WITHOUT_DB = "server=localhost;User Id=root;password=test;Port=3306;Allow User Variables=true;Pooling=false;Allow Zero DateTime=true;";
   }
 
   public class SteppingTraceInfo

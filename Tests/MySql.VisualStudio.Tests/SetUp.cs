@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -89,11 +89,11 @@ namespace MySql.VisualStudio.Tests
       if (string.IsNullOrEmpty(rootUser))
           rootUser = "root";
       if (string.IsNullOrEmpty(rootPassword))
-          rootPassword = string.Empty;
+          rootPassword = "test";
       if (string.IsNullOrEmpty(host))
           host = "localhost";
       if (string.IsNullOrEmpty(portString))
-          port = 3305;
+          port = 3306;
       else
           port = int.Parse(portString);
       if (string.IsNullOrEmpty(pipeName))
@@ -131,7 +131,7 @@ namespace MySql.VisualStudio.Tests
 
     internal protected void ExecuteSQLAsRoot(string sql)
     {
-      MySqlScript s = new MySqlScript(new MySqlConnection(GetConnectionString("root","",false,false)), sql);
+      MySqlScript s = new MySqlScript(new MySqlConnection(GetConnectionString("root","test",false,false)), sql);
       s.Execute();
     }
   }

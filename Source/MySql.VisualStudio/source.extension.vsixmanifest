@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="79A115C9-B133-4891-9E7B-242509DAD272" Version="1.2.9" Language="en-US" Publisher="Oracle, Inc." />
+    <Identity Id="79A115C9-B133-4891-9E7B-242509DAD272" Version="1.2.10" Language="en-US" Publisher="Oracle, Inc." />
     <DisplayName>MySQL for Visual Studio</DisplayName>
     <Description xml:space="preserve">Database design tools for MySQL</Description>
     <MoreInfo>https://dev.mysql.com/doc/visual-studio/en/</MoreInfo>

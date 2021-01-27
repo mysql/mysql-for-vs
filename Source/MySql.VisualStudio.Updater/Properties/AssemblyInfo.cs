@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2019, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -38,7 +38,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("MySql.VisualStudio.Updater")]
-[assembly: AssemblyCopyright("Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (c) 2019, 2021, Oracle and/or its affiliates.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,4 +1,12 @@
-﻿MySQL for Visual Studio 1.2.9 MR Release Notes
+﻿MySQL for Visual Studio 1.2.10 MR Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL for Visual Studio 1.2.10 MR
+
+
+
+
+MySQL for Visual Studio 1.2.9 MR Release Notes
 ------------------------------------
 
 Welcome to the release notes for MySQL for Visual Studio 1.2.9 MR
