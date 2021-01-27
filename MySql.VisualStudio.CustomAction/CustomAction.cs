@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -71,6 +71,11 @@ namespace MySql.VisualStudio.CustomAction
 
     #region Fields
 
+    /// <summary>
+    /// The app data path for this application.
+    /// </summary>
+    private static string _appDataPath;
+
     private static Version _internalMySqlDataVersion = new Version("8.0.18.0");
     private static string _vs2017CommunityInstallationPath;
     private static string _VS2017CommunityX64ExtensionsFilePath;
@@ -100,6 +105,22 @@ namespace MySql.VisualStudio.CustomAction
     #endregion
 
     #region Properties
+
+    /// <summary>
+    /// Gets the path for this application relative to the application data folder of the user where settings can be saved.
+    /// </summary>
+    internal static string AppDataPath
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(_appDataPath))
+        {
+          _appDataPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\MySQL\\{APPLICATION_NAME}\\";
+        }
+
+        return _appDataPath;
+      }
+    }
 
     /// <summary>
     /// The installation path for Visual Studio 2017 Community edition.
@@ -138,6 +159,7 @@ namespace MySql.VisualStudio.CustomAction
     /// </summary>
     static CustomActions()
     {
+      Logger.Initialize(AppDataPath.Substring(0, AppDataPath.Length - 1), APPLICATION_NAME, false, false, APPLICATION_NAME);
       SetVSInstallationPaths();
 
       if (!string.IsNullOrEmpty(_vs2017CommunityInstallationPath))
@@ -1013,7 +1035,10 @@ namespace MySql.VisualStudio.CustomAction
          }
          while (fetched > 0);
        }
-       catch (Exception) {}
+       catch (Exception ex)
+       {
+         Logger.LogException(ex);
+       }
     }
 
     /// <summary>
@@ -1202,7 +1227,7 @@ namespace MySql.VisualStudio.CustomAction
     /// <param name="visualStudioVersion">The version of Visual Studio where the PKGDEF file will be searched for.</param>
     /// <param name="mysqlForVisualStudioVersion">The version number of the installed MySQL for Visual Studio product.</param>
     /// <returns>The status of the PKGDEF file.</returns>
-    private static PkgdefFileStatus GetPkgdefFileStatus(SupportedVisualStudioVersions visualStudioVersion, Version mysqlForVisualStudioVersion)
+    internal static PkgdefFileStatus GetPkgdefFileStatus(SupportedVisualStudioVersions visualStudioVersion, Version mysqlForVisualStudioVersion)
     {
       string visualStudioInstallationPath = null;
       if (visualStudioVersion > SupportedVisualStudioVersions.Vs2015)
@@ -1249,9 +1274,84 @@ namespace MySql.VisualStudio.CustomAction
         return PkgdefFileStatus.Unknown;
       }
 
-      var pkgdefFilePath = Utility.Utilities.GetPkgdefFilePath(visualStudioInstallationPath, mysqlForVisualStudioVersion);
-      if (!File.Exists(pkgdefFilePath))
+      return ReadPkgdefFileStatus(Utility.Utilities.GetPkgdefFilePath(visualStudioInstallationPath, mysqlForVisualStudioVersion), visualStudioVersion);
+    }
+
+    /// <summary>
+    /// Gets the status for all supported versions of Visual Studio.
+    /// </summary>
+    /// <param name="mysqlForVisualStudioVersion">The version number of the installed MySQL for Visual Studio product.</param>
+    /// <returns>A tuple list with the status of the PKGDEF files where MySQL for Visual Studio is installed.</returns>
+    public static List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>> GetPkgdefFileStatuses(Version mysqlForVisualStudioVersion)
+    {
+      var list = new List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>>();
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2015, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2015, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Enterprise, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Professional, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Community, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Enterprise, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Professional, mysqlForVisualStudioVersion)));
+
+      return list;
+    }
+
+    /// <summary>
+    /// Checks if any of the PKGDEF files need to be updated.
+    /// </summary>
+    public static bool IsConfigurationUpdateRequired(Version mysqlForVisualStudioVersion, Version installedMySqlDataVersion, Version internalMySqlDataVersion)
+    {
+      if (mysqlForVisualStudioVersion == null
+          || internalMySqlDataVersion == null)
       {
+        return false;
+      }
+
+      // Get PKGDEF file status.
+      var pkgdefFileStatuses = GetPkgdefFileStatuses(mysqlForVisualStudioVersion);
+
+      // Connector/NET is not installed.
+      if (installedMySqlDataVersion == null)
+      {
+        // PKGDEF files have no binding redirect entries.
+        if (pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry
+                                                   || o.Item2 == PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry))
+        {
+          return true;
+        }
+
+        return false;
+      }
+
+      // Connector/NET is installed.
+      if ((internalMySqlDataVersion == installedMySqlDataVersion
+          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries && o.Item2 != PkgdefFileStatus.Unknown))
+          ||
+          (internalMySqlDataVersion > installedMySqlDataVersion
+           && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry
+                                          || o.Item2 == PkgdefFileStatus.NoBindingRedirectEntries))
+          ||
+          (internalMySqlDataVersion < installedMySqlDataVersion
+           && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry
+                                          || o.Item2 == PkgdefFileStatus.NoBindingRedirectEntries)))
+      {
+        return true;
+      }
+
+      return false;
+    }
+
+    /// <summary>
+    /// Reads the specified pkdef file for any MySql.Data entries and identifies if updates are required.
+    /// </summary>
+    /// <param name="pkgdefFilePath">The path to the pkgdef file.</param>
+    /// <returns>A value indicating the type of update required on the pkgdef file.</returns>
+    internal static PkgdefFileStatus ReadPkgdefFileStatus(string pkgdefFilePath, SupportedVisualStudioVersions visualStudioVersion)
+    {
+      if (string.IsNullOrEmpty(pkgdefFilePath)
+          || !File.Exists(pkgdefFilePath))
+      {
+        Logger.LogError(Resources.InvalidPkgdefFile);
         return PkgdefFileStatus.Unknown;
       }
 
@@ -1295,78 +1395,15 @@ namespace MySql.VisualStudio.CustomAction
               lookForVersionEntries = true;
             }
           }
-
-          return PkgdefFileStatus.NoBindingRedirectEntries;
         }
+
+        return PkgdefFileStatus.NoBindingRedirectEntries;
       }
       catch (Exception)
       {
         Logger.LogError(string.Format(Resources.FailedToReadThePkgdefFile, visualStudioVersion.GetDescription(), pkgdefFilePath));
         return PkgdefFileStatus.Unknown;
       }
-    }
-
-    /// <summary>
-    /// Gets the status for all supported versions of Visual Studio.
-    /// </summary>
-    /// <param name="mysqlForVisualStudioVersion">The version number of the installed MySQL for Visual Studio product.</param>
-    /// <returns>A tuple list with the status of the PKGDEF files where MySQL for Visual Studio is installed.</returns>
-    public static List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>> GetPkgdefFileStatuses(Version mysqlForVisualStudioVersion)
-    {
-      var list = new List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>>();
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2015, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2015, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Enterprise, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Professional, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Community, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Enterprise, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Professional, mysqlForVisualStudioVersion)));
-
-      return list;
-    }
-
-    /// <summary>
-    /// Checks if any of the PKGDEF files need to be updated.
-    /// </summary>
-    public static bool IsConfigurationUpdateRequired(Version mysqlForVisualStudioVersion, Version installedMySqlDataVersion, Version internalMySqlDataVersion)
-    {
-      if (mysqlForVisualStudioVersion== null || internalMySqlDataVersion == null)
-      {
-        return false;
-      }
-
-      // Get PKGDEF file status.  
-      var pkgdefFileStatuses = GetPkgdefFileStatuses(mysqlForVisualStudioVersion);
-
-      // Connector/NET is not installed.
-      if (installedMySqlDataVersion == null)
-      {
-        // PKGDEF files have no binding redirect entries.
-        if (pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry
-                                                   || o.Item2 == PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry))
-        {
-          return true;
-        }
-
-        return false;
-      }
-
-      // Connector/NET is installed.
-      if ((internalMySqlDataVersion == installedMySqlDataVersion
-          && pkgdefFileStatuses.Any(o => o.Item2 != PkgdefFileStatus.NoBindingRedirectEntries && o.Item2 != PkgdefFileStatus.Unknown))
-          ||
-          (internalMySqlDataVersion > installedMySqlDataVersion
-           && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry
-                                          || o.Item2 == PkgdefFileStatus.NoBindingRedirectEntries))
-          ||
-          (internalMySqlDataVersion < installedMySqlDataVersion
-           && pkgdefFileStatuses.Any(o => o.Item2 == PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry
-                                          || o.Item2 == PkgdefFileStatus.NoBindingRedirectEntries)))
-      {
-        return true;
-      }
-
-      return false;
     }
 
     #region External Methods

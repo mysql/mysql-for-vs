@@ -187,7 +187,7 @@ namespace MySql.VisualStudio.CustomAction.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to parse the OldVersion entry 0} for {1}.&quot;.
+        ///   Looks up a localized string similar to Failed to parse the OldVersion entry {0} for {1}..
         /// </summary>
         internal static string FailedToParseOldVersionEntry {
             get {
@@ -273,6 +273,15 @@ namespace MySql.VisualStudio.CustomAction.Properties {
         internal static string InternalMySqlDataVersion {
             get {
                 return ResourceManager.GetString("InternalMySqlDataVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An invalid name(&quot;{0}&quot;) for the PKGDEF file has been provided..
+        /// </summary>
+        internal static string InvalidPkgdefFile {
+            get {
+                return ResourceManager.GetString("InvalidPkgdefFile", resourceCulture);
             }
         }
         

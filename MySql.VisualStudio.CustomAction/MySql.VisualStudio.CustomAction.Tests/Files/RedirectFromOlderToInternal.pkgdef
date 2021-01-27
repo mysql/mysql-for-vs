@@ -1,0 +1,108 @@
+﻿[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}]
+@=".NET Framework Data Provider for MySQL"
+"DisplayName"="Provider_DisplayName, MySql.Data.VisualStudio.Properties.Resources"
+"ShortDisplayName"="Provider_ShortDisplayName, MySql.Data.VisualStudio.Properties.Resources"
+"Description"="Provider_Description, MySql.Data.VisualStudio.Properties.Resources"
+"Technology"="{77AB9A9D-78B9-4ba7-91AC-873F5338F1D2}"
+"FactoryService"="{D949EA95-EDA1-4b65-8A9E-266949A99360}"
+"InvariantName"="MySql.Data.MySqlClient"
+
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataConnectionPromptDialog]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataConnectionProperties]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataConnectionSupport]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataConnectionUIControl]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataObjectSupport]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataSourceInformation]
+[$RootKey$\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataViewSupport]
+
+[$RootKey$\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}]
+@="MySQL Database"
+[$RootKey$\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}\SupportingProviders]
+[$RootKey$\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}\SupportingProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}]
+"Description"="Provider_Description, MySql.Data.VisualStudio.Properties.Resources"
+"DisplayName"="Datasource_Displayname, MySql.Data.VisualStudio.Properties.Resources"
+
+[$RootKey$\InstalledProducts\MySQL for Visual Studio 1.2.9]
+@="MySQL for Visual Studio 1.2.9"
+"Package"="{79a115c9-b133-4891-9e7b-242509dad272}"
+"UseInterface"=dword:00000001
+
+[$RootKey$\Packages\{79a115c9-b133-4891-9e7b-242509dad272}]
+@="MySQL for Visual Studio 1.2.9"
+"InprocServer32"="$WinDir$\SYSTEM32\MSCOREE.DLL"
+"Class"="MySql.Data.VisualStudio.MySqlDataProviderPackage"
+"CodeBase"= "$PackageFolder$\mysql.visualstudio.dll"
+"ID"=dword:00000064
+"MinEdition"="Standard"
+"ProductVersion"="1.1"
+"ProductName"="MySQL for Visual Studio"
+"CompanyName"="Oracle"
+
+[$RootKey$\Menus]
+"{79a115c9-b133-4891-9e7b-242509dad272}"=", 1000, 1"
+
+[$RootKey$\Languages\Language Services\MySQL]
+@="{fa498a2d-116a-4f25-9b55-7938e8e6dda7}"
+"Package"="{79a115c9-b133-4891-9e7b-242509dad272}"
+"LangResID"=dword:00000065
+"RequestStockColors"=dword:00000001
+
+[$RootKey$\Services\{d949ea95-eda1-4b65-8a9e-266949a99360}]
+@="{79a115c9-b133-4891-9e7b-242509dad272}"
+"Name"="MySQL Provider Object Factory"
+
+[$RootKey$\Services\{fa498a2d-116a-4f25-9b55-7938e8e6dda7}]
+@="{79a115c9-b133-4891-9e7b-242509dad272}"
+"Name"="MySqlLanguageService"
+
+[$RootKey$\Projects\{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}\AddItemTemplates\TemplateDirs\{79a115c9-b133-4891-9e7b-242509dad272}\/1]
+@="#105"
+"Package"="{79a115c9-b133-4891-9e7b-242509dad272}"
+"TemplatesDir"="$PackageFolder$\\Templates"
+"SortPriority"=dword:00000020
+
+[$RootKey$\Editors\{CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581}]
+@="MySql for Visual Studio"
+"DisplayName"="#105"
+"Package"= "{79A115C9-B133-4891-9E7B-242509DAD272}"
+
+[$RootKey$\Editors\{CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581}\Extensions]
+"mysql"=dword:00000020
+
+[$RootKey$\Editors\{CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581}\LogicalViews]
+"{7651a703-06e5-11d1-8ebd-00a0c90f26ea}"=""
+
+[$RootKey$\AD7Metrics\Engine\{EEEE0740-10F7-4E5F-8BC4-1CC0AC9ED5B0}]
+"CLSID"="{EEEE066A-1103-451F-BC7A-6AEF76558AE2}"
+"ProgramProvider"="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}"
+"Attach"=dword:00000001
+"AddressBP"=dword:00000000
+"AutoSelectPriority"=dword:00000004
+"CallstackBP"=dword:00000001
+"Name"="MySql Stored Procedure Debug Engine"
+"PortSupplier"="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}"
+"AlwaysLoadLocal"=dword:00000000
+
+[$RootKey$\CLSID\{EEEE066A-1103-451F-BC7A-6AEF76558AE2}]
+"Assembly"="MySql.Debugger.VisualStudio"
+"Class"="MySql.Debugger.VisualStudio.AD7Engine"
+"InprocServer32"="c:\\windows\\system32\\mscoree.dll"
+"CodeBase"="$PackageFolder$\MySql.Debugger.VisualStudio.dll"
+
+[$RootKey$\CLSID\{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}]
+"Assembly"="MySql.Debugger.VisualStudio"
+"Class"="MySql.Debugger.VisualStudio.AD7ProgramProvider"
+"InprocServer32"="c:\\windows\\system32\\mscoree.dll"
+"CodeBase"="$PackageFolder$\MySql.Debugger.VisualStudio.dll"
+
+[$RootKey$\BindingPaths\{9ADD56DD-E512-4CB0-AF58-33ECCC0B4912}]
+"$PackageFolder$"=""
+
+
+[$RootKey$\RuntimeConfiguration\dependentAssembly\bindingRedirection\{EE3E8305-3E91-51CD-0B2D-8E8EFFDD081C}]
+"Name" = "MySql.Data"
+"PublicKeyToken" = "c5687fc88969c44d"
+"Culture" = "neutral"
+"OldVersion" = "6.7.4.0 - 8.0.17.0"
+"NewVersion" = "8.0.18.0"

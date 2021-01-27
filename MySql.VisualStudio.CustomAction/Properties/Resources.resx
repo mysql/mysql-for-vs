@@ -220,7 +220,7 @@
     <value>This version of Visual Studio was not selected for installation by the user. Updating the PKGDEF file is not required.</value>
   </data>
   <data name="FailedToParseOldVersionEntry" xml:space="preserve">
-    <value>Failed to parse the OldVersion entry 0} for {1}."</value>
+    <value>Failed to parse the OldVersion entry {0} for {1}.</value>
   </data>
   <data name="FailedToReadThePkgdefFile" xml:space="preserve">
     <value>Failed to read the PKGDEF file for {0} at: {1}.</value>
@@ -233,5 +233,8 @@
   </data>
   <data name="FailedToWriteToPkgdefFile" xml:space="preserve">
     <value>Failed to write to the PKGDEF file. Validate that the application is running with administrator privileges.</value>
+  </data>
+  <data name="InvalidPkgdefFile" xml:space="preserve">
+    <value>An invalid name("{0}") for the PKGDEF file has been provided.</value>
   </data>
 </root>

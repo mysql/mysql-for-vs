@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2019, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -35,12 +35,6 @@ namespace MySql.VisualStudio.CustomAction
   /// </summary>
   public enum SupportedVisualStudioVersions
   {
-    [Description("Visual Studio 2012")]
-    Vs2012,
-
-    [Description("Visual Studio 2013")]
-    Vs2013,
-
     [Description("Visual Studio 2015")]
     Vs2015,
 
