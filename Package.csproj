@@ -158,11 +158,11 @@
   <!-- Signing Targets -->
   <Target Name="PackageSigning" DependsOnTargets="PackageSigningGPL;$(PackageSigningCommercial)" />
   <Target Name="PackageSigningGPL">
-    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\files\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/GPL/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/GPL/signed&quot;" ContinueOnError="false" />
+    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\Signing\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/GPL/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/GPL/signed&quot;" ContinueOnError="false" />
     <Copy SourceFiles="Installer/bin/GPL/signed/MySql.VisualStudio.Plugin.msi" DestinationFiles="Installer/bin/GPL/MySql.VisualStudio.Plugin.msi" />
   </Target>
   <Target Name="PackageSigningCommercial">
-    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\files\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/Commercial/signed&quot;" ContinueOnError="false" />
+    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\Signing\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/Commercial/signed&quot;" ContinueOnError="false" />
     <Copy SourceFiles="Installer/bin/Commercial/signed/MySql.VisualStudio.Plugin.msi" DestinationFiles="Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi" />
   </Target>
   <!-- MSI Targets -->
