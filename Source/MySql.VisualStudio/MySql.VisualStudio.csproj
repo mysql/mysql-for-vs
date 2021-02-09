@@ -33,7 +33,7 @@
   </UsingTask>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
