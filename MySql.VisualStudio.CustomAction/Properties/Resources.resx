@@ -237,4 +237,7 @@
   <data name="InvalidPkgdefFile" xml:space="preserve">
     <value>An invalid name("{0}") for the PKGDEF file has been provided.</value>
   </data>
+  <data name="RegistryKeyDeleteSkipped" xml:space="preserve">
+    <value>Skipped deletion of the '{0}' registry key since it was not created during the installation of MySQL for Visual Studio.</value>
+  </data>
 </root>

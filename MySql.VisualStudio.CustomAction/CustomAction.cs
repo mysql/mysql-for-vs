@@ -53,6 +53,7 @@ namespace MySql.VisualStudio.CustomAction
     private const string EXTENSION_FILE_NAME = "extensions.configurationchanged";
     private const int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
     private const string VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\";
+    private const string VISUAL_STUDIO_2019_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\";
     private const string VS2015_VERSION_NUMBER = "14.0";
     private const string VS2017_VERSION_NUMBER = "15.0";
     private const string VS2019_VERSION_NUMBER = "16.0";
@@ -205,7 +206,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       else
       {
-        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\";
+        var partialPath = $@"{VISUAL_STUDIO_2019_DEFAULT_INSTALLATION_PATH}Community\";
         _VS2019CommunityX64ExtensionsFilePath = partialPath;
         _VS2019CommunityX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
@@ -217,7 +218,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       else
       {
-        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\";
+        var partialPath = $@"{VISUAL_STUDIO_2019_DEFAULT_INSTALLATION_PATH}Enterprise\";
         _VS2019EnterpriseX64ExtensionsFilePath = partialPath;
         _VS2019EnterpriseX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
@@ -229,7 +230,7 @@ namespace MySql.VisualStudio.CustomAction
       }
       else
       {
-        var partialPath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\";
+        var partialPath = $@"{VISUAL_STUDIO_2019_DEFAULT_INSTALLATION_PATH}Professional\";
         _VS2019ProfessionalX64ExtensionsFilePath = partialPath;
         _VS2019ProfessionalX86ExtensionsFilePath = partialPath.Replace(" (86)","");
       }
@@ -744,35 +745,43 @@ namespace MySql.VisualStudio.CustomAction
           string vsVersionNumber;
           string vsPath;
           string vsRootPath;
+          string registryKey = string.Empty;
           switch (vsVersion)
           {
             case SupportedVisualStudioVersions.Vs2015:
               vsPath = Environment.Is64BitOperatingSystem ? VS2015_X64_EXTENSIONS_FILE_PATH : VS2015_X86_EXTENSIONS_FILE_PATH;
               vsVersionNumber = VS2015_VERSION_NUMBER;
+              registryKey = "VS2015_REGISTRYFIX_CREATED";
               break;
             case SupportedVisualStudioVersions.Vs2017Community:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017CommunityX64ExtensionsFilePath : _VS2017CommunityX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
+              registryKey = "VS2017_REGISTRYFIX_CREATED";
               break;
             case SupportedVisualStudioVersions.Vs2017Enterprise:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017EnterpriseX64ExtensionsFilePath : _VS2017EnterpriseX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
+              registryKey = "VS2017_ENT_REGISTRYFIX_CREATED";
               break;
             case SupportedVisualStudioVersions.Vs2017Professional:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017ProfessionalX64ExtensionsFilePath : _VS2017ProfessionalX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
+              registryKey = "VS2017_PRO_REGISTRYFIX_CREATED";
               break;
             case SupportedVisualStudioVersions.Vs2019Community:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2019CommunityX64ExtensionsFilePath : _VS2019CommunityX86ExtensionsFilePath;
               vsVersionNumber = VS2019_VERSION_NUMBER;
+              registryKey = "VS2019_REGISTRYFIX_CREATED";
               break;
             case SupportedVisualStudioVersions.Vs2019Enterprise:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2019EnterpriseX64ExtensionsFilePath : _VS2019EnterpriseX86ExtensionsFilePath;
               vsVersionNumber = VS2019_VERSION_NUMBER;
+              registryKey = "VS2019_ENT_REGISTRYFIX_CREATED";
               break;
             case SupportedVisualStudioVersions.Vs2019Professional:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2019ProfessionalX64ExtensionsFilePath : _VS2019ProfessionalX86ExtensionsFilePath;
               vsVersionNumber = VS2019_VERSION_NUMBER;
+              registryKey = "VS2019_PRO_REGISTRYFIX_CREATED";
               break;
             default:
               throw new Exception(Resources.FailedToParseVSVersion);
@@ -791,6 +800,7 @@ namespace MySql.VisualStudio.CustomAction
               if (key != null)
               {
                 key.SetValue(keyName, vsPath, RegistryValueKind.String);
+                session.CustomActionData[registryKey] = "1";
                 session.Log(string.Format(Resources.CreatedRegistryKey, keyPath, keyName));
               }
             }
@@ -807,6 +817,12 @@ namespace MySql.VisualStudio.CustomAction
           }
           else
           {
+            if (session.CustomActionData[registryKey] == "0")
+            {
+              session.Log(string.Format(Resources.RegistryKeyDeleteSkipped, $@"{keyPath}\{keyName}"));
+              return true;
+            }
+
             session.Log(string.Format(Resources.DeletingRegistryKey, keyPath, keyName));
             if (key != null)
             {

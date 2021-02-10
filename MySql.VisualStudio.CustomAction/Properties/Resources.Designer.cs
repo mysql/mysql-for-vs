@@ -376,6 +376,15 @@ namespace MySql.VisualStudio.CustomAction.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipped deletion of the &apos;{0}&apos; registry key since it was not created during the installation of MySQL for Visual Studio..
+        /// </summary>
+        internal static string RegistryKeyDeleteSkipped {
+            get {
+                return ResourceManager.GetString("RegistryKeyDeleteSkipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set session value. {0}={1}..
         /// </summary>
         internal static string SetSessionVariableValue {
