@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion" />
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
@@ -59,12 +59,6 @@
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       </PropertyGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <PropertyGroup>
-        <Framework>4.6</Framework>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-      </PropertyGroup>
-    </When>
   </Choose>
   <PropertyGroup>
     <MSBuildExe Condition=" '$(MSBuildExe)'=='' AND Exists('$(MSBuildExtensionsPath)\..\MSBuild\16.0') ">"$(MSBuildExtensionsPath)\..\MSBuild\16.0\Bin\msbuild.exe"</MSBuildExe>
@@ -72,10 +66,6 @@
   <ItemGroup>
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
-    <Compile Include="ItemTemplates\VS14_CS_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_CS_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_VB_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_Ent_CS_Web_ItemTemplate.wxs" />
@@ -178,7 +168,7 @@
     <Zip Files="@(WebCsharpItemTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ItemTemplates\CSharp\MySQL\MySQL_Web.zip" ZipFileName="..\ItemTemplatesZipFolder\MySQL_Web.zip" />
     <Zip Files="@(WinFormsVBItemTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_WinForm.zip" ZipFileName="..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip" />
     <Zip Files="@(WebVBItemTemplateFiles)" WorkingDirectory="..\Source\MySql.VisualStudio\ItemTemplates\VisualBasic\MySQL\MySQL_VB_Web.zip" ZipFileName="..\ItemTemplatesZipFolder\MySQL_VB_Web.zip" />
-    <CallTarget Targets="Build46;Build461;Build472;" />
+    <CallTarget Targets="Build461;Build472;" />
   </Target>
   <Target Name="RemoveProjectTemplatesVBFolder">
     <RemoveDir Condition="Exists('../ProjectTemplatesZipFolder/VisualBasic')" Directories="..\ProjectTemplatesZipFolder\VisualBasic" ContinueOnError="false" />
@@ -193,15 +183,11 @@
     <MakeDir Condition="!Exists('../ProjectTemplatesZipFolder/VisualBasic')" Directories="..\ProjectTemplatesZipFolder\VisualBasic" />
   </Target>
   <!-- Build VS Source Targets -->
-  <Target Name="Build46" Condition=" '$(VisualStudioVersion)' == '14.0' ">
-    <Message Text="Building VisualStudioVersion=14.0" Importance="high" />
-    <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=14.0" />
-  </Target>
-  <Target Name="Build461" Condition=" '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' ">
+  <Target Name="Build461" Condition=" '$(VisualStudioVersion)' == '15.0' ">
     <Message Text="Building VisualStudioVersion=15.0" Importance="high" />
     <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=15.0" />
   </Target>
-  <Target Name="Build472" Condition=" '$(VisualStudioVersion)' == '14.0' Or '$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0' ">
+  <Target Name="Build472" Condition=" '$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0' ">
     <Message Text="Building VisualStudioVersion=15.0" Importance="high" />
     <Exec Command="$(MSBuildExe) ../Source/MySql.VisualStudio/MySql.VisualStudio.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:VisualStudioVersion=16.0" />
   </Target>

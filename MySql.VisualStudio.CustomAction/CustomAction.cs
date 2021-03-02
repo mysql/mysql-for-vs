@@ -54,13 +54,9 @@ namespace MySql.VisualStudio.CustomAction
     private const int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
     private const string VISUAL_STUDIO_2017_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\";
     private const string VISUAL_STUDIO_2019_DEFAULT_INSTALLATION_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\";
-    private const string VS2015_VERSION_NUMBER = "14.0";
     private const string VS2017_VERSION_NUMBER = "15.0";
     private const string VS2019_VERSION_NUMBER = "16.0";
-    private const string VS2015_X64_EXTENSIONS_FILE_PATH = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\";
-    private const string VS2015_X86_EXTENSIONS_FILE_PATH = @"C:\Program Files\Microsoft Visual Studio 14.0\";
 
-    private const string VS2015_INSTALL_FEATURE = "VS2015Install";
     private const string VS2017_COMMUNITY_INSTALL_FEATURE = "VS2017ComInstall";
     private const string VS2017_ENTERPRISE_INSTALL_FEATURE = "VS2017EntInstall";
     private const string VS2017_PROFESSIONAL_INSTALL_FEATURE = "VS2017ProInstall";
@@ -237,24 +233,6 @@ namespace MySql.VisualStudio.CustomAction
     }
 
     #region Custom Actions
-
-    [CustomAction]
-    public static ActionResult UpdateFlagPackagesFileForVs2015(Session session)
-    {
-      if (session == null)
-      {
-        return ActionResult.Failure;
-      }
-
-      string vsPath = Path.Combine(session.CustomActionData["VS2015_PathProp"], @"Common7\IDE\Extensions\extensions.configurationchanged");
-      if (File.Exists(vsPath))
-      {
-        File.WriteAllText(vsPath, string.Empty);
-        session.CustomActionData[VS2015_INSTALL_FEATURE] = "1";
-      }
-
-      return ActionResult.Success;
-    }
 
     [CustomAction]
     public static ActionResult UpdateFlagPackagesFileForVs2017(Session session)
@@ -572,7 +550,6 @@ namespace MySql.VisualStudio.CustomAction
       // Find affected Visual Studio versions.
       string[] features =
       {
-        VS2015_INSTALL_FEATURE,
         VS2017_COMMUNITY_INSTALL_FEATURE,
         VS2017_ENTERPRISE_INSTALL_FEATURE,
         VS2017_PROFESSIONAL_INSTALL_FEATURE,
@@ -748,11 +725,6 @@ namespace MySql.VisualStudio.CustomAction
           string registryKey = string.Empty;
           switch (vsVersion)
           {
-            case SupportedVisualStudioVersions.Vs2015:
-              vsPath = Environment.Is64BitOperatingSystem ? VS2015_X64_EXTENSIONS_FILE_PATH : VS2015_X86_EXTENSIONS_FILE_PATH;
-              vsVersionNumber = VS2015_VERSION_NUMBER;
-              registryKey = "VS2015_REGISTRYFIX_CREATED";
-              break;
             case SupportedVisualStudioVersions.Vs2017Community:
               vsPath = Environment.Is64BitOperatingSystem ? _VS2017CommunityX64ExtensionsFilePath : _VS2017CommunityX86ExtensionsFilePath;
               vsVersionNumber = VS2017_VERSION_NUMBER;
@@ -1077,10 +1049,6 @@ namespace MySql.VisualStudio.CustomAction
       string visualStudioInstallationPath = null;
       switch (feature)
       {
-        case VS2015_INSTALL_FEATURE:
-          visualStudioInstallationPath = session.CustomActionData["VS2015Path"];
-          break;
-
         case VS2017_COMMUNITY_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2017ComPath"];
           break;
@@ -1251,17 +1219,13 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       string visualStudioInstallationPath = null;
-      if (visualStudioVersion > SupportedVisualStudioVersions.Vs2015)
+      if (visualStudioVersion >= SupportedVisualStudioVersions.Vs2017Community)
       {
         SetVSInstallationPaths();
       }
 
       switch (visualStudioVersion)
       {
-        case SupportedVisualStudioVersions.Vs2015:
-          visualStudioInstallationPath = Utility.Utilities.GetVisualStudio2015InstallationPath();
-          break;
-
         case SupportedVisualStudioVersions.Vs2017Community:
           visualStudioInstallationPath = _vs2017CommunityInstallationPath;
           break;
@@ -1311,7 +1275,6 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       var list = new List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>>();
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2015, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2015, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Enterprise, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Professional, mysqlForVisualStudioVersion)));

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -41,6 +41,7 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Globalization;
 using System.IO;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.LanguageService;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -154,6 +155,7 @@ namespace MySql.Data.VisualStudio.Editors
       finally
       {
         d.Dispose();
+        MySqlQuickInfoController.Disconnect();
       }
     }
 
@@ -184,6 +186,7 @@ namespace MySql.Data.VisualStudio.Editors
         ExecuteScript(sql);
       }
 
+      MySqlQuickInfoController.Disconnect();
       StoreCurrentDatabase();
     }
 
@@ -289,6 +292,7 @@ namespace MySql.Data.VisualStudio.Editors
     private void disconnectButton_Click(object sender, EventArgs e)
     {
       connection.Close();
+      MySqlQuickInfoController.Disconnect();
       UpdateButtons();
     }
 

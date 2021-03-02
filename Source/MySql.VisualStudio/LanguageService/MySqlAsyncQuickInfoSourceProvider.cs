@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019, 2021, Oracle and/or its affiliates.
+// Copyright (c) 2012, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,31 +26,27 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Utilities;
 
-namespace MySql.VisualStudio.CustomAction
+namespace MySql.Data.VisualStudio.LanguageService
 {
-  /// <summary>
-  /// Defines the versions of Visual Studio that are supported by this product.
-  /// </summary>
-  public enum SupportedVisualStudioVersions
+  [Export(typeof(IAsyncQuickInfoSourceProvider))]
+  [Name("ToolTip QuickInfo Source")]
+  [Order(Before = "Default Quick Info Presenter")]
+  [ContentType("text")]
+  internal class MySqlAsyncQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
   {
-    [Description("Visual Studio 2017 Community")]
-    Vs2017Community,
+    [Import]
+    internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
-    [Description("Visual Studio 2017 Enterprise")]
-    Vs2017Enterprise,
-
-    [Description("Visual Studio 2017 Professional")]
-    Vs2017Professional,
-
-    [Description("Visual Studio 2019 Community")]
-    Vs2019Community,
-
-    [Description("Visual Studio 2019 Enterprise")]
-    Vs2019Enterprise,
-
-    [Description("Visual Studio 2019 Professional")]
-    Vs2019Professional
+    IAsyncQuickInfoSource IAsyncQuickInfoSourceProvider.TryCreateQuickInfoSource(ITextBuffer textBuffer)
+    {
+      return new MySqlAsyncQuickInfoSource(this, textBuffer);
+    }
   }
 }

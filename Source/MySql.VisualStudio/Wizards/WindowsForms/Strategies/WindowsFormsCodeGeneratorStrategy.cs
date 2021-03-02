@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -32,7 +32,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
 using System.Threading.Tasks;
 #endif
 using System.Text;
@@ -355,7 +355,7 @@ from information_schema.key_column_usage where `constraint_name` = '{0}' and tab
 
     }
     
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
     public IdentedStreamWriter(Stream stream, Encoding encoding, int bufferSize, bool leaveOpen) : base( stream, encoding, bufferSize, leaveOpen )
     {
 
@@ -436,7 +436,7 @@ from information_schema.key_column_usage where `constraint_name` = '{0}' and tab
       Write(new string(buffer, index, count));
     }
 
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
     public override Task WriteAsync(char value)
     {
       return WriteAsync(value.ToString());

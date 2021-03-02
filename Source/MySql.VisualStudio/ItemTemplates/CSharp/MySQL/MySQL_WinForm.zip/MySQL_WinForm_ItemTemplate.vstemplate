@@ -7,7 +7,7 @@
     <Icon>icon.png</Icon>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <TemplateID>191c2d4b-7cd1-46cb-9d89-850e54e91b55</TemplateID>
-    <RequiredFrameworkVersion>4.6</RequiredFrameworkVersion>
+    <RequiredFrameworkVersion>4.6.1</RequiredFrameworkVersion>
   </TemplateData>
 
   <TemplateContent>

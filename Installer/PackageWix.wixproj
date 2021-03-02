@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion" />
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
@@ -112,10 +112,6 @@
   <ItemGroup>
     <Compile Include="core.wxs" />
     <Compile Include="EntityFramework.wxs" />
-    <Compile Include="ItemTemplates\VS14_CS_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_CS_WinForm_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_VB_Web_ItemTemplate.wxs" />
-    <Compile Include="ItemTemplates\VS14_VB_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_Web_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_CS_WinForm_ItemTemplate.wxs" />
     <Compile Include="ItemTemplates\VS15_Ent_CS_Web_ItemTemplate.wxs" />
@@ -146,7 +142,7 @@
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
-    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\14.0v4.6\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="..\Source\MySql.VisualStudio\bin\15.0v4.6.1\release\mysql.visualstudio.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
     </GetVersion>
     <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">

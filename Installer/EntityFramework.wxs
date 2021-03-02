@@ -1,22 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment Id='EntityFramework'>    <DirectoryRef Id="VS14_DBGenDir">
-      <Component Id="EF.T4.VS14" Guid="9B861D6E-9401-45FF-B749-8E6519269B73">
-        <File Id="VS14.SSDLToMySQL6" Name="SSDLToMySQL6.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL6.tt"/>
-        <File Id="VS14.SSDLToMySQL8" Name="SSDLToMySQL8.tt" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\SSDLToMySQL8.tt"/>
-        <File Id="VS14.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\Source\MySql.VisualStudio\T4Templates\VS2015\GenerateMySQL.Utility.ttinclude"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_PrivateAssemblies'>
-      <Component Id="EF.PA14.v45" Guid="45F17AF0-0EF0-4343-824A-9F450EC93F54" DiskId="1">
-        <File Id="MySql.EF.PA14.v45" Name="MySql.Data.EntityFramework.dll"
-              Source="..\Dependencies\v4.5\Release\mysql.data.entityframework.dll" DiskId="1"/>
-      </Component>
-    </DirectoryRef>
+  <Fragment Id='EntityFramework'>
 
     <!-- Visual Studio 2017 Community -->
     <DirectoryRef Id="VS15_DBGenDir">
@@ -133,13 +117,6 @@
     </DirectoryRef>
 
     <!--Removing files from Public Assemblies Folders-->
-    <DirectoryRef Id='VS14_PrivateAssemblies'>
-      <Component Id="Remove.EF.PA14.v45" Guid="29548C71-81EE-4585-858C-E5E84E3F0C31" DiskId="1">
-        <RemoveFile Id="RemoveMySql.EF.PA14.v45" Name="MySql.Data.EntityFramework.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
     <!-- Visual Studio 2017 Community -->
     <DirectoryRef Id='VS15_PrivateAssemblies'>
       <Component Id="Remove.EF.PA15.v45" Guid="86882299-9C2A-4E6C-8307-E4E7234ECC44" DiskId="1">
@@ -187,14 +164,6 @@
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
-
-    <Feature Id="EntityFramework2015" Level="1" Display="expand" Title="Entity Framework Support for VS 2015"
-               Description="Support for the entity framework">
-      <Condition Level='0'>NOT VS_2015_PATH</Condition>
-      <ComponentRef Id="EF.T4.VS14" />
-      <ComponentRef Id="EF.PA14.v45"/>
-      <ComponentRef Id="Remove.EF.PA14.v45"/>
-    </Feature>
 
     <Feature Id="EntityFramework2017" Level="1" Display="expand" Title="Entity Framework Support for VS 2017"
            Description="Support for the entity framework">

@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -164,7 +164,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       VSProject vsProj = null;
       if (wizardFinished)
       {
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
         string frmName = string.Empty;
         SortedSet<string> tables = new SortedSet<string>();
         Dictionary<string, WindowsFormsCodeGeneratorStrategy> strategies = new Dictionary<string, WindowsFormsCodeGeneratorStrategy>();

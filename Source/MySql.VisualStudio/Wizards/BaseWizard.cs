@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -199,7 +199,7 @@ namespace MySql.Data.VisualStudio.Wizards
     {
       try
       {
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
         Dte = ((dynamic)automationObject).DTE;
 #endif
         DialogResult result = WizardForm.ShowDialog();
@@ -304,7 +304,7 @@ namespace MySql.Data.VisualStudio.Wizards
 
     protected void AddReferencesEntityFramework(VSProject vsProj)
     {
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
       string path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 #else
       string path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
@@ -612,7 +612,7 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
 
     internal protected string GetVisualStudioVersion()
     {
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
       return Dte.Version;
 #else
       return "9.0";

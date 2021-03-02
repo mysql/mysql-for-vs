@@ -51,7 +51,7 @@ namespace MySql.VisualStudio.CustomAction.Tests
       var mySqlForVisualStudioVersion = new Version(1, 2, 10);
 
       // If specified VS version is not installed.
-      Assert.IsTrue(CustomActions.GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2015, mySqlForVisualStudioVersion) == Enums.PkgdefFileStatus.Unknown);
+      Assert.IsTrue(CustomActions.GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mySqlForVisualStudioVersion) == Enums.PkgdefFileStatus.Unknown);
 
       // Validate the correct status is returned based on the state of the pkgdef file.
       Assert.IsTrue(CustomActions.ReadPkgdefFileStatus("../../Files/RedirectFromInternalToInstalled.pkgdef", SupportedVisualStudioVersions.Vs2019Enterprise) == Enums.PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry);

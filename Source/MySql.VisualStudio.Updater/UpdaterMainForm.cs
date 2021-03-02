@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2019, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -126,14 +126,6 @@ namespace MySql.VisualStudio.Updater
       }
 
       var errorMessage = Properties.Resources.PkgdefFileUpdateFailed;
-      if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2015, _mySqlForVisualStudioVersion))
-      {
-        SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2015.ToString()));
-        return;
-      }
-
-      SetStatusText();
-      SetProgress(10);
       CustomActions.SetVSInstallationPaths();
 
       // Perform update for each version of Visual Studio that is supported.
@@ -144,7 +136,7 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(25);
+      SetProgress(17);
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2017Enterprise, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2017Enterprise.ToString()));
@@ -152,7 +144,7 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(40);
+      SetProgress(34);
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2017Professional, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2017Professional.ToString()));
@@ -160,7 +152,7 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(55);
+      SetProgress(51);
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2019Community, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2019Community.ToString()));
@@ -168,7 +160,7 @@ namespace MySql.VisualStudio.Updater
       }
 
       SetStatusText();
-      SetProgress(70);
+      SetProgress(68);
       if (!UpdatePkgDefFileFor(SupportedVisualStudioVersions.Vs2019Enterprise, _mySqlForVisualStudioVersion))
       {
         SetStatusText(string.Format(errorMessage, SupportedVisualStudioVersions.Vs2019Enterprise.ToString()));
@@ -200,10 +192,6 @@ namespace MySql.VisualStudio.Updater
       string visualStudioInstallationPath = null;
       switch (visualStudioVersion)
       {
-        case SupportedVisualStudioVersions.Vs2015:
-          visualStudioInstallationPath = CustomAction.Utility.Utilities.GetVisualStudio2015InstallationPath();
-          break;
-
         case SupportedVisualStudioVersions.Vs2017Community:
           visualStudioInstallationPath = CustomActions.VS2017CommunityInstallationPath;
           break;

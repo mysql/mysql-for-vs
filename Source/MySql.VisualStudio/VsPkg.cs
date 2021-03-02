@@ -67,7 +67,7 @@ using MySql.VisualStudio.CustomAction;
 using System.Drawing;
 using System.Resources;
 using MySql.VisualStudio.CustomAction.Enums;
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
 #endif
 
@@ -316,7 +316,8 @@ namespace MySql.Data.VisualStudio
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
 
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
-#if NET_46_OR_GREATER
+      // Set the correct folder name where the Connector/NET assemblies are installed to.
+#if NET_461_OR_GREATER
       string mySqlConnectorAssembliesVersion = "v4.5.2";
 #else
       string mySqlConnectorAssembliesVersion = "v4.0";

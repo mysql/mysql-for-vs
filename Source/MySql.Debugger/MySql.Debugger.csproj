@@ -4,7 +4,7 @@
     <VisualStudioFlavor Condition="'$(VisualStudioVersion)' >= '15.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1969DE06-EC8C-41CE-AAEE-F54B27D309BA}</ProjectGuid>
@@ -21,7 +21,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.7.2</Framework>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER;NET_472_OR_GREATER</DefineConstants>
+        <DefineConstants>NET_461_OR_GREATER;NET_472_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
@@ -30,16 +30,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.6.1</Framework>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.6</Framework>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER</DefineConstants>
+        <DefineConstants>NET_461_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
     <Otherwise>
@@ -47,8 +38,8 @@
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.6</Framework>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+        <Framework>4.6.1</Framework>
+        <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
@@ -110,25 +101,6 @@
         <Reference Include="System.Xml" />
       </ItemGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="MySql.Data">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-      </ItemGroup>
-    </When>
   </Choose>
   <ItemGroup>
     <Compile Include="..\MySql.VisualStudio\Properties\VersionInfo.cs">
@@ -160,7 +132,6 @@
       <Name>MySql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' And '$(VisualStudioVersion)' != '16.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
   <PropertyGroup>

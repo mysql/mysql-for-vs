@@ -4,7 +4,7 @@
     <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A746219A-78F3-4D53-8308-68DB3D13EF78}</ProjectGuid>
@@ -31,15 +31,6 @@
         <Framework>4.6.1</Framework>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
         <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.6</Framework>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
   </Choose>
@@ -120,19 +111,6 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.Debugger.Interop.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Debugger.Interop.14.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Debugger.InteropA.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.14.0.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
   </Choose>
   <ItemGroup>
     <Compile Include="..\MySql.VisualStudio\Properties\VersionInfo.cs">
@@ -177,7 +155,6 @@
       <DependentUpon>StoredRoutineArgumentsDlg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' And '$(VisualStudioVersion)' != '16.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
   <PropertyGroup>

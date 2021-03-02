@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2012, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,16 +26,12 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
+using System.Data.Common;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.Text.Tagging;
-using Microsoft.VisualStudio.Utilities;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio.LanguageService
 {
@@ -44,7 +40,12 @@ namespace MySql.Data.VisualStudio.LanguageService
     private ITextView m_textView;
     private IList<ITextBuffer> m_subjectBuffers;
     private MySqlQuickInfoControllerProvider m_provider;
-    private IQuickInfoSession m_session;
+    private IAsyncQuickInfoSession m_session;
+
+    /// <summary>
+    /// Gets the connection object used by the Async Quick Info API.
+    /// </summary>
+    public static DbConnection Connection { get; private set; }
 
     internal MySqlQuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, MySqlQuickInfoControllerProvider provider)
     {
@@ -55,24 +56,48 @@ namespace MySql.Data.VisualStudio.LanguageService
       m_textView.MouseHover += this.OnTextViewMouseHover;
     }
 
-    private void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
+    private async void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
     {
+      if (Connection == null
+          || Connection.State != System.Data.ConnectionState.Open)
+      {
+        var currentConnection = LanguageServiceUtil.GetConnection();
+        if (currentConnection == null)
+        {
+          return;
+        }
+
+        var mysqlConnection = currentConnection as MySqlConnection;
+        if (mysqlConnection == null)
+        {
+          return;
+        }
+
+        Connection = mysqlConnection.Clone() as DbConnection;
+        if (Connection == null)
+        {
+          return;
+        }
+      }
+
       //find the mouse position by mapping down to the subject buffer
-      SnapshotPoint? point = m_textView.BufferGraph.MapDownToFirstMatch
-        (new SnapshotPoint(m_textView.TextSnapshot, e.Position),
+      SnapshotPoint? point = m_textView.BufferGraph.MapDownToFirstMatch(
+        new SnapshotPoint(m_textView.TextSnapshot, e.Position),
         PointTrackingMode.Positive,
         snapshot => m_subjectBuffers.Contains(snapshot.TextBuffer),
         PositionAffinity.Predecessor);
 
-      if (point != null)
+      if (point == null)
       {
-        ITrackingPoint triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position,
-        PointTrackingMode.Positive);
+        return;
+      }
 
-        if (!m_provider.QuickInfoBroker.IsQuickInfoActive(m_textView))
-        {
-          m_session = m_provider.QuickInfoBroker.TriggerQuickInfo(m_textView, triggerPoint, true);
-        }
+      ITrackingPoint triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position,
+      PointTrackingMode.Positive);
+
+      if (!m_provider.QuickInfoBroker.IsQuickInfoActive(m_textView))
+      {
+        m_session = await m_provider.QuickInfoBroker.TriggerQuickInfoAsync(m_textView, triggerPoint, QuickInfoSessionOptions.TrackMouse);
       }
     }
 
@@ -83,6 +108,13 @@ namespace MySql.Data.VisualStudio.LanguageService
         m_textView.MouseHover -= this.OnTextViewMouseHover;
         m_textView = null;
       }
+
+      if (Connection != null
+          && Connection.State == System.Data.ConnectionState.Open)
+      {
+        Connection.Close();
+        Connection = null;
+      }
     }
 
     public void ConnectSubjectBuffer(ITextBuffer subjectBuffer)
@@ -91,6 +123,18 @@ namespace MySql.Data.VisualStudio.LanguageService
 
     public void DisconnectSubjectBuffer(ITextBuffer subjectBuffer)
     {
+    }
+
+    public static void Disconnect()
+    {
+      if (Connection == null
+          || Connection.State != System.Data.ConnectionState.Open)
+      {
+        return;
+      }
+
+      Connection.Close();
+      Connection = null;
     }
   }
 }

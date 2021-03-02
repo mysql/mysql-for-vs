@@ -1,4 +1,4 @@
-// Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2012, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,15 +26,11 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
 namespace MySql.Data.VisualStudio.LanguageService
@@ -45,7 +41,7 @@ namespace MySql.Data.VisualStudio.LanguageService
   internal class MySqlQuickInfoControllerProvider : IIntellisenseControllerProvider
   {
     [Import]
-    internal IQuickInfoBroker QuickInfoBroker { get; set; }
+    internal IAsyncQuickInfoBroker QuickInfoBroker { get; set; }
 
     public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
     {

@@ -1,91 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
-    <!-- Visual Studio 2015 -->
-    <DirectoryRef Id='VS14_ExtVersionDir'>
-      <Component Id='VS2015_Extension' Guid='D7EE5F2F-5F1D-48F0-B7E6-E6D731B599F0'>
-        <File Id='MySQL.VisualStudio.2015' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\14.0v4.6\release\MySQL.VisualStudio.dll'/>
-        <File Id='MySql.Parser.2015' Name='MySql.Parser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\14.0v4.6\release\MySql.Parser.dll'/>
-        <File Id='Antlr3.Runtime.2015' Name='Antlr3.Runtime.dll' DiskId='1'
-              Source='..\Source\MySql.Parser\bin\Release\Antlr3.Runtime.dll'/>
-        <File Id='VsixManifest.2015' Name='extension.vsixmanifest' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\14.0v4.6\release\extension.vsixmanifest'/>
-        <File Id='VSPkgdef.2015' Name='MySql.VisualStudio.pkgdef' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\bin\14.0v4.6\release\MySql.VisualStudio.pkgdef'/>
-        <File Id='MySql.Debugger.2015' Name='MySql.Debugger.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
-        <File Id='MySql.Debugger.VisualStudio.2015' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
-              Source='..\Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\MySql.Debugger.VisualStudio.dll'/>
-        <File Id='MySql.Utility_2015' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
-        <File Id='MySql.VisualStudio.CustomAction_2015' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
-              Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_TemplatesDir'>
-      <Component Id='VS2015_Templates' Guid='A7EB6122-2F0F-4C60-BC52-F3C5050DE211'>
-        <File Id='VS2015_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='VS2015_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
-              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_PrivateAssemblies'>
-      <Component Id='VS2015_MD.Library' Guid='3E76F0B9-B63E-4EEB-A7D1-C6CA28DB0CD2'>
-        <File Id='VS2014_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
-      </Component>
-      <Component Id='VS2015_Web.Library' Guid='9CC2D22E-CB4D-4472-A957-998CB9307B63'>
-        <File Id='VS2015_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
-      </Component>
-      <Component Id='VS2015_Ext_BouncyCastle.Library' Guid='A0170186-72EA-464E-82A3-63C06116A470'>
-        <File Id='VS2015_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
-      </Component>
-    </DirectoryRef>
-
-    <!--Item Templates-->
-    <DirectoryRef Id='VS14_CSharpITMySQL'>
-      <Component Id='VS2015_VSIT_DIR' Guid='eaa4081e-fea6-4640-9481-f3b1c922ba3d'>
-        <File Id='VS2015_VSCS_Winform_ItemTemplate' Name='CSharpWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_WinForm.zip' />
-        <File Id='VS2015_VSCS_Web_ItemTemplate' Name='CSharpWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_Web.zip' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_VBITMySQL'>
-      <Component Id='VS2015_VB_VSIT_DIR' Guid='b0f00be9-2298-469f-b269-fd42263c2432'>
-        <File Id='VS2015_VSVB_Winform_ItemTemplate' Name='VBWinform_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_WinForm.zip' />
-        <File Id='VS2015_VSVB_Web_ItemTemplate' Name='VBWeb_ItemTemplate.zip' DiskId='1'
-              Source='..\ItemTemplatesZipFolder\MySQL_VB_Web.zip' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_T4TemplatesCSharpDir'>
-      <Component Id='VS2015_T4TemplatesCSharpDir' Guid='CD3EEFFD-230E-4387-92F5-1BCEF885D02B'>
-        <File Id='VS2015_T4TemplateCSharpController' Name='CSharpControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpControllerClass.tt' />
-        <File Id='VS2015_T4TemplateCSharpIndex' Name='CSharpIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\CSharp\CSharpIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id='VS14_T4TemplatesVBDir' >
-      <Component Id='VS2015_T4TemplatesVBDir' Guid='F8C1D443-164C-4821-9608-CD58C69232C9'>
-        <File Id='VS2015_T4TemplateVBController' Name='VisualBasicControllerClass.tt' DiskId='1'
-            Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicControllerClass.tt' />
-        <File Id='VS2015_T4TemplateVBIndex' Name='VisualBasicIndexFile.tt' DiskId='1'
-           Source='..\Source\MySql.VisualStudio\Wizards\Web\T4Templates\VisualBasic\VisualBasicIndexFile.tt' />
-      </Component>
-    </DirectoryRef>
-
     <!-- Visual Studio 2017 Community -->
     <DirectoryRef Id='VS15_ExtVersionDir'>
       <Component Id='VS2017_Com_EVars' Guid='13BBCEA7-FA64-43A5-B479-5422A5A9F0F9'>
@@ -657,21 +572,6 @@
     </DirectoryRef>
 
     <!--Removing files from Private Assemblies Folders-->
-    <DirectoryRef Id='VS14_PrivateAssemblies'>
-      <Component Id="Remove.VS2015_MD.Library" Guid="DDF7A0E8-55AD-4379-9B23-7C57078C34A5" DiskId="1">
-        <RemoveFile Id="RemoveVS2015_MySql.DataLib" Name="MySql.Data.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id="Remove.VS2015_Web.Library" Guid="1DB36478-2940-4202-97FD-BFBC2B2DF8C7" DiskId="1">
-        <RemoveFile Id="RemoveVS2015_MySql.Web.Lib" Name="MySql.Web.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id="Remove.VS2015_Ext_BouncyCastle.Library" Guid="21FE80EC-6971-4255-ACA0-B45DFBDF0359" DiskId="1">
-        <RemoveFile Id="RemoveVS2015_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-    </DirectoryRef>
-
     <!-- Visual Studio 2017 Community -->
     <DirectoryRef Id='VS15_PrivateAssemblies'>
       <Component Id="Remove.VS2017_MD.Library" Guid="8FFC92DF-D7B2-4CCF-AA6D-B0CDD1F6786F" DiskId="1">
@@ -767,31 +667,6 @@
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
-
-    <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
-      <Condition Level='0'>NOT VS_2015_PATH</Condition>
-      <ComponentRef Id='VS2015_Extension'/>
-      <ComponentRef Id='VS2015_Templates'/>
-      <ComponentRef Id='VS2015_MD.Library' />
-      <ComponentRef Id='VS2015_Web.Library' />
-      <ComponentRef Id='VS2015_Ext_BouncyCastle.Library' />
-      <ComponentRef Id='Remove.VS2015_MD.Library'/>
-      <ComponentRef Id='Remove.VS2015_Web.Library'/>
-      <ComponentRef Id='Remove.VS2015_Ext_BouncyCastle.Library'/>
-      <ComponentRef Id='AutoLoadPackageVS2015'/>
-      <!--Item Templates-->
-      <Feature Id='VS2015_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden' >
-        <ComponentRef Id='VS2015_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS14_CS_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS14_CS_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2015_VB_VSIT_DIR'/>
-        <ComponentGroupRef Id='VS14_VB_WinForm_ItemTemplate_DirectoryComponents'/>
-        <ComponentGroupRef Id='VS14_VB_Web_ItemTemplate_DirectoryComponents'/>
-        <ComponentRef Id='VS2015_T4TemplatesCSharpDir' />
-        <ComponentRef Id='VS2015_T4TemplatesVBDir' />
-      </Feature>
-    </Feature>
-
     <Feature Id='VS2017Int' Level='1' Title='Visual Studio 2017' Display='expand'>
       <Condition Level='0'>NOT VS2017COMINSTALL AND NOT VS2017ENTINSTALL AND NOT VS2017PROINSTALL</Condition>
       <Feature Id='VS2017CommunityInt' Level='1' Title='Visual Studio 2017 Community'>
@@ -948,12 +823,6 @@
       </Feature>
     </Feature>
 
-    <!-- Visual Studio 2015 installation location -->
-    <Property Id='VS_2015_PATH' Secure='yes'>
-      <RegistrySearch Id='Find_VS2015_Path' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\14.0\'
-          Name='ShellFolder' Type='raw'/>
-    </Property>
-
     <!-- Visual Studio 2017+ installation locations -->
     <!-- Value is calculated at runtime using the Setup Configuration API. -->
     <Property Id='VS_2017_COM_PATH' Secure='yes' />
@@ -971,18 +840,12 @@
 
     <!-- Additional properties -->
     <Property Id='CNETVERSION' Secure='yes' />
-    <Property Id='VS2015INSTALL' Secure='yes' />
     <Property Id='VS2017COMINSTALL' Secure='yes' />
     <Property Id='VS2017ENTINSTALL' Secure='yes' />
     <Property Id='VS2017PROINSTALL' Secure='yes' />
     <Property Id='VS2019COMINSTALL' Secure='yes' />
     <Property Id='VS2019ENTINSTALL' Secure='yes' />
     <Property Id='VS2019PROINSTALL' Secure='yes' />
-
-    <!-- Visual Studio 2015 Custom Action (update packages file) -->
-    <Binary Id="VS14_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
-    <CustomAction Id="VS2015_SetPathProp" Property="VS14_UpdatePackageFile" Value="VS2015_PathProp=[VS_2015_PATH]" Return="check" />
-    <CustomAction Id="VS14_UpdatePackageFile" DllEntry="UpdateFlagPackagesFileForVs2015" BinaryKey="VS14_PackagesFile" Execute="deferred" Return="check" Impersonate="no" />
 
     <!-- Visual Studio 2017 Community Custom Action (update packages file) -->
     <Binary Id="VS15_PackagesFile" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
@@ -1042,25 +905,10 @@
     <Binary Id="Win7Installation" SourceFile="..\MySql.VisualStudio.CustomAction\bin\Release\MySql.VisualStudio.CustomAction.CA.dll" />
     <CustomAction Id="Win7_ShowVSWarning" DllEntry="ShowWindows7InstallationWarning" BinaryKey="Win7Installation" Execute="immediate" Return="ignore" Impersonate="no" />
 
-    <!-- Adding AutoLoadPackage option so our connections are available -->
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="AutoLoadPackageVS2015" Guid="*">
-        <RegistryKey Root="HKLM"
-                     Key="SOFTWARE\Microsoft\VisualStudio\14.0\AutoLoadPackages\{adfc4e64-0397-11d1-9f4e-00a0c911004f}"
-                     ForceCreateOnInstall="yes"
-                     ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="integer" Name="{79a115c9-b133-4891-9e7b-242509dad272}"  Value="0" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
     <InstallExecuteSequence>
-      <Custom Action="VS15_16_SetVSInstallationPaths" Before="LaunchConditions"></Custom>
-      <Custom Action='VS2015_SetPathProp' Before='InstallFinalize'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action="VS14_UpdatePackageFile" After='VS2015_SetPathProp'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action='VS2015Setup' After='VS14_UpdatePackageFile'>(&amp;VS2015Int=2) OR (&amp;VS2015Int=3)</Custom>
-      <Custom Action='UpdatePkgdefFileParameters' After='VS2015Setup'>CNETINSTALLED = "Yes" AND ((&amp;VS2015Int=2) OR (&amp;VS2015Int=3) OR (&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3) OR (&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3) OR (&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3) OR (&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3))</Custom>
-      <Custom Action='UpdatePkgdefFile' After='UpdatePkgdefFileParameters'>CNETINSTALLED = "Yes" AND ((&amp;VS2015Int=2) OR (&amp;VS2015Int=3) OR (&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3) OR (&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3) OR (&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3) OR (&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3))</Custom>
+      <Custom Action="VS_SetInstallationPaths" Before="LaunchConditions"></Custom>
+      <Custom Action='UpdatePkgdefFileParameters' Before='InstallFinalize'>CNETINSTALLED = "Yes" AND ((&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3) OR (&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3) OR (&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3) OR (&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3))</Custom>
+      <Custom Action='UpdatePkgdefFile' After='UpdatePkgdefFileParameters'>CNETINSTALLED = "Yes" AND ((&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3) OR (&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3) OR (&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3) OR (&amp;VS2019CommunityInt=2) OR (&amp;VS2019CommunityInt=3) OR (&amp;VS2019EnterpriseInt=2) OR (&amp;VS2019EnterpriseInt=3) OR (&amp;VS2019ProfessionalInt=2) OR (&amp;VS2019ProfessionalInt=3))</Custom>
       <Custom Action='VS15Setup_Custom' After='UpdatePkgdefFile'>(&amp;VS2017CommunityInt=2) OR (&amp;VS2017CommunityInt=3)</Custom>
       <Custom Action='VS15_Ent_Setup_Custom' After='VS15Setup_Custom'>(&amp;VS2017EnterpriseInt=2) OR (&amp;VS2017EnterpriseInt=3)</Custom>
       <Custom Action='VS15_Pro_Setup_Custom' After='VS15_Ent_Setup_Custom'>(&amp;VS2017ProfessionalInt=2) OR (&amp;VS2017ProfessionalInt=3)</Custom>

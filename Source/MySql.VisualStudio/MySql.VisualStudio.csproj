@@ -1,16 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <!-- Setup the VSSDK env. variables -->
-  <UsingTask TaskName="SetVsSDKEnvVars_VS14" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-    <ParameterGroup>
-      <ProjectDirectory Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Code Type="Fragment" Language="cs">
-        System.Environment.SetEnvironmentVariable("VsSDKToolsPath", System.IO.Path.GetFullPath(@"$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Tools\Bin"));
-      </Code>
-    </Task>
-  </UsingTask>
   <UsingTask TaskName="SetVsSDKEnvVars_VS15" TaskFactory="CodeTaskFactory" AssemblyFile="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.Build.Tasks.v4.0.dll">
     <ParameterGroup>
       <ProjectDirectory Required="true" />
@@ -32,8 +22,8 @@
     </Task>
   </UsingTask>
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,7 +43,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -82,7 +72,7 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.7.2</Framework>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER;NET_472_OR_GREATER;</DefineConstants>
+        <DefineConstants>NET_461_OR_GREATER;NET_472_OR_GREATER;</DefineConstants>
         <StartAction>Program</StartAction>
         <StartProgram>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\devenv.exe</StartProgram>
         <StartArguments>/rootsuffix Exp</StartArguments>
@@ -100,25 +90,11 @@
         <SchemaVersion>2.0</SchemaVersion>
         <Framework>4.6.1</Framework>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER;</DefineConstants>
+        <DefineConstants>NET_461_OR_GREATER;</DefineConstants>
         <StartAction>Program</StartAction>
         <StartProgram>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\devenv.exe</StartProgram>
         <StartArguments>/rootsuffix Exp</StartArguments>
         <ProjectView>ProjectFiles</ProjectView>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <PropertyGroup>
-        <!-- Setup the VSSDK paths -->
-        <VsSDKInstall>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\</VsSDKInstall>
-        <VsSDKIncludes>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Inc</VsSDKIncludes>
-        <VsSDKToolsPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Tools\Bin</VsSDKToolsPath>
-        <VsixSchemaPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\Xml\Schemas\VSIXManifestSchema.xsd</VsixSchemaPath>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.6</Framework>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
   </Choose>
@@ -227,23 +203,6 @@
         </Reference>
       </ItemGroup>
     </When>
-    <!-- VS 2015 -->
-    <When Condition="Exists('C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VSDesigner\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VSDesigner.dll') And '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VSDesigner.dll, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VSDesigner\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VSDesigner.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="!Exists('C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VSDesigner\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VSDesigner.dll') And '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VSDesigner.dll, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\Microsoft.VSDesigner.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
   </Choose>
   <!-- References per specific VS version -->
   <Choose>
@@ -272,8 +231,14 @@
         <Reference Include="Microsoft.VisualStudio.Editor, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Editor.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.VisualStudio.Language, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Language.StandardClassification, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
@@ -382,8 +347,14 @@
         <Reference Include="Microsoft.VisualStudio.Editor, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Editor.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.VisualStudio.Language, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Language.StandardClassification, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
@@ -464,117 +435,6 @@
         <Reference Include="NuGet.VisualStudio">
           <HintPath>$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.VisualStudio.dll</HintPath>
           <EmbedInteropTypes>True</EmbedInteropTypes>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="System.Linq" />
-        <Reference Include="Microsoft.Data.ConnectionUI, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.Data.ConnectionUI.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Data, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Core.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Data.Services, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Data.Services.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Editor, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Editor.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Package.LanguageService.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Package.LanguageService.14.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.14.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Immutable.11.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Immutable.12.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Immutable.14.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Design.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Interop.11.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Interop.12.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Text.Data, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Text.Data.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Text.UI, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Text.UI.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.TextManager.Interop.9.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.TextManager.Interop.10.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.TextManager.Interop.11.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.TextManager.Interop.12.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.TextTemplating.14.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TextTemplating.VSHost.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <HintPath>$(ProgramFiles)\Microsoft Visual Studio 14.0\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.TextTemplating.VSHost.14.0.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.DataDesign.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <SpecificVersion>True</SpecificVersion>
-          <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.DataDesign.Interfaces\v4.0_14.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.DataDesign.Interfaces.dll</HintPath>
         </Reference>
       </ItemGroup>
     </When>
@@ -1053,8 +913,8 @@
     <Compile Include="LanguageService\MySqlCompletionSourceProvider .cs" />
     <Compile Include="LanguageService\MySqlQuickInfoController.cs" />
     <Compile Include="LanguageService\MySqlQuickInfoControllerProvider.cs" />
-    <Compile Include="LanguageService\MySqlQuickInfoSource.cs" />
-    <Compile Include="LanguageService\MySqlQuickInfoSourceProvider.cs" />
+    <Compile Include="LanguageService\MySqlAsyncQuickInfoSource.cs" />
+    <Compile Include="LanguageService\MySqlAsyncQuickInfoSourceProvider.cs" />
     <Compile Include="LanguageService\MySqlTokenType.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1249,14 +1109,7 @@
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
   <Import Project="ImportProjects4.7.2.targets" Condition="'$(Framework)' == '4.7.2'" />
   <Import Project="ImportProjects4.6.1.targets" Condition="'$(Framework)' == '4.6.1'" />
-  <Import Project="ImportProjects4.6.targets" Condition="'$(Framework)' == '4.6'" />
   <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '14.0' AND $(Configuration) == 'Debug'">
-      <PropertyGroup>
-        <PreBuildEvent>rd "%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp\Extensions\Oracle, Inc\MySQL for Visual Studio" /S /Q</PreBuildEvent>
-        <VS_Expr_Folder>%25LOCALAPPDATA%25\Microsoft\VisualStudio\14.0Exp</VS_Expr_Folder>
-      </PropertyGroup>
-    </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0' ">
       <PropertyGroup>
         <VS_Expr_Folder>%25LOCALAPPDATA%25\Microsoft\VisualStudio\15.0Exp</VS_Expr_Folder>
@@ -1274,9 +1127,6 @@
     <Exec Command="$(PowerShellExe) -NonInteractive -executionpolicy bypass -Command &quot;&amp; { If(Test-Path -Path Scripts\Update_Version.ps1) { Scripts\Update_Version.ps1 } }&quot; " />
   </Target>
   <!-- Targets for the VSSDK env. variables -->
-  <Target Name="SetVsSDKEnvVars_VS14" BeforeTargets="VSCTCompile">
-    <SetVsSDKEnvVars_VS14 ProjectDirectory="$(MSBuildProjectDirectory)" />
-  </Target>
   <Target Name="SetVsSDKEnvVars_VS15" BeforeTargets="VSCTCompile" Condition=" '$(VisualStudioVersion)' == '15.0'">
     <SetVsSDKEnvVars_VS15 ProjectDirectory="$(MSBuildProjectDirectory)" />
   </Target>

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -74,7 +74,7 @@ namespace MySql.Data.VisualStudio
 
     public override IScanner GetScanner(IVsTextLines buffer)
     {
-#if CLR4 || NET_46_OR_GREATER
+#if CLR4 || NET_461_OR_GREATER
       return null;  // rely on MEF for colorizing
 #else
       return new MySqlScanner();

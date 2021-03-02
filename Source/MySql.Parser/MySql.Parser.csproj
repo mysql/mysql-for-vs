@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MySql.Parser</RootNamespace>
     <AssemblyName>MySql.Parser</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <Choose>
@@ -34,22 +34,13 @@
         <DefineConstants>NET_46_OR_GREATER;NET_461_OR_GREATER</DefineConstants>
       </PropertyGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <PropertyGroup>
-        <ProductVersion>9.0.30729</ProductVersion>
-        <SchemaVersion>2.0</SchemaVersion>
-        <Framework>4.6</Framework>
-        <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-        <DefineConstants>NET_46_OR_GREATER</DefineConstants>
-      </PropertyGroup>
-    </When>
     <Otherwise>
       <!-- When Condition=" '$(VisualStudioVersion)' == ''" > -->
       <PropertyGroup>
         <ProductVersion>9.0.30729</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
-        <Framework>3.5</Framework>
-        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <Framework>4.6.1</Framework>
+        <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
@@ -104,20 +95,6 @@
         <Reference Include="System.Xml" />
       </ItemGroup>
     </When>
-    <When Condition=" '$(VisualStudioVersion)' == '14.0'">
-      <ItemGroup>
-        <Reference Include="Antlr3.Runtime">
-          <HintPath>Antlr\Antlr3.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-      </ItemGroup>
-    </When>
   </Choose>
   <ItemGroup>
     <Compile Include="..\MySql.VisualStudio\Properties\VersionInfo.cs">
@@ -142,7 +119,6 @@
   <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(VisualStudioVersion)' != '15.0' And '$(VisualStudioVersion)' != '16.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
   <PropertyGroup>

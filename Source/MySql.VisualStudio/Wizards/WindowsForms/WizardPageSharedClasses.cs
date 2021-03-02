@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -225,7 +225,7 @@ namespace MySql.Data.VisualStudio.Wizards
       List<ColumnValidation> colsValidation, Dictionary<string, Column> columns,
       Dictionary<string, ForeignKeyColumnInfo> FKs)
     {
-#if NET_46_OR_GREATER
+#if NET_461_OR_GREATER
       SortedSet<string> allColumns = new SortedSet<string>();
       BindingSource binding = new BindingSource();
       
