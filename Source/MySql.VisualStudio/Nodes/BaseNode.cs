@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -360,6 +360,13 @@ namespace MySql.Data.VisualStudio
 
       Debug.Assert(winFrame != null &&
              ErrorHandler.Succeeded(result), "Failed to initialize editor");
+
+      // Prevent the editor window from showing if there was an error loading the code.
+      var vsCodeEditor = editor as VSCodeEditor;
+      if (vsCodeEditor?.Text == string.Empty)
+      {
+        return;
+      }
 
       if (winFrame == null)
         throw new Exception("Cannot create a design window for the selected object");

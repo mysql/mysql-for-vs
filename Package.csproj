@@ -181,12 +181,11 @@
   <Target Name="PackageNoInstall" DependsOnTargets="PackageNoInstallPrepare;PackageNoInstallGPL;$(PackageNoInstallCommercial)" />
   <Target Name="PackageNoInstallPrepare">
     <ItemGroup>
-      <V46Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
-      <V46Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
-      <V46Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V46Assemblies Include="Dependencies\v4.5\Release\MySql.Data.dll" />
+      <V46Assemblies Include="Dependencies\v4.5\Release\MySql.Web.dll" />
+      <V46Assemblies Include="Dependencies\v4.5\Release\MySql.Data.Entity.dll" />
       <V46Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
-      <V46Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
-      <V46Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V46Assemblies Include="Dependencies\v4.5\Release\BouncyCastle.Crypto.dll" />
       <V46Assemblies Include="Source\MySql.VisualStudio\bin\14.0v4.6\release\MySql.VisualStudio.dll" />
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\Antlr3.Runtime.dll" />
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\MySql.Debugger.dll" />
@@ -194,12 +193,11 @@
       <V46Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\14.0v4.6\release\MySql.Debugger.VisualStudio.dll" />
     </ItemGroup>
     <ItemGroup>
-      <V461Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
-      <V461Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
-      <V461Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V461Assemblies Include="Dependencies\v4.5\Release\MySql.Data.dll" />
+      <V461Assemblies Include="Dependencies\v4.5\Release\MySql.Web.dll" />
+      <V461Assemblies Include="Dependencies\v4.5\Release\MySql.Data.Entity.dll" />
       <V461Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
-      <V461Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
-      <V461Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V461Assemblies Include="Dependencies\v4.5\Release\BouncyCastle.Crypto.dll" />
       <V461Assemblies Include="Source\MySql.VisualStudio\bin\15.0v4.6.1\release\MySql.VisualStudio.dll" />
       <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\Antlr3.Runtime.dll" />
       <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Debugger.dll" />
@@ -207,12 +205,11 @@
       <V461Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Debugger.VisualStudio.dll" />
     </ItemGroup>
     <ItemGroup>
-      <V472Assemblies Include="Dependencies\v4.0\Release\MySql.Data.dll" />
-      <V472Assemblies Include="Dependencies\v4.0\Release\MySql.Web.dll" />
-      <V472Assemblies Include="Dependencies\v4.0\Release\MySql.Data.Entity.dll" />
+      <V472Assemblies Include="Dependencies\v4.5\Release\MySql.Data.dll" />
+      <V472Assemblies Include="Dependencies\v4.5\Release\MySql.Web.dll" />
+      <V472Assemblies Include="Dependencies\v4.5\Release\MySql.Data.Entity.dll" />
       <V472Assemblies Include="Dependencies\v4.5\Release\MySql.Data.EntityFramework.dll" />
-      <V472Assemblies Include="Dependencies\v4.0\Release\BouncyCastle.Crypto.dll" />
-      <V472Assemblies Include="Dependencies\v4.0\Release\Renci.SshNet.dll" />
+      <V472Assemblies Include="Dependencies\v4.5\Release\BouncyCastle.Crypto.dll" />
       <V472Assemblies Include="Source\MySql.VisualStudio\bin\15.0v4.6.1\release\MySql.VisualStudio.dll" />
       <V472Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\Antlr3.Runtime.dll" />
       <V472Assemblies Include="Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.dll" />

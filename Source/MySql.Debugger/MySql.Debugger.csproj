@@ -80,7 +80,7 @@
         </Reference>
         <Reference Include="MySql.Data">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+          <HintPath>..\..\Dependencies\v4.5\Release\MySql.Data.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />

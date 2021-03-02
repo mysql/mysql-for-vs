@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -39,7 +39,7 @@ namespace MySql.Data.VisualStudio.WebConfig
   public static class AppConfigTools
   {
     private const string EF5Version = "5.0.0";
-    private const string EF6Version = "6.1.3";
+    private const string EF6Version = "6.4.4";
 
     private const string EF5SectionTypeValue = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
     private const string EF6SectionTypeValue = "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";

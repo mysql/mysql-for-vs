@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2019, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -132,7 +132,7 @@ namespace MySql.VisualStudio.CustomAction.Utility
       const string commonPath = @"Common7\IDE\Extensions\Oracle\MySQL for Visual Studio\{0}\MySql.VisualStudio.pkgdef";
 #if DEBUG
       return Path.Combine(visualStudioInstallationPath,
-                          string.Format(commonPath, $"{mySqlForVisualStudioVersion.Major}.{mySqlForVisualStudioVersion.Minor}.{mySqlForVisualStudioVersion.Build}"));
+                          string.Format(commonPath, $"{mySqlForVisualStudioVersion.Major}.{mySqlForVisualStudioVersion.Minor}.{mySqlForVisualStudioVersion.Build - 1}"));
 #else
       return Path.Combine(visualStudioInstallationPath,
                           string.Format(commonPath, $"{mySqlForVisualStudioVersion.Major}.{mySqlForVisualStudioVersion.Minor}.{mySqlForVisualStudioVersion.Build}"));

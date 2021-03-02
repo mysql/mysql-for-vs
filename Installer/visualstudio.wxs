@@ -47,10 +47,6 @@
         <File Id='VS2015_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
       </Component>
-      <Component Id='VS2015_Ext_SshNet.Library' Guid='D9390384-20B1-404B-BFD4-9EE20822FF7C'>
-        <File Id='VS2015_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
-      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -138,10 +134,6 @@
       <Component Id='VS2017_Ext_BouncyCastle.Library' Guid='063FBE9D-E27C-45A5-B1DA-FB6CCA649515'>
         <File Id='VS2017_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
-      </Component>
-      <Component Id='VS2017_Ext_SshNet.Library' Guid='739C0CA4-8E9E-4917-8D3E-77B8C5445D85'>
-        <File Id='VS2017_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -238,10 +230,6 @@
         <File Id='VS2017_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
       </Component>
-      <Component Id='VS2017_Ent_Ext_SshNet.Library' Guid='C8F3B714-02EF-42C9-8EC8-31202A693440'>
-        <File Id='VS2017_Ent_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
-      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -336,10 +324,6 @@
       <Component Id='VS2017_Pro_Ext_BouncyCastle.Library' Guid='4A03CA70-5DAB-4DD4-94B1-9EEBEF2EF2E9'>
         <File Id='VS2017_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
-      </Component>
-      <Component Id='VS2017_Pro_Ext_SshNet.Library' Guid='941F1C60-6617-43BD-8168-7E5C124673A2'>
-        <File Id='VS2017_Pro_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -436,10 +420,6 @@
         <File Id='VS2019_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
       </Component>
-      <Component Id='VS2019_Ext_SshNet.Library' Guid='F8969880-AB48-43E6-90EF-2657B07F2BB3'>
-        <File Id='VS2019_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
-      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -534,10 +514,6 @@
       <Component Id='VS2019_Ent_Ext_BouncyCastle.Library' Guid='9C9F735E-F677-4915-8690-BA5EF02E9CBB'>
         <File Id='VS2019_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
-      </Component>
-      <Component Id='VS2019_Ent_Ext_SshNet.Library' Guid='07F604FD-3161-4900-B7C9-D51755A6B9AB'>
-        <File Id='VS2019_Ent_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -634,10 +610,6 @@
         <File Id='VS2019_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
              Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
       </Component>
-      <Component Id='VS2019_Pro_Ext_SshNet.Library' Guid='F29E140A-2061-4F2E-BD57-DE3A39EEC243'>
-        <File Id='VS2019_Pro_Renci.SshNet.Lib' Name='Renci.SshNet.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\Renci.SshNet.dll'/>
-      </Component>
     </DirectoryRef>
 
     <!--Item Templates-->
@@ -698,10 +670,6 @@
         <RemoveFile Id="RemoveVS2015_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-      <Component Id="Remove.VS2015_Ext_SshNet.Library" Guid="56E8362F-8E7F-4441-AFB3-A32C8FA1382A" DiskId="1">
-        <RemoveFile Id="RemoveVS2015_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
     </DirectoryRef>
 
     <!-- Visual Studio 2017 Community -->
@@ -716,10 +684,6 @@
       </Component>
       <Component Id="Remove.VS2017_Ext_BouncyCastle.Library" Guid="82A1F8E2-DEDC-4D72-BB5D-212C80A7DEA6" DiskId="1">
         <RemoveFile Id="RemoveVS2017_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id="Remove.VS2017_Ext_SshNet.Library" Guid="210665AA-4963-4511-AD38-0F63027B89B9" DiskId="1">
-        <RemoveFile Id="RemoveVS2017_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -738,10 +702,6 @@
         <RemoveFile Id="RemoveVS2017_Ent_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-      <Component Id="Remove.VS2017_Ent_Ext_SshNet.Library" Guid="3D8934C1-8EE6-4536-8752-AF4663759845" DiskId="1">
-        <RemoveFile Id="RemoveVS2017_Ent_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
     </DirectoryRef>
 
     <!-- Visual Studio 2017 Professional -->
@@ -756,10 +716,6 @@
       </Component>
       <Component Id="Remove.VS2017_Pro_Ext_BouncyCastle.Library" Guid="9747BBAD-1083-4BA0-9FE0-312C17DFFBFB" DiskId="1">
         <RemoveFile Id="RemoveVS2017_Pro_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id="Remove.VS2017_Pro_Ext_SshNet.Library" Guid="0F91C8F7-60AE-4B6A-AA0F-0AA28761E9C3" DiskId="1">
-        <RemoveFile Id="RemoveVS2017_Pro_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -778,10 +734,6 @@
         <RemoveFile Id="RemoveVS2019_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-      <Component Id="Remove.VS2019_Ext_SshNet.Library" Guid="48CBDC69-6D8A-4F8A-AE85-0B894B023EC8" DiskId="1">
-        <RemoveFile Id="RemoveVS2019_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
     </DirectoryRef>
 
     <!-- Visual Studio 2019 Enterprise -->
@@ -796,10 +748,6 @@
       </Component>
       <Component Id="Remove.VS2019_Ent_Ext_BouncyCastle.Library" Guid="33633A97-F577-40FC-B260-0CE9740C34F0" DiskId="1">
         <RemoveFile Id="RemoveVS2019_Ent_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
-      <Component Id="Remove.VS2019_Ent_Ext_SshNet.Library" Guid="A4E24C00-18F6-41FE-82BA-607DDD24A613" DiskId="1">
-        <RemoveFile Id="RemoveVS2019_Ent_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
     </DirectoryRef>
@@ -818,10 +766,6 @@
         <RemoveFile Id="RemoveVS2019_Pro_Ext_BouncyCastle.Crypto.Lib" Name="BouncyCastle.Crypto.dll" On="uninstall" />
         <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
       </Component>
-      <Component Id="Remove.VS2019_Pro_Ext_SshNet.Library" Guid="CB0CA816-A165-4502-A413-DE9415D8F736" DiskId="1">
-        <RemoveFile Id="RemoveVS2019_Pro_Ext_Renci.SshNet.Lib" Name="Renci.SshNet.dll" On="uninstall" />
-        <Condition>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=ALL)</Condition>
-      </Component>
     </DirectoryRef>
 
     <Feature Id='VS2015Int' Level='1' Title='Visual Studio 2015'>
@@ -831,11 +775,9 @@
       <ComponentRef Id='VS2015_MD.Library' />
       <ComponentRef Id='VS2015_Web.Library' />
       <ComponentRef Id='VS2015_Ext_BouncyCastle.Library' />
-      <ComponentRef Id='VS2015_Ext_SshNet.Library' />
       <ComponentRef Id='Remove.VS2015_MD.Library'/>
       <ComponentRef Id='Remove.VS2015_Web.Library'/>
       <ComponentRef Id='Remove.VS2015_Ext_BouncyCastle.Library'/>
-      <ComponentRef Id='Remove.VS2015_Ext_SshNet.Library'/>
       <ComponentRef Id='AutoLoadPackageVS2015'/>
       <!--Item Templates-->
       <Feature Id='VS2015_AddItemTemplate' Title='ItemTemplates' Level='1' Display='hidden' >
@@ -859,11 +801,9 @@
         <ComponentRef Id='VS2017_MD.Library' />
         <ComponentRef Id='VS2017_Web.Library' />
         <ComponentRef Id='VS2017_Ext_BouncyCastle.Library' />
-        <ComponentRef Id='VS2017_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2017_MD.Library'/>
         <ComponentRef Id='Remove.VS2017_Web.Library'/>
         <ComponentRef Id='Remove.VS2017_Ext_BouncyCastle.Library'/>
-        <ComponentRef Id='Remove.VS2017_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2017_Com_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2017_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -886,11 +826,9 @@
         <ComponentRef Id='VS2017_Ent_MD.Library' />
         <ComponentRef Id='VS2017_Ent_Web.Library' />
         <ComponentRef Id='VS2017_Ent_Ext_BouncyCastle.Library' />
-        <ComponentRef Id='VS2017_Ent_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2017_Ent_MD.Library'/>
         <ComponentRef Id='Remove.VS2017_Ent_Web.Library'/>
         <ComponentRef Id='Remove.VS2017_Ent_Ext_BouncyCastle.Library'/>
-        <ComponentRef Id='Remove.VS2017_Ent_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2017_Ent_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2017_Ent_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -913,11 +851,9 @@
         <ComponentRef Id='VS2017_Pro_MD.Library' />
         <ComponentRef Id='VS2017_Pro_Web.Library' />
         <ComponentRef Id='VS2017_Pro_Ext_BouncyCastle.Library' />
-        <ComponentRef Id='VS2017_Pro_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2017_Pro_MD.Library'/>
         <ComponentRef Id='Remove.VS2017_Pro_Web.Library'/>
         <ComponentRef Id='Remove.VS2017_Pro_Ext_BouncyCastle.Library'/>
-        <ComponentRef Id='Remove.VS2017_Pro_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2017_Pro_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2017_Pro_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -943,11 +879,9 @@
         <ComponentRef Id='VS2019_MD.Library' />
         <ComponentRef Id='VS2019_Web.Library' />
         <ComponentRef Id='VS2019_Ext_BouncyCastle.Library' />
-        <ComponentRef Id='VS2019_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2019_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Web.Library'/>
         <ComponentRef Id='Remove.VS2019_Ext_BouncyCastle.Library'/>
-        <ComponentRef Id='Remove.VS2019_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2019_Com_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -970,11 +904,9 @@
         <ComponentRef Id='VS2019_Ent_MD.Library' />
         <ComponentRef Id='VS2019_Ent_Web.Library' />
         <ComponentRef Id='VS2019_Ent_Ext_BouncyCastle.Library' />
-        <ComponentRef Id='VS2019_Ent_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2019_Ent_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Ent_Web.Library'/>
         <ComponentRef Id='Remove.VS2019_Ent_Ext_BouncyCastle.Library'/>
-        <ComponentRef Id='Remove.VS2019_Ent_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2019_Ent_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_Ent_AddItemTemplate' Title='ItemTemplates' Level='1'>
@@ -997,11 +929,9 @@
         <ComponentRef Id='VS2019_Pro_MD.Library' />
         <ComponentRef Id='VS2019_Pro_Web.Library' />
         <ComponentRef Id='VS2019_Pro_Ext_BouncyCastle.Library' />
-        <ComponentRef Id='VS2019_Pro_Ext_SshNet.Library' />
         <ComponentRef Id='Remove.VS2019_Pro_MD.Library'/>
         <ComponentRef Id='Remove.VS2019_Pro_Web.Library'/>
         <ComponentRef Id='Remove.VS2019_Pro_Ext_BouncyCastle.Library'/>
-        <ComponentRef Id='Remove.VS2019_Pro_Ext_SshNet.Library'/>
         <ComponentRef Id='VS2019_Pro_EVars'/>
         <!--Item Templates-->
         <Feature Id='VS2019_Pro_AddItemTemplate' Title='ItemTemplates' Level='1'>

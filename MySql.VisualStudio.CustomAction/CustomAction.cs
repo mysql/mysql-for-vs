@@ -77,7 +77,7 @@ namespace MySql.VisualStudio.CustomAction
     /// </summary>
     private static string _appDataPath;
 
-    private static Version _internalMySqlDataVersion = new Version("8.0.18.0");
+    private static Version _internalMySqlDataVersion = new Version("8.0.24.0");
     private static string _vs2017CommunityInstallationPath;
     private static string _VS2017CommunityX64ExtensionsFilePath;
     private static string _VS2017CommunityX86ExtensionsFilePath;
@@ -1245,6 +1245,11 @@ namespace MySql.VisualStudio.CustomAction
     /// <returns>The status of the PKGDEF file.</returns>
     internal static PkgdefFileStatus GetPkgdefFileStatus(SupportedVisualStudioVersions visualStudioVersion, Version mysqlForVisualStudioVersion)
     {
+      if (mysqlForVisualStudioVersion == null)
+      {
+        return PkgdefFileStatus.Unknown;
+      }
+
       string visualStudioInstallationPath = null;
       if (visualStudioVersion > SupportedVisualStudioVersions.Vs2015)
       {
@@ -1300,6 +1305,11 @@ namespace MySql.VisualStudio.CustomAction
     /// <returns>A tuple list with the status of the PKGDEF files where MySQL for Visual Studio is installed.</returns>
     public static List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>> GetPkgdefFileStatuses(Version mysqlForVisualStudioVersion)
     {
+      if (mysqlForVisualStudioVersion == null)
+      {
+        return null;
+      }
+
       var list = new List<Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>>();
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2015, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2015, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
@@ -1325,6 +1335,11 @@ namespace MySql.VisualStudio.CustomAction
 
       // Get PKGDEF file status.
       var pkgdefFileStatuses = GetPkgdefFileStatuses(mysqlForVisualStudioVersion);
+      if (pkgdefFileStatuses == null)
+      {
+        Logger.LogError("Failed to get the MySQL for Visual Studio configurations of the Visual Studio installations.");
+        return false;
+      }
 
       // Connector/NET is not installed.
       if (installedMySqlDataVersion == null)

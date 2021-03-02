@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -202,7 +202,7 @@ namespace MySql.Data.VisualStudio
     private const string CONNECTOR_NET_ENVIRONMENT_VARIABLE = "MYSQLCONNECTOR_ASSEMBLIESPATH";
     private const string CONNECTOR_NET_REGISTRY_KEY = "Software\\Wow6432Node\\MySQL AB\\MySQL Connector/Net";
     private const string MYSQL_FOR_VISUAL_STUDIO_REGISTRY_KEY = "Software\\Wow6432Node\\MySQL AB\\MySQL for Visual Studio";
-    private const string DEPENDENCIES_FOLDER = @"..\..\..\..\..\Dependencies\v4.0\Release\";
+    private const string DEPENDENCIES_FOLDER = @"..\..\..\..\..\Dependencies\v4.5\Release\";
 
     #endregion    /// <summary>
 
@@ -233,7 +233,7 @@ namespace MySql.Data.VisualStudio
     /// </summary>
     protected override void Initialize()
     {
-      _internalMySqlDataVersion = new Version(8, 0, 18, 0);
+      _internalMySqlDataVersion = new Version(8, 0, 24, 0);
 
       // Initialize settings related to InfoDialog.
       CustomizeUtilityDialogs();
@@ -366,13 +366,19 @@ namespace MySql.Data.VisualStudio
       Version internalMySqlDataVersion = null;
 #if DEBUG
       internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
+      if (!CustomActions.IsConfigurationUpdateRequired(new Version(mysqlForVisualStudioVersion.Major, mysqlForVisualStudioVersion.Minor, mysqlForVisualStudioVersion.Build - 1),
+        installedMySqlDataVersion,
+        internalMySqlDataVersion))
+      {
+        return;
+      }
 #else
       internalMySqlDataVersion = _internalMySqlDataVersion;
-#endif
       if (!CustomActions.IsConfigurationUpdateRequired(mysqlForVisualStudioVersion, installedMySqlDataVersion, internalMySqlDataVersion))
       {
         return;
       }
+#endif
 
       ConnectorNETRegistryKeyChanged(this, EventArgs.Empty);
     }
@@ -935,6 +941,7 @@ namespace MySql.Data.VisualStudio
       var mysqlForVisualStudioVersion = AssemblyName.GetAssemblyName(this.GetType().Assembly.Location).Version;
       var installedMySqlDataVersionString = GetVersionStringFromRegistry(CONNECTOR_NET_REGISTRY_KEY);
 #if DEBUG
+      mysqlForVisualStudioVersion = new Version(mysqlForVisualStudioVersion.Major, mysqlForVisualStudioVersion.Minor, mysqlForVisualStudioVersion.Build - 1);
       var internalMySqlDataVersion = AssemblyName.GetAssemblyName($"{DEPENDENCIES_FOLDER}MySql.Data.dll").Version;
       var fileName = @"..\..\..\..\MySql.VisualStudio.Updater\bin\Debug\";
 #else

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2009, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -90,7 +90,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     public AppConfigDlg()
     {
       var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(8, 0, 18);
+      _connectorVersion = factory != null ? new Version(factory.GetType().Assembly.GetName().Version.ToString(3)) : new Version(8, 0, 24);
       InitializeComponent();
       dte = MySqlDataProviderPackage.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
       if (dte != null)

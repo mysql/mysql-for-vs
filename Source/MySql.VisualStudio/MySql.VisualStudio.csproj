@@ -169,15 +169,15 @@
       <HintPath>..\..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Web, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\Dependencies\v4.0\Release\MySql.Web.dll</HintPath>
+      <HintPath>..\..\Dependencies\v4.5\Release\MySql.Web.dll</HintPath>
     </Reference>
     <Reference Include="MySQL.Utility, Version=7.0.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
+      <HintPath>..\..\Dependencies\v4.5\Release\MySQL.Utility.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+      <HintPath>..\..\Dependencies\v4.5\Release\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

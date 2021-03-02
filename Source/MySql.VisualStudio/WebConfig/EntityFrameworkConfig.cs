@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -80,7 +80,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     private new EntityFrameworkOptions values;
     private bool _entityFrameworkEnabled = false;
     private const string EF5Version = "5.0.0";
-    private const string EF6Version = "6.1.3";
+    private const string EF6Version = "6.4.4";
     private const string mySQLData = "MySql.Data";
     private const string mySQLEF5Version = "6.9.12";
     private string _mySQLEF = "MySql.Data.Entity";
@@ -185,7 +185,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     {
       if (!Enabled && OriginallyEnabled)
       {
-        RemoveEFReferences(false);
+        RemoveEFReferences(true);
         RemoveEntityFrameworkSection();
         return;
       }

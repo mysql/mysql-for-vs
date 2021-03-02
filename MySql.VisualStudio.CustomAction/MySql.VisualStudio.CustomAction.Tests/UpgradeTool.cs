@@ -38,7 +38,7 @@ namespace MySql.VisualStudio.CustomAction.Tests
     public void NullValues()
     {
       var mySqlForVisualStudioVersion = new Version(1, 2, 10);
-      var internalMySqlDataVersion = new Version(8, 0, 18);
+      var internalMySqlDataVersion = new Version(8, 0, 24);
       var installedMySqlDataVersion = new Version(8, 0, 23);
       Assert.IsFalse(CustomActions.IsConfigurationUpdateRequired(null, null, null));
       Assert.IsFalse(CustomActions.IsConfigurationUpdateRequired(mySqlForVisualStudioVersion, null, null));

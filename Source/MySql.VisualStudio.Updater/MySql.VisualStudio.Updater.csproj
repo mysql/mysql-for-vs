@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySQL.Utility">
-      <HintPath>..\..\Dependencies\v4.0\Release\MySQL.Utility.dll</HintPath>
+      <HintPath>..\..\Dependencies\v4.5\Release\MySQL.Utility.dll</HintPath>
     </Reference>
     <Reference Include="MySql.VisualStudio.CustomAction, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
