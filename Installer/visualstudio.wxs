@@ -22,7 +22,7 @@
         <File Id='MySql.Debugger.VisualStudio.2017' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2017' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+              Source='..\Dependencies\v4.5\release\MySQL.Utility.dll'/>
         <File Id='MySql.VisualStudio.CustomAction_2017' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
               Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
       </Component>
@@ -40,15 +40,15 @@
     <DirectoryRef Id='VS15_PrivateAssemblies'>
       <Component Id='VS2017_MD.Library' Guid='C9B431D4-8A15-4491-B9BC-70766A5474AF'>
         <File Id='VS2017_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Data.dll'/>
       </Component>
       <Component Id='VS2017_Web.Library' Guid='C63A0350-536C-4ED0-A28A-0E41CFA67C87'>
         <File Id='VS2017_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Web.dll'/>
       </Component>
       <Component Id='VS2017_Ext_BouncyCastle.Library' Guid='063FBE9D-E27C-45A5-B1DA-FB6CCA649515'>
         <File Id='VS2017_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -117,7 +117,7 @@
         <File Id='MySql.Debugger.VisualStudio.2017_Ent' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2017_Ent' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+              Source='..\Dependencies\v4.5\release\MySQL.Utility.dll'/>
         <File Id='MySql.VisualStudio.CustomAction_2017_Ent' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
               Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
       </Component>
@@ -135,15 +135,15 @@
     <DirectoryRef Id='VS15_Ent_PrivateAssemblies'>
       <Component Id='VS2017_Ent_MD.Library' Guid='B2A955B4-7C1D-4A54-B57B-4F16F44AB7EE'>
         <File Id='VS2017_Ent_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Data.dll'/>
       </Component>
       <Component Id='VS2017_Ent_Web.Library' Guid='39F2F0AA-A018-4FF3-9376-B128383E962E'>
         <File Id='VS2017_Ent_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Web.dll'/>
       </Component>
       <Component Id='VS2017_Ent_Ext_BouncyCastle.Library' Guid='153BE379-E55E-4B87-A050-F0A61DB2EB35'>
         <File Id='VS2017_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -212,7 +212,7 @@
         <File Id='MySql.Debugger.VisualStudio.2017_Pro' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\15.0v4.6.1\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2017_Pro' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+              Source='..\Dependencies\v4.5\release\MySQL.Utility.dll'/>
         <File Id='MySql.VisualStudio.CustomAction_2017_Pro' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
               Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
       </Component>
@@ -230,15 +230,15 @@
     <DirectoryRef Id='VS15_Pro_PrivateAssemblies'>
       <Component Id='VS2017_Pro_MD.Library' Guid='4BAF8A31-DACE-43AD-9EA9-FDE6FC288109'>
         <File Id='VS2017_Pro_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Data.dll'/>
       </Component>
       <Component Id='VS2017_Pro_Web.Library' Guid='E94BCEE5-E67F-4B81-A34C-82A7A7EBF055'>
         <File Id='VS2017_Pro_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Web.dll'/>
       </Component>
       <Component Id='VS2017_Pro_Ext_BouncyCastle.Library' Guid='4A03CA70-5DAB-4DD4-94B1-9EEBEF2EF2E9'>
         <File Id='VS2017_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -307,7 +307,7 @@
         <File Id='MySql.Debugger.VisualStudio.2019' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2019' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+              Source='..\Dependencies\v4.5\release\MySQL.Utility.dll'/>
         <File Id='MySql.VisualStudio.CustomAction_2019' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
               Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
       </Component>
@@ -325,15 +325,15 @@
     <DirectoryRef Id='VS16_PrivateAssemblies'>
       <Component Id='VS2019_MD.Library' Guid='4B8A4563-33BF-4F4C-B394-875EDA70054E'>
         <File Id='VS2019_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Data.dll'/>
       </Component>
       <Component Id='VS2019_Web.Library' Guid='D1915760-C97E-4390-BB24-4135DBEEC1C1'>
         <File Id='VS2019_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Web.dll'/>
       </Component>
       <Component Id='VS2019_Ext_BouncyCastle.Library' Guid='4A8DE2DD-68BB-4AA1-9798-0A3F5788F680'>
         <File Id='VS2019_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -402,7 +402,7 @@
         <File Id='MySql.Debugger.VisualStudio.2019_Ent' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2019_Ent' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+              Source='..\Dependencies\v4.5\release\MySQL.Utility.dll'/>
         <File Id='MySql.VisualStudio.CustomAction_2019_Ent' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
               Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
       </Component>
@@ -420,15 +420,15 @@
     <DirectoryRef Id='VS16_Ent_PrivateAssemblies'>
       <Component Id='VS2019_Ent_MD.Library' Guid='7059E37E-AD4B-43E3-97B4-46030232C916'>
         <File Id='VS2019_Ent_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Data.dll'/>
       </Component>
       <Component Id='VS2019_Ent_Web.Library' Guid='94601352-0FBC-462D-B635-3C0252E430CF'>
         <File Id='VS2019_Ent_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Web.dll'/>
       </Component>
       <Component Id='VS2019_Ent_Ext_BouncyCastle.Library' Guid='9C9F735E-F677-4915-8690-BA5EF02E9CBB'>
         <File Id='VS2019_Ent_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -497,7 +497,7 @@
         <File Id='MySql.Debugger.VisualStudio.2019_Pro' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.Debugger.VisualStudio\bin\16.0v4.7.2\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySql.Utility_2019_Pro' Name='MySql.Utility.dll' DiskId='1'
-              Source='..\Dependencies\v4.0\release\MySQL.Utility.dll'/>
+              Source='..\Dependencies\v4.5\release\MySQL.Utility.dll'/>
         <File Id='MySql.VisualStudio.CustomAction_2019_Pro' Name='MySql.VisualStudio.CustomAction.dll' DiskId='1'
               Source='..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll'/>
       </Component>
@@ -515,15 +515,15 @@
     <DirectoryRef Id='VS16_Pro_PrivateAssemblies'>
       <Component Id='VS2019_Pro_MD.Library' Guid='2EBDC544-7C18-47FC-8E17-E3F3A082683B'>
         <File Id='VS2019_Pro_MySql.DataLib' Name='MySql.Data.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Data.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Data.dll'/>
       </Component>
       <Component Id='VS2019_Pro_Web.Library' Guid='944B886C-A589-46B8-9E89-0FA1EE01D490'>
         <File Id='VS2019_Pro_MySql.Web.Lib' Name='MySql.Web.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\MySql.Web.dll'/>
+             Source='..\Dependencies\v4.5\Release\MySql.Web.dll'/>
       </Component>
       <Component Id='VS2019_Pro_Ext_BouncyCastle.Library' Guid='2CE44705-C428-40D5-AB06-1D6CDE5B2408'>
         <File Id='VS2019_Pro_BouncyCastle.Crypto.Lib' Name='BouncyCastle.Crypto.dll' DiskId='1'
-             Source='..\Dependencies\v4.0\Release\BouncyCastle.Crypto.dll'/>
+             Source='..\Dependencies\v4.5\Release\BouncyCastle.Crypto.dll'/>
       </Component>
     </DirectoryRef>
 

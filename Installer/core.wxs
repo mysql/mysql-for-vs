@@ -78,7 +78,7 @@
       </Component>
       <Component Id="MySql.Utility" Guid="D37C08DB-C953-42E6-A676-11D4091F3966" >
         <File Id="MySql.UtilityFile" Name="MySQL.Utility.dll"
-              Source="..\Dependencies\v4.0\Release\MySQL.Utility.dll" DiskId="1"/>
+              Source="..\Dependencies\v4.5\Release\MySQL.Utility.dll" DiskId="1"/>
         <RemoveFile Id="MySql.Utility" Name="MySQL.Utility.dll" On="uninstall"/>
       </Component>
     </DirectoryRef>

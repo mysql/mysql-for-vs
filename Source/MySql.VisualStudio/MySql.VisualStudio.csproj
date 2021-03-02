@@ -23,7 +23,7 @@
   </UsingTask>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -144,7 +144,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\MySql\MySql.VisualStudio.CustomAction.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Web, Version=6.10.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+    <Reference Include="MySql.Web, Version=8.0.24.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\..\Dependencies\v4.5\Release\MySql.Web.dll</HintPath>
     </Reference>
     <Reference Include="MySQL.Utility, Version=7.0.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
