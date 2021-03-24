@@ -140,22 +140,25 @@ namespace MySql.Data.VisualStudio.Editors
       resultsPage.Hide();
       ConnectDialog d = new ConnectDialog();
       d.Connection = connection;
-      DialogResult r = d.ShowDialog();
-      if (r == DialogResult.Cancel) return;
+      DialogResult r;
       try
       {
+        r = d.ShowDialog();
+        if (r == DialogResult.Cancel) return;
         connection = d.Connection;
         UpdateButtons();
       }
+      catch (AccessViolationException)
+      {
+        Logger.LogError(@"Error establishing the database connection.", true);
+      }
       catch (MySqlException)
       {
-        Logger.LogError(
-          @"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", true);
+        Logger.LogError(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", true);
       }
       finally
       {
         d.Dispose();
-        MySqlQuickInfoController.Disconnect();
       }
     }
 
