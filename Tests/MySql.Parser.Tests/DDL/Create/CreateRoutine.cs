@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,11 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -48,9 +45,7 @@ CREATE PROCEDURE simpleproc (OUT param1 INT)
     BEGIN
       SELECT COUNT(*) INTO param1 FROM t;
     END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -63,9 +58,7 @@ BEGIN
   REPEAT SET @x = @x + 1; UNTIL @x > p1 END REPEAT;
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -76,9 +69,7 @@ SQL SECURITY INVOKER
 BEGIN
   SELECT 'Number of accounts:', COUNT(*) FROM mysql.user;
 END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -101,9 +92,7 @@ BEGIN
 INSERT INTO tbl_error_log(error_level, error_level_name, error_message, error_file,error_line, error_context,error_query_string,error_time, user_id, post_data, user_msg)
 values(error_level, error_level_name, error_message, error_file,error_line, error_context,error_query_string, error_time, user_id, post_data, user_msg);
 END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -129,9 +118,7 @@ begin
     end while;
 
 end;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
     
 
@@ -141,9 +128,7 @@ end;";
       string sql = @"CREATE FUNCTION hello (s CHAR(20))
     RETURNS CHAR(50) DETERMINISTIC
     RETURN CONCAT('Hello, ',s,'!');";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -164,9 +149,7 @@ set fieldresult = case when locate(xmlTagBegin,message) = 0 then ''
 else substring(message,locate(xmlTagBegin,message) + lenField,locate(xmlTagEnd,message) - (locate(xmlTagBegin,message) + lenField)) end;
 return fieldresult;
 end";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -183,9 +166,7 @@ SELECT CONCAT_WS(' ', db.people.FirstName, db.people.MiddleName, db.people.Famil
 RETURN fulname;
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -206,9 +187,7 @@ END;
 
     RETURN s;
   END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -233,9 +212,7 @@ END;
 
     RETURN s;
   END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -247,9 +224,7 @@ begin
   insert into test3 (1), (2), (3);
   # insert into test3 values (1), (2), (3);
 end";
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, true, out sb);
+      Utility.ParseSql(sql, true);
     }
 
     [Fact]
@@ -265,8 +240,7 @@ BEGIN
   select found_rows() into y; 
   select last_insert_id() into y; 
 END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -287,8 +261,7 @@ BEGIN
   select found_rows() into y; 
   select last_insert_id() into y; 
 END";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -315,8 +288,7 @@ begin
     end while;
 
 end;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -332,8 +304,7 @@ BEGIN
   select last_insert_id() into y; 
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version(5, 1));
+      Utility.ParseSql(sql, false, new Version(5, 1));
     }
 
     [Fact]
@@ -349,8 +320,7 @@ BEGIN
   select last_insert_id() into y; 
 END;
 ";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version( 5, 6 ));
+      Utility.ParseSql(sql, false, new Version( 5, 6 ));
     }
 
     [Fact]
@@ -383,8 +353,7 @@ END;
      DECLARE stock_code_include_yv varchar(5); 
      DECLARE non_HKD_char varchar(1) DEFAULT 'N';
   end;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -449,8 +418,7 @@ proc: BEGIN
     /* Clean up */
     DROP TABLE tmpCustomer;
 END;";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version(5, 1));
+      Utility.ParseSql(sql, false, new Version(5, 1));
     }
   }
 }

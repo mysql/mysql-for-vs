@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,12 +26,7 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -42,8 +37,8 @@ namespace MySql.Parser.Tests.DDL.Drop
 	{
 		[Fact]
 		public void Simple()
-		{			
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP INDEX indexName ON table1");
+		{
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP INDEX indexName ON table1");
 			/*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is DropIndexStatement);
@@ -66,13 +61,13 @@ namespace MySql.Parser.Tests.DDL.Drop
 		[Fact]
 		public void MissingIndexName()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP INDEX", true);
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP INDEX", true);
 		}
 
 		[Fact]
 		public void MissingTableName()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP INDEX indexName ON", true);
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP INDEX indexName ON", true);
 		}
 	}
 }

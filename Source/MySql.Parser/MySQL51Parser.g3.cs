@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -53,18 +53,18 @@ namespace MySql.Parser
 
     public MySQLParserBase( ITokenStream input, RecognizerSharedState state ) : base( input, state )
     {
-      // default value
-      mysqlVersion = 5.1;
+      // Default value.
+      _mysqlVersion = "8.0.0";
 
       _blockStack.Push(BlockKind.None);
     }
 
-    // holds values like 5.0, 5.1, 5.5, 5.6, etc.
-    protected double mysqlVersion;
+    // Holds values like 5.6, 5.7, 8.0, etc.
+    protected string _mysqlVersion;
 
     public Version MySqlVersion {
-      get { return new Version((int)mysqlVersion, (int)(mysqlVersion * 10 - (int)mysqlVersion * 10)); }
-      set { mysqlVersion = (double)value.Major + (double)value.Minor / 10; }
+      get { return new Version(_mysqlVersion); }
+      set { _mysqlVersion = value.ToString(); }
     }
 
     protected int simple_table_ref_no_alias_existing_cnt;
@@ -104,7 +104,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_declare_handler()
 #else
-    protected override void Enter_declare_handler()
+    protected override void EnterRule_declare_handler()
 #endif
     {
     }
@@ -112,7 +112,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_begin_end_stmt()
 #else
-    protected override void Enter_begin_end_stmt()
+    protected override void EnterRule_begin_end_stmt()
 #endif
     {
       _blockStack.Push( BlockKind.BeginEnd );
@@ -121,7 +121,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void LeaveRule_begin_end_stmt()
 #else
-    protected override void Leave_begin_end_stmt()
+    protected override void LeaveRule_begin_end_stmt()
 #endif
     {
       _blockStack.Pop();
@@ -131,7 +131,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_drop_table()
 #else
-    protected override void Enter_drop_table()
+    protected override void EnterRule_drop_table()
 #endif
     {
     }
@@ -139,7 +139,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_simple_obj_ref_no_alias()
 #else
-    protected override void Enter_simple_obj_ref_no_alias()
+    protected override void EnterRule_simple_obj_ref_no_alias()
 #endif
     {
     }
@@ -147,7 +147,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_update()
 #else
-    protected override void Enter_update()
+    protected override void EnterRule_update()
 #endif
     {
       cntUpdateTables = 0;
@@ -156,7 +156,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_statement_list()
 #else
-    protected override void Enter_statement_list()
+    protected override void EnterRule_statement_list()
 #endif
     {
       Scope.Push("statement_list");
@@ -165,7 +165,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void LeaveRule_statement_list()
 #else
-    protected override void Leave_statement_list()
+    protected override void LeaveRule_statement_list()
 #endif
     {
       Scope.Pop();
@@ -174,7 +174,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_expr()
 #else
-    protected override void Enter_expr()
+    protected override void EnterRule_expr()
 #endif
     {
       Scope.Push("expr");
@@ -183,7 +183,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void LeaveRule_expr()
 #else
-    protected override void Leave_expr()
+    protected override void LeaveRule_expr()
 #endif
     {
       Scope.Pop();
@@ -192,7 +192,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_field_name()
 #else
-    protected override void Enter_field_name()
+    protected override void EnterRule_field_name()
 #endif
     {
       Scope.Push("field_name");
@@ -201,7 +201,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void LeaveRule_field_name()
 #else
-    protected override void Leave_field_name()
+    protected override void LeaveRule_field_name()
 #endif
     {
       Scope.Pop();
@@ -210,7 +210,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void EnterRule_simple_table_ref_no_alias_existing()
 #else
-    protected override void Enter_simple_table_ref_no_alias_existing()
+    protected override void EnterRule_simple_table_ref_no_alias_existing()
 #endif
     {
       simple_table_ref_no_alias_existing_cnt++;
@@ -219,7 +219,7 @@ namespace MySql.Parser
 #if CSharp3Target
       partial void LeaveRule_simple_table_ref_no_alias_existing()
 #else
-    protected override void Leave_simple_table_ref_no_alias_existing()
+    protected override void LeaveRule_simple_table_ref_no_alias_existing()
 #endif
     {
       simple_table_ref_no_alias_existing_cnt--;
@@ -228,7 +228,7 @@ namespace MySql.Parser
 #if CSharp3Target
     partial void EnterRule_primary()
 #else
-    protected override void Enter_primary()
+    protected override void EnterRule_primary()
 #endif
     {
       Scope.Push("expr");
@@ -237,7 +237,7 @@ namespace MySql.Parser
 #if CSharp3Target
     partial void LeaveRule_primary()
 #else
-    protected override void Leave_primary()
+    protected override void LeaveRule_primary()
 #endif
     {
       Scope.Pop();

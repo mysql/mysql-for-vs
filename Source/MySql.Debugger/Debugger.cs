@@ -1,4 +1,4 @@
-// Copyright (c) 2004, 2016, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2004, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -232,7 +232,7 @@ namespace MySql.Debugger
         BackupPath = di.FullName;
         StringBuilder sb = new StringBuilder();
         CommonTokenStream cts = null;
-        MySQL51Parser.program_return r = ParseSql(SqlInput, false, out sb, out cts);
+        AstParserRuleReturnScope<object, IToken> r = ParseSql(SqlInput, false, out sb, out cts);
         //RoutineInfo ri = GetRoutineFromDb("", true);
         CommonTree t = (CommonTree)r.Tree;
         if (t.IsNil)
@@ -650,11 +650,11 @@ namespace MySql.Debugger
 
     public static string GetRoutineName(string sql)
     {
-      MySQL51Parser.program_return r = new MySQL51Parser.program_return();
+      AstParserRuleReturnScope<object, IToken> r = new AstParserRuleReturnScope<object, IToken>();
       StringBuilder sb;
       bool expectErrors = false;
       CommonTokenStream cts;
-      
+
       MemoryStream ms = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       MySQLLexer lexer = new MySQLLexer(input);
@@ -1094,7 +1094,7 @@ namespace MySql.Debugger
       // Parse args
       StringBuilder sb = new StringBuilder();
       CommonTokenStream tokenStream;
-      MySQL51Parser.program_return tree = 
+      AstParserRuleReturnScope<object, IToken> tree =
         ParseSql(routine.SourceCode, false, out sb, out tokenStream);
       routine.ParsedTree = ( CommonTree )( tree.Tree );
       if (routine.ParsedTree.IsNil)
@@ -2156,7 +2156,7 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
     {
       StringBuilder sb = new StringBuilder();
       CommonTokenStream tokenStream;
-      MySQL51Parser.program_return treeParsed =
+      AstParserRuleReturnScope<object, IToken> treeParsed =
         ParseSql(sql, false, out sb, out tokenStream);
       CommonTree tree = (CommonTree)treeParsed.Tree;
       if (tree.IsNil)
@@ -2286,7 +2286,7 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
     {
       CommonTokenStream cts;
       StringBuilder sb = new StringBuilder();
-      MySQL51Parser.program_return pr = this.ParseSql(
+      AstParserRuleReturnScope<object, IToken> pr = this.ParseSql(
         string.Format("select {0}", expression), false, out sb, out cts);
       error = sb.ToString();
       return error.Length == 0;
@@ -2301,7 +2301,7 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
     {
       CommonTokenStream cts;
       StringBuilder sb = new StringBuilder();
-      MySQL51Parser.program_return pr = this.ParseSql(
+      AstParserRuleReturnScope<object, IToken> pr = this.ParseSql(
         string.Format("select {0}", expression), false, out sb, out cts);
       return Eval((CommonTree)((CommonTree)pr.Tree).GetChild(0), cts, rs);
     }
@@ -2381,14 +2381,14 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
       return string.Compare(s1, s2, StringComparison.OrdinalIgnoreCase);
     }
 
-    public MySQL51Parser.program_return ParseSql(string sql)
+    public AstParserRuleReturnScope<object, IToken> ParseSql(string sql)
     {
       StringBuilder sb = new StringBuilder();
       CommonTokenStream cts;
       return ParseSql(sql, false, out sb, out cts);
     }
 
-    public MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb, out CommonTokenStream cts)
+    public AstParserRuleReturnScope<object, IToken> ParseSql(string sql, bool expectErrors, out StringBuilder sb, out CommonTokenStream cts)
     {
       Version ver = ParserUtils.GetVersion( _connection.ServerVersion );
       MemoryStream ms = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(sql));
@@ -2401,7 +2401,7 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
-      MySQL51Parser.program_return r = new MySQL51Parser.program_return();
+      AstParserRuleReturnScope<object, IToken> r = new AstParserRuleReturnScope<object, IToken>();
       r.Tree = null;
       try
       {

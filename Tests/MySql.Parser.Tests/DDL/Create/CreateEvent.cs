@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,12 +26,9 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
+using System;
+using System.Text;
 using Xunit;
 
 
@@ -43,7 +40,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT myevent
+      Utility.ParseSql(@"CREATE EVENT myevent
     ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR
     DO
       UPDATE myschema.mytable SET mycol = mycol + 1;", false);
@@ -52,7 +49,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_totals
+      Utility.ParseSql(@"CREATE EVENT e_totals
          ON SCHEDULE AT '2006-02-10 23:59:00'
          DO INSERT INTO test.totals VALUES (NOW())", false);
     }
@@ -60,7 +57,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_hourly
+      Utility.ParseSql(@"CREATE EVENT e_hourly
     ON SCHEDULE
       EVERY 1 HOUR
     COMMENT 'Clears out sessions table each hour.'
@@ -71,7 +68,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_daily
+      Utility.ParseSql(@"CREATE EVENT e_daily
     ON SCHEDULE
       EVERY 1 DAY
     COMMENT 'Saves total number of sessions then clears the table each day'
@@ -87,7 +84,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple4a()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e
+      Utility.ParseSql(@"CREATE EVENT e
     ON SCHEDULE
       EVERY 5 SECOND
     DO
@@ -108,7 +105,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple5()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_call_myproc
+      Utility.ParseSql(@"CREATE EVENT e_call_myproc
     ON SCHEDULE
       AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
     DO CALL myproc(5, 27);", false);
@@ -118,7 +115,7 @@ namespace MySql.Parser.Tests
     public void Simple5In50()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_call_myproc
+      Utility.ParseSql(@"CREATE EVENT e_call_myproc
     ON SCHEDULE
       AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
     DO CALL myproc(5, 27);", true, out sb, new Version( 5, 0 ));

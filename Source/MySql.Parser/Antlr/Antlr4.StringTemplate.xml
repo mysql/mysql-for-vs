@@ -1,0 +1,1003 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr4.StringTemplate</name>
+    </assembly>
+    <members>
+        <member name="T:Antlr4.StringTemplate.AutoIndentWriter">
+            Essentially a char filter that knows how to auto-indent output
+              by maintaining a stack of indent levels.
+            
+              The indent stack is a stack of strings so we can repeat original indent
+              not just the same number of columns (don't have to worry about tabs vs
+              spaces then).
+            
+              Anchors are char positions (tabs won't work) that indicate where all
+              future wraps should justify to.  The wrap position is actually the
+              larger of either the last anchor or the indentation level.
+            
+              This is a filter on a Writer.
+            
+              \n is the proper way to say newline for options and templates.
+              Templates can mix \r\n and \n them but use \n for sure in options like
+              wrap="\n". Template will generate the right thing. Override the default (locale)
+              newline by passing in a string to the constructor.
+        </member>
+        <member name="F:Antlr4.StringTemplate.AutoIndentWriter._indents">
+            <summary>
+            Stack of indents
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.AutoIndentWriter._anchors">
+            <summary>
+            Stack of integer anchors (char positions in line)
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.AutoIndentWriter._newline">
+            <summary>
+            The newline character used for this writer
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.AutoIndentWriter._writer">
+            <summary>
+            The underlying output stream
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.AutoIndentWriter._charPosition">
+            Track char position in the line (later we can think about tabs).
+            Indexed from 0.  We want to keep charPosition &lt;= lineWidth.
+            This is the position we are *about* to Write not the position
+            last written to.
+        </member>
+        <member name="F:Antlr4.StringTemplate.AutoIndentWriter._charIndex">
+            <summary>
+            The absolute char index into the output of the next char to be written.
+            </summary>
+        </member>
+        <member name="M:Antlr4.StringTemplate.AutoIndentWriter.Write(System.String)">
+            Write out a string literal or attribute expression or expression element.
+        </member>
+        <member name="M:Antlr4.StringTemplate.AutoIndentWriter.Write(System.String,System.String)">
+            Write out a string literal or attribute expression or expression element.
+            
+              If doing line wrap, then check wrap before emitting this str.  If
+              at or beyond desired line width then emit a \n and any indentation
+              before spitting out this str.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CodeGenerator.outermostTemplateName">
+            <summary>Name of overall template</summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CodeGenerator.templateToken">
+            <summary>Overall template token</summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CodeGenerator._template">
+            <summary>Overall template text</summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.CompilationState">
+            temp data used during construction and functions that fill it / use it.
+            Result is impl CompiledTemplate object.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompilationState.impl">
+            The compiled code implementation to fill in. 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompilationState.stringtable">
+            Track unique strings; copy into CompiledTemplate's String[] after compilation 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompilationState.ip">
+            Track instruction location within code.instrs array; this is
+            next address to Write to.  Byte-addressable memory.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.CompilationState.WriteShort(System.Byte[],System.Int32,System.Int16)">
+            Write value at index into a byte array highest to lowest byte,
+            left to right.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.CompiledTemplate">
+            The result of compiling an Template.  Contains all the bytecode instructions,
+            string table, bytecode address to source code map, and other bookkeeping
+            info.  It's the implementation of an Template you might say.  All instances
+            of the same template share a single implementation (impl field).
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._prefix">
+                    Every template knows where it is relative to the group that
+                    loaded it. The prefix is the relative path from the
+                    root. "/prefix/name" is the fully qualified name of this
+                    template. All ST.getInstanceOf() calls must use fully qualified
+                    names. A "/" is added to the front if you don't specify
+                    one. Template references within template code, however, uses
+                    relative names, unless of course the name starts with "/".
+            
+                    This has nothing to do with the outer filesystem path to the group dir
+                    or group file.
+            
+                    We set this as we load/compile the template.
+            
+                    Always ends with "/".
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._template">
+            The original, immutable pattern (not really used again after
+            initial "compilation"). Useful for debugging.  Even for
+            subtemplates, this is entire overall template.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._templateDefStartToken">
+            The token that begins template definition; could be &lt;@r&gt; of region. 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._tokens">
+            Overall token stream for template (debug only) 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._ast">
+            How do we interpret syntax of template? (debug only) 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate.implicitlyDefinedTemplates">
+            A list of all regions and subtemplates 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._nativeGroup">
+            The group that physically defines this Template definition.  We use it to initiate
+            interpretation via Template.ToString().  From there, it becomes field 'group'
+            in interpreter and is fixed until rendering completes.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate.isRegion">
+            Does this template come from a &lt;@region&gt;...&lt;@end&gt; embedded in
+            another template?
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.CompiledTemplate.regionDefType">
+            If someone refs &lt;@r()&gt; in template t, an implicit
+            
+               @t.r() ::= ""
+            
+              is defined, but you can overwrite this def by defining your
+              own.  We need to prevent more than one manual def though.  Between
+              this var and isEmbeddedRegion we can determine these cases.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.CompiledTemplate.Clone">
+            <summary>
+            Cloning the <see cref="T:Antlr4.StringTemplate.Compiler.CompiledTemplate"/> for a <see cref="T:Antlr4.StringTemplate.Template"/> instance allows
+            <see cref="M:Antlr4.StringTemplate.Template.Add(System.String,System.Object)"/> to be called safely during interpretation for templates that do
+            not contain formal arguments.
+            </summary>
+            <returns>
+            A copy of the current <see cref="T:Antlr4.StringTemplate.Compiler.CompiledTemplate"/> instance. The copy is a shallow copy, with the
+            exception of the <see cref="F:Antlr4.StringTemplate.Compiler.CompiledTemplate._formalArguments"/> field which is also cloned.
+            </returns>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.CompiledTemplate.AddArgument(Antlr4.StringTemplate.Compiler.FormalArgument)">
+            Used by Template.Add() to Add args one by one w/o turning on full formal args definition signal 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.FormalArgument">
+            Represents the name of a formal argument defined in a template:
+            
+              test(a,b,x=defaultvalue) ::= "&lt;a&gt; &lt;n&gt; &lt;x&gt;"
+            
+              Each template has a set of these formal arguments or uses
+              a placeholder object: UNKNOWN (indicating that no arguments
+              were specified such as when we create a template with "new Template(...)").
+            
+              Note: originally, I tracked cardinality as well as the name of an
+              attribute.  I'm leaving the code here as I suspect something may come
+              of it later.  Currently, though, cardinality is not used.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.FormalArgument.defaultValueToken">
+            If they specified default value x=y, store the token here 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.Instruction.instructions">
+            <summary>
+            Used for assembly/disassembly; describes instruction set
+            </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.StringTable">
+            A unique set of strings where we can get a string's index.
+            We can also get them back out in original order. 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.TemplateCompiler">
+            A compiler for a single template. 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.TemplateCompiler.subtemplateCount">
+            Name subtemplates _sub1, _sub2, ... 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.TemplateCompiler.Compile(System.String,System.String)">
+            Compile full template with unknown formal args. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.TemplateCompiler.Compile(System.String,System.String,System.Collections.Generic.List{Antlr4.StringTemplate.Compiler.FormalArgument},System.String,Antlr.Runtime.IToken)">
+            Compile full template with respect to a list of formal args. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.TemplateCompiler.TemplateLexerNoNewlines.NextToken">
+            <summary>
+            Throw out \n and leading whitespace tokens inside BIGSTRING_NO_NL.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.TemplateLexer">
+            This class represents the tokenizer for templates. It operates in two modes:
+              inside and outside of expressions. It behaves like an ANTLR TokenSource,
+              implementing nextToken().  Outside of expressions, we can return these
+              token types: TEXT, INDENT, LDELIM (start of expr), RCURLY (end of subtemplate),
+              and NEWLINE.  Inside of an expression, this lexer returns all of the tokens
+              needed by the STParser. From the parser's point of view, it can treat a
+              template as a simple stream of elements.
+            
+              This class defines the token types and communicates these values to STParser.g
+              via TemplateLexer.tokens file (which must remain consistent).
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.TemplateLexer.delimiterStartChar">
+            What char starts an expression? 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.TemplateLexer.scanningInsideExpr">
+            This keep track of the mode of the lexer. Are we inside or outside
+            an Template expression?
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.TemplateLexer.subtemplateDepth">
+            To be able to properly track the inside/outside mode, we need to
+            track how deeply nested we are in some templates. Otherwise, we
+            know whether a '}' and the outermost subtemplate to send this back to
+            outside mode.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.TemplateLexer.startCharIndex">
+            When we started token, track initial coordinates so we can properly
+            build token objects.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Compiler.TemplateLexer.tokens">
+            Our lexer routines might have to emit more than a single token. We
+            buffer everything through this list.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.TemplateLexer.Match(System.Char)">
+            Ensure x is next character on the input stream 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.TemplateLexer.MatchIdentifier">
+            ID  :   ('a'..'z'|'A'..'Z'|'_'|'/') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'/')* ; 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Compiler.TemplateLexer.MatchString">
+            STRING : '"' ( '\\' '"' | '\\' ~'"' | ~('\\'|'"') )* '"' ; 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.TemplateLexer.TemplateToken">
+            We build STToken tokens instead of relying on CommonToken so we
+            can override ToString(). It just converts token types to
+            token names like 23 to LDELIM.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Compiler.TemplateParser">
+            Build an AST from a single StringTemplate template 
+        </member>
+        <member name="T:Antlr4.StringTemplate.DateRenderer">
+            A renderer for java.util.Date and Calendar objects. It understands a
+            variety of format names as shown in formatToInt field.  By default
+            it assumes "short" format.  A prefix of date: or time: shows only
+            those components of the time object.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Debug.ConstructionEvent">
+            An event that happens when building Template trees, adding attributes etc... 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Debug.DebugEvents">
+            Track all events that happen while evaluating this template 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Debug.DebugEvents.ChildEvalTemplateEvents">
+            All templates evaluated and embedded in this ST. Used
+            for tree view in STViz.
+        </member>
+        <member name="T:Antlr4.StringTemplate.IAttributeRenderer">
+            This interface describes an object that knows how to Format or otherwise
+              Render an object appropriately.  There is one renderer registered per
+              group for a given Java type.
+            
+              If the Format string passed to the renderer is not recognized then simply
+              call ToString().
+            
+              formatString can be null but locale will at least be Locale.getDefault()
+        </member>
+        <member name="T:Antlr4.StringTemplate.IModelAdaptor">
+            An object that knows how to convert property references to appropriate
+              actions on a model object.  Some models, like JDBC, are interface based
+              (we aren't supposed to care about implementation classes). Some other
+              models don't follow getter method naming convention.  So, if we have
+              an object of type M with property method foo() (not getFoo()), we
+              register a model adaptor object, adap, that converts foo lookup to foo().
+            
+              Given &lt;a.foo&gt;, we look up foo via the adaptor if "a instanceof(M)".
+            
+              See unit tests.
+        </member>
+        <member name="M:Antlr4.StringTemplate.IModelAdaptor.GetProperty(Antlr4.StringTemplate.Interpreter,Antlr4.StringTemplate.TemplateFrame,System.Object,System.Object,System.String)">
+            Lookup property name in o and return its value.  It's a good
+              idea to cache a Method or Field reflection object to make
+              this fast after the first look up.
+            
+              property is normally a String but doesn't have to be. E.g.,
+              if o is Map, property could be any key type.  If we need to convert
+              to string, then it's done by Template and passed in here.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Interpreter">
+            This class knows how to execute template bytecodes relative to a
+              particular TemplateGroup. To execute the byte codes, we need an output stream
+              and a reference to an Template an instance. That instance's impl field points at
+              a CompiledTemplate, which contains all of the byte codes and other information
+              relevant to execution.
+            
+              This interpreter is a stack-based bytecode interpreter.  All operands
+              go onto an operand stack.
+            
+              If the group that we're executing relative to has debug set, we track
+              interpreter events. For now, I am only tracking instance creation events.
+              These are used by STViz to pair up output chunks with the template
+              expressions that generate them.
+            
+              We create a new interpreter for each Template.Render(), DebugTemplate.Visualize, or
+              DebugTemplate.GetEvents() invocation.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter.trace">
+            Dump bytecode instructions as we execute them? 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter.group">
+            Exec st with respect to this group. Once set in Template.ToString(),
+            it should be fixed. Template has group also.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter.culture">
+            For renderers, we have to pass in the culture 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter.operands">
+            Operand stack, grows upwards 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter.executeTrace">
+            If trace mode, track trace here 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter._debug">
+            Track events inside templates and in this.events 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Interpreter.events">
+            Track everything happening in interp if debug across all templates.
+            The last event in this field is the EvalTemplateEvent for the root
+            template.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Execute(Antlr4.StringTemplate.ITemplateWriter,Antlr4.StringTemplate.TemplateFrame)">
+            Execute template self and return how many characters it wrote to out 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.WriteObjectNoOptions(Antlr4.StringTemplate.ITemplateWriter,Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Write out an expression result that doesn't use expression options.
+            E.g., &lt;name&gt;
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.WriteObjectWithOptions(Antlr4.StringTemplate.ITemplateWriter,Antlr4.StringTemplate.TemplateFrame,System.Object,System.Object[])">
+            Write out an expression result that uses expression options.
+            E.g., &lt;names; separator=", "&gt;
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.WriteObject(Antlr4.StringTemplate.ITemplateWriter,Antlr4.StringTemplate.TemplateFrame,System.Object,System.String[])">
+            Generic method to emit text for an object. It differentiates
+            between templates, iterable objects, and plain old Java objects (POJOs)
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.First(Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Return the first attribute if multiple valued or the attribute
+            itself if single-valued.  Used in &lt;names:First()&gt;
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Last(Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Return the last attribute if multiple valued or the attribute
+            itself if single-valued. Unless it's a list or array, this is pretty
+            slow as it iterates until the last element.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Rest(Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Return everything but the first attribute if multiple valued
+            or null if single-valued.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Trunc(Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Return all but the last element.  Trunc(x)=null if x is single-valued. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Strip(Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Return a new list w/o null values. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Reverse(Antlr4.StringTemplate.TemplateFrame,System.Object)">
+            Return a list with the same elements as v but in reverse order. null
+            values are NOT stripped out. use Reverse(Strip(v)) to do that.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.Length(System.Object)">
+            Return the length of a mult-valued attribute or 1 if it is a
+            single attribute. If attribute is null return 0.
+            Special case several common collections and primitive arrays for
+            speed. This method by Kay Roepke from v3.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.GetAttribute(Antlr4.StringTemplate.TemplateFrame,System.String)">
+            Find an attr via dynamic scoping up enclosing scope chain.
+            If not found, look for a map.  So attributes sent in to a template
+            override dictionary names.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.SetDefaultArguments(Antlr4.StringTemplate.TemplateFrame)">
+            Set any default argument values that were not set by the
+              invoking template or by setAttribute directly.  Note
+              that the default values may be templates.
+            
+              The evaluation context is the template enclosing invokedST.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Interpreter.TrackDebugEvent(Antlr4.StringTemplate.TemplateFrame,Antlr4.StringTemplate.Debug.InterpEvent)">
+            For every event, we track in overall list and in self's
+            event list so that each template has a list of events used to
+            create it.  If EvalTemplateEvent, store in parent's
+            childEvalTemplateEvents list for STViz tree view.
+        </member>
+        <member name="T:Antlr4.StringTemplate.ITemplateErrorListener">
+            How to handle messages 
+        </member>
+        <member name="T:Antlr4.StringTemplate.ITemplateWriter">
+            Generic StringTemplate output writer filter.
+            
+              Literals and the elements of expressions are emitted via Write().
+              Separators are emitted via WriteSeparator() because they must be
+              handled specially when wrapping lines (we don't want to wrap
+              in between an element and it's separator).
+        </member>
+        <member name="P:Antlr4.StringTemplate.ITemplateWriter.Index">
+            Return the absolute char index into the output of the char
+            we're about to Write.  Returns 0 if no char written yet.
+        </member>
+        <member name="M:Antlr4.StringTemplate.ITemplateWriter.Write(System.String)">
+            Write the string and return how many actual chars were written.
+            With autoindentation and wrapping, more chars than length(str)
+            can be emitted.  No wrapping is done.
+        </member>
+        <member name="M:Antlr4.StringTemplate.ITemplateWriter.Write(System.String,System.String)">
+            Same as Write, but wrap lines using the indicated string as the
+            wrap character (such as "\n").
+        </member>
+        <member name="M:Antlr4.StringTemplate.ITemplateWriter.WriteWrap(System.String)">
+            Because we evaluate Template instance by invoking exec() again, we
+              can't pass options in.  So the WRITE instruction of an applied
+              template (such as when we wrap in between template applications
+              like &lt;data:{v|[&lt;v&gt;]}; wrap&gt;) we need to Write the wrap string
+              before calling exec().  We expose just like for the separator.
+              See Interpreter.WriteObject where it checks for Template instance.
+              If POJO, WritePlainObject passes wrap to ITemplateWriter's
+            
+                 Write(String str, String wrap)
+            
+              method.  Can't pass to exec(). 
+        </member>
+        <member name="M:Antlr4.StringTemplate.ITemplateWriter.WriteSeparator(System.String)">
+            Write a separator.  Same as Write() except that a \n cannot
+            be inserted before emitting a separator.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.Aggregate">
+            An automatically created aggregate of properties.
+            
+              I often have lists of things that need to be formatted, but the list
+              items are actually pieces of data that are not already in an object.  I
+              need ST to do something like:
+            
+              Ter=3432
+              Tom=32234
+              ....
+            
+              using template:
+            
+              $items:{it.name$=$it.type$}$
+            
+              This example will call getName() on the objects in items attribute, but
+              what if they aren't objects?  I have perhaps two parallel arrays
+              instead of a single array of objects containing two fields.  One
+              solution is allow Maps to be handled like properties so that it.name
+              would fail getName() but then see that it's a Map and do
+              it.get("name") instead.
+            
+              This very clean approach is espoused by some, but the problem is that
+              it's a hole in my separation rules.  People can put the logic in the
+              view because you could say: "go get bob's data" in the view:
+            
+              Bob's Phone: $db.bob.phone$
+            
+              A view should not be part of the program and hence should never be able
+              to go ask for a specific person's data.
+            
+              After much thought, I finally decided on a simple solution.  I've
+              added setAttribute variants that pass in multiple property values,
+              with the property names specified as part of the name using a special
+              attribute name syntax: "name.{propName1,propName2,...}".  This
+              object is a special kind of HashMap that hopefully prevents people
+              from passing a subclass or other variant that they have created as
+              it would be a loophole.  Anyway, the ASTExpr.getObjectProperty()
+              method looks for Aggregate as a special case and does a get() instead
+              of getPropertyName.
+        </member>
+        <member name="P:Antlr4.StringTemplate.Misc.Aggregate.Item(System.String)">
+            Allow StringTemplate to add values, but prevent the end
+            user from doing so.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.AggregateModelAdaptor">
+            Deal with structs created via ST.add("structname.{prop1, prop2}", ...); 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.Coordinate">
+            A line number and char position within a line.  Used by the source
+            mapping stuff to map address to range within a template.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.ErrorBuffer">
+            Used during tests to track all errors 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.ErrorType">
+            All the errors that can happen and how to generate a message 
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.Interval">
+            <summary>
+            Represents a range.
+            </summary>
+            <remarks>
+            This structure represents an immutable integer interval that describes a range of values, from Start to End.
+            It is closed on the left and open on the right: [Start .. End). In the context of a Template it represents a
+            span of text, but the Interval structure itself is independent of any particular text.
+            </remarks>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.Interval.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of an Interval with the given start point and length.
+            </summary>
+            <param name="start">The starting point of the interval.</param>
+            <param name="length">The length of the interval.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="start"/> or <paramref name="length"/> is less than zero.
+            </exception>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Misc.Interval.Start">
+            <summary>
+            Gets the starting index of the span.
+            </summary>
+            <value>
+            The starting index of the span.
+            </value>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Misc.Interval.End">
+            <summary>
+            Gets the end of the interval.
+            </summary>
+            <remarks>
+            The interval is open-ended on the right side, so that Start + Length = End.
+            </remarks>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Misc.Interval.Length">
+            <summary>
+            Gets the length of the interval, which is always non-negative.
+            </summary>
+            <value>
+            The length of the interval, which is always non-negative.
+            </value>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Misc.Interval.IsEmpty">
+            <summary>
+            Determines whether or not this interval is empty.
+            </summary>
+            <value>
+            true if the length of the interval is zero, otherwise false.
+            </value>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.Interval.FromBounds(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of an Interval with the given start and end positions.
+            </summary>
+            <param name="start">The start position of the new interval.</param>
+            <param name="end">The end position of the new interval.</param>
+            <returns>The new interval.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="start"/> is less than 0, or <paramref name="end"/> is less than <paramref name="start"/>.</exception>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.Interval.Contains(System.Int32)">
+            <summary>
+            Determines whether the position lies within the interval.
+            </summary>
+            <param name="position">The position to check.</param>
+            <returns>true if the position is greater than or equal to Start and less than End, otherwise false.</returns>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.Interval.Contains(Antlr4.StringTemplate.Misc.Interval)">
+            <summary>
+            Determines whether the specified interval falls completely within this interval.
+            </summary>
+            <param name="interval">The interval to check.</param>
+            <returns>true if the specified interval falls completely within this interval, otherwise false.</returns>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.MultiMap`2">
+            A hash table that maps a key to a list of elements not just a single. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.ObjectModelAdaptor.BuildAccessor(System.Reflection.MethodInfo,System.String)">
+            <summary>
+            Builds an accessor for an indexer property that returns a takes a string argument.
+            </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.TemplateCompiletimeMessage">
+            Used for semantic errors that occur at compile time not during
+            interpretation. For Template parsing ONLY not group parsing.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Misc.TemplateGroupCompiletimeMessage._token">
+            <summary>
+            token inside group file
+            </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.TemplateLexerMessage">
+            
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.TemplateMessage">
+            Upon error, Template creates an TemplateMessage or subclass instance and notifies
+              the listener.  This root class is used for IO and internal errors.
+            
+              @see TemplateRuntimeMessage
+              @see TemplateCompiletimeMessage
+        </member>
+        <member name="F:Antlr4.StringTemplate.Misc.TemplateMessage.self">
+            if in debug mode, has created instance, Add attr events and eval
+            template events.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.TemplateNoSuchPropertyException">
+            <summary>
+            For the expression a.b, object a has no b property.
+            </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Misc.TemplateRuntimeMessage">
+            Used to track errors that occur in the Template interpreter. 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Misc.TemplateRuntimeMessage.ip">
+            Where error occurred in bytecode memory 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.TemplateRuntimeMessage.GetSourceLocation">
+            Given an ip (code location), get it's range in source template then
+            return it's template line:col.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.Utility.ReplaceEscapedRightAngle(System.String)">
+            Replace >\> with >> in s. Replace \>> unless prefix of \>>> with >>.
+            Do NOT replace if it's &lt;\\&gt;
+        </member>
+        <member name="M:Antlr4.StringTemplate.Misc.Utility.GetLineCharPosition(System.String,System.Int32)">
+            Given index into string, compute the line and char position in line 
+        </member>
+        <member name="T:Antlr4.StringTemplate.NoIndentWriter">
+            Just pass through the text 
+        </member>
+        <member name="T:Antlr4.StringTemplate.NumberRenderer">
+            Works with Byte, Short, Integer, Long, and BigInteger as well as
+              Float, Double, and BigDecimal.  You pass in a Format string suitable
+              for Formatter object:
+            
+              http://java.sun.com/j2se/1.5.0/docs/api/java/util/Formatter.html
+            
+              For example, "%10d" emits a number as a decimal int padding to 10 char.
+              This can even do long to date conversions using the Format string.
+        </member>
+        <member name="T:Antlr4.StringTemplate.StringRenderer">
+            This Render knows to perform a few operations on String objects:
+            upper, lower, cap, url-encode, xml-encode.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Template">
+            An instance of the StringTemplate. It consists primarily of
+              a reference to its implementation (shared among all instances)
+              and a hash table of attributes.  Because of dynamic scoping,
+              we also need a reference to any enclosing instance. For example,
+              in a deeply nested template for an HTML page body, we could still reference
+              the title attribute defined in the outermost page template.
+            
+              To use templates, you create one (usually via TemplateGroup) and then inject
+              attributes using Add(). To Render its attacks, use Render().
+        </member>
+        <member name="T:Antlr4.StringTemplate.Template.RegionType">
+            &lt;@r()&gt;, &lt;@r&gt;...&lt;@end&gt;, and @t.r() ::= "..." defined manually by coder 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.RegionType.Implicit">
+            <summary>
+            The region is defined by &lt;@r()&gt;
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.RegionType.Embedded">
+            <summary>
+            The region is defined by &lt;@r&gt;...&lt;@end&gt;
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.RegionType.Explicit">
+            <summary>
+            The region is defined by @t.r ::= "..."
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.ImplicitArgumentName">
+            When there are no formal args for template t and you map t across
+            some values, t implicitly gets arg "it".  E.g., "<b>$it$</b>"
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.impl">
+            The implementation for this template among all instances of same tmpelate . 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.locals">
+            Safe to simultaneously Write via Add, which is synchronized.  Reading
+            during exec is, however, NOT synchronized.  So, not thread safe to
+            Add attributes while it is being evaluated.  Initialized to EmptyAttribute
+            to distinguish null from empty.
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.groupThatCreatedThisInstance">
+            Created as instance of which group? We need this to init interpreter
+              via Render.  So, we create st and then it needs to know which
+              group created it for sake of polymorphism:
+            
+              st = skin1.GetInstanceOf("searchbox");
+              result = st.Render(); // knows skin1 created it
+            
+              Say we have a group, g1, with template t and import t and u templates from
+              another group, g2.  g1.GetInstanceOf("u") finds u in g2 but remembers
+              that g1 created it.  If u includes t, it should create g1.t not g2.t.
+            
+               g1 = {t(), u()}
+               |
+               v
+               g2 = {t()}
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template._debugState">
+            If Interpreter.trackCreationEvents, track creation, add-attr events
+            for each object. Create this object on first use.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Template.AttributeList">
+            Just an alias for ArrayList, but this way I can track whether a
+            list is something Template created or it's an incoming list.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.#ctor(Antlr4.StringTemplate.TemplateGroup)">
+            Used by group creation routine, not by users 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.#ctor(System.String)">
+            Used to make templates inline in code for simple things like SQL or log records.
+            No formal args are set and there is no enclosing instance.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.#ctor(System.String,System.Char,System.Char)">
+            Create Template using non-default delimiters; each one of these will live
+            in it's own group since you're overriding a default; don't want to
+            alter TemplateGroup.defaultGroup.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.#ctor(Antlr4.StringTemplate.Template)">
+            Clone a prototype template.
+            Copy all fields except DebugState.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.Add(System.String,System.Object)">
+            Inject an attribute (name/value pair). If there is already an
+              attribute with that name, this method turns the attribute into an
+              AttributeList with both the previous and the new attribute as elements.
+              This method will never alter a List that you inject.  If you send
+              in a List and then inject a single value element, Add() copies
+              original list and adds the new value.
+            
+              Return self so we can chain.  t.add("x", 1).add("y", "hi");
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.AddMany(System.String,System.Object[])">
+            Split "aggrName.{propName1,propName2}" into list [propName1,propName2]
+            and the aggrName. Spaces are allowed around ','.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.Remove(System.String)">
+            Remove an attribute value entirely (can't Remove attribute definitions). 
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.RawSetAttribute(System.String,System.Object)">
+            Set this.locals attr value when you only know the name, not the index.
+            This is ultimately invoked by calling Template.Add() from outside so toss
+            an exception to notify them.
+        </member>
+        <member name="M:Antlr4.StringTemplate.Template.GetAttribute(System.String)">
+            Find an attr in this template only.
+        </member>
+        <member name="T:Antlr4.StringTemplate.Template.TemplateDebugState">
+            Events during template hierarchy construction (not evaluation) 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.TemplateDebugState.NewTemplateEvent">
+            Record who made us? ConstructionEvent creates Exception to grab stack 
+        </member>
+        <member name="F:Antlr4.StringTemplate.Template.TemplateDebugState.AddAttributeEvents">
+            Track construction-time add attribute "events"; used for ST user-level debugging 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateFrame.GetEnclosingInstanceStackString">
+            If an instance of x is enclosed in a y which is in a z, return
+            a String of these instance names in order from topmost to lowest;
+            here that would be "[z y x]".
+        </member>
+        <member name="T:Antlr4.StringTemplate.TemplateGroup">
+            A directory or directory tree of .st template files and/or group files.
+            Individual template files contain formal template definitions. In a sense,
+            it's like a single group file broken into multiple files, one for each template.
+            Template v3 had just the pure template inside, not the template name and header.
+            Name inside must match filename (minus suffix).
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup.DictionaryKey">
+            When we use key as a value in a dictionary, this is how we signify. 
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup._encoding">
+            Load files using what encoding? 
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup._imports">
+            Every group can import templates/dictionaries from other groups.
+            The list must be synchronized (see ImportTemplates).
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup.templates">
+            Maps template name to StringTemplate object. synchronized. 
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup.dictionaries">
+            Maps dict names to HashMap objects.  This is the list of dictionaries
+            defined by the user like typeInitMap ::= ["int":"0"]
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup.renderers">
+            A dictionary that allows people to register a renderer for
+              a particular kind of object for any template evaluated relative to this
+              group.  For example, a date should be formatted differently depending
+              on the culture.  You can set Date.class to an object whose
+              ToString(Object) method properly formats a Date attribute
+              according to culture.  Or you can have a different renderer object
+              for each culture.
+            
+              Order of addition is recorded and matters.  If more than one
+              renderer works for an object, the first registered has priority.
+            
+              Renderer associated with type t works for object o if
+            
+             		t.isAssignableFrom(o.getClass()) // would assignment t = o work?
+            
+              So it works if o is subclass or implements t.
+            
+              This structure is synchronized.
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup.adaptors">
+            A dictionary that allows people to register a model adaptor for
+              a particular kind of object (subclass or implementation). Applies
+              for any template evaluated relative to this group.
+            
+              Template initializes with model adaptors that know how to pull
+              properties out of Objects, Maps, and STs.
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup._verbose">
+            Watch loading of groups and templates 
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup._trackCreationEvents">
+            For debugging with STViz. Records where in code an ST was created
+            and where code added attributes.
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup._iterateAcrossValues">
+            v3 compatibility; used to iterate across values not keys like v4.
+            But to convert ANTLR templates, it's too hard to find without
+            static typing in templates.
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup.NotFoundTemplate">
+            Used to indicate that the template doesn't exist.
+            Prevents duplicate group file loads and unnecessary file checks.
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroup._errorManager">
+            The error manager for entire group; all compilations and executions.
+            This gets copied to parsers, walkers, and interpreters.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.GetInstanceOf(System.String)">
+            The primary means of getting an instance of a template from this
+            group. Names must be absolute, fully-qualified names like a/b
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.CreateSingleton(Antlr.Runtime.IToken)">
+            Create singleton template for use with dictionary values 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.IsDefined(System.String)">
+            Is this template defined in this group or from this group below?
+            Names must be absolute, fully-qualified names like /a/b
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.LookupTemplate(System.String)">
+            Look up a fully-qualified name 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.Unload">
+            "Unload" all templates and dictionaries but leave renderers, adaptors,
+            and import relationships.  This essentially forces next GetInstanceOf
+            to reload templates.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.Load(System.String)">
+            Load st from disk if dir or load whole group file if .stg file (then
+            return just one template). name is fully-qualified.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.Load">
+            Force a load if it makes sense for the group 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.DefineTemplateAlias(Antlr.Runtime.IToken,Antlr.Runtime.IToken)">
+            Make name and alias for target.  Replace any previous def of name 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.Compile(System.String,System.String,System.Collections.Generic.List{Antlr4.StringTemplate.Compiler.FormalArgument},System.String,Antlr.Runtime.IToken)">
+            Compile a template 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.GetMangledRegionName(System.String,System.String)">
+            The "foo" of t() ::= "&lt;@foo()&gt;" is mangled to "/region__/t__foo" 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.GetUnmangledTemplateName(System.String)">
+            Return "t.foo" from "/region__/t__foo" 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.DefineDictionary(System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+            Define a map for this group; not thread safe...do not keep adding
+            these while you reference them.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.ImportTemplates(Antlr4.StringTemplate.TemplateGroup)">
+            Make this group import templates/dictionaries from g. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.ImportTemplates(Antlr4.StringTemplate.TemplateGroup,System.Boolean)">
+            Make this group import templates/dictionaries from g. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.ImportTemplates(Antlr.Runtime.IToken)">
+            Import template files, directories, and group files.
+              Priority is given to templates defined in the current group;
+              this, in effect, provides inheritance. Polymorphism is in effect so
+              that if an inherited template references template t() then we
+              search for t() in the subgroup first.
+            
+              Templates are loaded on-demand from import dirs.  Imported groups are
+              loaded on-demand when searching for a template.
+            
+              The listener of this group is passed to the import group so errors
+              found while loading imported element are sent to listener of this group.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.LoadGroupFile(System.String,System.String)">
+            Load a group file with full path fileName; it's relative to root by prefix. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.LoadAbsoluteTemplateFile(System.String)">
+            Load template file into this group using absolute filename 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.LoadTemplateFile(System.String,System.String,Antlr.Runtime.ICharStream)">
+            Load template stream into this group. unqualifiedFileName is "a.st".
+            The prefix is path from group root to unqualifiedFileName like /subdir
+            if file is in /subdir/a.st
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.RegisterModelAdaptor(System.Type,Antlr4.StringTemplate.IModelAdaptor)">
+            Add an adaptor for a kind of object so Template knows how to pull properties
+              from them. Add adaptors in increasing order of specificity.  Template adds Object,
+              Map, and Template model adaptors for you first. Adaptors you Add have
+              priority over default adaptors.
+            
+              If an adaptor for type T already exists, it is replaced by the adaptor arg.
+            
+              This must invalidate cache entries, so set your adaptors up before
+              Render()ing your templates for efficiency.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.RegisterRenderer(System.Type,Antlr4.StringTemplate.IAttributeRenderer)">
+            Register a renderer for all objects of a particular "kind" for all
+            templates evaluated relative to this group.  Use r to Render if
+            object in question is instanceof(attributeType).
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.RegisterRenderer(System.Type,Antlr4.StringTemplate.IAttributeRenderer,System.Boolean)">
+            Register a renderer for all objects of a particular "kind" for all
+            templates evaluated relative to this group.  Use r to Render if
+            object in question is instanceof(attributeType).
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.CreateStringTemplate">
+            StringTemplate object factory; each group can have its own. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroup.CreateStringTemplateInternally(Antlr4.StringTemplate.Compiler.CompiledTemplate)">
+            differentiate so we can avoid having creation events for regions,
+            map operations, and other "new ST" events used during interp.
+        </member>
+        <member name="P:Antlr4.StringTemplate.TemplateGroup.RootDirUri">
+            Return root dir if this is group dir; return dir containing group file
+            if this is group file.  This is derived from original incoming
+            dir or filename.  If it was absolute, this should come back
+            as full absolute path.  If only a URL is available, return URL of
+            one dir up.
+        </member>
+        <member name="T:Antlr4.StringTemplate.TemplateGroupDirectory">
+            A directory or directory tree full of templates and/or group files.
+            We load files on-demand. If we fail to find a file, we look for it via
+            the CLASSPATH as a resource.  I track everything with URLs not file names.
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroupDirectory.Load(System.String)">
+            <summary>
+            Load a template from dir or group file.  Group file is given
+            precedence over dir with same name. <paramref name="name"/> is
+            always fully qualified.
+            </summary>
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroupDirectory.LoadTemplateFile(System.String,System.String)">
+            Load full path name .st file relative to root by prefix 
+        </member>
+        <member name="T:Antlr4.StringTemplate.TemplateGroupFile">
+            The internal representation of a single group file (which must end in
+            ".stg").  If we fail to find a group file, look for it via the
+            CLASSPATH as a resource.
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroupFile._fileName">
+            <summary>
+            Records how the user "spelled" the file name they wanted to load.
+            The URI is the key field here for loading content. If they use the
+            constructor with a URI argument, this field is <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="F:Antlr4.StringTemplate.TemplateGroupFile._url">
+            <summary>
+            Where to find the group file; non-null.
+            </summary>
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroupFile.#ctor(System.String)">
+            Load a file relative to current dir or from root or via CLASSPATH. 
+        </member>
+        <member name="M:Antlr4.StringTemplate.TemplateGroupFile.#ctor(System.Uri,System.Text.Encoding,System.Char,System.Char)">
+            <summary>
+            Pass in a URL with the location of a group file. E.g.,
+            TemplateGroup g = new TemplateGroupFile("file:///org/foo/templates/g.stg", Encoding.UTF8, '&lt;', '&gt;');
+            </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.TemplateGroupString">
+            A group derived from a string not a file or dir. 
+        </member>
+        <member name="T:Antlr4.StringTemplate.TemplateRawGroupDirectory">
+            A dir of templates w/o headers like ST v3 had.  Still allows group files
+            in dir though like TemplateGroupDirectory parent.
+        </member>
+    </members>
+</doc>

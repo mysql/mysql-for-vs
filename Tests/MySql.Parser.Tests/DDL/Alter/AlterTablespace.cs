@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,13 +26,8 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
+using System;
 using Xunit;
 
 
@@ -41,11 +36,39 @@ namespace MySql.Parser.Tests
   
   public class AlterTablespace
   {
-  [Fact]
-  public void Simple()
-  {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+    [Fact]
+    public void Rename()
+    {
+      Utility.ParseSql(
+        "ALTER TABLESPACE tsid ADD datafile '/usr/bin/mysql/datafiles/mydat1' RENAME TO mytablespace ENGINE = ndb;",
+        false,
+        new Version(8, 0, 3));
+      Utility.ParseSql(
+        "ALTER UNDO TABLESPACE tsid ADD datafile '/usr/bin/mysql/datafiles/mydat1' RENAME TO mytablespace ENGINE = ndb;",
+        true,
+        new Version(8, 0, 2));
+    }
+
+    [Fact]
+    public void Simple()
+    {
+      Utility.ParseSql(
         "alter tablespace tsid add datafile '/usr/bin/mysql/datafiles/mydat1' engine = ndb;");
-  }
+      Utility.ParseSql(
+        "alter tablespace tsid add datafile 'C:\\Users\\my_user\\datafile' engine = ndb;");
+    }
+
+    [Fact]
+    public void Undo()
+    {
+      Utility.ParseSql(
+        "ALTER UNDO TABLESPACE tsid add datafile '/usr/bin/mysql/datafiles/mydat1' engine = ndb;",
+        false,
+        new Version(8, 0, 14));
+      Utility.ParseSql(
+        "ALTER UNDO TABLESPACE tsid add datafile '/usr/bin/mysql/datafiles/mydat1' ENGINE = ndb;",
+        true,
+        new Version(8, 0, 13));
+    }
   }
 }

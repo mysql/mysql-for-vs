@@ -1,5 +1,5 @@
 /*
- * [The "BSD licence"]
+ * [The "BSD license"]
  * Copyright (c) 2005-2008 Terence Parr
  * All rights reserved.
  *
@@ -33,29 +33,28 @@
 /** Template overrides to add debugging to AST stuff.  Dynamic inheritance
  *  hierarchy is set up as ASTDbg : AST : Dbg : Java by code generator.
  */
-group ASTDbg;
 
 parserMembers() ::= <<
-// Implement this function in your helper file to use a custom tree adaptor
-partial void InitializeTreeAdaptor();
-protected DebugTreeAdaptor adaptor;
+	// Implement this function in your helper file to use a custom tree adaptor
+	partial void InitializeTreeAdaptor();
+	protected DebugTreeAdaptor adaptor;
 
-public ITreeAdaptor TreeAdaptor
-{
-	get
+	public ITreeAdaptor TreeAdaptor
 	{
-		return adaptor;
-	}
-	set
-	{
+		get
+		{
+			return adaptor;
+		}
+		set
+		{
 <if(grammar.grammarIsRoot)>
-		this.adaptor = new DebugTreeAdaptor(dbg,adaptor);
+			this.adaptor = new DebugTreeAdaptor(dbg,adaptor);
 <else>
-		this.adaptor = (DebugTreeAdaptor)adaptor; // delegator sends dbg adaptor
+			this.adaptor = (DebugTreeAdaptor)adaptor; // delegator sends dbg adaptor
 <endif><\n>
-		<grammar.directDelegates:{g|<g:delegateName()>.TreeAdaptor = this.adaptor;}>
-	}
-}<\n>
+			<grammar.directDelegates:{g|<g:delegateName()>.TreeAdaptor = this.adaptor;}>
+		}
+	}<\n>
 >>
 
 parserCtorBody() ::= <<

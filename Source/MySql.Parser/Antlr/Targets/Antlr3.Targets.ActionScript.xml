@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr3.Targets.ActionScript</name>
+    </assembly>
+    <members>
+        <member name="M:Antlr3.Targets.ActionScriptTarget.EncodeIntAsCharEscape(System.Int32)">
+             ActionScript doesn't support Unicode String literals that are considered "illegal"
+             or are in the surrogate pair ranges.  For example "/uffff" will not encode properly
+             nor will "/ud800".  To keep things as compact as possible we use the following encoding
+             if the int is below 255, we encode as hex literal
+             If the int is between 255 and 0x7fff we use a single unicode literal with the value
+             If the int is above 0x7fff, we use a unicode literal of 0x80hh, where hh is the high-order
+             bits followed by \xll where ll is the lower order bits of a 16-bit number.
+            
+             Ideally this should be improved at a future date.  The most optimal way to encode this
+             may be a compressed AMF encoding that is embedded using an Embed tag in ActionScript.
+            
+             @param v
+             @return
+        </member>
+        <member name="M:Antlr3.Targets.ActionScriptTarget.GetTarget64BitStringFromValue(System.UInt64)">
+            Convert long to two 32-bit numbers separted by a comma.
+            ActionScript does not support 64-bit numbers, so we need to break
+            the number into two 32-bit literals to give to the Bit.  A number like
+            0xHHHHHHHHLLLLLLLL is broken into the following string:
+            "0xLLLLLLLL, 0xHHHHHHHH"
+            Note that the low order bits are first, followed by the high order bits.
+            This is to match how the BitSet constructor works, where the bits are
+            passed in in 32-bit chunks with low-order bits coming first.
+        </member>
+    </members>
+</doc>

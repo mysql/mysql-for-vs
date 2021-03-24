@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr3.Targets.ObjC</name>
+    </assembly>
+    <members>
+        <member name="M:Antlr3.Targets.ObjCTarget.GetTargetStringLiteralFromANTLRStringLiteral(Antlr3.Codegen.CodeGenerator,System.String)">
+            Convert from an ANTLR string literal found in a grammar file to
+            an equivalent string literal in the target language.  For Java, this
+            is the translation 'a\n"' -> "a\n\"".  Expect single quotes
+            around the incoming literal.  Just flip the quotes and replace
+            double quotes with \"
+        </member>
+        <member name="M:Antlr3.Targets.ObjCTarget.GetTokenTypeAsTargetLabel(Antlr3.Codegen.CodeGenerator,System.Int32)">
+            If we have a label, prefix it with the recognizer's name 
+        </member>
+        <member name="M:Antlr3.Targets.ObjCTarget.GetTokenTextAndTypeAsTargetLabel(Antlr3.Codegen.CodeGenerator,System.String,System.Int32)">
+            Target must be able to override the labels used for token types. Sometimes also depends on the token text.
+        </member>
+    </members>
+</doc>

@@ -45,8 +45,8 @@
     </Otherwise>
   </Choose>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
@@ -101,7 +101,9 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="CaseInsensitiveInputStream.cs" />
+    <Compile Include="MySQL51Lexer.cs" />
     <Compile Include="MySQL51Lexer.g3.cs" />
+    <Compile Include="MySQL51Parser.cs" />
     <Compile Include="MySQL51Parser.g3.cs" />
     <Compile Include="MySQLLexer.cs">
       <SubType>Code</SubType>
@@ -111,23 +113,16 @@
     <Compile Include="TokenStreamRemovable.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Antlr3 Include="MySQL51Lexer.g3" />
+    <None Include="MySQL51Lexer.g3" />
   </ItemGroup>
   <ItemGroup>
-    <Antlr3 Include="MySQL51Parser.g3" />
+    <None Include="MySQL51Parser.g3" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '15.0' " />
   <Import Project="$(ProgramFiles)\Microsoft Visual Studio\$(VisualStudioYear)\$(VisualStudioFlavor)\MSBuild\Current\Bin\Microsoft.CSharp.targets" Condition="'$(VisualStudioVersion)' == '16.0' " />
-  <PropertyGroup>
-    <!-- Folder containing AntlrBuildTask.dll -->
-    <AntlrBuildTaskPath>$(ProjectDir)Antlr</AntlrBuildTaskPath>
-    <!-- Path to the ANTLR Tool itself. -->
-    <AntlrToolPath>$(ProjectDir)Antlr\Antlr3.exe</AntlrToolPath>
-  </PropertyGroup>
-  <Import Project="$(ProjectDir)Antlr\Antlr3.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -29,12 +29,8 @@
 namespace MySql.Parser.Tests
 {
   using System;
-  using System.Collections.Generic;
-  using System.Linq;
   using System.Text;
   using Antlr.Runtime;
-  using Antlr.Runtime.Tree;
-  using MySql.Parser;
   using Xunit;
 
   
@@ -43,16 +39,15 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", false, out sb, new Version( 5, 6 ) );
+      Utility.ParseSql(
+        @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", false, new Version(5, 6, 6) );
     }
 
     [Fact]
     public void Simple55()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", true, out sb, new Version(5, 5));
       Assert.True( sb.ToString().IndexOf( "user", StringComparison.InvariantCultureIgnoreCase ) 
         != -1 );

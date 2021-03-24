@@ -1,5 +1,5 @@
 /*
- [The "BSD licence"]
+ [The "BSD license"]
  Copyright (c) 2005-2006 Terence Parr
  All rights reserved.
 
@@ -28,7 +28,6 @@
 /** Template subgroup to add template rewrite output
  *  If debugging, then you'll also get STDbg.stg loaded.
  */
-group ST;
 
 @outputFile.imports() ::= <<
 <@super.imports()>
@@ -46,34 +45,31 @@ public String toString() { return st==null?null:st.toString(); }
 
 @genericParser.members() ::= <<
 <@super.members()>
-protected StringTemplateGroup templateLib =
-  new StringTemplateGroup("<name>Templates", AngleBracketTemplateLexer.class);
+	protected StringTemplateGroup templateLib =
+	  new StringTemplateGroup("<name>Templates", AngleBracketTemplateLexer.class);
 
-public void setTemplateLib(StringTemplateGroup templateLib) {
-  this.templateLib = templateLib;
-}
-public StringTemplateGroup getTemplateLib() {
-  return templateLib;
-}
-/** allows convenient multi-value initialization:
- *  "new STAttrMap().put(...).put(...)"
- */
-public static class STAttrMap extends HashMap {
-  public STAttrMap put(String attrName, Object value) {
-    super.put(attrName, value);
-    return this;
-  }
-  public STAttrMap put(String attrName, int value) {
-    super.put(attrName, new Integer(value));
-    return this;
-  }
-}
+	public void setTemplateLib(StringTemplateGroup templateLib) {
+	  this.templateLib = templateLib;
+	}
+	public StringTemplateGroup getTemplateLib() {
+	  return templateLib;
+	}
+	/** allows convenient multi-value initialization:
+	 *  "new STAttrMap().put(...).put(...)"
+	 */
+	@SuppressWarnings("serial")
+	public static class STAttrMap extends HashMap\<String, Object> {
+		public STAttrMap put(String attrName, Object value) {
+			super.put(attrName, value);
+			return this;
+		}
+	}
 >>
 
 /** x+=rule when output=template */
 ruleRefAndListLabel(rule,label,elementIndex,args,scope) ::= <<
-<ruleRef(...)>
-<listLabel(elem=label+".getTemplate()",...)>
+<ruleRef(rule,label,elementIndex,args,scope)>
+<listLabel(label, {<label>.getTemplate()})>
 >>
 
 rewriteTemplate(alts) ::= <<
@@ -104,15 +100,15 @@ replaceTextInLine() ::= <<
 <endif>
 >>
 
-rewriteTemplateAlt() ::= <<
-// <it.description>
-<if(it.pred)>
-if (<it.pred>) {
-    retval.st = <it.alt>;
+rewriteTemplateAlt(alt) ::= <<
+// <alt.description>
+<if(alt.pred)>
+if (<alt.pred>) {
+	retval.st = <alt.alt>;
 }<\n>
 <else>
 {
-    retval.st = <it.alt>;
+	retval.st = <alt.alt>;
 }<\n>
 <endif>
 >>
@@ -127,25 +123,25 @@ null;
  *  an attribute to build a bigger template; you get a self-embedded
  *  template.
  */
-rewriteExternalTemplate(name,args) ::= <<
+rewriteExternalTemplate(name,args) ::= <%
 templateLib.getInstanceOf("<name>"<if(args)>,
   new STAttrMap()<args:{a | .put("<a.name>", <a.value>)}>
   <endif>)
->>
+%>
 
 /** expr is a string expression that says what template to load */
-rewriteIndirectTemplate(expr,args) ::= <<
+rewriteIndirectTemplate(expr,args) ::= <%
 templateLib.getInstanceOf(<expr><if(args)>,
   new STAttrMap()<args:{a | .put("<a.name>", <a.value>)}>
   <endif>)
->>
+%>
 
 /** Invoke an inline template with a set of attribute name/value pairs */
-rewriteInlineTemplate(args, template) ::= <<
+rewriteInlineTemplate(args, template) ::= <%
 new StringTemplate(templateLib, "<template>"<if(args)>,
   new STAttrMap()<args:{a | .put("<a.name>", <a.value>)}>
   <endif>)
->>
+%>
 
 /** plain -> {foo} action */
 rewriteAction(action) ::= <<

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,37 +26,32 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 namespace MySql.Parser.Tests.DDL.Drop
 {
-	
-	public class DropTable
-	{
-		[Fact]
-		public void SimpleNoSchema()
-		{			
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE `tablename`");
-			/*
+
+  public class DropTable
+  {
+    [Fact]
+    public void SimpleNoSchema()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TABLE `tablename`");
+      /*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is DropTableStatement);
 			DropTableStatement ds = statements[0] as DropTableStatement;
 			Assert.Equal(1, ds.ToDrop.Count);
 			Assert.Null(ds.ToDrop[0].Database);
 			Assert.Equal("`tablename`", ds.ToDrop[0].Name.Text);*/
-		}
+    }
 
-		[Fact]
-		public void SimpleWithSchema()
-		{			
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE `schema1`.`tablename`");
-			/*
+    [Fact]
+    public void SimpleWithSchema()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TABLE `schema1`.`tablename`");
+      /*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is DropTableStatement);
 			DropTableStatement ds = statements[0] as DropTableStatement;
@@ -64,19 +59,19 @@ namespace MySql.Parser.Tests.DDL.Drop
 			Assert.Equal("`schema1`", ds.ToDrop[0].Database.Text);
 			Assert.Equal("`tablename`", ds.ToDrop[0].Name.Text);
 			 * */
-		}
+    }
 
-		[Fact]
-		public void MissingTableName()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE", true);			
-		}
+    [Fact]
+    public void MissingTableName()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TABLE", true);
+    }
 
-		[Fact]
-		public void MultipleTables()
-		{			
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE `table1`, schema2.table2, `schema3`.`table3`, table4");
-			/*
+    [Fact]
+    public void MultipleTables()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TABLE `table1`, schema2.table2, `schema3`.`table3`, table4");
+      /*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is DropTableStatement);
 			DropTableStatement ds = statements[0] as DropTableStatement;
@@ -94,13 +89,13 @@ namespace MySql.Parser.Tests.DDL.Drop
 			Assert.Null(ds.ToDrop[3].Database);
 			Assert.Equal("table4", ds.ToDrop[3].Name.Text);
 			 * */
-		}
+    }
 
-		[Fact]
-		public void IfExists()
-		{			
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename`");
-			/*
+    [Fact]
+    public void IfExists()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename`");
+      /*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is DropTableStatement);
 			DropTableStatement ds = statements[0] as DropTableStatement;
@@ -108,13 +103,13 @@ namespace MySql.Parser.Tests.DDL.Drop
 			Assert.Equal("`tablename`", ds.ToDrop[0].Name.Text);
 			Assert.True(ds.IfExists);
 			 * */
-		}
+    }
 
-		[Fact]
-		public void Temporary()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TEMPORARY TABLE IF EXISTS `tablename`");
-			/*
+    [Fact]
+    public void Temporary()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TEMPORARY TABLE IF EXISTS `tablename`");
+      /*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is DropTableStatement);
 			DropTableStatement ds = statements[0] as DropTableStatement;
@@ -122,31 +117,30 @@ namespace MySql.Parser.Tests.DDL.Drop
 			Assert.Equal("`tablename`", ds.ToDrop[0].Name.Text);
 			Assert.True(ds.Temporary);
 			 * */
-		}
+    }
 
-		[Fact]
-		public void CascadeOrRestrict()
-		{			
-			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename` CASCADE");
-			/*
+    [Fact]
+    public void CascadeOrRestrict()
+    {
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename` CASCADE");
+      /*
 			DropTableStatement ds = statements[0] as DropTableStatement;
 			Assert.True(ds.Cascade);
 			Assert.False(ds.Restrict);
 			*/
-			r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename` RESTRICT");
-			/*
+      r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename` RESTRICT");
+      /*
 			ds = statements[0] as DropTableStatement;
 			Assert.False(ds.Cascade);
 			Assert.True(ds.Restrict);
 			*/
-			
-		}
 
-		[Fact]
-		public void CascadeAndRestrict()
-		{
-			MySQL51Parser.program_return r = 
-				Utility.ParseSql("DROP TABLE IF EXISTS `tablename` RESTRICT CASCADE", true);
-		}
-	}
+    }
+
+    [Fact]
+    public void CascadeAndRestrict()
+    {
+      Utility.ParseSql("DROP TABLE IF EXISTS `tablename` RESTRICT CASCADE", true);
+    }
+  }
 }

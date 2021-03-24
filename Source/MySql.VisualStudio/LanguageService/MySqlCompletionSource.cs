@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -132,7 +132,7 @@ namespace MySql.Data.VisualStudio
       position = snapPos.Position;
       tokens = RemoveToken(sql, snapPos);
       if (tokens.Count == 1 && tokens.Get(0).Type == MySQL51Lexer.EOF) return;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         LanguageServiceUtil.ParseSql(sql, false, out sbErrors, tokens);
       if (r == null) return;
       ITree t = r.Tree as ITree;

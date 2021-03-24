@@ -90,7 +90,7 @@
         </Reference>
         <Reference Include="MySql.Data">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\Dependencies\v4.0\Release\MySql.Data.dll</HintPath>
+          <HintPath>..\..\Dependencies\v4.5\Release\MySql.Data.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
@@ -100,8 +100,7 @@
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
       </ItemGroup>
-    </When>
-  </Choose>
+    </When>  </Choose>
   <ItemGroup>
     <Compile Include="..\MySql.VisualStudio\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>

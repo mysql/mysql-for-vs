@@ -1,5 +1,5 @@
 /*
- * [The "BSD licence"]
+ * [The "BSD license"]
  * Copyright (c) 2005-2008 Terence Parr
  * All rights reserved.
  *
@@ -32,7 +32,6 @@
 /** Template overrides to add debugging to normal Java output;
  *  If ASTs are built, then you'll also get ASTDbg.stg loaded.
  */
-group Dbg;
 
 @outputFile.imports() ::= <<
 <@super.imports()>
@@ -49,21 +48,21 @@ public static readonly string[] ruleNames =
 	};<\n>
 <endif>
 <if(grammar.grammarIsRoot)><! grammar imports other grammar(s) !>
-	int ruleLevel = 0;
-	public virtual int RuleLevel { get { return ruleLevel; } }
-	public virtual void IncRuleLevel() { ruleLevel++; }
-	public virtual void DecRuleLevel() { ruleLevel--; }
+int ruleLevel = 0;
+public virtual int RuleLevel { get { return ruleLevel; } }
+public virtual void IncRuleLevel() { ruleLevel++; }
+public virtual void DecRuleLevel() { ruleLevel--; }
 <if(profile)>
-	<ctorForProfilingRootGrammar()>
+<ctorForProfilingRootGrammar()>
 <else>
-	<ctorForRootGrammar()>
+<ctorForRootGrammar()>
 <endif>
 <ctorForPredefinedListener()>
 <else><! imported grammar !>
-	public int RuleLevel { get { return <grammar.delegators:{g| <g:delegateName()>}>.RuleLevel; } }
-	public void IncRuleLevel() { <grammar.delegators:{g| <g:delegateName()>}>.IncRuleLevel(); }
-	public void DecRuleLevel() { <grammar.delegators:{g| <g:delegateName()>}>.DecRuleLevel(); }
-	<ctorForDelegateGrammar()>
+public int RuleLevel { get { return <grammar.delegators:{g| <g:delegateName()>}>.RuleLevel; } }
+public void IncRuleLevel() { <grammar.delegators:{g| <g:delegateName()>}>.IncRuleLevel(); }
+public void DecRuleLevel() { <grammar.delegators:{g| <g:delegateName()>}>.DecRuleLevel(); }
+<ctorForDelegateGrammar()>
 <endif>
 <if(profile)>
 public override bool AlreadyParsedRule( IIntStream input, int ruleIndex )
@@ -88,34 +87,34 @@ protected virtual bool EvalPredicate( bool result, string predicate )
 ctorForRootGrammar() ::= <<
 <! bug: can't use <@super.members()> cut-n-paste instead !>
 <! Same except we add port number and profile stuff if root grammar !>
-public <name>( <inputStreamType> input )
+<actions.(actionScope).ctorModifier; null="public"> <name>( <inputStreamType> input )
 	: this( input, DebugEventSocketProxy.DefaultDebuggerPort, new RecognizerSharedState() )
 {
 }
-public <name>( <inputStreamType> input, int port, RecognizerSharedState state )
+<actions.(actionScope).ctorModifier; null="public"> <name>( <inputStreamType> input, int port, RecognizerSharedState state )
 	: base( input, state )
 {
-	<parserCtorBody()>
 	<createListenerAndHandshake()>
 	<grammar.directDelegates:{g|<g:delegateName()> = new <g.recognizerName>( input, dbg, this.state, this<grammar.delegators:{g|, <g:delegateName()>}> );}; separator="\n">
+	<parserCtorBody()>
 	<@finally()>
 }<\n>
 >>
 
 ctorForProfilingRootGrammar() ::= <<
 <! bug: can't use <@super.members()> cut-n-paste instead !>
-public <name>( <inputStreamType> input )
+<actions.(actionScope).ctorModifier; null="public"> <name>( <inputStreamType> input )
 	: this( input, new Profiler(null), new RecognizerSharedState() )
 {
 }
-public <name>( <inputStreamType> input, IDebugEventListener dbg, RecognizerSharedState state )
+<actions.(actionScope).ctorModifier; null="public"> <name>( <inputStreamType> input, IDebugEventListener dbg, RecognizerSharedState state )
 	: base( input, dbg, state )
 {
 	Profiler p = (Profiler)dbg;
 	p.setParser(this);
-	<parserCtorBody()>
 	<grammar.directDelegates:
 	 {g|<g:delegateName()> = new <g.recognizerName>( input, dbg, this.state, this<grammar.delegators:{g|, <g:delegateName()>}> );}; separator="\n">
+	<parserCtorBody()>
 	<@finally()>
 }
 <\n>
@@ -123,25 +122,25 @@ public <name>( <inputStreamType> input, IDebugEventListener dbg, RecognizerShare
 
 /** Basically we don't want to set any dbg listeners are root will have it. */
 ctorForDelegateGrammar() ::= <<
-public <name>( <inputStreamType> input, IDebugEventListener dbg, RecognizerSharedState state<grammar.delegators:{g|, <g.recognizerName> <g:delegateName()>}> )
+<actions.(actionScope).ctorModifier; null="public"> <name>( <inputStreamType> input, IDebugEventListener dbg, RecognizerSharedState state<grammar.delegators:{g|, <g.recognizerName> <g:delegateName()>}> )
 	: base( input, dbg, state )
 {
-	<parserCtorBody()>
 	<grammar.directDelegates:
 	 {g|<g:delegateName()> = new <g.recognizerName>( input, this, this.state<grammar.delegators:{g|, <g:delegateName()>}> );}; separator="\n">
+	<parserCtorBody()>
 }<\n>
 >>
 
 ctorForPredefinedListener() ::= <<
-public <name>( <inputStreamType> input, IDebugEventListener dbg )
+<actions.(actionScope).ctorModifier; null="public"> <name>( <inputStreamType> input, IDebugEventListener dbg )
 	<@superClassRef>: base( input, dbg, new RecognizerSharedState() )<@end>
 {
 <if(profile)>
 	Profiler p = (Profiler)dbg;
 	p.setParser(this);
 <endif>
-	<parserCtorBody()>
 	<grammar.directDelegates:{g|<g:delegateName()> = new <g.recognizerName>(input, dbg, this.state, this<grammar.delegators:{g|, <g:delegateName()>}>);}; separator="\n">
+	<parserCtorBody()>
 	<@finally()>
 }<\n>
 >>

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,11 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 //using MySQLParser;
 
@@ -41,23 +38,22 @@ namespace MySql.Parser.Tests
   {
     [Fact]
     public void Simple()
-    {			
-      
-      MySQL51Parser.program_return r = Utility.ParseSql(
+    {
+      Utility.ParseSql(
         "insert into tableA ( col1, col2, col3 ) values ( 'a', tableB.colx, 4.55 )");
     }
 
     [Fact]
     public void WithSelect()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "insert into tableA ( col1, col2, col3 ) select 'a', tableB.colx, 4.55 from tableB");
     }
 
 [Fact]
     public void WithSelect2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
                 @"INSERT INTO t2
 SELECT
 a.X +
@@ -82,49 +78,43 @@ USING
       [Fact]
     public void WithSelect3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
-              "INSERT INTO table2 (field1, field2, field3, field4) (SELECT 'value1 from user input', field1, field2, field3 from table1)");
+      Utility.ParseSql("INSERT INTO table2 (field1, field2, field3, field4) (SELECT 'value1 from user input', field1, field2, field3 from table1)");
     }
 
       [Fact]
     public void WithoutColumns()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
-              "insert into test3 values (1), (2), (3)");
+      Utility.ParseSql("insert into test3 values (1), (2), (3)");
     }
 
-      [Fact]
-      public void WithPartition_55()
-      {
-        StringBuilder sb;
-        MySQL51Parser.program_return r = Utility.ParseSql(
-          @"INSERT INTO employees_copy SELECT * FROM employees PARTITION (p2);	", true, out sb, new Version(5, 5));
-        Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
-      }
+    [Fact]
+    public void WithPartition_55()
+    {
+      StringBuilder sb;
+      Utility.ParseSql(@"INSERT INTO employees_copy SELECT * FROM employees PARTITION (p2);	", true, out sb, new Version(5, 5));
+      Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
+    }
 
-      [Fact]
-      public void WithPartition_56()
-      {
-        StringBuilder sb;
-        MySQL51Parser.program_return r = Utility.ParseSql(
-          @"INSERT INTO employees_copy SELECT * FROM employees PARTITION (p2);	", false, out sb, new Version(5, 6));
-      }
+    [Fact]
+    public void WithPartition_56()
+    {
+      StringBuilder sb;
+      Utility.ParseSql(@"INSERT INTO employees_copy SELECT * FROM employees PARTITION (p2);	", false, out sb, new Version(5, 6));
+    }
 
-      [Fact]
-      public void WithPartition_2_55()
-      {
-        StringBuilder sb;
-        MySQL51Parser.program_return r = Utility.ParseSql(
-          @"INSERT INTO employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);	", true, out sb, new Version(5, 5));
-        Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
-      }
+    [Fact]
+    public void WithPartition_2_55()
+    {
+      StringBuilder sb;
+      Utility.ParseSql(@"INSERT INTO employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);	", true, out sb, new Version(5, 5));
+      Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
+    }
 
-      [Fact]
-      public void WithPartition_2_56()
-      {
-        StringBuilder sb;
-        MySQL51Parser.program_return r = Utility.ParseSql(
-          @"INSERT INTO employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);	", false, out sb, new Version(5, 6));
-      }
+    [Fact]
+    public void WithPartition_2_56()
+    {
+      StringBuilder sb;
+      Utility.ParseSql(@"INSERT INTO employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);	", false, out sb, new Version(5, 6));
+    }
   }
 }

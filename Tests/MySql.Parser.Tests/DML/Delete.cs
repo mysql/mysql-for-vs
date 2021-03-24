@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,11 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -43,13 +40,13 @@ namespace MySql.Parser.Tests
     [Fact]
     public void MissingTableDeleteTest()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("delete from ", true);
+      Utility.ParseSql("delete from ", true);
     }
 
     [Fact]
     public void DangerousDeleteTest()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("delete quick from a");
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("delete quick from a");
       /*
       Assert.Equal(1, statements.Count);
       Assert.True(statements[0] is DeleteStatement);
@@ -64,7 +61,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void DeleteSimpleTest()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("delete ignore from Table1 where ( Flag is null );");
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("delete ignore from Table1 where ( Flag is null );");
       /*
       Assert.Equal(1, statements.Count);
       Assert.True(statements[0] is DeleteStatement);
@@ -84,7 +81,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void DeleteWithClausules()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         "delete ignore quick low_priority from Table2 where ( Id <> 1 ) order by Id desc limit 100");
       /*
       Assert.Equal(1, statements.Count);
@@ -113,7 +110,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void DeleteMultiTableTest()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"delete from Table1, Table2.*, Table3.* using Table1, Table4 inner join Table5
         on Table4.KeyGuid = Table5.ForeignKeyGuid where ( IdKey <> 1 )");
       /*
@@ -151,7 +148,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void DeleteMultiTableTest2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"delete Table1.*, Table2, Table3 from Table1, Table2 inner join Table3 
         on Table2.KeyId = Table3.ForeignKeyId where ( IdKey = 2 )");
       /*
@@ -191,7 +188,7 @@ namespace MySql.Parser.Tests
     public void DeleteMultiTableWrongTest()
     {
       // TODO: Check if effectively is the multitable syntax disallowed in combination with order by.
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"delete Table1.*, Table2, Table3 from Table1, Table2 inner join Table3 
         on Table2.KeyId = Table3.ForeignKeyId where ( Id <> 1 ) order by Id desc", true);
       /*
@@ -228,7 +225,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void DeleteMultiTableWrongTest2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"delete Table1.*, Table2, Table3 from Table1, Table2 inner join Table3 
         on Table2.KeyId = Table3.ForeignKeyId where ( Id <> 1 ) limit 1000", true);
       /*
@@ -265,7 +262,7 @@ namespace MySql.Parser.Tests
         [Fact]
     public void Subquery()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
                 @"DELETE FROM t1
 WHERE s11 > ANY
  (SELECT COUNT(*) /* no hint */ FROM t2
@@ -280,7 +277,7 @@ WHERE s11 > ANY
         public void WithPartition_55()
         {
           StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql(
+          AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
             @"DELETE FROM employees PARTITION (p0, p1) WHERE fname LIKE 'j%';", true, out sb, new Version(5, 5));
           Assert.True(sb.ToString().IndexOf("partition", StringComparison.OrdinalIgnoreCase) != -1);
         }
@@ -288,9 +285,8 @@ WHERE s11 > ANY
         [Fact]
         public void WithPartition_56()
         {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql(
-            @"DELETE FROM employees PARTITION (p0, p1) WHERE fname LIKE 'j%';", false, out sb, new Version(5, 6));
+          Utility.ParseSql(
+            @"DELETE FROM employees PARTITION (p0, p1) WHERE fname LIKE 'j%';", false, new Version(5, 6));
         }
   }
 }

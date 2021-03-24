@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -114,9 +114,9 @@ XID;
 COLUMN_LIST;
 }
 
+@header {using System;}
 
 @namespace{MySql.Parser}
-
 
 
 public program
@@ -140,6 +140,7 @@ statement options { backtrack=true; memoize=true; }
 	:	(	select
 		|	do_stmt
 		|	show_stmt
+		|	table_stmt
 		|	deallocate
 		//|	declare_condition
 		//|	declare_handler
@@ -150,15 +151,16 @@ statement options { backtrack=true; memoize=true; }
 		|	insert
 		|	update
 		//|	declare_stmt 
-		|	delete		
+		|	delete
 		|   alter_function
 		|   alter_logfile
 		|   alter_procedure
 		|   ( ( ALTER ONLINE ) | ( ALTER OFFLINE ) | ( ALTER IGNORE ) | ( ALTER TABLE )) => alter_table
-		|	alter_tablespace		
+		|	alter_tablespace
 		|   alter_server
 		|	alter_view
 		|	alter_user
+		|	alter_instance
 		|   analyze_table
 		|   backup_table
 		|   binlog
@@ -194,6 +196,7 @@ statement options { backtrack=true; memoize=true; }
 		|	drop_trigger
 		|	drop_view
 		|	drop_user
+		|   drop_tablespace
 		|   flush
 		|	get_diagnostics
 		|   handler
@@ -381,15 +384,18 @@ set_stmt
 	;
 
 variable_assignment
-	:
-	session_variable EQUALS expr	-> 
-		^( VAR_ASSIGN /* creating a synthetic root (VAR_ASSIGN) to make antlr generate 
-						NextTree() call instead of NextNode() when adding 'session_variable' 
+	:	session_variable EQUALS expr	->
+		^( VAR_ASSIGN /* creating a synthetic root (VAR_ASSIGN) to make antlr generate
+						NextTree() call instead of NextNode() when adding 'session_variable'
 						to the AST */ session_variable expr )
 	/* TODO validate vs. the list of system variables */
-	|   global_variable EQUALS expr -> ^( VAR_ASSIGN global_variable expr )
+	|   { this.MySqlVersion >= new Version("8.0") }? => persist_variable EQUALS expr -> ^( VAR_ASSIGN persist_variable expr )
+	|   { this.MySqlVersion >= new Version("8.0.2") }? => persist_only_variable EQUALS expr -> ^( VAR_ASSIGN persist_only_variable expr )
+	|	global_variable EQUALS expr -> ^( VAR_ASSIGN global_variable expr )
 	|	( GLOBAL ) => GLOBAL ID EQUALS expr  -> ^( VAR_ASSIGN GLOBAL { new CommonTree( new CommonToken( ID, "@@" + $ID.Text ) ) } expr  )
 	|	( SESSION ) => SESSION ID EQUALS expr -> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID, "@" + $ID.Text ) ) } expr )
+	|	{ this.MySqlVersion >= new Version("8.0") }? => ( PERSIST ) => PERSIST ID EQUALS expr  -> ^( VAR_ASSIGN PERSIST { new CommonTree( new CommonToken( ID, "@@" + $ID.Text ) ) } expr  )
+	|	{ this.MySqlVersion >= new Version("8.0.2") }? => ( PERSIST_ONLY ) => PERSIST_ONLY ID EQUALS expr -> ^( VAR_ASSIGN PERSIST_ONLY { new CommonTree( new CommonToken( ID, "@" + $ID.Text ) ) } expr )
 	//|	AT1 AT1 GLOBAL DOT ID EQUALS expr -> ^( VAR_ASSIGN GLOBAL { new CommonTree( new CommonToken( ID, "@@" + $ID.Text ) ) } expr )
 	//|   AT1 AT1 SESSION DOT ID EQUALS expr	-> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID, "@" + $ID.Text ) ) } expr )
 	|	simple_obj_ref_no_alias EQUALS expr	-> ^( VAR_ASSIGN simple_obj_ref_no_alias expr )
@@ -405,8 +411,16 @@ global_variable
 	|	AT1 AT1 GLOBAL DOT ID -> ^( GLOBAL { new CommonTree( new CommonToken( ID, "@@" + $ID.Text ) ) } )
 	;
 
+persist_variable
+	:	AT1 AT1 PERSIST DOT ID -> ^( PERSIST { new CommonTree( new CommonToken( ID, "@@" + $ID.Text ) ) } )
+	;
+
+persist_only_variable
+	:	AT1 AT1 PERSIST_ONLY DOT ID -> ^( PERSIST_ONLY { new CommonTree( new CommonToken( ID, "@@" + $ID.Text ) ) } )
+	;
+
 create_database
-	:	CREATE ( DATABASE | SCHEMA ) ( IF NOT EXISTS )? ident create_specification* 
+	:	CREATE ( DATABASE | SCHEMA ) ( IF NOT EXISTS )? ident create_specification*
 		-> ^(CREATE { new CommonTree( new CommonToken( DATABASE, "DATABASE" ) ) } ident)
 	;
 
@@ -471,16 +485,16 @@ show_stmt
 	| SLAVE STATUS -> ^($show_stmt ^(SLAVE STATUS))
 	| MASTER STATUS -> ^($show_stmt ^(MASTER STATUS))
 	| BINARY LOGS -> ^($show_stmt ^(BINARY LOGS))
-	| MASTER LOGS -> ^($show_stmt ^(MASTER LOGS))	
+	| MASTER LOGS -> ^($show_stmt ^(MASTER LOGS))
     )
   ;
 
 innodb_status
-  : { this.mysqlVersion <= 5.1 }? =>  INNODB STATUS   -> ^( INNODB STATUS )
+  : { this.MySqlVersion <= new Version("5.1") }? =>  INNODB STATUS   -> ^( INNODB STATUS )
   ;
 
 plugins
-  : { this.mysqlVersion >= 5.1 }? => PLUGINS    -> ^( PLUGINS )
+  : { this.MySqlVersion >= new Version("5.1") }? => PLUGINS    -> ^( PLUGINS )
   ;
 
 create_specification
@@ -522,19 +536,23 @@ explain
   ;
 
 explain_for_connection
-  : { this.mysqlVersion >= 5.7 }? => FOR CONNECTION INT_NUMBER
+  : { this.MySqlVersion >= new Version("5.7") }? => FOR CONNECTION INT_NUMBER
   ;
+  catch[ FailedPredicateException fpe ]
+  {
+    throw new NoViableAltException("", 114, 0, input, 1);
+  }
 
 explain_partitions
-  : { this.mysqlVersion >= 5.1 }? => PARTITIONS
+  : { this.MySqlVersion >= new Version("5.1") }? => PARTITIONS
   ;
 
 explain_type
-  : { this.mysqlVersion >= 5.6 }? => FORMAT EQUALS ( TRADITIONAL | JSON )
+  : { this.MySqlVersion >= new Version("5.6") }? => FORMAT EQUALS ( TRADITIONAL | JSON )
   ;
 
 explain_stmt
-  : { this.mysqlVersion >= 5.6 }? => ( delete | insert | replace | update )
+  : { this.MySqlVersion >= new Version("5.6") }? => ( delete | insert | replace | update )
   ;
 
 help
@@ -553,6 +571,10 @@ describe
 prepare
 	:	PREPARE stmtname=ID FROM prepstmt=session_variable
 			-> ^( PREPARE $stmtname $prepstmt )
+	;
+
+table_stmt
+	:	{ this.MySqlVersion >= new Version("8.0.19") }? => TABLE ID ( ORDER BY ID )? (LIMIT INT_NUMBER ( OFFSET INT_NUMBER )? )?
 	;
 
 deallocate
@@ -599,7 +621,7 @@ select_paren
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 123 )
+		if( nvae.DecisionNumber == 126 )
 		{
 			nvae = new NoViableAltException( 
 					"column_name", 
@@ -627,7 +649,8 @@ select_inner
 		exprs+=select_expr (COMMA exprs+=select_expr)*
 		//( 
 			select_into_from
-            (forUpdate=FOR UPDATE | clock=LOCK IN SHARE MODE)?         
+            (forUpdate=FOR UPDATE | clock=LOCK IN SHARE MODE)?
+			({ this.MySqlVersion >= new Version("8.0.20") }? => select_into )?
 		//)?
 		)
 		-> ^(SELECT 
@@ -636,9 +659,10 @@ select_inner
 				select_into_from	
 				$forUpdate?
 				$clock?
+				select_into?
 			)
 	;
-	catch[ NoViableAltException nvae ] 
+	catch[ NoViableAltException nvae ]
 	{
 		//if( nvae.Token.Text == "<EOF>" ) {
 			nvae = new NoViableAltException( 
@@ -679,6 +703,7 @@ select_into
 
 select_from
 	:	FROM table_references
+	        ( select_into )?
             (WHERE where=where_condition)?
             ( group_by )?
             (HAVING having=where_condition)?
@@ -686,7 +711,7 @@ select_from
             limit?
             // these procedures are not "SQL-SPs" but C++ ones. very unlikely that we'll see them.
             (PROCEDURE procId=ident procArgs=parenOptExprList)?
-		-> ^(FROM table_references ^(WHERE $where)? group_by? ^(HAVING $having)? )?
+		-> ^(FROM table_references select_into? ^(WHERE $where)? group_by? ^(HAVING $having)? )?
 	;
 
 infile_options_helper
@@ -743,9 +768,9 @@ order_by
 			elements+=order_group_by_elements (COMMA elements+=order_group_by_elements )*
 		-> ^(ORDER $elements+)
 	;
-	
+
 order_group_by_elements
-	:	expr 
+	:	expr { this.MySqlVersion < new Version("8.0.13") }? =>
 		(	asc=ASC						-> ^(DIRECTION[$asc] expr)
 		|	desc=DESC					-> ^(DIRECTION[$desc] expr)
 		|	/* implicit ASC */			-> ^(DIRECTION["ASC"] expr)
@@ -768,12 +793,12 @@ select_options
 	;
 
 select_options57
-	: { this.mysqlVersion >= 5.7 }? => MAX_STATEMENT_TIME EQUALS INT_NUMBER
+	: { this.MySqlVersion >= new Version("5.7") }? => MAX_STATEMENT_TIME EQUALS INT_NUMBER
 	;
-	
+
 select_expr
 	:	( star=MULT				-> ^(SELECT_EXPR $star) )
-	|	expr 
+	|	expr
 	(
 		( { input.LA(1) == AS }? => (AS (ident | STRING_LEX) ))
 	|	( { input.LA(1) == ID }? => (ID)
@@ -1417,7 +1442,7 @@ equalityExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 206 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 211 ) && ( Scope.Peek() == "expr" ))
 		{
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1468,11 +1493,11 @@ equalityOperator
 	;
 
 bitwiseOrExpr
-  : lhs=bitwiseAndExpr 
-	( ( BITWISE | NOT | IN | LIKE | BETWEEN | SOUNDS | IS ) =>
-    ( (op+=BITWISE_OR^ rhs+=bitwiseAndExpr)+ 
-    | ((NOT^)? IN^ (parenExprList | subselect)) 
-    | (LIKE^ unaryExpr (ESCAPE STRING_LEX)? ) // STRING must be empty or one character long (or be "\\" if not in sql_mode NO_BACKSLASH_ESCAPES)		
+  : lhs=bitwiseAndExpr
+	( ( BITWISE_OR | NOT | IN | LIKE | BETWEEN | SOUNDS | IS ) =>
+    ( (op+=BITWISE_OR^ rhs+=bitwiseAndExpr)+
+    | ((NOT^)? IN^ (parenExprList | subselect))
+    | (LIKE^ unaryExpr (ESCAPE STRING_LEX)? ) // STRING must be empty or one character long (or be "\\" if not in sql_mode NO_BACKSLASH_ESCAPES)
 	| (BETWEEN^ bitwiseAndExpr AND! bitwiseOrExpr )
 	| (SOUNDS^ LIKE bitwiseAndExpr)
     | isOperator^
@@ -1519,7 +1544,7 @@ unaryExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 226 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 231 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1550,7 +1575,7 @@ binaryCollateExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 228 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 233 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1603,7 +1628,7 @@ primary options { backtrack=true; memoize=true; }
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 232 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 237 ) && ( Scope.Peek() == "expr" ))
 		{
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1654,7 +1679,7 @@ case_stmt
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 241 )
+		if( nvae.DecisionNumber == 246 )
 		{
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1785,8 +1810,9 @@ transaction options { backtrack=true; memoize=true; }
 		|	SERIALIZABLE				-> ^(ISOLATION SERIALIZABLE $txnScope? )	
 		)
 	|	release_savepoint				-> ^( release_savepoint )	
+	|	lock_instance					-> ^( lock_instance )
 	|	lockTables						-> ^( lockTables )
-	| xa								-> ^( xa )
+	|	xa								-> ^( xa )
 	;
 
 commit
@@ -1823,11 +1849,11 @@ rollback options { backtrack = true; }
 	;
 
 transaction_read_write_options
-  : { this.mysqlVersion >= 5.6 }? =>  (( READ WRITE ) | (  READ ONLY ) )
+  : { this.MySqlVersion >= new Version("5.6") }? =>  (( READ WRITE ) | (  READ ONLY ) )
   ;
 
 savepoint_ident options { backtrack = true; }
-	:	 { input.LT(1).Text.ToLower() == "savepoint" }? savepoint ident	
+	:	 { input.LT(1).Text.ToLower() == "savepoint" }? savepoint ident
 			-> ^(SAVEPOINT ident )
 	;
 
@@ -1854,17 +1880,21 @@ xa
 	;
 
 xid
-	:	( gtrid=STRING_LEX | gtrid=HEX_VALUE | gtrid=BINARY_VALUE ) 
-			( COMMA ( bqual=STRING_LEX | bqual=HEX_VALUE | bqual=BINARY_VALUE ) ( COMMA INT_NUMBER )?)?	
+	:	( gtrid=STRING_LEX | gtrid=HEX_VALUE | gtrid=BINARY_VALUE )
+			( COMMA ( bqual=STRING_LEX | bqual=HEX_VALUE | bqual=BINARY_VALUE ) ( COMMA INT_NUMBER )?)?
 		-> ^( XID $gtrid $bqual? INT_NUMBER? )
 	;
 
+lock_instance
+	: { this.MySqlVersion >= new Version("8.0.3") }? =>  ( LOCK INSTANCE FOR BACKUP ) -> ^( LOCK INSTANCE FOR BACKUP )
+	| { this.MySqlVersion >= new Version("8.0.3") }? =>  ( UNLOCK INSTANCE ) -> ^( UNLOCK INSTANCE )
+	;
 
 // $> Transactions
 
-// $< Insert   ( SELECT 
+// $< Insert   ( SELECT
 
-insert 
+insert
 	:	INSERT (opt=LOW_PRIORITY | opt=DELAYED | opt=HIGH_PRIORITY)?
 		IGNORE? INTO?
 		table=simple_table_ref_no_alias_existing partition_ref?
@@ -1957,7 +1987,7 @@ update
 // $< Delete
 
 partition_ref
-  : { this.mysqlVersion >= 5.6 }? => PARTITION LPAREN ID ( COMMA ID )* RPAREN
+  : { this.MySqlVersion >= new Version("5.6") }? => PARTITION LPAREN ID ( COMMA ID )* RPAREN
   ;
 
 /* both multi table delete trees are basically identical. The FROM and USING nodes are just in there to differentiate between the syntax used, in order to format it correctly
@@ -2045,7 +2075,7 @@ scope
 	;
 
 partition_options
-  : { this.mysqlVersion >= 5.1 }? => ( PARTITION BY (
+  : { this.MySqlVersion >= new Version("5.1") }? => ( PARTITION BY (
       ( LINEAR? typepart=HASH LPAREN partexpr=expr RPAREN )
 	| ( LINEAR? typepart=KEY LPAREN partcollist=column_name_list? RPAREN )
 	| ( typepart=RANGE (( LPAREN partexpr=expr RPAREN ) | partition_options_columnlist ))
@@ -2061,19 +2091,23 @@ partition_options
 	  ( SUBPARTITIONS numsubpartitions=INT_NUMBER )?
 	)?
 	( LPAREN partition_definition ( COMMA partition_definition )* RPAREN )? )
-	-> ^( PARTITION BY $typepart $partexpr? ^( KEY $partcollist? )? ^( PARTITIONS $numpartitions? )? 
+	-> ^( PARTITION BY $typepart $partexpr? ^( KEY $partcollist? )? ^( PARTITIONS $numpartitions? )?
 		^( SUBPARTITION ^( $typesubpart $subpartexpr? $subpartcollist? )? $numsubpartitions? )?)
   ;
 
 partition_options_columnlist
-  : { this.mysqlVersion >= 5.5 }? => ( COLUMNS LPAREN column_name_list RPAREN )
+  : { this.MySqlVersion >= new Version("5.5") }? => ( COLUMNS LPAREN column_name_list RPAREN )
   ;
+  catch[ FailedPredicateException fpe ]
+  {
+    throw new NoViableAltException("", 114, 0, input, 1);
+  }
 
 partition_definition
   : PARTITION partid=ident
-    ( VALUES 
+    ( VALUES
 	  (
-		( LESS THAN (( (LPAREN ( valuesexpr=expr | partition_definition_values | MAXVALUE ) RPAREN )) | MAXVALUE )) 
+		( LESS THAN (( (LPAREN ( valuesexpr=expr | partition_definition_values | MAXVALUE ) RPAREN )) | MAXVALUE ))
 	  | ( IN LPAREN exprList RPAREN )
 	  )
 	)?
@@ -2094,7 +2128,7 @@ partition_definition
   ;
 
 partition_definition_values
-  : { this.mysqlVersion >= 5.5 }? => exprList
+  : { this.MySqlVersion >= new Version("5.5") }? => exprList
   ;
 
 subpartition_definition
@@ -2143,13 +2177,14 @@ create_table_option
 	|	( PASSWORD EQUALS? STRING_LEX )							-> ^( CREATE_TBL_OPT PASSWORD STRING_LEX )
 	|	( ROW_FORMAT EQUALS? ( DEFAULT | DYNAMIC | FIXED | COMPRESSED | REDUNDANT | COMPACT ) )
 			-> ^( CREATE_TBL_OPT ROW_FORMAT DEFAULT? DYNAMIC? FIXED? COMPRESSED? REDUNDANT? COMPACT? )
+	|	( TABLESPACE symbol=ident ( STORAGE ( DISK | MEMORY ) )? ) -> ^( TABLESPACE STORAGE? DISK? MEMORY? )
 	|	( UNION EQUALS? LPAREN tabref+=simple_table_ref_no_alias ( COMMA tabref+=simple_table_ref_no_alias )* RPAREN )
 			-> ^( CREATE_TBL_OPT UNION $tabref? )
 	/*|	()*/
 	;
 
 create_table_top_type
-	: { this.mysqlVersion <= 5.0 }? => TYPE
+	: { this.MySqlVersion <= new Version("5.0") }? => TYPE
 	;
 
 engine_name
@@ -2182,7 +2217,9 @@ column_definition
 	;
 
 column_attr
-	: autoInc=AUTO_INCREMENT^
+	: VISIBLE
+	| INVISIBLE
+	| autoInc=AUTO_INCREMENT^
 	| notSym=NOT^ NULL
 	| nullSym=NULL^
 	| DEFAULT^ literal
@@ -2259,11 +2296,11 @@ data_type
 	;
 
 datetime_precision
-:  { this.mysqlVersion >= 5.6 }? => (LPAREN num1=INT_NUMBER RPAREN {(Convert.ToInt32($num1.Text) <= 6 && Convert.ToInt32($num1.Text) >= 1)}?)  -> ^( DATETIME_PRECISION INT_NUMBER? )
+:  { this.MySqlVersion >= new Version("5.6") }? => (LPAREN num1=INT_NUMBER RPAREN {(Convert.ToInt32($num1.Text) <= 6 && Convert.ToInt32($num1.Text) >= 1)}?)  -> ^( DATETIME_PRECISION INT_NUMBER? )
 ;
 
 timestamp
-  : { this.mysqlVersion >= 5.1 }? => TIMESTAMP ( LPAREN INT_NUMBER RPAREN )? -> ^( TIMESTAMP INT_NUMBER? )
+  : { this.MySqlVersion >= new Version("5.1") }? => TIMESTAMP ( LPAREN INT_NUMBER RPAREN )? -> ^( TIMESTAMP INT_NUMBER? )
   ;
 
 charset_def
@@ -2527,7 +2564,7 @@ database_or_schema
 	;
 
 drop_event
-	:   { this.mysqlVersion >= 5.1 }? => DROP EVENT ( IF EXISTS )? ident -> ^( DROP ^( EVENT ident? ))
+	:   { this.MySqlVersion >= new Version("5.1") }? => DROP EVENT ( IF EXISTS )? ident -> ^( DROP ^( EVENT ident? ))
 	;
 
 drop_routine
@@ -2560,7 +2597,7 @@ drop_table
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 574 )
+		if( nvae.DecisionNumber == 582 )
 		{
 			nvae = new NoViableAltException( 
 				"simple_table_ref_no_alias_existing", 
@@ -2592,6 +2629,11 @@ drop_trigger
 drop_view
 	:	DROP VIEW ( IF EXISTS )? simple_obj_ref_no_alias_list ( cascade_or_restrict )?
 		-> ^( DROP ^( VIEW simple_obj_ref_no_alias_list? ))
+	;
+
+drop_tablespace
+	:	{ this.MySqlVersion >= new Version("8.0.14") }? =>
+		DROP ( UNDO )? TABLESPACE tablespacename=ident ( ENGINE EQUALS? enginename=engine_name )?
 	;
 
 simple_obj_ref_no_alias_existing_list
@@ -2655,17 +2697,18 @@ grant
 			TO user_specification_list
 			( REQUIRE ( NONE | ( sslopt+=ssl_option ( AND sslopt+=ssl_option )* )) )?
 			( WITH withopt+=with_option ( withopt+=with_option )* )?
+			( AS )?
 		->	^( GRANT $priv $collist? ^( ON object_type? privilege_level )
 				^( TO user_specification_list ) ^( REQUIRE NONE? $sslopt? )? ^( WITH $withopt? )? ) )
 	;
 
 grant_proxy
-  :  { this.mysqlVersion >= 5.5 }? => GRANT PROXY ON user_specification TO user_specification_list ( WITH GRANT OPTION )?
+  :  { this.MySqlVersion >= new Version("5.5") }? => GRANT PROXY ON user_specification TO user_specification_list ( WITH GRANT OPTION )?
 	-> ^( PROXY user_specification? user_specification_list? )
   ;
 
 ssl_option
-	:	
+	:
 	(
 		sslopt=SSL
 	|	sslopt=X509
@@ -2708,12 +2751,12 @@ revoke_user
 	;
 
 revoke_proxy
-  : { this.mysqlVersion >= 5.5 }? => REVOKE PROXY ON user_specification FROM user_specification_list
+  : { this.MySqlVersion >= new Version("5.5") }? => REVOKE PROXY ON user_specification FROM user_specification_list
 	-> ^( PROXY user_specification? user_specification_list? )
   ;
 
 object_type
-	:	
+	:
 	( typeobj=TABLE
 	| typeobj=FUNCTION
 	| typeobj=PROCEDURE
@@ -2837,7 +2880,7 @@ sp_call options { backtrack=true; memoize=true; }
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 617 )
+		if( nvae.DecisionNumber == 619 )
 		{
 			nvae = new NoViableAltException( 
 					"proc_name", 
@@ -2856,8 +2899,8 @@ sp_call options { backtrack=true; memoize=true; }
 		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
 	}
 
-create_event 
-  :	{ this.mysqlVersion >= 5.1 }? => ( CREATE ( DEFINER EQUALS ( user_specification | CURRENT_USER ))? 
+create_event
+  :	{ this.MySqlVersion >= new Version("5.1") }? => ( CREATE ( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
 	EVENT
 	( IF NOT EXISTS )?
 	eventname=simple_obj_ref_no_alias
@@ -2891,7 +2934,7 @@ alter_database_specification
   ;
 
 alter_event
-  :	{ this.mysqlVersion >= 5.1 }? => ALTER ( DEFINER EQUALS ( user_specification | CURRENT_USER ))? 
+  :	{ this.MySqlVersion >= new Version("5.1") }? => ALTER ( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
 	EVENT eventname=simple_obj_ref_no_alias
 	( ON SCHEDULE schedule )?
 	( ON COMPLETION NOT? PRESERVE )?
@@ -2978,9 +3021,9 @@ create_server_option
   ;
 
 create_tablespace
-  : CREATE TABLESPACE tablespacename=ident
-	ADD DATAFILE datafile=STRING_LEX
-	USE LOGFILE GROUP logfilegroup=ident
+  : CREATE ({ this.MySqlVersion >= new Version("8.0.14") }? => ( UNDO ))? TABLESPACE tablespacename=ident
+	( ADD DATAFILE datafile=STRING_LEX )?
+	( USE LOGFILE GROUP logfilegroup=ident )?
 	( EXTENT_SIZE EQUALS? extsize=INT_NUMBER )?
 	( INITIAL_SIZE EQUALS? initsize=INT_NUMBER )?
 	( AUTOEXTEND_SIZE EQUALS? autosize=INT_NUMBER )?
@@ -2988,9 +3031,9 @@ create_tablespace
 	( NODEGROUP EQUALS? nodegroupid=ident )?
 	( WAIT )?
 	( COMMENT EQUALS? commenttext=STRING_LEX )?
-	ENGINE EQUALS? enginename=engine_name
-	-> ^( CREATE TABLESPACE $tablespacename ^( CT_DATAFILE $datafile? )? ^( CT_LOGFILE $logfilegroup )? 
-		^( CT_EXTENT_SIZE $extsize? )? ^( CT_INITIAL_SIZE $initsize? )? ^( CT_AUTOEXTEND_SIZE $autosize? )? 
+	( ENGINE EQUALS? enginename=engine_name )?
+	-> ^( CREATE TABLESPACE $tablespacename ^( CT_DATAFILE $datafile? )? ^( CT_LOGFILE $logfilegroup )?
+		^( CT_EXTENT_SIZE $extsize? )? ^( CT_INITIAL_SIZE $initsize? )? ^( CT_AUTOEXTEND_SIZE $autosize? )?
 		^( CT_MAX_SIZE $maxsize )? ^( CT_NODEGROUP $nodegroupid? )? WAIT? ^( CT_COMMENT $enginename? )? )
   ;
 
@@ -3011,25 +3054,25 @@ alter_table /*options { backtrack=true; memoize=true; }*/
   ;
 
 alter_table_ignore
-  : { this.mysqlVersion <= 5.6 }? => IGNORE
+  : { this.MySqlVersion <= new Version("5.6") }? => IGNORE
   ;
 
 alter_table_online_options
-  : { this.mysqlVersion <= 5.5 }? => ( ONLINE | OFFLINE )
+  : { this.MySqlVersion <= new Version("5.5") }? => ( ONLINE | OFFLINE )
   ;
 
 alter_specification_table options { backtrack=true; memoize=true; }
   : create_table_option
-  | ( ADD COLUMN? colname=ident ) => 
+  | ( ADD COLUMN? colname=ident ) =>
 		( ADD COLUMN? colname=ident column_definition (( FIRST | AFTER ) colnameafter=ident )? )
-  | ( ADD COLUMN? LPAREN ) => 
-		( ADD COLUMN? LPAREN colnamelist+=ident coldef+=column_definition 
+  | ( ADD COLUMN? LPAREN ) =>
+		( ADD COLUMN? LPAREN colnamelist+=ident coldef+=column_definition
 		( COMMA colnamelist+=ident coldef+=column_definition )* RPAREN )
-  | ( ADD ( INDEX | KEY ) ) => 
-		( ADD ( INDEX | KEY ) indexname=ident? index_type? 
+  | ( ADD ( INDEX | KEY ) ) =>
+		( ADD ( INDEX | KEY ) indexname=ident? index_type?
 		LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
-  | ( ADD CONSTRAINT? symbol=ident? PRIMARY ) => 
-		( ADD CONSTRAINT? symbol=ident? PRIMARY KEY index_type? 
+  | ( ADD CONSTRAINT? symbol=ident? PRIMARY ) =>
+		( ADD CONSTRAINT? symbol=ident? PRIMARY KEY index_type?
 		LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
   | ( ADD CONSTRAINT? symbol=ident? UNIQUE ) => 
 		( ADD CONSTRAINT? symbol=ident? UNIQUE ( INDEX | KEY )? index_type 
@@ -3049,8 +3092,9 @@ alter_specification_table options { backtrack=true; memoize=true; }
   | ( DROP FOREIGN KEY fksymbol=ident )
   | ( DISABLE KEYS )
   | ( ENABLE KEYS )
-  | ( RENAME TO? newtablename=ident )
-  | { this.mysqlVersion >= 5.7 }? => ( RENAME ( type=INDEX | type=KEY ) old_index_name=ident TO new_index_name=ident
+  | ( RENAME ( TO | AS )? newtablename=ident )
+  | { this.MySqlVersion >= new Version("8.0.3") }? => ( RENAME COLUMN oldcolname=ident TO newcolname=ident )
+  | { this.MySqlVersion >= new Version("8.0.3") }? => ( RENAME ( type=INDEX | type=KEY ) old_index_name=ident TO new_index_name=ident
 		                               -> ^( RENAME ^( $type $old_index_name $new_index_name )))
   | ( ORDER BY ordercolname+=ident (( COMMA ) => (COMMA ordercolname+=ident ))* )
   | ( CONVERT TO charset_def collate? )
@@ -3073,14 +3117,14 @@ alter_specification_table options { backtrack=true; memoize=true; }
   ;
 
 alter_specification_table56
-  : { this.mysqlVersion >= 5.6 }? => (
+  : { this.MySqlVersion >= new Version("5.6") }? => (
   ALGORITHM EQUALS ( DEFAULT | INPLACE | COPY )
   | LOCK EQUALS ( DEFAULT | NONE | SHARED | EXCLUSIVE )
   | EXCHANGE PARTITION ident WITH TABLE simple_table_ref_no_alias )
   ;
 
 truncate_partition
-  : { this.mysqlVersion >= 5.5 }? => TRUNCATE PARTITION LPAREN ( partition_names | ALL ) RPAREN
+  : { this.MySqlVersion >= new Version("5.5") }? => TRUNCATE PARTITION LPAREN ( partition_names | ALL ) RPAREN
   ;
 
 partition_names
@@ -3088,15 +3132,17 @@ partition_names
   ;
 
 alter_tablespace
-  : ALTER TABLESPACE tablespacename=ident
+  : ALTER ({ this.MySqlVersion >= new Version("8.0.14") }? => ( UNDO ))? TABLESPACE tablespacename=ident
     ( ADD | DROP ) DATAFILE STRING_LEX
-	( INITIAL_SIZE EQUALS? INT_NUMBER )?
+	({ this.MySqlVersion >= new Version("8.0.14") }? => ( INITIAL_SIZE EQUALS? INT_NUMBER ) )?
 	( WAIT )?
+	({ this.MySqlVersion >= new Version("8.0.3") }? => ( RENAME TO tablespacename=ident ) )?
+	( SET ( ACTIVE | INACTIVE)? )?
 	( ENGINE EQUALS? enginename=engine_name )?
   ;
 
 alter_view
-  : ALTER 
+  : ALTER
     ( ALGORITHM EQUALS ( UNDEFINED | MERGE | TEMPTABLE ) )?
 	( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
 	( SQL SECURITY ( DEFINER | INVOKER ) )?
@@ -3114,20 +3160,20 @@ create_index
   ;
 
 create_trigger
-  : CREATE 
+  : CREATE
     ( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
     TRIGGER triggername=simple_obj_ref_no_alias ( triggertime=BEFORE | triggertime=AFTER )
 	 ( triggerevent=INSERT | triggerevent=UPDATE | triggerevent=DELETE )
-	ON tblname=simple_obj_ref_no_alias FOR EACH ROW 
+	ON tblname=simple_obj_ref_no_alias FOR EACH ROW
 	trigger_order?
 	statement
-	-> ^( CREATE TRIGGER ( DEFINER user_specification? CURRENT_USER? )? 
-			$triggername? ^( TRIGGERTIME $triggertime? )? $triggerevent? ^( ON $tblname )? 
+	-> ^( CREATE TRIGGER ( DEFINER user_specification? CURRENT_USER? )?
+			$triggername? ^( TRIGGERTIME $triggertime? )? $triggerevent? ^( ON $tblname )?
 			trigger_order? statement )
   ;
 
 trigger_order
-  :	{ this.mysqlVersion >= 5.7 }? => (
+  :	{ this.MySqlVersion >= new Version("5.7") }? => (
 	( FOLLOWS name=simple_obj_ref_no_alias -> ^( FOLLOWS $name ))
   | ( PRECEDES name=simple_obj_ref_no_alias -> ^( PRECEDES $name )) )
   ;
@@ -3283,12 +3329,12 @@ server_id_list
 
 /* this is due to deprecation in later version, but still available in 5.1 */
 load_data_from_master
-  : { this.mysqlVersion < 5.5 }? => LOAD DATA FROM MASTER
+  : { this.MySqlVersion < new Version("5.5") }? => LOAD DATA FROM MASTER
   ;
 
 /* this is due to deprecation in later version, but still available in 5.1 */
 load_table_from_master
-  : { this.mysqlVersion < 5.5 }? => LOAD TABLE tbl_name=simple_obj_ref_no_alias FROM MASTER
+  : { this.MySqlVersion < new Version("5.5") }? => LOAD TABLE tbl_name=simple_obj_ref_no_alias FROM MASTER
   ;
 
 reset_slave
@@ -3316,11 +3362,11 @@ analyze_table
   ;
 
 backup_table
-  : { this.mysqlVersion < 5.5 }? => BACKUP TABLE simple_obj_ref_no_alias_list TO STRING_LEX
+  : { this.MySqlVersion < new Version("5.5") }? => BACKUP TABLE simple_obj_ref_no_alias_list TO STRING_LEX
   ;
 
 restore_table
-  : { this.mysqlVersion < 5.5 }? => RESTORE TABLE simple_obj_ref_no_alias_list FROM STRING_LEX
+  : { this.MySqlVersion < new Version("5.5") }? => RESTORE TABLE simple_obj_ref_no_alias_list FROM STRING_LEX
   ;
 
 check_table
@@ -3348,15 +3394,15 @@ cacheindex
   ;
 
 cache_index_partition
-  : { this.mysqlVersion >= 5.5 }? => PARTITION LPAREN ( partition_names | ALL ) RPAREN
+  : { this.MySqlVersion >= new Version("5.5") }? => PARTITION LPAREN ( partition_names | ALL ) RPAREN
   ;
 
 tblindexlist
-  : tblname=simple_obj_ref_no_alias 
-    ( ( INDEX | KEY ) LPAREN indexname+=simple_obj_ref_no_alias 
+  : tblname=simple_obj_ref_no_alias
+    ( ( INDEX | KEY ) LPAREN indexname+=simple_obj_ref_no_alias
 	  ( COMMA indexname+=simple_obj_ref_no_alias )* RPAREN )?
   ;
-  
+
 flush
   : FLUSH ( NO_WRITE_TO_BINLOG | LOCAL )? flush_option ( COMMA flush_option )*
   ;
@@ -3400,7 +3446,7 @@ uninstall_plugin
   ;
 
 load_xml
-  : { this.mysqlVersion >= 5.5 }? => (
+  : { this.MySqlVersion >= new Version("5.5") }? => (
   LOAD XML ( LOW_PRIORITY | CONCURRENT )? LOCAL? INFILE STRING_LEX
   ( REPLACE | IGNORE )?
   INTO TABLE simple_table_ref_no_alias
@@ -3413,7 +3459,7 @@ load_xml
   ;
 
 signal
-  : { this.mysqlVersion >= 5.5 }? =>  
+  : { this.MySqlVersion >= new Version("5.5") }? =>
   SIGNAL signal_condition_value
   ( SET signal_information_item ( COMMA signal_information_item )* )?
   ;
@@ -3446,23 +3492,23 @@ signal_condition_value
   ;
 
 resignal
-  : { this.mysqlVersion >= 5.5 }? =>  
+  : { this.MySqlVersion >= new Version("5.5") }? =>
   RESIGNAL signal_condition_value?
   ( SET signal_information_item ( COMMA signal_information_item )* )?
   ;
 
 get_diagnostics
-  :  { this.mysqlVersion >= 5.6 }? => (
+  :  { this.MySqlVersion >= new Version("5.6") }? => (
   ( GET ( CURRENT | get_diagnostics_options57 )? DIAGNOSTICS
-  (( CONDITION ( INT_NUMBER | get_diagnostics_target ) 
-  get_diagnostics_condition_info_item ( COMMA get_diagnostics_condition_info_item )* ) 
+  (( CONDITION ( INT_NUMBER | get_diagnostics_target )
+  get_diagnostics_condition_info_item ( COMMA get_diagnostics_condition_info_item )* )
   | ( get_diagnostics_stmt_info_item ( COMMA get_diagnostics_stmt_info_item )* ))
   ))
   ;
 
 get_diagnostics_options57
-  : { this.mysqlVersion >= 5.7 }? => STACKED
-  ;  
+  : { this.MySqlVersion >= new Version("5.7") }? => STACKED
+  ;
 
 get_diagnostics_stmt_info_item
   : get_diagnostics_target EQUALS ( NNUMBER | ROW_COUNT )
@@ -3478,6 +3524,17 @@ get_diagnostics_condition_info_item
   ;
 
 alter_user
-  : { this.mysqlVersion >= 5.6 }? /* actually available since ver 5.6.6 */ =>  
+  : { this.MySqlVersion >= new Version("5.6.6") }? =>
   ALTER USER user_specification PASSWORD EXPIRE ( COMMA user_specification PASSWORD EXPIRE )*
+  ;
+
+alter_instance
+  : { this.MySqlVersion >= new Version("8.0.3") }? => ALTER INSTANCE instance_action
+  ;
+
+instance_action
+  : ( ENABLE | DISABLE ) INNODB REDO_LOG
+  | ROTATE INNODB MASTER KEY
+  | ROTATE BINLOG MASTER KEY
+  | RELOAD TLS ( { this.MySqlVersion >= new Version("8.0.21") }? => ( FOR CHANNEL STRING_LEX ) )? ( NO ROLLBACK ON ERROR )?
   ;

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr3.Targets.C</name>
+    </assembly>
+    <members>
+        <member name="M:Antlr3.Targets.CTarget.IsValidActionScope(Antlr3.Tool.GrammarType,System.String)">
+            Is scope in @scope::name {action} valid for this kind of grammar?
+            Targets like C++ may want to allow new scopes like headerfile or
+            some such.  The action names themselves are not policed at the
+            moment so targets can add template actions w/o having to recompile
+            ANTLR.
+        </member>
+        <member name="M:Antlr3.Targets.CTarget.GetTargetStringLiteralFromANTLRStringLiteral(Antlr3.Codegen.CodeGenerator,System.String)">
+            Convert from an ANTLR string literal found in a grammar file to
+            an equivalent string literal in the C target.
+            Because we must support Unicode character sets and have chosen
+            to have the lexer match UTF32 characters, then we must encode
+            string matches to use 32 bit character arrays. Here then we
+            must produce the C array and cater for the case where the 
+            lexer has been encoded with a string such as 'xyz\n',
+        </member>
+        <member name="M:Antlr3.Targets.CTarget.PerformGrammarAnalysis(Antlr3.Codegen.CodeGenerator,Antlr3.Tool.Grammar)">
+             <summary>
+             Overrides the standard grammar analysis so we can prepare the analyser
+             a little differently from the other targets.
+            
+             In particular we want to influence the way the code generator makes assumptions about
+             switchs vs ifs, vs table driven DFAs. In general, C code should be generated that
+             has the minimum use of tables, and tha meximum use of large switch statements. This
+             allows the optimizers to generate very efficient code, it can reduce object code size
+             by about 30% and give about a 20% performance improvement over not doing this. Hence,
+             for the C target only, we change the defaults here, but only if they are still set to the
+             defaults.
+             </summary>
+             <param name="generator">An instance of the generic code generator class.</param>
+             <param name="grammar">The grammar that we are currently analyzing.</param>
+        </member>
+    </members>
+</doc>

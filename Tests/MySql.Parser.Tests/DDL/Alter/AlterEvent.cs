@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,12 +26,7 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 namespace MySql.Parser.Tests
@@ -42,7 +37,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple1()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER EVENT no_such_event 
+      Utility.ParseSql(@"ALTER EVENT no_such_event 
           ON SCHEDULE 
             EVERY '2:3' DAY_HOUR;", false);
     }
@@ -50,7 +45,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT myevent
+      Utility.ParseSql(@"CREATE EVENT myevent
     ON SCHEDULE
       EVERY 6 HOUR
     COMMENT 'A sample comment.'
@@ -61,7 +56,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER EVENT myevent
+      Utility.ParseSql(@"ALTER EVENT myevent
     ON SCHEDULE
       EVERY 12 HOUR
     STARTS CURRENT_TIMESTAMP + INTERVAL 4 HOUR;", false);
@@ -70,7 +65,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER EVENT myevent
+      Utility.ParseSql(@"ALTER EVENT myevent
     ON SCHEDULE
       AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
     DO
@@ -80,21 +75,21 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple5()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER EVENT myevent
+      Utility.ParseSql(@"ALTER EVENT myevent
     DISABLE;", false);
     }
 
     [Fact]
     public void Simple6()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER EVENT myevent
+      Utility.ParseSql(@"ALTER EVENT myevent
     RENAME TO yourevent;", false);
     }
 
     [Fact]
     public void Simple7()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER EVENT olddb.myevent
+      Utility.ParseSql(@"ALTER EVENT olddb.myevent
     RENAME TO newdb.myevent;", false);
     }
   }

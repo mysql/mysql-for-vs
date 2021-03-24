@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,11 +26,7 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -42,19 +38,19 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("CREATE VIEW v AS SELECT qty, price, qty*price AS `value` FROM t;");
+      Utility.ParseSql("CREATE VIEW v AS SELECT qty, price, qty*price AS `value` FROM t;");
     }
 
     [Fact]
     public void Simple2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("CREATE VIEW v (mycol) AS SELECT 'abc';");
+      Utility.ParseSql("CREATE VIEW v (mycol) AS SELECT 'abc';");
     }
 
     [Fact]
     public void Simple3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"create view thematical_books as
+      Utility.ParseSql(@"create view thematical_books as
 select title
 , author
 from books
@@ -65,7 +61,7 @@ where subject = book_subject();");
     [Fact]
     public void ComplexViewFromSakila()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
 @"CREATE VIEW `actor_info2` AS
 select `a`.`actor_id` AS `actor_id`,`a`.`first_name` AS `first_name`,`a`.`last_name` AS `last_name`,
 group_concat(distinct concat(`c`.`name`,': ',(select group_concat(`f`.`title` order by `f`.`title` ASC separator ', ') 

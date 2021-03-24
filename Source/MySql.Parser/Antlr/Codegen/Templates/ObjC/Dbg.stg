@@ -1,5 +1,5 @@
 /*
- [The "BSD licence"]
+ [The "BSD license"]
  Copyright (c) 2006 Kay Roepke 2010 Alan Condit
  All rights reserved.
 
@@ -28,33 +28,31 @@
 /** Template overrides to add debugging to normal Objective-C output;
  *  If ASTs are built, then you'll also get ASTDbg.stg loaded.
  */
-group Dbg;
-
 @headerFile.imports() ::= <<
 <@super.imports()>
-#import \<ANTLR/ANTLRDebug.h>
+#import \<ANTLR/Debug.h>
 >>
 
 @parserHeaderFile.memVars() ::= <<
-int ruleLevel;
+NSInteger ruleLevel;
 NSArray *ruleNames;
 >>
 
-@parserHeaderFile.methodsdecl() ::= <<
+@parserHeaderFile.methodsDecl() ::= <<
 -(BOOL) evalPredicate:(NSString *)predicate matched:(BOOL)result;<\n>
 >>
 
-@genericParser.members() ::= <<
+@genericParser.methods() ::= <<
 <if(grammar.grammarIsRoot)>
-NSMutableArray *ruleNames = [NSMutableArray arrayWithArray:{
+AMutableArray *ruleNames = [AMutableArray arrayWithArray:{
     @"invalidRule", <grammar.allImportedRules:{rST | @"<rST.name>"}; wrap=@"\n    ", separator=", ">
 };<\n>
 <endif>
 <if(grammar.grammarIsRoot)> <! grammar imports other grammar(s) !>
-    NSInteger ruleLevel = 0;
-    NSInteger getRuleLevel() { return ruleLevel; }
-    void incRuleLevel() { ruleLevel++; }
-    void decRuleLevel() { ruleLevel--; }
+    ruleLevel = 0;
+- (NSInteger) getRuleLevel { return ruleLevel; }
+- (void) incRuleLevel { ruleLevel++; }
+- (void) decRuleLevel { ruleLevel--; }
 <if(profile)>
     <ctorForProfilingRootGrammar()>
 <else>
@@ -62,17 +60,28 @@ NSMutableArray *ruleNames = [NSMutableArray arrayWithArray:{
 <endif>
 <ctorForPredefinedListener()>
 <else> <! imported grammar !>
-- (NSInteger) getRuleLevel { return <grammar.delegators:{g| <g:delegateName()>}>.getRuleLevel(); }
-- (void) incRuleLevel() { <grammar.delegators:{g| <g:delegateName()>}>.incRuleLevel(); }
-- (void) decRuleLevel() { <grammar.delegators:{g| <g:delegateName()>}>.decRuleLevel(); }
+- (NSInteger) getRuleLevel
+{
+    return <grammar.delegators:{g| <g:delegateName()>}>.getRuleLevel();
+}<\n>
+
+- (void) incRuleLevel
+{
+    <grammar.delegators:{g| <g:delegateName()>}>.incRuleLevel();
+}<\n>
+- (void) decRuleLevel
+{
+    <grammar.delegators:{g| <g:delegateName()>}>.decRuleLevel();
+}<\n>
     <ctorForDelegateGrammar()>
 <endif>
 <if(profile)>
-- (BOOL) alreadyParsedRule(IntStream input, int ruleIndex) {
+- (BOOL) alreadyParsedRule:(id<IntStream>) input Index:(NSInteger) ruleIndex
+{
     [(Profiler)dbg examineRuleMemoization:input, ruleIndex, <grammar.composite.rootGrammar.recognizerName>.ruleNames objectAtIndex:ruleIndex];
     return super.alreadyParsedRule(input, ruleIndex);
 }<\n>
-- (void) memoize:(id<ANTLRIntStream>)input RuleIndex:(NSInteger)ruleIndex StartIndex:(NSInteger)ruleStartIndex
+- (void) memoize:(id<IntStream>)input RuleIndex:(NSInteger)ruleIndex StartIndex:(NSInteger)ruleStartIndex
 {
     [((Profiler)dbg) memoize:input RuleIndex:ruleIndex StartIndex:ruleStartIndex [<grammar.composite.rootGrammar.recognizerName> ruleNames[ruleIndex]];
     [super memoize:input RuleIndex:ruleIndex StartIndex:ruleStartIndex];
@@ -102,7 +111,7 @@ ruleNames = [NSArray arrayWithObjects:<rules:{rST | @"<rST.ruleName>"}; separato
 >>
 
 /* bug: can't use @super.superClassName()> */
-@parserHeaderFile.superClassName() ::= "ANTLRDebug<if(TREE_PARSER)>Tree<endif>Parser"
+@parserHeaderFile.superClassName() ::= "Debug<if(TREE_PARSER)>Tree<endif>Parser"
 
 @rule.preamble() ::= <<
 @try { [debugListener enterRule:@"<ruleName>"];
@@ -200,14 +209,14 @@ dfaDecision(decisionNumber,description) ::= <<
     // isCyclicDecision = YES;
     <super.dfaDecision(...)>
 }
-@catch (ANTLRNoViableAltException *nvae) {
+@catch (NoViableAltException *nvae) {
     [debugListener recognitionException:nvae];
     @throw nvae;
 }
 >>
 
 @cyclicDFA.errorMethod() ::= <<
--(void) error:(ANTLRNoViableAltException *)nvae
+-(void) error:(NoViableAltException *)nvae
 {
     [[recognizer debugListener] recognitionException:nvae];
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,12 +26,9 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
+using System;
+using System.Text;
 using Xunit;
 
 
@@ -43,7 +40,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER testref BEFORE INSERT ON test1
+      Utility.ParseSql(@"CREATE TRIGGER testref BEFORE INSERT ON test1
   FOR EACH ROW BEGIN
     INSERT INTO test2 SET a2 = NEW.a1;
     DELETE FROM test3 WHERE a3 = NEW.a1;
@@ -54,7 +51,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void BeforeInsert()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sdata_insert BEFORE INSERT ON `sometable`
+      Utility.ParseSql(@"CREATE TRIGGER sdata_insert BEFORE INSERT ON `sometable`
 FOR EACH ROW
 BEGIN
 SET NEW.guid = UUID();
@@ -64,7 +61,7 @@ END");
     [Fact]
     public void AfterInsert()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sdata_insert AFTER INSERT ON `sometable`
+      Utility.ParseSql(@"CREATE TRIGGER sdata_insert AFTER INSERT ON `sometable`
 FOR EACH ROW
 BEGIN
 SET NEW.guid = UUID();
@@ -74,7 +71,7 @@ END");
     [Fact]
     public void BeforeInsert2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"CREATE TRIGGER user_insert BEFORE INSERT ON `user` FOR EACH ROW SET NEW.TimeStampCreated = NOW(), 
         NEW.Password = DES_ENCRYPT(NEW.Password);");
     }
@@ -82,14 +79,14 @@ END");
     [Fact]
     public void BeforeUpdate()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"CREATE TRIGGER user_update BEFORE UPDATE ON `user` FOR EACH ROW SET NEW.Password = DES_ENCRYPT(NEW.Password);");
     }
 
     [Fact]
     public void BeforeInsert3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"CREATE TRIGGER mytrigger BEFORE INSERT ON TABLE_1 FOR EACH ROW SET NEW.MY_DATETIME_COLUMN = NOW(), 
         NEW.MY_DATE_COLUMN = CURDATE()");
     }
@@ -97,7 +94,7 @@ END");
     [Fact]
     public void ForEachRow()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sanityCheck
+      Utility.ParseSql(@"CREATE TRIGGER sanityCheck
 BEFORE INSERT ON someTable
 FOR EACH ROW
 BEGIN
@@ -111,7 +108,7 @@ END;");
     [Fact]
     public void ForEachRow2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sanityCheck
+      Utility.ParseSql(@"CREATE TRIGGER sanityCheck
 BEFORE INSERT ON my_table
 FOR EACH ROW
 BEGIN
@@ -124,62 +121,58 @@ END;");
     [Fact]
     public void FollowsTriggerSyntax56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sanityCheck
+      Utility.ParseSql(@"CREATE TRIGGER sanityCheck
 BEFORE INSERT ON my_table
 FOR EACH ROW FOLLOWS mytrigger
 BEGIN
 IF something THEN
 SET NEW.S_ID = 0 ;
 END IF;
-END;", true, out sb, new Version( 5, 6 ) );
+END;", true, new Version( 5, 6 ) );
     }
 
     [Fact]
     public void FollowsTriggerSyntax57()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sanityCheck
+      Utility.ParseSql(@"CREATE TRIGGER sanityCheck
 BEFORE INSERT ON my_table
 FOR EACH ROW FOLLOWS mytrigger
 BEGIN
 IF something THEN
 SET NEW.S_ID = 0 ;
 END IF;
-END;", false, out sb, new Version(5, 7));
+END;", false, new Version(5, 7));
     }
 
     [Fact]
     public void PrecedesTriggerSyntax56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sanityCheck
+      Utility.ParseSql(@"CREATE TRIGGER sanityCheck
 BEFORE INSERT ON my_table
 FOR EACH ROW PRECEDES mytrigger
 BEGIN
 IF something THEN
 SET NEW.S_ID = 0 ;
 END IF;
-END;", true, out sb, new Version(5, 6));
+END;", true, new Version(5, 6));
     }
 
     [Fact]
     public void PrecedesTriggerSyntax57()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE TRIGGER sanityCheck
+      Utility.ParseSql(@"CREATE TRIGGER sanityCheck
 BEFORE INSERT ON my_table
 FOR EACH ROW PRECEDES mytrigger
 BEGIN
 IF something THEN
 SET NEW.S_ID = 0 ;
 END IF;
-END;", false, out sb, new Version(5, 7));
+END;", false, new Version(5, 7));
     }
 //    [Fact]
 //    public void ForEachRow3()
 //    {
-//      MySQL51Parser.program_return r = Utility.ParseSql(@"create trigger trg_trigger_test_ins before insert on trigger_test
+//      Utility.ParseSql(@"create trigger trg_trigger_test_ins before insert on trigger_test
 //for each row 
 //begin
 //declare msg varchar(255);

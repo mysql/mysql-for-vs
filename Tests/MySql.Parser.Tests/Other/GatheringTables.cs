@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,15 +26,10 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using Xunit;
-//using MySQLParser;
 
 namespace MySql.Parser.Tests
 {
@@ -44,7 +39,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void InsertWithTableExtraction()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "INSERT INTO test6.d_table VALUES (1);");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);
@@ -56,7 +51,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void InsertWithTableExtraction2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "INSERT INTO `test6`.`d_table` VALUES (1);");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);
@@ -69,7 +64,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void InsertWithTableExtraction3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "INSERT INTO test6.d_table ( col ) VALUES (1);");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);
@@ -81,7 +76,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void SelectWithTableExtraction()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "select * from test6.d_table;");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);
@@ -94,7 +89,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void SelectWithTableExtraction2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "select * from test6.d_table as T;");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);
@@ -107,7 +102,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void SelectWithTableExtraction3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "select * from d_table as T;");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);
@@ -120,7 +115,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void SelectWithTableExtraction4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
           "select * from d_table;");
       List<TableWithAlias> twa = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, twa);

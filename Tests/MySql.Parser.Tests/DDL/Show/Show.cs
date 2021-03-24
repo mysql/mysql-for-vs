@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,9 +27,6 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
@@ -59,7 +56,7 @@ namespace MySql.Parser.Tests.DDL.Show
       /* Illegal or deprecated */
       //TestShow("SHOW FULL ENGINES", ShowStatementType.ShowEngines);
       TestShow("SHOW BINARY LOGS", ShowStatementType.ShowLogs);
-      MySQL51Parser.program_return r = Utility.ParseSql("SHOW MASTER LOGS");
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("SHOW MASTER LOGS");
       Assert.Equal( "SHOW", (( CommonTree )r.Tree ).GetChild( 0 ).Text );
       Assert.Equal( "MASTER", (( CommonTree )r.Tree ).GetChild( 0 ).GetChild( 0 ).Text );
       Assert.Equal("LOGS", ((CommonTree)r.Tree).GetChild(0).GetChild(0).GetChild(0).Text);
@@ -88,8 +85,7 @@ namespace MySql.Parser.Tests.DDL.Show
       /*
       Assert.Equal("'userx'", ss.Id);
        * */
-      MySQL51Parser.program_return r = Utility.ParseSql("show grants for current_user");
-      r = Utility.ParseSql("show grants for current_user()");
+      Utility.ParseSql("show grants for current_user()");
     }
 
     // TODO: implement tests for these
@@ -100,8 +96,7 @@ namespace MySql.Parser.Tests.DDL.Show
     public void ShowWarningCount()
     {
       string sql = @"SHOW COUNT(*) WARNINGS";
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+      Utility.ParseSql(sql, false);
     }
 
     [Fact]
@@ -160,7 +155,7 @@ namespace MySql.Parser.Tests.DDL.Show
 
     private void TestShow(string sql, ShowStatementType type)
     {
-      MySQL51Parser.program_return r = Utility.ParseSql( sql );
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql( sql );
       /*
       Assert.Equal(1, statements.Count);
       Assert.True(statements[0] is ShowStatement);
@@ -173,62 +168,60 @@ namespace MySql.Parser.Tests.DDL.Show
     [Fact]
     public void BadShow()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("SHOW BAD", true);
+      Utility.ParseSql("SHOW BAD", true);
     }
 
     [Fact]
     public void Profile1()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("show profiles", false);
+      Utility.ParseSql("show profiles", false);
     }
 
     [Fact]
     public void Profile2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("show profile", false);
+      Utility.ParseSql("show profile", false);
     }
 
     [Fact]
     public void Profile3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("show profile for query 1", false);
+      Utility.ParseSql("show profile for query 1", false);
     }
 
     [Fact]
     public void Profile4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("show profiles cpu for query 2", false);
+      Utility.ParseSql("show profiles cpu for query 2", false);
     }
 
-        [Fact]
-        public void ShowInnodbStatus()
-        {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql("show innodb status", true, out sb, new Version(5, 5));
-          Assert.True(sb.ToString().IndexOf("no viable alternative at input 'innodb'") != -1 );
-        }
+    [Fact]
+    public void ShowInnodbStatus()
+    {
+      StringBuilder sb;
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("show innodb status", true, out sb, new Version(5, 5));
+      Assert.True(sb.ToString().IndexOf("no viable alternative at input 'innodb'") != -1 );
+    }
 
-        [Fact]
-        public void ShowInnodbStatus2()
-        {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql("show innodb status", false, out sb, new Version(5, 0));
-        }
+    [Fact]
+    public void ShowInnodbStatus2()
+    {
+      Utility.ParseSql("show innodb status", false, new Version(5, 0));
+    }
 
-        [Fact]
-        public void ShowPlugins50()
-        {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql("show plugins", true, out sb, new Version(5, 0));
-          Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PLUGINS'", StringComparison.OrdinalIgnoreCase) != -1);
-        }
+    [Fact]
+    public void ShowPlugins50()
+    {
+      StringBuilder sb;
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("show plugins", true, out sb, new Version(5, 0));
+      Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PLUGINS'", StringComparison.OrdinalIgnoreCase) != -1);
+    }
 
-        [Fact]
-        public void ShowPlugins()
-        {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql("show plugins", false, out sb, new Version(5, 1));
-        }
+    [Fact]
+    public void ShowPlugins()
+    {
+      Utility.ParseSql("show plugins", false, new Version(5, 1));
+    }
 
     public enum ShowStatementType
     {

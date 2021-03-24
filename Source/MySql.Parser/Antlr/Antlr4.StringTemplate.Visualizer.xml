@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr4.StringTemplate.Visualizer</name>
+    </assembly>
+    <members>
+        <member name="T:Antlr4.StringTemplate.Visualizer.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Visualizer.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Visualizer.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Antlr4.StringTemplate.Visualizer.Properties.Resources.AttributeRendererTemplates">
+             <summary>
+               Looks up a localized string similar to attribute(attr) ::= &lt;%
+            &lt;attr.Name&gt; = &lt;attr.Value&gt;
+            &lt;if(attr.Events)&gt;
+            &lt;!!&gt; @ &lt;attr.Events:{event|&lt;event.FileName&gt;:&lt;event.Line&gt;}; separator=&quot;, &quot;&gt;
+            &lt;endif&gt;
+            %&gt;
+            
+            listTemplate(list) ::= &lt;&lt;
+            [&lt;list:{x|&lt;x&gt;}; separator=&quot;, &quot;&gt;]
+            &gt;&gt;
+            
+            aggregateTemplate(aggr) ::= &lt;&lt;
+            aggr&lt;dictionaryTemplate(aggr)&gt;
+            &gt;&gt;
+            
+            dictionaryTemplate(dict) ::= &lt;&lt;
+            {&lt;dict.keys,dict.values:{key,value|&lt;key&gt;=&lt;value&gt;}; separator=&quot;, &quot;&gt;}
+            &gt;&gt;
+            .
+             </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Visualizer.TemplateVisualizerFrame">
+            <summary>
+            TemplateVisualizerFrame
+            </summary>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Visualizer.TemplateVisualizerFrame.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Antlr4.StringTemplate.Visualizer.TemplateVisualizerWindow">
+            <summary>
+            TemplateVisualizerWindow
+            </summary>
+        </member>
+        <member name="M:Antlr4.StringTemplate.Visualizer.TemplateVisualizerWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>

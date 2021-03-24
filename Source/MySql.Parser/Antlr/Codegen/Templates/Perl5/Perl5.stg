@@ -1,5 +1,5 @@
 /*
- [The "BSD licence"]
+ [The "BSD license"]
  Copyright (c) 2005-2006 Terence Parr
  Copyright (c) 2007-2008 Ronald Blaschke
  All rights reserved.
@@ -27,7 +27,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-group Perl5 implements ANTLRCore;
+group Perl5;
 
 /** The overall file structure of a recognizer; stores methods for rules
  *  and cyclic DFAs plus support code.
@@ -656,13 +656,13 @@ element() ::= <<
 >>
 
 /** match a token optionally with a label in front */
-tokenRef(token,label,elementIndex,hetero) ::= <<
+tokenRef(token,label,elementIndex,terminalOptions) ::= <<
 <if(label)>$<label> =<endif>$self->match($self->input, <token>, $FOLLOW_<token>_in_<ruleName><elementIndex>);
 <checkRuleBacktrackFailure()>
 >>
 
 /** ids+=ID */
-tokenRefAndListLabel(token,label,elementIndex,hetero) ::= <<
+tokenRefAndListLabel(token,label,elementIndex,terminalOptions) ::= <<
 <tokenRef(...)>
 <listLabel(elem=label,...)>
 >>
@@ -1105,7 +1105,7 @@ s = <targetStateNumber>;<\n>
 
 andPredicates(left,right) ::= "(<left> && <right>)"
 
-orPredicates(operands) ::= "(<first(operands)><rest(operands):{o | ||<o>}>)"
+orPredicates(operands) ::= "(<operands; separator=\"||\">)"
 
 notPredicate(pred) ::= "!(<evalPredicate(...)>)"
 

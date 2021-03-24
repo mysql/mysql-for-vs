@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr3.Targets.Ruby</name>
+    </assembly>
+    <members>
+        <member name="F:Antlr3.Targets.RubyTarget.rubyKeywords">
+            A set of ruby keywords which are used to escape labels and method names
+            which will cause parse errors in the ruby source
+        </member>
+    </members>
+</doc>

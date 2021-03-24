@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,11 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -43,50 +40,47 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Explain1()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("explain tbl", false);
+      Utility.ParseSql("explain tbl", false);
     }
 
     [Fact]
     public void Explain1WithDescribe()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("describe tbl", false);
+      Utility.ParseSql("describe tbl", false);
     }
 
     [Fact]
     public void Explain1WithDesc()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("desc tbl", false);
+      Utility.ParseSql("desc tbl", false);
     }
 
     [Fact]
     public void Explain2()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "explain extended select * from tbl", false, out sb, new Version(5, 1));
+      Utility.ParseSql(
+        "explain extended select * from tbl", false, new Version(5, 1));
     }
 
     [Fact]
     public void Explain2WithDescribe()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "describe extended select * from tbl", false, out sb, new Version(5, 1));
+      Utility.ParseSql(
+        "describe extended select * from tbl", false, new Version(5, 1));
     }
 
     [Fact]
     public void Explain2WithDesc()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "desc extended select * from tbl", false, out sb, new Version(5, 1));
+      Utility.ParseSql(
+        "desc extended select * from tbl", false, new Version(5, 1));
     }
 
     [Fact]
     public void Explain3()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "explain partitions select * from tbl", true, out sb, new Version(5, 0));
       Assert.True(sb.ToString().IndexOf("no viable alternative at input 'partitions'", StringComparison.OrdinalIgnoreCase ) != -1);
     }
@@ -94,14 +88,14 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Explain4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("explain partitions select * from tbl", false);
+      Utility.ParseSql("explain partitions select * from tbl", false);
     }
 
     [Fact]
     public void ExplainDelete_55()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "explain DELETE from t1;", true, out sb, new Version(5, 5));
       Assert.True(sb.ToString().IndexOf("delete", StringComparison.OrdinalIgnoreCase) != -1);
     }
@@ -110,7 +104,7 @@ namespace MySql.Parser.Tests
     public void ExplainDelete_56()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "explain DELETE from t1;", false, out sb, new Version(5, 6));
     }
 
@@ -118,7 +112,7 @@ namespace MySql.Parser.Tests
     public void ExplainInsert_55()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "explain INSERT into t1 ( col1, col2 ) values ( '', 1 );", true, out sb, new Version(5, 5));
       Assert.True(sb.ToString().IndexOf("insert", StringComparison.OrdinalIgnoreCase) != -1);
     }
@@ -126,16 +120,15 @@ namespace MySql.Parser.Tests
     [Fact]
     public void ExplainInsert_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "explain INSERT into t1 ( col1, col2 ) values ( '', 1 );", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        "explain INSERT into t1 ( col1, col2 ) values ( '', 1 );", false, new Version(5, 6));
     }
 
     [Fact]
     public void ExplainReplace_55()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "explain format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", true, out sb, new Version(5, 5));
       Assert.True(sb.ToString().IndexOf("no viable alternative at input '='", StringComparison.OrdinalIgnoreCase) != -1);
     }
@@ -143,32 +136,29 @@ namespace MySql.Parser.Tests
     [Fact]
     public void ExplainReplace_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "explain format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        "explain format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", false, new Version(5, 6));
     }
 
     [Fact]
     public void ExplainReplace_56WithDescribe()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "describe format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        "describe format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", false, new Version(5, 6));
     }
 
     [Fact]
     public void ExplainReplace_56WithDesc()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "desc format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        "desc format = json REPLACE into t1 ( col1, col2 ) values ( '', 1 );", false, new Version(5, 6));
     }
 
     [Fact]
     public void ExplainUpdate_55()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         "explain format = traditional UPDATE t1 set col1 = val1, col2 = val2;", true, out sb, new Version(5, 5));
       //Assert.True(sb.ToString().IndexOf("missing EndOfFile at '='", StringComparison.OrdinalIgnoreCase) != -1);
       Assert.True(sb.ToString().IndexOf("no viable alternative at input '='", StringComparison.OrdinalIgnoreCase) != -1);
@@ -177,25 +167,19 @@ namespace MySql.Parser.Tests
     [Fact]
     public void ExplainUpdate_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        "explain format = traditional UPDATE t1 set col1 = val1, col2 = val2;", false, out sb, new Version(5, 6));
+      Utility.ParseSql("explain format = traditional UPDATE t1 set col1 = val1, col2 = val2;", false, new Version(5, 6));
     }
 
     [Fact]
     public void ExplainForConnection_56()
     {
-        StringBuilder sb;
-        MySQL51Parser.program_return r = Utility.ParseSql(
-          "explain format = traditional for connection 1;", true, out sb, new Version(5, 6));
+      Utility.ParseSql("explain format = traditional for connection 1;", true, new Version(5, 6));
     }
 
     [Fact]
     public void ExplainForConnection_57()
     {
-        StringBuilder sb;
-        MySQL51Parser.program_return r = Utility.ParseSql(
-          "explain format = traditional for connection 1;", false, out sb, new Version(5, 7));
+      Utility.ParseSql("explain format = traditional for connection 1;", false, new Version(5, 7));
     }
   }
 }

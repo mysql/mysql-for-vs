@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,11 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 namespace MySql.Parser.Tests
@@ -41,7 +38,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void UpdateSimpleTest()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"update Table1 
           set col1 = 20, col2 = a and b, col3 = col4, col4 = true, col5 = null, col6 = 'string' 
           where Id = 30");
@@ -82,7 +79,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void UpdateMoreComplexText()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"update low_priority ignore T set deleted = 1, ToArchive = false, DateStamp = '10-10-2000' 
         where DateCreated < '09-10-2000' order by Id asc limit 1000");
       /*
@@ -121,45 +118,44 @@ namespace MySql.Parser.Tests
     [Fact]
     public void UpdateMultiTable()
     {			
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
         @"update T1, T2 inner join T3 on T2.KeyId = T3.ForeignKeyId 
           set Col1 = 3.1416, T1.Col3 = T2.Col3, T1.Col2 = T3.Col2  
           where ( T1.Id = T2.Id ) ");
       //Assert.Equal(1, l.Count);
     }
 
-[Fact]
-        public void Subquery()
-        {
-          MySQL51Parser.program_return r = Utility.ParseSql(@"UPDATE books SET author = ( SELECT author FROM volumes WHERE volumes.id = books.volume_id );");
-        }
+    [Fact]
+    public void Subquery()
+    {
+      Utility.ParseSql(@"UPDATE books SET author = ( SELECT author FROM volumes WHERE volumes.id = books.volume_id );");
+    }
 
-        [Fact]
-        public void Subquery2()
-        {
-          MySQL51Parser.program_return r = Utility.ParseSql(
+    [Fact]
+    public void Subquery2()
+    {
+      Utility.ParseSql(
 @"UPDATE people, 
 (SELECT count(*) as votecount, person_id 
 FROM votes GROUP BY person_id) as tally
 SET people.votecount = tally.votecount 
 WHERE people.person_id = tally.person_id;");
-        }
+    }
 
-        [Fact]
-        public void WithPartition_55()
-        {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql(
-            @"UPDATE employees PARTITION (p0) SET store_id = 2 WHERE fname = 'Jill';", true, out sb, new Version(5, 5));
-          Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
-        }
+    [Fact]
+    public void WithPartition_55()
+    {
+      StringBuilder sb;
+      Utility.ParseSql(
+        @"UPDATE employees PARTITION (p0) SET store_id = 2 WHERE fname = 'Jill';", true, out sb, new Version(5, 5));
+      Assert.True(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
+    }
 
-        [Fact]
-        public void WithPartition_56()
-        {
-          StringBuilder sb;
-          MySQL51Parser.program_return r = Utility.ParseSql(
-            @"UPDATE employees PARTITION (p0) SET store_id = 2 WHERE fname = 'Jill';", false, out sb, new Version(5, 6));
-        }
+    [Fact]
+    public void WithPartition_56()
+    {
+      Utility.ParseSql(
+        @"UPDATE employees PARTITION (p0) SET store_id = 2 WHERE fname = 'Jill';", false, new Version(5, 6));
+    }
   }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -91,25 +91,25 @@ namespace MySql.Data.VisualStudio
       return tokens;
     }
 
-    internal static MySQL51Parser.program_return ParseSql(string sql)
+    internal static AstParserRuleReturnScope<object, IToken> ParseSql(string sql)
     {
       return ParseSql(sql, false);
     }
 
-    internal static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb)
+    internal static AstParserRuleReturnScope<object, IToken> ParseSql(string sql, bool expectErrors, out StringBuilder sb)
     {
       CommonTokenStream ts;
       return ParseSql(sql, expectErrors, out sb, out ts);
     }
 
-    internal static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb, string version)
+    internal static AstParserRuleReturnScope<object, IToken> ParseSql(string sql, bool expectErrors, out StringBuilder sb, string version)
     {
       Version ver = GetVersion(version);
       CommonTokenStream ts;
       return ParseSql(sql, expectErrors, out sb, out ts, ver);
     }
 
-    internal static MySQL51Parser.program_return ParseSql(
+    internal static AstParserRuleReturnScope<object, IToken> ParseSql(
       string sql, bool expectErrors, out StringBuilder sb, out CommonTokenStream tokensOutput, Version version)
     {
       sql = sql.TrimStart();
@@ -123,14 +123,14 @@ namespace MySql.Data.VisualStudio
       return DoParse(tokens, expectErrors, out sb, lexer.MySqlVersion);
     }
 
-    internal static MySQL51Parser.program_return ParseSql(
+    internal static AstParserRuleReturnScope<object, IToken> ParseSql(
       string sql, bool expectErrors, out StringBuilder sb, CommonTokenStream tokens)
     {
       DbConnection con = GetConnection();
       return DoParse( tokens, expectErrors, out sb, GetVersion( con.ServerVersion ));
     }
 
-    internal static MySQL51Parser.program_return ParseSql(
+    internal static AstParserRuleReturnScope<object, IToken> ParseSql(
       string sql, bool expectErrors, out StringBuilder sb, out CommonTokenStream tokensOutput)
     {
       sql = sql.TrimStart();
@@ -145,7 +145,7 @@ namespace MySql.Data.VisualStudio
       return DoParse(tokens, expectErrors, out sb, lexer.MySqlVersion);
     }
 
-    private static MySQL51Parser.program_return DoParse( 
+    private static AstParserRuleReturnScope<object, IToken> DoParse( 
       CommonTokenStream tokens, bool expectErrors, out StringBuilder sb, Version version )
     {
       MySQLParser parser = new MySQLParser(tokens);
@@ -153,7 +153,7 @@ namespace MySql.Data.VisualStudio
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
-      MySQL51Parser.program_return r = null;
+      AstParserRuleReturnScope<object, IToken> r = null;
       int tokCount = tokens.Count;
       try
       {
@@ -179,7 +179,7 @@ namespace MySql.Data.VisualStudio
       return r;
     }
 
-    private static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors)
+    private static AstParserRuleReturnScope<object, IToken> ParseSql(string sql, bool expectErrors)
     {
       StringBuilder sb;
       CommonTokenStream ts;
@@ -243,7 +243,7 @@ namespace MySql.Data.VisualStudio
     public static string GetRoutineName(string sql)
     {
       StringBuilder sb;
-      MySQL51Parser.program_return pr = LanguageServiceUtil.ParseSql(sql, false, out sb);
+      AstParserRuleReturnScope<object, IToken> pr = LanguageServiceUtil.ParseSql(sql, false, out sb);
       if (sb.Length != 0)
       {
         throw new ApplicationException(string.Format("Syntactic error in stored routine: {0}", sb.ToString()));
@@ -271,7 +271,7 @@ namespace MySql.Data.VisualStudio
     /// <c>true</c> if the first SQL statement in the string returns a result set; otherwise, <c>false</c>.</returns>
     public static bool? DoesStmtReturnResults(string sql, MySqlConnection connection, out StringBuilder builder)
     {
-      MySQL51Parser.program_return programReturn = ParseSql(sql, false, out builder, connection.ServerVersion);
+      AstParserRuleReturnScope<object, IToken> programReturn = ParseSql(sql, false, out builder, connection.ServerVersion);
       if (programReturn == null)
       {
         return null;

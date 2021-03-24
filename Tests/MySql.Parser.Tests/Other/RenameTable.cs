@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,13 +26,7 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 namespace MySql.Parser.Tests
@@ -43,7 +37,7 @@ namespace MySql.Parser.Tests
 		[Fact]
 		public void SimpleNoSchema()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql("RENAME TABLE `table1` TO `table2`");
+			AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql("RENAME TABLE `table1` TO `table2`");
 			/*
 			Assert.Equal(1, statements.Count);
 			Assert.True(statements[0] is RenameTableStatement);
@@ -61,7 +55,7 @@ namespace MySql.Parser.Tests
 		[Fact]
 		public void SimpleWithSchema()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
+			AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
 				"RENAME TABLE `schema1`.`table1` TO `schema2`.`table2`");
 			/*
 			Assert.Equal(1, statements.Count);
@@ -80,19 +74,19 @@ namespace MySql.Parser.Tests
 		[Fact]
 		public void MissingFromTableName()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql("RENAME TABLE", true);
+			Utility.ParseSql("RENAME TABLE", true);
 		}
 
 		[Fact]
 		public void MissingToTableName()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql("RENAME TABLE table1 TO", true);
+			Utility.ParseSql("RENAME TABLE table1 TO", true);
 		}
 
 		[Fact]
 		public void MultipleRenames()
 		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
+			AstParserRuleReturnScope<object, IToken> r = Utility.ParseSql(
 				@"RENAME TABLE table1 TO table2, schema1.table4 TO table5, 
 				`schema3`.table6 TO `schema7`.table8");
 			/*

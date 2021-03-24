@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,10 +27,6 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
 
 namespace MySql.Parser
@@ -70,38 +66,37 @@ namespace MySql.Parser
     /// <summary>
     /// This functions allows certain keywords to be used as identifiers in a version before they were recognized as keywords.
     /// </summary>
-    /// <param name="version"></param>
-    /// <param name="proposedType"></param>
-    /// <param name="alternativeProposedType"></param>
+    /// <param name="versionString">A string representing the version to check.</param>
+    /// <param name="proposedType">The proposed token type.</param>
+    /// <param name="alternativeProposedType">The alternative proposed token type.</param>
     /// <returns></returns>
-    public int checkIDperVersion(double version, int proposedType, int alternativeProposedType)
+    public int checkIDperVersion(string versionString, int proposedType, int alternativeProposedType)
     {
-      return (mysqlVersion >= version) ? proposedType : alternativeProposedType;
+      var version = new Version(versionString);
+      return (MySqlVersion >= version) ? proposedType : alternativeProposedType;
     }
 
-    public int checkFunctionasIDperVersion(double version, int proposedType, int alternativeProposedType)
+    public int checkFunctionasIDperVersion(string versionString, int proposedType, int alternativeProposedType)
     {
-      if (mysqlVersion < version) return alternativeProposedType;
+      var version = new Version(versionString);
+      if (MySqlVersion < version) return alternativeProposedType;
       else return (input.LA(1) != '(') ? proposedType : alternativeProposedType;
     }
 
-    // holds values like 5.0, 5.1, 5.5, 5.6, etc.
-    protected double mysqlVersion;
+    // Holds values like 5.6, 5.7, 8.0, etc.
+    protected string _mysqlVersion;
 
     public Version MySqlVersion
     {
-      get { return new Version((int)mysqlVersion, (int)(mysqlVersion * 10 - (int)mysqlVersion * 10)); }
-      set { mysqlVersion = (double)value.Major + (double)value.Minor / 10; }
+      get { return new Version(_mysqlVersion); }
+      set { _mysqlVersion = value.ToString(); }
     }
 
     public MySQLLexerBase() { }
 
     public MySQLLexerBase(ICharStream input, RecognizerSharedState state)
       : base(input, state)
-    {
-
-      //errorListener = new BaseErrorListener(this);
-    }
+    { }
   }
 
   public class MySQLLexer : MySQL51Lexer
@@ -110,17 +105,11 @@ namespace MySql.Parser
 
     public MySQLLexer(ICharStream input)
       : base(input)
-    {
-
-      //errorListener = new BaseErrorListener(this);
-    }
+    { }
 
     public MySQLLexer(ICharStream input, RecognizerSharedState state)
       : base(input, state)
-    {
-
-      //errorListener = new BaseErrorListener(this);
-    }
+    { }
 
     public override int checkFunctionAsID(int proposedType)
     {
@@ -130,13 +119,6 @@ namespace MySql.Parser
     public override int checkFunctionAsNotId(int proposedType)
     {
       return (input.LA(1) != '(') ? ID : proposedType;
-    }
-
-    protected virtual void EnterRule(string ruleName, int ruleIndex) 
-    {
-      if (ruleName == "create_tablespace")
-      {
-      }
     }
   }
 }

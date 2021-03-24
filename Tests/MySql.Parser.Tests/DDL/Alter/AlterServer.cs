@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,12 +26,7 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 namespace MySql.Parser.Tests
@@ -42,7 +37,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER SERVER s OPTIONS (USER 'sally');");
+      Utility.ParseSql(@"ALTER SERVER s OPTIONS (USER 'sally');");
     }
   }
 }

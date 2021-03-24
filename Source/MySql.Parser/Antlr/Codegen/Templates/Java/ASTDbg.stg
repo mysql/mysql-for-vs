@@ -1,5 +1,5 @@
 /*
- [The "BSD licence"]
+ [The "BSD license"]
  Copyright (c) 2005-2006 Terence Parr
  All rights reserved.
 
@@ -29,21 +29,20 @@
 /** Template overrides to add debugging to AST stuff.  Dynamic inheritance
  *  hierarchy is set up as ASTDbg : AST : Dbg : Java by code generator.
  */
-group ASTDbg;
 
 parserMembers() ::= <<
-protected DebugTreeAdaptor adaptor;
-public void setTreeAdaptor(TreeAdaptor adaptor) {
+	protected DebugTreeAdaptor adaptor;
+	public void setTreeAdaptor(TreeAdaptor adaptor) {
 <if(grammar.grammarIsRoot)>
-    this.adaptor = new DebugTreeAdaptor(dbg,adaptor);
+		this.adaptor = new DebugTreeAdaptor(dbg,adaptor);
 <else>
-    this.adaptor = (DebugTreeAdaptor)adaptor; // delegator sends dbg adaptor 
-<endif><\n>
-    <grammar.directDelegates:{g|<g:delegateName()>.setTreeAdaptor(this.adaptor);}>
-}
-public TreeAdaptor getTreeAdaptor() {
-    return adaptor;
-}<\n>
+		this.adaptor = (DebugTreeAdaptor)adaptor; // delegator sends dbg adaptor
+<endif>
+		<grammar.directDelegates:{g|<g:delegateName()>.setTreeAdaptor(this.adaptor);}>
+	}
+	public TreeAdaptor getTreeAdaptor() {
+		return adaptor;
+	}
 >>
 
 parserCtorBody() ::= <<
@@ -52,14 +51,14 @@ parserCtorBody() ::= <<
 
 createListenerAndHandshake() ::= <<
 DebugEventSocketProxy proxy =
-    new DebugEventSocketProxy(this,port,<if(TREE_PARSER)>input.getTreeAdaptor()<else>adaptor<endif>);
+	new DebugEventSocketProxy(this,port,<if(TREE_PARSER)>input.getTreeAdaptor()<else>adaptor<endif>);
 setDebugListener(proxy);
 set<inputStreamType>(new Debug<inputStreamType>(input,proxy));
 try {
-    proxy.handshake();
+	proxy.handshake();
 }
 catch (IOException ioe) {
-    reportError(ioe);
+	reportError(ioe);
 }
 >>
 
@@ -79,7 +78,7 @@ setTreeAdaptor(adap);
 @ctorForPredefinedListener.finally() ::=<<
 <if(grammar.grammarIsRoot)> <! don't create new adaptor for delegates !>
 TreeAdaptor adap = new CommonTreeAdaptor();
-setTreeAdaptor(adap);<\n>
+setTreeAdaptor(adap);
 <endif>
 >>
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -28,14 +28,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
-using MySql.Parser;
 using Xunit;
 
 namespace MySql.Parser.Tests
@@ -50,7 +47,7 @@ namespace MySql.Parser.Tests
     public void SelectSimpleTableCompletion()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -63,7 +60,7 @@ namespace MySql.Parser.Tests
     public void SelectSimpleTableCompletionWitBeginEnd()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("begin select * from;  end", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -76,8 +73,7 @@ namespace MySql.Parser.Tests
     public void SelectSimpleTableCompletionWitBeginEnd2()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql("begin select * from  ", true, out sb);
+      Utility.ParseSql("begin select * from  ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
       Assert.True(
@@ -89,8 +85,7 @@ namespace MySql.Parser.Tests
     public void SelectSimpleTableCompletionWithBeginEnd3()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql("begin select * from end", true, out sb);
+      Utility.ParseSql("begin select * from end", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
       Assert.True(
@@ -101,17 +96,14 @@ namespace MySql.Parser.Tests
     [Fact]
     public void SelectSimpleTableCompletionWithoutBeginEnd()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql("select * from end", false, out sb);
+      Utility.ParseSql("select * from end", false);
     }
 
     [Fact]
     public void SelectJoinTableCompletion()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql("select facility.Id from facility inner join t2 on true left join ",
+      Utility.ParseSql("select facility.Id from facility inner join t2 on true left join ",
         true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -171,8 +163,7 @@ namespace MySql.Parser.Tests
     private void TestTableExpected(string sql)
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(sql, true, out sb);
+      Utility.ParseSql(sql, true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
       Assert.True(
@@ -184,8 +175,7 @@ namespace MySql.Parser.Tests
     public void CallProcedureNameCompletion()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql( "call", true, out sb );
+      Utility.ParseSql( "call", true, out sb );
       Assert.True(sb.ToString().EndsWith("no viable alternative at input '<EOF>'\r\n"));
       //string expectedToken =
       //    new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -198,7 +188,7 @@ namespace MySql.Parser.Tests
     {
       StringBuilder sb;
       string sql = "select *, fromtable.name, from fromtable inner join computer";
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql( sql, true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -234,7 +224,7 @@ namespace MySql.Parser.Tests
     {
       StringBuilder sb;
       string sql = "select *, fromtable.name, from fromtable as a inner join computer as B";
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql(sql, true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -275,7 +265,7 @@ namespace MySql.Parser.Tests
     {
       StringBuilder sb;
       string sql = "select *, fromtable.name, from test2.fromtable inner join test1.computer as B";
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql(sql, true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -316,7 +306,7 @@ namespace MySql.Parser.Tests
     {
       // "select" 
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -329,7 +319,7 @@ namespace MySql.Parser.Tests
     {
       // "select" 
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select a, ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -343,7 +333,7 @@ namespace MySql.Parser.Tests
     {
       // "select" 
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` as inner join `fromtable`", true, out sb);
       Assert.True( sb.ToString().EndsWith( 
         "no viable alternative at input 'inner'\r\n", StringComparison.CurrentCultureIgnoreCase) );
@@ -356,7 +346,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionAtSelectWhere()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select a from t where ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -370,7 +360,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionAtUpdateWhere()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("update t set c = 5 where  ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -384,7 +374,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionAtUpdateWhereWithMinus()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("update t set c = 5 where - ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -398,7 +388,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionAtUpdateWhereWithMinus2()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("update t set c = 5 where a = ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -412,7 +402,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -426,7 +416,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression2()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` between ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -440,7 +430,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression3()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` between c and ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -454,7 +444,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression4()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` & ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -468,7 +458,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression5()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` >> ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -482,7 +472,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression6()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` * ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -496,7 +486,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression7()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` ^ ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -510,7 +500,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression8()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and binary ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -524,7 +514,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression9()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and interval ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -538,7 +528,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression10()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and ( ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -552,7 +542,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression11()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and { id ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -566,7 +556,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression12()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -580,7 +570,7 @@ namespace MySql.Parser.Tests
     public void NonColumnCompletionOnExpression12()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -594,7 +584,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression13()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( a, b, c ) against ( ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -608,7 +598,7 @@ namespace MySql.Parser.Tests
     public void NonColumnCompletionOnExpression13()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( a, b, c ) against ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -622,7 +612,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression14()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( a, b, ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -636,7 +626,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression15()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and case when ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -650,7 +640,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression16()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and case when true then ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -664,7 +654,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression17()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and case when ( a = b ) then x + 1 else ", 
         true, out sb);
       string expectedToken =
@@ -679,7 +669,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression18()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("case ",
         true, out sb);
       string expectedToken =
@@ -694,7 +684,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionOnExpression19()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("case when ",
         true, out sb);
       string expectedToken =
@@ -709,7 +699,7 @@ namespace MySql.Parser.Tests
     public void RegressionTest2()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("-", true, out sb);
       Assert.True( sb.ToString().EndsWith( "no viable alternative at input '-'\r\n" ));
     }
@@ -719,7 +709,7 @@ namespace MySql.Parser.Tests
     {
       // "delete from t where "
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("delete from t where ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -736,7 +726,7 @@ namespace MySql.Parser.Tests
       // "insert into ta() values"
       // "insert into ta select "
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("insert into ta(", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -753,7 +743,7 @@ namespace MySql.Parser.Tests
       // "insert into ta( a, b "
       // "insert into ta( a, b, "
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("insert into ta( a, ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -767,7 +757,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionAtInsertSelect()
     {      
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("insert into ta select ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -781,7 +771,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionAtInsertSelectWithFrom()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("insert into ta select *, from a inner join b on true", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -796,7 +786,7 @@ namespace MySql.Parser.Tests
     {
       // "update t set "
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("update t set ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -810,7 +800,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionBeginEnd()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("CREATE PROCEDURE doiterate(p1 INT) begin select * from t where;  end ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
@@ -824,7 +814,7 @@ namespace MySql.Parser.Tests
     public void ColumnCompletionBeginEnd2()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
+      AstParserRuleReturnScope<object, IToken> r =
         Utility.ParseSql("CREATE PROCEDURE doiterate(p1 INT) begin select ;  end ", true, out sb);
       string expectedToken =
           new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;

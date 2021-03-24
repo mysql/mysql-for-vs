@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,12 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -45,7 +41,7 @@ namespace MySql.Parser.Tests
     public void Simple_55()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", true, out sb, new Version(5, 5));
       Assert.True(sb.ToString().IndexOf("rule savepoint_ident failed predicate: { input.LT(1).Text.ToLower() == \"savepoint\" }?") != -1);
     }
@@ -53,32 +49,28 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        @"GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Simple_2_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS @cno = NUMBER;", false, out sb, new Version(5, 6));
+       Utility.ParseSql(
+        @"GET DIAGNOSTICS @cno = NUMBER;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Simple_3_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS CONDITION @cno @errno = MYSQL_ERRNO;", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        @"GET DIAGNOSTICS CONDITION @cno @errno = MYSQL_ERRNO;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Compound_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"CREATE PROCEDURE do_insert(`value` INT)
 BEGIN
   -- declare variables to hold diagnostics area information
@@ -104,49 +96,41 @@ BEGIN
   END IF;
   -- say what happened
   SELECT result;
-END;", false, out sb, new Version(5, 6));
+END;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Compound__2_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"GET DIAGNOSTICS CONDITION 1
-@p3 = SCHEMA_NAME, @p4 = TABLE_NAME;", false, out sb, new Version(5, 6));
+@p3 = SCHEMA_NAME, @p4 = TABLE_NAME;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Compound_3_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"GET DIAGNOSTICS CONDITION 1
-    @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;", false, out sb, new Version(5, 6));
+    @p1 = RETURNED_SQLSTATE, @p2 = MESSAGE_TEXT;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Compound_4_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, out sb, new Version(5, 6));
+      Utility.ParseSql(@"GET DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Stacked_56()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", true, out sb, new Version(5, 6));
+      Utility.ParseSql(@"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", true, new Version(5, 6));
     }
 
     [Fact]
     public void Stacked_57()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, out sb, new Version(5, 7));
+      Utility.ParseSql(@"GET STACKED DIAGNOSTICS @p1 = ROW_COUNT, @p2 = NUMBER;", false, new Version(5, 7));
     }
   }
 }

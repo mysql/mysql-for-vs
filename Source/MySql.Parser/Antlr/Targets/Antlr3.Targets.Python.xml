@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr3.Targets.Python</name>
+    </assembly>
+    <members>
+        <member name="M:Antlr3.Targets.PythonTarget.GetTokenTypeAsTargetLabel(Antlr3.Codegen.CodeGenerator,System.Int32)">
+            Target must be able to override the labels used for token types 
+        </member>
+    </members>
+</doc>

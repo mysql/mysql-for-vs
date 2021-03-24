@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,12 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 namespace MySql.Parser.Tests
@@ -43,9 +39,7 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Iterate()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(
+      Utility.ParseSql(
   @"CREATE PROCEDURE doiterate(p1 INT)
 BEGIN
   label1: LOOP
@@ -58,50 +52,13 @@ BEGIN
   SET @x = p1;
 END;
 ",
-  false, out sb);
+  false);
     }
 
-//    [Fact]
-//    public void Handler()
-//    {
-//      StringBuilder sb;
-//      MySQL51Parser.program_return r =
-//        Utility.ParseSql(@"DECLARE CONTINUE HANDLER FOR 1051
-//  BEGIN
-//    //-- body of handler
-//  END;", false);
-      
-//    }
-
-//    [Fact]
-//    public void Handler2()
-//    {
-//      StringBuilder sb;
-//      MySQL51Parser.program_return r =
-//        Utility.ParseSql(@"DECLARE no_such_table CONDITION FOR 1051;
-//DECLARE CONTINUE HANDLER FOR no_such_table
-//  BEGIN
-//    -- body of handler
-//  END;", false);
-//    }
-
-//    [Fact]
-//    public void Handler3()
-//    {
-//      StringBuilder sb;
-//      MySQL51Parser.program_return r =
-//        Utility.ParseSql(@"DECLARE no_such_table CONDITION FOR SQLSTATE '42S02';
-//DECLARE CONTINUE HANDLER FOR no_such_table
-//  BEGIN
-//    -- body of handler
-//  END;", false);
-//    }
     [Fact]
     public void Handler()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(
+      Utility.ParseSql(
         @"CREATE PROCEDURE handlerdemo()
      BEGIN
        DECLARE CONTINUE HANDLER FOR SQLSTATE '23000' SET @x2 = 1;
@@ -111,41 +68,36 @@ END;
        INSERT INTO test.t VALUES (1);
        SET @x = 3;
      END;",
-        false, out sb);
+        false);
     }
 
     [Fact]
     public void Handler2()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(
+      Utility.ParseSql(
         @"
 begin 
   DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;
 end;",
-        false, out sb);
+        false);
     }
 
     [Fact]
     public void Handler3()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(
+      Utility.ParseSql(
         @"
 begin
   DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;
 end;",
-        false, out sb);
+        false);
     }
 
     [Fact]
     public void Timestamp50()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(
+      Utility.ParseSql(
         @"create procedure sp() 
 begin 
   DECLARE mystamp timestamp( 20 );
@@ -157,14 +109,12 @@ END;",
     [Fact]
     public void Timestamp51()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r =
-        Utility.ParseSql(
+      Utility.ParseSql(
         @"create procedure sp() 
 begin 
   DECLARE mystamp timestamp( 20 );
 END;",
-        false, out sb, new Version(5, 1));
+        false, new Version(5, 1));
     }
   }
 }

@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Antlr3.Runtime.Debug</name>
+    </assembly>
+    <members>
+        <member name="T:Antlr.Runtime.Debug.BlankDebugEventListener">
+            <summary>
+            A blank listener that does nothing; useful for real classes so
+            they don't have to have lots of blank methods and are less
+            sensitive to updates to debug interface.
+            </summary>
+        </member>
+        <member name="T:Antlr.Runtime.Debug.DebugEventHub">
+            <summary>
+              Broadcast debug events to multiple listeners.  Lets you debug and still
+              use the event mechanism to build parse trees etc...  Not thread-safe.
+              Don't add events in one thread while parser fires events in another.
+              </summary>
+            
+              <seealso cref="T:Antlr.Runtime.Debug.DebugEventRepeater"/>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugEventHub.AddListener(Antlr.Runtime.Debug.IDebugEventListener)">
+            <summary>
+            Add another listener to broadcast events too.  Not thread-safe.
+            Don't add events in one thread while parser fires events in another.
+            </summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugEventListenerConstants.ProtocolVersion">
+            <summary>Moved to version 2 for v3.1: added grammar name to enter/exit Rule</summary> 
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugEventListenerConstants.True">
+            <summary>Serialized version of true</summary> 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.DebugEventRepeater">
+            <summary>
+              A simple event repeater (proxy) that delegates all functionality to the
+              listener sent into the ctor.  Useful if you want to listen in on a few
+              debug events w/o interrupting the debugger.  Just subclass the repeater
+              and override the methods you want to listen in on.  Remember to call
+              the method in this class so the event will continue on to the original
+              recipient.
+              </summary>
+            
+              <seealso cref="T:Antlr.Runtime.Debug.DebugEventHub"/>
+        </member>
+        <member name="T:Antlr.Runtime.Debug.DebugEventSocketProxy">
+            <summary>
+            A proxy debug event listener that forwards events over a socket to
+            a debugger (or any other listener) using a simple text-based protocol;
+            one event per line.  ANTLRWorks listens on server socket with a
+            RemoteDebugEventSocketListener instance.  These two objects must therefore
+            be kept in sync.  New events must be handled on both sides of socket.
+            </summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugEventSocketProxy.recognizer">
+            <summary>Who am i debugging?</summary> 
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugEventSocketProxy.adaptor">
+            <summary>
+            Almost certainly the recognizer will have adaptor set, but
+            we don't know how to cast it (Parser or TreeParser) to get
+            the adaptor field.  Must be set with a constructor. :(
+            </summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugParser.dbg">
+            <summary>Who to notify when events in the parser occur.</summary> 
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugParser.isCyclicDecision">
+            <summary>
+            Used to differentiate between fixed lookahead and cyclic DFA decisions
+            while profiling.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugParser.#ctor(Antlr.Runtime.ITokenStream,Antlr.Runtime.Debug.IDebugEventListener,Antlr.Runtime.RecognizerSharedState)">
+            <summary>
+            Create a normal parser except wrap the token stream in a debug
+            proxy that fires consume events.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugParser.SetDebugListener(Antlr.Runtime.Debug.IDebugEventListener)">
+            <summary>
+            Provide a new debug event listener for this parser.  Notify the
+            input stream too that it should send events to this listener.
+            </summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugTokenStream.lastMarker">
+            <summary>Track the last mark() call result value for use in rewind().</summary> 
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugTokenStream.ConsumeInitialHiddenTokens">
+            <summary>Consume all initial off-channel tokens</summary> 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.DebugTreeAdaptor">
+            <summary>
+              A TreeAdaptor proxy that fires debugging events to a DebugEventListener
+              delegate and uses the TreeAdaptor delegate to do the actual work.  All
+              AST events are triggered by this adaptor; no code gen changes are needed
+              in generated rules.  Debugging events are triggered *after* invoking
+              tree adaptor routines.
+              </summary>
+            
+              <remarks>
+              Trees created with actions in rewrite actions like "-&gt; ^(ADD {foo} {bar})"
+              cannot be tracked as they might not use the adaptor to create foo, bar.
+              The debug listener has to deal with tree node IDs for which it did
+              not see a createNode event.  A single &lt;unknown&gt; node is sufficient even
+              if it represents a whole tree.
+              </remarks>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugTreeAdaptor.SimulateTreeConstruction(System.Object)">
+            <summary>^(A B C): emit create A, create B, add child, ...</summary> 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.DebugTreeNodeStream">
+            <summary>
+            Debug any tree node stream.  The constructor accepts the stream
+            and a debug listener.  As node stream calls come in, debug events
+            are triggered.
+            </summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugTreeNodeStream.lastMarker">
+            <summary>Track the last mark() call result value for use in rewind().</summary> 
+        </member>
+        <member name="P:Antlr.Runtime.Debug.DebugTreeNodeStream.UniqueNavigationNodes">
+            <summary>
+            It is normally this object that instructs the node stream to
+            create unique nav nodes, but to satisfy interface, we have to
+            define it.  It might be better to ignore the parameter but
+            there might be a use for it later, so I'll leave.
+            </summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugTreeParser.dbg">
+            <summary>Who to notify when events in the parser occur.</summary> 
+        </member>
+        <member name="F:Antlr.Runtime.Debug.DebugTreeParser.isCyclicDecision">
+            <summary>
+            Used to differentiate between fixed lookahead and cyclic DFA decisions
+            while profiling.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugTreeParser.#ctor(Antlr.Runtime.Tree.ITreeNodeStream,Antlr.Runtime.Debug.IDebugEventListener,Antlr.Runtime.RecognizerSharedState)">
+            <summary>
+            Create a normal parser except wrap the token stream in a debug
+            proxy that fires consume events.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.DebugTreeParser.SetDebugListener(Antlr.Runtime.Debug.IDebugEventListener)">
+            <summary>
+            Provide a new debug event listener for this parser.  Notify the
+            input stream too that it should send events to this listener.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Misc.DoubleKeyMap`3.Values(`0)">
+            Get all values associated with primary key 
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Misc.DoubleKeyMap`3.KeySet">
+            get all primary keys 
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Misc.DoubleKeyMap`3.KeySet(`0)">
+            get all secondary keys associated with a primary key 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.ParseTreeBuilder">
+            <summary>
+            This parser listener tracks rule entry/exit and token matches
+            to build a simple parse tree using ParseTree nodes.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.ParseTreeBuilder.Create(System.Object)">
+            <summary>
+            What kind of node to create.  You might want to override
+            so I factored out creation here.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.ParseTreeBuilder.EnterDecision(System.Int32,System.Boolean)">
+            <summary>Backtracking or cyclic DFA, don't want to add nodes to tree</summary> 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.Profiler">
+            <summary>Using the debug event interface, track what is happening in the parser
+            and record statistics about the runtime.</summary>
+        </member>
+        <member name="F:Antlr.Runtime.Debug.Profiler.Version">
+            Because I may change the stats, I need to track that for later
+            computations to be consistent.
+        </member>
+        <member name="F:Antlr.Runtime.Debug.Profiler.parser">
+            Ack, should not store parser; can't do remote stuff.  Well, we pass
+            input stream around too so I guess it's ok.
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Profiler.ExamineRuleMemoization(Antlr.Runtime.IIntStream,System.Int32,System.Int32,System.String)">
+            Track memoization; this is not part of standard debug interface
+            but is triggered by profiling.  Code gen inserts an override
+            for this method in the recognizer, which triggers this method.
+            Called from alreadyParsedRule().
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Profiler.Memoize(Antlr.Runtime.IIntStream,System.Int32,System.Int32,System.String)">
+            Warning: doesn't track success/failure, just unique recording event 
+        </member>
+        <member name="P:Antlr.Runtime.Debug.Profiler.InDecision">
+            The parser is in a decision if the decision depth > 0.  This
+            works for backtracking also, which can have nested decisions.
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Profiler.LT(System.Int32,Antlr.Runtime.IToken)">
+            Track refs to lookahead if in a fixed/nonfixed decision.
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Profiler.BeginBacktrack(System.Int32)">
+            Track backtracking decisions.  You'll see a fixed or cyclic decision
+              and then a backtrack.
+            
+             		enter rule
+             		...
+             		enter decision
+             		LA and possibly consumes (for cyclic DFAs)
+             		begin backtrack level
+             		mark m
+             		rewind m
+             		end backtrack level, success
+             		exit decision
+             		...
+             		exit rule
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Profiler.EndBacktrack(System.Int32,System.Boolean)">
+            Successful or not, track how much lookahead synpreds use 
+        </member>
+        <member name="M:Antlr.Runtime.Debug.Profiler.GetNumberOfHiddenTokens(System.Int32,System.Int32)">
+            Get num hidden tokens between i..j inclusive 
+        </member>
+        <member name="F:Antlr.Runtime.Debug.RemoteDebugEventSocketListener.version">
+            <summary>Version of ANTLR (dictates events)</summary> 
+        </member>
+        <member name="F:Antlr.Runtime.Debug.RemoteDebugEventSocketListener.previousTokenIndex">
+            <summary>
+            Track the last token index we saw during a consume.  If same, then
+            set a flag that we have a problem.
+            </summary>
+        </member>
+        <member name="M:Antlr.Runtime.Debug.RemoteDebugEventSocketListener.Start">
+            <summary>Create a thread to listen to the remote running recognizer</summary> 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.TraceDebugEventListener">
+            <summary>Print out (most of) the events... Useful for debugging, testing...</summary> 
+        </member>
+        <member name="T:Antlr.Runtime.Debug.Tracer">
+            <summary>
+            The default tracer mimics the traceParser behavior of ANTLR 2.x.
+            This listens for debugging events from the parser and implies
+            that you cannot debug and trace at the same time.
+            </summary>
+        </member>
+        <member name="T:Antlr.Runtime.Misc.Stats">
+            <summary>Stats routines needed by profiler etc...</summary>
+            
+              <remarks>
+              note that these routines return 0.0 if no values exist in the X[]
+              which is not "correct", but it is useful so I don't generate NaN
+              in my output
+              </remarks>
+        </member>
+        <member name="M:Antlr.Runtime.Misc.Stats.Stddev(System.Int32[])">
+            <summary>Compute the sample (unbiased estimator) standard deviation following:</summary>
+            
+              <remarks>
+              Computing Deviations: Standard Accuracy
+              Tony F. Chan and John Gregg Lewis
+              Stanford University
+              Communications of ACM September 1979 of Volume 22 the ACM Number 9
+            
+              The "two-pass" method from the paper; supposed to have better
+              numerical properties than the textbook summation/sqrt.  To me
+              this looks like the textbook method, but I ain't no numerical
+              methods guy.
+              </remarks>
+        </member>
+        <member name="M:Antlr.Runtime.Misc.Stats.Average(System.Collections.Generic.ICollection{System.Int32})">
+            <summary>Compute the sample mean</summary> 
+        </member>
+    </members>
+</doc>

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,14 +26,8 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
-
 
 
 namespace MySql.Parser.Tests
@@ -44,49 +38,49 @@ namespace MySql.Parser.Tests
     [Fact]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table1 READ my_idx = (col_a_val,col_b_val,col_c_val);");
+      Utility.ParseSql("HANDLER table1 READ my_idx = (col_a_val,col_b_val,col_c_val);");
     }
 
     [Fact]
     public void Simple2()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table1 READ my_idx = (col_a_val,col_b_val) where ( col_b_val is null );");
+      Utility.ParseSql("HANDLER table1 READ my_idx = (col_a_val,col_b_val) where ( col_b_val is null );");
     }
 
     [Fact]
     public void Simple3()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table2 READ my_idx = (col_a_val) limit 10;");
+      Utility.ParseSql("HANDLER table2 READ my_idx = (col_a_val) limit 10;");
     }
 
     [Fact]
     public void Simple4()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table1 READ my_idx < (col_a_val,col_b_val) where ( col_b_val is null );");
+      Utility.ParseSql("HANDLER table1 READ my_idx < (col_a_val,col_b_val) where ( col_b_val is null );");
     }
 
     [Fact]
     public void Simple5()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table1 READ my_idx <= (col_a_val,col_b_val) where ( col_b_val is null ) limit 10;");
+      Utility.ParseSql("HANDLER table1 READ my_idx <= (col_a_val,col_b_val) where ( col_b_val is null ) limit 10;");
     }
 
     [Fact]
     public void Simple6()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table2 READ my_idx >= (col_a_val) limit 10;");
+      Utility.ParseSql("HANDLER table2 READ my_idx >= (col_a_val) limit 10;");
     }
 
     [Fact]
     public void Simple7()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER table2 READ my_idx > (col_a_val) limit 10;");
+      Utility.ParseSql("HANDLER table2 READ my_idx > (col_a_val) limit 10;");
     }
 
     [Fact]
     public void Simple8()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("HANDLER tbl_name READ `PRIMARY` FIRST;");
+      Utility.ParseSql("HANDLER tbl_name READ `PRIMARY` FIRST;");
     }
   }
 }

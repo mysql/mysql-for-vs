@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -27,12 +27,8 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using Xunit;
 
 
@@ -45,7 +41,7 @@ namespace MySql.Parser.Tests
     public void Signal_51()
     {
       StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p (pval INT)
 BEGIN
@@ -71,8 +67,7 @@ END;", true, out sb, new Version(5, 1));
     [Fact]
     public void Signal_1_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p (pval INT)
 BEGIN
@@ -92,28 +87,26 @@ BEGIN
       SET MESSAGE_TEXT = 'An error occurred', MYSQL_ERRNO = 1001;
   END IF;
 END;
-", false, out sb, new Version(5, 5));
+", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_2_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p (divisor INT)
 BEGIN
   IF divisor = 0 THEN
     SIGNAL SQLSTATE '22012';
   END IF;
-END;", false, out sb, new Version(5, 5));
+END;", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_3_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p (divisor INT)
 BEGIN
@@ -121,28 +114,26 @@ BEGIN
   IF divisor = 0 THEN
     SIGNAL divide_by_zero;
   END IF;
-END;", false, out sb, new Version(5, 5));
+END;", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_4_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p (pval INT)
 BEGIN
   DECLARE no_such_table CONDITION FOR 1051;
   SIGNAL no_such_table;
 END;
-", false, out sb, new Version(5, 5));
+", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_5_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p (divisor INT)
 BEGIN
@@ -154,14 +145,13 @@ BEGIN
     END;
   END IF;
   SIGNAL my_error;
-END;", false, out sb, new Version(5, 5));
+END;", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_6_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE PROCEDURE p ()
 BEGIN
@@ -171,27 +161,25 @@ BEGIN
       SET MESSAGE_TEXT = 'An error occurred';
   END;
   DROP TABLE no_such_table;
-END;", false, out sb, new Version(5, 5));
+END;", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_7_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE FUNCTION f () RETURNS INT
 BEGIN
   SIGNAL SQLSTATE '01234';  -- signal a warning
   RETURN 5;
-END;", false, out sb, new Version(5, 5));
+END;", false, new Version(5, 5));
     }
 
     [Fact]
     public void Signal_8_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 DROP TABLE IF EXISTS xx;
 CREATE PROCEDURE p ()
@@ -207,14 +195,13 @@ SET @error_count = 0;
 SET @a = 0;
 SET @@max_error_count = 2;
 CALL p();
-SHOW ERRORS;", false, out sb, new Version(5, 6));
+SHOW ERRORS;", false, new Version(5, 6));
     }
 
     [Fact]
     public void Signal_9_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
+      Utility.ParseSql(
         @"
 CREATE FUNCTION f () RETURNS INT
 BEGIN
@@ -226,15 +213,14 @@ BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION SET @a=f();
   SIGNAL SQLSTATE '55555';
 END;
-CALL p();", false, out sb, new Version(5, 6));
+CALL p();", false, new Version(5, 6));
     }
 
     [Fact]
     public void Signal_10_55()
     {
-      StringBuilder sb;
-      MySQL51Parser.program_return r = Utility.ParseSql(
-        @"CREATE TRIGGER t_bi BEFORE INSERT ON t FOR EACH ROW RESIGNAL;", false, out sb, new Version(5, 6));
+      Utility.ParseSql(
+        @"CREATE TRIGGER t_bi BEFORE INSERT ON t FOR EACH ROW RESIGNAL;", false, new Version(5, 6));
     }
   }
 }
