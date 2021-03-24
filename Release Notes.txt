@@ -1,7 +1,17 @@
-﻿MySQL for Visual Studio 1.2.10 MR Release Notes
+﻿MySQL for Visual Studio 1.2.10 Release Notes
 ------------------------------------
 
-Welcome to the release notes for MySQL for Visual Studio 1.2.10 MR
+Welcome to the release notes for MySQL for Visual Studio 1.2.10
+
+* Upgraded the ANTLR 3 C# Target version used to generate the parser from 3.3.1 to 3.5.2.
+* Updated parser to support syntax changes introduced in MySQL Server 8.0+.
+* Removed support for Visual Studio 2015.
+* Added support for Connector/NET up to version 8.0.24. Support for later versions should continue to work as expected
+  unless any breaking changes are introduced on Connector/NET.
+* Switched to the Async Quick Info API to improve UI thread responsiveness when showing tooltips.
+* Fixed a bug in the Upgrade Tool where an exception crashed the tool in certain scenarios.
+* Fixed a bug in the MSI installer that prevented the plugin from being uninstalled due to an error when updating the
+  installation path registry key.
 
 
 
