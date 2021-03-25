@@ -12,6 +12,7 @@ Welcome to the release notes for MySQL for Visual Studio 1.2.10
 * Fixed a bug in the Upgrade Tool where an exception crashed the tool in certain scenarios.
 * Fixed a bug in the MSI installer that prevented the plugin from being uninstalled due to an error when updating the
   installation path registry key.
+* Fixed a bug that caused a null reference exception during execution when creating an SQL Data Source of type dataset.
 
 
 

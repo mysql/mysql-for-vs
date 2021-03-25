@@ -8,6 +8,8 @@
 - Fixed a bug in the Upgrade Tool where an exception crashed the tool in certain scenarios (Oracle Bug #32398894).
 - Fixed a bug in the MSI installer that prevented the plugin from being uninstalled due to an error when updating the
   installation path registry key (Oracle Bug #31966621).
+- Fixed a bug that caused a null reference exception during execution when creating an SQL Data Source of type dataset
+  (Oracle Bug #30961816).
 
 
 1.2.9
