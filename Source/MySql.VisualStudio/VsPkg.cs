@@ -267,11 +267,14 @@ namespace MySql.Data.VisualStudio
           typeof(MySqlProviderObjectFactory), factory, true);
 
       base.Initialize();
+      Logger.LogInformation("Initialized base package.");
 
       RegisterEditorFactory(new SqlEditorFactory());
+      Logger.LogInformation("Registered editor factory.");
 
       // Load our connections.
       _mysqlConnectionsList = GetMySqlConnections();
+      Logger.LogInformation("Retrieved list of connections.");
 
       // Add our command handlers for menu (commands must exist in the .vsct file).
       OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -308,12 +311,14 @@ namespace MySql.Data.VisualStudio
         OleMenuCommand cmdMenuAddConnection = new OleMenuCommand(cmdAddConnection_Callback, cmdAddConnection);
         mcs.AddCommand(cmdMenuAddConnection);
         var dynamicList = new MySqlConnectionListMenu(ref mcs, _mysqlConnectionsList);
+        Logger.LogInformation("Set commands.");
       }
 
       // Register and initialize language service
       MySqlLanguageService languageService = new MySqlLanguageService();
       languageService.SetSite(this);
       ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
+      Logger.LogInformation("Added language service.");
 
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
       // Set the correct folder name where the Connector/NET assemblies are installed to.
