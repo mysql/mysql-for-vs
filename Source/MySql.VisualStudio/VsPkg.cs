@@ -323,14 +323,15 @@ namespace MySql.Data.VisualStudio
       // Determine whether the environment variable "MYSQLCONNECTOR_ASSEMBLIESPATH" exists.
       // Set the correct folder name where the Connector/NET assemblies are installed to.
 #if NET_461_OR_GREATER
-      string mySqlConnectorAssembliesVersion = "v4.5.2";
+      SetConnectorNETInstallationPath("v4.8");
+      if (string.IsNullOrEmpty(_connectorNETInstallationPath)
+          || !Directory.Exists(_connectorNETInstallationPath))
+      {
+        SetConnectorNETInstallationPath("v4.5.2");
+      }
 #else
-      string mySqlConnectorAssembliesVersion = "v4.0";
+      SetConnectorNETInstallationPath("v4.0");
 #endif
-      string mySqlConnectorPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
-      _connectorNETInstallationPath = !string.IsNullOrEmpty(mySqlConnectorPath)
-                            ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, mySqlConnectorAssembliesVersion)
-                            : string.Empty;
 
       // If the environment variable doesn't exist, create it.
       string mySqlConnectorEnvironmentVariableValue = Environment.GetEnvironmentVariable(_connectorNETInstallationPath, EnvironmentVariableTarget.User);
@@ -403,6 +404,18 @@ namespace MySql.Data.VisualStudio
       InfoDialog.InformationLogo = Properties.Resources.MySQLforVisualStudio;
       PasswordDialog.ApplicationIcon = Properties.Resources.__TemplateIcon;
       PasswordDialog.SecurityLogo = Properties.Resources.MySQLforVisualStudio_Security;
+    }
+
+    /// <summary>
+    /// Sets the installation path of Connector/NET.
+    /// </summary>
+    /// <param name="frameworkVersion">The name of the default framework folder being used by Connector/NET.</param>
+    private void SetConnectorNETInstallationPath(string frameworkVersionFolderName)
+    {
+      string mySqlConnectorPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      _connectorNETInstallationPath = !string.IsNullOrEmpty(mySqlConnectorPath)
+                            ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, frameworkVersionFolderName)
+                            : string.Empty;
     }
 
     private void SetEnvironmentVariableValues(string mySqlConnectorPath)
