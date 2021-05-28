@@ -68,7 +68,7 @@
       </Component>
       <Component Id="MySql.VisualStudio.Updater" Guid="8A408C68-2496-4F74-A496-DC3D5C720F1A" >
         <File Id="MySql.VisualStudio.UpdaterFile" Name="MySql.VisualStudio.Updater.exe"
-              Source="..\Dependencies\MySql\MySql.VisualStudio.Updater.exe" DiskId="1"/>
+              Source="..\Source\MySql.VisualStudio.Updater\bin\Release\MySql.VisualStudio.Updater.exe" DiskId="1"/>
         <RemoveFile Id="MySql.VisualStudio.UpdaterFile" Name="MySql.VisualStudio.Updater.exe" On="uninstall"/>
       </Component>
       <Component Id="MySql.VisualStudio.CustomAction" Guid="63B25D69-8519-4AD0-BFEA-008885E572AF" >
