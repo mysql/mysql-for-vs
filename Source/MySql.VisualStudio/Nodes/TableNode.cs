@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -29,15 +29,11 @@
 using System;
 using System.Data.Common;
 using System.Data;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.DbObjects;
-using System.Text;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Editors;
 using System.Diagnostics;
-using Microsoft.VisualStudio.Shell.Interop;
-using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
@@ -161,6 +157,7 @@ namespace MySql.Data.VisualStudio
           ReleaseHierarchyAccessorConnection();
         }
       }
+
       OnDataLoaded();
     }
 
@@ -171,7 +168,11 @@ namespace MySql.Data.VisualStudio
 
     public override object GetEditor()
     {
+#if NET_472_OR_GREATER
+      return new TableEditorWPF(this);
+#else
       return new TableEditorPane(this);
+#endif
     }
 
     public override void ExecuteCommand(int command)
