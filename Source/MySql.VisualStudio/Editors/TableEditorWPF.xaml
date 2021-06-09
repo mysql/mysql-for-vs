@@ -6,12 +6,12 @@
              xmlns:local="clr-namespace:MySql.Data.VisualStudio.Editors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <Grid x:Name="MainGrid" Loaded="Grid_Loaded">
-    <TabControl x:Name="ColumnPropertiesTabControl" HorizontalAlignment="Left" Height="308" Margin="10,172,0,0" VerticalAlignment="Top">
-      <TabItem x:Name="ColumnPropertiesTab" Header="Column Properties" Loaded="ColumnPropertiesTab_Loaded">
-        <Grid Name="TabGrid" Background="#FFE5E5E5"/>
-      </TabItem>
-    </TabControl>
-    <WrapPanel x:Name="ColumnPanel" HorizontalAlignment="Left" Height="157" Margin="10,10,0,0" VerticalAlignment="Top" Width="374"/>
-  </Grid>
+    <Grid x:Name="MainGrid" Loaded="Grid_Loaded">
+        <TabControl x:Name="ColumnPropertiesTabControl" HorizontalAlignment="Left" Margin="10,172,10,10" VerticalAlignment="Top">
+            <TabItem x:Name="ColumnPropertiesTab" Header="Column Properties" Loaded="ColumnPropertiesTab_Loaded">
+                <Grid Name="TabGrid" Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        <WrapPanel x:Name="ColumnPanel" HorizontalAlignment="Left" Height="157" Margin="10,10,0,0" VerticalAlignment="Top" Width="374"/>
+    </Grid>
 </UserControl>

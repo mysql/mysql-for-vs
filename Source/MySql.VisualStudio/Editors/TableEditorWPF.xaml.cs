@@ -160,6 +160,7 @@ namespace MySql.Data.VisualStudio.Editors
       _columnGrid = new DataGridView();
       _columnGrid.AllowUserToResizeRows = false;
       _columnGrid.AutoGenerateColumns = false;
+      _columnGrid.ColumnHeadersHeight = 50;
       _columnGrid.CellClick += new DataGridViewCellEventHandler(ColumnGrid_CellClick);
       _columnGrid.CellContentClick += new DataGridViewCellEventHandler(ColumnGrid_CellContentClick);
       _columnGrid.CellEnter += new DataGridViewCellEventHandler(ColumnGrid_CellEnter);
@@ -181,14 +182,18 @@ namespace MySql.Data.VisualStudio.Editors
       _typeColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
       _typeColumn.DisplayStyleForCurrentCellOnly = true;
       _typeColumn.HeaderText = "Data Type";
+      _typeColumn.MinimumWidth = 185;
       _typeColumn.Name = "TypeColumn";
+      _typeColumn.Width = 185;
       _dataTypes = Metadata.GetDataTypes(true);
       _typeColumn.Items.AddRange((object[])_dataTypes);
 
       _allowNullColumn = new DataGridViewCheckBoxColumn();
       _allowNullColumn.DataPropertyName = "AllowNull";
       _allowNullColumn.HeaderText = "Allow Nulls";
+      _allowNullColumn.MinimumWidth = 130;
       _allowNullColumn.Name = "AllowNullColumn";
+      _allowNullColumn.Width = 130;
 
       _columnGrid.Columns.AddRange(new DataGridViewColumn[] {
             _nameColumn,
@@ -306,6 +311,11 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="e">The events object.</param>
     private void ColumnGrid_CellLeave(object sender, DataGridViewCellEventArgs e)
     {
+      if (_columnPropertiesGrid == null)
+      {
+        return;
+      }
+
       int index = _columnGrid.CurrentRow.Index;
       if (index >= 0 && index < _tableNode.Table.Columns.Count)
       {
@@ -459,6 +469,7 @@ namespace MySql.Data.VisualStudio.Editors
       TabGrid.Children.Add(host);
       _columnPropertiesGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(ColumnPropertiesGrid_PropertyValueChanged);
       _columnBindingSource.CurrentChanged += new EventHandler(ColumnBindingSource_CurrentChanged);
+      ColumnBindingSource_CurrentChanged(this, EventArgs.Empty);
     }
 
     /// <summary>
