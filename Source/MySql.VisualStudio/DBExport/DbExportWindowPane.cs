@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -34,30 +34,61 @@ using Microsoft.VisualStudio.Data.Services;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
-    [Guid("4469031d-23e0-483c-8566-ce978f6c9a6f")]
+  [Guid("4469031d-23e0-483c-8566-ce978f6c9a6f")]
   public class DbExportWindowPane : ToolWindowPane, IVsWindowFrameNotify2
   {
+    /// <summary>
+    /// The Export Panel control that will be displayed to export MySQL data.
+    /// </summary>
+#if NET_472_OR_GREATER
+    public DbExportPanelWPF DbExportPanelControl;
+#else
     public dbExportPanel DbExportPanelControl;
+#endif
     public List<IVsDataExplorerConnection> Connections {get; set;}
     public string SelectedConnectionName { get; set; }
     public ToolWindowPane WindowHandler { get; set; }
 
     public DbExportWindowPane() : base(null)
     {
-      DbExportPanelControl = new dbExportPanel();            
+#if NET_472_OR_GREATER
+      DbExportPanelControl = new DbExportPanelWPF();
+#else
+      DbExportPanelControl = new dbExportPanel();
+#endif
     }
 
     public void InitializeDbExportPanel()
     {
-      DbExportPanelControl.LoadConnections(Connections, SelectedConnectionName, WindowHandler);        
+#if NET_472_OR_GREATER
+      DbExportPanelControl.DbExportPanel.LoadConnections(Connections, SelectedConnectionName, WindowHandler);
+#else
+      DbExportPanelControl.LoadConnections(Connections, SelectedConnectionName, WindowHandler);
+#endif
     }
 
-    override public IWin32Window Window
+    override public System.Windows.Forms.IWin32Window Window
     {
-      get { return (IWin32Window)DbExportPanelControl; }
+#if NET_472_OR_GREATER
+      get
+      {
+        var helper = new WindowInteropHelper(DbExportPanelControl);
+        if (helper.Handle == IntPtr.Zero)
+        {
+          DbExportPanelControl.Show();
+        }
+
+        var win32Window = new WindowWrapper(helper.Handle);
+        return win32Window;
+      }
+#else
+      get { return (System.Windows.Forms.IWin32Window)DbExportPanelControl; }
+#endif
     }
 
     public int OnClose(ref uint pgrfSaveOptions)
@@ -74,7 +105,11 @@ namespace MySql.Data.VisualStudio.DBExport
         {
           if (yesNoDialog.ShowDialog() == DialogResult.Yes)
           {
+#if NET_472_OR_GREATER
+            DbExportPanelControl.DbExportPanel.SaveSettings(true);
+#else
             DbExportPanelControl.SaveSettings(true);
+#endif
           }
         }
       }

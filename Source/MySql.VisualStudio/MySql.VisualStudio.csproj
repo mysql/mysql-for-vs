@@ -441,9 +441,13 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="DBExport\DbExportPanelWPF.xaml.cs">
+      <DependentUpon>DbExportPanelWPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\TableEditorWPF.xaml.cs">
       <DependentUpon>TableEditorWPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DBExport\WindowWrapper.cs" />
     <Compile Include="Properties\Resources.4.x.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1091,6 +1095,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DBExport\DbExportPanelWPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Editors\TableEditorWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
