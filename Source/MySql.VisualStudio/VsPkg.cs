@@ -703,24 +703,36 @@ namespace MySql.Data.VisualStudio
 
     private void cmdAddConnection_Callback(object sender, EventArgs e)
     {
-      ConnectDialog d = new ConnectDialog();
-      DialogResult r = d.ShowDialog();
-      if (r == DialogResult.Cancel) return;
       try
       {
-        MysqlConnectionSelected = (MySqlConnection)d.Connection;
-        DTE env = (DTE)GetService(typeof(DTE));
-        Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)env);
-        IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
-        seConnectionsMgr.AddConnection(string.Format("{0}({1})", MysqlConnectionSelected.DataSource, MysqlConnectionSelected.Database), Guids.Provider, MysqlConnectionSelected.ConnectionString, false);
-        ItemOperations ItemOp = env.ItemOperations;
-        ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
+        using (ConnectDialog d = new ConnectDialog())
+        {
+          DialogResult r = d.ShowDialog();
+          if (r == DialogResult.Cancel)
+          {
+            return;
+          }
+
+          MysqlConnectionSelected = (MySqlConnection)d.Connection;
+          DTE env = (DTE)GetService(typeof(DTE));
+          Microsoft.VisualStudio.Shell.ServiceProvider sp = new Microsoft.VisualStudio.Shell.ServiceProvider((IOleServiceProvider)env);
+          IVsDataExplorerConnectionManager seConnectionsMgr = (IVsDataExplorerConnectionManager)sp.GetService(typeof(IVsDataExplorerConnectionManager).GUID);
+          seConnectionsMgr.AddConnection(string.Format("{0}({1})", MysqlConnectionSelected.DataSource, MysqlConnectionSelected.Database), Guids.Provider, MysqlConnectionSelected.ConnectionString, false);
+          ItemOperations ItemOp = env.ItemOperations;
+          ItemOp.NewFile(@"MySQL\MySQL Script", null, "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}");
+        }
       }
-      catch (MySqlException)
+      catch(MySqlException)
       {
         Logger.LogError(@"Error establishing the database connection. Check that the server is running, the database exist and the user credentials are valid.", true);
         return;
       }
+      catch(Exception ex)
+      {
+        Logger.LogError(string.Format(Properties.Resources.ConnectionDialogLoadingError, ex.Message), true);
+        return;
+      }
+
       MysqlConnectionSelected = null;
     }
 

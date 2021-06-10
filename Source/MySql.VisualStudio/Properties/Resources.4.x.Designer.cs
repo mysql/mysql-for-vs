@@ -309,6 +309,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There was an error attempting to open the connection dialog: {0}.
+        /// </summary>
+        public static string ConnectionDialogLoadingError {
+            get {
+                return ResourceManager.GetString("ConnectionDialogLoadingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error establishing the database connection. Validate that the connection is open..
         /// </summary>
         public static string ConnectionNotOpenError {
