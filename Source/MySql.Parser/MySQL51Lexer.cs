@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// $ANTLR 3.5.2-rc1 ..\\MySQL51Lexer.g3 2021-03-24 13:23:55
+// $ANTLR 3.5.2-rc1 MySQL51Lexer.g3 2021-06-10 18:00:27
 
 // The variable 'variable' is assigned but its value is never used.
 #pragma warning disable 168, 219
@@ -729,7 +729,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
 
 		OnCreated();
 	}
-	public override string GrammarFileName { get { return "..\\MySQL51Lexer.g3"; } }
+	public override string GrammarFileName { get { return "MySQL51Lexer.g3"; } }
 
 	private static readonly bool[] decisionCanBacktrack = new bool[0];
 
@@ -756,9 +756,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ACCESSIBLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:44:12: ( 'ACCESSIBLE' )
+    		// MySQL51Lexer.g3:44:12: ( 'ACCESSIBLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:44:14: 'ACCESSIBLE'
+    		// MySQL51Lexer.g3:44:14: 'ACCESSIBLE'
     		{
     		DebugLocation(44, 14);
     		Match("ACCESSIBLE"); if (state.failed) return;
@@ -794,9 +794,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ACCOUNT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:45:9: ( 'ACCOUNT' )
+    		// MySQL51Lexer.g3:45:9: ( 'ACCOUNT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:45:11: 'ACCOUNT'
+    		// MySQL51Lexer.g3:45:11: 'ACCOUNT'
     		{
     		DebugLocation(45, 11);
     		Match("ACCOUNT"); if (state.failed) return;
@@ -837,9 +837,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ACTIVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:46:8: ( 'ACTIVE' )
+    		// MySQL51Lexer.g3:46:8: ( 'ACTIVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:46:10: 'ACTIVE'
+    		// MySQL51Lexer.g3:46:10: 'ACTIVE'
     		{
     		DebugLocation(46, 10);
     		Match("ACTIVE"); if (state.failed) return;
@@ -880,9 +880,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ADD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:47:5: ( 'ADD' )
+    		// MySQL51Lexer.g3:47:5: ( 'ADD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:47:7: 'ADD'
+    		// MySQL51Lexer.g3:47:7: 'ADD'
     		{
     		DebugLocation(47, 7);
     		Match("ADD"); if (state.failed) return;
@@ -918,9 +918,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ALL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:48:5: ( 'ALL' )
+    		// MySQL51Lexer.g3:48:5: ( 'ALL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:48:7: 'ALL'
+    		// MySQL51Lexer.g3:48:7: 'ALL'
     		{
     		DebugLocation(48, 7);
     		Match("ALL"); if (state.failed) return;
@@ -956,9 +956,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ALTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:49:7: ( 'ALTER' )
+    		// MySQL51Lexer.g3:49:7: ( 'ALTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:49:9: 'ALTER'
+    		// MySQL51Lexer.g3:49:9: 'ALTER'
     		{
     		DebugLocation(49, 9);
     		Match("ALTER"); if (state.failed) return;
@@ -994,9 +994,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ANALYSE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:50:9: ( 'ANALYSE' )
+    		// MySQL51Lexer.g3:50:9: ( 'ANALYSE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:50:11: 'ANALYSE'
+    		// MySQL51Lexer.g3:50:11: 'ANALYSE'
     		{
     		DebugLocation(50, 11);
     		Match("ANALYSE"); if (state.failed) return;
@@ -1032,9 +1032,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ANALYZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:51:9: ( 'ANALYZE' )
+    		// MySQL51Lexer.g3:51:9: ( 'ANALYZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:51:11: 'ANALYZE'
+    		// MySQL51Lexer.g3:51:11: 'ANALYZE'
     		{
     		DebugLocation(51, 11);
     		Match("ANALYZE"); if (state.failed) return;
@@ -1070,9 +1070,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:52:5: ( 'AND' )
+    		// MySQL51Lexer.g3:52:5: ( 'AND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:52:7: 'AND'
+    		// MySQL51Lexer.g3:52:7: 'AND'
     		{
     		DebugLocation(52, 7);
     		Match("AND"); if (state.failed) return;
@@ -1108,9 +1108,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:53:4: ( 'AS' )
+    		// MySQL51Lexer.g3:53:4: ( 'AS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:53:6: 'AS'
+    		// MySQL51Lexer.g3:53:6: 'AS'
     		{
     		DebugLocation(53, 6);
     		Match("AS"); if (state.failed) return;
@@ -1146,9 +1146,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ASC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:54:5: ( 'ASC' )
+    		// MySQL51Lexer.g3:54:5: ( 'ASC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:54:7: 'ASC'
+    		// MySQL51Lexer.g3:54:7: 'ASC'
     		{
     		DebugLocation(54, 7);
     		Match("ASC"); if (state.failed) return;
@@ -1184,9 +1184,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ASENSITIVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:55:12: ( 'ASENSITIVE' )
+    		// MySQL51Lexer.g3:55:12: ( 'ASENSITIVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:55:14: 'ASENSITIVE'
+    		// MySQL51Lexer.g3:55:14: 'ASENSITIVE'
     		{
     		DebugLocation(55, 14);
     		Match("ASENSITIVE"); if (state.failed) return;
@@ -1222,9 +1222,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AT1;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:56:5: ( '@' )
+    		// MySQL51Lexer.g3:56:5: ( '@' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:56:7: '@'
+    		// MySQL51Lexer.g3:56:7: '@'
     		{
     		DebugLocation(56, 7);
     		Match('@'); if (state.failed) return;
@@ -1259,9 +1259,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AUTOCOMMIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:57:12: ( 'AUTOCOMMIT' )
+    		// MySQL51Lexer.g3:57:12: ( 'AUTOCOMMIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:57:14: 'AUTOCOMMIT'
+    		// MySQL51Lexer.g3:57:14: 'AUTOCOMMIT'
     		{
     		DebugLocation(57, 14);
     		Match("AUTOCOMMIT"); if (state.failed) return;
@@ -1297,9 +1297,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BEFORE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:58:8: ( 'BEFORE' )
+    		// MySQL51Lexer.g3:58:8: ( 'BEFORE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:58:10: 'BEFORE'
+    		// MySQL51Lexer.g3:58:10: 'BEFORE'
     		{
     		DebugLocation(58, 10);
     		Match("BEFORE"); if (state.failed) return;
@@ -1335,9 +1335,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BETWEEN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:59:9: ( 'BETWEEN' )
+    		// MySQL51Lexer.g3:59:9: ( 'BETWEEN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:59:11: 'BETWEEN'
+    		// MySQL51Lexer.g3:59:11: 'BETWEEN'
     		{
     		DebugLocation(59, 11);
     		Match("BETWEEN"); if (state.failed) return;
@@ -1373,9 +1373,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BINARY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:60:8: ( 'BINARY' )
+    		// MySQL51Lexer.g3:60:8: ( 'BINARY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:60:10: 'BINARY'
+    		// MySQL51Lexer.g3:60:10: 'BINARY'
     		{
     		DebugLocation(60, 10);
     		Match("BINARY"); if (state.failed) return;
@@ -1411,9 +1411,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BOTH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:61:6: ( 'BOTH' )
+    		// MySQL51Lexer.g3:61:6: ( 'BOTH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:61:8: 'BOTH'
+    		// MySQL51Lexer.g3:61:8: 'BOTH'
     		{
     		DebugLocation(61, 8);
     		Match("BOTH"); if (state.failed) return;
@@ -1449,9 +1449,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:62:4: ( 'BY' )
+    		// MySQL51Lexer.g3:62:4: ( 'BY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:62:6: 'BY'
+    		// MySQL51Lexer.g3:62:6: 'BY'
     		{
     		DebugLocation(62, 6);
     		Match("BY"); if (state.failed) return;
@@ -1487,9 +1487,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CACHING_SHA2_PASSWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:63:23: ( 'CACHING_SHA2_PASSWORD' )
+    		// MySQL51Lexer.g3:63:23: ( 'CACHING_SHA2_PASSWORD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:63:25: 'CACHING_SHA2_PASSWORD'
+    		// MySQL51Lexer.g3:63:25: 'CACHING_SHA2_PASSWORD'
     		{
     		DebugLocation(63, 25);
     		Match("CACHING_SHA2_PASSWORD"); if (state.failed) return;
@@ -1525,9 +1525,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CALL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:64:6: ( 'CALL' )
+    		// MySQL51Lexer.g3:64:6: ( 'CALL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:64:8: 'CALL'
+    		// MySQL51Lexer.g3:64:8: 'CALL'
     		{
     		DebugLocation(64, 8);
     		Match("CALL"); if (state.failed) return;
@@ -1563,9 +1563,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CASCADE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:65:9: ( 'CASCADE' )
+    		// MySQL51Lexer.g3:65:9: ( 'CASCADE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:65:11: 'CASCADE'
+    		// MySQL51Lexer.g3:65:11: 'CASCADE'
     		{
     		DebugLocation(65, 11);
     		Match("CASCADE"); if (state.failed) return;
@@ -1601,9 +1601,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CASE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:66:6: ( 'CASE' )
+    		// MySQL51Lexer.g3:66:6: ( 'CASE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:66:8: 'CASE'
+    		// MySQL51Lexer.g3:66:8: 'CASE'
     		{
     		DebugLocation(66, 8);
     		Match("CASE"); if (state.failed) return;
@@ -1639,9 +1639,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CATALOG_NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:67:14: ( 'CATALOG_NAME' )
+    		// MySQL51Lexer.g3:67:14: ( 'CATALOG_NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:67:16: 'CATALOG_NAME'
+    		// MySQL51Lexer.g3:67:16: 'CATALOG_NAME'
     		{
     		DebugLocation(67, 16);
     		Match("CATALOG_NAME"); if (state.failed) return;
@@ -1682,9 +1682,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHANNEL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:68:9: ( 'CHANNEL' )
+    		// MySQL51Lexer.g3:68:9: ( 'CHANNEL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:68:11: 'CHANNEL'
+    		// MySQL51Lexer.g3:68:11: 'CHANNEL'
     		{
     		DebugLocation(68, 11);
     		Match("CHANNEL"); if (state.failed) return;
@@ -1720,9 +1720,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHANGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:69:8: ( 'CHANGE' )
+    		// MySQL51Lexer.g3:69:8: ( 'CHANGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:69:10: 'CHANGE'
+    		// MySQL51Lexer.g3:69:10: 'CHANGE'
     		{
     		DebugLocation(69, 10);
     		Match("CHANGE"); if (state.failed) return;
@@ -1758,9 +1758,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHARACTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:70:11: ( 'CHARACTER' )
+    		// MySQL51Lexer.g3:70:11: ( 'CHARACTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:70:13: 'CHARACTER'
+    		// MySQL51Lexer.g3:70:13: 'CHARACTER'
     		{
     		DebugLocation(70, 13);
     		Match("CHARACTER"); if (state.failed) return;
@@ -1796,9 +1796,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHECK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:71:7: ( 'CHECK' )
+    		// MySQL51Lexer.g3:71:7: ( 'CHECK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:71:9: 'CHECK'
+    		// MySQL51Lexer.g3:71:9: 'CHECK'
     		{
     		DebugLocation(71, 9);
     		Match("CHECK"); if (state.failed) return;
@@ -1834,9 +1834,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CLASS_ORIGIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:72:14: ( 'CLASS_ORIGIN' )
+    		// MySQL51Lexer.g3:72:14: ( 'CLASS_ORIGIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:72:16: 'CLASS_ORIGIN'
+    		// MySQL51Lexer.g3:72:16: 'CLASS_ORIGIN'
     		{
     		DebugLocation(72, 16);
     		Match("CLASS_ORIGIN"); if (state.failed) return;
@@ -1877,9 +1877,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLLATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:73:9: ( 'COLLATE' )
+    		// MySQL51Lexer.g3:73:9: ( 'COLLATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:73:11: 'COLLATE'
+    		// MySQL51Lexer.g3:73:11: 'COLLATE'
     		{
     		DebugLocation(73, 11);
     		Match("COLLATE"); if (state.failed) return;
@@ -1915,9 +1915,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLON;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:74:7: ( ':' )
+    		// MySQL51Lexer.g3:74:7: ( ':' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:74:9: ':'
+    		// MySQL51Lexer.g3:74:9: ':'
     		{
     		DebugLocation(74, 9);
     		Match(':'); if (state.failed) return;
@@ -1952,9 +1952,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLUMN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:75:8: ( 'COLUMN' )
+    		// MySQL51Lexer.g3:75:8: ( 'COLUMN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:75:10: 'COLUMN'
+    		// MySQL51Lexer.g3:75:10: 'COLUMN'
     		{
     		DebugLocation(75, 10);
     		Match("COLUMN"); if (state.failed) return;
@@ -1990,9 +1990,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLUMN_FORMAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:76:15: ( 'COLUMN_FORMAT' )
+    		// MySQL51Lexer.g3:76:15: ( 'COLUMN_FORMAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:76:17: 'COLUMN_FORMAT'
+    		// MySQL51Lexer.g3:76:17: 'COLUMN_FORMAT'
     		{
     		DebugLocation(76, 17);
     		Match("COLUMN_FORMAT"); if (state.failed) return;
@@ -2028,9 +2028,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLUMN_NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:77:13: ( 'COLUMN_NAME' )
+    		// MySQL51Lexer.g3:77:13: ( 'COLUMN_NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:77:15: 'COLUMN_NAME'
+    		// MySQL51Lexer.g3:77:15: 'COLUMN_NAME'
     		{
     		DebugLocation(77, 15);
     		Match("COLUMN_NAME"); if (state.failed) return;
@@ -2071,9 +2071,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONDITION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:78:11: ( 'CONDITION' )
+    		// MySQL51Lexer.g3:78:11: ( 'CONDITION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:78:13: 'CONDITION'
+    		// MySQL51Lexer.g3:78:13: 'CONDITION'
     		{
     		DebugLocation(78, 13);
     		Match("CONDITION"); if (state.failed) return;
@@ -2109,9 +2109,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONSTRAINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:79:12: ( 'CONSTRAINT' )
+    		// MySQL51Lexer.g3:79:12: ( 'CONSTRAINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:79:14: 'CONSTRAINT'
+    		// MySQL51Lexer.g3:79:14: 'CONSTRAINT'
     		{
     		DebugLocation(79, 14);
     		Match("CONSTRAINT"); if (state.failed) return;
@@ -2147,9 +2147,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONSTRAINT_CATALOG;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:80:20: ( 'CONSTRAINT_CATALOG' )
+    		// MySQL51Lexer.g3:80:20: ( 'CONSTRAINT_CATALOG' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:80:22: 'CONSTRAINT_CATALOG'
+    		// MySQL51Lexer.g3:80:22: 'CONSTRAINT_CATALOG'
     		{
     		DebugLocation(80, 22);
     		Match("CONSTRAINT_CATALOG"); if (state.failed) return;
@@ -2190,9 +2190,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONSTRAINT_NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:81:20: ( 'CONSTRAINT_NAME' )
+    		// MySQL51Lexer.g3:81:20: ( 'CONSTRAINT_NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:81:22: 'CONSTRAINT_NAME'
+    		// MySQL51Lexer.g3:81:22: 'CONSTRAINT_NAME'
     		{
     		DebugLocation(81, 22);
     		Match("CONSTRAINT_NAME"); if (state.failed) return;
@@ -2233,9 +2233,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONSTRAINT_SCHEMA;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:82:20: ( 'CONSTRAINT_SCHEMA' )
+    		// MySQL51Lexer.g3:82:20: ( 'CONSTRAINT_SCHEMA' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:82:22: 'CONSTRAINT_SCHEMA'
+    		// MySQL51Lexer.g3:82:22: 'CONSTRAINT_SCHEMA'
     		{
     		DebugLocation(82, 22);
     		Match("CONSTRAINT_SCHEMA"); if (state.failed) return;
@@ -2276,9 +2276,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONTINUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:83:10: ( 'CONTINUE' )
+    		// MySQL51Lexer.g3:83:10: ( 'CONTINUE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:83:12: 'CONTINUE'
+    		// MySQL51Lexer.g3:83:12: 'CONTINUE'
     		{
     		DebugLocation(83, 12);
     		Match("CONTINUE"); if (state.failed) return;
@@ -2314,9 +2314,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONVERT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:84:9: ( 'CONVERT' )
+    		// MySQL51Lexer.g3:84:9: ( 'CONVERT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:84:11: 'CONVERT'
+    		// MySQL51Lexer.g3:84:11: 'CONVERT'
     		{
     		DebugLocation(84, 11);
     		Match("CONVERT"); if (state.failed) return;
@@ -2357,9 +2357,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COPY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:85:9: ( 'COPY' )
+    		// MySQL51Lexer.g3:85:9: ( 'COPY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:85:13: 'COPY'
+    		// MySQL51Lexer.g3:85:13: 'COPY'
     		{
     		DebugLocation(85, 13);
     		Match("COPY"); if (state.failed) return;
@@ -2400,9 +2400,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CREATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:86:8: ( 'CREATE' )
+    		// MySQL51Lexer.g3:86:8: ( 'CREATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:86:10: 'CREATE'
+    		// MySQL51Lexer.g3:86:10: 'CREATE'
     		{
     		DebugLocation(86, 10);
     		Match("CREATE"); if (state.failed) return;
@@ -2438,9 +2438,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CROSS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:87:7: ( 'CROSS' )
+    		// MySQL51Lexer.g3:87:7: ( 'CROSS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:87:9: 'CROSS'
+    		// MySQL51Lexer.g3:87:9: 'CROSS'
     		{
     		DebugLocation(87, 9);
     		Match("CROSS"); if (state.failed) return;
@@ -2476,9 +2476,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURRENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:88:9: ( 'CURRENT' )
+    		// MySQL51Lexer.g3:88:9: ( 'CURRENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:88:13: 'CURRENT'
+    		// MySQL51Lexer.g3:88:13: 'CURRENT'
     		{
     		DebugLocation(88, 13);
     		Match("CURRENT"); if (state.failed) return;
@@ -2519,9 +2519,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURRENT_DATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:89:14: ( 'CURRENT_DATE' )
+    		// MySQL51Lexer.g3:89:14: ( 'CURRENT_DATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:89:16: 'CURRENT_DATE'
+    		// MySQL51Lexer.g3:89:16: 'CURRENT_DATE'
     		{
     		DebugLocation(89, 16);
     		Match("CURRENT_DATE"); if (state.failed) return;
@@ -2562,9 +2562,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURRENT_TIME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:90:14: ( 'CURRENT_TIME' )
+    		// MySQL51Lexer.g3:90:14: ( 'CURRENT_TIME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:90:16: 'CURRENT_TIME'
+    		// MySQL51Lexer.g3:90:16: 'CURRENT_TIME'
     		{
     		DebugLocation(90, 16);
     		Match("CURRENT_TIME"); if (state.failed) return;
@@ -2605,9 +2605,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURRENT_TIMESTAMP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:91:19: ( 'CURRENT_TIMESTAMP' )
+    		// MySQL51Lexer.g3:91:19: ( 'CURRENT_TIMESTAMP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:91:21: 'CURRENT_TIMESTAMP'
+    		// MySQL51Lexer.g3:91:21: 'CURRENT_TIMESTAMP'
     		{
     		DebugLocation(91, 21);
     		Match("CURRENT_TIMESTAMP"); if (state.failed) return;
@@ -2648,9 +2648,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURSOR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:92:8: ( 'CURSOR' )
+    		// MySQL51Lexer.g3:92:8: ( 'CURSOR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:92:10: 'CURSOR'
+    		// MySQL51Lexer.g3:92:10: 'CURSOR'
     		{
     		DebugLocation(92, 10);
     		Match("CURSOR"); if (state.failed) return;
@@ -2686,9 +2686,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURSOR_NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:93:13: ( 'CURSOR_NAME' )
+    		// MySQL51Lexer.g3:93:13: ( 'CURSOR_NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:93:15: 'CURSOR_NAME'
+    		// MySQL51Lexer.g3:93:15: 'CURSOR_NAME'
     		{
     		DebugLocation(93, 15);
     		Match("CURSOR_NAME"); if (state.failed) return;
@@ -2729,9 +2729,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATABASE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:94:10: ( 'DATABASE' )
+    		// MySQL51Lexer.g3:94:10: ( 'DATABASE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:94:12: 'DATABASE'
+    		// MySQL51Lexer.g3:94:12: 'DATABASE'
     		{
     		DebugLocation(94, 12);
     		Match("DATABASE"); if (state.failed) return;
@@ -2767,9 +2767,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATABASES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:95:11: ( 'DATABASES' )
+    		// MySQL51Lexer.g3:95:11: ( 'DATABASES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:95:13: 'DATABASES'
+    		// MySQL51Lexer.g3:95:13: 'DATABASES'
     		{
     		DebugLocation(95, 13);
     		Match("DATABASES"); if (state.failed) return;
@@ -2805,9 +2805,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DAY_HOUR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:96:10: ( 'DAY_HOUR' )
+    		// MySQL51Lexer.g3:96:10: ( 'DAY_HOUR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:96:12: 'DAY_HOUR'
+    		// MySQL51Lexer.g3:96:12: 'DAY_HOUR'
     		{
     		DebugLocation(96, 12);
     		Match("DAY_HOUR"); if (state.failed) return;
@@ -2843,9 +2843,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DAY_MICROSECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:97:17: ( 'DAY_MICROSECOND' )
+    		// MySQL51Lexer.g3:97:17: ( 'DAY_MICROSECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:97:19: 'DAY_MICROSECOND'
+    		// MySQL51Lexer.g3:97:19: 'DAY_MICROSECOND'
     		{
     		DebugLocation(97, 19);
     		Match("DAY_MICROSECOND"); if (state.failed) return;
@@ -2881,9 +2881,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DAY_MINUTE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:98:12: ( 'DAY_MINUTE' )
+    		// MySQL51Lexer.g3:98:12: ( 'DAY_MINUTE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:98:14: 'DAY_MINUTE'
+    		// MySQL51Lexer.g3:98:14: 'DAY_MINUTE'
     		{
     		DebugLocation(98, 14);
     		Match("DAY_MINUTE"); if (state.failed) return;
@@ -2919,9 +2919,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DAY_SECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:99:12: ( 'DAY_SECOND' )
+    		// MySQL51Lexer.g3:99:12: ( 'DAY_SECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:99:14: 'DAY_SECOND'
+    		// MySQL51Lexer.g3:99:14: 'DAY_SECOND'
     		{
     		DebugLocation(99, 14);
     		Match("DAY_SECOND"); if (state.failed) return;
@@ -2957,9 +2957,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DEC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:100:5: ( 'DEC' )
+    		// MySQL51Lexer.g3:100:5: ( 'DEC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:100:7: 'DEC'
+    		// MySQL51Lexer.g3:100:7: 'DEC'
     		{
     		DebugLocation(100, 7);
     		Match("DEC"); if (state.failed) return;
@@ -2995,9 +2995,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DECLARE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:101:9: ( 'DECLARE' )
+    		// MySQL51Lexer.g3:101:9: ( 'DECLARE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:101:11: 'DECLARE'
+    		// MySQL51Lexer.g3:101:11: 'DECLARE'
     		{
     		DebugLocation(101, 11);
     		Match("DECLARE"); if (state.failed) return;
@@ -3033,9 +3033,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DEFAULT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:102:9: ( 'DEFAULT' )
+    		// MySQL51Lexer.g3:102:9: ( 'DEFAULT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:102:11: 'DEFAULT'
+    		// MySQL51Lexer.g3:102:11: 'DEFAULT'
     		{
     		DebugLocation(102, 11);
     		Match("DEFAULT"); if (state.failed) return;
@@ -3076,9 +3076,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DELAYED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:103:9: ( 'DELAYED' )
+    		// MySQL51Lexer.g3:103:9: ( 'DELAYED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:103:11: 'DELAYED'
+    		// MySQL51Lexer.g3:103:11: 'DELAYED'
     		{
     		DebugLocation(103, 11);
     		Match("DELAYED"); if (state.failed) return;
@@ -3114,9 +3114,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DELETE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:104:8: ( 'DELETE' )
+    		// MySQL51Lexer.g3:104:8: ( 'DELETE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:104:10: 'DELETE'
+    		// MySQL51Lexer.g3:104:10: 'DELETE'
     		{
     		DebugLocation(104, 10);
     		Match("DELETE"); if (state.failed) return;
@@ -3152,9 +3152,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DESC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:105:6: ( 'DESC' )
+    		// MySQL51Lexer.g3:105:6: ( 'DESC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:105:8: 'DESC'
+    		// MySQL51Lexer.g3:105:8: 'DESC'
     		{
     		DebugLocation(105, 8);
     		Match("DESC"); if (state.failed) return;
@@ -3190,9 +3190,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DESCRIBE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:106:10: ( 'DESCRIBE' )
+    		// MySQL51Lexer.g3:106:10: ( 'DESCRIBE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:106:12: 'DESCRIBE'
+    		// MySQL51Lexer.g3:106:12: 'DESCRIBE'
     		{
     		DebugLocation(106, 12);
     		Match("DESCRIBE"); if (state.failed) return;
@@ -3228,9 +3228,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DETERMINISTIC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:107:15: ( 'DETERMINISTIC' )
+    		// MySQL51Lexer.g3:107:15: ( 'DETERMINISTIC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:107:17: 'DETERMINISTIC'
+    		// MySQL51Lexer.g3:107:17: 'DETERMINISTIC'
     		{
     		DebugLocation(107, 17);
     		Match("DETERMINISTIC"); if (state.failed) return;
@@ -3266,9 +3266,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DIAGNOSTICS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:108:13: ( 'DIAGNOSTICS' )
+    		// MySQL51Lexer.g3:108:13: ( 'DIAGNOSTICS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:108:17: 'DIAGNOSTICS'
+    		// MySQL51Lexer.g3:108:17: 'DIAGNOSTICS'
     		{
     		DebugLocation(108, 17);
     		Match("DIAGNOSTICS"); if (state.failed) return;
@@ -3309,9 +3309,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DISTINCT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:109:10: ( 'DISTINCT' )
+    		// MySQL51Lexer.g3:109:10: ( 'DISTINCT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:109:12: 'DISTINCT'
+    		// MySQL51Lexer.g3:109:12: 'DISTINCT'
     		{
     		DebugLocation(109, 12);
     		Match("DISTINCT"); if (state.failed) return;
@@ -3347,9 +3347,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DISTINCTROW;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:110:13: ( 'DISTINCTROW' )
+    		// MySQL51Lexer.g3:110:13: ( 'DISTINCTROW' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:110:15: 'DISTINCTROW'
+    		// MySQL51Lexer.g3:110:15: 'DISTINCTROW'
     		{
     		DebugLocation(110, 15);
     		Match("DISTINCTROW"); if (state.failed) return;
@@ -3385,9 +3385,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DIV;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:111:5: ( 'DIV' )
+    		// MySQL51Lexer.g3:111:5: ( 'DIV' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:111:7: 'DIV'
+    		// MySQL51Lexer.g3:111:7: 'DIV'
     		{
     		DebugLocation(111, 7);
     		Match("DIV"); if (state.failed) return;
@@ -3423,9 +3423,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DROP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:112:6: ( 'DROP' )
+    		// MySQL51Lexer.g3:112:6: ( 'DROP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:112:8: 'DROP'
+    		// MySQL51Lexer.g3:112:8: 'DROP'
     		{
     		DebugLocation(112, 8);
     		Match("DROP"); if (state.failed) return;
@@ -3461,9 +3461,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DUAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:113:6: ( 'DUAL' )
+    		// MySQL51Lexer.g3:113:6: ( 'DUAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:113:8: 'DUAL'
+    		// MySQL51Lexer.g3:113:8: 'DUAL'
     		{
     		DebugLocation(113, 8);
     		Match("DUAL"); if (state.failed) return;
@@ -3499,9 +3499,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EACH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:114:6: ( 'EACH' )
+    		// MySQL51Lexer.g3:114:6: ( 'EACH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:114:8: 'EACH'
+    		// MySQL51Lexer.g3:114:8: 'EACH'
     		{
     		DebugLocation(114, 8);
     		Match("EACH"); if (state.failed) return;
@@ -3537,9 +3537,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ELSE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:115:6: ( 'ELSE' )
+    		// MySQL51Lexer.g3:115:6: ( 'ELSE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:115:8: 'ELSE'
+    		// MySQL51Lexer.g3:115:8: 'ELSE'
     		{
     		DebugLocation(115, 8);
     		Match("ELSE"); if (state.failed) return;
@@ -3575,9 +3575,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ELSEIF;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:116:8: ( 'ELSEIF' )
+    		// MySQL51Lexer.g3:116:8: ( 'ELSEIF' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:116:10: 'ELSEIF'
+    		// MySQL51Lexer.g3:116:10: 'ELSEIF'
     		{
     		DebugLocation(116, 10);
     		Match("ELSEIF"); if (state.failed) return;
@@ -3613,9 +3613,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ENCLOSED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:117:10: ( 'ENCLOSED' )
+    		// MySQL51Lexer.g3:117:10: ( 'ENCLOSED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:117:12: 'ENCLOSED'
+    		// MySQL51Lexer.g3:117:12: 'ENCLOSED'
     		{
     		DebugLocation(117, 12);
     		Match("ENCLOSED"); if (state.failed) return;
@@ -3651,9 +3651,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ESCAPED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:118:9: ( 'ESCAPED' )
+    		// MySQL51Lexer.g3:118:9: ( 'ESCAPED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:118:11: 'ESCAPED'
+    		// MySQL51Lexer.g3:118:11: 'ESCAPED'
     		{
     		DebugLocation(118, 11);
     		Match("ESCAPED"); if (state.failed) return;
@@ -3689,9 +3689,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXCHANGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:119:10: ( 'EXCHANGE' )
+    		// MySQL51Lexer.g3:119:10: ( 'EXCHANGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:119:13: 'EXCHANGE'
+    		// MySQL51Lexer.g3:119:13: 'EXCHANGE'
     		{
     		DebugLocation(119, 13);
     		Match("EXCHANGE"); if (state.failed) return;
@@ -3732,9 +3732,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXISTS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:120:8: ( 'EXISTS' )
+    		// MySQL51Lexer.g3:120:8: ( 'EXISTS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:120:10: 'EXISTS'
+    		// MySQL51Lexer.g3:120:10: 'EXISTS'
     		{
     		DebugLocation(120, 10);
     		Match("EXISTS"); if (state.failed) return;
@@ -3770,9 +3770,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:121:6: ( 'EXIT' )
+    		// MySQL51Lexer.g3:121:6: ( 'EXIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:121:8: 'EXIT'
+    		// MySQL51Lexer.g3:121:8: 'EXIT'
     		{
     		DebugLocation(121, 8);
     		Match("EXIT"); if (state.failed) return;
@@ -3808,9 +3808,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXPIRE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:122:8: ( 'EXPIRE' )
+    		// MySQL51Lexer.g3:122:8: ( 'EXPIRE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:122:10: 'EXPIRE'
+    		// MySQL51Lexer.g3:122:10: 'EXPIRE'
     		{
     		DebugLocation(122, 10);
     		Match("EXPIRE"); if (state.failed) return;
@@ -3851,9 +3851,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXPLAIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:123:9: ( 'EXPLAIN' )
+    		// MySQL51Lexer.g3:123:9: ( 'EXPLAIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:123:11: 'EXPLAIN'
+    		// MySQL51Lexer.g3:123:11: 'EXPLAIN'
     		{
     		DebugLocation(123, 11);
     		Match("EXPLAIN"); if (state.failed) return;
@@ -3889,9 +3889,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FALSE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:124:7: ( 'FALSE' )
+    		// MySQL51Lexer.g3:124:7: ( 'FALSE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:124:9: 'FALSE'
+    		// MySQL51Lexer.g3:124:9: 'FALSE'
     		{
     		DebugLocation(124, 9);
     		Match("FALSE"); if (state.failed) return;
@@ -3927,9 +3927,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FETCH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:125:7: ( 'FETCH' )
+    		// MySQL51Lexer.g3:125:7: ( 'FETCH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:125:9: 'FETCH'
+    		// MySQL51Lexer.g3:125:9: 'FETCH'
     		{
     		DebugLocation(125, 9);
     		Match("FETCH"); if (state.failed) return;
@@ -3965,9 +3965,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FLOAT4;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:126:8: ( 'FLOAT4' )
+    		// MySQL51Lexer.g3:126:8: ( 'FLOAT4' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:126:10: 'FLOAT4'
+    		// MySQL51Lexer.g3:126:10: 'FLOAT4'
     		{
     		DebugLocation(126, 10);
     		Match("FLOAT4"); if (state.failed) return;
@@ -4003,9 +4003,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FLOAT8;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:127:8: ( 'FLOAT8' )
+    		// MySQL51Lexer.g3:127:8: ( 'FLOAT8' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:127:10: 'FLOAT8'
+    		// MySQL51Lexer.g3:127:10: 'FLOAT8'
     		{
     		DebugLocation(127, 10);
     		Match("FLOAT8"); if (state.failed) return;
@@ -4041,9 +4041,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FOLLOWS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:128:9: ( 'FOLLOWS' )
+    		// MySQL51Lexer.g3:128:9: ( 'FOLLOWS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:128:11: 'FOLLOWS'
+    		// MySQL51Lexer.g3:128:11: 'FOLLOWS'
     		{
     		DebugLocation(128, 11);
     		Match("FOLLOWS"); if (state.failed) return;
@@ -4084,9 +4084,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FOR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:129:5: ( 'FOR' )
+    		// MySQL51Lexer.g3:129:5: ( 'FOR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:129:7: 'FOR'
+    		// MySQL51Lexer.g3:129:7: 'FOR'
     		{
     		DebugLocation(129, 7);
     		Match("FOR"); if (state.failed) return;
@@ -4122,9 +4122,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FORCE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:130:7: ( 'FORCE' )
+    		// MySQL51Lexer.g3:130:7: ( 'FORCE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:130:9: 'FORCE'
+    		// MySQL51Lexer.g3:130:9: 'FORCE'
     		{
     		DebugLocation(130, 9);
     		Match("FORCE"); if (state.failed) return;
@@ -4160,9 +4160,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FORMAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:131:9: ( 'FORMAT' )
+    		// MySQL51Lexer.g3:131:9: ( 'FORMAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:131:13: 'FORMAT'
+    		// MySQL51Lexer.g3:131:13: 'FORMAT'
     		{
     		DebugLocation(131, 13);
     		Match("FORMAT"); if (state.failed) return;
@@ -4203,9 +4203,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FOREIGN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:132:9: ( 'FOREIGN' )
+    		// MySQL51Lexer.g3:132:9: ( 'FOREIGN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:132:11: 'FOREIGN'
+    		// MySQL51Lexer.g3:132:11: 'FOREIGN'
     		{
     		DebugLocation(132, 11);
     		Match("FOREIGN"); if (state.failed) return;
@@ -4241,9 +4241,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FROM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:133:6: ( 'FROM' )
+    		// MySQL51Lexer.g3:133:6: ( 'FROM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:133:8: 'FROM'
+    		// MySQL51Lexer.g3:133:8: 'FROM'
     		{
     		DebugLocation(133, 8);
     		Match("FROM"); if (state.failed) return;
@@ -4279,9 +4279,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FULLTEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:134:10: ( 'FULLTEXT' )
+    		// MySQL51Lexer.g3:134:10: ( 'FULLTEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:134:12: 'FULLTEXT'
+    		// MySQL51Lexer.g3:134:12: 'FULLTEXT'
     		{
     		DebugLocation(134, 12);
     		Match("FULLTEXT"); if (state.failed) return;
@@ -4317,9 +4317,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GET;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:135:9: ( 'GET' )
+    		// MySQL51Lexer.g3:135:9: ( 'GET' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:135:13: 'GET'
+    		// MySQL51Lexer.g3:135:13: 'GET'
     		{
     		DebugLocation(135, 13);
     		Match("GET"); if (state.failed) return;
@@ -4360,9 +4360,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GOTO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:136:6: ( 'GOTO' )
+    		// MySQL51Lexer.g3:136:6: ( 'GOTO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:136:8: 'GOTO'
+    		// MySQL51Lexer.g3:136:8: 'GOTO'
     		{
     		DebugLocation(136, 8);
     		Match("GOTO"); if (state.failed) return;
@@ -4398,9 +4398,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GRANT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:137:7: ( 'GRANT' )
+    		// MySQL51Lexer.g3:137:7: ( 'GRANT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:137:9: 'GRANT'
+    		// MySQL51Lexer.g3:137:9: 'GRANT'
     		{
     		DebugLocation(137, 9);
     		Match("GRANT"); if (state.failed) return;
@@ -4436,9 +4436,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GROUP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:138:7: ( 'GROUP' )
+    		// MySQL51Lexer.g3:138:7: ( 'GROUP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:138:9: 'GROUP'
+    		// MySQL51Lexer.g3:138:9: 'GROUP'
     		{
     		DebugLocation(138, 9);
     		Match("GROUP"); if (state.failed) return;
@@ -4474,9 +4474,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HAVING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:139:8: ( 'HAVING' )
+    		// MySQL51Lexer.g3:139:8: ( 'HAVING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:139:10: 'HAVING'
+    		// MySQL51Lexer.g3:139:10: 'HAVING'
     		{
     		DebugLocation(139, 10);
     		Match("HAVING"); if (state.failed) return;
@@ -4512,9 +4512,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HISTORY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:140:9: ( 'HISTORY' )
+    		// MySQL51Lexer.g3:140:9: ( 'HISTORY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:140:11: 'HISTORY'
+    		// MySQL51Lexer.g3:140:11: 'HISTORY'
     		{
     		DebugLocation(140, 11);
     		Match("HISTORY"); if (state.failed) return;
@@ -4555,9 +4555,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HIGH_PRIORITY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:141:15: ( 'HIGH_PRIORITY' )
+    		// MySQL51Lexer.g3:141:15: ( 'HIGH_PRIORITY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:141:17: 'HIGH_PRIORITY'
+    		// MySQL51Lexer.g3:141:17: 'HIGH_PRIORITY'
     		{
     		DebugLocation(141, 17);
     		Match("HIGH_PRIORITY"); if (state.failed) return;
@@ -4593,9 +4593,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HOUR_MICROSECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:142:18: ( 'HOUR_MICROSECOND' )
+    		// MySQL51Lexer.g3:142:18: ( 'HOUR_MICROSECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:142:20: 'HOUR_MICROSECOND'
+    		// MySQL51Lexer.g3:142:20: 'HOUR_MICROSECOND'
     		{
     		DebugLocation(142, 20);
     		Match("HOUR_MICROSECOND"); if (state.failed) return;
@@ -4631,9 +4631,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HOUR_MINUTE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:143:13: ( 'HOUR_MINUTE' )
+    		// MySQL51Lexer.g3:143:13: ( 'HOUR_MINUTE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:143:15: 'HOUR_MINUTE'
+    		// MySQL51Lexer.g3:143:15: 'HOUR_MINUTE'
     		{
     		DebugLocation(143, 15);
     		Match("HOUR_MINUTE"); if (state.failed) return;
@@ -4669,9 +4669,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HOUR_SECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:144:13: ( 'HOUR_SECOND' )
+    		// MySQL51Lexer.g3:144:13: ( 'HOUR_SECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:144:15: 'HOUR_SECOND'
+    		// MySQL51Lexer.g3:144:15: 'HOUR_SECOND'
     		{
     		DebugLocation(144, 15);
     		Match("HOUR_SECOND"); if (state.failed) return;
@@ -4707,9 +4707,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IF;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:145:4: ( 'IF' )
+    		// MySQL51Lexer.g3:145:4: ( 'IF' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:145:6: 'IF'
+    		// MySQL51Lexer.g3:145:6: 'IF'
     		{
     		DebugLocation(145, 6);
     		Match("IF"); if (state.failed) return;
@@ -4745,9 +4745,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IFNULL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:146:8: ( 'IFNULL' )
+    		// MySQL51Lexer.g3:146:8: ( 'IFNULL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:146:10: 'IFNULL'
+    		// MySQL51Lexer.g3:146:10: 'IFNULL'
     		{
     		DebugLocation(146, 10);
     		Match("IFNULL"); if (state.failed) return;
@@ -4783,9 +4783,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IGNORE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:147:8: ( 'IGNORE' )
+    		// MySQL51Lexer.g3:147:8: ( 'IGNORE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:147:10: 'IGNORE'
+    		// MySQL51Lexer.g3:147:10: 'IGNORE'
     		{
     		DebugLocation(147, 10);
     		Match("IGNORE"); if (state.failed) return;
@@ -4821,9 +4821,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IGNORE_SERVER_IDS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:148:19: ( 'IGNORE_SERVER_IDS' )
+    		// MySQL51Lexer.g3:148:19: ( 'IGNORE_SERVER_IDS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:148:21: 'IGNORE_SERVER_IDS'
+    		// MySQL51Lexer.g3:148:21: 'IGNORE_SERVER_IDS'
     		{
     		DebugLocation(148, 21);
     		Match("IGNORE_SERVER_IDS"); if (state.failed) return;
@@ -4859,9 +4859,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:149:4: ( 'IN' )
+    		// MySQL51Lexer.g3:149:4: ( 'IN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:149:6: 'IN'
+    		// MySQL51Lexer.g3:149:6: 'IN'
     		{
     		DebugLocation(149, 6);
     		Match("IN"); if (state.failed) return;
@@ -4902,9 +4902,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INACTIVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:150:10: ( 'INACTIVE' )
+    		// MySQL51Lexer.g3:150:10: ( 'INACTIVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:150:12: 'INACTIVE'
+    		// MySQL51Lexer.g3:150:12: 'INACTIVE'
     		{
     		DebugLocation(150, 12);
     		Match("INACTIVE"); if (state.failed) return;
@@ -4945,9 +4945,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INDEX;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:151:7: ( 'INDEX' )
+    		// MySQL51Lexer.g3:151:7: ( 'INDEX' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:151:9: 'INDEX'
+    		// MySQL51Lexer.g3:151:9: 'INDEX'
     		{
     		DebugLocation(151, 9);
     		Match("INDEX"); if (state.failed) return;
@@ -4983,9 +4983,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:152:8: ( 'INFILE' )
+    		// MySQL51Lexer.g3:152:8: ( 'INFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:152:10: 'INFILE'
+    		// MySQL51Lexer.g3:152:10: 'INFILE'
     		{
     		DebugLocation(152, 10);
     		Match("INFILE"); if (state.failed) return;
@@ -5021,9 +5021,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INNER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:153:7: ( 'INNER' )
+    		// MySQL51Lexer.g3:153:7: ( 'INNER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:153:9: 'INNER'
+    		// MySQL51Lexer.g3:153:9: 'INNER'
     		{
     		DebugLocation(153, 9);
     		Match("INNER"); if (state.failed) return;
@@ -5059,9 +5059,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INNODB;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:154:9: ( 'INNODB' )
+    		// MySQL51Lexer.g3:154:9: ( 'INNODB' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:154:11: 'INNODB'
+    		// MySQL51Lexer.g3:154:11: 'INNODB'
     		{
     		DebugLocation(154, 11);
     		Match("INNODB"); if (state.failed) return;
@@ -5097,9 +5097,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INOUT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:155:7: ( 'INOUT' )
+    		// MySQL51Lexer.g3:155:7: ( 'INOUT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:155:9: 'INOUT'
+    		// MySQL51Lexer.g3:155:9: 'INOUT'
     		{
     		DebugLocation(155, 9);
     		Match("INOUT"); if (state.failed) return;
@@ -5135,9 +5135,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INPLACE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:156:9: ( 'INPLACE' )
+    		// MySQL51Lexer.g3:156:9: ( 'INPLACE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:156:12: 'INPLACE'
+    		// MySQL51Lexer.g3:156:12: 'INPLACE'
     		{
     		DebugLocation(156, 12);
     		Match("INPLACE"); if (state.failed) return;
@@ -5178,9 +5178,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INSENSITIVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:157:13: ( 'INSENSITIVE' )
+    		// MySQL51Lexer.g3:157:13: ( 'INSENSITIVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:157:15: 'INSENSITIVE'
+    		// MySQL51Lexer.g3:157:15: 'INSENSITIVE'
     		{
     		DebugLocation(157, 15);
     		Match("INSENSITIVE"); if (state.failed) return;
@@ -5216,9 +5216,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INSTANCE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:158:10: ( 'INSTANCE' )
+    		// MySQL51Lexer.g3:158:10: ( 'INSTANCE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:158:12: 'INSTANCE'
+    		// MySQL51Lexer.g3:158:12: 'INSTANCE'
     		{
     		DebugLocation(158, 12);
     		Match("INSTANCE"); if (state.failed) return;
@@ -5259,9 +5259,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT1;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:159:6: ( 'INT1' )
+    		// MySQL51Lexer.g3:159:6: ( 'INT1' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:159:8: 'INT1'
+    		// MySQL51Lexer.g3:159:8: 'INT1'
     		{
     		DebugLocation(159, 8);
     		Match("INT1"); if (state.failed) return;
@@ -5297,9 +5297,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT2;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:160:6: ( 'INT2' )
+    		// MySQL51Lexer.g3:160:6: ( 'INT2' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:160:8: 'INT2'
+    		// MySQL51Lexer.g3:160:8: 'INT2'
     		{
     		DebugLocation(160, 8);
     		Match("INT2"); if (state.failed) return;
@@ -5335,9 +5335,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT3;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:161:6: ( 'INT3' )
+    		// MySQL51Lexer.g3:161:6: ( 'INT3' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:161:8: 'INT3'
+    		// MySQL51Lexer.g3:161:8: 'INT3'
     		{
     		DebugLocation(161, 8);
     		Match("INT3"); if (state.failed) return;
@@ -5373,9 +5373,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT4;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:162:6: ( 'INT4' )
+    		// MySQL51Lexer.g3:162:6: ( 'INT4' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:162:8: 'INT4'
+    		// MySQL51Lexer.g3:162:8: 'INT4'
     		{
     		DebugLocation(162, 8);
     		Match("INT4"); if (state.failed) return;
@@ -5411,9 +5411,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT8;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:163:6: ( 'INT8' )
+    		// MySQL51Lexer.g3:163:6: ( 'INT8' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:163:8: 'INT8'
+    		// MySQL51Lexer.g3:163:8: 'INT8'
     		{
     		DebugLocation(163, 8);
     		Match("INT8"); if (state.failed) return;
@@ -5449,9 +5449,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INTO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:164:6: ( 'INTO' )
+    		// MySQL51Lexer.g3:164:6: ( 'INTO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:164:8: 'INTO'
+    		// MySQL51Lexer.g3:164:8: 'INTO'
     		{
     		DebugLocation(164, 8);
     		Match("INTO"); if (state.failed) return;
@@ -5487,9 +5487,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IO_THREAD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:165:11: ( 'IO_THREAD' )
+    		// MySQL51Lexer.g3:165:11: ( 'IO_THREAD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:165:13: 'IO_THREAD'
+    		// MySQL51Lexer.g3:165:13: 'IO_THREAD'
     		{
     		DebugLocation(165, 13);
     		Match("IO_THREAD"); if (state.failed) return;
@@ -5525,9 +5525,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:166:5: ( 'IS' )
+    		// MySQL51Lexer.g3:166:5: ( 'IS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:166:7: 'IS'
+    		// MySQL51Lexer.g3:166:7: 'IS'
     		{
     		DebugLocation(166, 7);
     		Match("IS"); if (state.failed) return;
@@ -5563,9 +5563,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ITERATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:167:9: ( 'ITERATE' )
+    		// MySQL51Lexer.g3:167:9: ( 'ITERATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:167:11: 'ITERATE'
+    		// MySQL51Lexer.g3:167:11: 'ITERATE'
     		{
     		DebugLocation(167, 11);
     		Match("ITERATE"); if (state.failed) return;
@@ -5601,9 +5601,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = JOIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:168:6: ( 'JOIN' )
+    		// MySQL51Lexer.g3:168:6: ( 'JOIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:168:8: 'JOIN'
+    		// MySQL51Lexer.g3:168:8: 'JOIN'
     		{
     		DebugLocation(168, 8);
     		Match("JOIN"); if (state.failed) return;
@@ -5639,9 +5639,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = JSON;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:169:9: ( 'JSON' )
+    		// MySQL51Lexer.g3:169:9: ( 'JSON' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:169:13: 'JSON'
+    		// MySQL51Lexer.g3:169:13: 'JSON'
     		{
     		DebugLocation(169, 13);
     		Match("JSON"); if (state.failed) return;
@@ -5682,9 +5682,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = KEY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:170:6: ( 'KEY' )
+    		// MySQL51Lexer.g3:170:6: ( 'KEY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:170:8: 'KEY'
+    		// MySQL51Lexer.g3:170:8: 'KEY'
     		{
     		DebugLocation(170, 8);
     		Match("KEY"); if (state.failed) return;
@@ -5720,9 +5720,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = KEYS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:171:6: ( 'KEYS' )
+    		// MySQL51Lexer.g3:171:6: ( 'KEYS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:171:8: 'KEYS'
+    		// MySQL51Lexer.g3:171:8: 'KEYS'
     		{
     		DebugLocation(171, 8);
     		Match("KEYS"); if (state.failed) return;
@@ -5758,9 +5758,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = KILL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:172:6: ( 'KILL' )
+    		// MySQL51Lexer.g3:172:6: ( 'KILL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:172:8: 'KILL'
+    		// MySQL51Lexer.g3:172:8: 'KILL'
     		{
     		DebugLocation(172, 8);
     		Match("KILL"); if (state.failed) return;
@@ -5796,9 +5796,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LABEL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:173:7: ( 'LABEL' )
+    		// MySQL51Lexer.g3:173:7: ( 'LABEL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:173:9: 'LABEL'
+    		// MySQL51Lexer.g3:173:9: 'LABEL'
     		{
     		DebugLocation(173, 9);
     		Match("LABEL"); if (state.failed) return;
@@ -5834,9 +5834,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LEADING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:174:9: ( 'LEADING' )
+    		// MySQL51Lexer.g3:174:9: ( 'LEADING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:174:11: 'LEADING'
+    		// MySQL51Lexer.g3:174:11: 'LEADING'
     		{
     		DebugLocation(174, 11);
     		Match("LEADING"); if (state.failed) return;
@@ -5872,9 +5872,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LEAVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:175:7: ( 'LEAVE' )
+    		// MySQL51Lexer.g3:175:7: ( 'LEAVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:175:9: 'LEAVE'
+    		// MySQL51Lexer.g3:175:9: 'LEAVE'
     		{
     		DebugLocation(175, 9);
     		Match("LEAVE"); if (state.failed) return;
@@ -5910,9 +5910,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LIKE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:176:6: ( 'LIKE' )
+    		// MySQL51Lexer.g3:176:6: ( 'LIKE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:176:8: 'LIKE'
+    		// MySQL51Lexer.g3:176:8: 'LIKE'
     		{
     		DebugLocation(176, 8);
     		Match("LIKE"); if (state.failed) return;
@@ -5948,9 +5948,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LIMIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:177:7: ( 'LIMIT' )
+    		// MySQL51Lexer.g3:177:7: ( 'LIMIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:177:9: 'LIMIT'
+    		// MySQL51Lexer.g3:177:9: 'LIMIT'
     		{
     		DebugLocation(177, 9);
     		Match("LIMIT"); if (state.failed) return;
@@ -5986,9 +5986,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LINEAR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:178:8: ( 'LINEAR' )
+    		// MySQL51Lexer.g3:178:8: ( 'LINEAR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:178:10: 'LINEAR'
+    		// MySQL51Lexer.g3:178:10: 'LINEAR'
     		{
     		DebugLocation(178, 10);
     		Match("LINEAR"); if (state.failed) return;
@@ -6024,9 +6024,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LINES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:179:7: ( 'LINES' )
+    		// MySQL51Lexer.g3:179:7: ( 'LINES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:179:9: 'LINES'
+    		// MySQL51Lexer.g3:179:9: 'LINES'
     		{
     		DebugLocation(179, 9);
     		Match("LINES"); if (state.failed) return;
@@ -6062,9 +6062,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOAD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:180:6: ( 'LOAD' )
+    		// MySQL51Lexer.g3:180:6: ( 'LOAD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:180:8: 'LOAD'
+    		// MySQL51Lexer.g3:180:8: 'LOAD'
     		{
     		DebugLocation(180, 8);
     		Match("LOAD"); if (state.failed) return;
@@ -6100,9 +6100,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOCALTIME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:181:11: ( 'LOCALTIME' )
+    		// MySQL51Lexer.g3:181:11: ( 'LOCALTIME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:181:13: 'LOCALTIME'
+    		// MySQL51Lexer.g3:181:13: 'LOCALTIME'
     		{
     		DebugLocation(181, 13);
     		Match("LOCALTIME"); if (state.failed) return;
@@ -6143,9 +6143,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOCALTIMESTAMP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:182:16: ( 'LOCALTIMESTAMP' )
+    		// MySQL51Lexer.g3:182:16: ( 'LOCALTIMESTAMP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:182:18: 'LOCALTIMESTAMP'
+    		// MySQL51Lexer.g3:182:18: 'LOCALTIMESTAMP'
     		{
     		DebugLocation(182, 18);
     		Match("LOCALTIMESTAMP"); if (state.failed) return;
@@ -6186,9 +6186,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOCK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:183:6: ( 'LOCK' )
+    		// MySQL51Lexer.g3:183:6: ( 'LOCK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:183:8: 'LOCK'
+    		// MySQL51Lexer.g3:183:8: 'LOCK'
     		{
     		DebugLocation(183, 8);
     		Match("LOCK"); if (state.failed) return;
@@ -6224,9 +6224,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LONG;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:184:6: ( 'LONG' )
+    		// MySQL51Lexer.g3:184:6: ( 'LONG' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:184:8: 'LONG'
+    		// MySQL51Lexer.g3:184:8: 'LONG'
     		{
     		DebugLocation(184, 8);
     		Match("LONG"); if (state.failed) return;
@@ -6262,9 +6262,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOOP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:185:6: ( 'LOOP' )
+    		// MySQL51Lexer.g3:185:6: ( 'LOOP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:185:8: 'LOOP'
+    		// MySQL51Lexer.g3:185:8: 'LOOP'
     		{
     		DebugLocation(185, 8);
     		Match("LOOP"); if (state.failed) return;
@@ -6300,9 +6300,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOW_PRIORITY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:186:14: ( 'LOW_PRIORITY' )
+    		// MySQL51Lexer.g3:186:14: ( 'LOW_PRIORITY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:186:16: 'LOW_PRIORITY'
+    		// MySQL51Lexer.g3:186:16: 'LOW_PRIORITY'
     		{
     		DebugLocation(186, 16);
     		Match("LOW_PRIORITY"); if (state.failed) return;
@@ -6338,9 +6338,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL_VERIFY_SERVER_CERT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:187:31: ( 'MASTER_SSL_VERIFY_SERVER_CERT' )
+    		// MySQL51Lexer.g3:187:31: ( 'MASTER_SSL_VERIFY_SERVER_CERT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:187:33: 'MASTER_SSL_VERIFY_SERVER_CERT'
+    		// MySQL51Lexer.g3:187:33: 'MASTER_SSL_VERIFY_SERVER_CERT'
     		{
     		DebugLocation(187, 33);
     		Match("MASTER_SSL_VERIFY_SERVER_CERT"); if (state.failed) return;
@@ -6376,9 +6376,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MATCH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:188:7: ( 'MATCH' )
+    		// MySQL51Lexer.g3:188:7: ( 'MATCH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:188:9: 'MATCH'
+    		// MySQL51Lexer.g3:188:9: 'MATCH'
     		{
     		DebugLocation(188, 9);
     		Match("MATCH"); if (state.failed) return;
@@ -6414,9 +6414,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_STATEMENT_TIME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:189:20: ( 'MAX_STATEMENT_TIME' )
+    		// MySQL51Lexer.g3:189:20: ( 'MAX_STATEMENT_TIME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:189:22: 'MAX_STATEMENT_TIME'
+    		// MySQL51Lexer.g3:189:22: 'MAX_STATEMENT_TIME'
     		{
     		DebugLocation(189, 22);
     		Match("MAX_STATEMENT_TIME"); if (state.failed) return;
@@ -6457,9 +6457,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAXVALUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:190:10: ( 'MAXVALUE' )
+    		// MySQL51Lexer.g3:190:10: ( 'MAXVALUE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:190:12: 'MAXVALUE'
+    		// MySQL51Lexer.g3:190:12: 'MAXVALUE'
     		{
     		DebugLocation(190, 12);
     		Match("MAXVALUE"); if (state.failed) return;
@@ -6495,9 +6495,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MESSAGE_TEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:191:14: ( 'MESSAGE_TEXT' )
+    		// MySQL51Lexer.g3:191:14: ( 'MESSAGE_TEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:191:16: 'MESSAGE_TEXT'
+    		// MySQL51Lexer.g3:191:16: 'MESSAGE_TEXT'
     		{
     		DebugLocation(191, 16);
     		Match("MESSAGE_TEXT"); if (state.failed) return;
@@ -6538,9 +6538,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MIDDLEINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:192:11: ( 'MIDDLEINT' )
+    		// MySQL51Lexer.g3:192:11: ( 'MIDDLEINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:192:13: 'MIDDLEINT'
+    		// MySQL51Lexer.g3:192:13: 'MIDDLEINT'
     		{
     		DebugLocation(192, 13);
     		Match("MIDDLEINT"); if (state.failed) return;
@@ -6576,9 +6576,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MINUTE_MICROSECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:193:20: ( 'MINUTE_MICROSECOND' )
+    		// MySQL51Lexer.g3:193:20: ( 'MINUTE_MICROSECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:193:22: 'MINUTE_MICROSECOND'
+    		// MySQL51Lexer.g3:193:22: 'MINUTE_MICROSECOND'
     		{
     		DebugLocation(193, 22);
     		Match("MINUTE_MICROSECOND"); if (state.failed) return;
@@ -6614,9 +6614,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MINUTE_SECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:194:15: ( 'MINUTE_SECOND' )
+    		// MySQL51Lexer.g3:194:15: ( 'MINUTE_SECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:194:17: 'MINUTE_SECOND'
+    		// MySQL51Lexer.g3:194:17: 'MINUTE_SECOND'
     		{
     		DebugLocation(194, 17);
     		Match("MINUTE_SECOND"); if (state.failed) return;
@@ -6652,9 +6652,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MOD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:195:5: ( 'MOD' )
+    		// MySQL51Lexer.g3:195:5: ( 'MOD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:195:7: 'MOD'
+    		// MySQL51Lexer.g3:195:7: 'MOD'
     		{
     		DebugLocation(195, 7);
     		Match("MOD"); if (state.failed) return;
@@ -6695,9 +6695,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MODIFIES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:196:10: ( 'MODIFIES' )
+    		// MySQL51Lexer.g3:196:10: ( 'MODIFIES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:196:12: 'MODIFIES'
+    		// MySQL51Lexer.g3:196:12: 'MODIFIES'
     		{
     		DebugLocation(196, 12);
     		Match("MODIFIES"); if (state.failed) return;
@@ -6733,9 +6733,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MYSQL_ERRNO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:197:13: ( 'MYSQL_ERRNO' )
+    		// MySQL51Lexer.g3:197:13: ( 'MYSQL_ERRNO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:197:15: 'MYSQL_ERRNO'
+    		// MySQL51Lexer.g3:197:15: 'MYSQL_ERRNO'
     		{
     		DebugLocation(197, 15);
     		Match("MYSQL_ERRNO"); if (state.failed) return;
@@ -6776,9 +6776,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MYSQL_NATIVE_PASSWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:198:23: ( 'MYSQL_NATIVE_PASSWORD' )
+    		// MySQL51Lexer.g3:198:23: ( 'MYSQL_NATIVE_PASSWORD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:198:25: 'MYSQL_NATIVE_PASSWORD'
+    		// MySQL51Lexer.g3:198:25: 'MYSQL_NATIVE_PASSWORD'
     		{
     		DebugLocation(198, 25);
     		Match("MYSQL_NATIVE_PASSWORD"); if (state.failed) return;
@@ -6814,9 +6814,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NATURAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:199:9: ( 'NATURAL' )
+    		// MySQL51Lexer.g3:199:9: ( 'NATURAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:199:11: 'NATURAL'
+    		// MySQL51Lexer.g3:199:11: 'NATURAL'
     		{
     		DebugLocation(199, 11);
     		Match("NATURAL"); if (state.failed) return;
@@ -6852,9 +6852,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NOT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:200:5: ( 'NOT' )
+    		// MySQL51Lexer.g3:200:5: ( 'NOT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:200:7: 'NOT'
+    		// MySQL51Lexer.g3:200:7: 'NOT'
     		{
     		DebugLocation(200, 7);
     		Match("NOT"); if (state.failed) return;
@@ -6890,9 +6890,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NO_WRITE_TO_BINLOG;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:201:20: ( 'NO_WRITE_TO_BINLOG' )
+    		// MySQL51Lexer.g3:201:20: ( 'NO_WRITE_TO_BINLOG' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:201:22: 'NO_WRITE_TO_BINLOG'
+    		// MySQL51Lexer.g3:201:22: 'NO_WRITE_TO_BINLOG'
     		{
     		DebugLocation(201, 22);
     		Match("NO_WRITE_TO_BINLOG"); if (state.failed) return;
@@ -6928,9 +6928,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NNUMBER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:202:9: ( 'NUMBER' )
+    		// MySQL51Lexer.g3:202:9: ( 'NUMBER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:202:13: 'NUMBER'
+    		// MySQL51Lexer.g3:202:13: 'NUMBER'
     		{
     		DebugLocation(202, 13);
     		Match("NUMBER"); if (state.failed) return;
@@ -6971,9 +6971,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NULL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:203:6: ( 'NULL' )
+    		// MySQL51Lexer.g3:203:6: ( 'NULL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:203:8: 'NULL'
+    		// MySQL51Lexer.g3:203:8: 'NULL'
     		{
     		DebugLocation(203, 8);
     		Match("NULL"); if (state.failed) return;
@@ -7009,9 +7009,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NULLIF;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:204:8: ( 'NULLIF' )
+    		// MySQL51Lexer.g3:204:8: ( 'NULLIF' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:204:10: 'NULLIF'
+    		// MySQL51Lexer.g3:204:10: 'NULLIF'
     		{
     		DebugLocation(204, 10);
     		Match("NULLIF"); if (state.failed) return;
@@ -7047,9 +7047,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OFFLINE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:205:9: ( 'OFFLINE' )
+    		// MySQL51Lexer.g3:205:9: ( 'OFFLINE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:205:11: 'OFFLINE'
+    		// MySQL51Lexer.g3:205:11: 'OFFLINE'
     		{
     		DebugLocation(205, 11);
     		Match("OFFLINE"); if (state.failed) return;
@@ -7085,9 +7085,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ON;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:206:4: ( 'ON' )
+    		// MySQL51Lexer.g3:206:4: ( 'ON' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:206:6: 'ON'
+    		// MySQL51Lexer.g3:206:6: 'ON'
     		{
     		DebugLocation(206, 6);
     		Match("ON"); if (state.failed) return;
@@ -7123,9 +7123,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ONLINE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:207:8: ( 'ONLINE' )
+    		// MySQL51Lexer.g3:207:8: ( 'ONLINE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:207:10: 'ONLINE'
+    		// MySQL51Lexer.g3:207:10: 'ONLINE'
     		{
     		DebugLocation(207, 10);
     		Match("ONLINE"); if (state.failed) return;
@@ -7161,9 +7161,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ONLY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:208:8: ( 'ONLY' )
+    		// MySQL51Lexer.g3:208:8: ( 'ONLY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:208:10: 'ONLY'
+    		// MySQL51Lexer.g3:208:10: 'ONLY'
     		{
     		DebugLocation(208, 10);
     		Match("ONLY"); if (state.failed) return;
@@ -7204,9 +7204,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OPTIMIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:209:10: ( 'OPTIMIZE' )
+    		// MySQL51Lexer.g3:209:10: ( 'OPTIMIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:209:12: 'OPTIMIZE'
+    		// MySQL51Lexer.g3:209:12: 'OPTIMIZE'
     		{
     		DebugLocation(209, 12);
     		Match("OPTIMIZE"); if (state.failed) return;
@@ -7242,9 +7242,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OPTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:210:8: ( 'OPTION' )
+    		// MySQL51Lexer.g3:210:8: ( 'OPTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:210:10: 'OPTION'
+    		// MySQL51Lexer.g3:210:10: 'OPTION'
     		{
     		DebugLocation(210, 10);
     		Match("OPTION"); if (state.failed) return;
@@ -7280,9 +7280,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OPTIONALLY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:211:12: ( 'OPTIONALLY' )
+    		// MySQL51Lexer.g3:211:12: ( 'OPTIONALLY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:211:14: 'OPTIONALLY'
+    		// MySQL51Lexer.g3:211:14: 'OPTIONALLY'
     		{
     		DebugLocation(211, 14);
     		Match("OPTIONALLY"); if (state.failed) return;
@@ -7318,9 +7318,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:212:4: ( 'OR' )
+    		// MySQL51Lexer.g3:212:4: ( 'OR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:212:6: 'OR'
+    		// MySQL51Lexer.g3:212:6: 'OR'
     		{
     		DebugLocation(212, 6);
     		Match("OR"); if (state.failed) return;
@@ -7356,9 +7356,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ORDER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:213:7: ( 'ORDER' )
+    		// MySQL51Lexer.g3:213:7: ( 'ORDER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:213:9: 'ORDER'
+    		// MySQL51Lexer.g3:213:9: 'ORDER'
     		{
     		DebugLocation(213, 9);
     		Match("ORDER"); if (state.failed) return;
@@ -7394,9 +7394,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OUT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:214:5: ( 'OUT' )
+    		// MySQL51Lexer.g3:214:5: ( 'OUT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:214:7: 'OUT'
+    		// MySQL51Lexer.g3:214:7: 'OUT'
     		{
     		DebugLocation(214, 7);
     		Match("OUT"); if (state.failed) return;
@@ -7432,9 +7432,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OUTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:215:7: ( 'OUTER' )
+    		// MySQL51Lexer.g3:215:7: ( 'OUTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:215:9: 'OUTER'
+    		// MySQL51Lexer.g3:215:9: 'OUTER'
     		{
     		DebugLocation(215, 9);
     		Match("OUTER"); if (state.failed) return;
@@ -7470,9 +7470,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OUTFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:216:9: ( 'OUTFILE' )
+    		// MySQL51Lexer.g3:216:9: ( 'OUTFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:216:11: 'OUTFILE'
+    		// MySQL51Lexer.g3:216:11: 'OUTFILE'
     		{
     		DebugLocation(216, 11);
     		Match("OUTFILE"); if (state.failed) return;
@@ -7508,9 +7508,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PERSIST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:217:9: ( 'PERSIST' )
+    		// MySQL51Lexer.g3:217:9: ( 'PERSIST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:217:11: 'PERSIST'
+    		// MySQL51Lexer.g3:217:11: 'PERSIST'
     		{
     		DebugLocation(217, 11);
     		Match("PERSIST"); if (state.failed) return;
@@ -7551,9 +7551,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PERSIST_ONLY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:218:14: ( 'PERSIST_ONLY' )
+    		// MySQL51Lexer.g3:218:14: ( 'PERSIST_ONLY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:218:16: 'PERSIST_ONLY'
+    		// MySQL51Lexer.g3:218:16: 'PERSIST_ONLY'
     		{
     		DebugLocation(218, 16);
     		Match("PERSIST_ONLY"); if (state.failed) return;
@@ -7594,9 +7594,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PRECEDES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:219:10: ( 'PRECEDES' )
+    		// MySQL51Lexer.g3:219:10: ( 'PRECEDES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:219:12: 'PRECEDES'
+    		// MySQL51Lexer.g3:219:12: 'PRECEDES'
     		{
     		DebugLocation(219, 12);
     		Match("PRECEDES"); if (state.failed) return;
@@ -7637,9 +7637,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PRECISION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:220:11: ( 'PRECISION' )
+    		// MySQL51Lexer.g3:220:11: ( 'PRECISION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:220:13: 'PRECISION'
+    		// MySQL51Lexer.g3:220:13: 'PRECISION'
     		{
     		DebugLocation(220, 13);
     		Match("PRECISION"); if (state.failed) return;
@@ -7675,9 +7675,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PRIMARY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:221:9: ( 'PRIMARY' )
+    		// MySQL51Lexer.g3:221:9: ( 'PRIMARY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:221:11: 'PRIMARY'
+    		// MySQL51Lexer.g3:221:11: 'PRIMARY'
     		{
     		DebugLocation(221, 11);
     		Match("PRIMARY"); if (state.failed) return;
@@ -7713,9 +7713,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PROCEDURE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:222:11: ( 'PROCEDURE' )
+    		// MySQL51Lexer.g3:222:11: ( 'PROCEDURE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:222:13: 'PROCEDURE'
+    		// MySQL51Lexer.g3:222:13: 'PROCEDURE'
     		{
     		DebugLocation(222, 13);
     		Match("PROCEDURE"); if (state.failed) return;
@@ -7751,9 +7751,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PROXY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:223:9: ( 'PROXY' )
+    		// MySQL51Lexer.g3:223:9: ( 'PROXY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:223:13: 'PROXY'
+    		// MySQL51Lexer.g3:223:13: 'PROXY'
     		{
     		DebugLocation(223, 13);
     		Match("PROXY"); if (state.failed) return;
@@ -7794,9 +7794,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PURGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:224:7: ( 'PURGE' )
+    		// MySQL51Lexer.g3:224:7: ( 'PURGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:224:9: 'PURGE'
+    		// MySQL51Lexer.g3:224:9: 'PURGE'
     		{
     		DebugLocation(224, 9);
     		Match("PURGE"); if (state.failed) return;
@@ -7832,9 +7832,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RANGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:225:7: ( 'RANGE' )
+    		// MySQL51Lexer.g3:225:7: ( 'RANGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:225:9: 'RANGE'
+    		// MySQL51Lexer.g3:225:9: 'RANGE'
     		{
     		DebugLocation(225, 9);
     		Match("RANGE"); if (state.failed) return;
@@ -7870,9 +7870,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = READ;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:226:6: ( 'READ' )
+    		// MySQL51Lexer.g3:226:6: ( 'READ' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:226:8: 'READ'
+    		// MySQL51Lexer.g3:226:8: 'READ'
     		{
     		DebugLocation(226, 8);
     		Match("READ"); if (state.failed) return;
@@ -7908,9 +7908,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = READS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:227:7: ( 'READS' )
+    		// MySQL51Lexer.g3:227:7: ( 'READS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:227:9: 'READS'
+    		// MySQL51Lexer.g3:227:9: 'READS'
     		{
     		DebugLocation(227, 9);
     		Match("READS"); if (state.failed) return;
@@ -7946,9 +7946,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = READ_ONLY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:228:11: ( 'READ_ONLY' )
+    		// MySQL51Lexer.g3:228:11: ( 'READ_ONLY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:228:13: 'READ_ONLY'
+    		// MySQL51Lexer.g3:228:13: 'READ_ONLY'
     		{
     		DebugLocation(228, 13);
     		Match("READ_ONLY"); if (state.failed) return;
@@ -7984,9 +7984,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = READ_WRITE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:229:12: ( 'READ_WRITE' )
+    		// MySQL51Lexer.g3:229:12: ( 'READ_WRITE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:229:14: 'READ_WRITE'
+    		// MySQL51Lexer.g3:229:14: 'READ_WRITE'
     		{
     		DebugLocation(229, 14);
     		Match("READ_WRITE"); if (state.failed) return;
@@ -8022,11 +8022,11 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REDO_LOG;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:230:10: ( 'REDO_LOG' )
+    		// MySQL51Lexer.g3:230:10: ( 'REDO_LOG' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:230:13: 'REDO_LOG'
+    		// MySQL51Lexer.g3:230:12: 'REDO_LOG'
     		{
-    		DebugLocation(230, 13);
+    		DebugLocation(230, 12);
     		Match("REDO_LOG"); if (state.failed) return;
 
 
@@ -8060,9 +8060,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REFERENCES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:231:12: ( 'REFERENCES' )
+    		// MySQL51Lexer.g3:231:12: ( 'REFERENCES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:231:14: 'REFERENCES'
+    		// MySQL51Lexer.g3:231:14: 'REFERENCES'
     		{
     		DebugLocation(231, 14);
     		Match("REFERENCES"); if (state.failed) return;
@@ -8098,9 +8098,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REGEXP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:232:8: ( 'REGEXP' )
+    		// MySQL51Lexer.g3:232:8: ( 'REGEXP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:232:10: 'REGEXP'
+    		// MySQL51Lexer.g3:232:10: 'REGEXP'
     		{
     		DebugLocation(232, 10);
     		Match("REGEXP"); if (state.failed) return;
@@ -8136,9 +8136,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RELEASE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:233:9: ( 'RELEASE' )
+    		// MySQL51Lexer.g3:233:9: ( 'RELEASE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:233:11: 'RELEASE'
+    		// MySQL51Lexer.g3:233:11: 'RELEASE'
     		{
     		DebugLocation(233, 11);
     		Match("RELEASE"); if (state.failed) return;
@@ -8174,9 +8174,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RENAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:234:8: ( 'RENAME' )
+    		// MySQL51Lexer.g3:234:8: ( 'RENAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:234:10: 'RENAME'
+    		// MySQL51Lexer.g3:234:10: 'RENAME'
     		{
     		DebugLocation(234, 10);
     		Match("RENAME"); if (state.failed) return;
@@ -8212,9 +8212,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REPEAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:235:8: ( 'REPEAT' )
+    		// MySQL51Lexer.g3:235:8: ( 'REPEAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:235:10: 'REPEAT'
+    		// MySQL51Lexer.g3:235:10: 'REPEAT'
     		{
     		DebugLocation(235, 10);
     		Match("REPEAT"); if (state.failed) return;
@@ -8255,9 +8255,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REPLACE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:236:9: ( 'REPLACE' )
+    		// MySQL51Lexer.g3:236:9: ( 'REPLACE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:236:11: 'REPLACE'
+    		// MySQL51Lexer.g3:236:11: 'REPLACE'
     		{
     		DebugLocation(236, 11);
     		Match("REPLACE"); if (state.failed) return;
@@ -8293,9 +8293,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REQUIRE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:237:9: ( 'REQUIRE' )
+    		// MySQL51Lexer.g3:237:9: ( 'REQUIRE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:237:11: 'REQUIRE'
+    		// MySQL51Lexer.g3:237:11: 'REQUIRE'
     		{
     		DebugLocation(237, 11);
     		Match("REQUIRE"); if (state.failed) return;
@@ -8331,9 +8331,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RESIGNAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:238:10: ( 'RESIGNAL' )
+    		// MySQL51Lexer.g3:238:10: ( 'RESIGNAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:238:12: 'RESIGNAL'
+    		// MySQL51Lexer.g3:238:12: 'RESIGNAL'
     		{
     		DebugLocation(238, 12);
     		Match("RESIGNAL"); if (state.failed) return;
@@ -8374,9 +8374,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RESTRICT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:239:10: ( 'RESTRICT' )
+    		// MySQL51Lexer.g3:239:10: ( 'RESTRICT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:239:12: 'RESTRICT'
+    		// MySQL51Lexer.g3:239:12: 'RESTRICT'
     		{
     		DebugLocation(239, 12);
     		Match("RESTRICT"); if (state.failed) return;
@@ -8412,9 +8412,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RETURN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:240:8: ( 'RETURN' )
+    		// MySQL51Lexer.g3:240:8: ( 'RETURN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:240:10: 'RETURN'
+    		// MySQL51Lexer.g3:240:10: 'RETURN'
     		{
     		DebugLocation(240, 10);
     		Match("RETURN"); if (state.failed) return;
@@ -8450,9 +8450,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RETURNED_SQLSTATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:241:19: ( 'RETURNED_SQLSTATE' )
+    		// MySQL51Lexer.g3:241:19: ( 'RETURNED_SQLSTATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:241:21: 'RETURNED_SQLSTATE'
+    		// MySQL51Lexer.g3:241:21: 'RETURNED_SQLSTATE'
     		{
     		DebugLocation(241, 21);
     		Match("RETURNED_SQLSTATE"); if (state.failed) return;
@@ -8488,9 +8488,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REUSE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:242:7: ( 'REUSE' )
+    		// MySQL51Lexer.g3:242:7: ( 'REUSE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:242:9: 'REUSE'
+    		// MySQL51Lexer.g3:242:9: 'REUSE'
     		{
     		DebugLocation(242, 9);
     		Match("REUSE"); if (state.failed) return;
@@ -8531,9 +8531,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REVOKE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:243:8: ( 'REVOKE' )
+    		// MySQL51Lexer.g3:243:8: ( 'REVOKE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:243:10: 'REVOKE'
+    		// MySQL51Lexer.g3:243:10: 'REVOKE'
     		{
     		DebugLocation(243, 10);
     		Match("REVOKE"); if (state.failed) return;
@@ -8569,9 +8569,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RLIKE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:244:7: ( 'RLIKE' )
+    		// MySQL51Lexer.g3:244:7: ( 'RLIKE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:244:9: 'RLIKE'
+    		// MySQL51Lexer.g3:244:9: 'RLIKE'
     		{
     		DebugLocation(244, 9);
     		Match("RLIKE"); if (state.failed) return;
@@ -8607,9 +8607,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:245:6: ( 'ROLE' )
+    		// MySQL51Lexer.g3:245:6: ( 'ROLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:245:8: 'ROLE'
+    		// MySQL51Lexer.g3:245:8: 'ROLE'
     		{
     		DebugLocation(245, 8);
     		Match("ROLE"); if (state.failed) return;
@@ -8650,9 +8650,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROW_COUNT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:246:11: ( 'ROW_COUNT' )
+    		// MySQL51Lexer.g3:246:11: ( 'ROW_COUNT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:246:13: 'ROW_COUNT'
+    		// MySQL51Lexer.g3:246:13: 'ROW_COUNT'
     		{
     		DebugLocation(246, 13);
     		Match("ROW_COUNT"); if (state.failed) return;
@@ -8693,9 +8693,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SCHEDULER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:247:11: ( 'SCHEDULER' )
+    		// MySQL51Lexer.g3:247:11: ( 'SCHEDULER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:247:13: 'SCHEDULER'
+    		// MySQL51Lexer.g3:247:13: 'SCHEDULER'
     		{
     		DebugLocation(247, 13);
     		Match("SCHEDULER"); if (state.failed) return;
@@ -8731,9 +8731,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SCHEMA;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:248:8: ( 'SCHEMA' )
+    		// MySQL51Lexer.g3:248:8: ( 'SCHEMA' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:248:10: 'SCHEMA'
+    		// MySQL51Lexer.g3:248:10: 'SCHEMA'
     		{
     		DebugLocation(248, 10);
     		Match("SCHEMA"); if (state.failed) return;
@@ -8769,9 +8769,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SCHEMAS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:249:9: ( 'SCHEMAS' )
+    		// MySQL51Lexer.g3:249:9: ( 'SCHEMAS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:249:11: 'SCHEMAS'
+    		// MySQL51Lexer.g3:249:11: 'SCHEMAS'
     		{
     		DebugLocation(249, 11);
     		Match("SCHEMAS"); if (state.failed) return;
@@ -8807,9 +8807,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SECOND_MICROSECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:250:20: ( 'SECOND_MICROSECOND' )
+    		// MySQL51Lexer.g3:250:20: ( 'SECOND_MICROSECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:250:22: 'SECOND_MICROSECOND'
+    		// MySQL51Lexer.g3:250:22: 'SECOND_MICROSECOND'
     		{
     		DebugLocation(250, 22);
     		Match("SECOND_MICROSECOND"); if (state.failed) return;
@@ -8845,9 +8845,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SELECT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:251:8: ( 'SELECT' )
+    		// MySQL51Lexer.g3:251:8: ( 'SELECT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:251:10: 'SELECT'
+    		// MySQL51Lexer.g3:251:10: 'SELECT'
     		{
     		DebugLocation(251, 10);
     		Match("SELECT"); if (state.failed) return;
@@ -8883,9 +8883,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SENSITIVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:252:11: ( 'SENSITIVE' )
+    		// MySQL51Lexer.g3:252:11: ( 'SENSITIVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:252:13: 'SENSITIVE'
+    		// MySQL51Lexer.g3:252:13: 'SENSITIVE'
     		{
     		DebugLocation(252, 13);
     		Match("SENSITIVE"); if (state.failed) return;
@@ -8921,9 +8921,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SEPARATOR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:253:11: ( 'SEPARATOR' )
+    		// MySQL51Lexer.g3:253:11: ( 'SEPARATOR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:253:13: 'SEPARATOR'
+    		// MySQL51Lexer.g3:253:13: 'SEPARATOR'
     		{
     		DebugLocation(253, 13);
     		Match("SEPARATOR"); if (state.failed) return;
@@ -8959,9 +8959,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SET;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:254:5: ( 'SET' )
+    		// MySQL51Lexer.g3:254:5: ( 'SET' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:254:7: 'SET'
+    		// MySQL51Lexer.g3:254:7: 'SET'
     		{
     		DebugLocation(254, 7);
     		Match("SET"); if (state.failed) return;
@@ -8997,9 +8997,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SCHEMA_NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:255:13: ( 'SCHEMA_NAME' )
+    		// MySQL51Lexer.g3:255:13: ( 'SCHEMA_NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:255:15: 'SCHEMA_NAME'
+    		// MySQL51Lexer.g3:255:15: 'SCHEMA_NAME'
     		{
     		DebugLocation(255, 15);
     		Match("SCHEMA_NAME"); if (state.failed) return;
@@ -9040,9 +9040,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SHA256_PASSWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:256:17: ( 'SHA256_PASSWORD' )
+    		// MySQL51Lexer.g3:256:17: ( 'SHA256_PASSWORD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:256:19: 'SHA256_PASSWORD'
+    		// MySQL51Lexer.g3:256:19: 'SHA256_PASSWORD'
     		{
     		DebugLocation(256, 19);
     		Match("SHA256_PASSWORD"); if (state.failed) return;
@@ -9078,9 +9078,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SHOW;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:257:6: ( 'SHOW' )
+    		// MySQL51Lexer.g3:257:6: ( 'SHOW' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:257:8: 'SHOW'
+    		// MySQL51Lexer.g3:257:8: 'SHOW'
     		{
     		DebugLocation(257, 8);
     		Match("SHOW"); if (state.failed) return;
@@ -9116,9 +9116,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SIGNAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:258:9: ( 'SIGNAL' )
+    		// MySQL51Lexer.g3:258:9: ( 'SIGNAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:258:11: 'SIGNAL'
+    		// MySQL51Lexer.g3:258:11: 'SIGNAL'
     		{
     		DebugLocation(258, 11);
     		Match("SIGNAL"); if (state.failed) return;
@@ -9159,9 +9159,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SPATIAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:259:9: ( 'SPATIAL' )
+    		// MySQL51Lexer.g3:259:9: ( 'SPATIAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:259:11: 'SPATIAL'
+    		// MySQL51Lexer.g3:259:11: 'SPATIAL'
     		{
     		DebugLocation(259, 11);
     		Match("SPATIAL"); if (state.failed) return;
@@ -9197,9 +9197,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SPECIFIC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:260:10: ( 'SPECIFIC' )
+    		// MySQL51Lexer.g3:260:10: ( 'SPECIFIC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:260:12: 'SPECIFIC'
+    		// MySQL51Lexer.g3:260:12: 'SPECIFIC'
     		{
     		DebugLocation(260, 12);
     		Match("SPECIFIC"); if (state.failed) return;
@@ -9235,9 +9235,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:261:5: ( 'SQL' )
+    		// MySQL51Lexer.g3:261:5: ( 'SQL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:261:7: 'SQL'
+    		// MySQL51Lexer.g3:261:7: 'SQL'
     		{
     		DebugLocation(261, 7);
     		Match("SQL"); if (state.failed) return;
@@ -9273,9 +9273,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQLEXCEPTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:262:14: ( 'SQLEXCEPTION' )
+    		// MySQL51Lexer.g3:262:14: ( 'SQLEXCEPTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:262:16: 'SQLEXCEPTION'
+    		// MySQL51Lexer.g3:262:16: 'SQLEXCEPTION'
     		{
     		DebugLocation(262, 16);
     		Match("SQLEXCEPTION"); if (state.failed) return;
@@ -9311,9 +9311,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQLSTATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:263:10: ( 'SQLSTATE' )
+    		// MySQL51Lexer.g3:263:10: ( 'SQLSTATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:263:12: 'SQLSTATE'
+    		// MySQL51Lexer.g3:263:12: 'SQLSTATE'
     		{
     		DebugLocation(263, 12);
     		Match("SQLSTATE"); if (state.failed) return;
@@ -9349,9 +9349,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQLWARNING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:264:12: ( 'SQLWARNING' )
+    		// MySQL51Lexer.g3:264:12: ( 'SQLWARNING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:264:14: 'SQLWARNING'
+    		// MySQL51Lexer.g3:264:14: 'SQLWARNING'
     		{
     		DebugLocation(264, 14);
     		Match("SQLWARNING"); if (state.failed) return;
@@ -9387,9 +9387,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_BIG_RESULT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:265:16: ( 'SQL_BIG_RESULT' )
+    		// MySQL51Lexer.g3:265:16: ( 'SQL_BIG_RESULT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:265:18: 'SQL_BIG_RESULT'
+    		// MySQL51Lexer.g3:265:18: 'SQL_BIG_RESULT'
     		{
     		DebugLocation(265, 18);
     		Match("SQL_BIG_RESULT"); if (state.failed) return;
@@ -9425,9 +9425,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_CALC_FOUND_ROWS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:266:21: ( 'SQL_CALC_FOUND_ROWS' )
+    		// MySQL51Lexer.g3:266:21: ( 'SQL_CALC_FOUND_ROWS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:266:23: 'SQL_CALC_FOUND_ROWS'
+    		// MySQL51Lexer.g3:266:23: 'SQL_CALC_FOUND_ROWS'
     		{
     		DebugLocation(266, 23);
     		Match("SQL_CALC_FOUND_ROWS"); if (state.failed) return;
@@ -9463,9 +9463,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_SMALL_RESULT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:267:18: ( 'SQL_SMALL_RESULT' )
+    		// MySQL51Lexer.g3:267:18: ( 'SQL_SMALL_RESULT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:267:20: 'SQL_SMALL_RESULT'
+    		// MySQL51Lexer.g3:267:20: 'SQL_SMALL_RESULT'
     		{
     		DebugLocation(267, 20);
     		Match("SQL_SMALL_RESULT"); if (state.failed) return;
@@ -9501,9 +9501,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SSL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:268:5: ( 'SSL' )
+    		// MySQL51Lexer.g3:268:5: ( 'SSL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:268:7: 'SSL'
+    		// MySQL51Lexer.g3:268:7: 'SSL'
     		{
     		DebugLocation(268, 7);
     		Match("SSL"); if (state.failed) return;
@@ -9539,9 +9539,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STACKED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:269:9: ( 'STACKED' )
+    		// MySQL51Lexer.g3:269:9: ( 'STACKED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:269:11: 'STACKED'
+    		// MySQL51Lexer.g3:269:11: 'STACKED'
     		{
     		DebugLocation(269, 11);
     		Match("STACKED"); if (state.failed) return;
@@ -9582,9 +9582,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STARTING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:270:10: ( 'STARTING' )
+    		// MySQL51Lexer.g3:270:10: ( 'STARTING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:270:12: 'STARTING'
+    		// MySQL51Lexer.g3:270:12: 'STARTING'
     		{
     		DebugLocation(270, 12);
     		Match("STARTING"); if (state.failed) return;
@@ -9620,9 +9620,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STRAIGHT_JOIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:271:15: ( 'STRAIGHT_JOIN' )
+    		// MySQL51Lexer.g3:271:15: ( 'STRAIGHT_JOIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:271:17: 'STRAIGHT_JOIN'
+    		// MySQL51Lexer.g3:271:17: 'STRAIGHT_JOIN'
     		{
     		DebugLocation(271, 17);
     		Match("STRAIGHT_JOIN"); if (state.failed) return;
@@ -9658,9 +9658,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBCLASS_ORIGIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:272:17: ( 'SUBCLASS_ORIGIN' )
+    		// MySQL51Lexer.g3:272:17: ( 'SUBCLASS_ORIGIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:272:19: 'SUBCLASS_ORIGIN'
+    		// MySQL51Lexer.g3:272:19: 'SUBCLASS_ORIGIN'
     		{
     		DebugLocation(272, 19);
     		Match("SUBCLASS_ORIGIN"); if (state.failed) return;
@@ -9701,9 +9701,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TABLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:273:7: ( 'TABLE' )
+    		// MySQL51Lexer.g3:273:7: ( 'TABLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:273:9: 'TABLE'
+    		// MySQL51Lexer.g3:273:9: 'TABLE'
     		{
     		DebugLocation(273, 9);
     		Match("TABLE"); if (state.failed) return;
@@ -9739,9 +9739,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TABLE_NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:274:12: ( 'TABLE_NAME' )
+    		// MySQL51Lexer.g3:274:12: ( 'TABLE_NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:274:14: 'TABLE_NAME'
+    		// MySQL51Lexer.g3:274:14: 'TABLE_NAME'
     		{
     		DebugLocation(274, 14);
     		Match("TABLE_NAME"); if (state.failed) return;
@@ -9782,9 +9782,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TERMINATED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:275:12: ( 'TERMINATED' )
+    		// MySQL51Lexer.g3:275:12: ( 'TERMINATED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:275:14: 'TERMINATED'
+    		// MySQL51Lexer.g3:275:14: 'TERMINATED'
     		{
     		DebugLocation(275, 14);
     		Match("TERMINATED"); if (state.failed) return;
@@ -9820,9 +9820,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = THEN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:276:6: ( 'THEN' )
+    		// MySQL51Lexer.g3:276:6: ( 'THEN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:276:8: 'THEN'
+    		// MySQL51Lexer.g3:276:8: 'THEN'
     		{
     		DebugLocation(276, 8);
     		Match("THEN"); if (state.failed) return;
@@ -9858,9 +9858,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TLS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:277:5: ( 'TLS' )
+    		// MySQL51Lexer.g3:277:5: ( 'TLS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:277:7: 'TLS'
+    		// MySQL51Lexer.g3:277:7: 'TLS'
     		{
     		DebugLocation(277, 7);
     		Match("TLS"); if (state.failed) return;
@@ -9896,9 +9896,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:278:4: ( 'TO' )
+    		// MySQL51Lexer.g3:278:4: ( 'TO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:278:6: 'TO'
+    		// MySQL51Lexer.g3:278:6: 'TO'
     		{
     		DebugLocation(278, 6);
     		Match("TO"); if (state.failed) return;
@@ -9934,9 +9934,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRADITIONAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:279:13: ( 'TRADITIONAL' )
+    		// MySQL51Lexer.g3:279:13: ( 'TRADITIONAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:279:17: 'TRADITIONAL'
+    		// MySQL51Lexer.g3:279:17: 'TRADITIONAL'
     		{
     		DebugLocation(279, 17);
     		Match("TRADITIONAL"); if (state.failed) return;
@@ -9977,9 +9977,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRAILING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:280:10: ( 'TRAILING' )
+    		// MySQL51Lexer.g3:280:10: ( 'TRAILING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:280:12: 'TRAILING'
+    		// MySQL51Lexer.g3:280:12: 'TRAILING'
     		{
     		DebugLocation(280, 12);
     		Match("TRAILING"); if (state.failed) return;
@@ -10015,9 +10015,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRIGGER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:281:9: ( 'TRIGGER' )
+    		// MySQL51Lexer.g3:281:9: ( 'TRIGGER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:281:11: 'TRIGGER'
+    		// MySQL51Lexer.g3:281:11: 'TRIGGER'
     		{
     		DebugLocation(281, 11);
     		Match("TRIGGER"); if (state.failed) return;
@@ -10053,9 +10053,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:282:6: ( 'TRUE' )
+    		// MySQL51Lexer.g3:282:6: ( 'TRUE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:282:8: 'TRUE'
+    		// MySQL51Lexer.g3:282:8: 'TRUE'
     		{
     		DebugLocation(282, 8);
     		Match("TRUE"); if (state.failed) return;
@@ -10091,9 +10091,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNDO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:283:6: ( 'UNDO' )
+    		// MySQL51Lexer.g3:283:6: ( 'UNDO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:283:8: 'UNDO'
+    		// MySQL51Lexer.g3:283:8: 'UNDO'
     		{
     		DebugLocation(283, 8);
     		Match("UNDO"); if (state.failed) return;
@@ -10129,9 +10129,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:284:7: ( 'UNION' )
+    		// MySQL51Lexer.g3:284:7: ( 'UNION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:284:9: 'UNION'
+    		// MySQL51Lexer.g3:284:9: 'UNION'
     		{
     		DebugLocation(284, 9);
     		Match("UNION"); if (state.failed) return;
@@ -10167,9 +10167,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNIQUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:285:8: ( 'UNIQUE' )
+    		// MySQL51Lexer.g3:285:8: ( 'UNIQUE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:285:10: 'UNIQUE'
+    		// MySQL51Lexer.g3:285:10: 'UNIQUE'
     		{
     		DebugLocation(285, 10);
     		Match("UNIQUE"); if (state.failed) return;
@@ -10205,9 +10205,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNLOCK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:286:8: ( 'UNLOCK' )
+    		// MySQL51Lexer.g3:286:8: ( 'UNLOCK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:286:10: 'UNLOCK'
+    		// MySQL51Lexer.g3:286:10: 'UNLOCK'
     		{
     		DebugLocation(286, 10);
     		Match("UNLOCK"); if (state.failed) return;
@@ -10243,9 +10243,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNSIGNED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:287:10: ( 'UNSIGNED' )
+    		// MySQL51Lexer.g3:287:10: ( 'UNSIGNED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:287:12: 'UNSIGNED'
+    		// MySQL51Lexer.g3:287:12: 'UNSIGNED'
     		{
     		DebugLocation(287, 12);
     		Match("UNSIGNED"); if (state.failed) return;
@@ -10281,9 +10281,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UPDATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:288:8: ( 'UPDATE' )
+    		// MySQL51Lexer.g3:288:8: ( 'UPDATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:288:10: 'UPDATE'
+    		// MySQL51Lexer.g3:288:10: 'UPDATE'
     		{
     		DebugLocation(288, 10);
     		Match("UPDATE"); if (state.failed) return;
@@ -10319,9 +10319,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = USAGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:289:7: ( 'USAGE' )
+    		// MySQL51Lexer.g3:289:7: ( 'USAGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:289:9: 'USAGE'
+    		// MySQL51Lexer.g3:289:9: 'USAGE'
     		{
     		DebugLocation(289, 9);
     		Match("USAGE"); if (state.failed) return;
@@ -10357,9 +10357,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = USE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:290:5: ( 'USE' )
+    		// MySQL51Lexer.g3:290:5: ( 'USE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:290:7: 'USE'
+    		// MySQL51Lexer.g3:290:7: 'USE'
     		{
     		DebugLocation(290, 7);
     		Match("USE"); if (state.failed) return;
@@ -10395,9 +10395,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = USING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:291:7: ( 'USING' )
+    		// MySQL51Lexer.g3:291:7: ( 'USING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:291:9: 'USING'
+    		// MySQL51Lexer.g3:291:9: 'USING'
     		{
     		DebugLocation(291, 9);
     		Match("USING"); if (state.failed) return;
@@ -10433,9 +10433,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VALUES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:292:8: ( 'VALUES' )
+    		// MySQL51Lexer.g3:292:8: ( 'VALUES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:292:10: 'VALUES'
+    		// MySQL51Lexer.g3:292:10: 'VALUES'
     		{
     		DebugLocation(292, 10);
     		Match("VALUES"); if (state.failed) return;
@@ -10471,9 +10471,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VARCHARACTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:293:14: ( 'VARCHARACTER' )
+    		// MySQL51Lexer.g3:293:14: ( 'VARCHARACTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:293:16: 'VARCHARACTER'
+    		// MySQL51Lexer.g3:293:16: 'VARCHARACTER'
     		{
     		DebugLocation(293, 16);
     		Match("VARCHARACTER"); if (state.failed) return;
@@ -10509,9 +10509,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VARYING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:294:9: ( 'VARYING' )
+    		// MySQL51Lexer.g3:294:9: ( 'VARYING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:294:11: 'VARYING'
+    		// MySQL51Lexer.g3:294:11: 'VARYING'
     		{
     		DebugLocation(294, 11);
     		Match("VARYING"); if (state.failed) return;
@@ -10547,9 +10547,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WHEN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:295:6: ( 'WHEN' )
+    		// MySQL51Lexer.g3:295:6: ( 'WHEN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:295:8: 'WHEN'
+    		// MySQL51Lexer.g3:295:8: 'WHEN'
     		{
     		DebugLocation(295, 8);
     		Match("WHEN"); if (state.failed) return;
@@ -10585,9 +10585,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WHERE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:296:7: ( 'WHERE' )
+    		// MySQL51Lexer.g3:296:7: ( 'WHERE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:296:9: 'WHERE'
+    		// MySQL51Lexer.g3:296:9: 'WHERE'
     		{
     		DebugLocation(296, 9);
     		Match("WHERE"); if (state.failed) return;
@@ -10623,9 +10623,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WHILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:297:7: ( 'WHILE' )
+    		// MySQL51Lexer.g3:297:7: ( 'WHILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:297:9: 'WHILE'
+    		// MySQL51Lexer.g3:297:9: 'WHILE'
     		{
     		DebugLocation(297, 9);
     		Match("WHILE"); if (state.failed) return;
@@ -10661,9 +10661,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WITH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:298:6: ( 'WITH' )
+    		// MySQL51Lexer.g3:298:6: ( 'WITH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:298:8: 'WITH'
+    		// MySQL51Lexer.g3:298:8: 'WITH'
     		{
     		DebugLocation(298, 8);
     		Match("WITH"); if (state.failed) return;
@@ -10699,9 +10699,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WRITE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:299:7: ( 'WRITE' )
+    		// MySQL51Lexer.g3:299:7: ( 'WRITE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:299:9: 'WRITE'
+    		// MySQL51Lexer.g3:299:9: 'WRITE'
     		{
     		DebugLocation(299, 9);
     		Match("WRITE"); if (state.failed) return;
@@ -10737,9 +10737,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = XOR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:300:5: ( 'XOR' )
+    		// MySQL51Lexer.g3:300:5: ( 'XOR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:300:7: 'XOR'
+    		// MySQL51Lexer.g3:300:7: 'XOR'
     		{
     		DebugLocation(300, 7);
     		Match("XOR"); if (state.failed) return;
@@ -10775,9 +10775,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = YEAR_MONTH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:301:12: ( 'YEAR_MONTH' )
+    		// MySQL51Lexer.g3:301:12: ( 'YEAR_MONTH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:301:14: 'YEAR_MONTH'
+    		// MySQL51Lexer.g3:301:14: 'YEAR_MONTH'
     		{
     		DebugLocation(301, 14);
     		Match("YEAR_MONTH"); if (state.failed) return;
@@ -10813,9 +10813,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ZEROFILL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:302:10: ( 'ZEROFILL' )
+    		// MySQL51Lexer.g3:302:10: ( 'ZEROFILL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:302:12: 'ZEROFILL'
+    		// MySQL51Lexer.g3:302:12: 'ZEROFILL'
     		{
     		DebugLocation(302, 12);
     		Match("ZEROFILL"); if (state.failed) return;
@@ -10851,9 +10851,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ASCII;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:316:7: ( 'ASCII' )
+    		// MySQL51Lexer.g3:316:7: ( 'ASCII' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:316:9: 'ASCII'
+    		// MySQL51Lexer.g3:316:9: 'ASCII'
     		{
     		DebugLocation(316, 9);
     		Match("ASCII"); if (state.failed) return;
@@ -10889,9 +10889,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BACKUP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:317:8: ( 'BACKUP' )
+    		// MySQL51Lexer.g3:317:8: ( 'BACKUP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:317:10: 'BACKUP'
+    		// MySQL51Lexer.g3:317:10: 'BACKUP'
     		{
     		DebugLocation(317, 10);
     		Match("BACKUP"); if (state.failed) return;
@@ -10927,9 +10927,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BEGIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:318:7: ( 'BEGIN' )
+    		// MySQL51Lexer.g3:318:7: ( 'BEGIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:318:9: 'BEGIN'
+    		// MySQL51Lexer.g3:318:9: 'BEGIN'
     		{
     		DebugLocation(318, 9);
     		Match("BEGIN"); if (state.failed) return;
@@ -10965,9 +10965,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BYTE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:319:6: ( 'BYTE' )
+    		// MySQL51Lexer.g3:319:6: ( 'BYTE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:319:8: 'BYTE'
+    		// MySQL51Lexer.g3:319:8: 'BYTE'
     		{
     		DebugLocation(319, 8);
     		Match("BYTE"); if (state.failed) return;
@@ -11003,9 +11003,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CACHE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:320:7: ( 'CACHE' )
+    		// MySQL51Lexer.g3:320:7: ( 'CACHE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:320:9: 'CACHE'
+    		// MySQL51Lexer.g3:320:9: 'CACHE'
     		{
     		DebugLocation(320, 9);
     		Match("CACHE"); if (state.failed) return;
@@ -11041,9 +11041,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHARSET;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:321:9: ( 'CHARSET' )
+    		// MySQL51Lexer.g3:321:9: ( 'CHARSET' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:321:11: 'CHARSET'
+    		// MySQL51Lexer.g3:321:11: 'CHARSET'
     		{
     		DebugLocation(321, 11);
     		Match("CHARSET"); if (state.failed) return;
@@ -11079,9 +11079,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHECKSUM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:322:10: ( 'CHECKSUM' )
+    		// MySQL51Lexer.g3:322:10: ( 'CHECKSUM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:322:12: 'CHECKSUM'
+    		// MySQL51Lexer.g3:322:12: 'CHECKSUM'
     		{
     		DebugLocation(322, 12);
     		Match("CHECKSUM"); if (state.failed) return;
@@ -11117,9 +11117,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CLOSE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:323:7: ( 'CLOSE' )
+    		// MySQL51Lexer.g3:323:7: ( 'CLOSE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:323:9: 'CLOSE'
+    		// MySQL51Lexer.g3:323:9: 'CLOSE'
     		{
     		DebugLocation(323, 9);
     		Match("CLOSE"); if (state.failed) return;
@@ -11155,9 +11155,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMMENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:324:9: ( 'COMMENT' )
+    		// MySQL51Lexer.g3:324:9: ( 'COMMENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:324:11: 'COMMENT'
+    		// MySQL51Lexer.g3:324:11: 'COMMENT'
     		{
     		DebugLocation(324, 11);
     		Match("COMMENT"); if (state.failed) return;
@@ -11193,9 +11193,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMMIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:325:8: ( 'COMMIT' )
+    		// MySQL51Lexer.g3:325:8: ( 'COMMIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:325:10: 'COMMIT'
+    		// MySQL51Lexer.g3:325:10: 'COMMIT'
     		{
     		DebugLocation(325, 10);
     		Match("COMMIT"); if (state.failed) return;
@@ -11231,9 +11231,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONTAINS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:326:10: ( 'CONTAINS' )
+    		// MySQL51Lexer.g3:326:10: ( 'CONTAINS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:326:12: 'CONTAINS'
+    		// MySQL51Lexer.g3:326:12: 'CONTAINS'
     		{
     		DebugLocation(326, 12);
     		Match("CONTAINS"); if (state.failed) return;
@@ -11269,9 +11269,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DEALLOCATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:327:12: ( 'DEALLOCATE' )
+    		// MySQL51Lexer.g3:327:12: ( 'DEALLOCATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:327:14: 'DEALLOCATE'
+    		// MySQL51Lexer.g3:327:14: 'DEALLOCATE'
     		{
     		DebugLocation(327, 14);
     		Match("DEALLOCATE"); if (state.failed) return;
@@ -11307,9 +11307,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:328:4: ( 'DO' )
+    		// MySQL51Lexer.g3:328:4: ( 'DO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:328:6: 'DO'
+    		// MySQL51Lexer.g3:328:6: 'DO'
     		{
     		DebugLocation(328, 6);
     		Match("DO"); if (state.failed) return;
@@ -11345,9 +11345,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = END;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:329:5: ( 'END' )
+    		// MySQL51Lexer.g3:329:5: ( 'END' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:329:7: 'END'
+    		// MySQL51Lexer.g3:329:7: 'END'
     		{
     		DebugLocation(329, 7);
     		Match("END"); if (state.failed) return;
@@ -11383,9 +11383,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXECUTE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:330:9: ( 'EXECUTE' )
+    		// MySQL51Lexer.g3:330:9: ( 'EXECUTE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:330:11: 'EXECUTE'
+    		// MySQL51Lexer.g3:330:11: 'EXECUTE'
     		{
     		DebugLocation(330, 11);
     		Match("EXECUTE"); if (state.failed) return;
@@ -11421,9 +11421,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FLUSH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:331:7: ( 'FLUSH' )
+    		// MySQL51Lexer.g3:331:7: ( 'FLUSH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:331:9: 'FLUSH'
+    		// MySQL51Lexer.g3:331:9: 'FLUSH'
     		{
     		DebugLocation(331, 9);
     		Match("FLUSH"); if (state.failed) return;
@@ -11459,9 +11459,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HANDLER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:332:9: ( 'HANDLER' )
+    		// MySQL51Lexer.g3:332:9: ( 'HANDLER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:332:11: 'HANDLER'
+    		// MySQL51Lexer.g3:332:11: 'HANDLER'
     		{
     		DebugLocation(332, 11);
     		Match("HANDLER"); if (state.failed) return;
@@ -11497,9 +11497,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HELP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:333:6: ( 'HELP' )
+    		// MySQL51Lexer.g3:333:6: ( 'HELP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:333:8: 'HELP'
+    		// MySQL51Lexer.g3:333:8: 'HELP'
     		{
     		DebugLocation(333, 8);
     		Match("HELP"); if (state.failed) return;
@@ -11535,9 +11535,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HOST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:334:6: ( 'HOST' )
+    		// MySQL51Lexer.g3:334:6: ( 'HOST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:334:8: 'HOST'
+    		// MySQL51Lexer.g3:334:8: 'HOST'
     		{
     		DebugLocation(334, 8);
     		Match("HOST"); if (state.failed) return;
@@ -11573,9 +11573,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INSTALL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:335:9: ( 'INSTALL' )
+    		// MySQL51Lexer.g3:335:9: ( 'INSTALL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:335:11: 'INSTALL'
+    		// MySQL51Lexer.g3:335:11: 'INSTALL'
     		{
     		DebugLocation(335, 11);
     		Match("INSTALL"); if (state.failed) return;
@@ -11611,9 +11611,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LANGUAGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:336:10: ( 'LANGUAGE' )
+    		// MySQL51Lexer.g3:336:10: ( 'LANGUAGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:336:12: 'LANGUAGE'
+    		// MySQL51Lexer.g3:336:12: 'LANGUAGE'
     		{
     		DebugLocation(336, 12);
     		Match("LANGUAGE"); if (state.failed) return;
@@ -11649,9 +11649,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:337:4: ( 'NO' )
+    		// MySQL51Lexer.g3:337:4: ( 'NO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:337:6: 'NO'
+    		// MySQL51Lexer.g3:337:6: 'NO'
     		{
     		DebugLocation(337, 6);
     		Match("NO"); if (state.failed) return;
@@ -11687,9 +11687,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OPEN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:338:6: ( 'OPEN' )
+    		// MySQL51Lexer.g3:338:6: ( 'OPEN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:338:8: 'OPEN'
+    		// MySQL51Lexer.g3:338:8: 'OPEN'
     		{
     		DebugLocation(338, 8);
     		Match("OPEN"); if (state.failed) return;
@@ -11725,9 +11725,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OPTIONS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:339:9: ( 'OPTIONS' )
+    		// MySQL51Lexer.g3:339:9: ( 'OPTIONS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:339:11: 'OPTIONS'
+    		// MySQL51Lexer.g3:339:11: 'OPTIONS'
     		{
     		DebugLocation(339, 11);
     		Match("OPTIONS"); if (state.failed) return;
@@ -11763,9 +11763,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OWNER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:340:7: ( 'OWNER' )
+    		// MySQL51Lexer.g3:340:7: ( 'OWNER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:340:9: 'OWNER'
+    		// MySQL51Lexer.g3:340:9: 'OWNER'
     		{
     		DebugLocation(340, 9);
     		Match("OWNER"); if (state.failed) return;
@@ -11801,9 +11801,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PARSER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:341:8: ( 'PARSER' )
+    		// MySQL51Lexer.g3:341:8: ( 'PARSER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:341:10: 'PARSER'
+    		// MySQL51Lexer.g3:341:10: 'PARSER'
     		{
     		DebugLocation(341, 10);
     		Match("PARSER"); if (state.failed) return;
@@ -11839,9 +11839,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PARTITION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:342:11: ( 'PARTITION' )
+    		// MySQL51Lexer.g3:342:11: ( 'PARTITION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:342:13: 'PARTITION'
+    		// MySQL51Lexer.g3:342:13: 'PARTITION'
     		{
     		DebugLocation(342, 13);
     		Match("PARTITION"); if (state.failed) return;
@@ -11877,9 +11877,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PORT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:343:6: ( 'PORT' )
+    		// MySQL51Lexer.g3:343:6: ( 'PORT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:343:8: 'PORT'
+    		// MySQL51Lexer.g3:343:8: 'PORT'
     		{
     		DebugLocation(343, 8);
     		Match("PORT"); if (state.failed) return;
@@ -11915,9 +11915,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PREPARE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:344:9: ( 'PREPARE' )
+    		// MySQL51Lexer.g3:344:9: ( 'PREPARE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:344:11: 'PREPARE'
+    		// MySQL51Lexer.g3:344:11: 'PREPARE'
     		{
     		DebugLocation(344, 11);
     		Match("PREPARE"); if (state.failed) return;
@@ -11953,9 +11953,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REMOVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:345:8: ( 'REMOVE' )
+    		// MySQL51Lexer.g3:345:8: ( 'REMOVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:345:10: 'REMOVE'
+    		// MySQL51Lexer.g3:345:10: 'REMOVE'
     		{
     		DebugLocation(345, 10);
     		Match("REMOVE"); if (state.failed) return;
@@ -11991,9 +11991,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REPAIR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:346:8: ( 'REPAIR' )
+    		// MySQL51Lexer.g3:346:8: ( 'REPAIR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:346:10: 'REPAIR'
+    		// MySQL51Lexer.g3:346:10: 'REPAIR'
     		{
     		DebugLocation(346, 10);
     		Match("REPAIR"); if (state.failed) return;
@@ -12029,9 +12029,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RESET;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:347:7: ( 'RESET' )
+    		// MySQL51Lexer.g3:347:7: ( 'RESET' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:347:9: 'RESET'
+    		// MySQL51Lexer.g3:347:9: 'RESET'
     		{
     		DebugLocation(347, 9);
     		Match("RESET"); if (state.failed) return;
@@ -12067,9 +12067,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RESTORE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:348:9: ( 'RESTORE' )
+    		// MySQL51Lexer.g3:348:9: ( 'RESTORE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:348:11: 'RESTORE'
+    		// MySQL51Lexer.g3:348:11: 'RESTORE'
     		{
     		DebugLocation(348, 11);
     		Match("RESTORE"); if (state.failed) return;
@@ -12105,9 +12105,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROLLBACK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:349:10: ( 'ROLLBACK' )
+    		// MySQL51Lexer.g3:349:10: ( 'ROLLBACK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:349:12: 'ROLLBACK'
+    		// MySQL51Lexer.g3:349:12: 'ROLLBACK'
     		{
     		DebugLocation(349, 12);
     		Match("ROLLBACK"); if (state.failed) return;
@@ -12143,9 +12143,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SAVEPOINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:350:11: ( 'SAVEPOINT' )
+    		// MySQL51Lexer.g3:350:11: ( 'SAVEPOINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:350:13: 'SAVEPOINT'
+    		// MySQL51Lexer.g3:350:13: 'SAVEPOINT'
     		{
     		DebugLocation(350, 13);
     		Match("SAVEPOINT"); if (state.failed) return;
@@ -12181,9 +12181,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SECURITY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:351:10: ( 'SECURITY' )
+    		// MySQL51Lexer.g3:351:10: ( 'SECURITY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:351:12: 'SECURITY'
+    		// MySQL51Lexer.g3:351:12: 'SECURITY'
     		{
     		DebugLocation(351, 12);
     		Match("SECURITY"); if (state.failed) return;
@@ -12219,9 +12219,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SERVER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:352:8: ( 'SERVER' )
+    		// MySQL51Lexer.g3:352:8: ( 'SERVER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:352:10: 'SERVER'
+    		// MySQL51Lexer.g3:352:10: 'SERVER'
     		{
     		DebugLocation(352, 10);
     		Match("SERVER"); if (state.failed) return;
@@ -12257,9 +12257,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SIGNED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:353:8: ( 'SIGNED' )
+    		// MySQL51Lexer.g3:353:8: ( 'SIGNED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:353:10: 'SIGNED'
+    		// MySQL51Lexer.g3:353:10: 'SIGNED'
     		{
     		DebugLocation(353, 10);
     		Match("SIGNED"); if (state.failed) return;
@@ -12295,9 +12295,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SOCKET;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:354:8: ( 'SOCKET' )
+    		// MySQL51Lexer.g3:354:8: ( 'SOCKET' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:354:10: 'SOCKET'
+    		// MySQL51Lexer.g3:354:10: 'SOCKET'
     		{
     		DebugLocation(354, 10);
     		Match("SOCKET"); if (state.failed) return;
@@ -12333,9 +12333,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SLAVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:355:7: ( 'SLAVE' )
+    		// MySQL51Lexer.g3:355:7: ( 'SLAVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:355:9: 'SLAVE'
+    		// MySQL51Lexer.g3:355:9: 'SLAVE'
     		{
     		DebugLocation(355, 9);
     		Match("SLAVE"); if (state.failed) return;
@@ -12371,9 +12371,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SONAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:356:8: ( 'SONAME' )
+    		// MySQL51Lexer.g3:356:8: ( 'SONAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:356:10: 'SONAME'
+    		// MySQL51Lexer.g3:356:10: 'SONAME'
     		{
     		DebugLocation(356, 10);
     		Match("SONAME"); if (state.failed) return;
@@ -12409,9 +12409,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = START;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:357:7: ( 'START' )
+    		// MySQL51Lexer.g3:357:7: ( 'START' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:357:9: 'START'
+    		// MySQL51Lexer.g3:357:9: 'START'
     		{
     		DebugLocation(357, 9);
     		Match("START"); if (state.failed) return;
@@ -12447,9 +12447,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STOP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:358:6: ( 'STOP' )
+    		// MySQL51Lexer.g3:358:6: ( 'STOP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:358:8: 'STOP'
+    		// MySQL51Lexer.g3:358:8: 'STOP'
     		{
     		DebugLocation(358, 8);
     		Match("STOP"); if (state.failed) return;
@@ -12485,9 +12485,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRUNCATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:359:10: ( 'TRUNCATE' )
+    		// MySQL51Lexer.g3:359:10: ( 'TRUNCATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:359:12: 'TRUNCATE'
+    		// MySQL51Lexer.g3:359:12: 'TRUNCATE'
     		{
     		DebugLocation(359, 12);
     		Match("TRUNCATE"); if (state.failed) return;
@@ -12523,9 +12523,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNICODE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:360:9: ( 'UNICODE' )
+    		// MySQL51Lexer.g3:360:9: ( 'UNICODE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:360:11: 'UNICODE'
+    		// MySQL51Lexer.g3:360:11: 'UNICODE'
     		{
     		DebugLocation(360, 11);
     		Match("UNICODE"); if (state.failed) return;
@@ -12561,9 +12561,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNINSTALL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:361:11: ( 'UNINSTALL' )
+    		// MySQL51Lexer.g3:361:11: ( 'UNINSTALL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:361:13: 'UNINSTALL'
+    		// MySQL51Lexer.g3:361:13: 'UNINSTALL'
     		{
     		DebugLocation(361, 13);
     		Match("UNINSTALL"); if (state.failed) return;
@@ -12599,9 +12599,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WRAPPER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:362:9: ( 'WRAPPER' )
+    		// MySQL51Lexer.g3:362:9: ( 'WRAPPER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:362:11: 'WRAPPER'
+    		// MySQL51Lexer.g3:362:11: 'WRAPPER'
     		{
     		DebugLocation(362, 11);
     		Match("WRAPPER"); if (state.failed) return;
@@ -12637,9 +12637,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = XA;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:363:4: ( 'XA' )
+    		// MySQL51Lexer.g3:363:4: ( 'XA' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:363:6: 'XA'
+    		// MySQL51Lexer.g3:363:6: 'XA'
     		{
     		DebugLocation(363, 6);
     		Match("XA"); if (state.failed) return;
@@ -12675,9 +12675,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UPGRADE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:364:9: ( 'UPGRADE' )
+    		// MySQL51Lexer.g3:364:9: ( 'UPGRADE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:364:11: 'UPGRADE'
+    		// MySQL51Lexer.g3:364:11: 'UPGRADE'
     		{
     		DebugLocation(364, 11);
     		Match("UPGRADE"); if (state.failed) return;
@@ -12713,9 +12713,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ACTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:370:8: ( 'ACTION' )
+    		// MySQL51Lexer.g3:370:8: ( 'ACTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:370:10: 'ACTION'
+    		// MySQL51Lexer.g3:370:10: 'ACTION'
     		{
     		DebugLocation(370, 10);
     		Match("ACTION"); if (state.failed) return;
@@ -12751,9 +12751,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AFTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:371:7: ( 'AFTER' )
+    		// MySQL51Lexer.g3:371:7: ( 'AFTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:371:9: 'AFTER'
+    		// MySQL51Lexer.g3:371:9: 'AFTER'
     		{
     		DebugLocation(371, 9);
     		Match("AFTER"); if (state.failed) return;
@@ -12789,9 +12789,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AGAINST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:372:9: ( 'AGAINST' )
+    		// MySQL51Lexer.g3:372:9: ( 'AGAINST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:372:11: 'AGAINST'
+    		// MySQL51Lexer.g3:372:11: 'AGAINST'
     		{
     		DebugLocation(372, 11);
     		Match("AGAINST"); if (state.failed) return;
@@ -12827,9 +12827,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AGGREGATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:373:11: ( 'AGGREGATE' )
+    		// MySQL51Lexer.g3:373:11: ( 'AGGREGATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:373:13: 'AGGREGATE'
+    		// MySQL51Lexer.g3:373:13: 'AGGREGATE'
     		{
     		DebugLocation(373, 13);
     		Match("AGGREGATE"); if (state.failed) return;
@@ -12865,9 +12865,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ALGORITHM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:374:11: ( 'ALGORITHM' )
+    		// MySQL51Lexer.g3:374:11: ( 'ALGORITHM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:374:13: 'ALGORITHM'
+    		// MySQL51Lexer.g3:374:13: 'ALGORITHM'
     		{
     		DebugLocation(374, 13);
     		Match("ALGORITHM"); if (state.failed) return;
@@ -12908,9 +12908,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ANY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:375:5: ( 'ANY' )
+    		// MySQL51Lexer.g3:375:5: ( 'ANY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:375:7: 'ANY'
+    		// MySQL51Lexer.g3:375:7: 'ANY'
     		{
     		DebugLocation(375, 7);
     		Match("ANY"); if (state.failed) return;
@@ -12946,9 +12946,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:377:4: ( 'AT' )
+    		// MySQL51Lexer.g3:377:4: ( 'AT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:377:6: 'AT'
+    		// MySQL51Lexer.g3:377:6: 'AT'
     		{
     		DebugLocation(377, 6);
     		Match("AT"); if (state.failed) return;
@@ -12984,9 +12984,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AUTHORS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:378:9: ( 'AUTHORS' )
+    		// MySQL51Lexer.g3:378:9: ( 'AUTHORS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:378:11: 'AUTHORS'
+    		// MySQL51Lexer.g3:378:11: 'AUTHORS'
     		{
     		DebugLocation(378, 11);
     		Match("AUTHORS"); if (state.failed) return;
@@ -13022,9 +13022,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AUTO_INCREMENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:379:16: ( 'AUTO_INCREMENT' )
+    		// MySQL51Lexer.g3:379:16: ( 'AUTO_INCREMENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:379:18: 'AUTO_INCREMENT'
+    		// MySQL51Lexer.g3:379:18: 'AUTO_INCREMENT'
     		{
     		DebugLocation(379, 18);
     		Match("AUTO_INCREMENT"); if (state.failed) return;
@@ -13060,9 +13060,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AUTOEXTEND_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:380:17: ( 'AUTOEXTEND_SIZE' )
+    		// MySQL51Lexer.g3:380:17: ( 'AUTOEXTEND_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:380:19: 'AUTOEXTEND_SIZE'
+    		// MySQL51Lexer.g3:380:19: 'AUTOEXTEND_SIZE'
     		{
     		DebugLocation(380, 19);
     		Match("AUTOEXTEND_SIZE"); if (state.failed) return;
@@ -13098,9 +13098,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AVG;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:381:5: ( 'AVG' )
+    		// MySQL51Lexer.g3:381:5: ( 'AVG' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:381:7: 'AVG'
+    		// MySQL51Lexer.g3:381:7: 'AVG'
     		{
     		DebugLocation(381, 7);
     		Match("AVG"); if (state.failed) return;
@@ -13136,9 +13136,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = AVG_ROW_LENGTH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:382:16: ( 'AVG_ROW_LENGTH' )
+    		// MySQL51Lexer.g3:382:16: ( 'AVG_ROW_LENGTH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:382:18: 'AVG_ROW_LENGTH'
+    		// MySQL51Lexer.g3:382:18: 'AVG_ROW_LENGTH'
     		{
     		DebugLocation(382, 18);
     		Match("AVG_ROW_LENGTH"); if (state.failed) return;
@@ -13174,9 +13174,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BINLOG;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:385:8: ( 'BINLOG' )
+    		// MySQL51Lexer.g3:385:8: ( 'BINLOG' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:385:10: 'BINLOG'
+    		// MySQL51Lexer.g3:385:10: 'BINLOG'
     		{
     		DebugLocation(385, 10);
     		Match("BINLOG"); if (state.failed) return;
@@ -13212,9 +13212,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BLOCK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:388:7: ( 'BLOCK' )
+    		// MySQL51Lexer.g3:388:7: ( 'BLOCK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:388:9: 'BLOCK'
+    		// MySQL51Lexer.g3:388:9: 'BLOCK'
     		{
     		DebugLocation(388, 9);
     		Match("BLOCK"); if (state.failed) return;
@@ -13250,9 +13250,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BOOL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:389:6: ( 'BOOL' )
+    		// MySQL51Lexer.g3:389:6: ( 'BOOL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:389:8: 'BOOL'
+    		// MySQL51Lexer.g3:389:8: 'BOOL'
     		{
     		DebugLocation(389, 8);
     		Match("BOOL"); if (state.failed) return;
@@ -13288,9 +13288,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BOOLEAN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:390:9: ( 'BOOLEAN' )
+    		// MySQL51Lexer.g3:390:9: ( 'BOOLEAN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:390:11: 'BOOLEAN'
+    		// MySQL51Lexer.g3:390:11: 'BOOLEAN'
     		{
     		DebugLocation(390, 11);
     		Match("BOOLEAN"); if (state.failed) return;
@@ -13326,9 +13326,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BTREE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:391:7: ( 'BTREE' )
+    		// MySQL51Lexer.g3:391:7: ( 'BTREE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:391:9: 'BTREE'
+    		// MySQL51Lexer.g3:391:9: 'BTREE'
     		{
     		DebugLocation(391, 9);
     		Match("BTREE"); if (state.failed) return;
@@ -13364,9 +13364,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CASCADED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:392:10: ( 'CASCADED' )
+    		// MySQL51Lexer.g3:392:10: ( 'CASCADED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:392:12: 'CASCADED'
+    		// MySQL51Lexer.g3:392:12: 'CASCADED'
     		{
     		DebugLocation(392, 12);
     		Match("CASCADED"); if (state.failed) return;
@@ -13402,9 +13402,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHAIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:393:7: ( 'CHAIN' )
+    		// MySQL51Lexer.g3:393:7: ( 'CHAIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:393:9: 'CHAIN'
+    		// MySQL51Lexer.g3:393:9: 'CHAIN'
     		{
     		DebugLocation(393, 9);
     		Match("CHAIN"); if (state.failed) return;
@@ -13440,9 +13440,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHANGED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:394:9: ( 'CHANGED' )
+    		// MySQL51Lexer.g3:394:9: ( 'CHANGED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:394:11: 'CHANGED'
+    		// MySQL51Lexer.g3:394:11: 'CHANGED'
     		{
     		DebugLocation(394, 11);
     		Match("CHANGED"); if (state.failed) return;
@@ -13478,9 +13478,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CIPHER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:395:8: ( 'CIPHER' )
+    		// MySQL51Lexer.g3:395:8: ( 'CIPHER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:395:10: 'CIPHER'
+    		// MySQL51Lexer.g3:395:10: 'CIPHER'
     		{
     		DebugLocation(395, 10);
     		Match("CIPHER"); if (state.failed) return;
@@ -13516,9 +13516,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CLIENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:396:8: ( 'CLIENT' )
+    		// MySQL51Lexer.g3:396:8: ( 'CLIENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:396:10: 'CLIENT'
+    		// MySQL51Lexer.g3:396:10: 'CLIENT'
     		{
     		DebugLocation(396, 10);
     		Match("CLIENT"); if (state.failed) return;
@@ -13554,9 +13554,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COALESCE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:397:10: ( 'COALESCE' )
+    		// MySQL51Lexer.g3:397:10: ( 'COALESCE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:397:12: 'COALESCE'
+    		// MySQL51Lexer.g3:397:12: 'COALESCE'
     		{
     		DebugLocation(397, 12);
     		Match("COALESCE"); if (state.failed) return;
@@ -13592,9 +13592,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CODE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:398:6: ( 'CODE' )
+    		// MySQL51Lexer.g3:398:6: ( 'CODE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:398:8: 'CODE'
+    		// MySQL51Lexer.g3:398:8: 'CODE'
     		{
     		DebugLocation(398, 8);
     		Match("CODE"); if (state.failed) return;
@@ -13630,9 +13630,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLLATION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:399:11: ( 'COLLATION' )
+    		// MySQL51Lexer.g3:399:11: ( 'COLLATION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:399:13: 'COLLATION'
+    		// MySQL51Lexer.g3:399:13: 'COLLATION'
     		{
     		DebugLocation(399, 13);
     		Match("COLLATION"); if (state.failed) return;
@@ -13668,9 +13668,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COLUMNS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:400:9: ( 'COLUMNS' )
+    		// MySQL51Lexer.g3:400:9: ( 'COLUMNS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:400:11: 'COLUMNS'
+    		// MySQL51Lexer.g3:400:11: 'COLUMNS'
     		{
     		DebugLocation(400, 11);
     		Match("COLUMNS"); if (state.failed) return;
@@ -13706,9 +13706,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FIELDS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:402:8: ( 'FIELDS' )
+    		// MySQL51Lexer.g3:402:8: ( 'FIELDS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:402:10: 'FIELDS'
+    		// MySQL51Lexer.g3:402:10: 'FIELDS'
     		{
     		DebugLocation(402, 10);
     		Match("FIELDS"); if (state.failed) return;
@@ -13744,9 +13744,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMMITTED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:403:11: ( 'COMMITTED' )
+    		// MySQL51Lexer.g3:403:11: ( 'COMMITTED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:403:13: 'COMMITTED'
+    		// MySQL51Lexer.g3:403:13: 'COMMITTED'
     		{
     		DebugLocation(403, 13);
     		Match("COMMITTED"); if (state.failed) return;
@@ -13782,9 +13782,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMPACT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:404:9: ( 'COMPACT' )
+    		// MySQL51Lexer.g3:404:9: ( 'COMPACT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:404:11: 'COMPACT'
+    		// MySQL51Lexer.g3:404:11: 'COMPACT'
     		{
     		DebugLocation(404, 11);
     		Match("COMPACT"); if (state.failed) return;
@@ -13820,9 +13820,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMPLETION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:405:12: ( 'COMPLETION' )
+    		// MySQL51Lexer.g3:405:12: ( 'COMPLETION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:405:14: 'COMPLETION'
+    		// MySQL51Lexer.g3:405:14: 'COMPLETION'
     		{
     		DebugLocation(405, 14);
     		Match("COMPLETION"); if (state.failed) return;
@@ -13858,9 +13858,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMPRESSED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:406:12: ( 'COMPRESSED' )
+    		// MySQL51Lexer.g3:406:12: ( 'COMPRESSED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:406:14: 'COMPRESSED'
+    		// MySQL51Lexer.g3:406:14: 'COMPRESSED'
     		{
     		DebugLocation(406, 14);
     		Match("COMPRESSED"); if (state.failed) return;
@@ -13896,9 +13896,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONCURRENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:407:12: ( 'CONCURRENT' )
+    		// MySQL51Lexer.g3:407:12: ( 'CONCURRENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:407:14: 'CONCURRENT'
+    		// MySQL51Lexer.g3:407:14: 'CONCURRENT'
     		{
     		DebugLocation(407, 14);
     		Match("CONCURRENT"); if (state.failed) return;
@@ -13934,9 +13934,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONNECTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:408:12: ( 'CONNECTION' )
+    		// MySQL51Lexer.g3:408:12: ( 'CONNECTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:408:14: 'CONNECTION'
+    		// MySQL51Lexer.g3:408:14: 'CONNECTION'
     		{
     		DebugLocation(408, 14);
     		Match("CONNECTION"); if (state.failed) return;
@@ -13972,9 +13972,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONSISTENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:409:12: ( 'CONSISTENT' )
+    		// MySQL51Lexer.g3:409:12: ( 'CONSISTENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:409:14: 'CONSISTENT'
+    		// MySQL51Lexer.g3:409:14: 'CONSISTENT'
     		{
     		DebugLocation(409, 14);
     		Match("CONSISTENT"); if (state.failed) return;
@@ -14010,9 +14010,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONTEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:410:9: ( 'CONTEXT' )
+    		// MySQL51Lexer.g3:410:9: ( 'CONTEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:410:11: 'CONTEXT'
+    		// MySQL51Lexer.g3:410:11: 'CONTEXT'
     		{
     		DebugLocation(410, 11);
     		Match("CONTEXT"); if (state.failed) return;
@@ -14048,9 +14048,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CONTRIBUTORS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:411:14: ( 'CONTRIBUTORS' )
+    		// MySQL51Lexer.g3:411:14: ( 'CONTRIBUTORS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:411:16: 'CONTRIBUTORS'
+    		// MySQL51Lexer.g3:411:16: 'CONTRIBUTORS'
     		{
     		DebugLocation(411, 16);
     		Match("CONTRIBUTORS"); if (state.failed) return;
@@ -14086,9 +14086,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CPU;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:412:5: ( 'CPU' )
+    		// MySQL51Lexer.g3:412:5: ( 'CPU' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:412:7: 'CPU'
+    		// MySQL51Lexer.g3:412:7: 'CPU'
     		{
     		DebugLocation(412, 7);
     		Match("CPU"); if (state.failed) return;
@@ -14124,9 +14124,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CUBE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:414:6: ( 'CUBE' )
+    		// MySQL51Lexer.g3:414:6: ( 'CUBE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:414:8: 'CUBE'
+    		// MySQL51Lexer.g3:414:8: 'CUBE'
     		{
     		DebugLocation(414, 8);
     		Match("CUBE"); if (state.failed) return;
@@ -14162,9 +14162,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATA;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:415:6: ( 'DATA' )
+    		// MySQL51Lexer.g3:415:6: ( 'DATA' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:415:8: 'DATA'
+    		// MySQL51Lexer.g3:415:8: 'DATA'
     		{
     		DebugLocation(415, 8);
     		Match("DATA"); if (state.failed) return;
@@ -14200,9 +14200,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATAFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:416:10: ( 'DATAFILE' )
+    		// MySQL51Lexer.g3:416:10: ( 'DATAFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:416:12: 'DATAFILE'
+    		// MySQL51Lexer.g3:416:12: 'DATAFILE'
     		{
     		DebugLocation(416, 12);
     		Match("DATAFILE"); if (state.failed) return;
@@ -14238,9 +14238,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DEFINER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:417:9: ( 'DEFINER' )
+    		// MySQL51Lexer.g3:417:9: ( 'DEFINER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:417:11: 'DEFINER'
+    		// MySQL51Lexer.g3:417:11: 'DEFINER'
     		{
     		DebugLocation(417, 11);
     		Match("DEFINER"); if (state.failed) return;
@@ -14276,9 +14276,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DELAY_KEY_WRITE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:418:17: ( 'DELAY_KEY_WRITE' )
+    		// MySQL51Lexer.g3:418:17: ( 'DELAY_KEY_WRITE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:418:19: 'DELAY_KEY_WRITE'
+    		// MySQL51Lexer.g3:418:19: 'DELAY_KEY_WRITE'
     		{
     		DebugLocation(418, 19);
     		Match("DELAY_KEY_WRITE"); if (state.failed) return;
@@ -14314,9 +14314,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DES_KEY_FILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:419:14: ( 'DES_KEY_FILE' )
+    		// MySQL51Lexer.g3:419:14: ( 'DES_KEY_FILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:419:16: 'DES_KEY_FILE'
+    		// MySQL51Lexer.g3:419:16: 'DES_KEY_FILE'
     		{
     		DebugLocation(419, 16);
     		Match("DES_KEY_FILE"); if (state.failed) return;
@@ -14352,9 +14352,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DIRECTORY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:420:11: ( 'DIRECTORY' )
+    		// MySQL51Lexer.g3:420:11: ( 'DIRECTORY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:420:13: 'DIRECTORY'
+    		// MySQL51Lexer.g3:420:13: 'DIRECTORY'
     		{
     		DebugLocation(420, 13);
     		Match("DIRECTORY"); if (state.failed) return;
@@ -14390,9 +14390,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DISABLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:421:9: ( 'DISABLE' )
+    		// MySQL51Lexer.g3:421:9: ( 'DISABLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:421:11: 'DISABLE'
+    		// MySQL51Lexer.g3:421:11: 'DISABLE'
     		{
     		DebugLocation(421, 11);
     		Match("DISABLE"); if (state.failed) return;
@@ -14428,9 +14428,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DISCARD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:422:9: ( 'DISCARD' )
+    		// MySQL51Lexer.g3:422:9: ( 'DISCARD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:422:11: 'DISCARD'
+    		// MySQL51Lexer.g3:422:11: 'DISCARD'
     		{
     		DebugLocation(422, 11);
     		Match("DISCARD"); if (state.failed) return;
@@ -14466,9 +14466,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DISK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:423:6: ( 'DISK' )
+    		// MySQL51Lexer.g3:423:6: ( 'DISK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:423:8: 'DISK'
+    		// MySQL51Lexer.g3:423:8: 'DISK'
     		{
     		DebugLocation(423, 8);
     		Match("DISK"); if (state.failed) return;
@@ -14504,9 +14504,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DUMPFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:424:10: ( 'DUMPFILE' )
+    		// MySQL51Lexer.g3:424:10: ( 'DUMPFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:424:12: 'DUMPFILE'
+    		// MySQL51Lexer.g3:424:12: 'DUMPFILE'
     		{
     		DebugLocation(424, 12);
     		Match("DUMPFILE"); if (state.failed) return;
@@ -14542,9 +14542,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DUPLICATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:425:11: ( 'DUPLICATE' )
+    		// MySQL51Lexer.g3:425:11: ( 'DUPLICATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:425:13: 'DUPLICATE'
+    		// MySQL51Lexer.g3:425:13: 'DUPLICATE'
     		{
     		DebugLocation(425, 13);
     		Match("DUPLICATE"); if (state.failed) return;
@@ -14580,9 +14580,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DYNAMIC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:426:9: ( 'DYNAMIC' )
+    		// MySQL51Lexer.g3:426:9: ( 'DYNAMIC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:426:11: 'DYNAMIC'
+    		// MySQL51Lexer.g3:426:11: 'DYNAMIC'
     		{
     		DebugLocation(426, 11);
     		Match("DYNAMIC"); if (state.failed) return;
@@ -14618,9 +14618,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ENDS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:427:6: ( 'ENDS' )
+    		// MySQL51Lexer.g3:427:6: ( 'ENDS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:427:8: 'ENDS'
+    		// MySQL51Lexer.g3:427:8: 'ENDS'
     		{
     		DebugLocation(427, 8);
     		Match("ENDS"); if (state.failed) return;
@@ -14656,9 +14656,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ENGINE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:428:8: ( 'ENGINE' )
+    		// MySQL51Lexer.g3:428:8: ( 'ENGINE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:428:10: 'ENGINE'
+    		// MySQL51Lexer.g3:428:10: 'ENGINE'
     		{
     		DebugLocation(428, 10);
     		Match("ENGINE"); if (state.failed) return;
@@ -14694,9 +14694,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ENGINES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:429:9: ( 'ENGINES' )
+    		// MySQL51Lexer.g3:429:9: ( 'ENGINES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:429:11: 'ENGINES'
+    		// MySQL51Lexer.g3:429:11: 'ENGINES'
     		{
     		DebugLocation(429, 11);
     		Match("ENGINES"); if (state.failed) return;
@@ -14732,9 +14732,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ERROR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:430:7: ( 'ERROR' )
+    		// MySQL51Lexer.g3:430:7: ( 'ERROR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:430:9: 'ERROR'
+    		// MySQL51Lexer.g3:430:9: 'ERROR'
     		{
     		DebugLocation(430, 9);
     		Match("ERROR"); if (state.failed) return;
@@ -14770,9 +14770,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ERRORS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:431:8: ( 'ERRORS' )
+    		// MySQL51Lexer.g3:431:8: ( 'ERRORS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:431:10: 'ERRORS'
+    		// MySQL51Lexer.g3:431:10: 'ERRORS'
     		{
     		DebugLocation(431, 10);
     		Match("ERRORS"); if (state.failed) return;
@@ -14808,9 +14808,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ESCAPE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:432:8: ( 'ESCAPE' )
+    		// MySQL51Lexer.g3:432:8: ( 'ESCAPE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:432:10: 'ESCAPE'
+    		// MySQL51Lexer.g3:432:10: 'ESCAPE'
     		{
     		DebugLocation(432, 10);
     		Match("ESCAPE"); if (state.failed) return;
@@ -14846,9 +14846,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EVENT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:433:7: ( 'EVENT' )
+    		// MySQL51Lexer.g3:433:7: ( 'EVENT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:433:9: 'EVENT'
+    		// MySQL51Lexer.g3:433:9: 'EVENT'
     		{
     		DebugLocation(433, 9);
     		Match("EVENT"); if (state.failed) return;
@@ -14884,9 +14884,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EVENTS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:434:8: ( 'EVENTS' )
+    		// MySQL51Lexer.g3:434:8: ( 'EVENTS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:434:10: 'EVENTS'
+    		// MySQL51Lexer.g3:434:10: 'EVENTS'
     		{
     		DebugLocation(434, 10);
     		Match("EVENTS"); if (state.failed) return;
@@ -14922,9 +14922,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EVERY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:435:7: ( 'EVERY' )
+    		// MySQL51Lexer.g3:435:7: ( 'EVERY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:435:9: 'EVERY'
+    		// MySQL51Lexer.g3:435:9: 'EVERY'
     		{
     		DebugLocation(435, 9);
     		Match("EVERY"); if (state.failed) return;
@@ -14960,9 +14960,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXCLUSIVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:437:11: ( 'EXCLUSIVE' )
+    		// MySQL51Lexer.g3:437:11: ( 'EXCLUSIVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:437:13: 'EXCLUSIVE'
+    		// MySQL51Lexer.g3:437:13: 'EXCLUSIVE'
     		{
     		DebugLocation(437, 13);
     		Match("EXCLUSIVE"); if (state.failed) return;
@@ -15003,9 +15003,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXPANSION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:438:11: ( 'EXPANSION' )
+    		// MySQL51Lexer.g3:438:11: ( 'EXPANSION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:438:13: 'EXPANSION'
+    		// MySQL51Lexer.g3:438:13: 'EXPANSION'
     		{
     		DebugLocation(438, 13);
     		Match("EXPANSION"); if (state.failed) return;
@@ -15041,9 +15041,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXTENDED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:439:10: ( 'EXTENDED' )
+    		// MySQL51Lexer.g3:439:10: ( 'EXTENDED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:439:12: 'EXTENDED'
+    		// MySQL51Lexer.g3:439:12: 'EXTENDED'
     		{
     		DebugLocation(439, 12);
     		Match("EXTENDED"); if (state.failed) return;
@@ -15079,9 +15079,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXTENT_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:440:13: ( 'EXTENT_SIZE' )
+    		// MySQL51Lexer.g3:440:13: ( 'EXTENT_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:440:15: 'EXTENT_SIZE'
+    		// MySQL51Lexer.g3:440:15: 'EXTENT_SIZE'
     		{
     		DebugLocation(440, 15);
     		Match("EXTENT_SIZE"); if (state.failed) return;
@@ -15117,9 +15117,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FAULTS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:441:8: ( 'FAULTS' )
+    		// MySQL51Lexer.g3:441:8: ( 'FAULTS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:441:10: 'FAULTS'
+    		// MySQL51Lexer.g3:441:10: 'FAULTS'
     		{
     		DebugLocation(441, 10);
     		Match("FAULTS"); if (state.failed) return;
@@ -15155,9 +15155,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FAST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:442:6: ( 'FAST' )
+    		// MySQL51Lexer.g3:442:6: ( 'FAST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:442:8: 'FAST'
+    		// MySQL51Lexer.g3:442:8: 'FAST'
     		{
     		DebugLocation(442, 8);
     		Match("FAST"); if (state.failed) return;
@@ -15193,9 +15193,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FOUND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:444:7: ( 'FOUND' )
+    		// MySQL51Lexer.g3:444:7: ( 'FOUND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:444:9: 'FOUND'
+    		// MySQL51Lexer.g3:444:9: 'FOUND'
     		{
     		DebugLocation(444, 9);
     		Match("FOUND"); if (state.failed) return;
@@ -15231,9 +15231,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ENABLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:445:8: ( 'ENABLE' )
+    		// MySQL51Lexer.g3:445:8: ( 'ENABLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:445:10: 'ENABLE'
+    		// MySQL51Lexer.g3:445:10: 'ENABLE'
     		{
     		DebugLocation(445, 10);
     		Match("ENABLE"); if (state.failed) return;
@@ -15269,9 +15269,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FULL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:446:6: ( 'FULL' )
+    		// MySQL51Lexer.g3:446:6: ( 'FULL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:446:8: 'FULL'
+    		// MySQL51Lexer.g3:446:8: 'FULL'
     		{
     		DebugLocation(446, 8);
     		Match("FULL"); if (state.failed) return;
@@ -15307,9 +15307,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:447:6: ( 'FILE' )
+    		// MySQL51Lexer.g3:447:6: ( 'FILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:447:8: 'FILE'
+    		// MySQL51Lexer.g3:447:8: 'FILE'
     		{
     		DebugLocation(447, 8);
     		Match("FILE"); if (state.failed) return;
@@ -15345,9 +15345,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FIRST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:448:7: ( 'FIRST' )
+    		// MySQL51Lexer.g3:448:7: ( 'FIRST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:448:9: 'FIRST'
+    		// MySQL51Lexer.g3:448:9: 'FIRST'
     		{
     		DebugLocation(448, 9);
     		Match("FIRST"); if (state.failed) return;
@@ -15383,9 +15383,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FIXED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:449:7: ( 'FIXED' )
+    		// MySQL51Lexer.g3:449:7: ( 'FIXED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:449:9: 'FIXED'
+    		// MySQL51Lexer.g3:449:9: 'FIXED'
     		{
     		DebugLocation(449, 9);
     		Match("FIXED"); if (state.failed) return;
@@ -15421,9 +15421,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FRAC_SECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:450:13: ( 'FRAC_SECOND' )
+    		// MySQL51Lexer.g3:450:13: ( 'FRAC_SECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:450:15: 'FRAC_SECOND'
+    		// MySQL51Lexer.g3:450:15: 'FRAC_SECOND'
     		{
     		DebugLocation(450, 15);
     		Match("FRAC_SECOND"); if (state.failed) return;
@@ -15459,9 +15459,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GEOMETRY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:451:10: ( 'GEOMETRY' )
+    		// MySQL51Lexer.g3:451:10: ( 'GEOMETRY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:451:12: 'GEOMETRY'
+    		// MySQL51Lexer.g3:451:12: 'GEOMETRY'
     		{
     		DebugLocation(451, 12);
     		Match("GEOMETRY"); if (state.failed) return;
@@ -15497,9 +15497,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GEOMETRYCOLLECTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:452:20: ( 'GEOMETRYCOLLECTION' )
+    		// MySQL51Lexer.g3:452:20: ( 'GEOMETRYCOLLECTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:452:22: 'GEOMETRYCOLLECTION'
+    		// MySQL51Lexer.g3:452:22: 'GEOMETRYCOLLECTION'
     		{
     		DebugLocation(452, 22);
     		Match("GEOMETRYCOLLECTION"); if (state.failed) return;
@@ -15535,9 +15535,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GRANTS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:454:8: ( 'GRANTS' )
+    		// MySQL51Lexer.g3:454:8: ( 'GRANTS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:454:10: 'GRANTS'
+    		// MySQL51Lexer.g3:454:10: 'GRANTS'
     		{
     		DebugLocation(454, 10);
     		Match("GRANTS"); if (state.failed) return;
@@ -15573,9 +15573,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GLOBAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:455:8: ( 'GLOBAL' )
+    		// MySQL51Lexer.g3:455:8: ( 'GLOBAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:455:10: 'GLOBAL'
+    		// MySQL51Lexer.g3:455:10: 'GLOBAL'
     		{
     		DebugLocation(455, 10);
     		Match("GLOBAL"); if (state.failed) return;
@@ -15611,9 +15611,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HASH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:456:6: ( 'HASH' )
+    		// MySQL51Lexer.g3:456:6: ( 'HASH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:456:8: 'HASH'
+    		// MySQL51Lexer.g3:456:8: 'HASH'
     		{
     		DebugLocation(456, 8);
     		Match("HASH"); if (state.failed) return;
@@ -15649,9 +15649,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HOSTS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:458:7: ( 'HOSTS' )
+    		// MySQL51Lexer.g3:458:7: ( 'HOSTS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:458:9: 'HOSTS'
+    		// MySQL51Lexer.g3:458:9: 'HOSTS'
     		{
     		DebugLocation(458, 9);
     		Match("HOSTS"); if (state.failed) return;
@@ -15687,9 +15687,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IDENTIFIED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:460:12: ( 'IDENTIFIED' )
+    		// MySQL51Lexer.g3:460:12: ( 'IDENTIFIED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:460:14: 'IDENTIFIED'
+    		// MySQL51Lexer.g3:460:14: 'IDENTIFIED'
     		{
     		DebugLocation(460, 14);
     		Match("IDENTIFIED"); if (state.failed) return;
@@ -15725,9 +15725,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INVOKER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:461:9: ( 'INVOKER' )
+    		// MySQL51Lexer.g3:461:9: ( 'INVOKER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:461:11: 'INVOKER'
+    		// MySQL51Lexer.g3:461:11: 'INVOKER'
     		{
     		DebugLocation(461, 11);
     		Match("INVOKER"); if (state.failed) return;
@@ -15763,9 +15763,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IMPORT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:462:8: ( 'IMPORT' )
+    		// MySQL51Lexer.g3:462:8: ( 'IMPORT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:462:10: 'IMPORT'
+    		// MySQL51Lexer.g3:462:10: 'IMPORT'
     		{
     		DebugLocation(462, 10);
     		Match("IMPORT"); if (state.failed) return;
@@ -15801,9 +15801,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INDEXES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:463:9: ( 'INDEXES' )
+    		// MySQL51Lexer.g3:463:9: ( 'INDEXES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:463:11: 'INDEXES'
+    		// MySQL51Lexer.g3:463:11: 'INDEXES'
     		{
     		DebugLocation(463, 11);
     		Match("INDEXES"); if (state.failed) return;
@@ -15839,9 +15839,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INITIAL_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:464:14: ( 'INITIAL_SIZE' )
+    		// MySQL51Lexer.g3:464:14: ( 'INITIAL_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:464:16: 'INITIAL_SIZE'
+    		// MySQL51Lexer.g3:464:16: 'INITIAL_SIZE'
     		{
     		DebugLocation(464, 16);
     		Match("INITIAL_SIZE"); if (state.failed) return;
@@ -15877,9 +15877,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INVISIBLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:465:11: ( 'INVISIBLE' )
+    		// MySQL51Lexer.g3:465:11: ( 'INVISIBLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:465:13: 'INVISIBLE'
+    		// MySQL51Lexer.g3:465:13: 'INVISIBLE'
     		{
     		DebugLocation(465, 13);
     		Match("INVISIBLE"); if (state.failed) return;
@@ -15920,9 +15920,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:466:4: ( 'IO' )
+    		// MySQL51Lexer.g3:466:4: ( 'IO' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:466:6: 'IO'
+    		// MySQL51Lexer.g3:466:6: 'IO'
     		{
     		DebugLocation(466, 6);
     		Match("IO"); if (state.failed) return;
@@ -15958,9 +15958,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = IPC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:467:5: ( 'IPC' )
+    		// MySQL51Lexer.g3:467:5: ( 'IPC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:467:7: 'IPC'
+    		// MySQL51Lexer.g3:467:7: 'IPC'
     		{
     		DebugLocation(467, 7);
     		Match("IPC"); if (state.failed) return;
@@ -15996,9 +15996,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ISOLATION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:468:11: ( 'ISOLATION' )
+    		// MySQL51Lexer.g3:468:11: ( 'ISOLATION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:468:13: 'ISOLATION'
+    		// MySQL51Lexer.g3:468:13: 'ISOLATION'
     		{
     		DebugLocation(468, 13);
     		Match("ISOLATION"); if (state.failed) return;
@@ -16034,9 +16034,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ISSUER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:469:8: ( 'ISSUER' )
+    		// MySQL51Lexer.g3:469:8: ( 'ISSUER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:469:10: 'ISSUER'
+    		// MySQL51Lexer.g3:469:10: 'ISSUER'
     		{
     		DebugLocation(469, 10);
     		Match("ISSUER"); if (state.failed) return;
@@ -16072,9 +16072,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INNOBASE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:470:10: ( 'INNOBASE' )
+    		// MySQL51Lexer.g3:470:10: ( 'INNOBASE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:470:12: 'INNOBASE'
+    		// MySQL51Lexer.g3:470:12: 'INNOBASE'
     		{
     		DebugLocation(470, 12);
     		Match("INNOBASE"); if (state.failed) return;
@@ -16110,9 +16110,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INSERT_METHOD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:471:15: ( 'INSERT_METHOD' )
+    		// MySQL51Lexer.g3:471:15: ( 'INSERT_METHOD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:471:17: 'INSERT_METHOD'
+    		// MySQL51Lexer.g3:471:17: 'INSERT_METHOD'
     		{
     		DebugLocation(471, 17);
     		Match("INSERT_METHOD"); if (state.failed) return;
@@ -16148,9 +16148,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = KEY_BLOCK_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:472:16: ( 'KEY_BLOCK_SIZE' )
+    		// MySQL51Lexer.g3:472:16: ( 'KEY_BLOCK_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:472:18: 'KEY_BLOCK_SIZE'
+    		// MySQL51Lexer.g3:472:18: 'KEY_BLOCK_SIZE'
     		{
     		DebugLocation(472, 18);
     		Match("KEY_BLOCK_SIZE"); if (state.failed) return;
@@ -16186,9 +16186,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LAST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:473:6: ( 'LAST' )
+    		// MySQL51Lexer.g3:473:6: ( 'LAST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:473:8: 'LAST'
+    		// MySQL51Lexer.g3:473:8: 'LAST'
     		{
     		DebugLocation(473, 8);
     		Match("LAST"); if (state.failed) return;
@@ -16224,9 +16224,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LEAVES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:474:8: ( 'LEAVES' )
+    		// MySQL51Lexer.g3:474:8: ( 'LEAVES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:474:10: 'LEAVES'
+    		// MySQL51Lexer.g3:474:10: 'LEAVES'
     		{
     		DebugLocation(474, 10);
     		Match("LEAVES"); if (state.failed) return;
@@ -16262,9 +16262,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LESS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:475:6: ( 'LESS' )
+    		// MySQL51Lexer.g3:475:6: ( 'LESS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:475:8: 'LESS'
+    		// MySQL51Lexer.g3:475:8: 'LESS'
     		{
     		DebugLocation(475, 8);
     		Match("LESS"); if (state.failed) return;
@@ -16300,9 +16300,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LEVEL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:476:7: ( 'LEVEL' )
+    		// MySQL51Lexer.g3:476:7: ( 'LEVEL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:476:9: 'LEVEL'
+    		// MySQL51Lexer.g3:476:9: 'LEVEL'
     		{
     		DebugLocation(476, 9);
     		Match("LEVEL"); if (state.failed) return;
@@ -16338,9 +16338,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LINESTRING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:477:12: ( 'LINESTRING' )
+    		// MySQL51Lexer.g3:477:12: ( 'LINESTRING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:477:14: 'LINESTRING'
+    		// MySQL51Lexer.g3:477:14: 'LINESTRING'
     		{
     		DebugLocation(477, 14);
     		Match("LINESTRING"); if (state.failed) return;
@@ -16376,9 +16376,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LIST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:478:6: ( 'LIST' )
+    		// MySQL51Lexer.g3:478:6: ( 'LIST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:478:8: 'LIST'
+    		// MySQL51Lexer.g3:478:8: 'LIST'
     		{
     		DebugLocation(478, 8);
     		Match("LIST"); if (state.failed) return;
@@ -16414,9 +16414,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOCAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:479:7: ( 'LOCAL' )
+    		// MySQL51Lexer.g3:479:7: ( 'LOCAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:479:9: 'LOCAL'
+    		// MySQL51Lexer.g3:479:9: 'LOCAL'
     		{
     		DebugLocation(479, 9);
     		Match("LOCAL"); if (state.failed) return;
@@ -16452,9 +16452,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOCKS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:480:7: ( 'LOCKS' )
+    		// MySQL51Lexer.g3:480:7: ( 'LOCKS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:480:9: 'LOCKS'
+    		// MySQL51Lexer.g3:480:9: 'LOCKS'
     		{
     		DebugLocation(480, 9);
     		Match("LOCKS"); if (state.failed) return;
@@ -16490,9 +16490,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOGFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:481:9: ( 'LOGFILE' )
+    		// MySQL51Lexer.g3:481:9: ( 'LOGFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:481:11: 'LOGFILE'
+    		// MySQL51Lexer.g3:481:11: 'LOGFILE'
     		{
     		DebugLocation(481, 11);
     		Match("LOGFILE"); if (state.failed) return;
@@ -16528,9 +16528,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOGS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:482:6: ( 'LOGS' )
+    		// MySQL51Lexer.g3:482:6: ( 'LOGS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:482:8: 'LOGS'
+    		// MySQL51Lexer.g3:482:8: 'LOGS'
     		{
     		DebugLocation(482, 8);
     		Match("LOGS"); if (state.failed) return;
@@ -16566,9 +16566,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_ROWS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:483:10: ( 'MAX_ROWS' )
+    		// MySQL51Lexer.g3:483:10: ( 'MAX_ROWS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:483:12: 'MAX_ROWS'
+    		// MySQL51Lexer.g3:483:12: 'MAX_ROWS'
     		{
     		DebugLocation(483, 12);
     		Match("MAX_ROWS"); if (state.failed) return;
@@ -16604,9 +16604,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:484:8: ( 'MASTER' )
+    		// MySQL51Lexer.g3:484:8: ( 'MASTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:484:10: 'MASTER'
+    		// MySQL51Lexer.g3:484:10: 'MASTER'
     		{
     		DebugLocation(484, 10);
     		Match("MASTER"); if (state.failed) return;
@@ -16642,9 +16642,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_HOST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:485:13: ( 'MASTER_HOST' )
+    		// MySQL51Lexer.g3:485:13: ( 'MASTER_HOST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:485:15: 'MASTER_HOST'
+    		// MySQL51Lexer.g3:485:15: 'MASTER_HOST'
     		{
     		DebugLocation(485, 15);
     		Match("MASTER_HOST"); if (state.failed) return;
@@ -16680,9 +16680,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_PORT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:486:13: ( 'MASTER_PORT' )
+    		// MySQL51Lexer.g3:486:13: ( 'MASTER_PORT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:486:15: 'MASTER_PORT'
+    		// MySQL51Lexer.g3:486:15: 'MASTER_PORT'
     		{
     		DebugLocation(486, 15);
     		Match("MASTER_PORT"); if (state.failed) return;
@@ -16718,9 +16718,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_LOG_FILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:487:17: ( 'MASTER_LOG_FILE' )
+    		// MySQL51Lexer.g3:487:17: ( 'MASTER_LOG_FILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:487:19: 'MASTER_LOG_FILE'
+    		// MySQL51Lexer.g3:487:19: 'MASTER_LOG_FILE'
     		{
     		DebugLocation(487, 19);
     		Match("MASTER_LOG_FILE"); if (state.failed) return;
@@ -16756,9 +16756,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_LOG_POS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:488:16: ( 'MASTER_LOG_POS' )
+    		// MySQL51Lexer.g3:488:16: ( 'MASTER_LOG_POS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:488:18: 'MASTER_LOG_POS'
+    		// MySQL51Lexer.g3:488:18: 'MASTER_LOG_POS'
     		{
     		DebugLocation(488, 18);
     		Match("MASTER_LOG_POS"); if (state.failed) return;
@@ -16794,9 +16794,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_USER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:489:13: ( 'MASTER_USER' )
+    		// MySQL51Lexer.g3:489:13: ( 'MASTER_USER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:489:15: 'MASTER_USER'
+    		// MySQL51Lexer.g3:489:15: 'MASTER_USER'
     		{
     		DebugLocation(489, 15);
     		Match("MASTER_USER"); if (state.failed) return;
@@ -16832,9 +16832,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_PASSWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:490:17: ( 'MASTER_PASSWORD' )
+    		// MySQL51Lexer.g3:490:17: ( 'MASTER_PASSWORD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:490:19: 'MASTER_PASSWORD'
+    		// MySQL51Lexer.g3:490:19: 'MASTER_PASSWORD'
     		{
     		DebugLocation(490, 19);
     		Match("MASTER_PASSWORD"); if (state.failed) return;
@@ -16870,9 +16870,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SERVER_ID;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:491:18: ( 'MASTER_SERVER_ID' )
+    		// MySQL51Lexer.g3:491:18: ( 'MASTER_SERVER_ID' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:491:20: 'MASTER_SERVER_ID'
+    		// MySQL51Lexer.g3:491:20: 'MASTER_SERVER_ID'
     		{
     		DebugLocation(491, 20);
     		Match("MASTER_SERVER_ID"); if (state.failed) return;
@@ -16908,9 +16908,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_CONNECT_RETRY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:492:22: ( 'MASTER_CONNECT_RETRY' )
+    		// MySQL51Lexer.g3:492:22: ( 'MASTER_CONNECT_RETRY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:492:24: 'MASTER_CONNECT_RETRY'
+    		// MySQL51Lexer.g3:492:24: 'MASTER_CONNECT_RETRY'
     		{
     		DebugLocation(492, 24);
     		Match("MASTER_CONNECT_RETRY"); if (state.failed) return;
@@ -16946,9 +16946,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:493:12: ( 'MASTER_SSL' )
+    		// MySQL51Lexer.g3:493:12: ( 'MASTER_SSL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:493:14: 'MASTER_SSL'
+    		// MySQL51Lexer.g3:493:14: 'MASTER_SSL'
     		{
     		DebugLocation(493, 14);
     		Match("MASTER_SSL"); if (state.failed) return;
@@ -16984,9 +16984,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL_CA;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:494:15: ( 'MASTER_SSL_CA' )
+    		// MySQL51Lexer.g3:494:15: ( 'MASTER_SSL_CA' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:494:17: 'MASTER_SSL_CA'
+    		// MySQL51Lexer.g3:494:17: 'MASTER_SSL_CA'
     		{
     		DebugLocation(494, 17);
     		Match("MASTER_SSL_CA"); if (state.failed) return;
@@ -17022,9 +17022,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL_CAPATH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:495:19: ( 'MASTER_SSL_CAPATH' )
+    		// MySQL51Lexer.g3:495:19: ( 'MASTER_SSL_CAPATH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:495:21: 'MASTER_SSL_CAPATH'
+    		// MySQL51Lexer.g3:495:21: 'MASTER_SSL_CAPATH'
     		{
     		DebugLocation(495, 21);
     		Match("MASTER_SSL_CAPATH"); if (state.failed) return;
@@ -17060,9 +17060,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL_CERT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:496:17: ( 'MASTER_SSL_CERT' )
+    		// MySQL51Lexer.g3:496:17: ( 'MASTER_SSL_CERT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:496:19: 'MASTER_SSL_CERT'
+    		// MySQL51Lexer.g3:496:19: 'MASTER_SSL_CERT'
     		{
     		DebugLocation(496, 19);
     		Match("MASTER_SSL_CERT"); if (state.failed) return;
@@ -17098,9 +17098,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL_CIPHER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:497:19: ( 'MASTER_SSL_CIPHER' )
+    		// MySQL51Lexer.g3:497:19: ( 'MASTER_SSL_CIPHER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:497:21: 'MASTER_SSL_CIPHER'
+    		// MySQL51Lexer.g3:497:21: 'MASTER_SSL_CIPHER'
     		{
     		DebugLocation(497, 21);
     		Match("MASTER_SSL_CIPHER"); if (state.failed) return;
@@ -17136,9 +17136,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MASTER_SSL_KEY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:498:16: ( 'MASTER_SSL_KEY' )
+    		// MySQL51Lexer.g3:498:16: ( 'MASTER_SSL_KEY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:498:18: 'MASTER_SSL_KEY'
+    		// MySQL51Lexer.g3:498:18: 'MASTER_SSL_KEY'
     		{
     		DebugLocation(498, 18);
     		Match("MASTER_SSL_KEY"); if (state.failed) return;
@@ -17174,9 +17174,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_CONNECTIONS_PER_HOUR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:499:26: ( 'MAX_CONNECTIONS_PER_HOUR' )
+    		// MySQL51Lexer.g3:499:26: ( 'MAX_CONNECTIONS_PER_HOUR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:499:28: 'MAX_CONNECTIONS_PER_HOUR'
+    		// MySQL51Lexer.g3:499:28: 'MAX_CONNECTIONS_PER_HOUR'
     		{
     		DebugLocation(499, 28);
     		Match("MAX_CONNECTIONS_PER_HOUR"); if (state.failed) return;
@@ -17212,9 +17212,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_QUERIES_PER_HOUR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:500:22: ( 'MAX_QUERIES_PER_HOUR' )
+    		// MySQL51Lexer.g3:500:22: ( 'MAX_QUERIES_PER_HOUR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:500:24: 'MAX_QUERIES_PER_HOUR'
+    		// MySQL51Lexer.g3:500:24: 'MAX_QUERIES_PER_HOUR'
     		{
     		DebugLocation(500, 24);
     		Match("MAX_QUERIES_PER_HOUR"); if (state.failed) return;
@@ -17250,9 +17250,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:501:10: ( 'MAX_SIZE' )
+    		// MySQL51Lexer.g3:501:10: ( 'MAX_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:501:12: 'MAX_SIZE'
+    		// MySQL51Lexer.g3:501:12: 'MAX_SIZE'
     		{
     		DebugLocation(501, 12);
     		Match("MAX_SIZE"); if (state.failed) return;
@@ -17288,9 +17288,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_UPDATES_PER_HOUR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:502:22: ( 'MAX_UPDATES_PER_HOUR' )
+    		// MySQL51Lexer.g3:502:22: ( 'MAX_UPDATES_PER_HOUR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:502:24: 'MAX_UPDATES_PER_HOUR'
+    		// MySQL51Lexer.g3:502:24: 'MAX_UPDATES_PER_HOUR'
     		{
     		DebugLocation(502, 24);
     		Match("MAX_UPDATES_PER_HOUR"); if (state.failed) return;
@@ -17326,9 +17326,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_USER_CONNECTIONS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:503:22: ( 'MAX_USER_CONNECTIONS' )
+    		// MySQL51Lexer.g3:503:22: ( 'MAX_USER_CONNECTIONS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:503:24: 'MAX_USER_CONNECTIONS'
+    		// MySQL51Lexer.g3:503:24: 'MAX_USER_CONNECTIONS'
     		{
     		DebugLocation(503, 24);
     		Match("MAX_USER_CONNECTIONS"); if (state.failed) return;
@@ -17364,9 +17364,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX_VALUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:504:11: ( 'MAX_VALUE' )
+    		// MySQL51Lexer.g3:504:11: ( 'MAX_VALUE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:504:13: 'MAX_VALUE'
+    		// MySQL51Lexer.g3:504:13: 'MAX_VALUE'
     		{
     		DebugLocation(504, 13);
     		Match("MAX_VALUE"); if (state.failed) return;
@@ -17402,9 +17402,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MEDIUM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:505:8: ( 'MEDIUM' )
+    		// MySQL51Lexer.g3:505:8: ( 'MEDIUM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:505:10: 'MEDIUM'
+    		// MySQL51Lexer.g3:505:10: 'MEDIUM'
     		{
     		DebugLocation(505, 10);
     		Match("MEDIUM"); if (state.failed) return;
@@ -17440,9 +17440,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MEMORY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:506:8: ( 'MEMORY' )
+    		// MySQL51Lexer.g3:506:8: ( 'MEMORY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:506:10: 'MEMORY'
+    		// MySQL51Lexer.g3:506:10: 'MEMORY'
     		{
     		DebugLocation(506, 10);
     		Match("MEMORY"); if (state.failed) return;
@@ -17478,9 +17478,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MERGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:507:7: ( 'MERGE' )
+    		// MySQL51Lexer.g3:507:7: ( 'MERGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:507:9: 'MERGE'
+    		// MySQL51Lexer.g3:507:9: 'MERGE'
     		{
     		DebugLocation(507, 9);
     		Match("MERGE"); if (state.failed) return;
@@ -17516,9 +17516,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MICROSECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:508:13: ( 'MICROSECOND' )
+    		// MySQL51Lexer.g3:508:13: ( 'MICROSECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:508:15: 'MICROSECOND'
+    		// MySQL51Lexer.g3:508:15: 'MICROSECOND'
     		{
     		DebugLocation(508, 15);
     		Match("MICROSECOND"); if (state.failed) return;
@@ -17554,9 +17554,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MIGRATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:509:9: ( 'MIGRATE' )
+    		// MySQL51Lexer.g3:509:9: ( 'MIGRATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:509:11: 'MIGRATE'
+    		// MySQL51Lexer.g3:509:11: 'MIGRATE'
     		{
     		DebugLocation(509, 11);
     		Match("MIGRATE"); if (state.failed) return;
@@ -17592,9 +17592,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MIN_ROWS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:511:10: ( 'MIN_ROWS' )
+    		// MySQL51Lexer.g3:511:10: ( 'MIN_ROWS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:511:12: 'MIN_ROWS'
+    		// MySQL51Lexer.g3:511:12: 'MIN_ROWS'
     		{
     		DebugLocation(511, 12);
     		Match("MIN_ROWS"); if (state.failed) return;
@@ -17630,9 +17630,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MODIFY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:512:8: ( 'MODIFY' )
+    		// MySQL51Lexer.g3:512:8: ( 'MODIFY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:512:10: 'MODIFY'
+    		// MySQL51Lexer.g3:512:10: 'MODIFY'
     		{
     		DebugLocation(512, 10);
     		Match("MODIFY"); if (state.failed) return;
@@ -17668,9 +17668,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MODE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:513:6: ( 'MODE' )
+    		// MySQL51Lexer.g3:513:6: ( 'MODE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:513:8: 'MODE'
+    		// MySQL51Lexer.g3:513:8: 'MODE'
     		{
     		DebugLocation(513, 8);
     		Match("MODE"); if (state.failed) return;
@@ -17706,9 +17706,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MULTILINESTRING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:515:17: ( 'MULTILINESTRING' )
+    		// MySQL51Lexer.g3:515:17: ( 'MULTILINESTRING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:515:19: 'MULTILINESTRING'
+    		// MySQL51Lexer.g3:515:19: 'MULTILINESTRING'
     		{
     		DebugLocation(515, 19);
     		Match("MULTILINESTRING"); if (state.failed) return;
@@ -17744,9 +17744,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MULTIPOINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:516:12: ( 'MULTIPOINT' )
+    		// MySQL51Lexer.g3:516:12: ( 'MULTIPOINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:516:14: 'MULTIPOINT'
+    		// MySQL51Lexer.g3:516:14: 'MULTIPOINT'
     		{
     		DebugLocation(516, 14);
     		Match("MULTIPOINT"); if (state.failed) return;
@@ -17782,9 +17782,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MULTIPOLYGON;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:517:14: ( 'MULTIPOLYGON' )
+    		// MySQL51Lexer.g3:517:14: ( 'MULTIPOLYGON' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:517:16: 'MULTIPOLYGON'
+    		// MySQL51Lexer.g3:517:16: 'MULTIPOLYGON'
     		{
     		DebugLocation(517, 16);
     		Match("MULTIPOLYGON"); if (state.failed) return;
@@ -17820,9 +17820,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MUTEX;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:518:7: ( 'MUTEX' )
+    		// MySQL51Lexer.g3:518:7: ( 'MUTEX' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:518:9: 'MUTEX'
+    		// MySQL51Lexer.g3:518:9: 'MUTEX'
     		{
     		DebugLocation(518, 9);
     		Match("MUTEX"); if (state.failed) return;
@@ -17858,9 +17858,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NAME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:519:6: ( 'NAME' )
+    		// MySQL51Lexer.g3:519:6: ( 'NAME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:519:8: 'NAME'
+    		// MySQL51Lexer.g3:519:8: 'NAME'
     		{
     		DebugLocation(519, 8);
     		Match("NAME"); if (state.failed) return;
@@ -17896,9 +17896,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NAMES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:520:7: ( 'NAMES' )
+    		// MySQL51Lexer.g3:520:7: ( 'NAMES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:520:9: 'NAMES'
+    		// MySQL51Lexer.g3:520:9: 'NAMES'
     		{
     		DebugLocation(520, 9);
     		Match("NAMES"); if (state.failed) return;
@@ -17934,9 +17934,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NATIONAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:521:10: ( 'NATIONAL' )
+    		// MySQL51Lexer.g3:521:10: ( 'NATIONAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:521:12: 'NATIONAL'
+    		// MySQL51Lexer.g3:521:12: 'NATIONAL'
     		{
     		DebugLocation(521, 12);
     		Match("NATIONAL"); if (state.failed) return;
@@ -17972,9 +17972,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NCHAR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:522:7: ( 'NCHAR' )
+    		// MySQL51Lexer.g3:522:7: ( 'NCHAR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:522:9: 'NCHAR'
+    		// MySQL51Lexer.g3:522:9: 'NCHAR'
     		{
     		DebugLocation(522, 9);
     		Match("NCHAR"); if (state.failed) return;
@@ -18010,9 +18010,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NDBCLUSTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:523:12: ( 'NDBCLUSTER' )
+    		// MySQL51Lexer.g3:523:12: ( 'NDBCLUSTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:523:14: 'NDBCLUSTER'
+    		// MySQL51Lexer.g3:523:14: 'NDBCLUSTER'
     		{
     		DebugLocation(523, 14);
     		Match("NDBCLUSTER"); if (state.failed) return;
@@ -18048,9 +18048,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:524:6: ( 'NEXT' )
+    		// MySQL51Lexer.g3:524:6: ( 'NEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:524:8: 'NEXT'
+    		// MySQL51Lexer.g3:524:8: 'NEXT'
     		{
     		DebugLocation(524, 8);
     		Match("NEXT"); if (state.failed) return;
@@ -18086,9 +18086,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NEW;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:525:5: ( 'NEW' )
+    		// MySQL51Lexer.g3:525:5: ( 'NEW' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:525:7: 'NEW'
+    		// MySQL51Lexer.g3:525:7: 'NEW'
     		{
     		DebugLocation(525, 7);
     		Match("NEW"); if (state.failed) return;
@@ -18124,9 +18124,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NO_WAIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:526:9: ( 'NO_WAIT' )
+    		// MySQL51Lexer.g3:526:9: ( 'NO_WAIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:526:11: 'NO_WAIT'
+    		// MySQL51Lexer.g3:526:11: 'NO_WAIT'
     		{
     		DebugLocation(526, 11);
     		Match("NO_WAIT"); if (state.failed) return;
@@ -18162,9 +18162,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NODEGROUP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:527:11: ( 'NODEGROUP' )
+    		// MySQL51Lexer.g3:527:11: ( 'NODEGROUP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:527:13: 'NODEGROUP'
+    		// MySQL51Lexer.g3:527:13: 'NODEGROUP'
     		{
     		DebugLocation(527, 13);
     		Match("NODEGROUP"); if (state.failed) return;
@@ -18200,9 +18200,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NONE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:528:6: ( 'NONE' )
+    		// MySQL51Lexer.g3:528:6: ( 'NONE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:528:8: 'NONE'
+    		// MySQL51Lexer.g3:528:8: 'NONE'
     		{
     		DebugLocation(528, 8);
     		Match("NONE"); if (state.failed) return;
@@ -18238,9 +18238,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NVARCHAR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:529:10: ( 'NVARCHAR' )
+    		// MySQL51Lexer.g3:529:10: ( 'NVARCHAR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:529:12: 'NVARCHAR'
+    		// MySQL51Lexer.g3:529:12: 'NVARCHAR'
     		{
     		DebugLocation(529, 12);
     		Match("NVARCHAR"); if (state.failed) return;
@@ -18276,9 +18276,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OFFSET;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:530:8: ( 'OFFSET' )
+    		// MySQL51Lexer.g3:530:8: ( 'OFFSET' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:530:10: 'OFFSET'
+    		// MySQL51Lexer.g3:530:10: 'OFFSET'
     		{
     		DebugLocation(530, 10);
     		Match("OFFSET"); if (state.failed) return;
@@ -18314,9 +18314,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = OLD_PASSWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:531:14: ( 'OLD_PASSWORD' )
+    		// MySQL51Lexer.g3:531:14: ( 'OLD_PASSWORD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:531:16: 'OLD_PASSWORD'
+    		// MySQL51Lexer.g3:531:16: 'OLD_PASSWORD'
     		{
     		DebugLocation(531, 16);
     		Match("OLD_PASSWORD"); if (state.failed) return;
@@ -18352,9 +18352,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ONE_SHOT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:532:10: ( 'ONE_SHOT' )
+    		// MySQL51Lexer.g3:532:10: ( 'ONE_SHOT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:532:12: 'ONE_SHOT'
+    		// MySQL51Lexer.g3:532:12: 'ONE_SHOT'
     		{
     		DebugLocation(532, 12);
     		Match("ONE_SHOT"); if (state.failed) return;
@@ -18390,9 +18390,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ONE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:533:5: ( 'ONE' )
+    		// MySQL51Lexer.g3:533:5: ( 'ONE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:533:7: 'ONE'
+    		// MySQL51Lexer.g3:533:7: 'ONE'
     		{
     		DebugLocation(533, 7);
     		Match("ONE"); if (state.failed) return;
@@ -18428,9 +18428,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PACK_KEYS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:534:11: ( 'PACK_KEYS' )
+    		// MySQL51Lexer.g3:534:11: ( 'PACK_KEYS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:534:13: 'PACK_KEYS'
+    		// MySQL51Lexer.g3:534:13: 'PACK_KEYS'
     		{
     		DebugLocation(534, 13);
     		Match("PACK_KEYS"); if (state.failed) return;
@@ -18466,9 +18466,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PAGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:535:6: ( 'PAGE' )
+    		// MySQL51Lexer.g3:535:6: ( 'PAGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:535:8: 'PAGE'
+    		// MySQL51Lexer.g3:535:8: 'PAGE'
     		{
     		DebugLocation(535, 8);
     		Match("PAGE"); if (state.failed) return;
@@ -18504,9 +18504,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PARTIAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:536:9: ( 'PARTIAL' )
+    		// MySQL51Lexer.g3:536:9: ( 'PARTIAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:536:11: 'PARTIAL'
+    		// MySQL51Lexer.g3:536:11: 'PARTIAL'
     		{
     		DebugLocation(536, 11);
     		Match("PARTIAL"); if (state.failed) return;
@@ -18542,9 +18542,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PARTITIONING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:537:14: ( 'PARTITIONING' )
+    		// MySQL51Lexer.g3:537:14: ( 'PARTITIONING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:537:16: 'PARTITIONING'
+    		// MySQL51Lexer.g3:537:16: 'PARTITIONING'
     		{
     		DebugLocation(537, 16);
     		Match("PARTITIONING"); if (state.failed) return;
@@ -18580,9 +18580,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PARTITIONS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:538:12: ( 'PARTITIONS' )
+    		// MySQL51Lexer.g3:538:12: ( 'PARTITIONS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:538:14: 'PARTITIONS'
+    		// MySQL51Lexer.g3:538:14: 'PARTITIONS'
     		{
     		DebugLocation(538, 14);
     		Match("PARTITIONS"); if (state.failed) return;
@@ -18618,9 +18618,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PASSWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:539:10: ( 'PASSWORD' )
+    		// MySQL51Lexer.g3:539:10: ( 'PASSWORD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:539:12: 'PASSWORD'
+    		// MySQL51Lexer.g3:539:12: 'PASSWORD'
     		{
     		DebugLocation(539, 12);
     		Match("PASSWORD"); if (state.failed) return;
@@ -18656,9 +18656,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PHASE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:540:7: ( 'PHASE' )
+    		// MySQL51Lexer.g3:540:7: ( 'PHASE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:540:9: 'PHASE'
+    		// MySQL51Lexer.g3:540:9: 'PHASE'
     		{
     		DebugLocation(540, 9);
     		Match("PHASE"); if (state.failed) return;
@@ -18694,9 +18694,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PLUGIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:541:8: ( 'PLUGIN' )
+    		// MySQL51Lexer.g3:541:8: ( 'PLUGIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:541:10: 'PLUGIN'
+    		// MySQL51Lexer.g3:541:10: 'PLUGIN'
     		{
     		DebugLocation(541, 10);
     		Match("PLUGIN"); if (state.failed) return;
@@ -18732,9 +18732,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PLUGINS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:542:9: ( 'PLUGINS' )
+    		// MySQL51Lexer.g3:542:9: ( 'PLUGINS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:542:11: 'PLUGINS'
+    		// MySQL51Lexer.g3:542:11: 'PLUGINS'
     		{
     		DebugLocation(542, 11);
     		Match("PLUGINS"); if (state.failed) return;
@@ -18770,9 +18770,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = POINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:543:7: ( 'POINT' )
+    		// MySQL51Lexer.g3:543:7: ( 'POINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:543:9: 'POINT'
+    		// MySQL51Lexer.g3:543:9: 'POINT'
     		{
     		DebugLocation(543, 9);
     		Match("POINT"); if (state.failed) return;
@@ -18808,9 +18808,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = POLYGON;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:544:9: ( 'POLYGON' )
+    		// MySQL51Lexer.g3:544:9: ( 'POLYGON' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:544:11: 'POLYGON'
+    		// MySQL51Lexer.g3:544:11: 'POLYGON'
     		{
     		DebugLocation(544, 11);
     		Match("POLYGON"); if (state.failed) return;
@@ -18846,9 +18846,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PRESERVE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:545:10: ( 'PRESERVE' )
+    		// MySQL51Lexer.g3:545:10: ( 'PRESERVE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:545:12: 'PRESERVE'
+    		// MySQL51Lexer.g3:545:12: 'PRESERVE'
     		{
     		DebugLocation(545, 12);
     		Match("PRESERVE"); if (state.failed) return;
@@ -18884,9 +18884,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PREV;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:546:6: ( 'PREV' )
+    		// MySQL51Lexer.g3:546:6: ( 'PREV' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:546:8: 'PREV'
+    		// MySQL51Lexer.g3:546:8: 'PREV'
     		{
     		DebugLocation(546, 8);
     		Match("PREV"); if (state.failed) return;
@@ -18922,9 +18922,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PRIVILEGES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:547:12: ( 'PRIVILEGES' )
+    		// MySQL51Lexer.g3:547:12: ( 'PRIVILEGES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:547:14: 'PRIVILEGES'
+    		// MySQL51Lexer.g3:547:14: 'PRIVILEGES'
     		{
     		DebugLocation(547, 14);
     		Match("PRIVILEGES"); if (state.failed) return;
@@ -18960,9 +18960,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PROCESS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:548:9: ( 'PROCESS' )
+    		// MySQL51Lexer.g3:548:9: ( 'PROCESS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:548:11: 'PROCESS'
+    		// MySQL51Lexer.g3:548:11: 'PROCESS'
     		{
     		DebugLocation(548, 11);
     		Match("PROCESS"); if (state.failed) return;
@@ -18998,9 +18998,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PROCESSLIST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:549:13: ( 'PROCESSLIST' )
+    		// MySQL51Lexer.g3:549:13: ( 'PROCESSLIST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:549:15: 'PROCESSLIST'
+    		// MySQL51Lexer.g3:549:15: 'PROCESSLIST'
     		{
     		DebugLocation(549, 15);
     		Match("PROCESSLIST"); if (state.failed) return;
@@ -19036,9 +19036,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PROFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:550:9: ( 'PROFILE' )
+    		// MySQL51Lexer.g3:550:9: ( 'PROFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:550:11: 'PROFILE'
+    		// MySQL51Lexer.g3:550:11: 'PROFILE'
     		{
     		DebugLocation(550, 11);
     		Match("PROFILE"); if (state.failed) return;
@@ -19074,9 +19074,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PROFILES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:551:10: ( 'PROFILES' )
+    		// MySQL51Lexer.g3:551:10: ( 'PROFILES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:551:12: 'PROFILES'
+    		// MySQL51Lexer.g3:551:12: 'PROFILES'
     		{
     		DebugLocation(551, 12);
     		Match("PROFILES"); if (state.failed) return;
@@ -19112,9 +19112,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = QUARTER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:552:9: ( 'QUARTER' )
+    		// MySQL51Lexer.g3:552:9: ( 'QUARTER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:552:11: 'QUARTER'
+    		// MySQL51Lexer.g3:552:11: 'QUARTER'
     		{
     		DebugLocation(552, 11);
     		Match("QUARTER"); if (state.failed) return;
@@ -19150,9 +19150,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = QUERY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:553:7: ( 'QUERY' )
+    		// MySQL51Lexer.g3:553:7: ( 'QUERY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:553:9: 'QUERY'
+    		// MySQL51Lexer.g3:553:9: 'QUERY'
     		{
     		DebugLocation(553, 9);
     		Match("QUERY"); if (state.failed) return;
@@ -19188,9 +19188,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = QUICK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:554:7: ( 'QUICK' )
+    		// MySQL51Lexer.g3:554:7: ( 'QUICK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:554:9: 'QUICK'
+    		// MySQL51Lexer.g3:554:9: 'QUICK'
     		{
     		DebugLocation(554, 9);
     		Match("QUICK"); if (state.failed) return;
@@ -19226,9 +19226,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROTATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:555:8: ( 'ROTATE' )
+    		// MySQL51Lexer.g3:555:8: ( 'ROTATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:555:10: 'ROTATE'
+    		// MySQL51Lexer.g3:555:10: 'ROTATE'
     		{
     		DebugLocation(555, 10);
     		Match("ROTATE"); if (state.failed) return;
@@ -19264,9 +19264,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REBUILD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:556:9: ( 'REBUILD' )
+    		// MySQL51Lexer.g3:556:9: ( 'REBUILD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:556:11: 'REBUILD'
+    		// MySQL51Lexer.g3:556:11: 'REBUILD'
     		{
     		DebugLocation(556, 11);
     		Match("REBUILD"); if (state.failed) return;
@@ -19302,9 +19302,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RECOVER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:557:9: ( 'RECOVER' )
+    		// MySQL51Lexer.g3:557:9: ( 'RECOVER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:557:11: 'RECOVER'
+    		// MySQL51Lexer.g3:557:11: 'RECOVER'
     		{
     		DebugLocation(557, 11);
     		Match("RECOVER"); if (state.failed) return;
@@ -19340,9 +19340,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REDO_BUFFER_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:558:18: ( 'REDO_BUFFER_SIZE' )
+    		// MySQL51Lexer.g3:558:18: ( 'REDO_BUFFER_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:558:20: 'REDO_BUFFER_SIZE'
+    		// MySQL51Lexer.g3:558:20: 'REDO_BUFFER_SIZE'
     		{
     		DebugLocation(558, 20);
     		Match("REDO_BUFFER_SIZE"); if (state.failed) return;
@@ -19378,9 +19378,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REDOFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:559:10: ( 'REDOFILE' )
+    		// MySQL51Lexer.g3:559:10: ( 'REDOFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:559:12: 'REDOFILE'
+    		// MySQL51Lexer.g3:559:12: 'REDOFILE'
     		{
     		DebugLocation(559, 12);
     		Match("REDOFILE"); if (state.failed) return;
@@ -19416,9 +19416,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REDUNDANT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:560:11: ( 'REDUNDANT' )
+    		// MySQL51Lexer.g3:560:11: ( 'REDUNDANT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:560:13: 'REDUNDANT'
+    		// MySQL51Lexer.g3:560:13: 'REDUNDANT'
     		{
     		DebugLocation(560, 13);
     		Match("REDUNDANT"); if (state.failed) return;
@@ -19454,9 +19454,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RELAY_LOG_FILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:561:16: ( 'RELAY_LOG_FILE' )
+    		// MySQL51Lexer.g3:561:16: ( 'RELAY_LOG_FILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:561:18: 'RELAY_LOG_FILE'
+    		// MySQL51Lexer.g3:561:18: 'RELAY_LOG_FILE'
     		{
     		DebugLocation(561, 18);
     		Match("RELAY_LOG_FILE"); if (state.failed) return;
@@ -19492,9 +19492,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RELAY_LOG_POS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:562:15: ( 'RELAY_LOG_POS' )
+    		// MySQL51Lexer.g3:562:15: ( 'RELAY_LOG_POS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:562:17: 'RELAY_LOG_POS'
+    		// MySQL51Lexer.g3:562:17: 'RELAY_LOG_POS'
     		{
     		DebugLocation(562, 17);
     		Match("RELAY_LOG_POS"); if (state.failed) return;
@@ -19530,9 +19530,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RELAY_THREAD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:563:14: ( 'RELAY_THREAD' )
+    		// MySQL51Lexer.g3:563:14: ( 'RELAY_THREAD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:563:16: 'RELAY_THREAD'
+    		// MySQL51Lexer.g3:563:16: 'RELAY_THREAD'
     		{
     		DebugLocation(563, 16);
     		Match("RELAY_THREAD"); if (state.failed) return;
@@ -19568,9 +19568,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RELOAD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:564:8: ( 'RELOAD' )
+    		// MySQL51Lexer.g3:564:8: ( 'RELOAD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:564:10: 'RELOAD'
+    		// MySQL51Lexer.g3:564:10: 'RELOAD'
     		{
     		DebugLocation(564, 10);
     		Match("RELOAD"); if (state.failed) return;
@@ -19606,9 +19606,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REORGANIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:565:12: ( 'REORGANIZE' )
+    		// MySQL51Lexer.g3:565:12: ( 'REORGANIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:565:14: 'REORGANIZE'
+    		// MySQL51Lexer.g3:565:14: 'REORGANIZE'
     		{
     		DebugLocation(565, 14);
     		Match("REORGANIZE"); if (state.failed) return;
@@ -19644,9 +19644,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REPEATABLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:566:12: ( 'REPEATABLE' )
+    		// MySQL51Lexer.g3:566:12: ( 'REPEATABLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:566:14: 'REPEATABLE'
+    		// MySQL51Lexer.g3:566:14: 'REPEATABLE'
     		{
     		DebugLocation(566, 14);
     		Match("REPEATABLE"); if (state.failed) return;
@@ -19682,9 +19682,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REPLICATION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:567:13: ( 'REPLICATION' )
+    		// MySQL51Lexer.g3:567:13: ( 'REPLICATION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:567:15: 'REPLICATION'
+    		// MySQL51Lexer.g3:567:15: 'REPLICATION'
     		{
     		DebugLocation(567, 15);
     		Match("REPLICATION"); if (state.failed) return;
@@ -19720,9 +19720,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RESOURCES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:568:11: ( 'RESOURCES' )
+    		// MySQL51Lexer.g3:568:11: ( 'RESOURCES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:568:13: 'RESOURCES'
+    		// MySQL51Lexer.g3:568:13: 'RESOURCES'
     		{
     		DebugLocation(568, 13);
     		Match("RESOURCES"); if (state.failed) return;
@@ -19758,9 +19758,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RESUME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:569:8: ( 'RESUME' )
+    		// MySQL51Lexer.g3:569:8: ( 'RESUME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:569:10: 'RESUME'
+    		// MySQL51Lexer.g3:569:10: 'RESUME'
     		{
     		DebugLocation(569, 10);
     		Match("RESUME"); if (state.failed) return;
@@ -19796,9 +19796,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RETURNS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:570:9: ( 'RETURNS' )
+    		// MySQL51Lexer.g3:570:9: ( 'RETURNS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:570:11: 'RETURNS'
+    		// MySQL51Lexer.g3:570:11: 'RETURNS'
     		{
     		DebugLocation(570, 11);
     		Match("RETURNS"); if (state.failed) return;
@@ -19834,9 +19834,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROLLUP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:571:8: ( 'ROLLUP' )
+    		// MySQL51Lexer.g3:571:8: ( 'ROLLUP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:571:10: 'ROLLUP'
+    		// MySQL51Lexer.g3:571:10: 'ROLLUP'
     		{
     		DebugLocation(571, 10);
     		Match("ROLLUP"); if (state.failed) return;
@@ -19872,9 +19872,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROUTINE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:572:9: ( 'ROUTINE' )
+    		// MySQL51Lexer.g3:572:9: ( 'ROUTINE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:572:11: 'ROUTINE'
+    		// MySQL51Lexer.g3:572:11: 'ROUTINE'
     		{
     		DebugLocation(572, 11);
     		Match("ROUTINE"); if (state.failed) return;
@@ -19910,9 +19910,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROWS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:573:6: ( 'ROWS' )
+    		// MySQL51Lexer.g3:573:6: ( 'ROWS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:573:8: 'ROWS'
+    		// MySQL51Lexer.g3:573:8: 'ROWS'
     		{
     		DebugLocation(573, 8);
     		Match("ROWS"); if (state.failed) return;
@@ -19948,9 +19948,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROW_FORMAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:574:12: ( 'ROW_FORMAT' )
+    		// MySQL51Lexer.g3:574:12: ( 'ROW_FORMAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:574:14: 'ROW_FORMAT'
+    		// MySQL51Lexer.g3:574:14: 'ROW_FORMAT'
     		{
     		DebugLocation(574, 14);
     		Match("ROW_FORMAT"); if (state.failed) return;
@@ -19986,9 +19986,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ROW;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:575:5: ( 'ROW' )
+    		// MySQL51Lexer.g3:575:5: ( 'ROW' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:575:7: 'ROW'
+    		// MySQL51Lexer.g3:575:7: 'ROW'
     		{
     		DebugLocation(575, 7);
     		Match("ROW"); if (state.failed) return;
@@ -20024,9 +20024,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RTREE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:576:7: ( 'RTREE' )
+    		// MySQL51Lexer.g3:576:7: ( 'RTREE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:576:9: 'RTREE'
+    		// MySQL51Lexer.g3:576:9: 'RTREE'
     		{
     		DebugLocation(576, 9);
     		Match("RTREE"); if (state.failed) return;
@@ -20062,9 +20062,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SCHEDULE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:577:10: ( 'SCHEDULE' )
+    		// MySQL51Lexer.g3:577:10: ( 'SCHEDULE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:577:12: 'SCHEDULE'
+    		// MySQL51Lexer.g3:577:12: 'SCHEDULE'
     		{
     		DebugLocation(577, 12);
     		Match("SCHEDULE"); if (state.failed) return;
@@ -20100,9 +20100,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SERIAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:579:8: ( 'SERIAL' )
+    		// MySQL51Lexer.g3:579:8: ( 'SERIAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:579:10: 'SERIAL'
+    		// MySQL51Lexer.g3:579:10: 'SERIAL'
     		{
     		DebugLocation(579, 10);
     		Match("SERIAL"); if (state.failed) return;
@@ -20138,9 +20138,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SERIALIZABLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:580:14: ( 'SERIALIZABLE' )
+    		// MySQL51Lexer.g3:580:14: ( 'SERIALIZABLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:580:16: 'SERIALIZABLE'
+    		// MySQL51Lexer.g3:580:16: 'SERIALIZABLE'
     		{
     		DebugLocation(580, 16);
     		Match("SERIALIZABLE"); if (state.failed) return;
@@ -20176,9 +20176,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SESSION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:581:9: ( 'SESSION' )
+    		// MySQL51Lexer.g3:581:9: ( 'SESSION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:581:11: 'SESSION'
+    		// MySQL51Lexer.g3:581:11: 'SESSION'
     		{
     		DebugLocation(581, 11);
     		Match("SESSION"); if (state.failed) return;
@@ -20214,9 +20214,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SIMPLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:582:8: ( 'SIMPLE' )
+    		// MySQL51Lexer.g3:582:8: ( 'SIMPLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:582:10: 'SIMPLE'
+    		// MySQL51Lexer.g3:582:10: 'SIMPLE'
     		{
     		DebugLocation(582, 10);
     		Match("SIMPLE"); if (state.failed) return;
@@ -20252,9 +20252,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SHARE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:583:7: ( 'SHARE' )
+    		// MySQL51Lexer.g3:583:7: ( 'SHARE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:583:9: 'SHARE'
+    		// MySQL51Lexer.g3:583:9: 'SHARE'
     		{
     		DebugLocation(583, 9);
     		Match("SHARE"); if (state.failed) return;
@@ -20290,9 +20290,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SHARED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:584:8: ( 'SHARED' )
+    		// MySQL51Lexer.g3:584:8: ( 'SHARED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:584:10: 'SHARED'
+    		// MySQL51Lexer.g3:584:10: 'SHARED'
     		{
     		DebugLocation(584, 10);
     		Match("SHARED"); if (state.failed) return;
@@ -20333,9 +20333,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SHUTDOWN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:585:10: ( 'SHUTDOWN' )
+    		// MySQL51Lexer.g3:585:10: ( 'SHUTDOWN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:585:12: 'SHUTDOWN'
+    		// MySQL51Lexer.g3:585:12: 'SHUTDOWN'
     		{
     		DebugLocation(585, 12);
     		Match("SHUTDOWN"); if (state.failed) return;
@@ -20371,9 +20371,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SNAPSHOT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:586:10: ( 'SNAPSHOT' )
+    		// MySQL51Lexer.g3:586:10: ( 'SNAPSHOT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:586:12: 'SNAPSHOT'
+    		// MySQL51Lexer.g3:586:12: 'SNAPSHOT'
     		{
     		DebugLocation(586, 12);
     		Match("SNAPSHOT"); if (state.failed) return;
@@ -20409,9 +20409,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SOME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:587:5: ( 'SOME' )
+    		// MySQL51Lexer.g3:587:5: ( 'SOME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:587:7: 'SOME'
+    		// MySQL51Lexer.g3:587:7: 'SOME'
     		{
     		DebugLocation(587, 7);
     		Match("SOME"); if (state.failed) return;
@@ -20447,9 +20447,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SOUNDS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:588:8: ( 'SOUNDS' )
+    		// MySQL51Lexer.g3:588:8: ( 'SOUNDS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:588:10: 'SOUNDS'
+    		// MySQL51Lexer.g3:588:10: 'SOUNDS'
     		{
     		DebugLocation(588, 10);
     		Match("SOUNDS"); if (state.failed) return;
@@ -20485,9 +20485,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SOURCE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:589:8: ( 'SOURCE' )
+    		// MySQL51Lexer.g3:589:8: ( 'SOURCE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:589:10: 'SOURCE'
+    		// MySQL51Lexer.g3:589:10: 'SOURCE'
     		{
     		DebugLocation(589, 10);
     		Match("SOURCE"); if (state.failed) return;
@@ -20523,9 +20523,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_CACHE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:590:11: ( 'SQL_CACHE' )
+    		// MySQL51Lexer.g3:590:11: ( 'SQL_CACHE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:590:13: 'SQL_CACHE'
+    		// MySQL51Lexer.g3:590:13: 'SQL_CACHE'
     		{
     		DebugLocation(590, 13);
     		Match("SQL_CACHE"); if (state.failed) return;
@@ -20561,9 +20561,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_BUFFER_RESULT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:591:19: ( 'SQL_BUFFER_RESULT' )
+    		// MySQL51Lexer.g3:591:19: ( 'SQL_BUFFER_RESULT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:591:21: 'SQL_BUFFER_RESULT'
+    		// MySQL51Lexer.g3:591:21: 'SQL_BUFFER_RESULT'
     		{
     		DebugLocation(591, 21);
     		Match("SQL_BUFFER_RESULT"); if (state.failed) return;
@@ -20599,9 +20599,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_NO_CACHE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:592:14: ( 'SQL_NO_CACHE' )
+    		// MySQL51Lexer.g3:592:14: ( 'SQL_NO_CACHE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:592:16: 'SQL_NO_CACHE'
+    		// MySQL51Lexer.g3:592:16: 'SQL_NO_CACHE'
     		{
     		DebugLocation(592, 16);
     		Match("SQL_NO_CACHE"); if (state.failed) return;
@@ -20637,9 +20637,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SQL_THREAD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:593:12: ( 'SQL_THREAD' )
+    		// MySQL51Lexer.g3:593:12: ( 'SQL_THREAD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:593:14: 'SQL_THREAD'
+    		// MySQL51Lexer.g3:593:14: 'SQL_THREAD'
     		{
     		DebugLocation(593, 14);
     		Match("SQL_THREAD"); if (state.failed) return;
@@ -20675,9 +20675,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STARTS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:594:8: ( 'STARTS' )
+    		// MySQL51Lexer.g3:594:8: ( 'STARTS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:594:10: 'STARTS'
+    		// MySQL51Lexer.g3:594:10: 'STARTS'
     		{
     		DebugLocation(594, 10);
     		Match("STARTS"); if (state.failed) return;
@@ -20713,9 +20713,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STATUS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:595:8: ( 'STATUS' )
+    		// MySQL51Lexer.g3:595:8: ( 'STATUS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:595:10: 'STATUS'
+    		// MySQL51Lexer.g3:595:10: 'STATUS'
     		{
     		DebugLocation(595, 10);
     		Match("STATUS"); if (state.failed) return;
@@ -20751,9 +20751,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STORAGE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:596:9: ( 'STORAGE' )
+    		// MySQL51Lexer.g3:596:9: ( 'STORAGE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:596:11: 'STORAGE'
+    		// MySQL51Lexer.g3:596:11: 'STORAGE'
     		{
     		DebugLocation(596, 11);
     		Match("STORAGE"); if (state.failed) return;
@@ -20789,9 +20789,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STRING_KEYWORD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:597:16: ( 'STRING' )
+    		// MySQL51Lexer.g3:597:16: ( 'STRING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:597:18: 'STRING'
+    		// MySQL51Lexer.g3:597:18: 'STRING'
     		{
     		DebugLocation(597, 18);
     		Match("STRING"); if (state.failed) return;
@@ -20827,9 +20827,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBJECT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:599:9: ( 'SUBJECT' )
+    		// MySQL51Lexer.g3:599:9: ( 'SUBJECT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:599:11: 'SUBJECT'
+    		// MySQL51Lexer.g3:599:11: 'SUBJECT'
     		{
     		DebugLocation(599, 11);
     		Match("SUBJECT"); if (state.failed) return;
@@ -20865,9 +20865,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBPARTITION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:600:14: ( 'SUBPARTITION' )
+    		// MySQL51Lexer.g3:600:14: ( 'SUBPARTITION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:600:16: 'SUBPARTITION'
+    		// MySQL51Lexer.g3:600:16: 'SUBPARTITION'
     		{
     		DebugLocation(600, 16);
     		Match("SUBPARTITION"); if (state.failed) return;
@@ -20903,9 +20903,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBPARTITIONS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:601:15: ( 'SUBPARTITIONS' )
+    		// MySQL51Lexer.g3:601:15: ( 'SUBPARTITIONS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:601:17: 'SUBPARTITIONS'
+    		// MySQL51Lexer.g3:601:17: 'SUBPARTITIONS'
     		{
     		DebugLocation(601, 17);
     		Match("SUBPARTITIONS"); if (state.failed) return;
@@ -20941,9 +20941,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUPER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:602:7: ( 'SUPER' )
+    		// MySQL51Lexer.g3:602:7: ( 'SUPER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:602:9: 'SUPER'
+    		// MySQL51Lexer.g3:602:9: 'SUPER'
     		{
     		DebugLocation(602, 9);
     		Match("SUPER"); if (state.failed) return;
@@ -20979,9 +20979,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUSPEND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:603:9: ( 'SUSPEND' )
+    		// MySQL51Lexer.g3:603:9: ( 'SUSPEND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:603:11: 'SUSPEND'
+    		// MySQL51Lexer.g3:603:11: 'SUSPEND'
     		{
     		DebugLocation(603, 11);
     		Match("SUSPEND"); if (state.failed) return;
@@ -21017,9 +21017,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SWAPS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:604:7: ( 'SWAPS' )
+    		// MySQL51Lexer.g3:604:7: ( 'SWAPS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:604:9: 'SWAPS'
+    		// MySQL51Lexer.g3:604:9: 'SWAPS'
     		{
     		DebugLocation(604, 9);
     		Match("SWAPS"); if (state.failed) return;
@@ -21055,9 +21055,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SWITCHES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:605:10: ( 'SWITCHES' )
+    		// MySQL51Lexer.g3:605:10: ( 'SWITCHES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:605:12: 'SWITCHES'
+    		// MySQL51Lexer.g3:605:12: 'SWITCHES'
     		{
     		DebugLocation(605, 12);
     		Match("SWITCHES"); if (state.failed) return;
@@ -21093,9 +21093,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TABLES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:606:8: ( 'TABLES' )
+    		// MySQL51Lexer.g3:606:8: ( 'TABLES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:606:10: 'TABLES'
+    		// MySQL51Lexer.g3:606:10: 'TABLES'
     		{
     		DebugLocation(606, 10);
     		Match("TABLES"); if (state.failed) return;
@@ -21131,9 +21131,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TABLESPACE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:607:12: ( 'TABLESPACE' )
+    		// MySQL51Lexer.g3:607:12: ( 'TABLESPACE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:607:14: 'TABLESPACE'
+    		// MySQL51Lexer.g3:607:14: 'TABLESPACE'
     		{
     		DebugLocation(607, 14);
     		Match("TABLESPACE"); if (state.failed) return;
@@ -21169,9 +21169,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TEMPORARY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:608:11: ( 'TEMPORARY' )
+    		// MySQL51Lexer.g3:608:11: ( 'TEMPORARY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:608:13: 'TEMPORARY'
+    		// MySQL51Lexer.g3:608:13: 'TEMPORARY'
     		{
     		DebugLocation(608, 13);
     		Match("TEMPORARY"); if (state.failed) return;
@@ -21207,9 +21207,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TEMPTABLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:609:11: ( 'TEMPTABLE' )
+    		// MySQL51Lexer.g3:609:11: ( 'TEMPTABLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:609:13: 'TEMPTABLE'
+    		// MySQL51Lexer.g3:609:13: 'TEMPTABLE'
     		{
     		DebugLocation(609, 13);
     		Match("TEMPTABLE"); if (state.failed) return;
@@ -21245,9 +21245,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = THAN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:610:6: ( 'THAN' )
+    		// MySQL51Lexer.g3:610:6: ( 'THAN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:610:8: 'THAN'
+    		// MySQL51Lexer.g3:610:8: 'THAN'
     		{
     		DebugLocation(610, 8);
     		Match("THAN"); if (state.failed) return;
@@ -21283,9 +21283,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRANSACTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:611:13: ( 'TRANSACTION' )
+    		// MySQL51Lexer.g3:611:13: ( 'TRANSACTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:611:15: 'TRANSACTION'
+    		// MySQL51Lexer.g3:611:15: 'TRANSACTION'
     		{
     		DebugLocation(611, 15);
     		Match("TRANSACTION"); if (state.failed) return;
@@ -21321,9 +21321,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRANSACTIONAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:612:15: ( 'TRANSACTIONAL' )
+    		// MySQL51Lexer.g3:612:15: ( 'TRANSACTIONAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:612:17: 'TRANSACTIONAL'
+    		// MySQL51Lexer.g3:612:17: 'TRANSACTIONAL'
     		{
     		DebugLocation(612, 17);
     		Match("TRANSACTIONAL"); if (state.failed) return;
@@ -21359,9 +21359,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRIGGERS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:613:10: ( 'TRIGGERS' )
+    		// MySQL51Lexer.g3:613:10: ( 'TRIGGERS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:613:12: 'TRIGGERS'
+    		// MySQL51Lexer.g3:613:12: 'TRIGGERS'
     		{
     		DebugLocation(613, 12);
     		Match("TRIGGERS"); if (state.failed) return;
@@ -21397,9 +21397,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TIMESTAMPADD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:614:14: ( 'TIMESTAMPADD' )
+    		// MySQL51Lexer.g3:614:14: ( 'TIMESTAMPADD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:614:16: 'TIMESTAMPADD'
+    		// MySQL51Lexer.g3:614:16: 'TIMESTAMPADD'
     		{
     		DebugLocation(614, 16);
     		Match("TIMESTAMPADD"); if (state.failed) return;
@@ -21435,9 +21435,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TIMESTAMPDIFF;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:615:15: ( 'TIMESTAMPDIFF' )
+    		// MySQL51Lexer.g3:615:15: ( 'TIMESTAMPDIFF' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:615:17: 'TIMESTAMPDIFF'
+    		// MySQL51Lexer.g3:615:17: 'TIMESTAMPDIFF'
     		{
     		DebugLocation(615, 17);
     		Match("TIMESTAMPDIFF"); if (state.failed) return;
@@ -21473,9 +21473,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TYPES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:616:7: ( 'TYPES' )
+    		// MySQL51Lexer.g3:616:7: ( 'TYPES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:616:9: 'TYPES'
+    		// MySQL51Lexer.g3:616:9: 'TYPES'
     		{
     		DebugLocation(616, 9);
     		Match("TYPES"); if (state.failed) return;
@@ -21511,9 +21511,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TYPE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:617:6: ( ( 'TYPE' ( WS | EOF ) )=> 'TYPE' )
+    		// MySQL51Lexer.g3:617:6: ( ( 'TYPE' ( WS | EOF ) )=> 'TYPE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:617:8: ( 'TYPE' ( WS | EOF ) )=> 'TYPE'
+    		// MySQL51Lexer.g3:617:8: ( 'TYPE' ( WS | EOF ) )=> 'TYPE'
     		{
     		DebugLocation(617, 28);
     		Match("TYPE"); if (state.failed) return;
@@ -21549,9 +21549,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UDF_RETURNS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:618:13: ( 'UDF_RETURNS' )
+    		// MySQL51Lexer.g3:618:13: ( 'UDF_RETURNS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:618:15: 'UDF_RETURNS'
+    		// MySQL51Lexer.g3:618:15: 'UDF_RETURNS'
     		{
     		DebugLocation(618, 15);
     		Match("UDF_RETURNS"); if (state.failed) return;
@@ -21587,9 +21587,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FUNCTION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:619:10: ( 'FUNCTION' )
+    		// MySQL51Lexer.g3:619:10: ( 'FUNCTION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:619:12: 'FUNCTION'
+    		// MySQL51Lexer.g3:619:12: 'FUNCTION'
     		{
     		DebugLocation(619, 12);
     		Match("FUNCTION"); if (state.failed) return;
@@ -21625,9 +21625,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNCOMMITTED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:620:13: ( 'UNCOMMITTED' )
+    		// MySQL51Lexer.g3:620:13: ( 'UNCOMMITTED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:620:15: 'UNCOMMITTED'
+    		// MySQL51Lexer.g3:620:15: 'UNCOMMITTED'
     		{
     		DebugLocation(620, 15);
     		Match("UNCOMMITTED"); if (state.failed) return;
@@ -21663,9 +21663,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNDEFINED;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:621:11: ( 'UNDEFINED' )
+    		// MySQL51Lexer.g3:621:11: ( 'UNDEFINED' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:621:13: 'UNDEFINED'
+    		// MySQL51Lexer.g3:621:13: 'UNDEFINED'
     		{
     		DebugLocation(621, 13);
     		Match("UNDEFINED"); if (state.failed) return;
@@ -21701,9 +21701,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNDO_BUFFER_SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:622:18: ( 'UNDO_BUFFER_SIZE' )
+    		// MySQL51Lexer.g3:622:18: ( 'UNDO_BUFFER_SIZE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:622:20: 'UNDO_BUFFER_SIZE'
+    		// MySQL51Lexer.g3:622:20: 'UNDO_BUFFER_SIZE'
     		{
     		DebugLocation(622, 20);
     		Match("UNDO_BUFFER_SIZE"); if (state.failed) return;
@@ -21739,9 +21739,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNDOFILE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:623:10: ( 'UNDOFILE' )
+    		// MySQL51Lexer.g3:623:10: ( 'UNDOFILE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:623:12: 'UNDOFILE'
+    		// MySQL51Lexer.g3:623:12: 'UNDOFILE'
     		{
     		DebugLocation(623, 12);
     		Match("UNDOFILE"); if (state.failed) return;
@@ -21777,9 +21777,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNKNOWN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:624:9: ( 'UNKNOWN' )
+    		// MySQL51Lexer.g3:624:9: ( 'UNKNOWN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:624:11: 'UNKNOWN'
+    		// MySQL51Lexer.g3:624:11: 'UNKNOWN'
     		{
     		DebugLocation(624, 11);
     		Match("UNKNOWN"); if (state.failed) return;
@@ -21815,9 +21815,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UNTIL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:625:7: ( 'UNTIL' )
+    		// MySQL51Lexer.g3:625:7: ( 'UNTIL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:625:9: 'UNTIL'
+    		// MySQL51Lexer.g3:625:9: 'UNTIL'
     		{
     		DebugLocation(625, 9);
     		Match("UNTIL"); if (state.failed) return;
@@ -21853,9 +21853,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = USE_FRM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:626:9: ( 'USE_FRM' )
+    		// MySQL51Lexer.g3:626:9: ( 'USE_FRM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:626:11: 'USE_FRM'
+    		// MySQL51Lexer.g3:626:11: 'USE_FRM'
     		{
     		DebugLocation(626, 11);
     		Match("USE_FRM"); if (state.failed) return;
@@ -21891,9 +21891,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VARIABLES;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:627:11: ( 'VARIABLES' )
+    		// MySQL51Lexer.g3:627:11: ( 'VARIABLES' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:627:13: 'VARIABLES'
+    		// MySQL51Lexer.g3:627:13: 'VARIABLES'
     		{
     		DebugLocation(627, 13);
     		Match("VARIABLES"); if (state.failed) return;
@@ -21929,9 +21929,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VALUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:628:7: ( 'VALUE' )
+    		// MySQL51Lexer.g3:628:7: ( 'VALUE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:628:9: 'VALUE'
+    		// MySQL51Lexer.g3:628:9: 'VALUE'
     		{
     		DebugLocation(628, 9);
     		Match("VALUE"); if (state.failed) return;
@@ -21967,9 +21967,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VIEW;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:629:6: ( 'VIEW' )
+    		// MySQL51Lexer.g3:629:6: ( 'VIEW' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:629:8: 'VIEW'
+    		// MySQL51Lexer.g3:629:8: 'VIEW'
     		{
     		DebugLocation(629, 8);
     		Match("VIEW"); if (state.failed) return;
@@ -22005,9 +22005,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VISIBLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:630:9: ( 'VISIBLE' )
+    		// MySQL51Lexer.g3:630:9: ( 'VISIBLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:630:11: 'VISIBLE'
+    		// MySQL51Lexer.g3:630:11: 'VISIBLE'
     		{
     		DebugLocation(630, 11);
     		Match("VISIBLE"); if (state.failed) return;
@@ -22048,9 +22048,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WARNINGS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:631:10: ( 'WARNINGS' )
+    		// MySQL51Lexer.g3:631:10: ( 'WARNINGS' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:631:12: 'WARNINGS'
+    		// MySQL51Lexer.g3:631:12: 'WARNINGS'
     		{
     		DebugLocation(631, 12);
     		Match("WARNINGS"); if (state.failed) return;
@@ -22086,9 +22086,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WAIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:632:6: ( 'WAIT' )
+    		// MySQL51Lexer.g3:632:6: ( 'WAIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:632:8: 'WAIT'
+    		// MySQL51Lexer.g3:632:8: 'WAIT'
     		{
     		DebugLocation(632, 8);
     		Match("WAIT"); if (state.failed) return;
@@ -22124,9 +22124,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WEEK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:633:6: ( 'WEEK' )
+    		// MySQL51Lexer.g3:633:6: ( 'WEEK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:633:8: 'WEEK'
+    		// MySQL51Lexer.g3:633:8: 'WEEK'
     		{
     		DebugLocation(633, 8);
     		Match("WEEK"); if (state.failed) return;
@@ -22162,9 +22162,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WORK;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:634:6: ( 'WORK' )
+    		// MySQL51Lexer.g3:634:6: ( 'WORK' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:634:8: 'WORK'
+    		// MySQL51Lexer.g3:634:8: 'WORK'
     		{
     		DebugLocation(634, 8);
     		Match("WORK"); if (state.failed) return;
@@ -22200,9 +22200,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = X509;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:635:6: ( 'X509' )
+    		// MySQL51Lexer.g3:635:6: ( 'X509' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:635:8: 'X509'
+    		// MySQL51Lexer.g3:635:8: 'X509'
     		{
     		DebugLocation(635, 8);
     		Match("X509"); if (state.failed) return;
@@ -22238,9 +22238,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = XML;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:636:6: ( 'XML' )
+    		// MySQL51Lexer.g3:636:6: ( 'XML' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:636:10: 'XML'
+    		// MySQL51Lexer.g3:636:10: 'XML'
     		{
     		DebugLocation(636, 10);
     		Match("XML"); if (state.failed) return;
@@ -22281,9 +22281,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMMA;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:644:7: ( ',' )
+    		// MySQL51Lexer.g3:644:7: ( ',' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:644:9: ','
+    		// MySQL51Lexer.g3:644:9: ','
     		{
     		DebugLocation(644, 9);
     		Match(','); if (state.failed) return;
@@ -22318,9 +22318,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DOT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:645:6: ( '.' )
+    		// MySQL51Lexer.g3:645:6: ( '.' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:645:8: '.'
+    		// MySQL51Lexer.g3:645:8: '.'
     		{
     		DebugLocation(645, 8);
     		Match('.'); if (state.failed) return;
@@ -22355,9 +22355,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SEMI;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:646:6: ( ';' )
+    		// MySQL51Lexer.g3:646:6: ( ';' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:646:8: ';'
+    		// MySQL51Lexer.g3:646:8: ';'
     		{
     		DebugLocation(646, 8);
     		Match(';'); if (state.failed) return;
@@ -22392,9 +22392,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LPAREN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:647:8: ( '(' )
+    		// MySQL51Lexer.g3:647:8: ( '(' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:647:10: '('
+    		// MySQL51Lexer.g3:647:10: '('
     		{
     		DebugLocation(647, 10);
     		Match('('); if (state.failed) return;
@@ -22429,9 +22429,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RPAREN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:648:8: ( ')' )
+    		// MySQL51Lexer.g3:648:8: ( ')' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:648:10: ')'
+    		// MySQL51Lexer.g3:648:10: ')'
     		{
     		DebugLocation(648, 10);
     		Match(')'); if (state.failed) return;
@@ -22466,9 +22466,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LCURLY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:649:8: ( '{' )
+    		// MySQL51Lexer.g3:649:8: ( '{' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:649:10: '{'
+    		// MySQL51Lexer.g3:649:10: '{'
     		{
     		DebugLocation(649, 10);
     		Match('{'); if (state.failed) return;
@@ -22503,9 +22503,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RCURLY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:650:8: ( '}' )
+    		// MySQL51Lexer.g3:650:8: ( '}' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:650:10: '}'
+    		// MySQL51Lexer.g3:650:10: '}'
     		{
     		DebugLocation(650, 10);
     		Match('}'); if (state.failed) return;
@@ -22540,9 +22540,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BIT_AND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:658:9: ( 'BIT_AND' )
+    		// MySQL51Lexer.g3:658:9: ( 'BIT_AND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:658:11: 'BIT_AND'
+    		// MySQL51Lexer.g3:658:11: 'BIT_AND'
     		{
     		DebugLocation(658, 11);
     		Match("BIT_AND"); if (state.failed) return;
@@ -22578,9 +22578,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BIT_OR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:659:8: ( 'BIT_OR' )
+    		// MySQL51Lexer.g3:659:8: ( 'BIT_OR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:659:10: 'BIT_OR'
+    		// MySQL51Lexer.g3:659:10: 'BIT_OR'
     		{
     		DebugLocation(659, 10);
     		Match("BIT_OR"); if (state.failed) return;
@@ -22616,9 +22616,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BIT_XOR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:660:9: ( 'BIT_XOR' )
+    		// MySQL51Lexer.g3:660:9: ( 'BIT_XOR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:660:11: 'BIT_XOR'
+    		// MySQL51Lexer.g3:660:11: 'BIT_XOR'
     		{
     		DebugLocation(660, 11);
     		Match("BIT_XOR"); if (state.failed) return;
@@ -22654,9 +22654,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CAST;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:661:6: ( 'CAST' )
+    		// MySQL51Lexer.g3:661:6: ( 'CAST' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:661:8: 'CAST'
+    		// MySQL51Lexer.g3:661:8: 'CAST'
     		{
     		DebugLocation(661, 8);
     		Match("CAST"); if (state.failed) return;
@@ -22697,9 +22697,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COUNT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:662:7: ( 'COUNT' )
+    		// MySQL51Lexer.g3:662:7: ( 'COUNT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:662:9: 'COUNT'
+    		// MySQL51Lexer.g3:662:9: 'COUNT'
     		{
     		DebugLocation(662, 9);
     		Match("COUNT"); if (state.failed) return;
@@ -22740,9 +22740,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATE_ADD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:665:10: ( 'DATE_ADD' )
+    		// MySQL51Lexer.g3:665:10: ( 'DATE_ADD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:665:12: 'DATE_ADD'
+    		// MySQL51Lexer.g3:665:12: 'DATE_ADD'
     		{
     		DebugLocation(665, 12);
     		Match("DATE_ADD"); if (state.failed) return;
@@ -22778,9 +22778,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATE_SUB;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:666:10: ( 'DATE_SUB' )
+    		// MySQL51Lexer.g3:666:10: ( 'DATE_SUB' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:666:12: 'DATE_SUB'
+    		// MySQL51Lexer.g3:666:12: 'DATE_SUB'
     		{
     		DebugLocation(666, 12);
     		Match("DATE_SUB"); if (state.failed) return;
@@ -22816,9 +22816,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GROUP_CONCAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:668:14: ( 'GROUP_CONCAT' )
+    		// MySQL51Lexer.g3:668:14: ( 'GROUP_CONCAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:668:16: 'GROUP_CONCAT'
+    		// MySQL51Lexer.g3:668:16: 'GROUP_CONCAT'
     		{
     		DebugLocation(668, 16);
     		Match("GROUP_CONCAT"); if (state.failed) return;
@@ -22854,9 +22854,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MAX;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:669:5: ( 'MAX' )
+    		// MySQL51Lexer.g3:669:5: ( 'MAX' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:669:7: 'MAX'
+    		// MySQL51Lexer.g3:669:7: 'MAX'
     		{
     		DebugLocation(669, 7);
     		Match("MAX"); if (state.failed) return;
@@ -22892,9 +22892,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MIN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:671:5: ( 'MIN' )
+    		// MySQL51Lexer.g3:671:5: ( 'MIN' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:671:7: 'MIN'
+    		// MySQL51Lexer.g3:671:7: 'MIN'
     		{
     		DebugLocation(671, 7);
     		Match("MIN"); if (state.failed) return;
@@ -22930,9 +22930,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:675:5: ( 'STD' )
+    		// MySQL51Lexer.g3:675:5: ( 'STD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:675:7: 'STD'
+    		// MySQL51Lexer.g3:675:7: 'STD'
     		{
     		DebugLocation(675, 7);
     		Match("STD"); if (state.failed) return;
@@ -22968,9 +22968,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STDDEV;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:676:8: ( 'STDDEV' )
+    		// MySQL51Lexer.g3:676:8: ( 'STDDEV' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:676:10: 'STDDEV'
+    		// MySQL51Lexer.g3:676:10: 'STDDEV'
     		{
     		DebugLocation(676, 10);
     		Match("STDDEV"); if (state.failed) return;
@@ -23006,9 +23006,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STDDEV_POP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:677:12: ( 'STDDEV_POP' )
+    		// MySQL51Lexer.g3:677:12: ( 'STDDEV_POP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:677:14: 'STDDEV_POP'
+    		// MySQL51Lexer.g3:677:14: 'STDDEV_POP'
     		{
     		DebugLocation(677, 14);
     		Match("STDDEV_POP"); if (state.failed) return;
@@ -23044,9 +23044,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STDDEV_SAMP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:678:13: ( 'STDDEV_SAMP' )
+    		// MySQL51Lexer.g3:678:13: ( 'STDDEV_SAMP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:678:15: 'STDDEV_SAMP'
+    		// MySQL51Lexer.g3:678:15: 'STDDEV_SAMP'
     		{
     		DebugLocation(678, 15);
     		Match("STDDEV_SAMP"); if (state.failed) return;
@@ -23082,9 +23082,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBSTR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:680:8: ( 'SUBSTR' )
+    		// MySQL51Lexer.g3:680:8: ( 'SUBSTR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:680:10: 'SUBSTR'
+    		// MySQL51Lexer.g3:680:10: 'SUBSTR'
     		{
     		DebugLocation(680, 10);
     		Match("SUBSTR"); if (state.failed) return;
@@ -23120,9 +23120,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:682:5: ( 'SUM' )
+    		// MySQL51Lexer.g3:682:5: ( 'SUM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:682:7: 'SUM'
+    		// MySQL51Lexer.g3:682:7: 'SUM'
     		{
     		DebugLocation(682, 7);
     		Match("SUM"); if (state.failed) return;
@@ -23158,9 +23158,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VARIANCE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:686:10: ( 'VARIANCE' )
+    		// MySQL51Lexer.g3:686:10: ( 'VARIANCE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:686:12: 'VARIANCE'
+    		// MySQL51Lexer.g3:686:12: 'VARIANCE'
     		{
     		DebugLocation(686, 12);
     		Match("VARIANCE"); if (state.failed) return;
@@ -23196,9 +23196,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VAR_POP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:687:9: ( 'VAR_POP' )
+    		// MySQL51Lexer.g3:687:9: ( 'VAR_POP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:687:11: 'VAR_POP'
+    		// MySQL51Lexer.g3:687:11: 'VAR_POP'
     		{
     		DebugLocation(687, 11);
     		Match("VAR_POP"); if (state.failed) return;
@@ -23234,9 +23234,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VAR_SAMP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:688:10: ( 'VAR_SAMP' )
+    		// MySQL51Lexer.g3:688:10: ( 'VAR_SAMP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:688:12: 'VAR_SAMP'
+    		// MySQL51Lexer.g3:688:12: 'VAR_SAMP'
     		{
     		DebugLocation(688, 12);
     		Match("VAR_SAMP"); if (state.failed) return;
@@ -23272,9 +23272,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ADDDATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:691:9: ( 'ADDDATE' )
+    		// MySQL51Lexer.g3:691:9: ( 'ADDDATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:691:11: 'ADDDATE'
+    		// MySQL51Lexer.g3:691:11: 'ADDDATE'
     		{
     		DebugLocation(691, 11);
     		Match("ADDDATE"); if (state.failed) return;
@@ -23310,9 +23310,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURDATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:692:9: ( 'CURDATE' )
+    		// MySQL51Lexer.g3:692:9: ( 'CURDATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:692:11: 'CURDATE'
+    		// MySQL51Lexer.g3:692:11: 'CURDATE'
     		{
     		DebugLocation(692, 11);
     		Match("CURDATE"); if (state.failed) return;
@@ -23348,9 +23348,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURTIME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:693:9: ( 'CURTIME' )
+    		// MySQL51Lexer.g3:693:9: ( 'CURTIME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:693:11: 'CURTIME'
+    		// MySQL51Lexer.g3:693:11: 'CURTIME'
     		{
     		DebugLocation(693, 11);
     		Match("CURTIME"); if (state.failed) return;
@@ -23391,9 +23391,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATE_ADD_INTERVAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:694:19: ( 'DATE_ADD_INTERVAL' )
+    		// MySQL51Lexer.g3:694:19: ( 'DATE_ADD_INTERVAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:694:21: 'DATE_ADD_INTERVAL'
+    		// MySQL51Lexer.g3:694:21: 'DATE_ADD_INTERVAL'
     		{
     		DebugLocation(694, 21);
     		Match("DATE_ADD_INTERVAL"); if (state.failed) return;
@@ -23429,9 +23429,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATE_SUB_INTERVAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:695:19: ( 'DATE_SUB_INTERVAL' )
+    		// MySQL51Lexer.g3:695:19: ( 'DATE_SUB_INTERVAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:695:21: 'DATE_SUB_INTERVAL'
+    		// MySQL51Lexer.g3:695:21: 'DATE_SUB_INTERVAL'
     		{
     		DebugLocation(695, 21);
     		Match("DATE_SUB_INTERVAL"); if (state.failed) return;
@@ -23467,9 +23467,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EXTRACT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:696:9: ( 'EXTRACT' )
+    		// MySQL51Lexer.g3:696:9: ( 'EXTRACT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:696:11: 'EXTRACT'
+    		// MySQL51Lexer.g3:696:11: 'EXTRACT'
     		{
     		DebugLocation(696, 11);
     		Match("EXTRACT"); if (state.failed) return;
@@ -23505,9 +23505,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GET_FORMAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:697:12: ( 'GET_FORMAT' )
+    		// MySQL51Lexer.g3:697:12: ( 'GET_FORMAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:697:14: 'GET_FORMAT'
+    		// MySQL51Lexer.g3:697:14: 'GET_FORMAT'
     		{
     		DebugLocation(697, 14);
     		Match("GET_FORMAT"); if (state.failed) return;
@@ -23543,9 +23543,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NOW;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:698:5: ( 'NOW' )
+    		// MySQL51Lexer.g3:698:5: ( 'NOW' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:698:7: 'NOW'
+    		// MySQL51Lexer.g3:698:7: 'NOW'
     		{
     		DebugLocation(698, 7);
     		Match("NOW"); if (state.failed) return;
@@ -23586,9 +23586,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = POSITION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:699:10: ( 'POSITION' )
+    		// MySQL51Lexer.g3:699:10: ( 'POSITION' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:699:12: 'POSITION'
+    		// MySQL51Lexer.g3:699:12: 'POSITION'
     		{
     		DebugLocation(699, 12);
     		Match("POSITION"); if (state.failed) return;
@@ -23624,9 +23624,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBDATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:700:9: ( 'SUBDATE' )
+    		// MySQL51Lexer.g3:700:9: ( 'SUBDATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:700:11: 'SUBDATE'
+    		// MySQL51Lexer.g3:700:11: 'SUBDATE'
     		{
     		DebugLocation(700, 11);
     		Match("SUBDATE"); if (state.failed) return;
@@ -23662,9 +23662,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SUBSTRING;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:701:11: ( 'SUBSTRING' )
+    		// MySQL51Lexer.g3:701:11: ( 'SUBSTRING' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:701:13: 'SUBSTRING'
+    		// MySQL51Lexer.g3:701:13: 'SUBSTRING'
     		{
     		DebugLocation(701, 13);
     		Match("SUBSTRING"); if (state.failed) return;
@@ -23700,9 +23700,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TIMESTAMP_ADD;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:703:15: ( 'TIMESTAMP_ADD' )
+    		// MySQL51Lexer.g3:703:15: ( 'TIMESTAMP_ADD' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:703:17: 'TIMESTAMP_ADD'
+    		// MySQL51Lexer.g3:703:17: 'TIMESTAMP_ADD'
     		{
     		DebugLocation(703, 17);
     		Match("TIMESTAMP_ADD"); if (state.failed) return;
@@ -23738,9 +23738,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TIMESTAMP_DIFF;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:704:16: ( 'TIMESTAMP_DIFF' )
+    		// MySQL51Lexer.g3:704:16: ( 'TIMESTAMP_DIFF' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:704:18: 'TIMESTAMP_DIFF'
+    		// MySQL51Lexer.g3:704:18: 'TIMESTAMP_DIFF'
     		{
     		DebugLocation(704, 18);
     		Match("TIMESTAMP_DIFF"); if (state.failed) return;
@@ -23776,9 +23776,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = UTC_DATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:705:10: ( 'UTC_DATE' )
+    		// MySQL51Lexer.g3:705:10: ( 'UTC_DATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:705:12: 'UTC_DATE'
+    		// MySQL51Lexer.g3:705:12: 'UTC_DATE'
     		{
     		DebugLocation(705, 12);
     		Match("UTC_DATE"); if (state.failed) return;
@@ -23814,9 +23814,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CHAR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:737:6: ( 'CHAR' )
+    		// MySQL51Lexer.g3:737:6: ( 'CHAR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:737:8: 'CHAR'
+    		// MySQL51Lexer.g3:737:8: 'CHAR'
     		{
     		DebugLocation(737, 8);
     		Match("CHAR"); if (state.failed) return;
@@ -23852,9 +23852,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = CURRENT_USER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:738:14: ( 'CURRENT_USER' )
+    		// MySQL51Lexer.g3:738:14: ( 'CURRENT_USER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:738:16: 'CURRENT_USER'
+    		// MySQL51Lexer.g3:738:16: 'CURRENT_USER'
     		{
     		DebugLocation(738, 16);
     		Match("CURRENT_USER"); if (state.failed) return;
@@ -23890,9 +23890,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:739:6: ( 'DATE' )
+    		// MySQL51Lexer.g3:739:6: ( 'DATE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:739:8: 'DATE'
+    		// MySQL51Lexer.g3:739:8: 'DATE'
     		{
     		DebugLocation(739, 8);
     		Match("DATE"); if (state.failed) return;
@@ -23933,9 +23933,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DAY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:740:5: ( 'DAY' )
+    		// MySQL51Lexer.g3:740:5: ( 'DAY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:740:7: 'DAY'
+    		// MySQL51Lexer.g3:740:7: 'DAY'
     		{
     		DebugLocation(740, 7);
     		Match("DAY"); if (state.failed) return;
@@ -23971,9 +23971,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HOUR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:741:6: ( 'HOUR' )
+    		// MySQL51Lexer.g3:741:6: ( 'HOUR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:741:8: 'HOUR'
+    		// MySQL51Lexer.g3:741:8: 'HOUR'
     		{
     		DebugLocation(741, 8);
     		Match("HOUR"); if (state.failed) return;
@@ -24009,9 +24009,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INSERT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:742:8: ( 'INSERT' )
+    		// MySQL51Lexer.g3:742:8: ( 'INSERT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:742:10: 'INSERT'
+    		// MySQL51Lexer.g3:742:10: 'INSERT'
     		{
     		DebugLocation(742, 10);
     		Match("INSERT"); if (state.failed) return;
@@ -24047,9 +24047,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INTERVAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:743:10: ( 'INTERVAL' )
+    		// MySQL51Lexer.g3:743:10: ( 'INTERVAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:743:12: 'INTERVAL'
+    		// MySQL51Lexer.g3:743:12: 'INTERVAL'
     		{
     		DebugLocation(743, 12);
     		Match("INTERVAL"); if (state.failed) return;
@@ -24085,9 +24085,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LEFT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:744:6: ( 'LEFT' )
+    		// MySQL51Lexer.g3:744:6: ( 'LEFT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:744:8: 'LEFT'
+    		// MySQL51Lexer.g3:744:8: 'LEFT'
     		{
     		DebugLocation(744, 8);
     		Match("LEFT"); if (state.failed) return;
@@ -24123,9 +24123,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MINUTE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:745:8: ( 'MINUTE' )
+    		// MySQL51Lexer.g3:745:8: ( 'MINUTE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:745:10: 'MINUTE'
+    		// MySQL51Lexer.g3:745:10: 'MINUTE'
     		{
     		DebugLocation(745, 10);
     		Match("MINUTE"); if (state.failed) return;
@@ -24161,9 +24161,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MONTH;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:746:7: ( 'MONTH' )
+    		// MySQL51Lexer.g3:746:7: ( 'MONTH' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:746:9: 'MONTH'
+    		// MySQL51Lexer.g3:746:9: 'MONTH'
     		{
     		DebugLocation(746, 9);
     		Match("MONTH"); if (state.failed) return;
@@ -24199,9 +24199,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RIGHT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:747:7: ( 'RIGHT' )
+    		// MySQL51Lexer.g3:747:7: ( 'RIGHT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:747:9: 'RIGHT'
+    		// MySQL51Lexer.g3:747:9: 'RIGHT'
     		{
     		DebugLocation(747, 9);
     		Match("RIGHT"); if (state.failed) return;
@@ -24237,9 +24237,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SECOND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:748:8: ( 'SECOND' )
+    		// MySQL51Lexer.g3:748:8: ( 'SECOND' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:748:10: 'SECOND'
+    		// MySQL51Lexer.g3:748:10: 'SECOND'
     		{
     		DebugLocation(748, 10);
     		Match("SECOND"); if (state.failed) return;
@@ -24275,9 +24275,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TIME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:749:6: ( 'TIME' )
+    		// MySQL51Lexer.g3:749:6: ( 'TIME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:749:8: 'TIME'
+    		// MySQL51Lexer.g3:749:8: 'TIME'
     		{
     		DebugLocation(749, 8);
     		Match("TIME"); if (state.failed) return;
@@ -24313,9 +24313,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TIMESTAMP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:750:11: ( 'TIMESTAMP' )
+    		// MySQL51Lexer.g3:750:11: ( 'TIMESTAMP' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:750:13: 'TIMESTAMP'
+    		// MySQL51Lexer.g3:750:13: 'TIMESTAMP'
     		{
     		DebugLocation(750, 13);
     		Match("TIMESTAMP"); if (state.failed) return;
@@ -24351,9 +24351,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TRIM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:751:6: ( 'TRIM' )
+    		// MySQL51Lexer.g3:751:6: ( 'TRIM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:751:8: 'TRIM'
+    		// MySQL51Lexer.g3:751:8: 'TRIM'
     		{
     		DebugLocation(751, 8);
     		Match("TRIM"); if (state.failed) return;
@@ -24389,9 +24389,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = USER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:752:6: ( 'USER' )
+    		// MySQL51Lexer.g3:752:6: ( 'USER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:752:8: 'USER'
+    		// MySQL51Lexer.g3:752:8: 'USER'
     		{
     		DebugLocation(752, 8);
     		Match("USER"); if (state.failed) return;
@@ -24427,9 +24427,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = YEAR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:753:6: ( 'YEAR' )
+    		// MySQL51Lexer.g3:753:6: ( 'YEAR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:753:8: 'YEAR'
+    		// MySQL51Lexer.g3:753:8: 'YEAR'
     		{
     		DebugLocation(753, 8);
     		Match("YEAR"); if (state.failed) return;
@@ -24465,9 +24465,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ASSIGN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:781:9: ( ':=' )
+    		// MySQL51Lexer.g3:781:9: ( ':=' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:781:11: ':='
+    		// MySQL51Lexer.g3:781:11: ':='
     		{
     		DebugLocation(781, 11);
     		Match(":="); if (state.failed) return;
@@ -24503,9 +24503,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = PLUS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:782:7: ( '+' )
+    		// MySQL51Lexer.g3:782:7: ( '+' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:782:9: '+'
+    		// MySQL51Lexer.g3:782:9: '+'
     		{
     		DebugLocation(782, 9);
     		Match('+'); if (state.failed) return;
@@ -24540,9 +24540,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MINUS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:783:9: ( '-' )
+    		// MySQL51Lexer.g3:783:9: ( '-' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:783:11: '-'
+    		// MySQL51Lexer.g3:783:11: '-'
     		{
     		DebugLocation(783, 11);
     		Match('-'); if (state.failed) return;
@@ -24577,9 +24577,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MULT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:784:7: ( '*' )
+    		// MySQL51Lexer.g3:784:7: ( '*' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:784:9: '*'
+    		// MySQL51Lexer.g3:784:9: '*'
     		{
     		DebugLocation(784, 9);
     		Match('*'); if (state.failed) return;
@@ -24614,9 +24614,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DIVISION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:785:10: ( '/' )
+    		// MySQL51Lexer.g3:785:10: ( '/' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:785:12: '/'
+    		// MySQL51Lexer.g3:785:12: '/'
     		{
     		DebugLocation(785, 12);
     		Match('/'); if (state.failed) return;
@@ -24651,9 +24651,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MODULO;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:786:9: ( '%' )
+    		// MySQL51Lexer.g3:786:9: ( '%' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:786:11: '%'
+    		// MySQL51Lexer.g3:786:11: '%'
     		{
     		DebugLocation(786, 11);
     		Match('%'); if (state.failed) return;
@@ -24688,9 +24688,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BITWISE_XOR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:787:13: ( '^' )
+    		// MySQL51Lexer.g3:787:13: ( '^' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:787:15: '^'
+    		// MySQL51Lexer.g3:787:15: '^'
     		{
     		DebugLocation(787, 15);
     		Match('^'); if (state.failed) return;
@@ -24725,9 +24725,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BITWISE_INVERSION;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:788:19: ( '~' )
+    		// MySQL51Lexer.g3:788:19: ( '~' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:788:21: '~'
+    		// MySQL51Lexer.g3:788:21: '~'
     		{
     		DebugLocation(788, 21);
     		Match('~'); if (state.failed) return;
@@ -24762,9 +24762,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BITWISE_AND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:789:13: ( '&' )
+    		// MySQL51Lexer.g3:789:13: ( '&' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:789:15: '&'
+    		// MySQL51Lexer.g3:789:15: '&'
     		{
     		DebugLocation(789, 15);
     		Match('&'); if (state.failed) return;
@@ -24799,9 +24799,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOGICAL_AND;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:790:13: ( '&&' )
+    		// MySQL51Lexer.g3:790:13: ( '&&' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:790:15: '&&'
+    		// MySQL51Lexer.g3:790:15: '&&'
     		{
     		DebugLocation(790, 15);
     		Match("&&"); if (state.failed) return;
@@ -24837,9 +24837,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BITWISE_OR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:791:12: ( '|' )
+    		// MySQL51Lexer.g3:791:12: ( '|' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:791:14: '|'
+    		// MySQL51Lexer.g3:791:14: '|'
     		{
     		DebugLocation(791, 14);
     		Match('|'); if (state.failed) return;
@@ -24874,9 +24874,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LOGICAL_OR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:792:12: ( '||' )
+    		// MySQL51Lexer.g3:792:12: ( '||' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:792:14: '||'
+    		// MySQL51Lexer.g3:792:14: '||'
     		{
     		DebugLocation(792, 14);
     		Match("||"); if (state.failed) return;
@@ -24912,9 +24912,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LESS_THAN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:793:11: ( '<' )
+    		// MySQL51Lexer.g3:793:11: ( '<' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:793:13: '<'
+    		// MySQL51Lexer.g3:793:13: '<'
     		{
     		DebugLocation(793, 13);
     		Match('<'); if (state.failed) return;
@@ -24949,9 +24949,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LEFT_SHIFT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:794:12: ( '<<' )
+    		// MySQL51Lexer.g3:794:12: ( '<<' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:794:14: '<<'
+    		// MySQL51Lexer.g3:794:14: '<<'
     		{
     		DebugLocation(794, 14);
     		Match("<<"); if (state.failed) return;
@@ -24987,9 +24987,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LESS_THAN_EQUAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:795:17: ( '<=' )
+    		// MySQL51Lexer.g3:795:17: ( '<=' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:795:19: '<='
+    		// MySQL51Lexer.g3:795:19: '<='
     		{
     		DebugLocation(795, 19);
     		Match("<="); if (state.failed) return;
@@ -25025,9 +25025,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NULL_SAFE_NOT_EQUAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:796:21: ( '<=>' )
+    		// MySQL51Lexer.g3:796:21: ( '<=>' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:796:23: '<=>'
+    		// MySQL51Lexer.g3:796:23: '<=>'
     		{
     		DebugLocation(796, 23);
     		Match("<=>"); if (state.failed) return;
@@ -25063,9 +25063,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = EQUALS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:797:9: ( '=' )
+    		// MySQL51Lexer.g3:797:9: ( '=' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:797:11: '='
+    		// MySQL51Lexer.g3:797:11: '='
     		{
     		DebugLocation(797, 11);
     		Match('='); if (state.failed) return;
@@ -25100,9 +25100,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NOT_OP;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:798:9: ( '!' )
+    		// MySQL51Lexer.g3:798:9: ( '!' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:798:11: '!'
+    		// MySQL51Lexer.g3:798:11: '!'
     		{
     		DebugLocation(798, 11);
     		Match('!'); if (state.failed) return;
@@ -25137,7 +25137,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NOT_EQUAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:799:11: ( '<>' | '!=' )
+    		// MySQL51Lexer.g3:799:11: ( '<>' | '!=' )
     		int alt1=2;
     		try { DebugEnterDecision(1, decisionCanBacktrack[1]);
     		int LA1_1 = input.LA(1);
@@ -25164,7 +25164,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:799:13: '<>'
+    			// MySQL51Lexer.g3:799:13: '<>'
     			{
     			DebugLocation(799, 13);
     			Match("<>"); if (state.failed) return;
@@ -25174,7 +25174,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 2:
     			DebugEnterAlt(2);
-    			// ..\\MySQL51Lexer.g3:799:20: '!='
+    			// MySQL51Lexer.g3:799:20: '!='
     			{
     			DebugLocation(799, 20);
     			Match("!="); if (state.failed) return;
@@ -25212,9 +25212,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GREATER_THAN;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:800:13: ( '>' )
+    		// MySQL51Lexer.g3:800:13: ( '>' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:800:15: '>'
+    		// MySQL51Lexer.g3:800:15: '>'
     		{
     		DebugLocation(800, 15);
     		Match('>'); if (state.failed) return;
@@ -25249,9 +25249,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = RIGHT_SHIFT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:801:13: ( '>>' )
+    		// MySQL51Lexer.g3:801:13: ( '>>' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:801:15: '>>'
+    		// MySQL51Lexer.g3:801:15: '>>'
     		{
     		DebugLocation(801, 15);
     		Match(">>"); if (state.failed) return;
@@ -25287,9 +25287,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = GREATER_THAN_EQUAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:802:20: ( '>=' )
+    		// MySQL51Lexer.g3:802:20: ( '>=' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:802:22: '>='
+    		// MySQL51Lexer.g3:802:22: '>='
     		{
     		DebugLocation(802, 22);
     		Match(">="); if (state.failed) return;
@@ -25325,9 +25325,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BIGINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:806:8: ( 'BIGINT' )
+    		// MySQL51Lexer.g3:806:8: ( 'BIGINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:806:10: 'BIGINT'
+    		// MySQL51Lexer.g3:806:10: 'BIGINT'
     		{
     		DebugLocation(806, 10);
     		Match("BIGINT"); if (state.failed) return;
@@ -25363,9 +25363,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BIT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:807:5: ( 'BIT' )
+    		// MySQL51Lexer.g3:807:5: ( 'BIT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:807:7: 'BIT'
+    		// MySQL51Lexer.g3:807:7: 'BIT'
     		{
     		DebugLocation(807, 7);
     		Match("BIT"); if (state.failed) return;
@@ -25401,9 +25401,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BLOB;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:808:6: ( 'BLOB' )
+    		// MySQL51Lexer.g3:808:6: ( 'BLOB' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:808:8: 'BLOB'
+    		// MySQL51Lexer.g3:808:8: 'BLOB'
     		{
     		DebugLocation(808, 8);
     		Match("BLOB"); if (state.failed) return;
@@ -25439,9 +25439,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DATETIME;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:811:10: ( 'DATETIME' )
+    		// MySQL51Lexer.g3:811:10: ( 'DATETIME' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:811:12: 'DATETIME'
+    		// MySQL51Lexer.g3:811:12: 'DATETIME'
     		{
     		DebugLocation(811, 12);
     		Match("DATETIME"); if (state.failed) return;
@@ -25477,9 +25477,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DECIMAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:812:9: ( 'DECIMAL' )
+    		// MySQL51Lexer.g3:812:9: ( 'DECIMAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:812:11: 'DECIMAL'
+    		// MySQL51Lexer.g3:812:11: 'DECIMAL'
     		{
     		DebugLocation(812, 11);
     		Match("DECIMAL"); if (state.failed) return;
@@ -25515,9 +25515,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = DOUBLE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:813:8: ( 'DOUBLE' )
+    		// MySQL51Lexer.g3:813:8: ( 'DOUBLE' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:813:10: 'DOUBLE'
+    		// MySQL51Lexer.g3:813:10: 'DOUBLE'
     		{
     		DebugLocation(813, 10);
     		Match("DOUBLE"); if (state.failed) return;
@@ -25553,9 +25553,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ENUM;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:814:6: ( 'ENUM' )
+    		// MySQL51Lexer.g3:814:6: ( 'ENUM' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:814:8: 'ENUM'
+    		// MySQL51Lexer.g3:814:8: 'ENUM'
     		{
     		DebugLocation(814, 8);
     		Match("ENUM"); if (state.failed) return;
@@ -25591,9 +25591,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = FLOAT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:815:7: ( 'FLOAT' )
+    		// MySQL51Lexer.g3:815:7: ( 'FLOAT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:815:9: 'FLOAT'
+    		// MySQL51Lexer.g3:815:9: 'FLOAT'
     		{
     		DebugLocation(815, 9);
     		Match("FLOAT"); if (state.failed) return;
@@ -25629,9 +25629,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:816:5: ( 'INT' )
+    		// MySQL51Lexer.g3:816:5: ( 'INT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:816:7: 'INT'
+    		// MySQL51Lexer.g3:816:7: 'INT'
     		{
     		DebugLocation(816, 7);
     		Match("INT"); if (state.failed) return;
@@ -25667,9 +25667,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INTEGER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:817:9: ( 'INTEGER' )
+    		// MySQL51Lexer.g3:817:9: ( 'INTEGER' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:817:11: 'INTEGER'
+    		// MySQL51Lexer.g3:817:11: 'INTEGER'
     		{
     		DebugLocation(817, 11);
     		Match("INTEGER"); if (state.failed) return;
@@ -25705,9 +25705,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LONGBLOB;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:818:10: ( 'LONGBLOB' )
+    		// MySQL51Lexer.g3:818:10: ( 'LONGBLOB' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:818:12: 'LONGBLOB'
+    		// MySQL51Lexer.g3:818:12: 'LONGBLOB'
     		{
     		DebugLocation(818, 12);
     		Match("LONGBLOB"); if (state.failed) return;
@@ -25743,9 +25743,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = LONGTEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:819:10: ( 'LONGTEXT' )
+    		// MySQL51Lexer.g3:819:10: ( 'LONGTEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:819:12: 'LONGTEXT'
+    		// MySQL51Lexer.g3:819:12: 'LONGTEXT'
     		{
     		DebugLocation(819, 12);
     		Match("LONGTEXT"); if (state.failed) return;
@@ -25781,9 +25781,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MEDIUMBLOB;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:820:12: ( 'MEDIUMBLOB' )
+    		// MySQL51Lexer.g3:820:12: ( 'MEDIUMBLOB' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:820:14: 'MEDIUMBLOB'
+    		// MySQL51Lexer.g3:820:14: 'MEDIUMBLOB'
     		{
     		DebugLocation(820, 14);
     		Match("MEDIUMBLOB"); if (state.failed) return;
@@ -25819,9 +25819,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MEDIUMINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:821:11: ( 'MEDIUMINT' )
+    		// MySQL51Lexer.g3:821:11: ( 'MEDIUMINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:821:13: 'MEDIUMINT'
+    		// MySQL51Lexer.g3:821:13: 'MEDIUMINT'
     		{
     		DebugLocation(821, 13);
     		Match("MEDIUMINT"); if (state.failed) return;
@@ -25857,9 +25857,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = MEDIUMTEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:822:12: ( 'MEDIUMTEXT' )
+    		// MySQL51Lexer.g3:822:12: ( 'MEDIUMTEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:822:14: 'MEDIUMTEXT'
+    		// MySQL51Lexer.g3:822:14: 'MEDIUMTEXT'
     		{
     		DebugLocation(822, 14);
     		Match("MEDIUMTEXT"); if (state.failed) return;
@@ -25895,9 +25895,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NUMERIC;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:823:9: ( 'NUMERIC' )
+    		// MySQL51Lexer.g3:823:9: ( 'NUMERIC' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:823:11: 'NUMERIC'
+    		// MySQL51Lexer.g3:823:11: 'NUMERIC'
     		{
     		DebugLocation(823, 11);
     		Match("NUMERIC"); if (state.failed) return;
@@ -25933,9 +25933,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = REAL;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:824:6: ( 'REAL' )
+    		// MySQL51Lexer.g3:824:6: ( 'REAL' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:824:8: 'REAL'
+    		// MySQL51Lexer.g3:824:8: 'REAL'
     		{
     		DebugLocation(824, 8);
     		Match("REAL"); if (state.failed) return;
@@ -25971,9 +25971,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SMALLINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:825:10: ( 'SMALLINT' )
+    		// MySQL51Lexer.g3:825:10: ( 'SMALLINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:825:12: 'SMALLINT'
+    		// MySQL51Lexer.g3:825:12: 'SMALLINT'
     		{
     		DebugLocation(825, 12);
     		Match("SMALLINT"); if (state.failed) return;
@@ -26009,9 +26009,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:826:6: ( 'TEXT' )
+    		// MySQL51Lexer.g3:826:6: ( 'TEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:826:8: 'TEXT'
+    		// MySQL51Lexer.g3:826:8: 'TEXT'
     		{
     		DebugLocation(826, 8);
     		Match("TEXT"); if (state.failed) return;
@@ -26047,9 +26047,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TINYBLOB;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:829:10: ( 'TINYBLOB' )
+    		// MySQL51Lexer.g3:829:10: ( 'TINYBLOB' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:829:12: 'TINYBLOB'
+    		// MySQL51Lexer.g3:829:12: 'TINYBLOB'
     		{
     		DebugLocation(829, 12);
     		Match("TINYBLOB"); if (state.failed) return;
@@ -26085,9 +26085,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TINYINT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:830:9: ( 'TINYINT' )
+    		// MySQL51Lexer.g3:830:9: ( 'TINYINT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:830:11: 'TINYINT'
+    		// MySQL51Lexer.g3:830:11: 'TINYINT'
     		{
     		DebugLocation(830, 11);
     		Match("TINYINT"); if (state.failed) return;
@@ -26123,9 +26123,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = TINYTEXT;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:831:10: ( 'TINYTEXT' )
+    		// MySQL51Lexer.g3:831:10: ( 'TINYTEXT' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:831:12: 'TINYTEXT'
+    		// MySQL51Lexer.g3:831:12: 'TINYTEXT'
     		{
     		DebugLocation(831, 12);
     		Match("TINYTEXT"); if (state.failed) return;
@@ -26161,9 +26161,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VARBINARY;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:832:11: ( 'VARBINARY' )
+    		// MySQL51Lexer.g3:832:11: ( 'VARBINARY' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:832:13: 'VARBINARY'
+    		// MySQL51Lexer.g3:832:13: 'VARBINARY'
     		{
     		DebugLocation(832, 13);
     		Match("VARBINARY"); if (state.failed) return;
@@ -26199,9 +26199,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VARCHAR;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:833:9: ( 'VARCHAR' )
+    		// MySQL51Lexer.g3:833:9: ( 'VARCHAR' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:833:11: 'VARCHAR'
+    		// MySQL51Lexer.g3:833:11: 'VARCHAR'
     		{
     		DebugLocation(833, 11);
     		Match("VARCHAR"); if (state.failed) return;
@@ -26237,15 +26237,15 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = BINARY_VALUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:847:2: ( ( 'B' '\\'' )=> 'B\\'' ( '0' | '1' )* '\\'' )
+    		// MySQL51Lexer.g3:847:2: ( ( 'B' '\\'' )=> 'B\\'' ( '0' | '1' )* '\\'' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:847:4: ( 'B' '\\'' )=> 'B\\'' ( '0' | '1' )* '\\''
+    		// MySQL51Lexer.g3:847:4: ( 'B' '\\'' )=> 'B\\'' ( '0' | '1' )* '\\''
     		{
     		DebugLocation(847, 17);
     		Match("B'"); if (state.failed) return;
 
     		DebugLocation(847, 23);
-    		// ..\\MySQL51Lexer.g3:847:23: ( '0' | '1' )*
+    		// MySQL51Lexer.g3:847:23: ( '0' | '1' )*
     		try { DebugEnterSubRule(2);
     		while (true)
     		{
@@ -26264,7 +26264,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(847, 23);
     				input.Consume();
@@ -26316,15 +26316,15 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = HEXA_VALUE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:851:2: ( ( 'X' '\\'' )=> 'X\\'' ( DIGIT | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )* '\\'' )
+    		// MySQL51Lexer.g3:851:2: ( ( 'X' '\\'' )=> 'X\\'' ( DIGIT | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )* '\\'' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:851:4: ( 'X' '\\'' )=> 'X\\'' ( DIGIT | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )* '\\''
+    		// MySQL51Lexer.g3:851:4: ( 'X' '\\'' )=> 'X\\'' ( DIGIT | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )* '\\''
     		{
     		DebugLocation(851, 17);
     		Match("X'"); if (state.failed) return;
 
     		DebugLocation(851, 23);
-    		// ..\\MySQL51Lexer.g3:851:23: ( DIGIT | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )*
+    		// MySQL51Lexer.g3:851:23: ( DIGIT | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )*
     		try { DebugEnterSubRule(3);
     		while (true)
     		{
@@ -26343,7 +26343,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(851, 23);
     				input.Consume();
@@ -26395,12 +26395,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = STRING_LEX;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:866:2: ( ( 'N' )? ( '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"' | '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\'' ) )
+    		// MySQL51Lexer.g3:866:2: ( ( 'N' )? ( '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"' | '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\'' ) )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:866:4: ( 'N' )? ( '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"' | '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\'' )
+    		// MySQL51Lexer.g3:866:4: ( 'N' )? ( '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"' | '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\'' )
     		{
     		DebugLocation(866, 4);
-    		// ..\\MySQL51Lexer.g3:866:4: ( 'N' )?
+    		// MySQL51Lexer.g3:866:4: ( 'N' )?
     		int alt4=2;
     		try { DebugEnterSubRule(4);
     		try { DebugEnterDecision(4, decisionCanBacktrack[4]);
@@ -26415,7 +26415,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:866:4: 'N'
+    			// MySQL51Lexer.g3:866:4: 'N'
     			{
     			DebugLocation(866, 4);
     			Match('N'); if (state.failed) return;
@@ -26427,7 +26427,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		} finally { DebugExitSubRule(4); }
 
     		DebugLocation(867, 3);
-    		// ..\\MySQL51Lexer.g3:867:3: ( '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"' | '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\'' )
+    		// MySQL51Lexer.g3:867:3: ( '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"' | '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\'' )
     		int alt7=2;
     		try { DebugEnterSubRule(7);
     		try { DebugEnterDecision(7, decisionCanBacktrack[7]);
@@ -26455,12 +26455,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:867:5: '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"'
+    			// MySQL51Lexer.g3:867:5: '\"' ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )* '\"'
     			{
     			DebugLocation(867, 5);
     			Match('\"'); if (state.failed) return;
     			DebugLocation(868, 4);
-    			// ..\\MySQL51Lexer.g3:868:4: ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )*
+    			// MySQL51Lexer.g3:868:4: ( ( '\"\"' )=> '\"\"' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\"' | '\\\\' ) )*
     			try { DebugEnterSubRule(5);
     			while (true)
     			{
@@ -26494,7 +26494,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     				{
     				case 1:
     					DebugEnterAlt(1);
-    					// ..\\MySQL51Lexer.g3:868:6: ( '\"\"' )=> '\"\"'
+    					// MySQL51Lexer.g3:868:6: ( '\"\"' )=> '\"\"'
     					{
     					DebugLocation(868, 15);
     					Match("\"\""); if (state.failed) return;
@@ -26504,7 +26504,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     					break;
     				case 2:
     					DebugEnterAlt(2);
-    					// ..\\MySQL51Lexer.g3:869:6: ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE
+    					// MySQL51Lexer.g3:869:6: ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE
     					{
     					DebugLocation(869, 26);
     					mESCAPE_SEQUENCE(); if (state.failed) return;
@@ -26513,7 +26513,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     					break;
     				case 3:
     					DebugEnterAlt(3);
-    					// ..\\MySQL51Lexer.g3:870:6: ~ ( '\"' | '\\\\' )
+    					// MySQL51Lexer.g3:870:6: ~ ( '\"' | '\\\\' )
     					{
     					DebugLocation(870, 6);
     					input.Consume();
@@ -26539,12 +26539,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 2:
     			DebugEnterAlt(2);
-    			// ..\\MySQL51Lexer.g3:873:5: '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\''
+    			// MySQL51Lexer.g3:873:5: '\\'' ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )* '\\''
     			{
     			DebugLocation(873, 5);
     			Match('\''); if (state.failed) return;
     			DebugLocation(874, 4);
-    			// ..\\MySQL51Lexer.g3:874:4: ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )*
+    			// MySQL51Lexer.g3:874:4: ( ( '\\'\\'' )=> '\\'\\'' | ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE |~ ( '\\'' | '\\\\' ) )*
     			try { DebugEnterSubRule(6);
     			while (true)
     			{
@@ -26578,7 +26578,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     				{
     				case 1:
     					DebugEnterAlt(1);
-    					// ..\\MySQL51Lexer.g3:874:6: ( '\\'\\'' )=> '\\'\\''
+    					// MySQL51Lexer.g3:874:6: ( '\\'\\'' )=> '\\'\\''
     					{
     					DebugLocation(874, 17);
     					Match("''"); if (state.failed) return;
@@ -26588,7 +26588,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     					break;
     				case 2:
     					DebugEnterAlt(2);
-    					// ..\\MySQL51Lexer.g3:875:6: ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE
+    					// MySQL51Lexer.g3:875:6: ( ESCAPE_SEQUENCE )=> ESCAPE_SEQUENCE
     					{
     					DebugLocation(875, 26);
     					mESCAPE_SEQUENCE(); if (state.failed) return;
@@ -26597,7 +26597,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     					break;
     				case 3:
     					DebugEnterAlt(3);
-    					// ..\\MySQL51Lexer.g3:876:6: ~ ( '\\'' | '\\\\' )
+    					// MySQL51Lexer.g3:876:6: ~ ( '\\'' | '\\\\' )
     					{
     					DebugLocation(876, 6);
     					input.Consume();
@@ -26656,7 +26656,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = ID;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:909:5: ( '`' ( options {greedy=false; } : (~ ( '`' ) )+ ) '`' | REAL_ID )
+    		// MySQL51Lexer.g3:909:5: ( '`' ( options {greedy=false; } : (~ ( '`' ) )+ ) '`' | REAL_ID )
     		int alt9=2;
     		try { DebugEnterDecision(9, decisionCanBacktrack[9]);
     		int LA9_1 = input.LA(1);
@@ -26683,17 +26683,17 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:909:7: '`' ( options {greedy=false; } : (~ ( '`' ) )+ ) '`'
+    			// MySQL51Lexer.g3:909:7: '`' ( options {greedy=false; } : (~ ( '`' ) )+ ) '`'
     			{
     			DebugLocation(909, 7);
     			Match('`'); if (state.failed) return;
     			DebugLocation(909, 11);
-    			// ..\\MySQL51Lexer.g3:909:11: ( options {greedy=false; } : (~ ( '`' ) )+ )
+    			// MySQL51Lexer.g3:909:11: ( options {greedy=false; } : (~ ( '`' ) )+ )
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:909:36: (~ ( '`' ) )+
+    			// MySQL51Lexer.g3:909:36: (~ ( '`' ) )+
     			{
     			DebugLocation(909, 36);
-    			// ..\\MySQL51Lexer.g3:909:36: (~ ( '`' ) )+
+    			// MySQL51Lexer.g3:909:36: (~ ( '`' ) )+
     			int cnt8=0;
     			try { DebugEnterSubRule(8);
     			while (true)
@@ -26713,7 +26713,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     				{
     				case 1:
     					DebugEnterAlt(1);
-    					// ..\\MySQL51Lexer.g3:
+    					// MySQL51Lexer.g3:
     					{
     					DebugLocation(909, 36);
     					input.Consume();
@@ -26748,7 +26748,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 2:
     			DebugEnterAlt(2);
-    			// ..\\MySQL51Lexer.g3:910:5: REAL_ID
+    			// MySQL51Lexer.g3:910:5: REAL_ID
     			{
     			DebugLocation(910, 5);
     			mREAL_ID(); if (state.failed) return;
@@ -26783,9 +26783,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("REAL_ID", 667);
     		try
     		{
-    		// ..\\MySQL51Lexer.g3:927:2: ( ( 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' ) ( '0' .. '9' | 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' )* )
+    		// MySQL51Lexer.g3:927:2: ( ( 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' ) ( '0' .. '9' | 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' )* )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:927:4: ( 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' ) ( '0' .. '9' | 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' )*
+    		// MySQL51Lexer.g3:927:4: ( 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' ) ( '0' .. '9' | 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' )*
     		{
     		DebugLocation(927, 4);
     		if (input.LA(1)=='$'||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='\u0080' && input.LA(1)<='\uFFFE'))
@@ -26803,7 +26803,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		}
 
     		DebugLocation(927, 42);
-    		// ..\\MySQL51Lexer.g3:927:42: ( '0' .. '9' | 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' )*
+    		// MySQL51Lexer.g3:927:42: ( '0' .. '9' | 'A' .. 'Z' | '_' | '$' | '\\u0080' .. '\\ufffe' )*
     		try { DebugEnterSubRule(10);
     		while (true)
     		{
@@ -26822,7 +26822,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(927, 42);
     				input.Consume();
@@ -26870,14 +26870,14 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int character = 0;
 
-    		// ..\\MySQL51Lexer.g3:934:2: ( '\\\\' ( '0' | '\\'' | '\"' | 'B' | 'N' | 'R' | 'T' | 'Z' | '\\\\' | '%' | '_' |character= . ) )
+    		// MySQL51Lexer.g3:934:2: ( '\\\\' ( '0' | '\\'' | '\"' | 'B' | 'N' | 'R' | 'T' | 'Z' | '\\\\' | '%' | '_' |character= . ) )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:934:4: '\\\\' ( '0' | '\\'' | '\"' | 'B' | 'N' | 'R' | 'T' | 'Z' | '\\\\' | '%' | '_' |character= . )
+    		// MySQL51Lexer.g3:934:4: '\\\\' ( '0' | '\\'' | '\"' | 'B' | 'N' | 'R' | 'T' | 'Z' | '\\\\' | '%' | '_' |character= . )
     		{
     		DebugLocation(934, 4);
     		Match('\\'); if (state.failed) return;
     		DebugLocation(935, 3);
-    		// ..\\MySQL51Lexer.g3:935:3: ( '0' | '\\'' | '\"' | 'B' | 'N' | 'R' | 'T' | 'Z' | '\\\\' | '%' | '_' |character= . )
+    		// MySQL51Lexer.g3:935:3: ( '0' | '\\'' | '\"' | 'B' | 'N' | 'R' | 'T' | 'Z' | '\\\\' | '%' | '_' |character= . )
     		int alt11=12;
     		try { DebugEnterSubRule(11);
     		try { DebugEnterDecision(11, decisionCanBacktrack[11]);
@@ -26945,7 +26945,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:935:5: '0'
+    			// MySQL51Lexer.g3:935:5: '0'
     			{
     			DebugLocation(935, 5);
     			Match('0'); if (state.failed) return;
@@ -26954,7 +26954,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 2:
     			DebugEnterAlt(2);
-    			// ..\\MySQL51Lexer.g3:936:5: '\\''
+    			// MySQL51Lexer.g3:936:5: '\\''
     			{
     			DebugLocation(936, 5);
     			Match('\''); if (state.failed) return;
@@ -26963,7 +26963,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 3:
     			DebugEnterAlt(3);
-    			// ..\\MySQL51Lexer.g3:937:5: '\"'
+    			// MySQL51Lexer.g3:937:5: '\"'
     			{
     			DebugLocation(937, 5);
     			Match('\"'); if (state.failed) return;
@@ -26972,7 +26972,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 4:
     			DebugEnterAlt(4);
-    			// ..\\MySQL51Lexer.g3:938:5: 'B'
+    			// MySQL51Lexer.g3:938:5: 'B'
     			{
     			DebugLocation(938, 5);
     			Match('B'); if (state.failed) return;
@@ -26981,7 +26981,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 5:
     			DebugEnterAlt(5);
-    			// ..\\MySQL51Lexer.g3:939:5: 'N'
+    			// MySQL51Lexer.g3:939:5: 'N'
     			{
     			DebugLocation(939, 5);
     			Match('N'); if (state.failed) return;
@@ -26990,7 +26990,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 6:
     			DebugEnterAlt(6);
-    			// ..\\MySQL51Lexer.g3:940:5: 'R'
+    			// MySQL51Lexer.g3:940:5: 'R'
     			{
     			DebugLocation(940, 5);
     			Match('R'); if (state.failed) return;
@@ -26999,7 +26999,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 7:
     			DebugEnterAlt(7);
-    			// ..\\MySQL51Lexer.g3:941:5: 'T'
+    			// MySQL51Lexer.g3:941:5: 'T'
     			{
     			DebugLocation(941, 5);
     			Match('T'); if (state.failed) return;
@@ -27008,7 +27008,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 8:
     			DebugEnterAlt(8);
-    			// ..\\MySQL51Lexer.g3:942:5: 'Z'
+    			// MySQL51Lexer.g3:942:5: 'Z'
     			{
     			DebugLocation(942, 5);
     			Match('Z'); if (state.failed) return;
@@ -27017,7 +27017,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 9:
     			DebugEnterAlt(9);
-    			// ..\\MySQL51Lexer.g3:943:5: '\\\\'
+    			// MySQL51Lexer.g3:943:5: '\\\\'
     			{
     			DebugLocation(943, 5);
     			Match('\\'); if (state.failed) return;
@@ -27026,7 +27026,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 10:
     			DebugEnterAlt(10);
-    			// ..\\MySQL51Lexer.g3:944:5: '%'
+    			// MySQL51Lexer.g3:944:5: '%'
     			{
     			DebugLocation(944, 5);
     			Match('%'); if (state.failed) return;
@@ -27035,7 +27035,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 11:
     			DebugEnterAlt(11);
-    			// ..\\MySQL51Lexer.g3:945:5: '_'
+    			// MySQL51Lexer.g3:945:5: '_'
     			{
     			DebugLocation(945, 5);
     			Match('_'); if (state.failed) return;
@@ -27044,7 +27044,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 12:
     			DebugEnterAlt(12);
-    			// ..\\MySQL51Lexer.g3:946:5: character= .
+    			// MySQL51Lexer.g3:946:5: character= .
     			{
     			DebugLocation(946, 14);
 
@@ -27085,9 +27085,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("DIGIT", 669);
     		try
     		{
-    		// ..\\MySQL51Lexer.g3:952:2: ( '0' .. '9' )
+    		// MySQL51Lexer.g3:952:2: ( '0' .. '9' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:
+    		// MySQL51Lexer.g3:
     		{
     		DebugLocation(952, 2);
     		if ((input.LA(1)>='0' && input.LA(1)<='9'))
@@ -27133,12 +27133,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = NUMBER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:970:2: ( ( DOT ( DIGIT )+ | INT_NUMBER DOT ( DIGIT )* ) ( 'E' ( DIGIT )+ )? )
+    		// MySQL51Lexer.g3:970:2: ( ( DOT ( DIGIT )+ | INT_NUMBER DOT ( DIGIT )* ) ( 'E' ( DIGIT )+ )? )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:971:2: ( DOT ( DIGIT )+ | INT_NUMBER DOT ( DIGIT )* ) ( 'E' ( DIGIT )+ )?
+    		// MySQL51Lexer.g3:971:2: ( DOT ( DIGIT )+ | INT_NUMBER DOT ( DIGIT )* ) ( 'E' ( DIGIT )+ )?
     		{
     		DebugLocation(971, 2);
-    		// ..\\MySQL51Lexer.g3:971:2: ( DOT ( DIGIT )+ | INT_NUMBER DOT ( DIGIT )* )
+    		// MySQL51Lexer.g3:971:2: ( DOT ( DIGIT )+ | INT_NUMBER DOT ( DIGIT )* )
     		int alt14=2;
     		try { DebugEnterSubRule(14);
     		try { DebugEnterDecision(14, decisionCanBacktrack[14]);
@@ -27166,12 +27166,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:972:4: DOT ( DIGIT )+
+    			// MySQL51Lexer.g3:972:4: DOT ( DIGIT )+
     			{
     			DebugLocation(972, 4);
     			mDOT(); if (state.failed) return;
     			DebugLocation(972, 8);
-    			// ..\\MySQL51Lexer.g3:972:8: ( DIGIT )+
+    			// MySQL51Lexer.g3:972:8: ( DIGIT )+
     			int cnt12=0;
     			try { DebugEnterSubRule(12);
     			while (true)
@@ -27191,7 +27191,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     				{
     				case 1:
     					DebugEnterAlt(1);
-    					// ..\\MySQL51Lexer.g3:
+    					// MySQL51Lexer.g3:
     					{
     					DebugLocation(972, 8);
     					input.Consume();
@@ -27221,14 +27221,14 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 2:
     			DebugEnterAlt(2);
-    			// ..\\MySQL51Lexer.g3:973:5: INT_NUMBER DOT ( DIGIT )*
+    			// MySQL51Lexer.g3:973:5: INT_NUMBER DOT ( DIGIT )*
     			{
     			DebugLocation(973, 5);
     			mINT_NUMBER(); if (state.failed) return;
     			DebugLocation(973, 16);
     			mDOT(); if (state.failed) return;
     			DebugLocation(973, 20);
-    			// ..\\MySQL51Lexer.g3:973:20: ( DIGIT )*
+    			// MySQL51Lexer.g3:973:20: ( DIGIT )*
     			try { DebugEnterSubRule(13);
     			while (true)
     			{
@@ -27247,7 +27247,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     				{
     				case 1:
     					DebugEnterAlt(1);
-    					// ..\\MySQL51Lexer.g3:
+    					// MySQL51Lexer.g3:
     					{
     					DebugLocation(973, 20);
     					input.Consume();
@@ -27274,7 +27274,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		} finally { DebugExitSubRule(14); }
 
     		DebugLocation(975, 3);
-    		// ..\\MySQL51Lexer.g3:975:3: ( 'E' ( DIGIT )+ )?
+    		// MySQL51Lexer.g3:975:3: ( 'E' ( DIGIT )+ )?
     		int alt16=2;
     		try { DebugEnterSubRule(16);
     		try { DebugEnterDecision(16, decisionCanBacktrack[16]);
@@ -27289,12 +27289,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:975:4: 'E' ( DIGIT )+
+    			// MySQL51Lexer.g3:975:4: 'E' ( DIGIT )+
     			{
     			DebugLocation(975, 4);
     			Match('E'); if (state.failed) return;
     			DebugLocation(975, 8);
-    			// ..\\MySQL51Lexer.g3:975:8: ( DIGIT )+
+    			// MySQL51Lexer.g3:975:8: ( DIGIT )+
     			int cnt15=0;
     			try { DebugEnterSubRule(15);
     			while (true)
@@ -27314,7 +27314,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     				{
     				case 1:
     					DebugEnterAlt(1);
-    					// ..\\MySQL51Lexer.g3:
+    					// MySQL51Lexer.g3:
     					{
     					DebugLocation(975, 8);
     					input.Consume();
@@ -27377,12 +27377,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = INT_NUMBER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:985:2: ( ( DIGIT )+ )
+    		// MySQL51Lexer.g3:985:2: ( ( DIGIT )+ )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:985:4: ( DIGIT )+
+    		// MySQL51Lexer.g3:985:4: ( DIGIT )+
     		{
     		DebugLocation(985, 4);
-    		// ..\\MySQL51Lexer.g3:985:4: ( DIGIT )+
+    		// MySQL51Lexer.g3:985:4: ( DIGIT )+
     		int cnt17=0;
     		try { DebugEnterSubRule(17);
     		while (true)
@@ -27402,7 +27402,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(985, 4);
     				input.Consume();
@@ -27458,12 +27458,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = SIZE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:989:3: ( ( DIGIT )+ ( 'M' | 'G' ) )
+    		// MySQL51Lexer.g3:989:3: ( ( DIGIT )+ ( 'M' | 'G' ) )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:989:5: ( DIGIT )+ ( 'M' | 'G' )
+    		// MySQL51Lexer.g3:989:5: ( DIGIT )+ ( 'M' | 'G' )
     		{
     		DebugLocation(989, 5);
-    		// ..\\MySQL51Lexer.g3:989:5: ( DIGIT )+
+    		// MySQL51Lexer.g3:989:5: ( DIGIT )+
     		int cnt18=0;
     		try { DebugEnterSubRule(18);
     		while (true)
@@ -27483,7 +27483,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(989, 5);
     				input.Consume();
@@ -27554,12 +27554,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = COMMENT_RULE;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:995:2: ( ( C_COMMENT | POUND_COMMENT | MINUS_MINUS_COMMENT ) )
+    		// MySQL51Lexer.g3:995:2: ( ( C_COMMENT | POUND_COMMENT | MINUS_MINUS_COMMENT ) )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:995:4: ( C_COMMENT | POUND_COMMENT | MINUS_MINUS_COMMENT )
+    		// MySQL51Lexer.g3:995:4: ( C_COMMENT | POUND_COMMENT | MINUS_MINUS_COMMENT )
     		{
     		DebugLocation(995, 4);
-    		// ..\\MySQL51Lexer.g3:995:4: ( C_COMMENT | POUND_COMMENT | MINUS_MINUS_COMMENT )
+    		// MySQL51Lexer.g3:995:4: ( C_COMMENT | POUND_COMMENT | MINUS_MINUS_COMMENT )
     		int alt19=3;
     		try { DebugEnterSubRule(19);
     		try { DebugEnterDecision(19, decisionCanBacktrack[19]);
@@ -27594,7 +27594,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:995:6: C_COMMENT
+    			// MySQL51Lexer.g3:995:6: C_COMMENT
     			{
     			DebugLocation(995, 6);
     			mC_COMMENT(); if (state.failed) return;
@@ -27603,7 +27603,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 2:
     			DebugEnterAlt(2);
-    			// ..\\MySQL51Lexer.g3:996:5: POUND_COMMENT
+    			// MySQL51Lexer.g3:996:5: POUND_COMMENT
     			{
     			DebugLocation(996, 5);
     			mPOUND_COMMENT(); if (state.failed) return;
@@ -27612,7 +27612,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			break;
     		case 3:
     			DebugEnterAlt(3);
-    			// ..\\MySQL51Lexer.g3:997:5: MINUS_MINUS_COMMENT
+    			// MySQL51Lexer.g3:997:5: MINUS_MINUS_COMMENT
     			{
     			DebugLocation(997, 5);
     			mMINUS_MINUS_COMMENT(); if (state.failed) return;
@@ -27657,15 +27657,15 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("C_COMMENT", 674);
     		try
     		{
-    		// ..\\MySQL51Lexer.g3:1005:2: ( '/*' ( options {greedy=false; } : . )* '*/' )
+    		// MySQL51Lexer.g3:1005:2: ( '/*' ( options {greedy=false; } : . )* '*/' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1005:4: '/*' ( options {greedy=false; } : . )* '*/'
+    		// MySQL51Lexer.g3:1005:4: '/*' ( options {greedy=false; } : . )* '*/'
     		{
     		DebugLocation(1005, 4);
     		Match("/*"); if (state.failed) return;
 
     		DebugLocation(1005, 9);
-    		// ..\\MySQL51Lexer.g3:1005:9: ( options {greedy=false; } : . )*
+    		// MySQL51Lexer.g3:1005:9: ( options {greedy=false; } : . )*
     		try { DebugEnterSubRule(20);
     		while (true)
     		{
@@ -27699,7 +27699,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:1005:37: .
+    				// MySQL51Lexer.g3:1005:37: .
     				{
     				DebugLocation(1005, 37);
     				MatchAny(); if (state.failed) return;
@@ -27747,14 +27747,14 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("POUND_COMMENT", 675);
     		try
     		{
-    		// ..\\MySQL51Lexer.g3:1010:2: ( '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+    		// MySQL51Lexer.g3:1010:2: ( '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1010:4: '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+    		// MySQL51Lexer.g3:1010:4: '#' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
     		{
     		DebugLocation(1010, 4);
     		Match('#'); if (state.failed) return;
     		DebugLocation(1010, 8);
-    		// ..\\MySQL51Lexer.g3:1010:8: (~ ( '\\n' | '\\r' ) )*
+    		// MySQL51Lexer.g3:1010:8: (~ ( '\\n' | '\\r' ) )*
     		try { DebugEnterSubRule(21);
     		while (true)
     		{
@@ -27773,7 +27773,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(1010, 8);
     				input.Consume();
@@ -27793,7 +27793,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		} finally { DebugExitSubRule(21); }
 
     		DebugLocation(1010, 22);
-    		// ..\\MySQL51Lexer.g3:1010:22: ( '\\r' )?
+    		// MySQL51Lexer.g3:1010:22: ( '\\r' )?
     		int alt22=2;
     		try { DebugEnterSubRule(22);
     		try { DebugEnterDecision(22, decisionCanBacktrack[22]);
@@ -27808,7 +27808,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:1010:22: '\\r'
+    			// MySQL51Lexer.g3:1010:22: '\\r'
     			{
     			DebugLocation(1010, 22);
     			Match('\r'); if (state.failed) return;
@@ -27848,16 +27848,16 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("MINUS_MINUS_COMMENT", 676);
     		try
     		{
-    		// ..\\MySQL51Lexer.g3:1015:2: ( '-' '-' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+    		// MySQL51Lexer.g3:1015:2: ( '-' '-' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1015:4: '-' '-' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+    		// MySQL51Lexer.g3:1015:4: '-' '-' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
     		{
     		DebugLocation(1015, 4);
     		Match('-'); if (state.failed) return;
     		DebugLocation(1015, 7);
     		Match('-'); if (state.failed) return;
     		DebugLocation(1015, 11);
-    		// ..\\MySQL51Lexer.g3:1015:11: (~ ( '\\n' | '\\r' ) )*
+    		// MySQL51Lexer.g3:1015:11: (~ ( '\\n' | '\\r' ) )*
     		try { DebugEnterSubRule(23);
     		while (true)
     		{
@@ -27876,7 +27876,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(1015, 11);
     				input.Consume();
@@ -27896,7 +27896,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		} finally { DebugExitSubRule(23); }
 
     		DebugLocation(1015, 25);
-    		// ..\\MySQL51Lexer.g3:1015:25: ( '\\r' )?
+    		// MySQL51Lexer.g3:1015:25: ( '\\r' )?
     		int alt24=2;
     		try { DebugEnterSubRule(24);
     		try { DebugEnterDecision(24, decisionCanBacktrack[24]);
@@ -27911,7 +27911,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:1015:25: '\\r'
+    			// MySQL51Lexer.g3:1015:25: '\\r'
     			{
     			DebugLocation(1015, 25);
     			Match('\r'); if (state.failed) return;
@@ -27951,9 +27951,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("DASHDASH_COMMENT", 677);
     		try
     		{
-    		// ..\\MySQL51Lexer.g3:1020:2: ( '--' ( ' ' | '\\t' | '\\n' | '\\r' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+    		// MySQL51Lexer.g3:1020:2: ( '--' ( ' ' | '\\t' | '\\n' | '\\r' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1020:4: '--' ( ' ' | '\\t' | '\\n' | '\\r' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+    		// MySQL51Lexer.g3:1020:4: '--' ( ' ' | '\\t' | '\\n' | '\\r' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
     		{
     		DebugLocation(1020, 4);
     		Match("--"); if (state.failed) return;
@@ -27974,7 +27974,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		}
 
     		DebugLocation(1020, 36);
-    		// ..\\MySQL51Lexer.g3:1020:36: (~ ( '\\n' | '\\r' ) )*
+    		// MySQL51Lexer.g3:1020:36: (~ ( '\\n' | '\\r' ) )*
     		try { DebugEnterSubRule(25);
     		while (true)
     		{
@@ -27993,7 +27993,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(1020, 36);
     				input.Consume();
@@ -28013,7 +28013,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		} finally { DebugExitSubRule(25); }
 
     		DebugLocation(1020, 50);
-    		// ..\\MySQL51Lexer.g3:1020:50: ( '\\r' )?
+    		// MySQL51Lexer.g3:1020:50: ( '\\r' )?
     		int alt26=2;
     		try { DebugEnterSubRule(26);
     		try { DebugEnterDecision(26, decisionCanBacktrack[26]);
@@ -28028,7 +28028,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		case 1:
     			DebugEnterAlt(1);
-    			// ..\\MySQL51Lexer.g3:1020:50: '\\r'
+    			// MySQL51Lexer.g3:1020:50: '\\r'
     			{
     			DebugLocation(1020, 50);
     			Match('\r'); if (state.failed) return;
@@ -28070,12 +28070,12 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = WS;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:1031:4: ( ( ' ' | '\\t' | '\\n' | '\\r' )+ )
+    		// MySQL51Lexer.g3:1031:4: ( ( ' ' | '\\t' | '\\n' | '\\r' )+ )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1031:6: ( ' ' | '\\t' | '\\n' | '\\r' )+
+    		// MySQL51Lexer.g3:1031:6: ( ' ' | '\\t' | '\\n' | '\\r' )+
     		{
     		DebugLocation(1031, 6);
-    		// ..\\MySQL51Lexer.g3:1031:6: ( ' ' | '\\t' | '\\n' | '\\r' )+
+    		// MySQL51Lexer.g3:1031:6: ( ' ' | '\\t' | '\\n' | '\\r' )+
     		int cnt27=0;
     		try { DebugEnterSubRule(27);
     		while (true)
@@ -28095,7 +28095,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     			{
     			case 1:
     				DebugEnterAlt(1);
-    				// ..\\MySQL51Lexer.g3:
+    				// MySQL51Lexer.g3:
     				{
     				DebugLocation(1031, 6);
     				input.Consume();
@@ -28156,9 +28156,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		{
     		int _type = VALUE_PLACEHOLDER;
     		int _channel = DefaultTokenChannel;
-    		// ..\\MySQL51Lexer.g3:1039:2: ( '?' )
+    		// MySQL51Lexer.g3:1039:2: ( '?' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1039:4: '?'
+    		// MySQL51Lexer.g3:1039:4: '?'
     		{
     		DebugLocation(1039, 4);
     		Match('?'); if (state.failed) return;
@@ -28179,7 +28179,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
 
     public override void mTokens()
     {
-    	// ..\\MySQL51Lexer.g3:1:8: ( ACCESSIBLE | ACCOUNT | ACTIVE | ADD | ALL | ALTER | ANALYSE | ANALYZE | AND | AS | ASC | ASENSITIVE | AT1 | AUTOCOMMIT | BEFORE | BETWEEN | BINARY | BOTH | BY | CACHING_SHA2_PASSWORD | CALL | CASCADE | CASE | CATALOG_NAME | CHANNEL | CHANGE | CHARACTER | CHECK | CLASS_ORIGIN | COLLATE | COLON | COLUMN | COLUMN_FORMAT | COLUMN_NAME | CONDITION | CONSTRAINT | CONSTRAINT_CATALOG | CONSTRAINT_NAME | CONSTRAINT_SCHEMA | CONTINUE | CONVERT | COPY | CREATE | CROSS | CURRENT | CURRENT_DATE | CURRENT_TIME | CURRENT_TIMESTAMP | CURSOR | CURSOR_NAME | DATABASE | DATABASES | DAY_HOUR | DAY_MICROSECOND | DAY_MINUTE | DAY_SECOND | DEC | DECLARE | DEFAULT | DELAYED | DELETE | DESC | DESCRIBE | DETERMINISTIC | DIAGNOSTICS | DISTINCT | DISTINCTROW | DIV | DROP | DUAL | EACH | ELSE | ELSEIF | ENCLOSED | ESCAPED | EXCHANGE | EXISTS | EXIT | EXPIRE | EXPLAIN | FALSE | FETCH | FLOAT4 | FLOAT8 | FOLLOWS | FOR | FORCE | FORMAT | FOREIGN | FROM | FULLTEXT | GET | GOTO | GRANT | GROUP | HAVING | HISTORY | HIGH_PRIORITY | HOUR_MICROSECOND | HOUR_MINUTE | HOUR_SECOND | IF | IFNULL | IGNORE | IGNORE_SERVER_IDS | IN | INACTIVE | INDEX | INFILE | INNER | INNODB | INOUT | INPLACE | INSENSITIVE | INSTANCE | INT1 | INT2 | INT3 | INT4 | INT8 | INTO | IO_THREAD | IS | ITERATE | JOIN | JSON | KEY | KEYS | KILL | LABEL | LEADING | LEAVE | LIKE | LIMIT | LINEAR | LINES | LOAD | LOCALTIME | LOCALTIMESTAMP | LOCK | LONG | LOOP | LOW_PRIORITY | MASTER_SSL_VERIFY_SERVER_CERT | MATCH | MAX_STATEMENT_TIME | MAXVALUE | MESSAGE_TEXT | MIDDLEINT | MINUTE_MICROSECOND | MINUTE_SECOND | MOD | MODIFIES | MYSQL_ERRNO | MYSQL_NATIVE_PASSWORD | NATURAL | NOT | NO_WRITE_TO_BINLOG | NNUMBER | NULL | NULLIF | OFFLINE | ON | ONLINE | ONLY | OPTIMIZE | OPTION | OPTIONALLY | OR | ORDER | OUT | OUTER | OUTFILE | PERSIST | PERSIST_ONLY | PRECEDES | PRECISION | PRIMARY | PROCEDURE | PROXY | PURGE | RANGE | READ | READS | READ_ONLY | READ_WRITE | REDO_LOG | REFERENCES | REGEXP | RELEASE | RENAME | REPEAT | REPLACE | REQUIRE | RESIGNAL | RESTRICT | RETURN | RETURNED_SQLSTATE | REUSE | REVOKE | RLIKE | ROLE | ROW_COUNT | SCHEDULER | SCHEMA | SCHEMAS | SECOND_MICROSECOND | SELECT | SENSITIVE | SEPARATOR | SET | SCHEMA_NAME | SHA256_PASSWORD | SHOW | SIGNAL | SPATIAL | SPECIFIC | SQL | SQLEXCEPTION | SQLSTATE | SQLWARNING | SQL_BIG_RESULT | SQL_CALC_FOUND_ROWS | SQL_SMALL_RESULT | SSL | STACKED | STARTING | STRAIGHT_JOIN | SUBCLASS_ORIGIN | TABLE | TABLE_NAME | TERMINATED | THEN | TLS | TO | TRADITIONAL | TRAILING | TRIGGER | TRUE | UNDO | UNION | UNIQUE | UNLOCK | UNSIGNED | UPDATE | USAGE | USE | USING | VALUES | VARCHARACTER | VARYING | WHEN | WHERE | WHILE | WITH | WRITE | XOR | YEAR_MONTH | ZEROFILL | ASCII | BACKUP | BEGIN | BYTE | CACHE | CHARSET | CHECKSUM | CLOSE | COMMENT | COMMIT | CONTAINS | DEALLOCATE | DO | END | EXECUTE | FLUSH | HANDLER | HELP | HOST | INSTALL | LANGUAGE | NO | OPEN | OPTIONS | OWNER | PARSER | PARTITION | PORT | PREPARE | REMOVE | REPAIR | RESET | RESTORE | ROLLBACK | SAVEPOINT | SECURITY | SERVER | SIGNED | SOCKET | SLAVE | SONAME | START | STOP | TRUNCATE | UNICODE | UNINSTALL | WRAPPER | XA | UPGRADE | ACTION | AFTER | AGAINST | AGGREGATE | ALGORITHM | ANY | AT | AUTHORS | AUTO_INCREMENT | AUTOEXTEND_SIZE | AVG | AVG_ROW_LENGTH | BINLOG | BLOCK | BOOL | BOOLEAN | BTREE | CASCADED | CHAIN | CHANGED | CIPHER | CLIENT | COALESCE | CODE | COLLATION | COLUMNS | FIELDS | COMMITTED | COMPACT | COMPLETION | COMPRESSED | CONCURRENT | CONNECTION | CONSISTENT | CONTEXT | CONTRIBUTORS | CPU | CUBE | DATA | DATAFILE | DEFINER | DELAY_KEY_WRITE | DES_KEY_FILE | DIRECTORY | DISABLE | DISCARD | DISK | DUMPFILE | DUPLICATE | DYNAMIC | ENDS | ENGINE | ENGINES | ERROR | ERRORS | ESCAPE | EVENT | EVENTS | EVERY | EXCLUSIVE | EXPANSION | EXTENDED | EXTENT_SIZE | FAULTS | FAST | FOUND | ENABLE | FULL | FILE | FIRST | FIXED | FRAC_SECOND | GEOMETRY | GEOMETRYCOLLECTION | GRANTS | GLOBAL | HASH | HOSTS | IDENTIFIED | INVOKER | IMPORT | INDEXES | INITIAL_SIZE | INVISIBLE | IO | IPC | ISOLATION | ISSUER | INNOBASE | INSERT_METHOD | KEY_BLOCK_SIZE | LAST | LEAVES | LESS | LEVEL | LINESTRING | LIST | LOCAL | LOCKS | LOGFILE | LOGS | MAX_ROWS | MASTER | MASTER_HOST | MASTER_PORT | MASTER_LOG_FILE | MASTER_LOG_POS | MASTER_USER | MASTER_PASSWORD | MASTER_SERVER_ID | MASTER_CONNECT_RETRY | MASTER_SSL | MASTER_SSL_CA | MASTER_SSL_CAPATH | MASTER_SSL_CERT | MASTER_SSL_CIPHER | MASTER_SSL_KEY | MAX_CONNECTIONS_PER_HOUR | MAX_QUERIES_PER_HOUR | MAX_SIZE | MAX_UPDATES_PER_HOUR | MAX_USER_CONNECTIONS | MAX_VALUE | MEDIUM | MEMORY | MERGE | MICROSECOND | MIGRATE | MIN_ROWS | MODIFY | MODE | MULTILINESTRING | MULTIPOINT | MULTIPOLYGON | MUTEX | NAME | NAMES | NATIONAL | NCHAR | NDBCLUSTER | NEXT | NEW | NO_WAIT | NODEGROUP | NONE | NVARCHAR | OFFSET | OLD_PASSWORD | ONE_SHOT | ONE | PACK_KEYS | PAGE | PARTIAL | PARTITIONING | PARTITIONS | PASSWORD | PHASE | PLUGIN | PLUGINS | POINT | POLYGON | PRESERVE | PREV | PRIVILEGES | PROCESS | PROCESSLIST | PROFILE | PROFILES | QUARTER | QUERY | QUICK | ROTATE | REBUILD | RECOVER | REDO_BUFFER_SIZE | REDOFILE | REDUNDANT | RELAY_LOG_FILE | RELAY_LOG_POS | RELAY_THREAD | RELOAD | REORGANIZE | REPEATABLE | REPLICATION | RESOURCES | RESUME | RETURNS | ROLLUP | ROUTINE | ROWS | ROW_FORMAT | ROW | RTREE | SCHEDULE | SERIAL | SERIALIZABLE | SESSION | SIMPLE | SHARE | SHARED | SHUTDOWN | SNAPSHOT | SOME | SOUNDS | SOURCE | SQL_CACHE | SQL_BUFFER_RESULT | SQL_NO_CACHE | SQL_THREAD | STARTS | STATUS | STORAGE | STRING_KEYWORD | SUBJECT | SUBPARTITION | SUBPARTITIONS | SUPER | SUSPEND | SWAPS | SWITCHES | TABLES | TABLESPACE | TEMPORARY | TEMPTABLE | THAN | TRANSACTION | TRANSACTIONAL | TRIGGERS | TIMESTAMPADD | TIMESTAMPDIFF | TYPES | TYPE | UDF_RETURNS | FUNCTION | UNCOMMITTED | UNDEFINED | UNDO_BUFFER_SIZE | UNDOFILE | UNKNOWN | UNTIL | USE_FRM | VARIABLES | VALUE | VIEW | VISIBLE | WARNINGS | WAIT | WEEK | WORK | X509 | XML | COMMA | DOT | SEMI | LPAREN | RPAREN | LCURLY | RCURLY | BIT_AND | BIT_OR | BIT_XOR | CAST | COUNT | DATE_ADD | DATE_SUB | GROUP_CONCAT | MAX | MIN | STD | STDDEV | STDDEV_POP | STDDEV_SAMP | SUBSTR | SUM | VARIANCE | VAR_POP | VAR_SAMP | ADDDATE | CURDATE | CURTIME | DATE_ADD_INTERVAL | DATE_SUB_INTERVAL | EXTRACT | GET_FORMAT | NOW | POSITION | SUBDATE | SUBSTRING | TIMESTAMP_ADD | TIMESTAMP_DIFF | UTC_DATE | CHAR | CURRENT_USER | DATE | DAY | HOUR | INSERT | INTERVAL | LEFT | MINUTE | MONTH | RIGHT | SECOND | TIME | TIMESTAMP | TRIM | USER | YEAR | ASSIGN | PLUS | MINUS | MULT | DIVISION | MODULO | BITWISE_XOR | BITWISE_INVERSION | BITWISE_AND | LOGICAL_AND | BITWISE_OR | LOGICAL_OR | LESS_THAN | LEFT_SHIFT | LESS_THAN_EQUAL | NULL_SAFE_NOT_EQUAL | EQUALS | NOT_OP | NOT_EQUAL | GREATER_THAN | RIGHT_SHIFT | GREATER_THAN_EQUAL | BIGINT | BIT | BLOB | DATETIME | DECIMAL | DOUBLE | ENUM | FLOAT | INT | INTEGER | LONGBLOB | LONGTEXT | MEDIUMBLOB | MEDIUMINT | MEDIUMTEXT | NUMERIC | REAL | SMALLINT | TEXT | TINYBLOB | TINYINT | TINYTEXT | VARBINARY | VARCHAR | BINARY_VALUE | HEXA_VALUE | STRING_LEX | ID | NUMBER | INT_NUMBER | SIZE | COMMENT_RULE | WS | VALUE_PLACEHOLDER )
+    	// MySQL51Lexer.g3:1:8: ( ACCESSIBLE | ACCOUNT | ACTIVE | ADD | ALL | ALTER | ANALYSE | ANALYZE | AND | AS | ASC | ASENSITIVE | AT1 | AUTOCOMMIT | BEFORE | BETWEEN | BINARY | BOTH | BY | CACHING_SHA2_PASSWORD | CALL | CASCADE | CASE | CATALOG_NAME | CHANNEL | CHANGE | CHARACTER | CHECK | CLASS_ORIGIN | COLLATE | COLON | COLUMN | COLUMN_FORMAT | COLUMN_NAME | CONDITION | CONSTRAINT | CONSTRAINT_CATALOG | CONSTRAINT_NAME | CONSTRAINT_SCHEMA | CONTINUE | CONVERT | COPY | CREATE | CROSS | CURRENT | CURRENT_DATE | CURRENT_TIME | CURRENT_TIMESTAMP | CURSOR | CURSOR_NAME | DATABASE | DATABASES | DAY_HOUR | DAY_MICROSECOND | DAY_MINUTE | DAY_SECOND | DEC | DECLARE | DEFAULT | DELAYED | DELETE | DESC | DESCRIBE | DETERMINISTIC | DIAGNOSTICS | DISTINCT | DISTINCTROW | DIV | DROP | DUAL | EACH | ELSE | ELSEIF | ENCLOSED | ESCAPED | EXCHANGE | EXISTS | EXIT | EXPIRE | EXPLAIN | FALSE | FETCH | FLOAT4 | FLOAT8 | FOLLOWS | FOR | FORCE | FORMAT | FOREIGN | FROM | FULLTEXT | GET | GOTO | GRANT | GROUP | HAVING | HISTORY | HIGH_PRIORITY | HOUR_MICROSECOND | HOUR_MINUTE | HOUR_SECOND | IF | IFNULL | IGNORE | IGNORE_SERVER_IDS | IN | INACTIVE | INDEX | INFILE | INNER | INNODB | INOUT | INPLACE | INSENSITIVE | INSTANCE | INT1 | INT2 | INT3 | INT4 | INT8 | INTO | IO_THREAD | IS | ITERATE | JOIN | JSON | KEY | KEYS | KILL | LABEL | LEADING | LEAVE | LIKE | LIMIT | LINEAR | LINES | LOAD | LOCALTIME | LOCALTIMESTAMP | LOCK | LONG | LOOP | LOW_PRIORITY | MASTER_SSL_VERIFY_SERVER_CERT | MATCH | MAX_STATEMENT_TIME | MAXVALUE | MESSAGE_TEXT | MIDDLEINT | MINUTE_MICROSECOND | MINUTE_SECOND | MOD | MODIFIES | MYSQL_ERRNO | MYSQL_NATIVE_PASSWORD | NATURAL | NOT | NO_WRITE_TO_BINLOG | NNUMBER | NULL | NULLIF | OFFLINE | ON | ONLINE | ONLY | OPTIMIZE | OPTION | OPTIONALLY | OR | ORDER | OUT | OUTER | OUTFILE | PERSIST | PERSIST_ONLY | PRECEDES | PRECISION | PRIMARY | PROCEDURE | PROXY | PURGE | RANGE | READ | READS | READ_ONLY | READ_WRITE | REDO_LOG | REFERENCES | REGEXP | RELEASE | RENAME | REPEAT | REPLACE | REQUIRE | RESIGNAL | RESTRICT | RETURN | RETURNED_SQLSTATE | REUSE | REVOKE | RLIKE | ROLE | ROW_COUNT | SCHEDULER | SCHEMA | SCHEMAS | SECOND_MICROSECOND | SELECT | SENSITIVE | SEPARATOR | SET | SCHEMA_NAME | SHA256_PASSWORD | SHOW | SIGNAL | SPATIAL | SPECIFIC | SQL | SQLEXCEPTION | SQLSTATE | SQLWARNING | SQL_BIG_RESULT | SQL_CALC_FOUND_ROWS | SQL_SMALL_RESULT | SSL | STACKED | STARTING | STRAIGHT_JOIN | SUBCLASS_ORIGIN | TABLE | TABLE_NAME | TERMINATED | THEN | TLS | TO | TRADITIONAL | TRAILING | TRIGGER | TRUE | UNDO | UNION | UNIQUE | UNLOCK | UNSIGNED | UPDATE | USAGE | USE | USING | VALUES | VARCHARACTER | VARYING | WHEN | WHERE | WHILE | WITH | WRITE | XOR | YEAR_MONTH | ZEROFILL | ASCII | BACKUP | BEGIN | BYTE | CACHE | CHARSET | CHECKSUM | CLOSE | COMMENT | COMMIT | CONTAINS | DEALLOCATE | DO | END | EXECUTE | FLUSH | HANDLER | HELP | HOST | INSTALL | LANGUAGE | NO | OPEN | OPTIONS | OWNER | PARSER | PARTITION | PORT | PREPARE | REMOVE | REPAIR | RESET | RESTORE | ROLLBACK | SAVEPOINT | SECURITY | SERVER | SIGNED | SOCKET | SLAVE | SONAME | START | STOP | TRUNCATE | UNICODE | UNINSTALL | WRAPPER | XA | UPGRADE | ACTION | AFTER | AGAINST | AGGREGATE | ALGORITHM | ANY | AT | AUTHORS | AUTO_INCREMENT | AUTOEXTEND_SIZE | AVG | AVG_ROW_LENGTH | BINLOG | BLOCK | BOOL | BOOLEAN | BTREE | CASCADED | CHAIN | CHANGED | CIPHER | CLIENT | COALESCE | CODE | COLLATION | COLUMNS | FIELDS | COMMITTED | COMPACT | COMPLETION | COMPRESSED | CONCURRENT | CONNECTION | CONSISTENT | CONTEXT | CONTRIBUTORS | CPU | CUBE | DATA | DATAFILE | DEFINER | DELAY_KEY_WRITE | DES_KEY_FILE | DIRECTORY | DISABLE | DISCARD | DISK | DUMPFILE | DUPLICATE | DYNAMIC | ENDS | ENGINE | ENGINES | ERROR | ERRORS | ESCAPE | EVENT | EVENTS | EVERY | EXCLUSIVE | EXPANSION | EXTENDED | EXTENT_SIZE | FAULTS | FAST | FOUND | ENABLE | FULL | FILE | FIRST | FIXED | FRAC_SECOND | GEOMETRY | GEOMETRYCOLLECTION | GRANTS | GLOBAL | HASH | HOSTS | IDENTIFIED | INVOKER | IMPORT | INDEXES | INITIAL_SIZE | INVISIBLE | IO | IPC | ISOLATION | ISSUER | INNOBASE | INSERT_METHOD | KEY_BLOCK_SIZE | LAST | LEAVES | LESS | LEVEL | LINESTRING | LIST | LOCAL | LOCKS | LOGFILE | LOGS | MAX_ROWS | MASTER | MASTER_HOST | MASTER_PORT | MASTER_LOG_FILE | MASTER_LOG_POS | MASTER_USER | MASTER_PASSWORD | MASTER_SERVER_ID | MASTER_CONNECT_RETRY | MASTER_SSL | MASTER_SSL_CA | MASTER_SSL_CAPATH | MASTER_SSL_CERT | MASTER_SSL_CIPHER | MASTER_SSL_KEY | MAX_CONNECTIONS_PER_HOUR | MAX_QUERIES_PER_HOUR | MAX_SIZE | MAX_UPDATES_PER_HOUR | MAX_USER_CONNECTIONS | MAX_VALUE | MEDIUM | MEMORY | MERGE | MICROSECOND | MIGRATE | MIN_ROWS | MODIFY | MODE | MULTILINESTRING | MULTIPOINT | MULTIPOLYGON | MUTEX | NAME | NAMES | NATIONAL | NCHAR | NDBCLUSTER | NEXT | NEW | NO_WAIT | NODEGROUP | NONE | NVARCHAR | OFFSET | OLD_PASSWORD | ONE_SHOT | ONE | PACK_KEYS | PAGE | PARTIAL | PARTITIONING | PARTITIONS | PASSWORD | PHASE | PLUGIN | PLUGINS | POINT | POLYGON | PRESERVE | PREV | PRIVILEGES | PROCESS | PROCESSLIST | PROFILE | PROFILES | QUARTER | QUERY | QUICK | ROTATE | REBUILD | RECOVER | REDO_BUFFER_SIZE | REDOFILE | REDUNDANT | RELAY_LOG_FILE | RELAY_LOG_POS | RELAY_THREAD | RELOAD | REORGANIZE | REPEATABLE | REPLICATION | RESOURCES | RESUME | RETURNS | ROLLUP | ROUTINE | ROWS | ROW_FORMAT | ROW | RTREE | SCHEDULE | SERIAL | SERIALIZABLE | SESSION | SIMPLE | SHARE | SHARED | SHUTDOWN | SNAPSHOT | SOME | SOUNDS | SOURCE | SQL_CACHE | SQL_BUFFER_RESULT | SQL_NO_CACHE | SQL_THREAD | STARTS | STATUS | STORAGE | STRING_KEYWORD | SUBJECT | SUBPARTITION | SUBPARTITIONS | SUPER | SUSPEND | SWAPS | SWITCHES | TABLES | TABLESPACE | TEMPORARY | TEMPTABLE | THAN | TRANSACTION | TRANSACTIONAL | TRIGGERS | TIMESTAMPADD | TIMESTAMPDIFF | TYPES | TYPE | UDF_RETURNS | FUNCTION | UNCOMMITTED | UNDEFINED | UNDO_BUFFER_SIZE | UNDOFILE | UNKNOWN | UNTIL | USE_FRM | VARIABLES | VALUE | VIEW | VISIBLE | WARNINGS | WAIT | WEEK | WORK | X509 | XML | COMMA | DOT | SEMI | LPAREN | RPAREN | LCURLY | RCURLY | BIT_AND | BIT_OR | BIT_XOR | CAST | COUNT | DATE_ADD | DATE_SUB | GROUP_CONCAT | MAX | MIN | STD | STDDEV | STDDEV_POP | STDDEV_SAMP | SUBSTR | SUM | VARIANCE | VAR_POP | VAR_SAMP | ADDDATE | CURDATE | CURTIME | DATE_ADD_INTERVAL | DATE_SUB_INTERVAL | EXTRACT | GET_FORMAT | NOW | POSITION | SUBDATE | SUBSTRING | TIMESTAMP_ADD | TIMESTAMP_DIFF | UTC_DATE | CHAR | CURRENT_USER | DATE | DAY | HOUR | INSERT | INTERVAL | LEFT | MINUTE | MONTH | RIGHT | SECOND | TIME | TIMESTAMP | TRIM | USER | YEAR | ASSIGN | PLUS | MINUS | MULT | DIVISION | MODULO | BITWISE_XOR | BITWISE_INVERSION | BITWISE_AND | LOGICAL_AND | BITWISE_OR | LOGICAL_OR | LESS_THAN | LEFT_SHIFT | LESS_THAN_EQUAL | NULL_SAFE_NOT_EQUAL | EQUALS | NOT_OP | NOT_EQUAL | GREATER_THAN | RIGHT_SHIFT | GREATER_THAN_EQUAL | BIGINT | BIT | BLOB | DATETIME | DECIMAL | DOUBLE | ENUM | FLOAT | INT | INTEGER | LONGBLOB | LONGTEXT | MEDIUMBLOB | MEDIUMINT | MEDIUMTEXT | NUMERIC | REAL | SMALLINT | TEXT | TINYBLOB | TINYINT | TINYTEXT | VARBINARY | VARCHAR | BINARY_VALUE | HEXA_VALUE | STRING_LEX | ID | NUMBER | INT_NUMBER | SIZE | COMMENT_RULE | WS | VALUE_PLACEHOLDER )
     	int alt28=672;
     	try { DebugEnterDecision(28, decisionCanBacktrack[28]);
     	try
@@ -28196,7 +28196,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	{
     	case 1:
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:1:10: ACCESSIBLE
+    		// MySQL51Lexer.g3:1:10: ACCESSIBLE
     		{
     		DebugLocation(1, 10);
     		mACCESSIBLE(); if (state.failed) return;
@@ -28205,7 +28205,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 2:
     		DebugEnterAlt(2);
-    		// ..\\MySQL51Lexer.g3:1:21: ACCOUNT
+    		// MySQL51Lexer.g3:1:21: ACCOUNT
     		{
     		DebugLocation(1, 21);
     		mACCOUNT(); if (state.failed) return;
@@ -28214,7 +28214,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 3:
     		DebugEnterAlt(3);
-    		// ..\\MySQL51Lexer.g3:1:29: ACTIVE
+    		// MySQL51Lexer.g3:1:29: ACTIVE
     		{
     		DebugLocation(1, 29);
     		mACTIVE(); if (state.failed) return;
@@ -28223,7 +28223,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 4:
     		DebugEnterAlt(4);
-    		// ..\\MySQL51Lexer.g3:1:36: ADD
+    		// MySQL51Lexer.g3:1:36: ADD
     		{
     		DebugLocation(1, 36);
     		mADD(); if (state.failed) return;
@@ -28232,7 +28232,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 5:
     		DebugEnterAlt(5);
-    		// ..\\MySQL51Lexer.g3:1:40: ALL
+    		// MySQL51Lexer.g3:1:40: ALL
     		{
     		DebugLocation(1, 40);
     		mALL(); if (state.failed) return;
@@ -28241,7 +28241,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 6:
     		DebugEnterAlt(6);
-    		// ..\\MySQL51Lexer.g3:1:44: ALTER
+    		// MySQL51Lexer.g3:1:44: ALTER
     		{
     		DebugLocation(1, 44);
     		mALTER(); if (state.failed) return;
@@ -28250,7 +28250,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 7:
     		DebugEnterAlt(7);
-    		// ..\\MySQL51Lexer.g3:1:50: ANALYSE
+    		// MySQL51Lexer.g3:1:50: ANALYSE
     		{
     		DebugLocation(1, 50);
     		mANALYSE(); if (state.failed) return;
@@ -28259,7 +28259,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 8:
     		DebugEnterAlt(8);
-    		// ..\\MySQL51Lexer.g3:1:58: ANALYZE
+    		// MySQL51Lexer.g3:1:58: ANALYZE
     		{
     		DebugLocation(1, 58);
     		mANALYZE(); if (state.failed) return;
@@ -28268,7 +28268,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 9:
     		DebugEnterAlt(9);
-    		// ..\\MySQL51Lexer.g3:1:66: AND
+    		// MySQL51Lexer.g3:1:66: AND
     		{
     		DebugLocation(1, 66);
     		mAND(); if (state.failed) return;
@@ -28277,7 +28277,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 10:
     		DebugEnterAlt(10);
-    		// ..\\MySQL51Lexer.g3:1:70: AS
+    		// MySQL51Lexer.g3:1:70: AS
     		{
     		DebugLocation(1, 70);
     		mAS(); if (state.failed) return;
@@ -28286,7 +28286,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 11:
     		DebugEnterAlt(11);
-    		// ..\\MySQL51Lexer.g3:1:73: ASC
+    		// MySQL51Lexer.g3:1:73: ASC
     		{
     		DebugLocation(1, 73);
     		mASC(); if (state.failed) return;
@@ -28295,7 +28295,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 12:
     		DebugEnterAlt(12);
-    		// ..\\MySQL51Lexer.g3:1:77: ASENSITIVE
+    		// MySQL51Lexer.g3:1:77: ASENSITIVE
     		{
     		DebugLocation(1, 77);
     		mASENSITIVE(); if (state.failed) return;
@@ -28304,7 +28304,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 13:
     		DebugEnterAlt(13);
-    		// ..\\MySQL51Lexer.g3:1:88: AT1
+    		// MySQL51Lexer.g3:1:88: AT1
     		{
     		DebugLocation(1, 88);
     		mAT1(); if (state.failed) return;
@@ -28313,7 +28313,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 14:
     		DebugEnterAlt(14);
-    		// ..\\MySQL51Lexer.g3:1:92: AUTOCOMMIT
+    		// MySQL51Lexer.g3:1:92: AUTOCOMMIT
     		{
     		DebugLocation(1, 92);
     		mAUTOCOMMIT(); if (state.failed) return;
@@ -28322,7 +28322,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 15:
     		DebugEnterAlt(15);
-    		// ..\\MySQL51Lexer.g3:1:103: BEFORE
+    		// MySQL51Lexer.g3:1:103: BEFORE
     		{
     		DebugLocation(1, 103);
     		mBEFORE(); if (state.failed) return;
@@ -28331,7 +28331,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 16:
     		DebugEnterAlt(16);
-    		// ..\\MySQL51Lexer.g3:1:110: BETWEEN
+    		// MySQL51Lexer.g3:1:110: BETWEEN
     		{
     		DebugLocation(1, 110);
     		mBETWEEN(); if (state.failed) return;
@@ -28340,7 +28340,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 17:
     		DebugEnterAlt(17);
-    		// ..\\MySQL51Lexer.g3:1:118: BINARY
+    		// MySQL51Lexer.g3:1:118: BINARY
     		{
     		DebugLocation(1, 118);
     		mBINARY(); if (state.failed) return;
@@ -28349,7 +28349,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 18:
     		DebugEnterAlt(18);
-    		// ..\\MySQL51Lexer.g3:1:125: BOTH
+    		// MySQL51Lexer.g3:1:125: BOTH
     		{
     		DebugLocation(1, 125);
     		mBOTH(); if (state.failed) return;
@@ -28358,7 +28358,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 19:
     		DebugEnterAlt(19);
-    		// ..\\MySQL51Lexer.g3:1:130: BY
+    		// MySQL51Lexer.g3:1:130: BY
     		{
     		DebugLocation(1, 130);
     		mBY(); if (state.failed) return;
@@ -28367,7 +28367,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 20:
     		DebugEnterAlt(20);
-    		// ..\\MySQL51Lexer.g3:1:133: CACHING_SHA2_PASSWORD
+    		// MySQL51Lexer.g3:1:133: CACHING_SHA2_PASSWORD
     		{
     		DebugLocation(1, 133);
     		mCACHING_SHA2_PASSWORD(); if (state.failed) return;
@@ -28376,7 +28376,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 21:
     		DebugEnterAlt(21);
-    		// ..\\MySQL51Lexer.g3:1:155: CALL
+    		// MySQL51Lexer.g3:1:155: CALL
     		{
     		DebugLocation(1, 155);
     		mCALL(); if (state.failed) return;
@@ -28385,7 +28385,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 22:
     		DebugEnterAlt(22);
-    		// ..\\MySQL51Lexer.g3:1:160: CASCADE
+    		// MySQL51Lexer.g3:1:160: CASCADE
     		{
     		DebugLocation(1, 160);
     		mCASCADE(); if (state.failed) return;
@@ -28394,7 +28394,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 23:
     		DebugEnterAlt(23);
-    		// ..\\MySQL51Lexer.g3:1:168: CASE
+    		// MySQL51Lexer.g3:1:168: CASE
     		{
     		DebugLocation(1, 168);
     		mCASE(); if (state.failed) return;
@@ -28403,7 +28403,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 24:
     		DebugEnterAlt(24);
-    		// ..\\MySQL51Lexer.g3:1:173: CATALOG_NAME
+    		// MySQL51Lexer.g3:1:173: CATALOG_NAME
     		{
     		DebugLocation(1, 173);
     		mCATALOG_NAME(); if (state.failed) return;
@@ -28412,7 +28412,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 25:
     		DebugEnterAlt(25);
-    		// ..\\MySQL51Lexer.g3:1:186: CHANNEL
+    		// MySQL51Lexer.g3:1:186: CHANNEL
     		{
     		DebugLocation(1, 186);
     		mCHANNEL(); if (state.failed) return;
@@ -28421,7 +28421,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 26:
     		DebugEnterAlt(26);
-    		// ..\\MySQL51Lexer.g3:1:194: CHANGE
+    		// MySQL51Lexer.g3:1:194: CHANGE
     		{
     		DebugLocation(1, 194);
     		mCHANGE(); if (state.failed) return;
@@ -28430,7 +28430,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 27:
     		DebugEnterAlt(27);
-    		// ..\\MySQL51Lexer.g3:1:201: CHARACTER
+    		// MySQL51Lexer.g3:1:201: CHARACTER
     		{
     		DebugLocation(1, 201);
     		mCHARACTER(); if (state.failed) return;
@@ -28439,7 +28439,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 28:
     		DebugEnterAlt(28);
-    		// ..\\MySQL51Lexer.g3:1:211: CHECK
+    		// MySQL51Lexer.g3:1:211: CHECK
     		{
     		DebugLocation(1, 211);
     		mCHECK(); if (state.failed) return;
@@ -28448,7 +28448,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 29:
     		DebugEnterAlt(29);
-    		// ..\\MySQL51Lexer.g3:1:217: CLASS_ORIGIN
+    		// MySQL51Lexer.g3:1:217: CLASS_ORIGIN
     		{
     		DebugLocation(1, 217);
     		mCLASS_ORIGIN(); if (state.failed) return;
@@ -28457,7 +28457,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 30:
     		DebugEnterAlt(30);
-    		// ..\\MySQL51Lexer.g3:1:230: COLLATE
+    		// MySQL51Lexer.g3:1:230: COLLATE
     		{
     		DebugLocation(1, 230);
     		mCOLLATE(); if (state.failed) return;
@@ -28466,7 +28466,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 31:
     		DebugEnterAlt(31);
-    		// ..\\MySQL51Lexer.g3:1:238: COLON
+    		// MySQL51Lexer.g3:1:238: COLON
     		{
     		DebugLocation(1, 238);
     		mCOLON(); if (state.failed) return;
@@ -28475,7 +28475,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 32:
     		DebugEnterAlt(32);
-    		// ..\\MySQL51Lexer.g3:1:244: COLUMN
+    		// MySQL51Lexer.g3:1:244: COLUMN
     		{
     		DebugLocation(1, 244);
     		mCOLUMN(); if (state.failed) return;
@@ -28484,7 +28484,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 33:
     		DebugEnterAlt(33);
-    		// ..\\MySQL51Lexer.g3:1:251: COLUMN_FORMAT
+    		// MySQL51Lexer.g3:1:251: COLUMN_FORMAT
     		{
     		DebugLocation(1, 251);
     		mCOLUMN_FORMAT(); if (state.failed) return;
@@ -28493,7 +28493,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 34:
     		DebugEnterAlt(34);
-    		// ..\\MySQL51Lexer.g3:1:265: COLUMN_NAME
+    		// MySQL51Lexer.g3:1:265: COLUMN_NAME
     		{
     		DebugLocation(1, 265);
     		mCOLUMN_NAME(); if (state.failed) return;
@@ -28502,7 +28502,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 35:
     		DebugEnterAlt(35);
-    		// ..\\MySQL51Lexer.g3:1:277: CONDITION
+    		// MySQL51Lexer.g3:1:277: CONDITION
     		{
     		DebugLocation(1, 277);
     		mCONDITION(); if (state.failed) return;
@@ -28511,7 +28511,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 36:
     		DebugEnterAlt(36);
-    		// ..\\MySQL51Lexer.g3:1:287: CONSTRAINT
+    		// MySQL51Lexer.g3:1:287: CONSTRAINT
     		{
     		DebugLocation(1, 287);
     		mCONSTRAINT(); if (state.failed) return;
@@ -28520,7 +28520,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 37:
     		DebugEnterAlt(37);
-    		// ..\\MySQL51Lexer.g3:1:298: CONSTRAINT_CATALOG
+    		// MySQL51Lexer.g3:1:298: CONSTRAINT_CATALOG
     		{
     		DebugLocation(1, 298);
     		mCONSTRAINT_CATALOG(); if (state.failed) return;
@@ -28529,7 +28529,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 38:
     		DebugEnterAlt(38);
-    		// ..\\MySQL51Lexer.g3:1:317: CONSTRAINT_NAME
+    		// MySQL51Lexer.g3:1:317: CONSTRAINT_NAME
     		{
     		DebugLocation(1, 317);
     		mCONSTRAINT_NAME(); if (state.failed) return;
@@ -28538,7 +28538,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 39:
     		DebugEnterAlt(39);
-    		// ..\\MySQL51Lexer.g3:1:333: CONSTRAINT_SCHEMA
+    		// MySQL51Lexer.g3:1:333: CONSTRAINT_SCHEMA
     		{
     		DebugLocation(1, 333);
     		mCONSTRAINT_SCHEMA(); if (state.failed) return;
@@ -28547,7 +28547,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 40:
     		DebugEnterAlt(40);
-    		// ..\\MySQL51Lexer.g3:1:351: CONTINUE
+    		// MySQL51Lexer.g3:1:351: CONTINUE
     		{
     		DebugLocation(1, 351);
     		mCONTINUE(); if (state.failed) return;
@@ -28556,7 +28556,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 41:
     		DebugEnterAlt(41);
-    		// ..\\MySQL51Lexer.g3:1:360: CONVERT
+    		// MySQL51Lexer.g3:1:360: CONVERT
     		{
     		DebugLocation(1, 360);
     		mCONVERT(); if (state.failed) return;
@@ -28565,7 +28565,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 42:
     		DebugEnterAlt(42);
-    		// ..\\MySQL51Lexer.g3:1:368: COPY
+    		// MySQL51Lexer.g3:1:368: COPY
     		{
     		DebugLocation(1, 368);
     		mCOPY(); if (state.failed) return;
@@ -28574,7 +28574,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 43:
     		DebugEnterAlt(43);
-    		// ..\\MySQL51Lexer.g3:1:373: CREATE
+    		// MySQL51Lexer.g3:1:373: CREATE
     		{
     		DebugLocation(1, 373);
     		mCREATE(); if (state.failed) return;
@@ -28583,7 +28583,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 44:
     		DebugEnterAlt(44);
-    		// ..\\MySQL51Lexer.g3:1:380: CROSS
+    		// MySQL51Lexer.g3:1:380: CROSS
     		{
     		DebugLocation(1, 380);
     		mCROSS(); if (state.failed) return;
@@ -28592,7 +28592,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 45:
     		DebugEnterAlt(45);
-    		// ..\\MySQL51Lexer.g3:1:386: CURRENT
+    		// MySQL51Lexer.g3:1:386: CURRENT
     		{
     		DebugLocation(1, 386);
     		mCURRENT(); if (state.failed) return;
@@ -28601,7 +28601,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 46:
     		DebugEnterAlt(46);
-    		// ..\\MySQL51Lexer.g3:1:394: CURRENT_DATE
+    		// MySQL51Lexer.g3:1:394: CURRENT_DATE
     		{
     		DebugLocation(1, 394);
     		mCURRENT_DATE(); if (state.failed) return;
@@ -28610,7 +28610,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 47:
     		DebugEnterAlt(47);
-    		// ..\\MySQL51Lexer.g3:1:407: CURRENT_TIME
+    		// MySQL51Lexer.g3:1:407: CURRENT_TIME
     		{
     		DebugLocation(1, 407);
     		mCURRENT_TIME(); if (state.failed) return;
@@ -28619,7 +28619,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 48:
     		DebugEnterAlt(48);
-    		// ..\\MySQL51Lexer.g3:1:420: CURRENT_TIMESTAMP
+    		// MySQL51Lexer.g3:1:420: CURRENT_TIMESTAMP
     		{
     		DebugLocation(1, 420);
     		mCURRENT_TIMESTAMP(); if (state.failed) return;
@@ -28628,7 +28628,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 49:
     		DebugEnterAlt(49);
-    		// ..\\MySQL51Lexer.g3:1:438: CURSOR
+    		// MySQL51Lexer.g3:1:438: CURSOR
     		{
     		DebugLocation(1, 438);
     		mCURSOR(); if (state.failed) return;
@@ -28637,7 +28637,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 50:
     		DebugEnterAlt(50);
-    		// ..\\MySQL51Lexer.g3:1:445: CURSOR_NAME
+    		// MySQL51Lexer.g3:1:445: CURSOR_NAME
     		{
     		DebugLocation(1, 445);
     		mCURSOR_NAME(); if (state.failed) return;
@@ -28646,7 +28646,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 51:
     		DebugEnterAlt(51);
-    		// ..\\MySQL51Lexer.g3:1:457: DATABASE
+    		// MySQL51Lexer.g3:1:457: DATABASE
     		{
     		DebugLocation(1, 457);
     		mDATABASE(); if (state.failed) return;
@@ -28655,7 +28655,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 52:
     		DebugEnterAlt(52);
-    		// ..\\MySQL51Lexer.g3:1:466: DATABASES
+    		// MySQL51Lexer.g3:1:466: DATABASES
     		{
     		DebugLocation(1, 466);
     		mDATABASES(); if (state.failed) return;
@@ -28664,7 +28664,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 53:
     		DebugEnterAlt(53);
-    		// ..\\MySQL51Lexer.g3:1:476: DAY_HOUR
+    		// MySQL51Lexer.g3:1:476: DAY_HOUR
     		{
     		DebugLocation(1, 476);
     		mDAY_HOUR(); if (state.failed) return;
@@ -28673,7 +28673,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 54:
     		DebugEnterAlt(54);
-    		// ..\\MySQL51Lexer.g3:1:485: DAY_MICROSECOND
+    		// MySQL51Lexer.g3:1:485: DAY_MICROSECOND
     		{
     		DebugLocation(1, 485);
     		mDAY_MICROSECOND(); if (state.failed) return;
@@ -28682,7 +28682,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 55:
     		DebugEnterAlt(55);
-    		// ..\\MySQL51Lexer.g3:1:501: DAY_MINUTE
+    		// MySQL51Lexer.g3:1:501: DAY_MINUTE
     		{
     		DebugLocation(1, 501);
     		mDAY_MINUTE(); if (state.failed) return;
@@ -28691,7 +28691,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 56:
     		DebugEnterAlt(56);
-    		// ..\\MySQL51Lexer.g3:1:512: DAY_SECOND
+    		// MySQL51Lexer.g3:1:512: DAY_SECOND
     		{
     		DebugLocation(1, 512);
     		mDAY_SECOND(); if (state.failed) return;
@@ -28700,7 +28700,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 57:
     		DebugEnterAlt(57);
-    		// ..\\MySQL51Lexer.g3:1:523: DEC
+    		// MySQL51Lexer.g3:1:523: DEC
     		{
     		DebugLocation(1, 523);
     		mDEC(); if (state.failed) return;
@@ -28709,7 +28709,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 58:
     		DebugEnterAlt(58);
-    		// ..\\MySQL51Lexer.g3:1:527: DECLARE
+    		// MySQL51Lexer.g3:1:527: DECLARE
     		{
     		DebugLocation(1, 527);
     		mDECLARE(); if (state.failed) return;
@@ -28718,7 +28718,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 59:
     		DebugEnterAlt(59);
-    		// ..\\MySQL51Lexer.g3:1:535: DEFAULT
+    		// MySQL51Lexer.g3:1:535: DEFAULT
     		{
     		DebugLocation(1, 535);
     		mDEFAULT(); if (state.failed) return;
@@ -28727,7 +28727,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 60:
     		DebugEnterAlt(60);
-    		// ..\\MySQL51Lexer.g3:1:543: DELAYED
+    		// MySQL51Lexer.g3:1:543: DELAYED
     		{
     		DebugLocation(1, 543);
     		mDELAYED(); if (state.failed) return;
@@ -28736,7 +28736,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 61:
     		DebugEnterAlt(61);
-    		// ..\\MySQL51Lexer.g3:1:551: DELETE
+    		// MySQL51Lexer.g3:1:551: DELETE
     		{
     		DebugLocation(1, 551);
     		mDELETE(); if (state.failed) return;
@@ -28745,7 +28745,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 62:
     		DebugEnterAlt(62);
-    		// ..\\MySQL51Lexer.g3:1:558: DESC
+    		// MySQL51Lexer.g3:1:558: DESC
     		{
     		DebugLocation(1, 558);
     		mDESC(); if (state.failed) return;
@@ -28754,7 +28754,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 63:
     		DebugEnterAlt(63);
-    		// ..\\MySQL51Lexer.g3:1:563: DESCRIBE
+    		// MySQL51Lexer.g3:1:563: DESCRIBE
     		{
     		DebugLocation(1, 563);
     		mDESCRIBE(); if (state.failed) return;
@@ -28763,7 +28763,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 64:
     		DebugEnterAlt(64);
-    		// ..\\MySQL51Lexer.g3:1:572: DETERMINISTIC
+    		// MySQL51Lexer.g3:1:572: DETERMINISTIC
     		{
     		DebugLocation(1, 572);
     		mDETERMINISTIC(); if (state.failed) return;
@@ -28772,7 +28772,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 65:
     		DebugEnterAlt(65);
-    		// ..\\MySQL51Lexer.g3:1:586: DIAGNOSTICS
+    		// MySQL51Lexer.g3:1:586: DIAGNOSTICS
     		{
     		DebugLocation(1, 586);
     		mDIAGNOSTICS(); if (state.failed) return;
@@ -28781,7 +28781,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 66:
     		DebugEnterAlt(66);
-    		// ..\\MySQL51Lexer.g3:1:598: DISTINCT
+    		// MySQL51Lexer.g3:1:598: DISTINCT
     		{
     		DebugLocation(1, 598);
     		mDISTINCT(); if (state.failed) return;
@@ -28790,7 +28790,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 67:
     		DebugEnterAlt(67);
-    		// ..\\MySQL51Lexer.g3:1:607: DISTINCTROW
+    		// MySQL51Lexer.g3:1:607: DISTINCTROW
     		{
     		DebugLocation(1, 607);
     		mDISTINCTROW(); if (state.failed) return;
@@ -28799,7 +28799,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 68:
     		DebugEnterAlt(68);
-    		// ..\\MySQL51Lexer.g3:1:619: DIV
+    		// MySQL51Lexer.g3:1:619: DIV
     		{
     		DebugLocation(1, 619);
     		mDIV(); if (state.failed) return;
@@ -28808,7 +28808,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 69:
     		DebugEnterAlt(69);
-    		// ..\\MySQL51Lexer.g3:1:623: DROP
+    		// MySQL51Lexer.g3:1:623: DROP
     		{
     		DebugLocation(1, 623);
     		mDROP(); if (state.failed) return;
@@ -28817,7 +28817,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 70:
     		DebugEnterAlt(70);
-    		// ..\\MySQL51Lexer.g3:1:628: DUAL
+    		// MySQL51Lexer.g3:1:628: DUAL
     		{
     		DebugLocation(1, 628);
     		mDUAL(); if (state.failed) return;
@@ -28826,7 +28826,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 71:
     		DebugEnterAlt(71);
-    		// ..\\MySQL51Lexer.g3:1:633: EACH
+    		// MySQL51Lexer.g3:1:633: EACH
     		{
     		DebugLocation(1, 633);
     		mEACH(); if (state.failed) return;
@@ -28835,7 +28835,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 72:
     		DebugEnterAlt(72);
-    		// ..\\MySQL51Lexer.g3:1:638: ELSE
+    		// MySQL51Lexer.g3:1:638: ELSE
     		{
     		DebugLocation(1, 638);
     		mELSE(); if (state.failed) return;
@@ -28844,7 +28844,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 73:
     		DebugEnterAlt(73);
-    		// ..\\MySQL51Lexer.g3:1:643: ELSEIF
+    		// MySQL51Lexer.g3:1:643: ELSEIF
     		{
     		DebugLocation(1, 643);
     		mELSEIF(); if (state.failed) return;
@@ -28853,7 +28853,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 74:
     		DebugEnterAlt(74);
-    		// ..\\MySQL51Lexer.g3:1:650: ENCLOSED
+    		// MySQL51Lexer.g3:1:650: ENCLOSED
     		{
     		DebugLocation(1, 650);
     		mENCLOSED(); if (state.failed) return;
@@ -28862,7 +28862,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 75:
     		DebugEnterAlt(75);
-    		// ..\\MySQL51Lexer.g3:1:659: ESCAPED
+    		// MySQL51Lexer.g3:1:659: ESCAPED
     		{
     		DebugLocation(1, 659);
     		mESCAPED(); if (state.failed) return;
@@ -28871,7 +28871,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 76:
     		DebugEnterAlt(76);
-    		// ..\\MySQL51Lexer.g3:1:667: EXCHANGE
+    		// MySQL51Lexer.g3:1:667: EXCHANGE
     		{
     		DebugLocation(1, 667);
     		mEXCHANGE(); if (state.failed) return;
@@ -28880,7 +28880,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 77:
     		DebugEnterAlt(77);
-    		// ..\\MySQL51Lexer.g3:1:676: EXISTS
+    		// MySQL51Lexer.g3:1:676: EXISTS
     		{
     		DebugLocation(1, 676);
     		mEXISTS(); if (state.failed) return;
@@ -28889,7 +28889,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 78:
     		DebugEnterAlt(78);
-    		// ..\\MySQL51Lexer.g3:1:683: EXIT
+    		// MySQL51Lexer.g3:1:683: EXIT
     		{
     		DebugLocation(1, 683);
     		mEXIT(); if (state.failed) return;
@@ -28898,7 +28898,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 79:
     		DebugEnterAlt(79);
-    		// ..\\MySQL51Lexer.g3:1:688: EXPIRE
+    		// MySQL51Lexer.g3:1:688: EXPIRE
     		{
     		DebugLocation(1, 688);
     		mEXPIRE(); if (state.failed) return;
@@ -28907,7 +28907,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 80:
     		DebugEnterAlt(80);
-    		// ..\\MySQL51Lexer.g3:1:695: EXPLAIN
+    		// MySQL51Lexer.g3:1:695: EXPLAIN
     		{
     		DebugLocation(1, 695);
     		mEXPLAIN(); if (state.failed) return;
@@ -28916,7 +28916,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 81:
     		DebugEnterAlt(81);
-    		// ..\\MySQL51Lexer.g3:1:703: FALSE
+    		// MySQL51Lexer.g3:1:703: FALSE
     		{
     		DebugLocation(1, 703);
     		mFALSE(); if (state.failed) return;
@@ -28925,7 +28925,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 82:
     		DebugEnterAlt(82);
-    		// ..\\MySQL51Lexer.g3:1:709: FETCH
+    		// MySQL51Lexer.g3:1:709: FETCH
     		{
     		DebugLocation(1, 709);
     		mFETCH(); if (state.failed) return;
@@ -28934,7 +28934,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 83:
     		DebugEnterAlt(83);
-    		// ..\\MySQL51Lexer.g3:1:715: FLOAT4
+    		// MySQL51Lexer.g3:1:715: FLOAT4
     		{
     		DebugLocation(1, 715);
     		mFLOAT4(); if (state.failed) return;
@@ -28943,7 +28943,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 84:
     		DebugEnterAlt(84);
-    		// ..\\MySQL51Lexer.g3:1:722: FLOAT8
+    		// MySQL51Lexer.g3:1:722: FLOAT8
     		{
     		DebugLocation(1, 722);
     		mFLOAT8(); if (state.failed) return;
@@ -28952,7 +28952,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 85:
     		DebugEnterAlt(85);
-    		// ..\\MySQL51Lexer.g3:1:729: FOLLOWS
+    		// MySQL51Lexer.g3:1:729: FOLLOWS
     		{
     		DebugLocation(1, 729);
     		mFOLLOWS(); if (state.failed) return;
@@ -28961,7 +28961,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 86:
     		DebugEnterAlt(86);
-    		// ..\\MySQL51Lexer.g3:1:737: FOR
+    		// MySQL51Lexer.g3:1:737: FOR
     		{
     		DebugLocation(1, 737);
     		mFOR(); if (state.failed) return;
@@ -28970,7 +28970,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 87:
     		DebugEnterAlt(87);
-    		// ..\\MySQL51Lexer.g3:1:741: FORCE
+    		// MySQL51Lexer.g3:1:741: FORCE
     		{
     		DebugLocation(1, 741);
     		mFORCE(); if (state.failed) return;
@@ -28979,7 +28979,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 88:
     		DebugEnterAlt(88);
-    		// ..\\MySQL51Lexer.g3:1:747: FORMAT
+    		// MySQL51Lexer.g3:1:747: FORMAT
     		{
     		DebugLocation(1, 747);
     		mFORMAT(); if (state.failed) return;
@@ -28988,7 +28988,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 89:
     		DebugEnterAlt(89);
-    		// ..\\MySQL51Lexer.g3:1:754: FOREIGN
+    		// MySQL51Lexer.g3:1:754: FOREIGN
     		{
     		DebugLocation(1, 754);
     		mFOREIGN(); if (state.failed) return;
@@ -28997,7 +28997,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 90:
     		DebugEnterAlt(90);
-    		// ..\\MySQL51Lexer.g3:1:762: FROM
+    		// MySQL51Lexer.g3:1:762: FROM
     		{
     		DebugLocation(1, 762);
     		mFROM(); if (state.failed) return;
@@ -29006,7 +29006,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 91:
     		DebugEnterAlt(91);
-    		// ..\\MySQL51Lexer.g3:1:767: FULLTEXT
+    		// MySQL51Lexer.g3:1:767: FULLTEXT
     		{
     		DebugLocation(1, 767);
     		mFULLTEXT(); if (state.failed) return;
@@ -29015,7 +29015,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 92:
     		DebugEnterAlt(92);
-    		// ..\\MySQL51Lexer.g3:1:776: GET
+    		// MySQL51Lexer.g3:1:776: GET
     		{
     		DebugLocation(1, 776);
     		mGET(); if (state.failed) return;
@@ -29024,7 +29024,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 93:
     		DebugEnterAlt(93);
-    		// ..\\MySQL51Lexer.g3:1:780: GOTO
+    		// MySQL51Lexer.g3:1:780: GOTO
     		{
     		DebugLocation(1, 780);
     		mGOTO(); if (state.failed) return;
@@ -29033,7 +29033,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 94:
     		DebugEnterAlt(94);
-    		// ..\\MySQL51Lexer.g3:1:785: GRANT
+    		// MySQL51Lexer.g3:1:785: GRANT
     		{
     		DebugLocation(1, 785);
     		mGRANT(); if (state.failed) return;
@@ -29042,7 +29042,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 95:
     		DebugEnterAlt(95);
-    		// ..\\MySQL51Lexer.g3:1:791: GROUP
+    		// MySQL51Lexer.g3:1:791: GROUP
     		{
     		DebugLocation(1, 791);
     		mGROUP(); if (state.failed) return;
@@ -29051,7 +29051,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 96:
     		DebugEnterAlt(96);
-    		// ..\\MySQL51Lexer.g3:1:797: HAVING
+    		// MySQL51Lexer.g3:1:797: HAVING
     		{
     		DebugLocation(1, 797);
     		mHAVING(); if (state.failed) return;
@@ -29060,7 +29060,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 97:
     		DebugEnterAlt(97);
-    		// ..\\MySQL51Lexer.g3:1:804: HISTORY
+    		// MySQL51Lexer.g3:1:804: HISTORY
     		{
     		DebugLocation(1, 804);
     		mHISTORY(); if (state.failed) return;
@@ -29069,7 +29069,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 98:
     		DebugEnterAlt(98);
-    		// ..\\MySQL51Lexer.g3:1:812: HIGH_PRIORITY
+    		// MySQL51Lexer.g3:1:812: HIGH_PRIORITY
     		{
     		DebugLocation(1, 812);
     		mHIGH_PRIORITY(); if (state.failed) return;
@@ -29078,7 +29078,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 99:
     		DebugEnterAlt(99);
-    		// ..\\MySQL51Lexer.g3:1:826: HOUR_MICROSECOND
+    		// MySQL51Lexer.g3:1:826: HOUR_MICROSECOND
     		{
     		DebugLocation(1, 826);
     		mHOUR_MICROSECOND(); if (state.failed) return;
@@ -29087,7 +29087,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 100:
     		DebugEnterAlt(100);
-    		// ..\\MySQL51Lexer.g3:1:843: HOUR_MINUTE
+    		// MySQL51Lexer.g3:1:843: HOUR_MINUTE
     		{
     		DebugLocation(1, 843);
     		mHOUR_MINUTE(); if (state.failed) return;
@@ -29096,7 +29096,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 101:
     		DebugEnterAlt(101);
-    		// ..\\MySQL51Lexer.g3:1:855: HOUR_SECOND
+    		// MySQL51Lexer.g3:1:855: HOUR_SECOND
     		{
     		DebugLocation(1, 855);
     		mHOUR_SECOND(); if (state.failed) return;
@@ -29105,7 +29105,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 102:
     		DebugEnterAlt(102);
-    		// ..\\MySQL51Lexer.g3:1:867: IF
+    		// MySQL51Lexer.g3:1:867: IF
     		{
     		DebugLocation(1, 867);
     		mIF(); if (state.failed) return;
@@ -29114,7 +29114,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 103:
     		DebugEnterAlt(103);
-    		// ..\\MySQL51Lexer.g3:1:870: IFNULL
+    		// MySQL51Lexer.g3:1:870: IFNULL
     		{
     		DebugLocation(1, 870);
     		mIFNULL(); if (state.failed) return;
@@ -29123,7 +29123,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 104:
     		DebugEnterAlt(104);
-    		// ..\\MySQL51Lexer.g3:1:877: IGNORE
+    		// MySQL51Lexer.g3:1:877: IGNORE
     		{
     		DebugLocation(1, 877);
     		mIGNORE(); if (state.failed) return;
@@ -29132,7 +29132,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 105:
     		DebugEnterAlt(105);
-    		// ..\\MySQL51Lexer.g3:1:884: IGNORE_SERVER_IDS
+    		// MySQL51Lexer.g3:1:884: IGNORE_SERVER_IDS
     		{
     		DebugLocation(1, 884);
     		mIGNORE_SERVER_IDS(); if (state.failed) return;
@@ -29141,7 +29141,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 106:
     		DebugEnterAlt(106);
-    		// ..\\MySQL51Lexer.g3:1:902: IN
+    		// MySQL51Lexer.g3:1:902: IN
     		{
     		DebugLocation(1, 902);
     		mIN(); if (state.failed) return;
@@ -29150,7 +29150,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 107:
     		DebugEnterAlt(107);
-    		// ..\\MySQL51Lexer.g3:1:905: INACTIVE
+    		// MySQL51Lexer.g3:1:905: INACTIVE
     		{
     		DebugLocation(1, 905);
     		mINACTIVE(); if (state.failed) return;
@@ -29159,7 +29159,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 108:
     		DebugEnterAlt(108);
-    		// ..\\MySQL51Lexer.g3:1:914: INDEX
+    		// MySQL51Lexer.g3:1:914: INDEX
     		{
     		DebugLocation(1, 914);
     		mINDEX(); if (state.failed) return;
@@ -29168,7 +29168,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 109:
     		DebugEnterAlt(109);
-    		// ..\\MySQL51Lexer.g3:1:920: INFILE
+    		// MySQL51Lexer.g3:1:920: INFILE
     		{
     		DebugLocation(1, 920);
     		mINFILE(); if (state.failed) return;
@@ -29177,7 +29177,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 110:
     		DebugEnterAlt(110);
-    		// ..\\MySQL51Lexer.g3:1:927: INNER
+    		// MySQL51Lexer.g3:1:927: INNER
     		{
     		DebugLocation(1, 927);
     		mINNER(); if (state.failed) return;
@@ -29186,7 +29186,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 111:
     		DebugEnterAlt(111);
-    		// ..\\MySQL51Lexer.g3:1:933: INNODB
+    		// MySQL51Lexer.g3:1:933: INNODB
     		{
     		DebugLocation(1, 933);
     		mINNODB(); if (state.failed) return;
@@ -29195,7 +29195,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 112:
     		DebugEnterAlt(112);
-    		// ..\\MySQL51Lexer.g3:1:940: INOUT
+    		// MySQL51Lexer.g3:1:940: INOUT
     		{
     		DebugLocation(1, 940);
     		mINOUT(); if (state.failed) return;
@@ -29204,7 +29204,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 113:
     		DebugEnterAlt(113);
-    		// ..\\MySQL51Lexer.g3:1:946: INPLACE
+    		// MySQL51Lexer.g3:1:946: INPLACE
     		{
     		DebugLocation(1, 946);
     		mINPLACE(); if (state.failed) return;
@@ -29213,7 +29213,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 114:
     		DebugEnterAlt(114);
-    		// ..\\MySQL51Lexer.g3:1:954: INSENSITIVE
+    		// MySQL51Lexer.g3:1:954: INSENSITIVE
     		{
     		DebugLocation(1, 954);
     		mINSENSITIVE(); if (state.failed) return;
@@ -29222,7 +29222,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 115:
     		DebugEnterAlt(115);
-    		// ..\\MySQL51Lexer.g3:1:966: INSTANCE
+    		// MySQL51Lexer.g3:1:966: INSTANCE
     		{
     		DebugLocation(1, 966);
     		mINSTANCE(); if (state.failed) return;
@@ -29231,7 +29231,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 116:
     		DebugEnterAlt(116);
-    		// ..\\MySQL51Lexer.g3:1:975: INT1
+    		// MySQL51Lexer.g3:1:975: INT1
     		{
     		DebugLocation(1, 975);
     		mINT1(); if (state.failed) return;
@@ -29240,7 +29240,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 117:
     		DebugEnterAlt(117);
-    		// ..\\MySQL51Lexer.g3:1:980: INT2
+    		// MySQL51Lexer.g3:1:980: INT2
     		{
     		DebugLocation(1, 980);
     		mINT2(); if (state.failed) return;
@@ -29249,7 +29249,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 118:
     		DebugEnterAlt(118);
-    		// ..\\MySQL51Lexer.g3:1:985: INT3
+    		// MySQL51Lexer.g3:1:985: INT3
     		{
     		DebugLocation(1, 985);
     		mINT3(); if (state.failed) return;
@@ -29258,7 +29258,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 119:
     		DebugEnterAlt(119);
-    		// ..\\MySQL51Lexer.g3:1:990: INT4
+    		// MySQL51Lexer.g3:1:990: INT4
     		{
     		DebugLocation(1, 990);
     		mINT4(); if (state.failed) return;
@@ -29267,7 +29267,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 120:
     		DebugEnterAlt(120);
-    		// ..\\MySQL51Lexer.g3:1:995: INT8
+    		// MySQL51Lexer.g3:1:995: INT8
     		{
     		DebugLocation(1, 995);
     		mINT8(); if (state.failed) return;
@@ -29276,7 +29276,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 121:
     		DebugEnterAlt(121);
-    		// ..\\MySQL51Lexer.g3:1:1000: INTO
+    		// MySQL51Lexer.g3:1:1000: INTO
     		{
     		DebugLocation(1, 1000);
     		mINTO(); if (state.failed) return;
@@ -29285,7 +29285,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 122:
     		DebugEnterAlt(122);
-    		// ..\\MySQL51Lexer.g3:1:1005: IO_THREAD
+    		// MySQL51Lexer.g3:1:1005: IO_THREAD
     		{
     		DebugLocation(1, 1005);
     		mIO_THREAD(); if (state.failed) return;
@@ -29294,7 +29294,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 123:
     		DebugEnterAlt(123);
-    		// ..\\MySQL51Lexer.g3:1:1015: IS
+    		// MySQL51Lexer.g3:1:1015: IS
     		{
     		DebugLocation(1, 1015);
     		mIS(); if (state.failed) return;
@@ -29303,7 +29303,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 124:
     		DebugEnterAlt(124);
-    		// ..\\MySQL51Lexer.g3:1:1018: ITERATE
+    		// MySQL51Lexer.g3:1:1018: ITERATE
     		{
     		DebugLocation(1, 1018);
     		mITERATE(); if (state.failed) return;
@@ -29312,7 +29312,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 125:
     		DebugEnterAlt(125);
-    		// ..\\MySQL51Lexer.g3:1:1026: JOIN
+    		// MySQL51Lexer.g3:1:1026: JOIN
     		{
     		DebugLocation(1, 1026);
     		mJOIN(); if (state.failed) return;
@@ -29321,7 +29321,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 126:
     		DebugEnterAlt(126);
-    		// ..\\MySQL51Lexer.g3:1:1031: JSON
+    		// MySQL51Lexer.g3:1:1031: JSON
     		{
     		DebugLocation(1, 1031);
     		mJSON(); if (state.failed) return;
@@ -29330,7 +29330,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 127:
     		DebugEnterAlt(127);
-    		// ..\\MySQL51Lexer.g3:1:1036: KEY
+    		// MySQL51Lexer.g3:1:1036: KEY
     		{
     		DebugLocation(1, 1036);
     		mKEY(); if (state.failed) return;
@@ -29339,7 +29339,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 128:
     		DebugEnterAlt(128);
-    		// ..\\MySQL51Lexer.g3:1:1040: KEYS
+    		// MySQL51Lexer.g3:1:1040: KEYS
     		{
     		DebugLocation(1, 1040);
     		mKEYS(); if (state.failed) return;
@@ -29348,7 +29348,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 129:
     		DebugEnterAlt(129);
-    		// ..\\MySQL51Lexer.g3:1:1045: KILL
+    		// MySQL51Lexer.g3:1:1045: KILL
     		{
     		DebugLocation(1, 1045);
     		mKILL(); if (state.failed) return;
@@ -29357,7 +29357,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 130:
     		DebugEnterAlt(130);
-    		// ..\\MySQL51Lexer.g3:1:1050: LABEL
+    		// MySQL51Lexer.g3:1:1050: LABEL
     		{
     		DebugLocation(1, 1050);
     		mLABEL(); if (state.failed) return;
@@ -29366,7 +29366,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 131:
     		DebugEnterAlt(131);
-    		// ..\\MySQL51Lexer.g3:1:1056: LEADING
+    		// MySQL51Lexer.g3:1:1056: LEADING
     		{
     		DebugLocation(1, 1056);
     		mLEADING(); if (state.failed) return;
@@ -29375,7 +29375,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 132:
     		DebugEnterAlt(132);
-    		// ..\\MySQL51Lexer.g3:1:1064: LEAVE
+    		// MySQL51Lexer.g3:1:1064: LEAVE
     		{
     		DebugLocation(1, 1064);
     		mLEAVE(); if (state.failed) return;
@@ -29384,7 +29384,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 133:
     		DebugEnterAlt(133);
-    		// ..\\MySQL51Lexer.g3:1:1070: LIKE
+    		// MySQL51Lexer.g3:1:1070: LIKE
     		{
     		DebugLocation(1, 1070);
     		mLIKE(); if (state.failed) return;
@@ -29393,7 +29393,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 134:
     		DebugEnterAlt(134);
-    		// ..\\MySQL51Lexer.g3:1:1075: LIMIT
+    		// MySQL51Lexer.g3:1:1075: LIMIT
     		{
     		DebugLocation(1, 1075);
     		mLIMIT(); if (state.failed) return;
@@ -29402,7 +29402,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 135:
     		DebugEnterAlt(135);
-    		// ..\\MySQL51Lexer.g3:1:1081: LINEAR
+    		// MySQL51Lexer.g3:1:1081: LINEAR
     		{
     		DebugLocation(1, 1081);
     		mLINEAR(); if (state.failed) return;
@@ -29411,7 +29411,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 136:
     		DebugEnterAlt(136);
-    		// ..\\MySQL51Lexer.g3:1:1088: LINES
+    		// MySQL51Lexer.g3:1:1088: LINES
     		{
     		DebugLocation(1, 1088);
     		mLINES(); if (state.failed) return;
@@ -29420,7 +29420,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 137:
     		DebugEnterAlt(137);
-    		// ..\\MySQL51Lexer.g3:1:1094: LOAD
+    		// MySQL51Lexer.g3:1:1094: LOAD
     		{
     		DebugLocation(1, 1094);
     		mLOAD(); if (state.failed) return;
@@ -29429,7 +29429,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 138:
     		DebugEnterAlt(138);
-    		// ..\\MySQL51Lexer.g3:1:1099: LOCALTIME
+    		// MySQL51Lexer.g3:1:1099: LOCALTIME
     		{
     		DebugLocation(1, 1099);
     		mLOCALTIME(); if (state.failed) return;
@@ -29438,7 +29438,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 139:
     		DebugEnterAlt(139);
-    		// ..\\MySQL51Lexer.g3:1:1109: LOCALTIMESTAMP
+    		// MySQL51Lexer.g3:1:1109: LOCALTIMESTAMP
     		{
     		DebugLocation(1, 1109);
     		mLOCALTIMESTAMP(); if (state.failed) return;
@@ -29447,7 +29447,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 140:
     		DebugEnterAlt(140);
-    		// ..\\MySQL51Lexer.g3:1:1124: LOCK
+    		// MySQL51Lexer.g3:1:1124: LOCK
     		{
     		DebugLocation(1, 1124);
     		mLOCK(); if (state.failed) return;
@@ -29456,7 +29456,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 141:
     		DebugEnterAlt(141);
-    		// ..\\MySQL51Lexer.g3:1:1129: LONG
+    		// MySQL51Lexer.g3:1:1129: LONG
     		{
     		DebugLocation(1, 1129);
     		mLONG(); if (state.failed) return;
@@ -29465,7 +29465,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 142:
     		DebugEnterAlt(142);
-    		// ..\\MySQL51Lexer.g3:1:1134: LOOP
+    		// MySQL51Lexer.g3:1:1134: LOOP
     		{
     		DebugLocation(1, 1134);
     		mLOOP(); if (state.failed) return;
@@ -29474,7 +29474,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 143:
     		DebugEnterAlt(143);
-    		// ..\\MySQL51Lexer.g3:1:1139: LOW_PRIORITY
+    		// MySQL51Lexer.g3:1:1139: LOW_PRIORITY
     		{
     		DebugLocation(1, 1139);
     		mLOW_PRIORITY(); if (state.failed) return;
@@ -29483,7 +29483,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 144:
     		DebugEnterAlt(144);
-    		// ..\\MySQL51Lexer.g3:1:1152: MASTER_SSL_VERIFY_SERVER_CERT
+    		// MySQL51Lexer.g3:1:1152: MASTER_SSL_VERIFY_SERVER_CERT
     		{
     		DebugLocation(1, 1152);
     		mMASTER_SSL_VERIFY_SERVER_CERT(); if (state.failed) return;
@@ -29492,7 +29492,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 145:
     		DebugEnterAlt(145);
-    		// ..\\MySQL51Lexer.g3:1:1182: MATCH
+    		// MySQL51Lexer.g3:1:1182: MATCH
     		{
     		DebugLocation(1, 1182);
     		mMATCH(); if (state.failed) return;
@@ -29501,7 +29501,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 146:
     		DebugEnterAlt(146);
-    		// ..\\MySQL51Lexer.g3:1:1188: MAX_STATEMENT_TIME
+    		// MySQL51Lexer.g3:1:1188: MAX_STATEMENT_TIME
     		{
     		DebugLocation(1, 1188);
     		mMAX_STATEMENT_TIME(); if (state.failed) return;
@@ -29510,7 +29510,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 147:
     		DebugEnterAlt(147);
-    		// ..\\MySQL51Lexer.g3:1:1207: MAXVALUE
+    		// MySQL51Lexer.g3:1:1207: MAXVALUE
     		{
     		DebugLocation(1, 1207);
     		mMAXVALUE(); if (state.failed) return;
@@ -29519,7 +29519,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 148:
     		DebugEnterAlt(148);
-    		// ..\\MySQL51Lexer.g3:1:1216: MESSAGE_TEXT
+    		// MySQL51Lexer.g3:1:1216: MESSAGE_TEXT
     		{
     		DebugLocation(1, 1216);
     		mMESSAGE_TEXT(); if (state.failed) return;
@@ -29528,7 +29528,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 149:
     		DebugEnterAlt(149);
-    		// ..\\MySQL51Lexer.g3:1:1229: MIDDLEINT
+    		// MySQL51Lexer.g3:1:1229: MIDDLEINT
     		{
     		DebugLocation(1, 1229);
     		mMIDDLEINT(); if (state.failed) return;
@@ -29537,7 +29537,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 150:
     		DebugEnterAlt(150);
-    		// ..\\MySQL51Lexer.g3:1:1239: MINUTE_MICROSECOND
+    		// MySQL51Lexer.g3:1:1239: MINUTE_MICROSECOND
     		{
     		DebugLocation(1, 1239);
     		mMINUTE_MICROSECOND(); if (state.failed) return;
@@ -29546,7 +29546,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 151:
     		DebugEnterAlt(151);
-    		// ..\\MySQL51Lexer.g3:1:1258: MINUTE_SECOND
+    		// MySQL51Lexer.g3:1:1258: MINUTE_SECOND
     		{
     		DebugLocation(1, 1258);
     		mMINUTE_SECOND(); if (state.failed) return;
@@ -29555,7 +29555,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 152:
     		DebugEnterAlt(152);
-    		// ..\\MySQL51Lexer.g3:1:1272: MOD
+    		// MySQL51Lexer.g3:1:1272: MOD
     		{
     		DebugLocation(1, 1272);
     		mMOD(); if (state.failed) return;
@@ -29564,7 +29564,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 153:
     		DebugEnterAlt(153);
-    		// ..\\MySQL51Lexer.g3:1:1276: MODIFIES
+    		// MySQL51Lexer.g3:1:1276: MODIFIES
     		{
     		DebugLocation(1, 1276);
     		mMODIFIES(); if (state.failed) return;
@@ -29573,7 +29573,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 154:
     		DebugEnterAlt(154);
-    		// ..\\MySQL51Lexer.g3:1:1285: MYSQL_ERRNO
+    		// MySQL51Lexer.g3:1:1285: MYSQL_ERRNO
     		{
     		DebugLocation(1, 1285);
     		mMYSQL_ERRNO(); if (state.failed) return;
@@ -29582,7 +29582,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 155:
     		DebugEnterAlt(155);
-    		// ..\\MySQL51Lexer.g3:1:1297: MYSQL_NATIVE_PASSWORD
+    		// MySQL51Lexer.g3:1:1297: MYSQL_NATIVE_PASSWORD
     		{
     		DebugLocation(1, 1297);
     		mMYSQL_NATIVE_PASSWORD(); if (state.failed) return;
@@ -29591,7 +29591,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 156:
     		DebugEnterAlt(156);
-    		// ..\\MySQL51Lexer.g3:1:1319: NATURAL
+    		// MySQL51Lexer.g3:1:1319: NATURAL
     		{
     		DebugLocation(1, 1319);
     		mNATURAL(); if (state.failed) return;
@@ -29600,7 +29600,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 157:
     		DebugEnterAlt(157);
-    		// ..\\MySQL51Lexer.g3:1:1327: NOT
+    		// MySQL51Lexer.g3:1:1327: NOT
     		{
     		DebugLocation(1, 1327);
     		mNOT(); if (state.failed) return;
@@ -29609,7 +29609,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 158:
     		DebugEnterAlt(158);
-    		// ..\\MySQL51Lexer.g3:1:1331: NO_WRITE_TO_BINLOG
+    		// MySQL51Lexer.g3:1:1331: NO_WRITE_TO_BINLOG
     		{
     		DebugLocation(1, 1331);
     		mNO_WRITE_TO_BINLOG(); if (state.failed) return;
@@ -29618,7 +29618,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 159:
     		DebugEnterAlt(159);
-    		// ..\\MySQL51Lexer.g3:1:1350: NNUMBER
+    		// MySQL51Lexer.g3:1:1350: NNUMBER
     		{
     		DebugLocation(1, 1350);
     		mNNUMBER(); if (state.failed) return;
@@ -29627,7 +29627,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 160:
     		DebugEnterAlt(160);
-    		// ..\\MySQL51Lexer.g3:1:1358: NULL
+    		// MySQL51Lexer.g3:1:1358: NULL
     		{
     		DebugLocation(1, 1358);
     		mNULL(); if (state.failed) return;
@@ -29636,7 +29636,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 161:
     		DebugEnterAlt(161);
-    		// ..\\MySQL51Lexer.g3:1:1363: NULLIF
+    		// MySQL51Lexer.g3:1:1363: NULLIF
     		{
     		DebugLocation(1, 1363);
     		mNULLIF(); if (state.failed) return;
@@ -29645,7 +29645,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 162:
     		DebugEnterAlt(162);
-    		// ..\\MySQL51Lexer.g3:1:1370: OFFLINE
+    		// MySQL51Lexer.g3:1:1370: OFFLINE
     		{
     		DebugLocation(1, 1370);
     		mOFFLINE(); if (state.failed) return;
@@ -29654,7 +29654,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 163:
     		DebugEnterAlt(163);
-    		// ..\\MySQL51Lexer.g3:1:1378: ON
+    		// MySQL51Lexer.g3:1:1378: ON
     		{
     		DebugLocation(1, 1378);
     		mON(); if (state.failed) return;
@@ -29663,7 +29663,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 164:
     		DebugEnterAlt(164);
-    		// ..\\MySQL51Lexer.g3:1:1381: ONLINE
+    		// MySQL51Lexer.g3:1:1381: ONLINE
     		{
     		DebugLocation(1, 1381);
     		mONLINE(); if (state.failed) return;
@@ -29672,7 +29672,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 165:
     		DebugEnterAlt(165);
-    		// ..\\MySQL51Lexer.g3:1:1388: ONLY
+    		// MySQL51Lexer.g3:1:1388: ONLY
     		{
     		DebugLocation(1, 1388);
     		mONLY(); if (state.failed) return;
@@ -29681,7 +29681,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 166:
     		DebugEnterAlt(166);
-    		// ..\\MySQL51Lexer.g3:1:1393: OPTIMIZE
+    		// MySQL51Lexer.g3:1:1393: OPTIMIZE
     		{
     		DebugLocation(1, 1393);
     		mOPTIMIZE(); if (state.failed) return;
@@ -29690,7 +29690,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 167:
     		DebugEnterAlt(167);
-    		// ..\\MySQL51Lexer.g3:1:1402: OPTION
+    		// MySQL51Lexer.g3:1:1402: OPTION
     		{
     		DebugLocation(1, 1402);
     		mOPTION(); if (state.failed) return;
@@ -29699,7 +29699,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 168:
     		DebugEnterAlt(168);
-    		// ..\\MySQL51Lexer.g3:1:1409: OPTIONALLY
+    		// MySQL51Lexer.g3:1:1409: OPTIONALLY
     		{
     		DebugLocation(1, 1409);
     		mOPTIONALLY(); if (state.failed) return;
@@ -29708,7 +29708,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 169:
     		DebugEnterAlt(169);
-    		// ..\\MySQL51Lexer.g3:1:1420: OR
+    		// MySQL51Lexer.g3:1:1420: OR
     		{
     		DebugLocation(1, 1420);
     		mOR(); if (state.failed) return;
@@ -29717,7 +29717,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 170:
     		DebugEnterAlt(170);
-    		// ..\\MySQL51Lexer.g3:1:1423: ORDER
+    		// MySQL51Lexer.g3:1:1423: ORDER
     		{
     		DebugLocation(1, 1423);
     		mORDER(); if (state.failed) return;
@@ -29726,7 +29726,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 171:
     		DebugEnterAlt(171);
-    		// ..\\MySQL51Lexer.g3:1:1429: OUT
+    		// MySQL51Lexer.g3:1:1429: OUT
     		{
     		DebugLocation(1, 1429);
     		mOUT(); if (state.failed) return;
@@ -29735,7 +29735,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 172:
     		DebugEnterAlt(172);
-    		// ..\\MySQL51Lexer.g3:1:1433: OUTER
+    		// MySQL51Lexer.g3:1:1433: OUTER
     		{
     		DebugLocation(1, 1433);
     		mOUTER(); if (state.failed) return;
@@ -29744,7 +29744,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 173:
     		DebugEnterAlt(173);
-    		// ..\\MySQL51Lexer.g3:1:1439: OUTFILE
+    		// MySQL51Lexer.g3:1:1439: OUTFILE
     		{
     		DebugLocation(1, 1439);
     		mOUTFILE(); if (state.failed) return;
@@ -29753,7 +29753,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 174:
     		DebugEnterAlt(174);
-    		// ..\\MySQL51Lexer.g3:1:1447: PERSIST
+    		// MySQL51Lexer.g3:1:1447: PERSIST
     		{
     		DebugLocation(1, 1447);
     		mPERSIST(); if (state.failed) return;
@@ -29762,7 +29762,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 175:
     		DebugEnterAlt(175);
-    		// ..\\MySQL51Lexer.g3:1:1455: PERSIST_ONLY
+    		// MySQL51Lexer.g3:1:1455: PERSIST_ONLY
     		{
     		DebugLocation(1, 1455);
     		mPERSIST_ONLY(); if (state.failed) return;
@@ -29771,7 +29771,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 176:
     		DebugEnterAlt(176);
-    		// ..\\MySQL51Lexer.g3:1:1468: PRECEDES
+    		// MySQL51Lexer.g3:1:1468: PRECEDES
     		{
     		DebugLocation(1, 1468);
     		mPRECEDES(); if (state.failed) return;
@@ -29780,7 +29780,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 177:
     		DebugEnterAlt(177);
-    		// ..\\MySQL51Lexer.g3:1:1477: PRECISION
+    		// MySQL51Lexer.g3:1:1477: PRECISION
     		{
     		DebugLocation(1, 1477);
     		mPRECISION(); if (state.failed) return;
@@ -29789,7 +29789,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 178:
     		DebugEnterAlt(178);
-    		// ..\\MySQL51Lexer.g3:1:1487: PRIMARY
+    		// MySQL51Lexer.g3:1:1487: PRIMARY
     		{
     		DebugLocation(1, 1487);
     		mPRIMARY(); if (state.failed) return;
@@ -29798,7 +29798,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 179:
     		DebugEnterAlt(179);
-    		// ..\\MySQL51Lexer.g3:1:1495: PROCEDURE
+    		// MySQL51Lexer.g3:1:1495: PROCEDURE
     		{
     		DebugLocation(1, 1495);
     		mPROCEDURE(); if (state.failed) return;
@@ -29807,7 +29807,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 180:
     		DebugEnterAlt(180);
-    		// ..\\MySQL51Lexer.g3:1:1505: PROXY
+    		// MySQL51Lexer.g3:1:1505: PROXY
     		{
     		DebugLocation(1, 1505);
     		mPROXY(); if (state.failed) return;
@@ -29816,7 +29816,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 181:
     		DebugEnterAlt(181);
-    		// ..\\MySQL51Lexer.g3:1:1511: PURGE
+    		// MySQL51Lexer.g3:1:1511: PURGE
     		{
     		DebugLocation(1, 1511);
     		mPURGE(); if (state.failed) return;
@@ -29825,7 +29825,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 182:
     		DebugEnterAlt(182);
-    		// ..\\MySQL51Lexer.g3:1:1517: RANGE
+    		// MySQL51Lexer.g3:1:1517: RANGE
     		{
     		DebugLocation(1, 1517);
     		mRANGE(); if (state.failed) return;
@@ -29834,7 +29834,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 183:
     		DebugEnterAlt(183);
-    		// ..\\MySQL51Lexer.g3:1:1523: READ
+    		// MySQL51Lexer.g3:1:1523: READ
     		{
     		DebugLocation(1, 1523);
     		mREAD(); if (state.failed) return;
@@ -29843,7 +29843,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 184:
     		DebugEnterAlt(184);
-    		// ..\\MySQL51Lexer.g3:1:1528: READS
+    		// MySQL51Lexer.g3:1:1528: READS
     		{
     		DebugLocation(1, 1528);
     		mREADS(); if (state.failed) return;
@@ -29852,7 +29852,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 185:
     		DebugEnterAlt(185);
-    		// ..\\MySQL51Lexer.g3:1:1534: READ_ONLY
+    		// MySQL51Lexer.g3:1:1534: READ_ONLY
     		{
     		DebugLocation(1, 1534);
     		mREAD_ONLY(); if (state.failed) return;
@@ -29861,7 +29861,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 186:
     		DebugEnterAlt(186);
-    		// ..\\MySQL51Lexer.g3:1:1544: READ_WRITE
+    		// MySQL51Lexer.g3:1:1544: READ_WRITE
     		{
     		DebugLocation(1, 1544);
     		mREAD_WRITE(); if (state.failed) return;
@@ -29870,7 +29870,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 187:
     		DebugEnterAlt(187);
-    		// ..\\MySQL51Lexer.g3:1:1555: REDO_LOG
+    		// MySQL51Lexer.g3:1:1555: REDO_LOG
     		{
     		DebugLocation(1, 1555);
     		mREDO_LOG(); if (state.failed) return;
@@ -29879,7 +29879,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 188:
     		DebugEnterAlt(188);
-    		// ..\\MySQL51Lexer.g3:1:1564: REFERENCES
+    		// MySQL51Lexer.g3:1:1564: REFERENCES
     		{
     		DebugLocation(1, 1564);
     		mREFERENCES(); if (state.failed) return;
@@ -29888,7 +29888,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 189:
     		DebugEnterAlt(189);
-    		// ..\\MySQL51Lexer.g3:1:1575: REGEXP
+    		// MySQL51Lexer.g3:1:1575: REGEXP
     		{
     		DebugLocation(1, 1575);
     		mREGEXP(); if (state.failed) return;
@@ -29897,7 +29897,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 190:
     		DebugEnterAlt(190);
-    		// ..\\MySQL51Lexer.g3:1:1582: RELEASE
+    		// MySQL51Lexer.g3:1:1582: RELEASE
     		{
     		DebugLocation(1, 1582);
     		mRELEASE(); if (state.failed) return;
@@ -29906,7 +29906,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 191:
     		DebugEnterAlt(191);
-    		// ..\\MySQL51Lexer.g3:1:1590: RENAME
+    		// MySQL51Lexer.g3:1:1590: RENAME
     		{
     		DebugLocation(1, 1590);
     		mRENAME(); if (state.failed) return;
@@ -29915,7 +29915,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 192:
     		DebugEnterAlt(192);
-    		// ..\\MySQL51Lexer.g3:1:1597: REPEAT
+    		// MySQL51Lexer.g3:1:1597: REPEAT
     		{
     		DebugLocation(1, 1597);
     		mREPEAT(); if (state.failed) return;
@@ -29924,7 +29924,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 193:
     		DebugEnterAlt(193);
-    		// ..\\MySQL51Lexer.g3:1:1604: REPLACE
+    		// MySQL51Lexer.g3:1:1604: REPLACE
     		{
     		DebugLocation(1, 1604);
     		mREPLACE(); if (state.failed) return;
@@ -29933,7 +29933,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 194:
     		DebugEnterAlt(194);
-    		// ..\\MySQL51Lexer.g3:1:1612: REQUIRE
+    		// MySQL51Lexer.g3:1:1612: REQUIRE
     		{
     		DebugLocation(1, 1612);
     		mREQUIRE(); if (state.failed) return;
@@ -29942,7 +29942,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 195:
     		DebugEnterAlt(195);
-    		// ..\\MySQL51Lexer.g3:1:1620: RESIGNAL
+    		// MySQL51Lexer.g3:1:1620: RESIGNAL
     		{
     		DebugLocation(1, 1620);
     		mRESIGNAL(); if (state.failed) return;
@@ -29951,7 +29951,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 196:
     		DebugEnterAlt(196);
-    		// ..\\MySQL51Lexer.g3:1:1629: RESTRICT
+    		// MySQL51Lexer.g3:1:1629: RESTRICT
     		{
     		DebugLocation(1, 1629);
     		mRESTRICT(); if (state.failed) return;
@@ -29960,7 +29960,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 197:
     		DebugEnterAlt(197);
-    		// ..\\MySQL51Lexer.g3:1:1638: RETURN
+    		// MySQL51Lexer.g3:1:1638: RETURN
     		{
     		DebugLocation(1, 1638);
     		mRETURN(); if (state.failed) return;
@@ -29969,7 +29969,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 198:
     		DebugEnterAlt(198);
-    		// ..\\MySQL51Lexer.g3:1:1645: RETURNED_SQLSTATE
+    		// MySQL51Lexer.g3:1:1645: RETURNED_SQLSTATE
     		{
     		DebugLocation(1, 1645);
     		mRETURNED_SQLSTATE(); if (state.failed) return;
@@ -29978,7 +29978,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 199:
     		DebugEnterAlt(199);
-    		// ..\\MySQL51Lexer.g3:1:1663: REUSE
+    		// MySQL51Lexer.g3:1:1663: REUSE
     		{
     		DebugLocation(1, 1663);
     		mREUSE(); if (state.failed) return;
@@ -29987,7 +29987,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 200:
     		DebugEnterAlt(200);
-    		// ..\\MySQL51Lexer.g3:1:1669: REVOKE
+    		// MySQL51Lexer.g3:1:1669: REVOKE
     		{
     		DebugLocation(1, 1669);
     		mREVOKE(); if (state.failed) return;
@@ -29996,7 +29996,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 201:
     		DebugEnterAlt(201);
-    		// ..\\MySQL51Lexer.g3:1:1676: RLIKE
+    		// MySQL51Lexer.g3:1:1676: RLIKE
     		{
     		DebugLocation(1, 1676);
     		mRLIKE(); if (state.failed) return;
@@ -30005,7 +30005,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 202:
     		DebugEnterAlt(202);
-    		// ..\\MySQL51Lexer.g3:1:1682: ROLE
+    		// MySQL51Lexer.g3:1:1682: ROLE
     		{
     		DebugLocation(1, 1682);
     		mROLE(); if (state.failed) return;
@@ -30014,7 +30014,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 203:
     		DebugEnterAlt(203);
-    		// ..\\MySQL51Lexer.g3:1:1687: ROW_COUNT
+    		// MySQL51Lexer.g3:1:1687: ROW_COUNT
     		{
     		DebugLocation(1, 1687);
     		mROW_COUNT(); if (state.failed) return;
@@ -30023,7 +30023,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 204:
     		DebugEnterAlt(204);
-    		// ..\\MySQL51Lexer.g3:1:1697: SCHEDULER
+    		// MySQL51Lexer.g3:1:1697: SCHEDULER
     		{
     		DebugLocation(1, 1697);
     		mSCHEDULER(); if (state.failed) return;
@@ -30032,7 +30032,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 205:
     		DebugEnterAlt(205);
-    		// ..\\MySQL51Lexer.g3:1:1707: SCHEMA
+    		// MySQL51Lexer.g3:1:1707: SCHEMA
     		{
     		DebugLocation(1, 1707);
     		mSCHEMA(); if (state.failed) return;
@@ -30041,7 +30041,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 206:
     		DebugEnterAlt(206);
-    		// ..\\MySQL51Lexer.g3:1:1714: SCHEMAS
+    		// MySQL51Lexer.g3:1:1714: SCHEMAS
     		{
     		DebugLocation(1, 1714);
     		mSCHEMAS(); if (state.failed) return;
@@ -30050,7 +30050,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 207:
     		DebugEnterAlt(207);
-    		// ..\\MySQL51Lexer.g3:1:1722: SECOND_MICROSECOND
+    		// MySQL51Lexer.g3:1:1722: SECOND_MICROSECOND
     		{
     		DebugLocation(1, 1722);
     		mSECOND_MICROSECOND(); if (state.failed) return;
@@ -30059,7 +30059,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 208:
     		DebugEnterAlt(208);
-    		// ..\\MySQL51Lexer.g3:1:1741: SELECT
+    		// MySQL51Lexer.g3:1:1741: SELECT
     		{
     		DebugLocation(1, 1741);
     		mSELECT(); if (state.failed) return;
@@ -30068,7 +30068,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 209:
     		DebugEnterAlt(209);
-    		// ..\\MySQL51Lexer.g3:1:1748: SENSITIVE
+    		// MySQL51Lexer.g3:1:1748: SENSITIVE
     		{
     		DebugLocation(1, 1748);
     		mSENSITIVE(); if (state.failed) return;
@@ -30077,7 +30077,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 210:
     		DebugEnterAlt(210);
-    		// ..\\MySQL51Lexer.g3:1:1758: SEPARATOR
+    		// MySQL51Lexer.g3:1:1758: SEPARATOR
     		{
     		DebugLocation(1, 1758);
     		mSEPARATOR(); if (state.failed) return;
@@ -30086,7 +30086,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 211:
     		DebugEnterAlt(211);
-    		// ..\\MySQL51Lexer.g3:1:1768: SET
+    		// MySQL51Lexer.g3:1:1768: SET
     		{
     		DebugLocation(1, 1768);
     		mSET(); if (state.failed) return;
@@ -30095,7 +30095,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 212:
     		DebugEnterAlt(212);
-    		// ..\\MySQL51Lexer.g3:1:1772: SCHEMA_NAME
+    		// MySQL51Lexer.g3:1:1772: SCHEMA_NAME
     		{
     		DebugLocation(1, 1772);
     		mSCHEMA_NAME(); if (state.failed) return;
@@ -30104,7 +30104,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 213:
     		DebugEnterAlt(213);
-    		// ..\\MySQL51Lexer.g3:1:1784: SHA256_PASSWORD
+    		// MySQL51Lexer.g3:1:1784: SHA256_PASSWORD
     		{
     		DebugLocation(1, 1784);
     		mSHA256_PASSWORD(); if (state.failed) return;
@@ -30113,7 +30113,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 214:
     		DebugEnterAlt(214);
-    		// ..\\MySQL51Lexer.g3:1:1800: SHOW
+    		// MySQL51Lexer.g3:1:1800: SHOW
     		{
     		DebugLocation(1, 1800);
     		mSHOW(); if (state.failed) return;
@@ -30122,7 +30122,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 215:
     		DebugEnterAlt(215);
-    		// ..\\MySQL51Lexer.g3:1:1805: SIGNAL
+    		// MySQL51Lexer.g3:1:1805: SIGNAL
     		{
     		DebugLocation(1, 1805);
     		mSIGNAL(); if (state.failed) return;
@@ -30131,7 +30131,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 216:
     		DebugEnterAlt(216);
-    		// ..\\MySQL51Lexer.g3:1:1812: SPATIAL
+    		// MySQL51Lexer.g3:1:1812: SPATIAL
     		{
     		DebugLocation(1, 1812);
     		mSPATIAL(); if (state.failed) return;
@@ -30140,7 +30140,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 217:
     		DebugEnterAlt(217);
-    		// ..\\MySQL51Lexer.g3:1:1820: SPECIFIC
+    		// MySQL51Lexer.g3:1:1820: SPECIFIC
     		{
     		DebugLocation(1, 1820);
     		mSPECIFIC(); if (state.failed) return;
@@ -30149,7 +30149,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 218:
     		DebugEnterAlt(218);
-    		// ..\\MySQL51Lexer.g3:1:1829: SQL
+    		// MySQL51Lexer.g3:1:1829: SQL
     		{
     		DebugLocation(1, 1829);
     		mSQL(); if (state.failed) return;
@@ -30158,7 +30158,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 219:
     		DebugEnterAlt(219);
-    		// ..\\MySQL51Lexer.g3:1:1833: SQLEXCEPTION
+    		// MySQL51Lexer.g3:1:1833: SQLEXCEPTION
     		{
     		DebugLocation(1, 1833);
     		mSQLEXCEPTION(); if (state.failed) return;
@@ -30167,7 +30167,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 220:
     		DebugEnterAlt(220);
-    		// ..\\MySQL51Lexer.g3:1:1846: SQLSTATE
+    		// MySQL51Lexer.g3:1:1846: SQLSTATE
     		{
     		DebugLocation(1, 1846);
     		mSQLSTATE(); if (state.failed) return;
@@ -30176,7 +30176,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 221:
     		DebugEnterAlt(221);
-    		// ..\\MySQL51Lexer.g3:1:1855: SQLWARNING
+    		// MySQL51Lexer.g3:1:1855: SQLWARNING
     		{
     		DebugLocation(1, 1855);
     		mSQLWARNING(); if (state.failed) return;
@@ -30185,7 +30185,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 222:
     		DebugEnterAlt(222);
-    		// ..\\MySQL51Lexer.g3:1:1866: SQL_BIG_RESULT
+    		// MySQL51Lexer.g3:1:1866: SQL_BIG_RESULT
     		{
     		DebugLocation(1, 1866);
     		mSQL_BIG_RESULT(); if (state.failed) return;
@@ -30194,7 +30194,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 223:
     		DebugEnterAlt(223);
-    		// ..\\MySQL51Lexer.g3:1:1881: SQL_CALC_FOUND_ROWS
+    		// MySQL51Lexer.g3:1:1881: SQL_CALC_FOUND_ROWS
     		{
     		DebugLocation(1, 1881);
     		mSQL_CALC_FOUND_ROWS(); if (state.failed) return;
@@ -30203,7 +30203,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 224:
     		DebugEnterAlt(224);
-    		// ..\\MySQL51Lexer.g3:1:1901: SQL_SMALL_RESULT
+    		// MySQL51Lexer.g3:1:1901: SQL_SMALL_RESULT
     		{
     		DebugLocation(1, 1901);
     		mSQL_SMALL_RESULT(); if (state.failed) return;
@@ -30212,7 +30212,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 225:
     		DebugEnterAlt(225);
-    		// ..\\MySQL51Lexer.g3:1:1918: SSL
+    		// MySQL51Lexer.g3:1:1918: SSL
     		{
     		DebugLocation(1, 1918);
     		mSSL(); if (state.failed) return;
@@ -30221,7 +30221,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 226:
     		DebugEnterAlt(226);
-    		// ..\\MySQL51Lexer.g3:1:1922: STACKED
+    		// MySQL51Lexer.g3:1:1922: STACKED
     		{
     		DebugLocation(1, 1922);
     		mSTACKED(); if (state.failed) return;
@@ -30230,7 +30230,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 227:
     		DebugEnterAlt(227);
-    		// ..\\MySQL51Lexer.g3:1:1930: STARTING
+    		// MySQL51Lexer.g3:1:1930: STARTING
     		{
     		DebugLocation(1, 1930);
     		mSTARTING(); if (state.failed) return;
@@ -30239,7 +30239,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 228:
     		DebugEnterAlt(228);
-    		// ..\\MySQL51Lexer.g3:1:1939: STRAIGHT_JOIN
+    		// MySQL51Lexer.g3:1:1939: STRAIGHT_JOIN
     		{
     		DebugLocation(1, 1939);
     		mSTRAIGHT_JOIN(); if (state.failed) return;
@@ -30248,7 +30248,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 229:
     		DebugEnterAlt(229);
-    		// ..\\MySQL51Lexer.g3:1:1953: SUBCLASS_ORIGIN
+    		// MySQL51Lexer.g3:1:1953: SUBCLASS_ORIGIN
     		{
     		DebugLocation(1, 1953);
     		mSUBCLASS_ORIGIN(); if (state.failed) return;
@@ -30257,7 +30257,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 230:
     		DebugEnterAlt(230);
-    		// ..\\MySQL51Lexer.g3:1:1969: TABLE
+    		// MySQL51Lexer.g3:1:1969: TABLE
     		{
     		DebugLocation(1, 1969);
     		mTABLE(); if (state.failed) return;
@@ -30266,7 +30266,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 231:
     		DebugEnterAlt(231);
-    		// ..\\MySQL51Lexer.g3:1:1975: TABLE_NAME
+    		// MySQL51Lexer.g3:1:1975: TABLE_NAME
     		{
     		DebugLocation(1, 1975);
     		mTABLE_NAME(); if (state.failed) return;
@@ -30275,7 +30275,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 232:
     		DebugEnterAlt(232);
-    		// ..\\MySQL51Lexer.g3:1:1986: TERMINATED
+    		// MySQL51Lexer.g3:1:1986: TERMINATED
     		{
     		DebugLocation(1, 1986);
     		mTERMINATED(); if (state.failed) return;
@@ -30284,7 +30284,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 233:
     		DebugEnterAlt(233);
-    		// ..\\MySQL51Lexer.g3:1:1997: THEN
+    		// MySQL51Lexer.g3:1:1997: THEN
     		{
     		DebugLocation(1, 1997);
     		mTHEN(); if (state.failed) return;
@@ -30293,7 +30293,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 234:
     		DebugEnterAlt(234);
-    		// ..\\MySQL51Lexer.g3:1:2002: TLS
+    		// MySQL51Lexer.g3:1:2002: TLS
     		{
     		DebugLocation(1, 2002);
     		mTLS(); if (state.failed) return;
@@ -30302,7 +30302,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 235:
     		DebugEnterAlt(235);
-    		// ..\\MySQL51Lexer.g3:1:2006: TO
+    		// MySQL51Lexer.g3:1:2006: TO
     		{
     		DebugLocation(1, 2006);
     		mTO(); if (state.failed) return;
@@ -30311,7 +30311,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 236:
     		DebugEnterAlt(236);
-    		// ..\\MySQL51Lexer.g3:1:2009: TRADITIONAL
+    		// MySQL51Lexer.g3:1:2009: TRADITIONAL
     		{
     		DebugLocation(1, 2009);
     		mTRADITIONAL(); if (state.failed) return;
@@ -30320,7 +30320,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 237:
     		DebugEnterAlt(237);
-    		// ..\\MySQL51Lexer.g3:1:2021: TRAILING
+    		// MySQL51Lexer.g3:1:2021: TRAILING
     		{
     		DebugLocation(1, 2021);
     		mTRAILING(); if (state.failed) return;
@@ -30329,7 +30329,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 238:
     		DebugEnterAlt(238);
-    		// ..\\MySQL51Lexer.g3:1:2030: TRIGGER
+    		// MySQL51Lexer.g3:1:2030: TRIGGER
     		{
     		DebugLocation(1, 2030);
     		mTRIGGER(); if (state.failed) return;
@@ -30338,7 +30338,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 239:
     		DebugEnterAlt(239);
-    		// ..\\MySQL51Lexer.g3:1:2038: TRUE
+    		// MySQL51Lexer.g3:1:2038: TRUE
     		{
     		DebugLocation(1, 2038);
     		mTRUE(); if (state.failed) return;
@@ -30347,7 +30347,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 240:
     		DebugEnterAlt(240);
-    		// ..\\MySQL51Lexer.g3:1:2043: UNDO
+    		// MySQL51Lexer.g3:1:2043: UNDO
     		{
     		DebugLocation(1, 2043);
     		mUNDO(); if (state.failed) return;
@@ -30356,7 +30356,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 241:
     		DebugEnterAlt(241);
-    		// ..\\MySQL51Lexer.g3:1:2048: UNION
+    		// MySQL51Lexer.g3:1:2048: UNION
     		{
     		DebugLocation(1, 2048);
     		mUNION(); if (state.failed) return;
@@ -30365,7 +30365,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 242:
     		DebugEnterAlt(242);
-    		// ..\\MySQL51Lexer.g3:1:2054: UNIQUE
+    		// MySQL51Lexer.g3:1:2054: UNIQUE
     		{
     		DebugLocation(1, 2054);
     		mUNIQUE(); if (state.failed) return;
@@ -30374,7 +30374,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 243:
     		DebugEnterAlt(243);
-    		// ..\\MySQL51Lexer.g3:1:2061: UNLOCK
+    		// MySQL51Lexer.g3:1:2061: UNLOCK
     		{
     		DebugLocation(1, 2061);
     		mUNLOCK(); if (state.failed) return;
@@ -30383,7 +30383,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 244:
     		DebugEnterAlt(244);
-    		// ..\\MySQL51Lexer.g3:1:2068: UNSIGNED
+    		// MySQL51Lexer.g3:1:2068: UNSIGNED
     		{
     		DebugLocation(1, 2068);
     		mUNSIGNED(); if (state.failed) return;
@@ -30392,7 +30392,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 245:
     		DebugEnterAlt(245);
-    		// ..\\MySQL51Lexer.g3:1:2077: UPDATE
+    		// MySQL51Lexer.g3:1:2077: UPDATE
     		{
     		DebugLocation(1, 2077);
     		mUPDATE(); if (state.failed) return;
@@ -30401,7 +30401,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 246:
     		DebugEnterAlt(246);
-    		// ..\\MySQL51Lexer.g3:1:2084: USAGE
+    		// MySQL51Lexer.g3:1:2084: USAGE
     		{
     		DebugLocation(1, 2084);
     		mUSAGE(); if (state.failed) return;
@@ -30410,7 +30410,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 247:
     		DebugEnterAlt(247);
-    		// ..\\MySQL51Lexer.g3:1:2090: USE
+    		// MySQL51Lexer.g3:1:2090: USE
     		{
     		DebugLocation(1, 2090);
     		mUSE(); if (state.failed) return;
@@ -30419,7 +30419,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 248:
     		DebugEnterAlt(248);
-    		// ..\\MySQL51Lexer.g3:1:2094: USING
+    		// MySQL51Lexer.g3:1:2094: USING
     		{
     		DebugLocation(1, 2094);
     		mUSING(); if (state.failed) return;
@@ -30428,7 +30428,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 249:
     		DebugEnterAlt(249);
-    		// ..\\MySQL51Lexer.g3:1:2100: VALUES
+    		// MySQL51Lexer.g3:1:2100: VALUES
     		{
     		DebugLocation(1, 2100);
     		mVALUES(); if (state.failed) return;
@@ -30437,7 +30437,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 250:
     		DebugEnterAlt(250);
-    		// ..\\MySQL51Lexer.g3:1:2107: VARCHARACTER
+    		// MySQL51Lexer.g3:1:2107: VARCHARACTER
     		{
     		DebugLocation(1, 2107);
     		mVARCHARACTER(); if (state.failed) return;
@@ -30446,7 +30446,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 251:
     		DebugEnterAlt(251);
-    		// ..\\MySQL51Lexer.g3:1:2120: VARYING
+    		// MySQL51Lexer.g3:1:2120: VARYING
     		{
     		DebugLocation(1, 2120);
     		mVARYING(); if (state.failed) return;
@@ -30455,7 +30455,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 252:
     		DebugEnterAlt(252);
-    		// ..\\MySQL51Lexer.g3:1:2128: WHEN
+    		// MySQL51Lexer.g3:1:2128: WHEN
     		{
     		DebugLocation(1, 2128);
     		mWHEN(); if (state.failed) return;
@@ -30464,7 +30464,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 253:
     		DebugEnterAlt(253);
-    		// ..\\MySQL51Lexer.g3:1:2133: WHERE
+    		// MySQL51Lexer.g3:1:2133: WHERE
     		{
     		DebugLocation(1, 2133);
     		mWHERE(); if (state.failed) return;
@@ -30473,7 +30473,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 254:
     		DebugEnterAlt(254);
-    		// ..\\MySQL51Lexer.g3:1:2139: WHILE
+    		// MySQL51Lexer.g3:1:2139: WHILE
     		{
     		DebugLocation(1, 2139);
     		mWHILE(); if (state.failed) return;
@@ -30482,7 +30482,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 255:
     		DebugEnterAlt(255);
-    		// ..\\MySQL51Lexer.g3:1:2145: WITH
+    		// MySQL51Lexer.g3:1:2145: WITH
     		{
     		DebugLocation(1, 2145);
     		mWITH(); if (state.failed) return;
@@ -30491,7 +30491,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 256:
     		DebugEnterAlt(256);
-    		// ..\\MySQL51Lexer.g3:1:2150: WRITE
+    		// MySQL51Lexer.g3:1:2150: WRITE
     		{
     		DebugLocation(1, 2150);
     		mWRITE(); if (state.failed) return;
@@ -30500,7 +30500,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 257:
     		DebugEnterAlt(257);
-    		// ..\\MySQL51Lexer.g3:1:2156: XOR
+    		// MySQL51Lexer.g3:1:2156: XOR
     		{
     		DebugLocation(1, 2156);
     		mXOR(); if (state.failed) return;
@@ -30509,7 +30509,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 258:
     		DebugEnterAlt(258);
-    		// ..\\MySQL51Lexer.g3:1:2160: YEAR_MONTH
+    		// MySQL51Lexer.g3:1:2160: YEAR_MONTH
     		{
     		DebugLocation(1, 2160);
     		mYEAR_MONTH(); if (state.failed) return;
@@ -30518,7 +30518,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 259:
     		DebugEnterAlt(259);
-    		// ..\\MySQL51Lexer.g3:1:2171: ZEROFILL
+    		// MySQL51Lexer.g3:1:2171: ZEROFILL
     		{
     		DebugLocation(1, 2171);
     		mZEROFILL(); if (state.failed) return;
@@ -30527,7 +30527,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 260:
     		DebugEnterAlt(260);
-    		// ..\\MySQL51Lexer.g3:1:2180: ASCII
+    		// MySQL51Lexer.g3:1:2180: ASCII
     		{
     		DebugLocation(1, 2180);
     		mASCII(); if (state.failed) return;
@@ -30536,7 +30536,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 261:
     		DebugEnterAlt(261);
-    		// ..\\MySQL51Lexer.g3:1:2186: BACKUP
+    		// MySQL51Lexer.g3:1:2186: BACKUP
     		{
     		DebugLocation(1, 2186);
     		mBACKUP(); if (state.failed) return;
@@ -30545,7 +30545,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 262:
     		DebugEnterAlt(262);
-    		// ..\\MySQL51Lexer.g3:1:2193: BEGIN
+    		// MySQL51Lexer.g3:1:2193: BEGIN
     		{
     		DebugLocation(1, 2193);
     		mBEGIN(); if (state.failed) return;
@@ -30554,7 +30554,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 263:
     		DebugEnterAlt(263);
-    		// ..\\MySQL51Lexer.g3:1:2199: BYTE
+    		// MySQL51Lexer.g3:1:2199: BYTE
     		{
     		DebugLocation(1, 2199);
     		mBYTE(); if (state.failed) return;
@@ -30563,7 +30563,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 264:
     		DebugEnterAlt(264);
-    		// ..\\MySQL51Lexer.g3:1:2204: CACHE
+    		// MySQL51Lexer.g3:1:2204: CACHE
     		{
     		DebugLocation(1, 2204);
     		mCACHE(); if (state.failed) return;
@@ -30572,7 +30572,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 265:
     		DebugEnterAlt(265);
-    		// ..\\MySQL51Lexer.g3:1:2210: CHARSET
+    		// MySQL51Lexer.g3:1:2210: CHARSET
     		{
     		DebugLocation(1, 2210);
     		mCHARSET(); if (state.failed) return;
@@ -30581,7 +30581,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 266:
     		DebugEnterAlt(266);
-    		// ..\\MySQL51Lexer.g3:1:2218: CHECKSUM
+    		// MySQL51Lexer.g3:1:2218: CHECKSUM
     		{
     		DebugLocation(1, 2218);
     		mCHECKSUM(); if (state.failed) return;
@@ -30590,7 +30590,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 267:
     		DebugEnterAlt(267);
-    		// ..\\MySQL51Lexer.g3:1:2227: CLOSE
+    		// MySQL51Lexer.g3:1:2227: CLOSE
     		{
     		DebugLocation(1, 2227);
     		mCLOSE(); if (state.failed) return;
@@ -30599,7 +30599,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 268:
     		DebugEnterAlt(268);
-    		// ..\\MySQL51Lexer.g3:1:2233: COMMENT
+    		// MySQL51Lexer.g3:1:2233: COMMENT
     		{
     		DebugLocation(1, 2233);
     		mCOMMENT(); if (state.failed) return;
@@ -30608,7 +30608,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 269:
     		DebugEnterAlt(269);
-    		// ..\\MySQL51Lexer.g3:1:2241: COMMIT
+    		// MySQL51Lexer.g3:1:2241: COMMIT
     		{
     		DebugLocation(1, 2241);
     		mCOMMIT(); if (state.failed) return;
@@ -30617,7 +30617,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 270:
     		DebugEnterAlt(270);
-    		// ..\\MySQL51Lexer.g3:1:2248: CONTAINS
+    		// MySQL51Lexer.g3:1:2248: CONTAINS
     		{
     		DebugLocation(1, 2248);
     		mCONTAINS(); if (state.failed) return;
@@ -30626,7 +30626,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 271:
     		DebugEnterAlt(271);
-    		// ..\\MySQL51Lexer.g3:1:2257: DEALLOCATE
+    		// MySQL51Lexer.g3:1:2257: DEALLOCATE
     		{
     		DebugLocation(1, 2257);
     		mDEALLOCATE(); if (state.failed) return;
@@ -30635,7 +30635,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 272:
     		DebugEnterAlt(272);
-    		// ..\\MySQL51Lexer.g3:1:2268: DO
+    		// MySQL51Lexer.g3:1:2268: DO
     		{
     		DebugLocation(1, 2268);
     		mDO(); if (state.failed) return;
@@ -30644,7 +30644,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 273:
     		DebugEnterAlt(273);
-    		// ..\\MySQL51Lexer.g3:1:2271: END
+    		// MySQL51Lexer.g3:1:2271: END
     		{
     		DebugLocation(1, 2271);
     		mEND(); if (state.failed) return;
@@ -30653,7 +30653,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 274:
     		DebugEnterAlt(274);
-    		// ..\\MySQL51Lexer.g3:1:2275: EXECUTE
+    		// MySQL51Lexer.g3:1:2275: EXECUTE
     		{
     		DebugLocation(1, 2275);
     		mEXECUTE(); if (state.failed) return;
@@ -30662,7 +30662,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 275:
     		DebugEnterAlt(275);
-    		// ..\\MySQL51Lexer.g3:1:2283: FLUSH
+    		// MySQL51Lexer.g3:1:2283: FLUSH
     		{
     		DebugLocation(1, 2283);
     		mFLUSH(); if (state.failed) return;
@@ -30671,7 +30671,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 276:
     		DebugEnterAlt(276);
-    		// ..\\MySQL51Lexer.g3:1:2289: HANDLER
+    		// MySQL51Lexer.g3:1:2289: HANDLER
     		{
     		DebugLocation(1, 2289);
     		mHANDLER(); if (state.failed) return;
@@ -30680,7 +30680,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 277:
     		DebugEnterAlt(277);
-    		// ..\\MySQL51Lexer.g3:1:2297: HELP
+    		// MySQL51Lexer.g3:1:2297: HELP
     		{
     		DebugLocation(1, 2297);
     		mHELP(); if (state.failed) return;
@@ -30689,7 +30689,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 278:
     		DebugEnterAlt(278);
-    		// ..\\MySQL51Lexer.g3:1:2302: HOST
+    		// MySQL51Lexer.g3:1:2302: HOST
     		{
     		DebugLocation(1, 2302);
     		mHOST(); if (state.failed) return;
@@ -30698,7 +30698,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 279:
     		DebugEnterAlt(279);
-    		// ..\\MySQL51Lexer.g3:1:2307: INSTALL
+    		// MySQL51Lexer.g3:1:2307: INSTALL
     		{
     		DebugLocation(1, 2307);
     		mINSTALL(); if (state.failed) return;
@@ -30707,7 +30707,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 280:
     		DebugEnterAlt(280);
-    		// ..\\MySQL51Lexer.g3:1:2315: LANGUAGE
+    		// MySQL51Lexer.g3:1:2315: LANGUAGE
     		{
     		DebugLocation(1, 2315);
     		mLANGUAGE(); if (state.failed) return;
@@ -30716,7 +30716,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 281:
     		DebugEnterAlt(281);
-    		// ..\\MySQL51Lexer.g3:1:2324: NO
+    		// MySQL51Lexer.g3:1:2324: NO
     		{
     		DebugLocation(1, 2324);
     		mNO(); if (state.failed) return;
@@ -30725,7 +30725,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 282:
     		DebugEnterAlt(282);
-    		// ..\\MySQL51Lexer.g3:1:2327: OPEN
+    		// MySQL51Lexer.g3:1:2327: OPEN
     		{
     		DebugLocation(1, 2327);
     		mOPEN(); if (state.failed) return;
@@ -30734,7 +30734,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 283:
     		DebugEnterAlt(283);
-    		// ..\\MySQL51Lexer.g3:1:2332: OPTIONS
+    		// MySQL51Lexer.g3:1:2332: OPTIONS
     		{
     		DebugLocation(1, 2332);
     		mOPTIONS(); if (state.failed) return;
@@ -30743,7 +30743,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 284:
     		DebugEnterAlt(284);
-    		// ..\\MySQL51Lexer.g3:1:2340: OWNER
+    		// MySQL51Lexer.g3:1:2340: OWNER
     		{
     		DebugLocation(1, 2340);
     		mOWNER(); if (state.failed) return;
@@ -30752,7 +30752,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 285:
     		DebugEnterAlt(285);
-    		// ..\\MySQL51Lexer.g3:1:2346: PARSER
+    		// MySQL51Lexer.g3:1:2346: PARSER
     		{
     		DebugLocation(1, 2346);
     		mPARSER(); if (state.failed) return;
@@ -30761,7 +30761,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 286:
     		DebugEnterAlt(286);
-    		// ..\\MySQL51Lexer.g3:1:2353: PARTITION
+    		// MySQL51Lexer.g3:1:2353: PARTITION
     		{
     		DebugLocation(1, 2353);
     		mPARTITION(); if (state.failed) return;
@@ -30770,7 +30770,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 287:
     		DebugEnterAlt(287);
-    		// ..\\MySQL51Lexer.g3:1:2363: PORT
+    		// MySQL51Lexer.g3:1:2363: PORT
     		{
     		DebugLocation(1, 2363);
     		mPORT(); if (state.failed) return;
@@ -30779,7 +30779,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 288:
     		DebugEnterAlt(288);
-    		// ..\\MySQL51Lexer.g3:1:2368: PREPARE
+    		// MySQL51Lexer.g3:1:2368: PREPARE
     		{
     		DebugLocation(1, 2368);
     		mPREPARE(); if (state.failed) return;
@@ -30788,7 +30788,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 289:
     		DebugEnterAlt(289);
-    		// ..\\MySQL51Lexer.g3:1:2376: REMOVE
+    		// MySQL51Lexer.g3:1:2376: REMOVE
     		{
     		DebugLocation(1, 2376);
     		mREMOVE(); if (state.failed) return;
@@ -30797,7 +30797,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 290:
     		DebugEnterAlt(290);
-    		// ..\\MySQL51Lexer.g3:1:2383: REPAIR
+    		// MySQL51Lexer.g3:1:2383: REPAIR
     		{
     		DebugLocation(1, 2383);
     		mREPAIR(); if (state.failed) return;
@@ -30806,7 +30806,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 291:
     		DebugEnterAlt(291);
-    		// ..\\MySQL51Lexer.g3:1:2390: RESET
+    		// MySQL51Lexer.g3:1:2390: RESET
     		{
     		DebugLocation(1, 2390);
     		mRESET(); if (state.failed) return;
@@ -30815,7 +30815,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 292:
     		DebugEnterAlt(292);
-    		// ..\\MySQL51Lexer.g3:1:2396: RESTORE
+    		// MySQL51Lexer.g3:1:2396: RESTORE
     		{
     		DebugLocation(1, 2396);
     		mRESTORE(); if (state.failed) return;
@@ -30824,7 +30824,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 293:
     		DebugEnterAlt(293);
-    		// ..\\MySQL51Lexer.g3:1:2404: ROLLBACK
+    		// MySQL51Lexer.g3:1:2404: ROLLBACK
     		{
     		DebugLocation(1, 2404);
     		mROLLBACK(); if (state.failed) return;
@@ -30833,7 +30833,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 294:
     		DebugEnterAlt(294);
-    		// ..\\MySQL51Lexer.g3:1:2413: SAVEPOINT
+    		// MySQL51Lexer.g3:1:2413: SAVEPOINT
     		{
     		DebugLocation(1, 2413);
     		mSAVEPOINT(); if (state.failed) return;
@@ -30842,7 +30842,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 295:
     		DebugEnterAlt(295);
-    		// ..\\MySQL51Lexer.g3:1:2423: SECURITY
+    		// MySQL51Lexer.g3:1:2423: SECURITY
     		{
     		DebugLocation(1, 2423);
     		mSECURITY(); if (state.failed) return;
@@ -30851,7 +30851,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 296:
     		DebugEnterAlt(296);
-    		// ..\\MySQL51Lexer.g3:1:2432: SERVER
+    		// MySQL51Lexer.g3:1:2432: SERVER
     		{
     		DebugLocation(1, 2432);
     		mSERVER(); if (state.failed) return;
@@ -30860,7 +30860,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 297:
     		DebugEnterAlt(297);
-    		// ..\\MySQL51Lexer.g3:1:2439: SIGNED
+    		// MySQL51Lexer.g3:1:2439: SIGNED
     		{
     		DebugLocation(1, 2439);
     		mSIGNED(); if (state.failed) return;
@@ -30869,7 +30869,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 298:
     		DebugEnterAlt(298);
-    		// ..\\MySQL51Lexer.g3:1:2446: SOCKET
+    		// MySQL51Lexer.g3:1:2446: SOCKET
     		{
     		DebugLocation(1, 2446);
     		mSOCKET(); if (state.failed) return;
@@ -30878,7 +30878,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 299:
     		DebugEnterAlt(299);
-    		// ..\\MySQL51Lexer.g3:1:2453: SLAVE
+    		// MySQL51Lexer.g3:1:2453: SLAVE
     		{
     		DebugLocation(1, 2453);
     		mSLAVE(); if (state.failed) return;
@@ -30887,7 +30887,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 300:
     		DebugEnterAlt(300);
-    		// ..\\MySQL51Lexer.g3:1:2459: SONAME
+    		// MySQL51Lexer.g3:1:2459: SONAME
     		{
     		DebugLocation(1, 2459);
     		mSONAME(); if (state.failed) return;
@@ -30896,7 +30896,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 301:
     		DebugEnterAlt(301);
-    		// ..\\MySQL51Lexer.g3:1:2466: START
+    		// MySQL51Lexer.g3:1:2466: START
     		{
     		DebugLocation(1, 2466);
     		mSTART(); if (state.failed) return;
@@ -30905,7 +30905,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 302:
     		DebugEnterAlt(302);
-    		// ..\\MySQL51Lexer.g3:1:2472: STOP
+    		// MySQL51Lexer.g3:1:2472: STOP
     		{
     		DebugLocation(1, 2472);
     		mSTOP(); if (state.failed) return;
@@ -30914,7 +30914,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 303:
     		DebugEnterAlt(303);
-    		// ..\\MySQL51Lexer.g3:1:2477: TRUNCATE
+    		// MySQL51Lexer.g3:1:2477: TRUNCATE
     		{
     		DebugLocation(1, 2477);
     		mTRUNCATE(); if (state.failed) return;
@@ -30923,7 +30923,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 304:
     		DebugEnterAlt(304);
-    		// ..\\MySQL51Lexer.g3:1:2486: UNICODE
+    		// MySQL51Lexer.g3:1:2486: UNICODE
     		{
     		DebugLocation(1, 2486);
     		mUNICODE(); if (state.failed) return;
@@ -30932,7 +30932,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 305:
     		DebugEnterAlt(305);
-    		// ..\\MySQL51Lexer.g3:1:2494: UNINSTALL
+    		// MySQL51Lexer.g3:1:2494: UNINSTALL
     		{
     		DebugLocation(1, 2494);
     		mUNINSTALL(); if (state.failed) return;
@@ -30941,7 +30941,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 306:
     		DebugEnterAlt(306);
-    		// ..\\MySQL51Lexer.g3:1:2504: WRAPPER
+    		// MySQL51Lexer.g3:1:2504: WRAPPER
     		{
     		DebugLocation(1, 2504);
     		mWRAPPER(); if (state.failed) return;
@@ -30950,7 +30950,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 307:
     		DebugEnterAlt(307);
-    		// ..\\MySQL51Lexer.g3:1:2512: XA
+    		// MySQL51Lexer.g3:1:2512: XA
     		{
     		DebugLocation(1, 2512);
     		mXA(); if (state.failed) return;
@@ -30959,7 +30959,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 308:
     		DebugEnterAlt(308);
-    		// ..\\MySQL51Lexer.g3:1:2515: UPGRADE
+    		// MySQL51Lexer.g3:1:2515: UPGRADE
     		{
     		DebugLocation(1, 2515);
     		mUPGRADE(); if (state.failed) return;
@@ -30968,7 +30968,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 309:
     		DebugEnterAlt(309);
-    		// ..\\MySQL51Lexer.g3:1:2523: ACTION
+    		// MySQL51Lexer.g3:1:2523: ACTION
     		{
     		DebugLocation(1, 2523);
     		mACTION(); if (state.failed) return;
@@ -30977,7 +30977,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 310:
     		DebugEnterAlt(310);
-    		// ..\\MySQL51Lexer.g3:1:2530: AFTER
+    		// MySQL51Lexer.g3:1:2530: AFTER
     		{
     		DebugLocation(1, 2530);
     		mAFTER(); if (state.failed) return;
@@ -30986,7 +30986,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 311:
     		DebugEnterAlt(311);
-    		// ..\\MySQL51Lexer.g3:1:2536: AGAINST
+    		// MySQL51Lexer.g3:1:2536: AGAINST
     		{
     		DebugLocation(1, 2536);
     		mAGAINST(); if (state.failed) return;
@@ -30995,7 +30995,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 312:
     		DebugEnterAlt(312);
-    		// ..\\MySQL51Lexer.g3:1:2544: AGGREGATE
+    		// MySQL51Lexer.g3:1:2544: AGGREGATE
     		{
     		DebugLocation(1, 2544);
     		mAGGREGATE(); if (state.failed) return;
@@ -31004,7 +31004,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 313:
     		DebugEnterAlt(313);
-    		// ..\\MySQL51Lexer.g3:1:2554: ALGORITHM
+    		// MySQL51Lexer.g3:1:2554: ALGORITHM
     		{
     		DebugLocation(1, 2554);
     		mALGORITHM(); if (state.failed) return;
@@ -31013,7 +31013,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 314:
     		DebugEnterAlt(314);
-    		// ..\\MySQL51Lexer.g3:1:2564: ANY
+    		// MySQL51Lexer.g3:1:2564: ANY
     		{
     		DebugLocation(1, 2564);
     		mANY(); if (state.failed) return;
@@ -31022,7 +31022,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 315:
     		DebugEnterAlt(315);
-    		// ..\\MySQL51Lexer.g3:1:2568: AT
+    		// MySQL51Lexer.g3:1:2568: AT
     		{
     		DebugLocation(1, 2568);
     		mAT(); if (state.failed) return;
@@ -31031,7 +31031,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 316:
     		DebugEnterAlt(316);
-    		// ..\\MySQL51Lexer.g3:1:2571: AUTHORS
+    		// MySQL51Lexer.g3:1:2571: AUTHORS
     		{
     		DebugLocation(1, 2571);
     		mAUTHORS(); if (state.failed) return;
@@ -31040,7 +31040,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 317:
     		DebugEnterAlt(317);
-    		// ..\\MySQL51Lexer.g3:1:2579: AUTO_INCREMENT
+    		// MySQL51Lexer.g3:1:2579: AUTO_INCREMENT
     		{
     		DebugLocation(1, 2579);
     		mAUTO_INCREMENT(); if (state.failed) return;
@@ -31049,7 +31049,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 318:
     		DebugEnterAlt(318);
-    		// ..\\MySQL51Lexer.g3:1:2594: AUTOEXTEND_SIZE
+    		// MySQL51Lexer.g3:1:2594: AUTOEXTEND_SIZE
     		{
     		DebugLocation(1, 2594);
     		mAUTOEXTEND_SIZE(); if (state.failed) return;
@@ -31058,7 +31058,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 319:
     		DebugEnterAlt(319);
-    		// ..\\MySQL51Lexer.g3:1:2610: AVG
+    		// MySQL51Lexer.g3:1:2610: AVG
     		{
     		DebugLocation(1, 2610);
     		mAVG(); if (state.failed) return;
@@ -31067,7 +31067,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 320:
     		DebugEnterAlt(320);
-    		// ..\\MySQL51Lexer.g3:1:2614: AVG_ROW_LENGTH
+    		// MySQL51Lexer.g3:1:2614: AVG_ROW_LENGTH
     		{
     		DebugLocation(1, 2614);
     		mAVG_ROW_LENGTH(); if (state.failed) return;
@@ -31076,7 +31076,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 321:
     		DebugEnterAlt(321);
-    		// ..\\MySQL51Lexer.g3:1:2629: BINLOG
+    		// MySQL51Lexer.g3:1:2629: BINLOG
     		{
     		DebugLocation(1, 2629);
     		mBINLOG(); if (state.failed) return;
@@ -31085,7 +31085,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 322:
     		DebugEnterAlt(322);
-    		// ..\\MySQL51Lexer.g3:1:2636: BLOCK
+    		// MySQL51Lexer.g3:1:2636: BLOCK
     		{
     		DebugLocation(1, 2636);
     		mBLOCK(); if (state.failed) return;
@@ -31094,7 +31094,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 323:
     		DebugEnterAlt(323);
-    		// ..\\MySQL51Lexer.g3:1:2642: BOOL
+    		// MySQL51Lexer.g3:1:2642: BOOL
     		{
     		DebugLocation(1, 2642);
     		mBOOL(); if (state.failed) return;
@@ -31103,7 +31103,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 324:
     		DebugEnterAlt(324);
-    		// ..\\MySQL51Lexer.g3:1:2647: BOOLEAN
+    		// MySQL51Lexer.g3:1:2647: BOOLEAN
     		{
     		DebugLocation(1, 2647);
     		mBOOLEAN(); if (state.failed) return;
@@ -31112,7 +31112,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 325:
     		DebugEnterAlt(325);
-    		// ..\\MySQL51Lexer.g3:1:2655: BTREE
+    		// MySQL51Lexer.g3:1:2655: BTREE
     		{
     		DebugLocation(1, 2655);
     		mBTREE(); if (state.failed) return;
@@ -31121,7 +31121,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 326:
     		DebugEnterAlt(326);
-    		// ..\\MySQL51Lexer.g3:1:2661: CASCADED
+    		// MySQL51Lexer.g3:1:2661: CASCADED
     		{
     		DebugLocation(1, 2661);
     		mCASCADED(); if (state.failed) return;
@@ -31130,7 +31130,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 327:
     		DebugEnterAlt(327);
-    		// ..\\MySQL51Lexer.g3:1:2670: CHAIN
+    		// MySQL51Lexer.g3:1:2670: CHAIN
     		{
     		DebugLocation(1, 2670);
     		mCHAIN(); if (state.failed) return;
@@ -31139,7 +31139,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 328:
     		DebugEnterAlt(328);
-    		// ..\\MySQL51Lexer.g3:1:2676: CHANGED
+    		// MySQL51Lexer.g3:1:2676: CHANGED
     		{
     		DebugLocation(1, 2676);
     		mCHANGED(); if (state.failed) return;
@@ -31148,7 +31148,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 329:
     		DebugEnterAlt(329);
-    		// ..\\MySQL51Lexer.g3:1:2684: CIPHER
+    		// MySQL51Lexer.g3:1:2684: CIPHER
     		{
     		DebugLocation(1, 2684);
     		mCIPHER(); if (state.failed) return;
@@ -31157,7 +31157,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 330:
     		DebugEnterAlt(330);
-    		// ..\\MySQL51Lexer.g3:1:2691: CLIENT
+    		// MySQL51Lexer.g3:1:2691: CLIENT
     		{
     		DebugLocation(1, 2691);
     		mCLIENT(); if (state.failed) return;
@@ -31166,7 +31166,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 331:
     		DebugEnterAlt(331);
-    		// ..\\MySQL51Lexer.g3:1:2698: COALESCE
+    		// MySQL51Lexer.g3:1:2698: COALESCE
     		{
     		DebugLocation(1, 2698);
     		mCOALESCE(); if (state.failed) return;
@@ -31175,7 +31175,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 332:
     		DebugEnterAlt(332);
-    		// ..\\MySQL51Lexer.g3:1:2707: CODE
+    		// MySQL51Lexer.g3:1:2707: CODE
     		{
     		DebugLocation(1, 2707);
     		mCODE(); if (state.failed) return;
@@ -31184,7 +31184,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 333:
     		DebugEnterAlt(333);
-    		// ..\\MySQL51Lexer.g3:1:2712: COLLATION
+    		// MySQL51Lexer.g3:1:2712: COLLATION
     		{
     		DebugLocation(1, 2712);
     		mCOLLATION(); if (state.failed) return;
@@ -31193,7 +31193,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 334:
     		DebugEnterAlt(334);
-    		// ..\\MySQL51Lexer.g3:1:2722: COLUMNS
+    		// MySQL51Lexer.g3:1:2722: COLUMNS
     		{
     		DebugLocation(1, 2722);
     		mCOLUMNS(); if (state.failed) return;
@@ -31202,7 +31202,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 335:
     		DebugEnterAlt(335);
-    		// ..\\MySQL51Lexer.g3:1:2730: FIELDS
+    		// MySQL51Lexer.g3:1:2730: FIELDS
     		{
     		DebugLocation(1, 2730);
     		mFIELDS(); if (state.failed) return;
@@ -31211,7 +31211,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 336:
     		DebugEnterAlt(336);
-    		// ..\\MySQL51Lexer.g3:1:2737: COMMITTED
+    		// MySQL51Lexer.g3:1:2737: COMMITTED
     		{
     		DebugLocation(1, 2737);
     		mCOMMITTED(); if (state.failed) return;
@@ -31220,7 +31220,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 337:
     		DebugEnterAlt(337);
-    		// ..\\MySQL51Lexer.g3:1:2747: COMPACT
+    		// MySQL51Lexer.g3:1:2747: COMPACT
     		{
     		DebugLocation(1, 2747);
     		mCOMPACT(); if (state.failed) return;
@@ -31229,7 +31229,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 338:
     		DebugEnterAlt(338);
-    		// ..\\MySQL51Lexer.g3:1:2755: COMPLETION
+    		// MySQL51Lexer.g3:1:2755: COMPLETION
     		{
     		DebugLocation(1, 2755);
     		mCOMPLETION(); if (state.failed) return;
@@ -31238,7 +31238,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 339:
     		DebugEnterAlt(339);
-    		// ..\\MySQL51Lexer.g3:1:2766: COMPRESSED
+    		// MySQL51Lexer.g3:1:2766: COMPRESSED
     		{
     		DebugLocation(1, 2766);
     		mCOMPRESSED(); if (state.failed) return;
@@ -31247,7 +31247,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 340:
     		DebugEnterAlt(340);
-    		// ..\\MySQL51Lexer.g3:1:2777: CONCURRENT
+    		// MySQL51Lexer.g3:1:2777: CONCURRENT
     		{
     		DebugLocation(1, 2777);
     		mCONCURRENT(); if (state.failed) return;
@@ -31256,7 +31256,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 341:
     		DebugEnterAlt(341);
-    		// ..\\MySQL51Lexer.g3:1:2788: CONNECTION
+    		// MySQL51Lexer.g3:1:2788: CONNECTION
     		{
     		DebugLocation(1, 2788);
     		mCONNECTION(); if (state.failed) return;
@@ -31265,7 +31265,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 342:
     		DebugEnterAlt(342);
-    		// ..\\MySQL51Lexer.g3:1:2799: CONSISTENT
+    		// MySQL51Lexer.g3:1:2799: CONSISTENT
     		{
     		DebugLocation(1, 2799);
     		mCONSISTENT(); if (state.failed) return;
@@ -31274,7 +31274,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 343:
     		DebugEnterAlt(343);
-    		// ..\\MySQL51Lexer.g3:1:2810: CONTEXT
+    		// MySQL51Lexer.g3:1:2810: CONTEXT
     		{
     		DebugLocation(1, 2810);
     		mCONTEXT(); if (state.failed) return;
@@ -31283,7 +31283,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 344:
     		DebugEnterAlt(344);
-    		// ..\\MySQL51Lexer.g3:1:2818: CONTRIBUTORS
+    		// MySQL51Lexer.g3:1:2818: CONTRIBUTORS
     		{
     		DebugLocation(1, 2818);
     		mCONTRIBUTORS(); if (state.failed) return;
@@ -31292,7 +31292,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 345:
     		DebugEnterAlt(345);
-    		// ..\\MySQL51Lexer.g3:1:2831: CPU
+    		// MySQL51Lexer.g3:1:2831: CPU
     		{
     		DebugLocation(1, 2831);
     		mCPU(); if (state.failed) return;
@@ -31301,7 +31301,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 346:
     		DebugEnterAlt(346);
-    		// ..\\MySQL51Lexer.g3:1:2835: CUBE
+    		// MySQL51Lexer.g3:1:2835: CUBE
     		{
     		DebugLocation(1, 2835);
     		mCUBE(); if (state.failed) return;
@@ -31310,7 +31310,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 347:
     		DebugEnterAlt(347);
-    		// ..\\MySQL51Lexer.g3:1:2840: DATA
+    		// MySQL51Lexer.g3:1:2840: DATA
     		{
     		DebugLocation(1, 2840);
     		mDATA(); if (state.failed) return;
@@ -31319,7 +31319,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 348:
     		DebugEnterAlt(348);
-    		// ..\\MySQL51Lexer.g3:1:2845: DATAFILE
+    		// MySQL51Lexer.g3:1:2845: DATAFILE
     		{
     		DebugLocation(1, 2845);
     		mDATAFILE(); if (state.failed) return;
@@ -31328,7 +31328,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 349:
     		DebugEnterAlt(349);
-    		// ..\\MySQL51Lexer.g3:1:2854: DEFINER
+    		// MySQL51Lexer.g3:1:2854: DEFINER
     		{
     		DebugLocation(1, 2854);
     		mDEFINER(); if (state.failed) return;
@@ -31337,7 +31337,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 350:
     		DebugEnterAlt(350);
-    		// ..\\MySQL51Lexer.g3:1:2862: DELAY_KEY_WRITE
+    		// MySQL51Lexer.g3:1:2862: DELAY_KEY_WRITE
     		{
     		DebugLocation(1, 2862);
     		mDELAY_KEY_WRITE(); if (state.failed) return;
@@ -31346,7 +31346,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 351:
     		DebugEnterAlt(351);
-    		// ..\\MySQL51Lexer.g3:1:2878: DES_KEY_FILE
+    		// MySQL51Lexer.g3:1:2878: DES_KEY_FILE
     		{
     		DebugLocation(1, 2878);
     		mDES_KEY_FILE(); if (state.failed) return;
@@ -31355,7 +31355,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 352:
     		DebugEnterAlt(352);
-    		// ..\\MySQL51Lexer.g3:1:2891: DIRECTORY
+    		// MySQL51Lexer.g3:1:2891: DIRECTORY
     		{
     		DebugLocation(1, 2891);
     		mDIRECTORY(); if (state.failed) return;
@@ -31364,7 +31364,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 353:
     		DebugEnterAlt(353);
-    		// ..\\MySQL51Lexer.g3:1:2901: DISABLE
+    		// MySQL51Lexer.g3:1:2901: DISABLE
     		{
     		DebugLocation(1, 2901);
     		mDISABLE(); if (state.failed) return;
@@ -31373,7 +31373,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 354:
     		DebugEnterAlt(354);
-    		// ..\\MySQL51Lexer.g3:1:2909: DISCARD
+    		// MySQL51Lexer.g3:1:2909: DISCARD
     		{
     		DebugLocation(1, 2909);
     		mDISCARD(); if (state.failed) return;
@@ -31382,7 +31382,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 355:
     		DebugEnterAlt(355);
-    		// ..\\MySQL51Lexer.g3:1:2917: DISK
+    		// MySQL51Lexer.g3:1:2917: DISK
     		{
     		DebugLocation(1, 2917);
     		mDISK(); if (state.failed) return;
@@ -31391,7 +31391,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 356:
     		DebugEnterAlt(356);
-    		// ..\\MySQL51Lexer.g3:1:2922: DUMPFILE
+    		// MySQL51Lexer.g3:1:2922: DUMPFILE
     		{
     		DebugLocation(1, 2922);
     		mDUMPFILE(); if (state.failed) return;
@@ -31400,7 +31400,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 357:
     		DebugEnterAlt(357);
-    		// ..\\MySQL51Lexer.g3:1:2931: DUPLICATE
+    		// MySQL51Lexer.g3:1:2931: DUPLICATE
     		{
     		DebugLocation(1, 2931);
     		mDUPLICATE(); if (state.failed) return;
@@ -31409,7 +31409,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 358:
     		DebugEnterAlt(358);
-    		// ..\\MySQL51Lexer.g3:1:2941: DYNAMIC
+    		// MySQL51Lexer.g3:1:2941: DYNAMIC
     		{
     		DebugLocation(1, 2941);
     		mDYNAMIC(); if (state.failed) return;
@@ -31418,7 +31418,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 359:
     		DebugEnterAlt(359);
-    		// ..\\MySQL51Lexer.g3:1:2949: ENDS
+    		// MySQL51Lexer.g3:1:2949: ENDS
     		{
     		DebugLocation(1, 2949);
     		mENDS(); if (state.failed) return;
@@ -31427,7 +31427,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 360:
     		DebugEnterAlt(360);
-    		// ..\\MySQL51Lexer.g3:1:2954: ENGINE
+    		// MySQL51Lexer.g3:1:2954: ENGINE
     		{
     		DebugLocation(1, 2954);
     		mENGINE(); if (state.failed) return;
@@ -31436,7 +31436,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 361:
     		DebugEnterAlt(361);
-    		// ..\\MySQL51Lexer.g3:1:2961: ENGINES
+    		// MySQL51Lexer.g3:1:2961: ENGINES
     		{
     		DebugLocation(1, 2961);
     		mENGINES(); if (state.failed) return;
@@ -31445,7 +31445,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 362:
     		DebugEnterAlt(362);
-    		// ..\\MySQL51Lexer.g3:1:2969: ERROR
+    		// MySQL51Lexer.g3:1:2969: ERROR
     		{
     		DebugLocation(1, 2969);
     		mERROR(); if (state.failed) return;
@@ -31454,7 +31454,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 363:
     		DebugEnterAlt(363);
-    		// ..\\MySQL51Lexer.g3:1:2975: ERRORS
+    		// MySQL51Lexer.g3:1:2975: ERRORS
     		{
     		DebugLocation(1, 2975);
     		mERRORS(); if (state.failed) return;
@@ -31463,7 +31463,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 364:
     		DebugEnterAlt(364);
-    		// ..\\MySQL51Lexer.g3:1:2982: ESCAPE
+    		// MySQL51Lexer.g3:1:2982: ESCAPE
     		{
     		DebugLocation(1, 2982);
     		mESCAPE(); if (state.failed) return;
@@ -31472,7 +31472,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 365:
     		DebugEnterAlt(365);
-    		// ..\\MySQL51Lexer.g3:1:2989: EVENT
+    		// MySQL51Lexer.g3:1:2989: EVENT
     		{
     		DebugLocation(1, 2989);
     		mEVENT(); if (state.failed) return;
@@ -31481,7 +31481,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 366:
     		DebugEnterAlt(366);
-    		// ..\\MySQL51Lexer.g3:1:2995: EVENTS
+    		// MySQL51Lexer.g3:1:2995: EVENTS
     		{
     		DebugLocation(1, 2995);
     		mEVENTS(); if (state.failed) return;
@@ -31490,7 +31490,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 367:
     		DebugEnterAlt(367);
-    		// ..\\MySQL51Lexer.g3:1:3002: EVERY
+    		// MySQL51Lexer.g3:1:3002: EVERY
     		{
     		DebugLocation(1, 3002);
     		mEVERY(); if (state.failed) return;
@@ -31499,7 +31499,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 368:
     		DebugEnterAlt(368);
-    		// ..\\MySQL51Lexer.g3:1:3008: EXCLUSIVE
+    		// MySQL51Lexer.g3:1:3008: EXCLUSIVE
     		{
     		DebugLocation(1, 3008);
     		mEXCLUSIVE(); if (state.failed) return;
@@ -31508,7 +31508,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 369:
     		DebugEnterAlt(369);
-    		// ..\\MySQL51Lexer.g3:1:3018: EXPANSION
+    		// MySQL51Lexer.g3:1:3018: EXPANSION
     		{
     		DebugLocation(1, 3018);
     		mEXPANSION(); if (state.failed) return;
@@ -31517,7 +31517,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 370:
     		DebugEnterAlt(370);
-    		// ..\\MySQL51Lexer.g3:1:3028: EXTENDED
+    		// MySQL51Lexer.g3:1:3028: EXTENDED
     		{
     		DebugLocation(1, 3028);
     		mEXTENDED(); if (state.failed) return;
@@ -31526,7 +31526,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 371:
     		DebugEnterAlt(371);
-    		// ..\\MySQL51Lexer.g3:1:3037: EXTENT_SIZE
+    		// MySQL51Lexer.g3:1:3037: EXTENT_SIZE
     		{
     		DebugLocation(1, 3037);
     		mEXTENT_SIZE(); if (state.failed) return;
@@ -31535,7 +31535,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 372:
     		DebugEnterAlt(372);
-    		// ..\\MySQL51Lexer.g3:1:3049: FAULTS
+    		// MySQL51Lexer.g3:1:3049: FAULTS
     		{
     		DebugLocation(1, 3049);
     		mFAULTS(); if (state.failed) return;
@@ -31544,7 +31544,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 373:
     		DebugEnterAlt(373);
-    		// ..\\MySQL51Lexer.g3:1:3056: FAST
+    		// MySQL51Lexer.g3:1:3056: FAST
     		{
     		DebugLocation(1, 3056);
     		mFAST(); if (state.failed) return;
@@ -31553,7 +31553,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 374:
     		DebugEnterAlt(374);
-    		// ..\\MySQL51Lexer.g3:1:3061: FOUND
+    		// MySQL51Lexer.g3:1:3061: FOUND
     		{
     		DebugLocation(1, 3061);
     		mFOUND(); if (state.failed) return;
@@ -31562,7 +31562,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 375:
     		DebugEnterAlt(375);
-    		// ..\\MySQL51Lexer.g3:1:3067: ENABLE
+    		// MySQL51Lexer.g3:1:3067: ENABLE
     		{
     		DebugLocation(1, 3067);
     		mENABLE(); if (state.failed) return;
@@ -31571,7 +31571,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 376:
     		DebugEnterAlt(376);
-    		// ..\\MySQL51Lexer.g3:1:3074: FULL
+    		// MySQL51Lexer.g3:1:3074: FULL
     		{
     		DebugLocation(1, 3074);
     		mFULL(); if (state.failed) return;
@@ -31580,7 +31580,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 377:
     		DebugEnterAlt(377);
-    		// ..\\MySQL51Lexer.g3:1:3079: FILE
+    		// MySQL51Lexer.g3:1:3079: FILE
     		{
     		DebugLocation(1, 3079);
     		mFILE(); if (state.failed) return;
@@ -31589,7 +31589,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 378:
     		DebugEnterAlt(378);
-    		// ..\\MySQL51Lexer.g3:1:3084: FIRST
+    		// MySQL51Lexer.g3:1:3084: FIRST
     		{
     		DebugLocation(1, 3084);
     		mFIRST(); if (state.failed) return;
@@ -31598,7 +31598,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 379:
     		DebugEnterAlt(379);
-    		// ..\\MySQL51Lexer.g3:1:3090: FIXED
+    		// MySQL51Lexer.g3:1:3090: FIXED
     		{
     		DebugLocation(1, 3090);
     		mFIXED(); if (state.failed) return;
@@ -31607,7 +31607,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 380:
     		DebugEnterAlt(380);
-    		// ..\\MySQL51Lexer.g3:1:3096: FRAC_SECOND
+    		// MySQL51Lexer.g3:1:3096: FRAC_SECOND
     		{
     		DebugLocation(1, 3096);
     		mFRAC_SECOND(); if (state.failed) return;
@@ -31616,7 +31616,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 381:
     		DebugEnterAlt(381);
-    		// ..\\MySQL51Lexer.g3:1:3108: GEOMETRY
+    		// MySQL51Lexer.g3:1:3108: GEOMETRY
     		{
     		DebugLocation(1, 3108);
     		mGEOMETRY(); if (state.failed) return;
@@ -31625,7 +31625,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 382:
     		DebugEnterAlt(382);
-    		// ..\\MySQL51Lexer.g3:1:3117: GEOMETRYCOLLECTION
+    		// MySQL51Lexer.g3:1:3117: GEOMETRYCOLLECTION
     		{
     		DebugLocation(1, 3117);
     		mGEOMETRYCOLLECTION(); if (state.failed) return;
@@ -31634,7 +31634,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 383:
     		DebugEnterAlt(383);
-    		// ..\\MySQL51Lexer.g3:1:3136: GRANTS
+    		// MySQL51Lexer.g3:1:3136: GRANTS
     		{
     		DebugLocation(1, 3136);
     		mGRANTS(); if (state.failed) return;
@@ -31643,7 +31643,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 384:
     		DebugEnterAlt(384);
-    		// ..\\MySQL51Lexer.g3:1:3143: GLOBAL
+    		// MySQL51Lexer.g3:1:3143: GLOBAL
     		{
     		DebugLocation(1, 3143);
     		mGLOBAL(); if (state.failed) return;
@@ -31652,7 +31652,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 385:
     		DebugEnterAlt(385);
-    		// ..\\MySQL51Lexer.g3:1:3150: HASH
+    		// MySQL51Lexer.g3:1:3150: HASH
     		{
     		DebugLocation(1, 3150);
     		mHASH(); if (state.failed) return;
@@ -31661,7 +31661,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 386:
     		DebugEnterAlt(386);
-    		// ..\\MySQL51Lexer.g3:1:3155: HOSTS
+    		// MySQL51Lexer.g3:1:3155: HOSTS
     		{
     		DebugLocation(1, 3155);
     		mHOSTS(); if (state.failed) return;
@@ -31670,7 +31670,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 387:
     		DebugEnterAlt(387);
-    		// ..\\MySQL51Lexer.g3:1:3161: IDENTIFIED
+    		// MySQL51Lexer.g3:1:3161: IDENTIFIED
     		{
     		DebugLocation(1, 3161);
     		mIDENTIFIED(); if (state.failed) return;
@@ -31679,7 +31679,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 388:
     		DebugEnterAlt(388);
-    		// ..\\MySQL51Lexer.g3:1:3172: INVOKER
+    		// MySQL51Lexer.g3:1:3172: INVOKER
     		{
     		DebugLocation(1, 3172);
     		mINVOKER(); if (state.failed) return;
@@ -31688,7 +31688,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 389:
     		DebugEnterAlt(389);
-    		// ..\\MySQL51Lexer.g3:1:3180: IMPORT
+    		// MySQL51Lexer.g3:1:3180: IMPORT
     		{
     		DebugLocation(1, 3180);
     		mIMPORT(); if (state.failed) return;
@@ -31697,7 +31697,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 390:
     		DebugEnterAlt(390);
-    		// ..\\MySQL51Lexer.g3:1:3187: INDEXES
+    		// MySQL51Lexer.g3:1:3187: INDEXES
     		{
     		DebugLocation(1, 3187);
     		mINDEXES(); if (state.failed) return;
@@ -31706,7 +31706,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 391:
     		DebugEnterAlt(391);
-    		// ..\\MySQL51Lexer.g3:1:3195: INITIAL_SIZE
+    		// MySQL51Lexer.g3:1:3195: INITIAL_SIZE
     		{
     		DebugLocation(1, 3195);
     		mINITIAL_SIZE(); if (state.failed) return;
@@ -31715,7 +31715,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 392:
     		DebugEnterAlt(392);
-    		// ..\\MySQL51Lexer.g3:1:3208: INVISIBLE
+    		// MySQL51Lexer.g3:1:3208: INVISIBLE
     		{
     		DebugLocation(1, 3208);
     		mINVISIBLE(); if (state.failed) return;
@@ -31724,7 +31724,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 393:
     		DebugEnterAlt(393);
-    		// ..\\MySQL51Lexer.g3:1:3218: IO
+    		// MySQL51Lexer.g3:1:3218: IO
     		{
     		DebugLocation(1, 3218);
     		mIO(); if (state.failed) return;
@@ -31733,7 +31733,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 394:
     		DebugEnterAlt(394);
-    		// ..\\MySQL51Lexer.g3:1:3221: IPC
+    		// MySQL51Lexer.g3:1:3221: IPC
     		{
     		DebugLocation(1, 3221);
     		mIPC(); if (state.failed) return;
@@ -31742,7 +31742,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 395:
     		DebugEnterAlt(395);
-    		// ..\\MySQL51Lexer.g3:1:3225: ISOLATION
+    		// MySQL51Lexer.g3:1:3225: ISOLATION
     		{
     		DebugLocation(1, 3225);
     		mISOLATION(); if (state.failed) return;
@@ -31751,7 +31751,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 396:
     		DebugEnterAlt(396);
-    		// ..\\MySQL51Lexer.g3:1:3235: ISSUER
+    		// MySQL51Lexer.g3:1:3235: ISSUER
     		{
     		DebugLocation(1, 3235);
     		mISSUER(); if (state.failed) return;
@@ -31760,7 +31760,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 397:
     		DebugEnterAlt(397);
-    		// ..\\MySQL51Lexer.g3:1:3242: INNOBASE
+    		// MySQL51Lexer.g3:1:3242: INNOBASE
     		{
     		DebugLocation(1, 3242);
     		mINNOBASE(); if (state.failed) return;
@@ -31769,7 +31769,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 398:
     		DebugEnterAlt(398);
-    		// ..\\MySQL51Lexer.g3:1:3251: INSERT_METHOD
+    		// MySQL51Lexer.g3:1:3251: INSERT_METHOD
     		{
     		DebugLocation(1, 3251);
     		mINSERT_METHOD(); if (state.failed) return;
@@ -31778,7 +31778,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 399:
     		DebugEnterAlt(399);
-    		// ..\\MySQL51Lexer.g3:1:3265: KEY_BLOCK_SIZE
+    		// MySQL51Lexer.g3:1:3265: KEY_BLOCK_SIZE
     		{
     		DebugLocation(1, 3265);
     		mKEY_BLOCK_SIZE(); if (state.failed) return;
@@ -31787,7 +31787,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 400:
     		DebugEnterAlt(400);
-    		// ..\\MySQL51Lexer.g3:1:3280: LAST
+    		// MySQL51Lexer.g3:1:3280: LAST
     		{
     		DebugLocation(1, 3280);
     		mLAST(); if (state.failed) return;
@@ -31796,7 +31796,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 401:
     		DebugEnterAlt(401);
-    		// ..\\MySQL51Lexer.g3:1:3285: LEAVES
+    		// MySQL51Lexer.g3:1:3285: LEAVES
     		{
     		DebugLocation(1, 3285);
     		mLEAVES(); if (state.failed) return;
@@ -31805,7 +31805,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 402:
     		DebugEnterAlt(402);
-    		// ..\\MySQL51Lexer.g3:1:3292: LESS
+    		// MySQL51Lexer.g3:1:3292: LESS
     		{
     		DebugLocation(1, 3292);
     		mLESS(); if (state.failed) return;
@@ -31814,7 +31814,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 403:
     		DebugEnterAlt(403);
-    		// ..\\MySQL51Lexer.g3:1:3297: LEVEL
+    		// MySQL51Lexer.g3:1:3297: LEVEL
     		{
     		DebugLocation(1, 3297);
     		mLEVEL(); if (state.failed) return;
@@ -31823,7 +31823,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 404:
     		DebugEnterAlt(404);
-    		// ..\\MySQL51Lexer.g3:1:3303: LINESTRING
+    		// MySQL51Lexer.g3:1:3303: LINESTRING
     		{
     		DebugLocation(1, 3303);
     		mLINESTRING(); if (state.failed) return;
@@ -31832,7 +31832,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 405:
     		DebugEnterAlt(405);
-    		// ..\\MySQL51Lexer.g3:1:3314: LIST
+    		// MySQL51Lexer.g3:1:3314: LIST
     		{
     		DebugLocation(1, 3314);
     		mLIST(); if (state.failed) return;
@@ -31841,7 +31841,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 406:
     		DebugEnterAlt(406);
-    		// ..\\MySQL51Lexer.g3:1:3319: LOCAL
+    		// MySQL51Lexer.g3:1:3319: LOCAL
     		{
     		DebugLocation(1, 3319);
     		mLOCAL(); if (state.failed) return;
@@ -31850,7 +31850,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 407:
     		DebugEnterAlt(407);
-    		// ..\\MySQL51Lexer.g3:1:3325: LOCKS
+    		// MySQL51Lexer.g3:1:3325: LOCKS
     		{
     		DebugLocation(1, 3325);
     		mLOCKS(); if (state.failed) return;
@@ -31859,7 +31859,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 408:
     		DebugEnterAlt(408);
-    		// ..\\MySQL51Lexer.g3:1:3331: LOGFILE
+    		// MySQL51Lexer.g3:1:3331: LOGFILE
     		{
     		DebugLocation(1, 3331);
     		mLOGFILE(); if (state.failed) return;
@@ -31868,7 +31868,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 409:
     		DebugEnterAlt(409);
-    		// ..\\MySQL51Lexer.g3:1:3339: LOGS
+    		// MySQL51Lexer.g3:1:3339: LOGS
     		{
     		DebugLocation(1, 3339);
     		mLOGS(); if (state.failed) return;
@@ -31877,7 +31877,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 410:
     		DebugEnterAlt(410);
-    		// ..\\MySQL51Lexer.g3:1:3344: MAX_ROWS
+    		// MySQL51Lexer.g3:1:3344: MAX_ROWS
     		{
     		DebugLocation(1, 3344);
     		mMAX_ROWS(); if (state.failed) return;
@@ -31886,7 +31886,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 411:
     		DebugEnterAlt(411);
-    		// ..\\MySQL51Lexer.g3:1:3353: MASTER
+    		// MySQL51Lexer.g3:1:3353: MASTER
     		{
     		DebugLocation(1, 3353);
     		mMASTER(); if (state.failed) return;
@@ -31895,7 +31895,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 412:
     		DebugEnterAlt(412);
-    		// ..\\MySQL51Lexer.g3:1:3360: MASTER_HOST
+    		// MySQL51Lexer.g3:1:3360: MASTER_HOST
     		{
     		DebugLocation(1, 3360);
     		mMASTER_HOST(); if (state.failed) return;
@@ -31904,7 +31904,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 413:
     		DebugEnterAlt(413);
-    		// ..\\MySQL51Lexer.g3:1:3372: MASTER_PORT
+    		// MySQL51Lexer.g3:1:3372: MASTER_PORT
     		{
     		DebugLocation(1, 3372);
     		mMASTER_PORT(); if (state.failed) return;
@@ -31913,7 +31913,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 414:
     		DebugEnterAlt(414);
-    		// ..\\MySQL51Lexer.g3:1:3384: MASTER_LOG_FILE
+    		// MySQL51Lexer.g3:1:3384: MASTER_LOG_FILE
     		{
     		DebugLocation(1, 3384);
     		mMASTER_LOG_FILE(); if (state.failed) return;
@@ -31922,7 +31922,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 415:
     		DebugEnterAlt(415);
-    		// ..\\MySQL51Lexer.g3:1:3400: MASTER_LOG_POS
+    		// MySQL51Lexer.g3:1:3400: MASTER_LOG_POS
     		{
     		DebugLocation(1, 3400);
     		mMASTER_LOG_POS(); if (state.failed) return;
@@ -31931,7 +31931,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 416:
     		DebugEnterAlt(416);
-    		// ..\\MySQL51Lexer.g3:1:3415: MASTER_USER
+    		// MySQL51Lexer.g3:1:3415: MASTER_USER
     		{
     		DebugLocation(1, 3415);
     		mMASTER_USER(); if (state.failed) return;
@@ -31940,7 +31940,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 417:
     		DebugEnterAlt(417);
-    		// ..\\MySQL51Lexer.g3:1:3427: MASTER_PASSWORD
+    		// MySQL51Lexer.g3:1:3427: MASTER_PASSWORD
     		{
     		DebugLocation(1, 3427);
     		mMASTER_PASSWORD(); if (state.failed) return;
@@ -31949,7 +31949,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 418:
     		DebugEnterAlt(418);
-    		// ..\\MySQL51Lexer.g3:1:3443: MASTER_SERVER_ID
+    		// MySQL51Lexer.g3:1:3443: MASTER_SERVER_ID
     		{
     		DebugLocation(1, 3443);
     		mMASTER_SERVER_ID(); if (state.failed) return;
@@ -31958,7 +31958,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 419:
     		DebugEnterAlt(419);
-    		// ..\\MySQL51Lexer.g3:1:3460: MASTER_CONNECT_RETRY
+    		// MySQL51Lexer.g3:1:3460: MASTER_CONNECT_RETRY
     		{
     		DebugLocation(1, 3460);
     		mMASTER_CONNECT_RETRY(); if (state.failed) return;
@@ -31967,7 +31967,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 420:
     		DebugEnterAlt(420);
-    		// ..\\MySQL51Lexer.g3:1:3481: MASTER_SSL
+    		// MySQL51Lexer.g3:1:3481: MASTER_SSL
     		{
     		DebugLocation(1, 3481);
     		mMASTER_SSL(); if (state.failed) return;
@@ -31976,7 +31976,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 421:
     		DebugEnterAlt(421);
-    		// ..\\MySQL51Lexer.g3:1:3492: MASTER_SSL_CA
+    		// MySQL51Lexer.g3:1:3492: MASTER_SSL_CA
     		{
     		DebugLocation(1, 3492);
     		mMASTER_SSL_CA(); if (state.failed) return;
@@ -31985,7 +31985,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 422:
     		DebugEnterAlt(422);
-    		// ..\\MySQL51Lexer.g3:1:3506: MASTER_SSL_CAPATH
+    		// MySQL51Lexer.g3:1:3506: MASTER_SSL_CAPATH
     		{
     		DebugLocation(1, 3506);
     		mMASTER_SSL_CAPATH(); if (state.failed) return;
@@ -31994,7 +31994,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 423:
     		DebugEnterAlt(423);
-    		// ..\\MySQL51Lexer.g3:1:3524: MASTER_SSL_CERT
+    		// MySQL51Lexer.g3:1:3524: MASTER_SSL_CERT
     		{
     		DebugLocation(1, 3524);
     		mMASTER_SSL_CERT(); if (state.failed) return;
@@ -32003,7 +32003,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 424:
     		DebugEnterAlt(424);
-    		// ..\\MySQL51Lexer.g3:1:3540: MASTER_SSL_CIPHER
+    		// MySQL51Lexer.g3:1:3540: MASTER_SSL_CIPHER
     		{
     		DebugLocation(1, 3540);
     		mMASTER_SSL_CIPHER(); if (state.failed) return;
@@ -32012,7 +32012,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 425:
     		DebugEnterAlt(425);
-    		// ..\\MySQL51Lexer.g3:1:3558: MASTER_SSL_KEY
+    		// MySQL51Lexer.g3:1:3558: MASTER_SSL_KEY
     		{
     		DebugLocation(1, 3558);
     		mMASTER_SSL_KEY(); if (state.failed) return;
@@ -32021,7 +32021,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 426:
     		DebugEnterAlt(426);
-    		// ..\\MySQL51Lexer.g3:1:3573: MAX_CONNECTIONS_PER_HOUR
+    		// MySQL51Lexer.g3:1:3573: MAX_CONNECTIONS_PER_HOUR
     		{
     		DebugLocation(1, 3573);
     		mMAX_CONNECTIONS_PER_HOUR(); if (state.failed) return;
@@ -32030,7 +32030,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 427:
     		DebugEnterAlt(427);
-    		// ..\\MySQL51Lexer.g3:1:3598: MAX_QUERIES_PER_HOUR
+    		// MySQL51Lexer.g3:1:3598: MAX_QUERIES_PER_HOUR
     		{
     		DebugLocation(1, 3598);
     		mMAX_QUERIES_PER_HOUR(); if (state.failed) return;
@@ -32039,7 +32039,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 428:
     		DebugEnterAlt(428);
-    		// ..\\MySQL51Lexer.g3:1:3619: MAX_SIZE
+    		// MySQL51Lexer.g3:1:3619: MAX_SIZE
     		{
     		DebugLocation(1, 3619);
     		mMAX_SIZE(); if (state.failed) return;
@@ -32048,7 +32048,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 429:
     		DebugEnterAlt(429);
-    		// ..\\MySQL51Lexer.g3:1:3628: MAX_UPDATES_PER_HOUR
+    		// MySQL51Lexer.g3:1:3628: MAX_UPDATES_PER_HOUR
     		{
     		DebugLocation(1, 3628);
     		mMAX_UPDATES_PER_HOUR(); if (state.failed) return;
@@ -32057,7 +32057,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 430:
     		DebugEnterAlt(430);
-    		// ..\\MySQL51Lexer.g3:1:3649: MAX_USER_CONNECTIONS
+    		// MySQL51Lexer.g3:1:3649: MAX_USER_CONNECTIONS
     		{
     		DebugLocation(1, 3649);
     		mMAX_USER_CONNECTIONS(); if (state.failed) return;
@@ -32066,7 +32066,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 431:
     		DebugEnterAlt(431);
-    		// ..\\MySQL51Lexer.g3:1:3670: MAX_VALUE
+    		// MySQL51Lexer.g3:1:3670: MAX_VALUE
     		{
     		DebugLocation(1, 3670);
     		mMAX_VALUE(); if (state.failed) return;
@@ -32075,7 +32075,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 432:
     		DebugEnterAlt(432);
-    		// ..\\MySQL51Lexer.g3:1:3680: MEDIUM
+    		// MySQL51Lexer.g3:1:3680: MEDIUM
     		{
     		DebugLocation(1, 3680);
     		mMEDIUM(); if (state.failed) return;
@@ -32084,7 +32084,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 433:
     		DebugEnterAlt(433);
-    		// ..\\MySQL51Lexer.g3:1:3687: MEMORY
+    		// MySQL51Lexer.g3:1:3687: MEMORY
     		{
     		DebugLocation(1, 3687);
     		mMEMORY(); if (state.failed) return;
@@ -32093,7 +32093,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 434:
     		DebugEnterAlt(434);
-    		// ..\\MySQL51Lexer.g3:1:3694: MERGE
+    		// MySQL51Lexer.g3:1:3694: MERGE
     		{
     		DebugLocation(1, 3694);
     		mMERGE(); if (state.failed) return;
@@ -32102,7 +32102,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 435:
     		DebugEnterAlt(435);
-    		// ..\\MySQL51Lexer.g3:1:3700: MICROSECOND
+    		// MySQL51Lexer.g3:1:3700: MICROSECOND
     		{
     		DebugLocation(1, 3700);
     		mMICROSECOND(); if (state.failed) return;
@@ -32111,7 +32111,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 436:
     		DebugEnterAlt(436);
-    		// ..\\MySQL51Lexer.g3:1:3712: MIGRATE
+    		// MySQL51Lexer.g3:1:3712: MIGRATE
     		{
     		DebugLocation(1, 3712);
     		mMIGRATE(); if (state.failed) return;
@@ -32120,7 +32120,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 437:
     		DebugEnterAlt(437);
-    		// ..\\MySQL51Lexer.g3:1:3720: MIN_ROWS
+    		// MySQL51Lexer.g3:1:3720: MIN_ROWS
     		{
     		DebugLocation(1, 3720);
     		mMIN_ROWS(); if (state.failed) return;
@@ -32129,7 +32129,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 438:
     		DebugEnterAlt(438);
-    		// ..\\MySQL51Lexer.g3:1:3729: MODIFY
+    		// MySQL51Lexer.g3:1:3729: MODIFY
     		{
     		DebugLocation(1, 3729);
     		mMODIFY(); if (state.failed) return;
@@ -32138,7 +32138,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 439:
     		DebugEnterAlt(439);
-    		// ..\\MySQL51Lexer.g3:1:3736: MODE
+    		// MySQL51Lexer.g3:1:3736: MODE
     		{
     		DebugLocation(1, 3736);
     		mMODE(); if (state.failed) return;
@@ -32147,7 +32147,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 440:
     		DebugEnterAlt(440);
-    		// ..\\MySQL51Lexer.g3:1:3741: MULTILINESTRING
+    		// MySQL51Lexer.g3:1:3741: MULTILINESTRING
     		{
     		DebugLocation(1, 3741);
     		mMULTILINESTRING(); if (state.failed) return;
@@ -32156,7 +32156,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 441:
     		DebugEnterAlt(441);
-    		// ..\\MySQL51Lexer.g3:1:3757: MULTIPOINT
+    		// MySQL51Lexer.g3:1:3757: MULTIPOINT
     		{
     		DebugLocation(1, 3757);
     		mMULTIPOINT(); if (state.failed) return;
@@ -32165,7 +32165,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 442:
     		DebugEnterAlt(442);
-    		// ..\\MySQL51Lexer.g3:1:3768: MULTIPOLYGON
+    		// MySQL51Lexer.g3:1:3768: MULTIPOLYGON
     		{
     		DebugLocation(1, 3768);
     		mMULTIPOLYGON(); if (state.failed) return;
@@ -32174,7 +32174,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 443:
     		DebugEnterAlt(443);
-    		// ..\\MySQL51Lexer.g3:1:3781: MUTEX
+    		// MySQL51Lexer.g3:1:3781: MUTEX
     		{
     		DebugLocation(1, 3781);
     		mMUTEX(); if (state.failed) return;
@@ -32183,7 +32183,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 444:
     		DebugEnterAlt(444);
-    		// ..\\MySQL51Lexer.g3:1:3787: NAME
+    		// MySQL51Lexer.g3:1:3787: NAME
     		{
     		DebugLocation(1, 3787);
     		mNAME(); if (state.failed) return;
@@ -32192,7 +32192,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 445:
     		DebugEnterAlt(445);
-    		// ..\\MySQL51Lexer.g3:1:3792: NAMES
+    		// MySQL51Lexer.g3:1:3792: NAMES
     		{
     		DebugLocation(1, 3792);
     		mNAMES(); if (state.failed) return;
@@ -32201,7 +32201,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 446:
     		DebugEnterAlt(446);
-    		// ..\\MySQL51Lexer.g3:1:3798: NATIONAL
+    		// MySQL51Lexer.g3:1:3798: NATIONAL
     		{
     		DebugLocation(1, 3798);
     		mNATIONAL(); if (state.failed) return;
@@ -32210,7 +32210,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 447:
     		DebugEnterAlt(447);
-    		// ..\\MySQL51Lexer.g3:1:3807: NCHAR
+    		// MySQL51Lexer.g3:1:3807: NCHAR
     		{
     		DebugLocation(1, 3807);
     		mNCHAR(); if (state.failed) return;
@@ -32219,7 +32219,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 448:
     		DebugEnterAlt(448);
-    		// ..\\MySQL51Lexer.g3:1:3813: NDBCLUSTER
+    		// MySQL51Lexer.g3:1:3813: NDBCLUSTER
     		{
     		DebugLocation(1, 3813);
     		mNDBCLUSTER(); if (state.failed) return;
@@ -32228,7 +32228,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 449:
     		DebugEnterAlt(449);
-    		// ..\\MySQL51Lexer.g3:1:3824: NEXT
+    		// MySQL51Lexer.g3:1:3824: NEXT
     		{
     		DebugLocation(1, 3824);
     		mNEXT(); if (state.failed) return;
@@ -32237,7 +32237,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 450:
     		DebugEnterAlt(450);
-    		// ..\\MySQL51Lexer.g3:1:3829: NEW
+    		// MySQL51Lexer.g3:1:3829: NEW
     		{
     		DebugLocation(1, 3829);
     		mNEW(); if (state.failed) return;
@@ -32246,7 +32246,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 451:
     		DebugEnterAlt(451);
-    		// ..\\MySQL51Lexer.g3:1:3833: NO_WAIT
+    		// MySQL51Lexer.g3:1:3833: NO_WAIT
     		{
     		DebugLocation(1, 3833);
     		mNO_WAIT(); if (state.failed) return;
@@ -32255,7 +32255,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 452:
     		DebugEnterAlt(452);
-    		// ..\\MySQL51Lexer.g3:1:3841: NODEGROUP
+    		// MySQL51Lexer.g3:1:3841: NODEGROUP
     		{
     		DebugLocation(1, 3841);
     		mNODEGROUP(); if (state.failed) return;
@@ -32264,7 +32264,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 453:
     		DebugEnterAlt(453);
-    		// ..\\MySQL51Lexer.g3:1:3851: NONE
+    		// MySQL51Lexer.g3:1:3851: NONE
     		{
     		DebugLocation(1, 3851);
     		mNONE(); if (state.failed) return;
@@ -32273,7 +32273,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 454:
     		DebugEnterAlt(454);
-    		// ..\\MySQL51Lexer.g3:1:3856: NVARCHAR
+    		// MySQL51Lexer.g3:1:3856: NVARCHAR
     		{
     		DebugLocation(1, 3856);
     		mNVARCHAR(); if (state.failed) return;
@@ -32282,7 +32282,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 455:
     		DebugEnterAlt(455);
-    		// ..\\MySQL51Lexer.g3:1:3865: OFFSET
+    		// MySQL51Lexer.g3:1:3865: OFFSET
     		{
     		DebugLocation(1, 3865);
     		mOFFSET(); if (state.failed) return;
@@ -32291,7 +32291,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 456:
     		DebugEnterAlt(456);
-    		// ..\\MySQL51Lexer.g3:1:3872: OLD_PASSWORD
+    		// MySQL51Lexer.g3:1:3872: OLD_PASSWORD
     		{
     		DebugLocation(1, 3872);
     		mOLD_PASSWORD(); if (state.failed) return;
@@ -32300,7 +32300,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 457:
     		DebugEnterAlt(457);
-    		// ..\\MySQL51Lexer.g3:1:3885: ONE_SHOT
+    		// MySQL51Lexer.g3:1:3885: ONE_SHOT
     		{
     		DebugLocation(1, 3885);
     		mONE_SHOT(); if (state.failed) return;
@@ -32309,7 +32309,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 458:
     		DebugEnterAlt(458);
-    		// ..\\MySQL51Lexer.g3:1:3894: ONE
+    		// MySQL51Lexer.g3:1:3894: ONE
     		{
     		DebugLocation(1, 3894);
     		mONE(); if (state.failed) return;
@@ -32318,7 +32318,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 459:
     		DebugEnterAlt(459);
-    		// ..\\MySQL51Lexer.g3:1:3898: PACK_KEYS
+    		// MySQL51Lexer.g3:1:3898: PACK_KEYS
     		{
     		DebugLocation(1, 3898);
     		mPACK_KEYS(); if (state.failed) return;
@@ -32327,7 +32327,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 460:
     		DebugEnterAlt(460);
-    		// ..\\MySQL51Lexer.g3:1:3908: PAGE
+    		// MySQL51Lexer.g3:1:3908: PAGE
     		{
     		DebugLocation(1, 3908);
     		mPAGE(); if (state.failed) return;
@@ -32336,7 +32336,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 461:
     		DebugEnterAlt(461);
-    		// ..\\MySQL51Lexer.g3:1:3913: PARTIAL
+    		// MySQL51Lexer.g3:1:3913: PARTIAL
     		{
     		DebugLocation(1, 3913);
     		mPARTIAL(); if (state.failed) return;
@@ -32345,7 +32345,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 462:
     		DebugEnterAlt(462);
-    		// ..\\MySQL51Lexer.g3:1:3921: PARTITIONING
+    		// MySQL51Lexer.g3:1:3921: PARTITIONING
     		{
     		DebugLocation(1, 3921);
     		mPARTITIONING(); if (state.failed) return;
@@ -32354,7 +32354,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 463:
     		DebugEnterAlt(463);
-    		// ..\\MySQL51Lexer.g3:1:3934: PARTITIONS
+    		// MySQL51Lexer.g3:1:3934: PARTITIONS
     		{
     		DebugLocation(1, 3934);
     		mPARTITIONS(); if (state.failed) return;
@@ -32363,7 +32363,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 464:
     		DebugEnterAlt(464);
-    		// ..\\MySQL51Lexer.g3:1:3945: PASSWORD
+    		// MySQL51Lexer.g3:1:3945: PASSWORD
     		{
     		DebugLocation(1, 3945);
     		mPASSWORD(); if (state.failed) return;
@@ -32372,7 +32372,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 465:
     		DebugEnterAlt(465);
-    		// ..\\MySQL51Lexer.g3:1:3954: PHASE
+    		// MySQL51Lexer.g3:1:3954: PHASE
     		{
     		DebugLocation(1, 3954);
     		mPHASE(); if (state.failed) return;
@@ -32381,7 +32381,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 466:
     		DebugEnterAlt(466);
-    		// ..\\MySQL51Lexer.g3:1:3960: PLUGIN
+    		// MySQL51Lexer.g3:1:3960: PLUGIN
     		{
     		DebugLocation(1, 3960);
     		mPLUGIN(); if (state.failed) return;
@@ -32390,7 +32390,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 467:
     		DebugEnterAlt(467);
-    		// ..\\MySQL51Lexer.g3:1:3967: PLUGINS
+    		// MySQL51Lexer.g3:1:3967: PLUGINS
     		{
     		DebugLocation(1, 3967);
     		mPLUGINS(); if (state.failed) return;
@@ -32399,7 +32399,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 468:
     		DebugEnterAlt(468);
-    		// ..\\MySQL51Lexer.g3:1:3975: POINT
+    		// MySQL51Lexer.g3:1:3975: POINT
     		{
     		DebugLocation(1, 3975);
     		mPOINT(); if (state.failed) return;
@@ -32408,7 +32408,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 469:
     		DebugEnterAlt(469);
-    		// ..\\MySQL51Lexer.g3:1:3981: POLYGON
+    		// MySQL51Lexer.g3:1:3981: POLYGON
     		{
     		DebugLocation(1, 3981);
     		mPOLYGON(); if (state.failed) return;
@@ -32417,7 +32417,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 470:
     		DebugEnterAlt(470);
-    		// ..\\MySQL51Lexer.g3:1:3989: PRESERVE
+    		// MySQL51Lexer.g3:1:3989: PRESERVE
     		{
     		DebugLocation(1, 3989);
     		mPRESERVE(); if (state.failed) return;
@@ -32426,7 +32426,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 471:
     		DebugEnterAlt(471);
-    		// ..\\MySQL51Lexer.g3:1:3998: PREV
+    		// MySQL51Lexer.g3:1:3998: PREV
     		{
     		DebugLocation(1, 3998);
     		mPREV(); if (state.failed) return;
@@ -32435,7 +32435,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 472:
     		DebugEnterAlt(472);
-    		// ..\\MySQL51Lexer.g3:1:4003: PRIVILEGES
+    		// MySQL51Lexer.g3:1:4003: PRIVILEGES
     		{
     		DebugLocation(1, 4003);
     		mPRIVILEGES(); if (state.failed) return;
@@ -32444,7 +32444,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 473:
     		DebugEnterAlt(473);
-    		// ..\\MySQL51Lexer.g3:1:4014: PROCESS
+    		// MySQL51Lexer.g3:1:4014: PROCESS
     		{
     		DebugLocation(1, 4014);
     		mPROCESS(); if (state.failed) return;
@@ -32453,7 +32453,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 474:
     		DebugEnterAlt(474);
-    		// ..\\MySQL51Lexer.g3:1:4022: PROCESSLIST
+    		// MySQL51Lexer.g3:1:4022: PROCESSLIST
     		{
     		DebugLocation(1, 4022);
     		mPROCESSLIST(); if (state.failed) return;
@@ -32462,7 +32462,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 475:
     		DebugEnterAlt(475);
-    		// ..\\MySQL51Lexer.g3:1:4034: PROFILE
+    		// MySQL51Lexer.g3:1:4034: PROFILE
     		{
     		DebugLocation(1, 4034);
     		mPROFILE(); if (state.failed) return;
@@ -32471,7 +32471,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 476:
     		DebugEnterAlt(476);
-    		// ..\\MySQL51Lexer.g3:1:4042: PROFILES
+    		// MySQL51Lexer.g3:1:4042: PROFILES
     		{
     		DebugLocation(1, 4042);
     		mPROFILES(); if (state.failed) return;
@@ -32480,7 +32480,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 477:
     		DebugEnterAlt(477);
-    		// ..\\MySQL51Lexer.g3:1:4051: QUARTER
+    		// MySQL51Lexer.g3:1:4051: QUARTER
     		{
     		DebugLocation(1, 4051);
     		mQUARTER(); if (state.failed) return;
@@ -32489,7 +32489,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 478:
     		DebugEnterAlt(478);
-    		// ..\\MySQL51Lexer.g3:1:4059: QUERY
+    		// MySQL51Lexer.g3:1:4059: QUERY
     		{
     		DebugLocation(1, 4059);
     		mQUERY(); if (state.failed) return;
@@ -32498,7 +32498,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 479:
     		DebugEnterAlt(479);
-    		// ..\\MySQL51Lexer.g3:1:4065: QUICK
+    		// MySQL51Lexer.g3:1:4065: QUICK
     		{
     		DebugLocation(1, 4065);
     		mQUICK(); if (state.failed) return;
@@ -32507,7 +32507,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 480:
     		DebugEnterAlt(480);
-    		// ..\\MySQL51Lexer.g3:1:4071: ROTATE
+    		// MySQL51Lexer.g3:1:4071: ROTATE
     		{
     		DebugLocation(1, 4071);
     		mROTATE(); if (state.failed) return;
@@ -32516,7 +32516,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 481:
     		DebugEnterAlt(481);
-    		// ..\\MySQL51Lexer.g3:1:4078: REBUILD
+    		// MySQL51Lexer.g3:1:4078: REBUILD
     		{
     		DebugLocation(1, 4078);
     		mREBUILD(); if (state.failed) return;
@@ -32525,7 +32525,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 482:
     		DebugEnterAlt(482);
-    		// ..\\MySQL51Lexer.g3:1:4086: RECOVER
+    		// MySQL51Lexer.g3:1:4086: RECOVER
     		{
     		DebugLocation(1, 4086);
     		mRECOVER(); if (state.failed) return;
@@ -32534,7 +32534,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 483:
     		DebugEnterAlt(483);
-    		// ..\\MySQL51Lexer.g3:1:4094: REDO_BUFFER_SIZE
+    		// MySQL51Lexer.g3:1:4094: REDO_BUFFER_SIZE
     		{
     		DebugLocation(1, 4094);
     		mREDO_BUFFER_SIZE(); if (state.failed) return;
@@ -32543,7 +32543,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 484:
     		DebugEnterAlt(484);
-    		// ..\\MySQL51Lexer.g3:1:4111: REDOFILE
+    		// MySQL51Lexer.g3:1:4111: REDOFILE
     		{
     		DebugLocation(1, 4111);
     		mREDOFILE(); if (state.failed) return;
@@ -32552,7 +32552,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 485:
     		DebugEnterAlt(485);
-    		// ..\\MySQL51Lexer.g3:1:4120: REDUNDANT
+    		// MySQL51Lexer.g3:1:4120: REDUNDANT
     		{
     		DebugLocation(1, 4120);
     		mREDUNDANT(); if (state.failed) return;
@@ -32561,7 +32561,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 486:
     		DebugEnterAlt(486);
-    		// ..\\MySQL51Lexer.g3:1:4130: RELAY_LOG_FILE
+    		// MySQL51Lexer.g3:1:4130: RELAY_LOG_FILE
     		{
     		DebugLocation(1, 4130);
     		mRELAY_LOG_FILE(); if (state.failed) return;
@@ -32570,7 +32570,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 487:
     		DebugEnterAlt(487);
-    		// ..\\MySQL51Lexer.g3:1:4145: RELAY_LOG_POS
+    		// MySQL51Lexer.g3:1:4145: RELAY_LOG_POS
     		{
     		DebugLocation(1, 4145);
     		mRELAY_LOG_POS(); if (state.failed) return;
@@ -32579,7 +32579,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 488:
     		DebugEnterAlt(488);
-    		// ..\\MySQL51Lexer.g3:1:4159: RELAY_THREAD
+    		// MySQL51Lexer.g3:1:4159: RELAY_THREAD
     		{
     		DebugLocation(1, 4159);
     		mRELAY_THREAD(); if (state.failed) return;
@@ -32588,7 +32588,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 489:
     		DebugEnterAlt(489);
-    		// ..\\MySQL51Lexer.g3:1:4172: RELOAD
+    		// MySQL51Lexer.g3:1:4172: RELOAD
     		{
     		DebugLocation(1, 4172);
     		mRELOAD(); if (state.failed) return;
@@ -32597,7 +32597,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 490:
     		DebugEnterAlt(490);
-    		// ..\\MySQL51Lexer.g3:1:4179: REORGANIZE
+    		// MySQL51Lexer.g3:1:4179: REORGANIZE
     		{
     		DebugLocation(1, 4179);
     		mREORGANIZE(); if (state.failed) return;
@@ -32606,7 +32606,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 491:
     		DebugEnterAlt(491);
-    		// ..\\MySQL51Lexer.g3:1:4190: REPEATABLE
+    		// MySQL51Lexer.g3:1:4190: REPEATABLE
     		{
     		DebugLocation(1, 4190);
     		mREPEATABLE(); if (state.failed) return;
@@ -32615,7 +32615,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 492:
     		DebugEnterAlt(492);
-    		// ..\\MySQL51Lexer.g3:1:4201: REPLICATION
+    		// MySQL51Lexer.g3:1:4201: REPLICATION
     		{
     		DebugLocation(1, 4201);
     		mREPLICATION(); if (state.failed) return;
@@ -32624,7 +32624,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 493:
     		DebugEnterAlt(493);
-    		// ..\\MySQL51Lexer.g3:1:4213: RESOURCES
+    		// MySQL51Lexer.g3:1:4213: RESOURCES
     		{
     		DebugLocation(1, 4213);
     		mRESOURCES(); if (state.failed) return;
@@ -32633,7 +32633,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 494:
     		DebugEnterAlt(494);
-    		// ..\\MySQL51Lexer.g3:1:4223: RESUME
+    		// MySQL51Lexer.g3:1:4223: RESUME
     		{
     		DebugLocation(1, 4223);
     		mRESUME(); if (state.failed) return;
@@ -32642,7 +32642,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 495:
     		DebugEnterAlt(495);
-    		// ..\\MySQL51Lexer.g3:1:4230: RETURNS
+    		// MySQL51Lexer.g3:1:4230: RETURNS
     		{
     		DebugLocation(1, 4230);
     		mRETURNS(); if (state.failed) return;
@@ -32651,7 +32651,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 496:
     		DebugEnterAlt(496);
-    		// ..\\MySQL51Lexer.g3:1:4238: ROLLUP
+    		// MySQL51Lexer.g3:1:4238: ROLLUP
     		{
     		DebugLocation(1, 4238);
     		mROLLUP(); if (state.failed) return;
@@ -32660,7 +32660,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 497:
     		DebugEnterAlt(497);
-    		// ..\\MySQL51Lexer.g3:1:4245: ROUTINE
+    		// MySQL51Lexer.g3:1:4245: ROUTINE
     		{
     		DebugLocation(1, 4245);
     		mROUTINE(); if (state.failed) return;
@@ -32669,7 +32669,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 498:
     		DebugEnterAlt(498);
-    		// ..\\MySQL51Lexer.g3:1:4253: ROWS
+    		// MySQL51Lexer.g3:1:4253: ROWS
     		{
     		DebugLocation(1, 4253);
     		mROWS(); if (state.failed) return;
@@ -32678,7 +32678,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 499:
     		DebugEnterAlt(499);
-    		// ..\\MySQL51Lexer.g3:1:4258: ROW_FORMAT
+    		// MySQL51Lexer.g3:1:4258: ROW_FORMAT
     		{
     		DebugLocation(1, 4258);
     		mROW_FORMAT(); if (state.failed) return;
@@ -32687,7 +32687,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 500:
     		DebugEnterAlt(500);
-    		// ..\\MySQL51Lexer.g3:1:4269: ROW
+    		// MySQL51Lexer.g3:1:4269: ROW
     		{
     		DebugLocation(1, 4269);
     		mROW(); if (state.failed) return;
@@ -32696,7 +32696,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 501:
     		DebugEnterAlt(501);
-    		// ..\\MySQL51Lexer.g3:1:4273: RTREE
+    		// MySQL51Lexer.g3:1:4273: RTREE
     		{
     		DebugLocation(1, 4273);
     		mRTREE(); if (state.failed) return;
@@ -32705,7 +32705,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 502:
     		DebugEnterAlt(502);
-    		// ..\\MySQL51Lexer.g3:1:4279: SCHEDULE
+    		// MySQL51Lexer.g3:1:4279: SCHEDULE
     		{
     		DebugLocation(1, 4279);
     		mSCHEDULE(); if (state.failed) return;
@@ -32714,7 +32714,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 503:
     		DebugEnterAlt(503);
-    		// ..\\MySQL51Lexer.g3:1:4288: SERIAL
+    		// MySQL51Lexer.g3:1:4288: SERIAL
     		{
     		DebugLocation(1, 4288);
     		mSERIAL(); if (state.failed) return;
@@ -32723,7 +32723,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 504:
     		DebugEnterAlt(504);
-    		// ..\\MySQL51Lexer.g3:1:4295: SERIALIZABLE
+    		// MySQL51Lexer.g3:1:4295: SERIALIZABLE
     		{
     		DebugLocation(1, 4295);
     		mSERIALIZABLE(); if (state.failed) return;
@@ -32732,7 +32732,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 505:
     		DebugEnterAlt(505);
-    		// ..\\MySQL51Lexer.g3:1:4308: SESSION
+    		// MySQL51Lexer.g3:1:4308: SESSION
     		{
     		DebugLocation(1, 4308);
     		mSESSION(); if (state.failed) return;
@@ -32741,7 +32741,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 506:
     		DebugEnterAlt(506);
-    		// ..\\MySQL51Lexer.g3:1:4316: SIMPLE
+    		// MySQL51Lexer.g3:1:4316: SIMPLE
     		{
     		DebugLocation(1, 4316);
     		mSIMPLE(); if (state.failed) return;
@@ -32750,7 +32750,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 507:
     		DebugEnterAlt(507);
-    		// ..\\MySQL51Lexer.g3:1:4323: SHARE
+    		// MySQL51Lexer.g3:1:4323: SHARE
     		{
     		DebugLocation(1, 4323);
     		mSHARE(); if (state.failed) return;
@@ -32759,7 +32759,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 508:
     		DebugEnterAlt(508);
-    		// ..\\MySQL51Lexer.g3:1:4329: SHARED
+    		// MySQL51Lexer.g3:1:4329: SHARED
     		{
     		DebugLocation(1, 4329);
     		mSHARED(); if (state.failed) return;
@@ -32768,7 +32768,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 509:
     		DebugEnterAlt(509);
-    		// ..\\MySQL51Lexer.g3:1:4336: SHUTDOWN
+    		// MySQL51Lexer.g3:1:4336: SHUTDOWN
     		{
     		DebugLocation(1, 4336);
     		mSHUTDOWN(); if (state.failed) return;
@@ -32777,7 +32777,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 510:
     		DebugEnterAlt(510);
-    		// ..\\MySQL51Lexer.g3:1:4345: SNAPSHOT
+    		// MySQL51Lexer.g3:1:4345: SNAPSHOT
     		{
     		DebugLocation(1, 4345);
     		mSNAPSHOT(); if (state.failed) return;
@@ -32786,7 +32786,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 511:
     		DebugEnterAlt(511);
-    		// ..\\MySQL51Lexer.g3:1:4354: SOME
+    		// MySQL51Lexer.g3:1:4354: SOME
     		{
     		DebugLocation(1, 4354);
     		mSOME(); if (state.failed) return;
@@ -32795,7 +32795,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 512:
     		DebugEnterAlt(512);
-    		// ..\\MySQL51Lexer.g3:1:4359: SOUNDS
+    		// MySQL51Lexer.g3:1:4359: SOUNDS
     		{
     		DebugLocation(1, 4359);
     		mSOUNDS(); if (state.failed) return;
@@ -32804,7 +32804,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 513:
     		DebugEnterAlt(513);
-    		// ..\\MySQL51Lexer.g3:1:4366: SOURCE
+    		// MySQL51Lexer.g3:1:4366: SOURCE
     		{
     		DebugLocation(1, 4366);
     		mSOURCE(); if (state.failed) return;
@@ -32813,7 +32813,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 514:
     		DebugEnterAlt(514);
-    		// ..\\MySQL51Lexer.g3:1:4373: SQL_CACHE
+    		// MySQL51Lexer.g3:1:4373: SQL_CACHE
     		{
     		DebugLocation(1, 4373);
     		mSQL_CACHE(); if (state.failed) return;
@@ -32822,7 +32822,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 515:
     		DebugEnterAlt(515);
-    		// ..\\MySQL51Lexer.g3:1:4383: SQL_BUFFER_RESULT
+    		// MySQL51Lexer.g3:1:4383: SQL_BUFFER_RESULT
     		{
     		DebugLocation(1, 4383);
     		mSQL_BUFFER_RESULT(); if (state.failed) return;
@@ -32831,7 +32831,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 516:
     		DebugEnterAlt(516);
-    		// ..\\MySQL51Lexer.g3:1:4401: SQL_NO_CACHE
+    		// MySQL51Lexer.g3:1:4401: SQL_NO_CACHE
     		{
     		DebugLocation(1, 4401);
     		mSQL_NO_CACHE(); if (state.failed) return;
@@ -32840,7 +32840,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 517:
     		DebugEnterAlt(517);
-    		// ..\\MySQL51Lexer.g3:1:4414: SQL_THREAD
+    		// MySQL51Lexer.g3:1:4414: SQL_THREAD
     		{
     		DebugLocation(1, 4414);
     		mSQL_THREAD(); if (state.failed) return;
@@ -32849,7 +32849,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 518:
     		DebugEnterAlt(518);
-    		// ..\\MySQL51Lexer.g3:1:4425: STARTS
+    		// MySQL51Lexer.g3:1:4425: STARTS
     		{
     		DebugLocation(1, 4425);
     		mSTARTS(); if (state.failed) return;
@@ -32858,7 +32858,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 519:
     		DebugEnterAlt(519);
-    		// ..\\MySQL51Lexer.g3:1:4432: STATUS
+    		// MySQL51Lexer.g3:1:4432: STATUS
     		{
     		DebugLocation(1, 4432);
     		mSTATUS(); if (state.failed) return;
@@ -32867,7 +32867,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 520:
     		DebugEnterAlt(520);
-    		// ..\\MySQL51Lexer.g3:1:4439: STORAGE
+    		// MySQL51Lexer.g3:1:4439: STORAGE
     		{
     		DebugLocation(1, 4439);
     		mSTORAGE(); if (state.failed) return;
@@ -32876,7 +32876,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 521:
     		DebugEnterAlt(521);
-    		// ..\\MySQL51Lexer.g3:1:4447: STRING_KEYWORD
+    		// MySQL51Lexer.g3:1:4447: STRING_KEYWORD
     		{
     		DebugLocation(1, 4447);
     		mSTRING_KEYWORD(); if (state.failed) return;
@@ -32885,7 +32885,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 522:
     		DebugEnterAlt(522);
-    		// ..\\MySQL51Lexer.g3:1:4462: SUBJECT
+    		// MySQL51Lexer.g3:1:4462: SUBJECT
     		{
     		DebugLocation(1, 4462);
     		mSUBJECT(); if (state.failed) return;
@@ -32894,7 +32894,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 523:
     		DebugEnterAlt(523);
-    		// ..\\MySQL51Lexer.g3:1:4470: SUBPARTITION
+    		// MySQL51Lexer.g3:1:4470: SUBPARTITION
     		{
     		DebugLocation(1, 4470);
     		mSUBPARTITION(); if (state.failed) return;
@@ -32903,7 +32903,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 524:
     		DebugEnterAlt(524);
-    		// ..\\MySQL51Lexer.g3:1:4483: SUBPARTITIONS
+    		// MySQL51Lexer.g3:1:4483: SUBPARTITIONS
     		{
     		DebugLocation(1, 4483);
     		mSUBPARTITIONS(); if (state.failed) return;
@@ -32912,7 +32912,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 525:
     		DebugEnterAlt(525);
-    		// ..\\MySQL51Lexer.g3:1:4497: SUPER
+    		// MySQL51Lexer.g3:1:4497: SUPER
     		{
     		DebugLocation(1, 4497);
     		mSUPER(); if (state.failed) return;
@@ -32921,7 +32921,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 526:
     		DebugEnterAlt(526);
-    		// ..\\MySQL51Lexer.g3:1:4503: SUSPEND
+    		// MySQL51Lexer.g3:1:4503: SUSPEND
     		{
     		DebugLocation(1, 4503);
     		mSUSPEND(); if (state.failed) return;
@@ -32930,7 +32930,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 527:
     		DebugEnterAlt(527);
-    		// ..\\MySQL51Lexer.g3:1:4511: SWAPS
+    		// MySQL51Lexer.g3:1:4511: SWAPS
     		{
     		DebugLocation(1, 4511);
     		mSWAPS(); if (state.failed) return;
@@ -32939,7 +32939,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 528:
     		DebugEnterAlt(528);
-    		// ..\\MySQL51Lexer.g3:1:4517: SWITCHES
+    		// MySQL51Lexer.g3:1:4517: SWITCHES
     		{
     		DebugLocation(1, 4517);
     		mSWITCHES(); if (state.failed) return;
@@ -32948,7 +32948,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 529:
     		DebugEnterAlt(529);
-    		// ..\\MySQL51Lexer.g3:1:4526: TABLES
+    		// MySQL51Lexer.g3:1:4526: TABLES
     		{
     		DebugLocation(1, 4526);
     		mTABLES(); if (state.failed) return;
@@ -32957,7 +32957,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 530:
     		DebugEnterAlt(530);
-    		// ..\\MySQL51Lexer.g3:1:4533: TABLESPACE
+    		// MySQL51Lexer.g3:1:4533: TABLESPACE
     		{
     		DebugLocation(1, 4533);
     		mTABLESPACE(); if (state.failed) return;
@@ -32966,7 +32966,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 531:
     		DebugEnterAlt(531);
-    		// ..\\MySQL51Lexer.g3:1:4544: TEMPORARY
+    		// MySQL51Lexer.g3:1:4544: TEMPORARY
     		{
     		DebugLocation(1, 4544);
     		mTEMPORARY(); if (state.failed) return;
@@ -32975,7 +32975,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 532:
     		DebugEnterAlt(532);
-    		// ..\\MySQL51Lexer.g3:1:4554: TEMPTABLE
+    		// MySQL51Lexer.g3:1:4554: TEMPTABLE
     		{
     		DebugLocation(1, 4554);
     		mTEMPTABLE(); if (state.failed) return;
@@ -32984,7 +32984,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 533:
     		DebugEnterAlt(533);
-    		// ..\\MySQL51Lexer.g3:1:4564: THAN
+    		// MySQL51Lexer.g3:1:4564: THAN
     		{
     		DebugLocation(1, 4564);
     		mTHAN(); if (state.failed) return;
@@ -32993,7 +32993,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 534:
     		DebugEnterAlt(534);
-    		// ..\\MySQL51Lexer.g3:1:4569: TRANSACTION
+    		// MySQL51Lexer.g3:1:4569: TRANSACTION
     		{
     		DebugLocation(1, 4569);
     		mTRANSACTION(); if (state.failed) return;
@@ -33002,7 +33002,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 535:
     		DebugEnterAlt(535);
-    		// ..\\MySQL51Lexer.g3:1:4581: TRANSACTIONAL
+    		// MySQL51Lexer.g3:1:4581: TRANSACTIONAL
     		{
     		DebugLocation(1, 4581);
     		mTRANSACTIONAL(); if (state.failed) return;
@@ -33011,7 +33011,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 536:
     		DebugEnterAlt(536);
-    		// ..\\MySQL51Lexer.g3:1:4595: TRIGGERS
+    		// MySQL51Lexer.g3:1:4595: TRIGGERS
     		{
     		DebugLocation(1, 4595);
     		mTRIGGERS(); if (state.failed) return;
@@ -33020,7 +33020,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 537:
     		DebugEnterAlt(537);
-    		// ..\\MySQL51Lexer.g3:1:4604: TIMESTAMPADD
+    		// MySQL51Lexer.g3:1:4604: TIMESTAMPADD
     		{
     		DebugLocation(1, 4604);
     		mTIMESTAMPADD(); if (state.failed) return;
@@ -33029,7 +33029,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 538:
     		DebugEnterAlt(538);
-    		// ..\\MySQL51Lexer.g3:1:4617: TIMESTAMPDIFF
+    		// MySQL51Lexer.g3:1:4617: TIMESTAMPDIFF
     		{
     		DebugLocation(1, 4617);
     		mTIMESTAMPDIFF(); if (state.failed) return;
@@ -33038,7 +33038,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 539:
     		DebugEnterAlt(539);
-    		// ..\\MySQL51Lexer.g3:1:4631: TYPES
+    		// MySQL51Lexer.g3:1:4631: TYPES
     		{
     		DebugLocation(1, 4631);
     		mTYPES(); if (state.failed) return;
@@ -33047,7 +33047,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 540:
     		DebugEnterAlt(540);
-    		// ..\\MySQL51Lexer.g3:1:4637: TYPE
+    		// MySQL51Lexer.g3:1:4637: TYPE
     		{
     		DebugLocation(1, 4637);
     		mTYPE(); if (state.failed) return;
@@ -33056,7 +33056,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 541:
     		DebugEnterAlt(541);
-    		// ..\\MySQL51Lexer.g3:1:4642: UDF_RETURNS
+    		// MySQL51Lexer.g3:1:4642: UDF_RETURNS
     		{
     		DebugLocation(1, 4642);
     		mUDF_RETURNS(); if (state.failed) return;
@@ -33065,7 +33065,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 542:
     		DebugEnterAlt(542);
-    		// ..\\MySQL51Lexer.g3:1:4654: FUNCTION
+    		// MySQL51Lexer.g3:1:4654: FUNCTION
     		{
     		DebugLocation(1, 4654);
     		mFUNCTION(); if (state.failed) return;
@@ -33074,7 +33074,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 543:
     		DebugEnterAlt(543);
-    		// ..\\MySQL51Lexer.g3:1:4663: UNCOMMITTED
+    		// MySQL51Lexer.g3:1:4663: UNCOMMITTED
     		{
     		DebugLocation(1, 4663);
     		mUNCOMMITTED(); if (state.failed) return;
@@ -33083,7 +33083,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 544:
     		DebugEnterAlt(544);
-    		// ..\\MySQL51Lexer.g3:1:4675: UNDEFINED
+    		// MySQL51Lexer.g3:1:4675: UNDEFINED
     		{
     		DebugLocation(1, 4675);
     		mUNDEFINED(); if (state.failed) return;
@@ -33092,7 +33092,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 545:
     		DebugEnterAlt(545);
-    		// ..\\MySQL51Lexer.g3:1:4685: UNDO_BUFFER_SIZE
+    		// MySQL51Lexer.g3:1:4685: UNDO_BUFFER_SIZE
     		{
     		DebugLocation(1, 4685);
     		mUNDO_BUFFER_SIZE(); if (state.failed) return;
@@ -33101,7 +33101,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 546:
     		DebugEnterAlt(546);
-    		// ..\\MySQL51Lexer.g3:1:4702: UNDOFILE
+    		// MySQL51Lexer.g3:1:4702: UNDOFILE
     		{
     		DebugLocation(1, 4702);
     		mUNDOFILE(); if (state.failed) return;
@@ -33110,7 +33110,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 547:
     		DebugEnterAlt(547);
-    		// ..\\MySQL51Lexer.g3:1:4711: UNKNOWN
+    		// MySQL51Lexer.g3:1:4711: UNKNOWN
     		{
     		DebugLocation(1, 4711);
     		mUNKNOWN(); if (state.failed) return;
@@ -33119,7 +33119,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 548:
     		DebugEnterAlt(548);
-    		// ..\\MySQL51Lexer.g3:1:4719: UNTIL
+    		// MySQL51Lexer.g3:1:4719: UNTIL
     		{
     		DebugLocation(1, 4719);
     		mUNTIL(); if (state.failed) return;
@@ -33128,7 +33128,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 549:
     		DebugEnterAlt(549);
-    		// ..\\MySQL51Lexer.g3:1:4725: USE_FRM
+    		// MySQL51Lexer.g3:1:4725: USE_FRM
     		{
     		DebugLocation(1, 4725);
     		mUSE_FRM(); if (state.failed) return;
@@ -33137,7 +33137,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 550:
     		DebugEnterAlt(550);
-    		// ..\\MySQL51Lexer.g3:1:4733: VARIABLES
+    		// MySQL51Lexer.g3:1:4733: VARIABLES
     		{
     		DebugLocation(1, 4733);
     		mVARIABLES(); if (state.failed) return;
@@ -33146,7 +33146,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 551:
     		DebugEnterAlt(551);
-    		// ..\\MySQL51Lexer.g3:1:4743: VALUE
+    		// MySQL51Lexer.g3:1:4743: VALUE
     		{
     		DebugLocation(1, 4743);
     		mVALUE(); if (state.failed) return;
@@ -33155,7 +33155,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 552:
     		DebugEnterAlt(552);
-    		// ..\\MySQL51Lexer.g3:1:4749: VIEW
+    		// MySQL51Lexer.g3:1:4749: VIEW
     		{
     		DebugLocation(1, 4749);
     		mVIEW(); if (state.failed) return;
@@ -33164,7 +33164,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 553:
     		DebugEnterAlt(553);
-    		// ..\\MySQL51Lexer.g3:1:4754: VISIBLE
+    		// MySQL51Lexer.g3:1:4754: VISIBLE
     		{
     		DebugLocation(1, 4754);
     		mVISIBLE(); if (state.failed) return;
@@ -33173,7 +33173,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 554:
     		DebugEnterAlt(554);
-    		// ..\\MySQL51Lexer.g3:1:4762: WARNINGS
+    		// MySQL51Lexer.g3:1:4762: WARNINGS
     		{
     		DebugLocation(1, 4762);
     		mWARNINGS(); if (state.failed) return;
@@ -33182,7 +33182,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 555:
     		DebugEnterAlt(555);
-    		// ..\\MySQL51Lexer.g3:1:4771: WAIT
+    		// MySQL51Lexer.g3:1:4771: WAIT
     		{
     		DebugLocation(1, 4771);
     		mWAIT(); if (state.failed) return;
@@ -33191,7 +33191,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 556:
     		DebugEnterAlt(556);
-    		// ..\\MySQL51Lexer.g3:1:4776: WEEK
+    		// MySQL51Lexer.g3:1:4776: WEEK
     		{
     		DebugLocation(1, 4776);
     		mWEEK(); if (state.failed) return;
@@ -33200,7 +33200,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 557:
     		DebugEnterAlt(557);
-    		// ..\\MySQL51Lexer.g3:1:4781: WORK
+    		// MySQL51Lexer.g3:1:4781: WORK
     		{
     		DebugLocation(1, 4781);
     		mWORK(); if (state.failed) return;
@@ -33209,7 +33209,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 558:
     		DebugEnterAlt(558);
-    		// ..\\MySQL51Lexer.g3:1:4786: X509
+    		// MySQL51Lexer.g3:1:4786: X509
     		{
     		DebugLocation(1, 4786);
     		mX509(); if (state.failed) return;
@@ -33218,7 +33218,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 559:
     		DebugEnterAlt(559);
-    		// ..\\MySQL51Lexer.g3:1:4791: XML
+    		// MySQL51Lexer.g3:1:4791: XML
     		{
     		DebugLocation(1, 4791);
     		mXML(); if (state.failed) return;
@@ -33227,7 +33227,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 560:
     		DebugEnterAlt(560);
-    		// ..\\MySQL51Lexer.g3:1:4795: COMMA
+    		// MySQL51Lexer.g3:1:4795: COMMA
     		{
     		DebugLocation(1, 4795);
     		mCOMMA(); if (state.failed) return;
@@ -33236,7 +33236,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 561:
     		DebugEnterAlt(561);
-    		// ..\\MySQL51Lexer.g3:1:4801: DOT
+    		// MySQL51Lexer.g3:1:4801: DOT
     		{
     		DebugLocation(1, 4801);
     		mDOT(); if (state.failed) return;
@@ -33245,7 +33245,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 562:
     		DebugEnterAlt(562);
-    		// ..\\MySQL51Lexer.g3:1:4805: SEMI
+    		// MySQL51Lexer.g3:1:4805: SEMI
     		{
     		DebugLocation(1, 4805);
     		mSEMI(); if (state.failed) return;
@@ -33254,7 +33254,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 563:
     		DebugEnterAlt(563);
-    		// ..\\MySQL51Lexer.g3:1:4810: LPAREN
+    		// MySQL51Lexer.g3:1:4810: LPAREN
     		{
     		DebugLocation(1, 4810);
     		mLPAREN(); if (state.failed) return;
@@ -33263,7 +33263,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 564:
     		DebugEnterAlt(564);
-    		// ..\\MySQL51Lexer.g3:1:4817: RPAREN
+    		// MySQL51Lexer.g3:1:4817: RPAREN
     		{
     		DebugLocation(1, 4817);
     		mRPAREN(); if (state.failed) return;
@@ -33272,7 +33272,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 565:
     		DebugEnterAlt(565);
-    		// ..\\MySQL51Lexer.g3:1:4824: LCURLY
+    		// MySQL51Lexer.g3:1:4824: LCURLY
     		{
     		DebugLocation(1, 4824);
     		mLCURLY(); if (state.failed) return;
@@ -33281,7 +33281,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 566:
     		DebugEnterAlt(566);
-    		// ..\\MySQL51Lexer.g3:1:4831: RCURLY
+    		// MySQL51Lexer.g3:1:4831: RCURLY
     		{
     		DebugLocation(1, 4831);
     		mRCURLY(); if (state.failed) return;
@@ -33290,7 +33290,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 567:
     		DebugEnterAlt(567);
-    		// ..\\MySQL51Lexer.g3:1:4838: BIT_AND
+    		// MySQL51Lexer.g3:1:4838: BIT_AND
     		{
     		DebugLocation(1, 4838);
     		mBIT_AND(); if (state.failed) return;
@@ -33299,7 +33299,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 568:
     		DebugEnterAlt(568);
-    		// ..\\MySQL51Lexer.g3:1:4846: BIT_OR
+    		// MySQL51Lexer.g3:1:4846: BIT_OR
     		{
     		DebugLocation(1, 4846);
     		mBIT_OR(); if (state.failed) return;
@@ -33308,7 +33308,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 569:
     		DebugEnterAlt(569);
-    		// ..\\MySQL51Lexer.g3:1:4853: BIT_XOR
+    		// MySQL51Lexer.g3:1:4853: BIT_XOR
     		{
     		DebugLocation(1, 4853);
     		mBIT_XOR(); if (state.failed) return;
@@ -33317,7 +33317,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 570:
     		DebugEnterAlt(570);
-    		// ..\\MySQL51Lexer.g3:1:4861: CAST
+    		// MySQL51Lexer.g3:1:4861: CAST
     		{
     		DebugLocation(1, 4861);
     		mCAST(); if (state.failed) return;
@@ -33326,7 +33326,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 571:
     		DebugEnterAlt(571);
-    		// ..\\MySQL51Lexer.g3:1:4866: COUNT
+    		// MySQL51Lexer.g3:1:4866: COUNT
     		{
     		DebugLocation(1, 4866);
     		mCOUNT(); if (state.failed) return;
@@ -33335,7 +33335,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 572:
     		DebugEnterAlt(572);
-    		// ..\\MySQL51Lexer.g3:1:4872: DATE_ADD
+    		// MySQL51Lexer.g3:1:4872: DATE_ADD
     		{
     		DebugLocation(1, 4872);
     		mDATE_ADD(); if (state.failed) return;
@@ -33344,7 +33344,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 573:
     		DebugEnterAlt(573);
-    		// ..\\MySQL51Lexer.g3:1:4881: DATE_SUB
+    		// MySQL51Lexer.g3:1:4881: DATE_SUB
     		{
     		DebugLocation(1, 4881);
     		mDATE_SUB(); if (state.failed) return;
@@ -33353,7 +33353,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 574:
     		DebugEnterAlt(574);
-    		// ..\\MySQL51Lexer.g3:1:4890: GROUP_CONCAT
+    		// MySQL51Lexer.g3:1:4890: GROUP_CONCAT
     		{
     		DebugLocation(1, 4890);
     		mGROUP_CONCAT(); if (state.failed) return;
@@ -33362,7 +33362,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 575:
     		DebugEnterAlt(575);
-    		// ..\\MySQL51Lexer.g3:1:4903: MAX
+    		// MySQL51Lexer.g3:1:4903: MAX
     		{
     		DebugLocation(1, 4903);
     		mMAX(); if (state.failed) return;
@@ -33371,7 +33371,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 576:
     		DebugEnterAlt(576);
-    		// ..\\MySQL51Lexer.g3:1:4907: MIN
+    		// MySQL51Lexer.g3:1:4907: MIN
     		{
     		DebugLocation(1, 4907);
     		mMIN(); if (state.failed) return;
@@ -33380,7 +33380,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 577:
     		DebugEnterAlt(577);
-    		// ..\\MySQL51Lexer.g3:1:4911: STD
+    		// MySQL51Lexer.g3:1:4911: STD
     		{
     		DebugLocation(1, 4911);
     		mSTD(); if (state.failed) return;
@@ -33389,7 +33389,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 578:
     		DebugEnterAlt(578);
-    		// ..\\MySQL51Lexer.g3:1:4915: STDDEV
+    		// MySQL51Lexer.g3:1:4915: STDDEV
     		{
     		DebugLocation(1, 4915);
     		mSTDDEV(); if (state.failed) return;
@@ -33398,7 +33398,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 579:
     		DebugEnterAlt(579);
-    		// ..\\MySQL51Lexer.g3:1:4922: STDDEV_POP
+    		// MySQL51Lexer.g3:1:4922: STDDEV_POP
     		{
     		DebugLocation(1, 4922);
     		mSTDDEV_POP(); if (state.failed) return;
@@ -33407,7 +33407,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 580:
     		DebugEnterAlt(580);
-    		// ..\\MySQL51Lexer.g3:1:4933: STDDEV_SAMP
+    		// MySQL51Lexer.g3:1:4933: STDDEV_SAMP
     		{
     		DebugLocation(1, 4933);
     		mSTDDEV_SAMP(); if (state.failed) return;
@@ -33416,7 +33416,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 581:
     		DebugEnterAlt(581);
-    		// ..\\MySQL51Lexer.g3:1:4945: SUBSTR
+    		// MySQL51Lexer.g3:1:4945: SUBSTR
     		{
     		DebugLocation(1, 4945);
     		mSUBSTR(); if (state.failed) return;
@@ -33425,7 +33425,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 582:
     		DebugEnterAlt(582);
-    		// ..\\MySQL51Lexer.g3:1:4952: SUM
+    		// MySQL51Lexer.g3:1:4952: SUM
     		{
     		DebugLocation(1, 4952);
     		mSUM(); if (state.failed) return;
@@ -33434,7 +33434,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 583:
     		DebugEnterAlt(583);
-    		// ..\\MySQL51Lexer.g3:1:4956: VARIANCE
+    		// MySQL51Lexer.g3:1:4956: VARIANCE
     		{
     		DebugLocation(1, 4956);
     		mVARIANCE(); if (state.failed) return;
@@ -33443,7 +33443,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 584:
     		DebugEnterAlt(584);
-    		// ..\\MySQL51Lexer.g3:1:4965: VAR_POP
+    		// MySQL51Lexer.g3:1:4965: VAR_POP
     		{
     		DebugLocation(1, 4965);
     		mVAR_POP(); if (state.failed) return;
@@ -33452,7 +33452,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 585:
     		DebugEnterAlt(585);
-    		// ..\\MySQL51Lexer.g3:1:4973: VAR_SAMP
+    		// MySQL51Lexer.g3:1:4973: VAR_SAMP
     		{
     		DebugLocation(1, 4973);
     		mVAR_SAMP(); if (state.failed) return;
@@ -33461,7 +33461,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 586:
     		DebugEnterAlt(586);
-    		// ..\\MySQL51Lexer.g3:1:4982: ADDDATE
+    		// MySQL51Lexer.g3:1:4982: ADDDATE
     		{
     		DebugLocation(1, 4982);
     		mADDDATE(); if (state.failed) return;
@@ -33470,7 +33470,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 587:
     		DebugEnterAlt(587);
-    		// ..\\MySQL51Lexer.g3:1:4990: CURDATE
+    		// MySQL51Lexer.g3:1:4990: CURDATE
     		{
     		DebugLocation(1, 4990);
     		mCURDATE(); if (state.failed) return;
@@ -33479,7 +33479,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 588:
     		DebugEnterAlt(588);
-    		// ..\\MySQL51Lexer.g3:1:4998: CURTIME
+    		// MySQL51Lexer.g3:1:4998: CURTIME
     		{
     		DebugLocation(1, 4998);
     		mCURTIME(); if (state.failed) return;
@@ -33488,7 +33488,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 589:
     		DebugEnterAlt(589);
-    		// ..\\MySQL51Lexer.g3:1:5006: DATE_ADD_INTERVAL
+    		// MySQL51Lexer.g3:1:5006: DATE_ADD_INTERVAL
     		{
     		DebugLocation(1, 5006);
     		mDATE_ADD_INTERVAL(); if (state.failed) return;
@@ -33497,7 +33497,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 590:
     		DebugEnterAlt(590);
-    		// ..\\MySQL51Lexer.g3:1:5024: DATE_SUB_INTERVAL
+    		// MySQL51Lexer.g3:1:5024: DATE_SUB_INTERVAL
     		{
     		DebugLocation(1, 5024);
     		mDATE_SUB_INTERVAL(); if (state.failed) return;
@@ -33506,7 +33506,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 591:
     		DebugEnterAlt(591);
-    		// ..\\MySQL51Lexer.g3:1:5042: EXTRACT
+    		// MySQL51Lexer.g3:1:5042: EXTRACT
     		{
     		DebugLocation(1, 5042);
     		mEXTRACT(); if (state.failed) return;
@@ -33515,7 +33515,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 592:
     		DebugEnterAlt(592);
-    		// ..\\MySQL51Lexer.g3:1:5050: GET_FORMAT
+    		// MySQL51Lexer.g3:1:5050: GET_FORMAT
     		{
     		DebugLocation(1, 5050);
     		mGET_FORMAT(); if (state.failed) return;
@@ -33524,7 +33524,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 593:
     		DebugEnterAlt(593);
-    		// ..\\MySQL51Lexer.g3:1:5061: NOW
+    		// MySQL51Lexer.g3:1:5061: NOW
     		{
     		DebugLocation(1, 5061);
     		mNOW(); if (state.failed) return;
@@ -33533,7 +33533,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 594:
     		DebugEnterAlt(594);
-    		// ..\\MySQL51Lexer.g3:1:5065: POSITION
+    		// MySQL51Lexer.g3:1:5065: POSITION
     		{
     		DebugLocation(1, 5065);
     		mPOSITION(); if (state.failed) return;
@@ -33542,7 +33542,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 595:
     		DebugEnterAlt(595);
-    		// ..\\MySQL51Lexer.g3:1:5074: SUBDATE
+    		// MySQL51Lexer.g3:1:5074: SUBDATE
     		{
     		DebugLocation(1, 5074);
     		mSUBDATE(); if (state.failed) return;
@@ -33551,7 +33551,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 596:
     		DebugEnterAlt(596);
-    		// ..\\MySQL51Lexer.g3:1:5082: SUBSTRING
+    		// MySQL51Lexer.g3:1:5082: SUBSTRING
     		{
     		DebugLocation(1, 5082);
     		mSUBSTRING(); if (state.failed) return;
@@ -33560,7 +33560,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 597:
     		DebugEnterAlt(597);
-    		// ..\\MySQL51Lexer.g3:1:5092: TIMESTAMP_ADD
+    		// MySQL51Lexer.g3:1:5092: TIMESTAMP_ADD
     		{
     		DebugLocation(1, 5092);
     		mTIMESTAMP_ADD(); if (state.failed) return;
@@ -33569,7 +33569,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 598:
     		DebugEnterAlt(598);
-    		// ..\\MySQL51Lexer.g3:1:5106: TIMESTAMP_DIFF
+    		// MySQL51Lexer.g3:1:5106: TIMESTAMP_DIFF
     		{
     		DebugLocation(1, 5106);
     		mTIMESTAMP_DIFF(); if (state.failed) return;
@@ -33578,7 +33578,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 599:
     		DebugEnterAlt(599);
-    		// ..\\MySQL51Lexer.g3:1:5121: UTC_DATE
+    		// MySQL51Lexer.g3:1:5121: UTC_DATE
     		{
     		DebugLocation(1, 5121);
     		mUTC_DATE(); if (state.failed) return;
@@ -33587,7 +33587,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 600:
     		DebugEnterAlt(600);
-    		// ..\\MySQL51Lexer.g3:1:5130: CHAR
+    		// MySQL51Lexer.g3:1:5130: CHAR
     		{
     		DebugLocation(1, 5130);
     		mCHAR(); if (state.failed) return;
@@ -33596,7 +33596,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 601:
     		DebugEnterAlt(601);
-    		// ..\\MySQL51Lexer.g3:1:5135: CURRENT_USER
+    		// MySQL51Lexer.g3:1:5135: CURRENT_USER
     		{
     		DebugLocation(1, 5135);
     		mCURRENT_USER(); if (state.failed) return;
@@ -33605,7 +33605,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 602:
     		DebugEnterAlt(602);
-    		// ..\\MySQL51Lexer.g3:1:5148: DATE
+    		// MySQL51Lexer.g3:1:5148: DATE
     		{
     		DebugLocation(1, 5148);
     		mDATE(); if (state.failed) return;
@@ -33614,7 +33614,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 603:
     		DebugEnterAlt(603);
-    		// ..\\MySQL51Lexer.g3:1:5153: DAY
+    		// MySQL51Lexer.g3:1:5153: DAY
     		{
     		DebugLocation(1, 5153);
     		mDAY(); if (state.failed) return;
@@ -33623,7 +33623,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 604:
     		DebugEnterAlt(604);
-    		// ..\\MySQL51Lexer.g3:1:5157: HOUR
+    		// MySQL51Lexer.g3:1:5157: HOUR
     		{
     		DebugLocation(1, 5157);
     		mHOUR(); if (state.failed) return;
@@ -33632,7 +33632,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 605:
     		DebugEnterAlt(605);
-    		// ..\\MySQL51Lexer.g3:1:5162: INSERT
+    		// MySQL51Lexer.g3:1:5162: INSERT
     		{
     		DebugLocation(1, 5162);
     		mINSERT(); if (state.failed) return;
@@ -33641,7 +33641,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 606:
     		DebugEnterAlt(606);
-    		// ..\\MySQL51Lexer.g3:1:5169: INTERVAL
+    		// MySQL51Lexer.g3:1:5169: INTERVAL
     		{
     		DebugLocation(1, 5169);
     		mINTERVAL(); if (state.failed) return;
@@ -33650,7 +33650,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 607:
     		DebugEnterAlt(607);
-    		// ..\\MySQL51Lexer.g3:1:5178: LEFT
+    		// MySQL51Lexer.g3:1:5178: LEFT
     		{
     		DebugLocation(1, 5178);
     		mLEFT(); if (state.failed) return;
@@ -33659,7 +33659,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 608:
     		DebugEnterAlt(608);
-    		// ..\\MySQL51Lexer.g3:1:5183: MINUTE
+    		// MySQL51Lexer.g3:1:5183: MINUTE
     		{
     		DebugLocation(1, 5183);
     		mMINUTE(); if (state.failed) return;
@@ -33668,7 +33668,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 609:
     		DebugEnterAlt(609);
-    		// ..\\MySQL51Lexer.g3:1:5190: MONTH
+    		// MySQL51Lexer.g3:1:5190: MONTH
     		{
     		DebugLocation(1, 5190);
     		mMONTH(); if (state.failed) return;
@@ -33677,7 +33677,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 610:
     		DebugEnterAlt(610);
-    		// ..\\MySQL51Lexer.g3:1:5196: RIGHT
+    		// MySQL51Lexer.g3:1:5196: RIGHT
     		{
     		DebugLocation(1, 5196);
     		mRIGHT(); if (state.failed) return;
@@ -33686,7 +33686,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 611:
     		DebugEnterAlt(611);
-    		// ..\\MySQL51Lexer.g3:1:5202: SECOND
+    		// MySQL51Lexer.g3:1:5202: SECOND
     		{
     		DebugLocation(1, 5202);
     		mSECOND(); if (state.failed) return;
@@ -33695,7 +33695,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 612:
     		DebugEnterAlt(612);
-    		// ..\\MySQL51Lexer.g3:1:5209: TIME
+    		// MySQL51Lexer.g3:1:5209: TIME
     		{
     		DebugLocation(1, 5209);
     		mTIME(); if (state.failed) return;
@@ -33704,7 +33704,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 613:
     		DebugEnterAlt(613);
-    		// ..\\MySQL51Lexer.g3:1:5214: TIMESTAMP
+    		// MySQL51Lexer.g3:1:5214: TIMESTAMP
     		{
     		DebugLocation(1, 5214);
     		mTIMESTAMP(); if (state.failed) return;
@@ -33713,7 +33713,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 614:
     		DebugEnterAlt(614);
-    		// ..\\MySQL51Lexer.g3:1:5224: TRIM
+    		// MySQL51Lexer.g3:1:5224: TRIM
     		{
     		DebugLocation(1, 5224);
     		mTRIM(); if (state.failed) return;
@@ -33722,7 +33722,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 615:
     		DebugEnterAlt(615);
-    		// ..\\MySQL51Lexer.g3:1:5229: USER
+    		// MySQL51Lexer.g3:1:5229: USER
     		{
     		DebugLocation(1, 5229);
     		mUSER(); if (state.failed) return;
@@ -33731,7 +33731,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 616:
     		DebugEnterAlt(616);
-    		// ..\\MySQL51Lexer.g3:1:5234: YEAR
+    		// MySQL51Lexer.g3:1:5234: YEAR
     		{
     		DebugLocation(1, 5234);
     		mYEAR(); if (state.failed) return;
@@ -33740,7 +33740,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 617:
     		DebugEnterAlt(617);
-    		// ..\\MySQL51Lexer.g3:1:5239: ASSIGN
+    		// MySQL51Lexer.g3:1:5239: ASSIGN
     		{
     		DebugLocation(1, 5239);
     		mASSIGN(); if (state.failed) return;
@@ -33749,7 +33749,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 618:
     		DebugEnterAlt(618);
-    		// ..\\MySQL51Lexer.g3:1:5246: PLUS
+    		// MySQL51Lexer.g3:1:5246: PLUS
     		{
     		DebugLocation(1, 5246);
     		mPLUS(); if (state.failed) return;
@@ -33758,7 +33758,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 619:
     		DebugEnterAlt(619);
-    		// ..\\MySQL51Lexer.g3:1:5251: MINUS
+    		// MySQL51Lexer.g3:1:5251: MINUS
     		{
     		DebugLocation(1, 5251);
     		mMINUS(); if (state.failed) return;
@@ -33767,7 +33767,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 620:
     		DebugEnterAlt(620);
-    		// ..\\MySQL51Lexer.g3:1:5257: MULT
+    		// MySQL51Lexer.g3:1:5257: MULT
     		{
     		DebugLocation(1, 5257);
     		mMULT(); if (state.failed) return;
@@ -33776,7 +33776,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 621:
     		DebugEnterAlt(621);
-    		// ..\\MySQL51Lexer.g3:1:5262: DIVISION
+    		// MySQL51Lexer.g3:1:5262: DIVISION
     		{
     		DebugLocation(1, 5262);
     		mDIVISION(); if (state.failed) return;
@@ -33785,7 +33785,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 622:
     		DebugEnterAlt(622);
-    		// ..\\MySQL51Lexer.g3:1:5271: MODULO
+    		// MySQL51Lexer.g3:1:5271: MODULO
     		{
     		DebugLocation(1, 5271);
     		mMODULO(); if (state.failed) return;
@@ -33794,7 +33794,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 623:
     		DebugEnterAlt(623);
-    		// ..\\MySQL51Lexer.g3:1:5278: BITWISE_XOR
+    		// MySQL51Lexer.g3:1:5278: BITWISE_XOR
     		{
     		DebugLocation(1, 5278);
     		mBITWISE_XOR(); if (state.failed) return;
@@ -33803,7 +33803,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 624:
     		DebugEnterAlt(624);
-    		// ..\\MySQL51Lexer.g3:1:5290: BITWISE_INVERSION
+    		// MySQL51Lexer.g3:1:5290: BITWISE_INVERSION
     		{
     		DebugLocation(1, 5290);
     		mBITWISE_INVERSION(); if (state.failed) return;
@@ -33812,7 +33812,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 625:
     		DebugEnterAlt(625);
-    		// ..\\MySQL51Lexer.g3:1:5308: BITWISE_AND
+    		// MySQL51Lexer.g3:1:5308: BITWISE_AND
     		{
     		DebugLocation(1, 5308);
     		mBITWISE_AND(); if (state.failed) return;
@@ -33821,7 +33821,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 626:
     		DebugEnterAlt(626);
-    		// ..\\MySQL51Lexer.g3:1:5320: LOGICAL_AND
+    		// MySQL51Lexer.g3:1:5320: LOGICAL_AND
     		{
     		DebugLocation(1, 5320);
     		mLOGICAL_AND(); if (state.failed) return;
@@ -33830,7 +33830,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 627:
     		DebugEnterAlt(627);
-    		// ..\\MySQL51Lexer.g3:1:5332: BITWISE_OR
+    		// MySQL51Lexer.g3:1:5332: BITWISE_OR
     		{
     		DebugLocation(1, 5332);
     		mBITWISE_OR(); if (state.failed) return;
@@ -33839,7 +33839,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 628:
     		DebugEnterAlt(628);
-    		// ..\\MySQL51Lexer.g3:1:5343: LOGICAL_OR
+    		// MySQL51Lexer.g3:1:5343: LOGICAL_OR
     		{
     		DebugLocation(1, 5343);
     		mLOGICAL_OR(); if (state.failed) return;
@@ -33848,7 +33848,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 629:
     		DebugEnterAlt(629);
-    		// ..\\MySQL51Lexer.g3:1:5354: LESS_THAN
+    		// MySQL51Lexer.g3:1:5354: LESS_THAN
     		{
     		DebugLocation(1, 5354);
     		mLESS_THAN(); if (state.failed) return;
@@ -33857,7 +33857,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 630:
     		DebugEnterAlt(630);
-    		// ..\\MySQL51Lexer.g3:1:5364: LEFT_SHIFT
+    		// MySQL51Lexer.g3:1:5364: LEFT_SHIFT
     		{
     		DebugLocation(1, 5364);
     		mLEFT_SHIFT(); if (state.failed) return;
@@ -33866,7 +33866,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 631:
     		DebugEnterAlt(631);
-    		// ..\\MySQL51Lexer.g3:1:5375: LESS_THAN_EQUAL
+    		// MySQL51Lexer.g3:1:5375: LESS_THAN_EQUAL
     		{
     		DebugLocation(1, 5375);
     		mLESS_THAN_EQUAL(); if (state.failed) return;
@@ -33875,7 +33875,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 632:
     		DebugEnterAlt(632);
-    		// ..\\MySQL51Lexer.g3:1:5391: NULL_SAFE_NOT_EQUAL
+    		// MySQL51Lexer.g3:1:5391: NULL_SAFE_NOT_EQUAL
     		{
     		DebugLocation(1, 5391);
     		mNULL_SAFE_NOT_EQUAL(); if (state.failed) return;
@@ -33884,7 +33884,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 633:
     		DebugEnterAlt(633);
-    		// ..\\MySQL51Lexer.g3:1:5411: EQUALS
+    		// MySQL51Lexer.g3:1:5411: EQUALS
     		{
     		DebugLocation(1, 5411);
     		mEQUALS(); if (state.failed) return;
@@ -33893,7 +33893,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 634:
     		DebugEnterAlt(634);
-    		// ..\\MySQL51Lexer.g3:1:5418: NOT_OP
+    		// MySQL51Lexer.g3:1:5418: NOT_OP
     		{
     		DebugLocation(1, 5418);
     		mNOT_OP(); if (state.failed) return;
@@ -33902,7 +33902,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 635:
     		DebugEnterAlt(635);
-    		// ..\\MySQL51Lexer.g3:1:5425: NOT_EQUAL
+    		// MySQL51Lexer.g3:1:5425: NOT_EQUAL
     		{
     		DebugLocation(1, 5425);
     		mNOT_EQUAL(); if (state.failed) return;
@@ -33911,7 +33911,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 636:
     		DebugEnterAlt(636);
-    		// ..\\MySQL51Lexer.g3:1:5435: GREATER_THAN
+    		// MySQL51Lexer.g3:1:5435: GREATER_THAN
     		{
     		DebugLocation(1, 5435);
     		mGREATER_THAN(); if (state.failed) return;
@@ -33920,7 +33920,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 637:
     		DebugEnterAlt(637);
-    		// ..\\MySQL51Lexer.g3:1:5448: RIGHT_SHIFT
+    		// MySQL51Lexer.g3:1:5448: RIGHT_SHIFT
     		{
     		DebugLocation(1, 5448);
     		mRIGHT_SHIFT(); if (state.failed) return;
@@ -33929,7 +33929,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 638:
     		DebugEnterAlt(638);
-    		// ..\\MySQL51Lexer.g3:1:5460: GREATER_THAN_EQUAL
+    		// MySQL51Lexer.g3:1:5460: GREATER_THAN_EQUAL
     		{
     		DebugLocation(1, 5460);
     		mGREATER_THAN_EQUAL(); if (state.failed) return;
@@ -33938,7 +33938,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 639:
     		DebugEnterAlt(639);
-    		// ..\\MySQL51Lexer.g3:1:5479: BIGINT
+    		// MySQL51Lexer.g3:1:5479: BIGINT
     		{
     		DebugLocation(1, 5479);
     		mBIGINT(); if (state.failed) return;
@@ -33947,7 +33947,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 640:
     		DebugEnterAlt(640);
-    		// ..\\MySQL51Lexer.g3:1:5486: BIT
+    		// MySQL51Lexer.g3:1:5486: BIT
     		{
     		DebugLocation(1, 5486);
     		mBIT(); if (state.failed) return;
@@ -33956,7 +33956,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 641:
     		DebugEnterAlt(641);
-    		// ..\\MySQL51Lexer.g3:1:5490: BLOB
+    		// MySQL51Lexer.g3:1:5490: BLOB
     		{
     		DebugLocation(1, 5490);
     		mBLOB(); if (state.failed) return;
@@ -33965,7 +33965,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 642:
     		DebugEnterAlt(642);
-    		// ..\\MySQL51Lexer.g3:1:5495: DATETIME
+    		// MySQL51Lexer.g3:1:5495: DATETIME
     		{
     		DebugLocation(1, 5495);
     		mDATETIME(); if (state.failed) return;
@@ -33974,7 +33974,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 643:
     		DebugEnterAlt(643);
-    		// ..\\MySQL51Lexer.g3:1:5504: DECIMAL
+    		// MySQL51Lexer.g3:1:5504: DECIMAL
     		{
     		DebugLocation(1, 5504);
     		mDECIMAL(); if (state.failed) return;
@@ -33983,7 +33983,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 644:
     		DebugEnterAlt(644);
-    		// ..\\MySQL51Lexer.g3:1:5512: DOUBLE
+    		// MySQL51Lexer.g3:1:5512: DOUBLE
     		{
     		DebugLocation(1, 5512);
     		mDOUBLE(); if (state.failed) return;
@@ -33992,7 +33992,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 645:
     		DebugEnterAlt(645);
-    		// ..\\MySQL51Lexer.g3:1:5519: ENUM
+    		// MySQL51Lexer.g3:1:5519: ENUM
     		{
     		DebugLocation(1, 5519);
     		mENUM(); if (state.failed) return;
@@ -34001,7 +34001,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 646:
     		DebugEnterAlt(646);
-    		// ..\\MySQL51Lexer.g3:1:5524: FLOAT
+    		// MySQL51Lexer.g3:1:5524: FLOAT
     		{
     		DebugLocation(1, 5524);
     		mFLOAT(); if (state.failed) return;
@@ -34010,7 +34010,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 647:
     		DebugEnterAlt(647);
-    		// ..\\MySQL51Lexer.g3:1:5530: INT
+    		// MySQL51Lexer.g3:1:5530: INT
     		{
     		DebugLocation(1, 5530);
     		mINT(); if (state.failed) return;
@@ -34019,7 +34019,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 648:
     		DebugEnterAlt(648);
-    		// ..\\MySQL51Lexer.g3:1:5534: INTEGER
+    		// MySQL51Lexer.g3:1:5534: INTEGER
     		{
     		DebugLocation(1, 5534);
     		mINTEGER(); if (state.failed) return;
@@ -34028,7 +34028,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 649:
     		DebugEnterAlt(649);
-    		// ..\\MySQL51Lexer.g3:1:5542: LONGBLOB
+    		// MySQL51Lexer.g3:1:5542: LONGBLOB
     		{
     		DebugLocation(1, 5542);
     		mLONGBLOB(); if (state.failed) return;
@@ -34037,7 +34037,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 650:
     		DebugEnterAlt(650);
-    		// ..\\MySQL51Lexer.g3:1:5551: LONGTEXT
+    		// MySQL51Lexer.g3:1:5551: LONGTEXT
     		{
     		DebugLocation(1, 5551);
     		mLONGTEXT(); if (state.failed) return;
@@ -34046,7 +34046,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 651:
     		DebugEnterAlt(651);
-    		// ..\\MySQL51Lexer.g3:1:5560: MEDIUMBLOB
+    		// MySQL51Lexer.g3:1:5560: MEDIUMBLOB
     		{
     		DebugLocation(1, 5560);
     		mMEDIUMBLOB(); if (state.failed) return;
@@ -34055,7 +34055,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 652:
     		DebugEnterAlt(652);
-    		// ..\\MySQL51Lexer.g3:1:5571: MEDIUMINT
+    		// MySQL51Lexer.g3:1:5571: MEDIUMINT
     		{
     		DebugLocation(1, 5571);
     		mMEDIUMINT(); if (state.failed) return;
@@ -34064,7 +34064,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 653:
     		DebugEnterAlt(653);
-    		// ..\\MySQL51Lexer.g3:1:5581: MEDIUMTEXT
+    		// MySQL51Lexer.g3:1:5581: MEDIUMTEXT
     		{
     		DebugLocation(1, 5581);
     		mMEDIUMTEXT(); if (state.failed) return;
@@ -34073,7 +34073,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 654:
     		DebugEnterAlt(654);
-    		// ..\\MySQL51Lexer.g3:1:5592: NUMERIC
+    		// MySQL51Lexer.g3:1:5592: NUMERIC
     		{
     		DebugLocation(1, 5592);
     		mNUMERIC(); if (state.failed) return;
@@ -34082,7 +34082,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 655:
     		DebugEnterAlt(655);
-    		// ..\\MySQL51Lexer.g3:1:5600: REAL
+    		// MySQL51Lexer.g3:1:5600: REAL
     		{
     		DebugLocation(1, 5600);
     		mREAL(); if (state.failed) return;
@@ -34091,7 +34091,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 656:
     		DebugEnterAlt(656);
-    		// ..\\MySQL51Lexer.g3:1:5605: SMALLINT
+    		// MySQL51Lexer.g3:1:5605: SMALLINT
     		{
     		DebugLocation(1, 5605);
     		mSMALLINT(); if (state.failed) return;
@@ -34100,7 +34100,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 657:
     		DebugEnterAlt(657);
-    		// ..\\MySQL51Lexer.g3:1:5614: TEXT
+    		// MySQL51Lexer.g3:1:5614: TEXT
     		{
     		DebugLocation(1, 5614);
     		mTEXT(); if (state.failed) return;
@@ -34109,7 +34109,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 658:
     		DebugEnterAlt(658);
-    		// ..\\MySQL51Lexer.g3:1:5619: TINYBLOB
+    		// MySQL51Lexer.g3:1:5619: TINYBLOB
     		{
     		DebugLocation(1, 5619);
     		mTINYBLOB(); if (state.failed) return;
@@ -34118,7 +34118,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 659:
     		DebugEnterAlt(659);
-    		// ..\\MySQL51Lexer.g3:1:5628: TINYINT
+    		// MySQL51Lexer.g3:1:5628: TINYINT
     		{
     		DebugLocation(1, 5628);
     		mTINYINT(); if (state.failed) return;
@@ -34127,7 +34127,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 660:
     		DebugEnterAlt(660);
-    		// ..\\MySQL51Lexer.g3:1:5636: TINYTEXT
+    		// MySQL51Lexer.g3:1:5636: TINYTEXT
     		{
     		DebugLocation(1, 5636);
     		mTINYTEXT(); if (state.failed) return;
@@ -34136,7 +34136,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 661:
     		DebugEnterAlt(661);
-    		// ..\\MySQL51Lexer.g3:1:5645: VARBINARY
+    		// MySQL51Lexer.g3:1:5645: VARBINARY
     		{
     		DebugLocation(1, 5645);
     		mVARBINARY(); if (state.failed) return;
@@ -34145,7 +34145,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 662:
     		DebugEnterAlt(662);
-    		// ..\\MySQL51Lexer.g3:1:5655: VARCHAR
+    		// MySQL51Lexer.g3:1:5655: VARCHAR
     		{
     		DebugLocation(1, 5655);
     		mVARCHAR(); if (state.failed) return;
@@ -34154,7 +34154,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 663:
     		DebugEnterAlt(663);
-    		// ..\\MySQL51Lexer.g3:1:5663: BINARY_VALUE
+    		// MySQL51Lexer.g3:1:5663: BINARY_VALUE
     		{
     		DebugLocation(1, 5663);
     		mBINARY_VALUE(); if (state.failed) return;
@@ -34163,7 +34163,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 664:
     		DebugEnterAlt(664);
-    		// ..\\MySQL51Lexer.g3:1:5676: HEXA_VALUE
+    		// MySQL51Lexer.g3:1:5676: HEXA_VALUE
     		{
     		DebugLocation(1, 5676);
     		mHEXA_VALUE(); if (state.failed) return;
@@ -34172,7 +34172,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 665:
     		DebugEnterAlt(665);
-    		// ..\\MySQL51Lexer.g3:1:5687: STRING_LEX
+    		// MySQL51Lexer.g3:1:5687: STRING_LEX
     		{
     		DebugLocation(1, 5687);
     		mSTRING_LEX(); if (state.failed) return;
@@ -34181,7 +34181,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 666:
     		DebugEnterAlt(666);
-    		// ..\\MySQL51Lexer.g3:1:5698: ID
+    		// MySQL51Lexer.g3:1:5698: ID
     		{
     		DebugLocation(1, 5698);
     		mID(); if (state.failed) return;
@@ -34190,7 +34190,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 667:
     		DebugEnterAlt(667);
-    		// ..\\MySQL51Lexer.g3:1:5701: NUMBER
+    		// MySQL51Lexer.g3:1:5701: NUMBER
     		{
     		DebugLocation(1, 5701);
     		mNUMBER(); if (state.failed) return;
@@ -34199,7 +34199,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 668:
     		DebugEnterAlt(668);
-    		// ..\\MySQL51Lexer.g3:1:5708: INT_NUMBER
+    		// MySQL51Lexer.g3:1:5708: INT_NUMBER
     		{
     		DebugLocation(1, 5708);
     		mINT_NUMBER(); if (state.failed) return;
@@ -34208,7 +34208,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 669:
     		DebugEnterAlt(669);
-    		// ..\\MySQL51Lexer.g3:1:5719: SIZE
+    		// MySQL51Lexer.g3:1:5719: SIZE
     		{
     		DebugLocation(1, 5719);
     		mSIZE(); if (state.failed) return;
@@ -34217,7 +34217,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 670:
     		DebugEnterAlt(670);
-    		// ..\\MySQL51Lexer.g3:1:5724: COMMENT_RULE
+    		// MySQL51Lexer.g3:1:5724: COMMENT_RULE
     		{
     		DebugLocation(1, 5724);
     		mCOMMENT_RULE(); if (state.failed) return;
@@ -34226,7 +34226,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 671:
     		DebugEnterAlt(671);
-    		// ..\\MySQL51Lexer.g3:1:5737: WS
+    		// MySQL51Lexer.g3:1:5737: WS
     		{
     		DebugLocation(1, 5737);
     		mWS(); if (state.failed) return;
@@ -34235,7 +34235,7 @@ public partial class MySQL51Lexer : MySQLLexerBase
     		break;
     	case 672:
     		DebugEnterAlt(672);
-    		// ..\\MySQL51Lexer.g3:1:5740: VALUE_PLACEHOLDER
+    		// MySQL51Lexer.g3:1:5740: VALUE_PLACEHOLDER
     		{
     		DebugLocation(1, 5740);
     		mVALUE_PLACEHOLDER(); if (state.failed) return;
@@ -34259,9 +34259,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("synpred4_MySQL51Lexer_fragment", 684);
     	try
     	{
-    		// ..\\MySQL51Lexer.g3:868:6: ( '\"\"' )
+    		// MySQL51Lexer.g3:868:6: ( '\"\"' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:868:7: '\"\"'
+    		// MySQL51Lexer.g3:868:7: '\"\"'
     		{
     		DebugLocation(868, 7);
     		Match("\"\""); if (state.failed) return;
@@ -34291,9 +34291,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("synpred5_MySQL51Lexer_fragment", 685);
     	try
     	{
-    		// ..\\MySQL51Lexer.g3:869:6: ( ESCAPE_SEQUENCE )
+    		// MySQL51Lexer.g3:869:6: ( ESCAPE_SEQUENCE )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:869:7: ESCAPE_SEQUENCE
+    		// MySQL51Lexer.g3:869:7: ESCAPE_SEQUENCE
     		{
     		DebugLocation(869, 7);
     		mESCAPE_SEQUENCE(); if (state.failed) return;
@@ -34322,9 +34322,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("synpred6_MySQL51Lexer_fragment", 686);
     	try
     	{
-    		// ..\\MySQL51Lexer.g3:874:6: ( '\\'\\'' )
+    		// MySQL51Lexer.g3:874:6: ( '\\'\\'' )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:874:7: '\\'\\''
+    		// MySQL51Lexer.g3:874:7: '\\'\\''
     		{
     		DebugLocation(874, 7);
     		Match("''"); if (state.failed) return;
@@ -34354,9 +34354,9 @@ public partial class MySQL51Lexer : MySQLLexerBase
     	TraceIn("synpred7_MySQL51Lexer_fragment", 687);
     	try
     	{
-    		// ..\\MySQL51Lexer.g3:875:6: ( ESCAPE_SEQUENCE )
+    		// MySQL51Lexer.g3:875:6: ( ESCAPE_SEQUENCE )
     		DebugEnterAlt(1);
-    		// ..\\MySQL51Lexer.g3:875:7: ESCAPE_SEQUENCE
+    		// MySQL51Lexer.g3:875:7: ESCAPE_SEQUENCE
     		{
     		DebugLocation(875, 7);
     		mESCAPE_SEQUENCE(); if (state.failed) return;

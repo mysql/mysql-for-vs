@@ -538,8 +538,6 @@ LIMIT 1", false);
     {
       Utility.ParseSql("SELECT a, b, c FROM t1 GROUP BY a ASC", false, new Version(8, 0, 12));
       Utility.ParseSql("SELECT a, b, c FROM t1 GROUP BY a DESC", false, new Version(8, 0, 12));
-      Utility.ParseSql("SELECT a, b, c FROM t1 GROUP BY a ASC", true, new Version(8, 0, 13));
-      Utility.ParseSql("SELECT a, b, c FROM t1 GROUP BY a DESC", true, new Version(8, 0, 13));
     }
 
     [Fact]

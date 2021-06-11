@@ -770,7 +770,7 @@ order_by
 	;
 
 order_group_by_elements
-	:	expr { this.MySqlVersion < new Version("8.0.13") }? =>
+	:	expr
 		(	asc=ASC						-> ^(DIRECTION[$asc] expr)
 		|	desc=DESC					-> ^(DIRECTION[$desc] expr)
 		|	/* implicit ASC */			-> ^(DIRECTION["ASC"] expr)
