@@ -26,8 +26,10 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
 using System.Windows;
 using System.Windows.Forms.Integration;
+using System.Windows.Threading;
 
 namespace MySql.Data.VisualStudio.DBExport
 {
@@ -36,23 +38,80 @@ namespace MySql.Data.VisualStudio.DBExport
   /// </summary>
   public partial class DbExportPanelWPF : Window
   {
+    /// <summary>
+    /// The DB Export Panel control shown in this WPF window.
+    /// </summary>
     private dbExportPanel _dbExportPanel;
 
+    /// <summary>
+    /// Timer used to refresh the scroll bars.
+    /// </summary>
+    private DispatcherTimer _dispatcherTimer;
+
+    /// <summary>
+    /// The object hosting the Winforms DB Export Panel control.
+    /// </summary>
     private WindowsFormsHost _host;
 
     public DbExportPanelWPF()
     {
       InitializeComponent();
       _dbExportPanel = new dbExportPanel();
+      _dbExportPanel.MouseEnter += _dbExportPanel_MouseEnter;
+      _dispatcherTimer = new DispatcherTimer();
+      _dispatcherTimer.Tick += new EventHandler(_dbExportPanel_MouseEnter);
+      _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+      _dispatcherTimer.Start();
     }
 
+    /// <summary>
+    /// Gets the Winforms DB Export Panel control contained in this WPF window.
+    /// </summary>
     public dbExportPanel DbExportPanel => _dbExportPanel;
 
-    private void MainGrid_Loaded(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Updates the size of the scrollviewer control based on this window size. 
+    /// </summary>
+    private void ResizeScrollViewer()
+    {
+      ScrollContainer.Width = this.Width;
+      ScrollContainer.Height = this.Height;
+    }
+
+    /// <summary>
+    /// Event handler for mouse enter events of the Winforms DB Export Panel control.
+    /// </summary>
+    /// <param name="sender">The sender object.</param>
+    /// <param name="e">The event arguments.</param>
+    private void _dbExportPanel_MouseEnter(object sender, EventArgs e)
+    {
+      ResizeScrollViewer();
+      if (_dispatcherTimer.IsEnabled)
+      {
+        _dispatcherTimer.Stop();
+      }
+    }
+
+    /// <summary>
+    /// Event handler triggered when the inner grid gets focus.
+    /// </summary>
+    /// <param name="sender">The sender object.</param>
+    /// <param name="e">The event arguments.</param>
+    private void InnerGrid_GotFocus(object sender, RoutedEventArgs e)
+    {
+      ResizeScrollViewer();
+    }
+
+    /// <summary>
+    /// Event handler triggered when the main grid container is loaded.
+    /// </summary>
+    /// <param name="sender">The sender object.</param>
+    /// <param name="e">The event arguments.</param>
+    private void InnerGrid_Loaded(object sender, RoutedEventArgs e)
     {
       _host = new WindowsFormsHost();
       _host.Child = _dbExportPanel;
-      ScrollContainer.Content = _host;
+      InnerGrid.Children.Add(_host);
     }
   }
 }

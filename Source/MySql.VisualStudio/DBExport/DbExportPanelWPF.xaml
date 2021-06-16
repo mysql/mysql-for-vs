@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MySql.Data.VisualStudio.DBExport"
         mc:Ignorable="d"
-        Title="MainWindow" Height="775" Width="1232">
-  <ScrollViewer x:Name="ScrollContainer">
-    <Grid x:Name="MainGrid" Loaded="MainGrid_Loaded" >
-    </Grid>
-  </ScrollViewer>
+        Title="MainWindow" Width="Auto" Height="Auto" >
+    <Grid x:Name="MainGrid" Width="Auto" Height="Auto" >
+      <ScrollViewer x:Name="ScrollContainer" Height="775" Width="1232" >
+      <Grid x:Name="InnerGrid" Width="Auto" Height="Auto" GotFocus="InnerGrid_GotFocus" Loaded="InnerGrid_Loaded" >
+        </Grid>
+      </ScrollViewer>
+  </Grid>
 </Window>
