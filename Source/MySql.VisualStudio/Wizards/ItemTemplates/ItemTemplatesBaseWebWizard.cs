@@ -173,6 +173,12 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       vsProj = project.Object as VSProject;
       var tables = new List<string>();
       Settings.Default.MVCWizardConnection = _connectionString;
+      if (Settings.Default.MVCWizardConnection == null)
+      {
+        SendToGeneralOutputWindow(Properties.Resources.ItemTemplatesMVCNoAction);
+        return;
+      }
+
       Settings.Default.Save();
       if (_generalPane != null)
       {

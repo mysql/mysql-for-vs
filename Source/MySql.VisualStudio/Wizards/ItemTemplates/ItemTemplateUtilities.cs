@@ -41,6 +41,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Linq;
 using VSLangProj;
 
@@ -122,6 +123,64 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     }
 
     /// <summary>
+    /// Gets the list of entities associated to the specified model.
+    /// </summary>
+    /// <param name="modelPath">The path to the model file.</param>
+    /// <returns>A list of entities found in the specified model.</returns>
+    internal static List<string> GetEntities(string modelPath)
+    {
+      var entities = new List<string>();
+      if (string.IsNullOrEmpty(modelPath))
+      {
+        return entities;
+      }
+
+      var xmlDocument = new XmlDocument();
+      try
+      {
+        xmlDocument.Load(modelPath);
+        var entityNodes = xmlDocument.GetElementsByTagName("EntityTypeShape");
+        if (entityNodes.Count == 0)
+        {
+          return entities;
+        }
+
+        foreach (XmlNode entityNode in entityNodes)
+        {
+          var attribute = entityNode.Attributes["EntityType"];
+          if (attribute == null)
+          {
+            continue;
+          }
+
+          var entityName = attribute.Value;
+          if (string.IsNullOrEmpty(entityName))
+          {
+            continue;
+          }
+
+          var dotIndex = entityName.IndexOf('.');
+          if (dotIndex != -1)
+          {
+            entities.Add(entityName.Substring(dotIndex + 1));
+          }
+          else
+          {
+            entities.Add(entityName);
+          }
+        }
+
+        return entities;
+      }
+      catch (Exception ex)
+      {
+        Logger.LogError(ex.Message);
+      }
+
+      return entities;
+    }
+
+    /// <summary>
     /// Gets the web config XML from the "edmx" file.
     /// </summary>
     /// <param name="edmxFileName">Name of the edmx file.</param>
@@ -200,11 +259,27 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     /// <param name="projectItems">The project items.</param>
     /// <param name="models">The models list to be filled.</param>
     /// <returns>A list of string with all the "edmx" that exists in the project.</returns>
-    internal static List<string> GetModels(ProjectItems projectItems, ref List<string> models)
+    internal static List<string> GetModels(ProjectItems projectItems, ref List<string> models, ref List<string> entities)
     {
       foreach (ProjectItem item in projectItems)
       {
-        if (item.get_FileNames(1).Contains(".edmx") && !item.get_FileNames(1).Contains(".edmx.diagram"))
+        if (item.Name.ToLowerInvariant().Contains(".edmx.diagram"))
+        {
+          try
+          {
+            var fullPathProperty = item.Properties.Item("FullPath");
+            var filePath = fullPathProperty.Value != null
+                             ? fullPathProperty.Value.ToString()
+                             : null;
+            entities = GetEntities(filePath);
+          }
+          catch (ArgumentException)
+          {
+            entities = new List<string>();
+          }
+        }
+
+        if (item.get_FileNames(1).ToLowerInvariant().Contains(".edmx") && !item.get_FileNames(1).ToLowerInvariant().Contains(".edmx.diagram"))
         {
           models.Add(item.Name.Replace(".edmx", ""));
         }
@@ -212,12 +287,12 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         if (item.SubProject != null)
         {
           // We navigate recursively because it can be an Enterprise project or a solution folder
-          GetModels(item.SubProject.ProjectItems, ref models);
+          GetModels(item.SubProject.ProjectItems, ref models, ref entities);
         }
         else if (item.ProjectItems.Count > 0)
         {
           // We navigate recursively because it can be a folder inside a project or a project item with nested project items (code-behind files, etc.)
-          GetModels(item.ProjectItems, ref models);
+          GetModels(item.ProjectItems, ref models, ref entities);
         }
       }
 

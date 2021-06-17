@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -47,6 +47,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
   public partial class ModelEntitySelection : UserControl
   {
     internal List<string> models = null;
+    internal List<string> _entities;
     protected BindingList<DbTables> _tables = new BindingList<DbTables>();
     internal BindingSource _sourceTables = new BindingSource();
     private BackgroundWorker _worker;
@@ -109,7 +110,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         Array activeProjects = (Array)Dte.ActiveSolutionProjects;
         Project project = (Project)activeProjects.GetValue(0);
         models = new List<string>();
-        models = ItemTemplateUtilities.GetModels(project.ProjectItems, ref models);
+        models = ItemTemplateUtilities.GetModels(project.ProjectItems, ref models, ref _entities);
 
         foreach (var model in models)
         {
@@ -244,12 +245,28 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
           this.Invoke((Action)(() =>
           {
             ComboEntities.Items.Clear();
+            if (_entities != null
+                && _entities.Count > 0)
+            {
+              foreach (string entity in _entities)
+              {
+                _tables.Add(new DbTables(false, entity));
+              }
+            }
+            else
+            {
+              for (int i = 0; i < dtTables.Rows.Count; i++)
+              {
+                if (dtTables.Rows[i].ItemArray.Length < 3)
+                {
+                  continue;
+                }
 
-            for (int i = 0; i < dtTables.Rows.Count; i++)
-              _tables.Add(new DbTables(false, dtTables.Rows[i][2].ToString()));
+                _tables.Add(new DbTables(false, dtTables.Rows[i][2].ToString()));
+              }
+            }
 
             _sourceTables.DataSource = _tables;
-
             foreach (string table in _tables.Select(t => t.Name))
             {
               ComboEntities.Items.Add(table);

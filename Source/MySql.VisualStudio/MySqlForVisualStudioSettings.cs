@@ -1,4 +1,4 @@
-﻿// Copyright © 2014, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2014, 2021, Oracle and/or its affiliates.
 //
 // MySQL for Visual Studio is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
@@ -41,6 +41,11 @@ namespace MySql.Data.VisualStudio
     {
       get
       {
+        if (MySqlDataProviderPackage.Instance == null)
+        {
+          return null;
+        }
+
         return MySqlDataProviderPackage.Instance.AppDataPath + "settings.config";
       }
     }
