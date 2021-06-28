@@ -369,17 +369,20 @@ namespace MySql.Data.VisualStudio
       }
 
       if (winFrame == null)
-        throw new Exception("Cannot create a design window for the selected object");
+      {
+        var message = Properties.Resources.DesignWindowCreationFailed;
+        if (!string.IsNullOrEmpty(MySqlProviderObjectFactory.FactoryErrorMessage))
+        {
+          var factoryMessage = MySqlProviderObjectFactory.FactoryErrorMessage.Contains(Properties.Resources.NetFrameworkDataProviderNotFound)
+                                ? Properties.Resources.ConnectorNetNotFound
+                                : MySqlProviderObjectFactory.FactoryErrorMessage;
+          message += $" Creation failed with message: {factoryMessage}";
+        }
 
-      // if our editor is a text buffer then hook up our language service
-      //if (editor is TextBufferEditor)
-      //{
-      //    // now we tell our text buffer what language service to use
-      //    Guid langSvcGuid = typeof(MySqlLanguageService).GUID;
-      //    (editor as TextBufferEditor).TextBuffer.SetLanguageServiceID(ref langSvcGuid);
-      //}
+        throw new Exception(message);
+      }
 
-       winFrame.Show();
+      winFrame.Show();
     }
 
     protected void SaveNode()

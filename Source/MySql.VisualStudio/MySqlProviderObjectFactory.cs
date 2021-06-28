@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -41,23 +41,46 @@ namespace MySql.Data.VisualStudio
   [Guid("D949EA95-EDA1-4b65-8A9E-266949A99360")]
   class MySqlProviderObjectFactory : AdoDotNetProviderObjectFactory
   {
+    /// <summary>
+    /// The provider factory object.
+    /// </summary>
     private static DbProviderFactory _factory;
+
+    /// <summary>
+    /// The error message for the exception raised when calling DbProviderFactories.GetFactory (if any).
+    /// </summary>
+    private static string _factoryErrorMessage;
 
     public MySqlProviderObjectFactory()
     {
     }
 
+    /// <summary>
+    /// Gets the error message for the exception raised when calling DbProviderFactories.GetFactory (if any).
+    /// </summary>
+    public static string FactoryErrorMessage => _factoryErrorMessage;
+
     internal static DbProviderFactory Factory
     {
       get
       {
+        _factoryErrorMessage = null;
         if (_factory != null)
         {
           return _factory;
         }
 
         // Try to get it from DbProviders table.
-        _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        try
+        {
+          _factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+        }
+        catch (ArgumentException ex)
+        {
+          _factoryErrorMessage = ex.Message;
+          throw ex;
+        }
+
         return _factory;
       }
     }

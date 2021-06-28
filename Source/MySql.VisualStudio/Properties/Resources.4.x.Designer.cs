@@ -355,6 +355,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested .NET Framework Data Provider was not found. Please confirm that Connector/NET is installed..
+        /// </summary>
+        public static string ConnectorNetNotFound {
+            get {
+                return ResourceManager.GetString("ConnectorNetNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MySQL Database.
         /// </summary>
         public static string DataSource_DisplayName {
@@ -1485,6 +1494,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Description_View_IsUpdatable {
             get {
                 return ResourceManager.GetString("Description_View_IsUpdatable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create a design window for the selected object..
+        /// </summary>
+        public static string DesignWindowCreationFailed {
+            get {
+                return ResourceManager.GetString("DesignWindowCreationFailed", resourceCulture);
             }
         }
         
@@ -2917,6 +2935,15 @@ namespace MySql.Data.VisualStudio.Properties {
             get {
                 object obj = ResourceManager.GetObject("MySQLforVisualStudio_Warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find the requested .Net Framework Data Provider.  It may not be installed..
+        /// </summary>
+        public static string NetFrameworkDataProviderNotFound {
+            get {
+                return ResourceManager.GetString("NetFrameworkDataProviderNotFound", resourceCulture);
             }
         }
         
