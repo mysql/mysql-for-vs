@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -37,25 +37,49 @@ using System.Data.Common;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Properties;
 using MySql.Utility.Classes.Logging;
+using MySql.Utility.Forms;
+using MySql.Utility.Classes.VisualStyles;
 
 namespace MySql.Data.VisualStudio
 {
   public partial class ConnectDialog : Form
   {
-    private int bigSize = 522;
-    private int smallSize = 340;
-    private DbProviderFactory factory;
-    private DbConnectionStringBuilder connectionStringBuilder;
-    private bool populated = false;
+    #region Constants
+
+    private const int BIG_SIZE = 522;
+
+    private const int SMALL_SIZE = 340;
+
+    #endregion
+
+    #region Fields
+
+    /// <summary>
+    /// Flag to indicate if the advanced view is currently visible.
+    /// </summary>
+    private bool _advancedViewEnabled;
+
+    private DbConnectionStringBuilder _connectionStringBuilder;
+
+    private DbProviderFactory _factory;
+
+    private bool _populated = false;
+
+    #endregion
 
     public ConnectDialog()
     {
       InitializeComponent();
-      factory = MySqlClientFactory.Instance;
-      if (factory == null)
+      HandleDpiSizeConversions = true;
+      _advancedViewEnabled = false;
+      _factory = MySqlClientFactory.Instance;
+      if (_factory == null)
+      {
         throw new Exception("MySql Data Provider is not correctly registered");
-      connectionStringBuilder = factory.CreateConnectionStringBuilder();
-      connectionProperties.SelectedObject = connectionStringBuilder;
+      }
+
+      _connectionStringBuilder = _factory.CreateConnectionStringBuilder();
+      connectionProperties.SelectedObject = _connectionStringBuilder;
       btnRefresh.Click += btnRefresh_Click;
       txtPort.Leave += txtPort_Leave;
     }
@@ -75,34 +99,38 @@ namespace MySql.Data.VisualStudio
         userId.Text = settings.UserID;
         password.Text = settings.Password;
         database.Text = settings.Database;
-        connectionStringBuilder["Port"] = txtPort.Text = settings.Port.ToString();        
-        ReadFields();        
-      }    
+        _connectionStringBuilder["Port"] = txtPort.Text = settings.Port.ToString();
+        ReadFields();
+      }
     }
-    
+
     public DbConnection Connection
     {
       get
       {
-        return GetConnection(false);       
+        return GetConnection(false);
       }
       set
       {
         if (value != null)
         {
-          connectionStringBuilder.ConnectionString = value.ConnectionString;
+          _connectionStringBuilder.ConnectionString = value.ConnectionString;
           Rebind();
         }
       }
     }
 
+    public bool HandleDpiSizeConversions { get; set; }
+
     private void advancedButton_Click(object sender, EventArgs e)
     {
       this.SuspendLayout();
-      if (this.Size.Height > 400)
+      if (_advancedViewEnabled)
       {
         advancedButton.Text = "Advanced >>";
-        Height = smallSize;
+        Height = HandleDpiSizeConversions
+          ? (int) (SMALL_SIZE * this.GetDpiScaleY())
+          : SMALL_SIZE;
         simplePanel.Visible = true;
         connectionProperties.Visible = false;
         Rebind();
@@ -110,60 +138,72 @@ namespace MySql.Data.VisualStudio
       else
       {
         advancedButton.Text = "Simple <<";
-        Height = bigSize;
+        Height = HandleDpiSizeConversions
+          ? (int) (BIG_SIZE * this.GetDpiScaleY())
+          : BIG_SIZE;
         simplePanel.Visible = false;
         connectionProperties.Visible = true;
       }
+
+      _advancedViewEnabled = !_advancedViewEnabled;
       this.ResumeLayout();
     }
 
     private void Rebind()
     {
-      serverName.Text = connectionStringBuilder["server"] as string;
-      userId.Text = connectionStringBuilder["userid"] as string;
-      password.Text = connectionStringBuilder["password"] as string;
-      database.Text = connectionStringBuilder["database"] as string;
-      
+      serverName.Text = _connectionStringBuilder["server"] as string;
+      userId.Text = _connectionStringBuilder["userid"] as string;
+      password.Text = _connectionStringBuilder["password"] as string;
+      database.Text = _connectionStringBuilder["database"] as string;
+
       int port = 0;
-      if (connectionStringBuilder["port"] != null)
-         int.TryParse(connectionStringBuilder["port"].ToString(), out port);
+      if (_connectionStringBuilder["port"] != null)
+      {
+        int.TryParse(_connectionStringBuilder["port"].ToString(), out port);
+      }
       else
+      {
         port = 3306;
+      }
+
       txtPort.Text = port.ToString();
- 
     }
 
     private void database_DropDown(object sender, EventArgs e)
     {
-      if (populated) return;
+      if (_populated)
+      {
+        return;
+      }
+
       database.Items.Add("Loading databases...");
       GetDatabases();
     }
 
     private void serverName_Leave(object sender, EventArgs e)
     {
-      connectionStringBuilder["server"] = serverName.Text.Trim();
+      _connectionStringBuilder["server"] = serverName.Text.Trim();
     }
 
     private void userId_Leave(object sender, EventArgs e)
     {
-      connectionStringBuilder["userid"] = userId.Text.Trim();         
+      _connectionStringBuilder["userid"] = userId.Text.Trim();
     }
 
     private void password_Leave(object sender, EventArgs e)
     {
-      connectionStringBuilder["password"] = password.Text.Trim();      
+      _connectionStringBuilder["password"] = password.Text.Trim();
     }
 
     private void database_Leave(object sender, EventArgs e)
     {
-      connectionStringBuilder["database"] = database.Text.Trim();
+      _connectionStringBuilder["database"] = database.Text.Trim();
     }
 
     private void txtPort_Leave(object sender, EventArgs e)
     {
       int port;
-      connectionStringBuilder["Port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
+      _connectionStringBuilder["Port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
     }
 
     private void GetDatabases()
@@ -172,9 +212,9 @@ namespace MySql.Data.VisualStudio
       {
         ReadFields();
         
-        using (DbConnection c = factory.CreateConnection())
+        using (DbConnection c = _factory.CreateConnection())
         {
-          c.ConnectionString = connectionStringBuilder.ConnectionString;
+          c.ConnectionString = _connectionStringBuilder.ConnectionString;
           c.Open();
           DbCommand cmd = c.CreateCommand();
           cmd.CommandText = "SHOW DATABASES";
@@ -190,40 +230,41 @@ namespace MySql.Data.VisualStudio
             }
           }
         }
-        populated = true;
+
+        _populated = true;
       }
       catch (MySqlException ex)
       {
         Logger.LogError(ex.Message, true);
-      }      
+      }
     }
 
     private void connectButton_Click(object sender, EventArgs e)
     {
       int port;
       // Ensure all data is populated into the connection string builder.
-      connectionStringBuilder["server"] = serverName.Text.Trim() == string.Empty ? "localhost" : serverName.Text.Trim();
-      connectionStringBuilder["userid"] = userId.Text.Trim() == string.Empty ? "root" : userId.Text.Trim();
-      connectionStringBuilder["database"] = database.Text.Trim() == string.Empty ? "test" : database.Text.Trim();
-      connectionStringBuilder["port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
+      _connectionStringBuilder["server"] = serverName.Text.Trim() == string.Empty ? "localhost" : serverName.Text.Trim();
+      _connectionStringBuilder["userid"] = userId.Text.Trim() == string.Empty ? "root" : userId.Text.Trim();
+      _connectionStringBuilder["database"] = database.Text.Trim() == string.Empty ? "test" : database.Text.Trim();
+      _connectionStringBuilder["port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
       password_Leave(serverName, EventArgs.Empty);
-      
-      if (!populated)
+
+      if (!_populated)
        GetConnection(true);
     }
 
     private void ReadFields()
     {
       int port;
-      connectionStringBuilder["server"] = serverName.Text.Trim();
-      connectionStringBuilder["userid"] = userId.Text.Trim();
-      connectionStringBuilder["password"] = password.Text.Trim();
-      connectionStringBuilder["database"] = database.Text.Trim();
-      connectionStringBuilder["port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
+      _connectionStringBuilder["server"] = serverName.Text.Trim();
+      _connectionStringBuilder["userid"] = userId.Text.Trim();
+      _connectionStringBuilder["password"] = password.Text.Trim();
+      _connectionStringBuilder["database"] = database.Text.Trim();
+      _connectionStringBuilder["port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
     }
 
     private bool AttemptToCreateDatabase(string connectionString)
-    {           
+    {
       try
       {
         using (MySqlConnectionSupport conn = new MySqlConnectionSupport())
@@ -240,7 +281,7 @@ namespace MySql.Data.VisualStudio
       catch (Exception)
       {
         Logger.LogError(string.Format(Properties.Resources.ErrorAttemptingToCreateDB, database.Text), true);
-        return false;    
+        return false;
       }
     }
 
@@ -248,7 +289,7 @@ namespace MySql.Data.VisualStudio
     {
       if ((this.ActiveControl == database) && (keyData == Keys.Return))
       {
-        connectionStringBuilder["database"] = database.Text.Trim();
+        _connectionStringBuilder["database"] = database.Text.Trim();
         try
         {
           var c = GetConnection(true);
@@ -257,17 +298,17 @@ namespace MySql.Data.VisualStudio
         }
         catch (MySqlException mysqlexception)
         {
-          Logger.LogError(mysqlexception.Message, true);          
+          Logger.LogError(mysqlexception.Message, true);
           return false;
         }        
       }           
-      return base.ProcessCmdKey(ref msg, keyData);  
+      return base.ProcessCmdKey(ref msg, keyData);
     }
 
      private DbConnection GetConnection(bool askToCreate)
      {
-       DbConnection c = factory.CreateConnection();
-       c.ConnectionString = connectionStringBuilder.ConnectionString;
+       DbConnection c = _factory.CreateConnection();
+       c.ConnectionString = _connectionStringBuilder.ConnectionString;
        try
         {
            c.Open();         
@@ -318,12 +359,13 @@ namespace MySql.Data.VisualStudio
             throw;
           }
         }
+
        return c;
      }
 
      private void btnRefresh_Click(object sender, EventArgs e)
      {
        GetDatabases();
-     }    
+     }
   }
 }
