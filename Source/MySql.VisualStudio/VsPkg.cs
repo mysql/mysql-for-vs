@@ -404,6 +404,7 @@ namespace MySql.Data.VisualStudio
       InfoDialog.InformationLogo = Properties.Resources.MySQLforVisualStudio;
       PasswordDialog.ApplicationIcon = Properties.Resources.__TemplateIcon;
       PasswordDialog.SecurityLogo = Properties.Resources.MySQLforVisualStudio_Security;
+      AutoStyleableBaseForm.HandleDpiSizeConversions = true;
     }
 
     /// <summary>
