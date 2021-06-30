@@ -247,10 +247,13 @@ namespace MySql.Data.VisualStudio
       _connectionStringBuilder["userid"] = userId.Text.Trim() == string.Empty ? "root" : userId.Text.Trim();
       _connectionStringBuilder["database"] = database.Text.Trim() == string.Empty ? "test" : database.Text.Trim();
       _connectionStringBuilder["port"] = !int.TryParse(txtPort.Text, out port) ? 3306 : port;
+      _connectionStringBuilder["persistsecurityinfo"] = true;
       password_Leave(serverName, EventArgs.Empty);
 
       if (!_populated)
-       GetConnection(true);
+      {
+        GetConnection(true);
+      }
     }
 
     private void ReadFields()
