@@ -79,8 +79,8 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     private string T4Templates_Path = @"..\IDE\Extensions\Oracle\MySQL for Visual Studio\";
     private string cSharpControllerClass_FileName = @"\T4Templates\CSharp\CSharpControllerClass.tt";
     private string cSharpIndexFile_FileName = @"\T4Templates\CSharp\CSharpIndexFile.tt";
-    private string vbControllerClass_FileName = @"\T4Templates\CSharp\VisualBasicControllerClass.tt";
-    private string vbIndexFile_FileName = @"\T4Templates\CSharp\VisualBasicIndexFile.tt";
+    private string vbControllerClass_FileName = @"\T4Templates\VisualBasic\VisualBasicControllerClass.tt";
+    private string vbIndexFile_FileName = @"\T4Templates\VisualBasic\VisualBasicIndexFile.tt";
     #endregion
 
     #region [ IWIzard implementaion ]

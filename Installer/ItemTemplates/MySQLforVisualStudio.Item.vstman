@@ -31,7 +31,7 @@
     </VSTemplateHeader>
   </VSTemplateContainer>
   <VSTemplateContainer TemplateType="Item">
-    <RelativePathOnDisk>Visual Basic\MySQL\VBWeb_ItemTemplate.zip</RelativePathOnDisk>
+    <RelativePathOnDisk>VisualBasic\MySQL\VBWeb_ItemTemplate.zip</RelativePathOnDisk>
     <TemplateFileName>MySQL_Web_VB_ItemTemplate.vstemplate</TemplateFileName>
     <VSTemplateHeader>
       <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
@@ -47,7 +47,7 @@
     </VSTemplateHeader>
   </VSTemplateContainer>
   <VSTemplateContainer TemplateType="Item">
-    <RelativePathOnDisk>Visual Basic\MySQL\VBWinform_ItemTemplate.zip</RelativePathOnDisk>
+    <RelativePathOnDisk>VisualBasic\MySQL\VBWinform_ItemTemplate.zip</RelativePathOnDisk>
     <TemplateFileName>MySQL_WinForm_VB_ItemTemplate.vstemplate</TemplateFileName>
     <VSTemplateHeader>
       <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
