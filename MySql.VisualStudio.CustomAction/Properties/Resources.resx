@@ -240,4 +240,7 @@
   <data name="RegistryKeyDeleteSkipped" xml:space="preserve">
     <value>Skipped deletion of the '{0}' registry key since it was not created during the installation of MySQL for Visual Studio.</value>
   </data>
+  <data name="PkgdefFileUpdateNotRequired" xml:space="preserve">
+    <value>Updating the PKGDEF file is not required.</value>
+  </data>
 </root>

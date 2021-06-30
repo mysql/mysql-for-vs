@@ -1047,30 +1047,37 @@ namespace MySql.VisualStudio.CustomAction
       }
 
       string visualStudioInstallationPath = null;
+      SupportedVisualStudioVersions visualStudioVersion;
       switch (feature)
       {
         case VS2017_COMMUNITY_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2017ComPath"];
+          visualStudioVersion = SupportedVisualStudioVersions.Vs2017Community;
           break;
 
         case VS2017_ENTERPRISE_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2017EntPath"];
+          visualStudioVersion = SupportedVisualStudioVersions.Vs2017Enterprise;
           break;
 
         case VS2017_PROFESSIONAL_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2017ProPath"];
+          visualStudioVersion = SupportedVisualStudioVersions.Vs2017Professional;
           break;
 
         case VS2019_COMMUNITY_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2019ComPath"];
+          visualStudioVersion = SupportedVisualStudioVersions.Vs2019Community;
           break;
 
         case VS2019_ENTERPRISE_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2019EntPath"];
+          visualStudioVersion = SupportedVisualStudioVersions.Vs2019Enterprise;
           break;
 
         case VS2019_PROFESSIONAL_INSTALL_FEATURE:
           visualStudioInstallationPath = session.CustomActionData["VS2019ProPath"];
+          visualStudioVersion = SupportedVisualStudioVersions.Vs2019Professional;
           break;
 
         default:
@@ -1081,7 +1088,7 @@ namespace MySql.VisualStudio.CustomAction
       if (!string.IsNullOrEmpty(visualStudioInstallationPath))
       {
         session.Log(string.Format(Resources.ProductInstallationPath, "Visual Studio", visualStudioInstallationPath));
-        if (UpdatePkgdefFile(visualStudioInstallationPath, new Version(mysqlForVisualStudioVersion), installedMySqlDataVersion, internalMySqlDataVersion, out var logMessage, Encoding.Unicode))
+        if (UpdatePkgdefFile(visualStudioVersion, visualStudioInstallationPath, new Version(mysqlForVisualStudioVersion), installedMySqlDataVersion, internalMySqlDataVersion, out var logMessage, Encoding.Unicode))
         {
           session.Log(logMessage);
         }
@@ -1102,13 +1109,22 @@ namespace MySql.VisualStudio.CustomAction
     /// <summary>
     /// Updated the PKGDEF file located in the MySQL for Visual Studio extensions folder for the specified Visual Studio version.
     /// </summary>
+    /// <param name="visualStudioVersion">The Visual Studio installation to check.</param>
     /// <param name="visualStudioInstallationPath">The installation path for the Visual Studio version where the PKGDEF file exists.</param>
-    /// <param name="mysqlForVisualStudioVersion">The version number of MySQL for Visual Studio.</param>
+    /// <param name="mySqlForVisualStudioVersion">The version number of MySQL for Visual Studio.</param>
     /// <param name="installedMySqlDataVersion">The version number of the MySql.Data library found in the Connector/NET installation.</param>
+    /// <param name="logData">The log message to display.</param>
     /// <param name="internalMySqlDataVersion">The version number of the MySql.Data included in this MySQL for Visual Studio installlation.</param>
     /// <param name="encoding">The encoding to use when updating the PKGDEF file.</param>
     /// <returns></returns>
-    public static bool UpdatePkgdefFile(string visualStudioInstallationPath, Version mySqlForVisualStudioVersion, Version installedMySqlDataVersion, Version internalMySqlDataVersion, out string logData, Encoding encoding = null)
+    public static bool UpdatePkgdefFile(
+      SupportedVisualStudioVersions visualStudioVersion,
+      string visualStudioInstallationPath,
+      Version mySqlForVisualStudioVersion,
+      Version installedMySqlDataVersion,
+      Version internalMySqlDataVersion,
+      out string logData,
+      Encoding encoding = null)
     {
       if (string.IsNullOrEmpty(visualStudioInstallationPath) || mySqlForVisualStudioVersion == null || internalMySqlDataVersion == null)
       {
@@ -1121,6 +1137,28 @@ namespace MySql.VisualStudio.CustomAction
       if (!File.Exists(pkgdefFilePath))
       {
         logBuilder.AppendLine(Resources.MySQLForVisualStudioNotInstalledNoUpdateRequired);
+        logData = logBuilder.ToString();
+        return true;
+      }
+
+      var currentFileStatus = GetPkgdefFileStatus(visualStudioVersion, mySqlForVisualStudioVersion);
+      var expectedFileStatus = PkgdefFileStatus.Unknown;
+      if (installedMySqlDataVersion == null)
+      {
+        expectedFileStatus = PkgdefFileStatus.NoBindingRedirectEntries;
+      }
+      else if (installedMySqlDataVersion < internalMySqlDataVersion)
+      {
+        expectedFileStatus = PkgdefFileStatus.RedirectFromOlderToInternalMySqlDataEntry;
+      }
+      else if (installedMySqlDataVersion > internalMySqlDataVersion)
+      {
+        expectedFileStatus = PkgdefFileStatus.RedirectFromInternalToInstalledMySqlDataEntry;
+      }
+
+      if (currentFileStatus == expectedFileStatus)
+      {
+        logBuilder.AppendLine(Resources.PkgdefFileUpdateNotRequired);
         logData = logBuilder.ToString();
         return true;
       }
@@ -1278,9 +1316,9 @@ namespace MySql.VisualStudio.CustomAction
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Community, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Enterprise, mysqlForVisualStudioVersion)));
       list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2017Professional, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Community, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Enterprise, mysqlForVisualStudioVersion)));
-      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2017Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Professional, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2019Community, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Community, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2019Enterprise, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Enterprise, mysqlForVisualStudioVersion)));
+      list.Add(new Tuple<SupportedVisualStudioVersions, PkgdefFileStatus>(SupportedVisualStudioVersions.Vs2019Professional, GetPkgdefFileStatus(SupportedVisualStudioVersions.Vs2019Professional, mysqlForVisualStudioVersion)));
 
       return list;
     }

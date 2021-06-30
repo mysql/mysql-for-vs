@@ -226,7 +226,7 @@ namespace MySql.VisualStudio.Updater
         return true;
       }
 
-      if (CustomActions.UpdatePkgdefFile(visualStudioInstallationPath, mySqlForVisualStudioVersion, _installedMySqlDataVersion, _internalMySqlDataVersion, out var logData, null))
+      if (CustomActions.UpdatePkgdefFile(visualStudioVersion, visualStudioInstallationPath, mySqlForVisualStudioVersion, _installedMySqlDataVersion, _internalMySqlDataVersion, out var logData, null))
       {
         SetStatusText(logData);
         if (logData != null && logData.Contains("Updating the PKGDEF file is not required."))

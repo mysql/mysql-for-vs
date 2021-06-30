@@ -358,6 +358,15 @@ namespace MySql.VisualStudio.CustomAction.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Updating the PKGDEF file is not required..
+        /// </summary>
+        internal static string PkgdefFileUpdateNotRequired {
+            get {
+                return ResourceManager.GetString("PkgdefFileUpdateNotRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} installation path: {1}..
         /// </summary>
         internal static string ProductInstallationPath {
