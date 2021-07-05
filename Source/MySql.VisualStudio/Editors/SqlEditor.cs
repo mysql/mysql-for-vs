@@ -43,6 +43,8 @@ using System.IO;
 using MySql.Utility.Classes.Logging;
 using MySql.Data.VisualStudio.LanguageService;
 using MySql.Data.VisualStudio.Common;
+using MySql.Utility.Classes;
+using MySql.Utility.Forms;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -205,9 +207,36 @@ namespace MySql.Data.VisualStudio.Editors
     {
       MySqlConnection con = (MySqlConnection)connection;
       MySqlCommand cmd = new MySqlCommand("select database();", con);
-      object val = cmd.ExecuteScalar();
-      if (val is DBNull) CurrentDatabase = "";
-      else CurrentDatabase = (string)val;
+      object val = null;
+      try
+      {
+        val = cmd.ExecuteScalar();
+      }
+      catch (InvalidOperationException ex)
+      {
+        if (con.State == ConnectionState.Closed)
+        {
+          var properties = new InfoDialogProperties();
+          properties.InfoType = InfoDialog.InfoType.Error;
+          properties.TitleText = Properties.Resources.ConnectionNotValid;
+          properties.DetailText = Properties.Resources.ReconnectionRequired;
+          using (var dialog = new InfoDialog(properties))
+          {
+            dialog.ShowDialog();
+          }
+        }
+
+        Logger.LogException(ex);
+      }
+      catch (Exception ex)
+      {
+        Logger.LogException(ex);
+      }
+
+      CurrentDatabase = val is DBNull
+        || val is null
+          ? string.Empty
+          : (string)val;
     }
 
     private void ExecuteSelect(string sql)

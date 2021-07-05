@@ -327,6 +327,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection must be valid or open..
+        /// </summary>
+        public static string ConnectionNotValid {
+            get {
+                return ResourceManager.GetString("ConnectionNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error establishing the database connection.
         ///Check that the server is running, the database exists, and the user credentials are valid..
         /// </summary>
@@ -3080,6 +3089,15 @@ namespace MySql.Data.VisualStudio.Properties {
         public static string Provider_ShortDisplayName {
             get {
                 return ResourceManager.GetString("Provider_ShortDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The connection may have timed out, please attempt to reconnect..
+        /// </summary>
+        public static string ReconnectionRequired {
+            get {
+                return ResourceManager.GetString("ReconnectionRequired", resourceCulture);
             }
         }
         
