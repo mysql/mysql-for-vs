@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -39,7 +39,7 @@ using MySql.Data.VisualStudio;
 using MySql.Data.MySqlClient;
 using EnvDTE;
 using MySql.Data.VisualStudio.DBExport;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
@@ -159,7 +159,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       var cnn = new MySqlConnection(connectionString);
       try
       {
-        cnn.Open();
+        cnn.OpenWithDefaultTimeout();
         cnn.Close();
       }
       catch { return false; }

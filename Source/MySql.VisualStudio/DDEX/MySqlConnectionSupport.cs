@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -32,9 +32,11 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio
 {
@@ -110,6 +112,7 @@ namespace MySql.Data.VisualStudio
           connection.Open();
         }
 
+        Utilities.UpdateWaitTimeout(connection);
         if (connection.IsPasswordExpired)
         {
           MySqlNewPasswordDialog newPasswordDialog = new MySqlNewPasswordDialog(connection);
@@ -131,7 +134,12 @@ namespace MySql.Data.VisualStudio
             if (connString != null)
             {
               base.Connection.ConnectionString = connString;
-              base.Connection.Open();
+              var connection = base.Connection as DbConnection;
+              if (connection != null)
+              {
+                connection.OpenWithDefaultTimeout();
+              }
+
               return true;
             }
           }

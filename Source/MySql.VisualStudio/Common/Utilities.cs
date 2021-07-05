@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,9 +26,12 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using MySql.Data.MySqlClient;
 using MySql.Utility.Classes;
+using MySql.Utility.Classes.Logging;
 using MySql.Utility.Forms;
 using System;
+using System.Data;
 using System.Text;
 using static MySql.Utility.Forms.InfoDialog;
 
@@ -39,6 +42,15 @@ namespace MySql.Data.VisualStudio.Common
   /// </summary>
   public static class Utilities
   {
+    #region Constants
+
+    /// <summary>
+    /// The default WAIT_TIMEOUT for server connections.
+    /// </summary>
+    private const int DEFAULT_SERVER_WAIT_TIMEOUT = 28800;
+
+    #endregion
+
     /// <summary>
     /// Gets a string containing all nested <see cref="InnerException"/> messages.
     /// </summary>
@@ -109,6 +121,38 @@ namespace MySql.Data.VisualStudio.Common
       dialog.Button1Text = button1Text;
       dialog.Button2Text = button2Text;
       return dialog;
+    }
+
+    /// <summary>
+    /// Set the WAIT_TIMEOUT server variable to its default if the value is lower than the default.
+    /// </summary>
+    /// <param name="connection">The connection used to access the server.</param>
+    public static void UpdateWaitTimeout(MySqlConnection connection)
+    {
+      if (connection == null
+          || connection.State != ConnectionState.Open)
+      {
+        return;
+      }
+
+      try
+      {
+        var sqlCommand = "SELECT @@SESSION.wait_timeout";
+        var command = new MySqlCommand(sqlCommand, connection);
+        var result = command.ExecuteScalar();
+        var waitTimeout = Convert.ToInt32(result.ToString());
+        if (waitTimeout < DEFAULT_SERVER_WAIT_TIMEOUT)
+        {
+          sqlCommand = $"SET SESSION wait_timeout={DEFAULT_SERVER_WAIT_TIMEOUT}";
+          command.CommandText = sqlCommand;
+          command.ExecuteNonQuery();
+        }
+      }
+      catch (Exception ex)
+      {
+        Logger.LogWarning(ex.Message);
+        return;
+      }
     }
   }
 }

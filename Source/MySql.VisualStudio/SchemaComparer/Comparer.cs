@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2016, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -33,7 +33,7 @@ using System.Text;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.Common;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {
@@ -367,7 +367,9 @@ where kcu.table_schema = '{0}'", con.Database);
     private void EnsureOpenedConnection(MySqlConnection con)
     {
       if ((con.State & ConnectionState.Open) == 0)
-        con.Open();
+      {
+        con.OpenWithDefaultTimeout();
+      }
     }
 
     /// <summary>

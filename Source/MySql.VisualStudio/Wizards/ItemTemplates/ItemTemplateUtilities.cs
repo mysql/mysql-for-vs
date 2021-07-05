@@ -28,6 +28,7 @@
 
 using EnvDTE;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Common;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Utility.Classes.Logging;
 using System;
@@ -352,7 +353,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
                                   (select `constraint_name` from information_schema.referential_constraints where `constraint_schema` = '{0}' and `table_name` = '{1}')", con.Database, tableName);
       if ((con.State & ConnectionState.Open) == 0)
       {
-        con.Open();
+        con.OpenWithDefaultTimeout();
       }
 
       Dictionary<string, ForeignKeyColumnInfo> FKs = new Dictionary<string, ForeignKeyColumnInfo>();
@@ -476,7 +477,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
       Dictionary<string, T> dic = new Dictionary<string, T>();
       if (connection != null && (connection.State & ConnectionState.Open) == 0)
       {
-        connection.Open();
+        connection.OpenWithDefaultTimeout();
       }
 
       try

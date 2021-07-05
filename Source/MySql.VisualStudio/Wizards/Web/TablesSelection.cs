@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -37,6 +37,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.Wizards;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.Web
 {
@@ -104,7 +105,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         {          
           Application.DoEvents();          
           var cnn = new MySqlConnection(connectionString);
-          cnn.Open();
+          cnn.OpenWithDefaultTimeout();
           var dtTables = cnn.GetSchema("Tables", new string[] { null, cnn.Database });
           cnn.Close();
           _tables = new BindingList<DbTables>();
@@ -193,7 +194,7 @@ namespace MySql.Data.VisualStudio.Wizards.Web
         var cnn = new MySqlConnection(_wiz.ConnectionString);
         try
         {
-          cnn.Open();
+          cnn.OpenWithDefaultTimeout();
         }
         catch (Exception)
         {

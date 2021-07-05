@@ -41,6 +41,7 @@ using MySql.Data.VisualStudio.DBExport;
 using VSLangProj;
 using System.Xml.Linq;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 {
@@ -237,7 +238,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
         {
           Application.DoEvents();
           var cnn = new MySqlConnection(providerConnectionString);
-          cnn.Open();
+          cnn.OpenWithDefaultTimeout();
           var dtTables = cnn.GetSchema("Tables", new string[] { null, cnn.Database });
           cnn.Close();
           _tables = new BindingList<DbTables>();

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -47,6 +47,7 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio
 {
@@ -189,7 +190,10 @@ namespace MySql.Data.VisualStudio
         {
           cmd.Connection = MySqlProviderObjectFactory.Factory.CreateConnection();
           cmd.Connection.ConnectionString = conn.ConnectionString;
-          if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
+          if (cmd.Connection.State != ConnectionState.Open)
+          {
+            cmd.Connection.OpenWithDefaultTimeout();
+          }
         }
 
         cmd.CommandText = sql;

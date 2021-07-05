@@ -40,7 +40,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.VisualStudio.Wizards.WindowsForms;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
@@ -237,7 +237,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 from information_schema.key_column_usage where `constraint_name` = '{0}' and table_schema = '{1}'";
 
       MySqlConnection con = new MySqlConnection(ConnectionStringWithPassword);
-      con.Open();
+      con.OpenWithDefaultTimeout();
       sql = string.Format(sql, ConstraintName, con.Database);
       MySqlCommand cmd = new MySqlCommand(sql, con);
 

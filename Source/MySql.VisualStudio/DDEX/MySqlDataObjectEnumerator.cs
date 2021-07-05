@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -31,7 +31,6 @@
  */
 using System;
 using System.Data;
-using System.Diagnostics;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using System.Data.Common;
@@ -79,11 +78,18 @@ namespace MySql.Data.VisualStudio
         object[] items, object[] restrictions, string sort, object[] parameters)
     {
       if (typeName == null)
+      {
         throw new ArgumentNullException("typeName");
+      }
 
-      if (typeName == String.Empty)
+      if (typeName == string.Empty)
+      {
         return EnumerateRoot();
-      else return EnumerateSchemaObjects(parameters[0] as string, restrictions);
+      }
+      else
+      {
+        return EnumerateSchemaObjects(parameters[0] as string, restrictions);
+      }
     }
 
     private DataReader EnumerateRoot()
@@ -122,17 +128,26 @@ namespace MySql.Data.VisualStudio
           foreach (object o in restrictions)
           {
             if (o is DBNull)
+            {
               rest[i++] = "";
+            }
             else
+            {
               rest[i++] = (string)o;
+            }
           }
           tables = conn.GetSchema(typeName, rest);
         }
         else
+        {
           tables = conn.GetSchema(typeName);
+        }
 
         foreach (DataRow row in tables.Rows)
+        {
           row["TABLE_CATALOG"] = DBNull.Value;
+        }
+
         return new AdoDotNetDataTableReader(tables);
       }
       finally
@@ -140,68 +155,5 @@ namespace MySql.Data.VisualStudio
         Connection.UnlockProviderObject();
       }
     }
-
-    /*
-                // Chose restricitions array
-                object[] appliedRestrictions;
-                if (typeName.Equals(RootDescriptor.TypeName, StringComparison.InvariantCultureIgnoreCase))
-                {
-
-                    appliedRestrictions = new object[] { 
-                                            ConnectionWrapper.ServerName, 
-                                            ConnectionWrapper.Schema 
-                                            };
-                }
-                else
-                {
-                    appliedRestrictions = restrictions;
-                }
-
-                DataTable table;
-                try
-                {
-                    // Enumerate objects into table
-                    table = ObjectDescriptor.EnumerateObjects(ConnectionWrapper, typeName, appliedRestrictions, sort);
-                }
-                catch (DbException e)
-                {
-                    SqlErrorDialog.ShowError(e, ConnectionWrapper.GetFullStatus());
-                    throw;
-                }
-                catch (Exception e)
-                {
-                    UIHelper.ShowError(e);
-                    throw;
-                }
-
-                // Validate table
-                if (table == null)
-                {
-                    Debug.Fail("Failed to enumerate objects of type '" + typeName + "'!");
-                    return null;
-                }
-
-                // Enumerete objects in to DataReader
-                return new AdoDotNetDataTableReader(table);*/
-
-    #region Connection wrapper
-    /// <summary>
-    /// Returns wrapper for the underlying connection. Creates it at the first call.
-    /// </summary>
-    /*        private DataConnectionWrapper ConnectionWrapper
-            {
-                get
-                {
-                    if (connectionWrapperRef == null)                
-                        connectionWrapperRef = new DataConnectionWrapper(Connection);
-                    return connectionWrapperRef;
-                }
-            }
-            /// <summary>
-            /// Used to stroe connection wrapper.
-            /// </summary>
-            private DataConnectionWrapper connectionWrapperRef;*/
-    #endregion
-
   }
 }

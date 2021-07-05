@@ -441,6 +441,7 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="Common\ConnectionExtensions.cs" />
     <Compile Include="DBExport\DbExportPanelWPF.xaml.cs">
       <DependentUpon>DbExportPanelWPF.xaml</DependentUpon>
     </Compile>

@@ -47,6 +47,7 @@ using MySql.Data.VisualStudio.Editors;
 using Microsoft.VisualStudio.Shell;
 using MySql.Data.MySqlClient;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio
 {
@@ -90,7 +91,7 @@ namespace MySql.Data.VisualStudio
       var connStringBuilder = ((MySqlConnectionStringBuilder)con.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(con, null));
       connStringBuilder.AllowUserVariables = true;
       _con = new MySqlConnection(connStringBuilder.ConnectionString);     
-      _con.Open();
+      _con.OpenWithDefaultTimeout();
       return _con;
     }
 

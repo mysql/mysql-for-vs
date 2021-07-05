@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -33,7 +33,7 @@ using System.Text;
 using Xunit;
 using MySql.Data.VisualStudio.SchemaComparer;
 using MySql.Data.MySqlClient;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.VisualStudio.Tests
 {
@@ -48,7 +48,7 @@ namespace MySql.VisualStudio.Tests
       MySqlConnection mon = new MySqlConnection("server=localhost; userid=root; database=mysql; port=3305;");
       try
       {
-        mon.Open();
+        mon.OpenWithDefaultTimeout();
         MySqlScript scr = new MySqlScript(mon);
         scr.Query = @"delimiter //
           drop database if exists DbCmp1 //
@@ -63,8 +63,8 @@ namespace MySql.VisualStudio.Tests
       }
       try
       {
-        src.Open();
-        dst.Open();
+        src.OpenWithDefaultTimeout();
+        dst.OpenWithDefaultTimeout();
         MySqlScript scrSrc = new MySqlScript( src,"delimiter // create table t1( a int, b int, d int ) //" );
         MySqlScript scrDst = new MySqlScript(dst, "delimiter // create table t1( a int, c int, d bit ) //");
         scrSrc.Execute();

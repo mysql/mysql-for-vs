@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -34,6 +34,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Data;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {
@@ -45,7 +46,7 @@ namespace MySql.Data.VisualStudio.SchemaComparer
             MySqlConnection con2 = new MySqlConnection(con.ConnectionString);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(" delimiter // ");
-            con2.Open();
+            con2.OpenWithDefaultTimeout();
             try
             {
                 // Get Stuff
@@ -65,32 +66,35 @@ namespace MySql.Data.VisualStudio.SchemaComparer
         {
 
           if (con.State != System.Data.ConnectionState.Open)
-            con.Open();
+          {
+            con.OpenWithDefaultTimeout();
+          }
           
-            MySqlCommand cmd = new MySqlCommand("show tables", con);
-            List<string> tables = new List<string>();
+          MySqlCommand cmd = new MySqlCommand("show tables", con);
+          List<string> tables = new List<string>();
 
-            using (MySqlDataReader r = cmd.ExecuteReader())
+          using (MySqlDataReader r = cmd.ExecuteReader())
+          {
+            while (r.Read())
             {
-                while (r.Read())
+              if (createScript)
+              {
+                MySqlCommand cmd2 = new MySqlCommand(string.Format("show create table `{0}`", r.GetString(0)), con2);
+                using (MySqlDataReader r2 = cmd2.ExecuteReader())
                 {
-                    if (createScript)
-                    {
-                        MySqlCommand cmd2 = new MySqlCommand(string.Format("show create table `{0}`", r.GetString(0)), con2);
-                        using (MySqlDataReader r2 = cmd2.ExecuteReader())
-                        {
-                            r2.Read();
-                            sb.AppendLine(r2.GetString(1)).AppendLine(" // ");
-                        }
-                    }
-                    else
-                    {
-                        tables.Add(r.GetString(0));
-                    }
+                  r2.Read();
+                  sb.AppendLine(r2.GetString(1)).AppendLine(" // ");
                 }
+              }
+              else
+              {
+                tables.Add(r.GetString(0));
+              }
             }
-            con.Close();
-            return tables;
+          }
+
+          con.Close();
+          return tables;
         }
 
         private static void GetProcedures(MySqlConnection con, MySqlConnection con2, StringBuilder sb)
@@ -162,7 +166,9 @@ namespace MySql.Data.VisualStudio.SchemaComparer
             return null;
 
           if (cnn.State != System.Data.ConnectionState.Open)
-            cnn.Open();
+          {
+            cnn.OpenWithDefaultTimeout();
+          }
 
           MySqlCommand cmd = new MySqlCommand("SHOW FULL TABLES IN `" + cnn.Database + "` WHERE TABLE_TYPE LIKE 'VIEW'", cnn);            
           using (MySqlDataReader reader = cmd.ExecuteReader())

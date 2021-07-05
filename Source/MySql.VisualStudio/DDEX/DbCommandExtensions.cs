@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -26,6 +26,8 @@
 // along with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Common;
 using MySql.Utility.Classes.Logging;
 using System;
 using System.Collections.Generic;
@@ -106,7 +108,9 @@ namespace MySql.Data.VisualStudio.DDEX
       try
       {
         if (cmd.Connection.State != ConnectionState.Open)
-          cmd.Connection.Open();
+        {
+          cmd.Connection.OpenWithDefaultTimeout();
+        }
 
         string sProcDefinition = string.Empty;
         var schemaName = restrictions.Length > 1 ? restrictions[1] : string.Empty;
@@ -271,7 +275,9 @@ namespace MySql.Data.VisualStudio.DDEX
       try
       {
         if (cmd.Connection.State != ConnectionState.Open)
-          cmd.Connection.Open();
+        {
+          cmd.Connection.OpenWithDefaultTimeout();
+        }
 
         CommandType originalCommandType = cmd.CommandType;
         string originalCommandText = cmd.CommandText;

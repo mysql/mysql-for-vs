@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
@@ -51,7 +51,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
     {
       DicConfig = new Dictionary<string, AdvancedWizardForm>();
       MySqlConnection con = new MySqlConnection(ConnectionString);
-      con.Open();
+      con.OpenWithDefaultTimeout();
       Wizard.Connection = con;
       foreach(DbTables t in _tables)
       {

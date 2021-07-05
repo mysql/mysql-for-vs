@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -35,6 +35,7 @@ using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using System.Data;
 using System.Data.Common;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio
 {
@@ -124,7 +125,9 @@ namespace MySql.Data.VisualStudio
     private void EnsureConnected()
     {
       if (Connection.State != DataConnectionState.Open)
-        Connection.Open();
+      {
+        Connection.OpenWithDefaultTimeout();
+      }
     }
   }
 }

@@ -47,6 +47,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards
 {
@@ -567,7 +568,10 @@ where ( c.table_schema = '{0}' ) and ( c.table_name = '{1}' );", con.Database, T
     {
       Dictionary<string, T> dic = new Dictionary<string, T>();
       if ((con.State & ConnectionState.Open) == 0)
-        con.Open();
+      {
+        con.OpenWithDefaultTimeout();
+      }
+
       try
       {
         MySqlCommand cmd = new MySqlCommand("", con);
@@ -628,7 +632,10 @@ select `constraint_name` from information_schema.referential_constraints where `
 ",
 con.Database, tableName );
       if ((con.State & ConnectionState.Open) == 0)
-        con.Open();
+      {
+        con.OpenWithDefaultTimeout();
+      }
+
       Dictionary<string,ForeignKeyColumnInfo> FKs = new Dictionary<string,ForeignKeyColumnInfo>();
       // Gather FK info per column pair
       MySqlCommand cmd = new MySqlCommand(sql, con);

@@ -1,4 +1,4 @@
-// Copyright (c) 2013, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2013, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -29,6 +29,7 @@
 using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Common;
 using MySql.Utility.Classes.Logging;
 
 namespace MySql.Data.VisualStudio
@@ -62,7 +63,7 @@ namespace MySql.Data.VisualStudio
         MySqlCommand cmd = new MySqlCommand(string.Format("SET PASSWORD = PASSWORD('{0}')", txtPassword.Text), _connection);
         cmd.ExecuteNonQuery();
         _connection.Close();
-        _connection.Open();
+        _connection.OpenWithDefaultTimeout();
         this.Close();
       }
       catch (Exception ex)

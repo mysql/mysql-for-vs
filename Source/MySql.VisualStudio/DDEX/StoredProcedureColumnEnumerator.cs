@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2015, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -32,6 +32,8 @@ using System.Data.Common;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using System.Data;
 using MySql.Data.VisualStudio.DDEX;
+using MySql.Data.VisualStudio.Common;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio
 {
@@ -47,7 +49,9 @@ namespace MySql.Data.VisualStudio
         DataTable schemaDataTable;
 
         if (conn.State != ConnectionState.Open)
-          conn.Open();
+        {
+          conn.OpenWithDefaultTimeout();
+        }
 
         DbCommand cmd = conn.CreateCommand();
         cmd.CommandType = CommandType.StoredProcedure;

@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -35,7 +35,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.SchemaComparer
 {
@@ -56,9 +56,14 @@ namespace MySql.Data.VisualStudio.SchemaComparer
     private void EnsureConnectionsOpened()
     {
       if ((SourceConnection.State & ConnectionState.Open) == 0)
-        SourceConnection.Open();
+      {
+        SourceConnection.OpenWithDefaultTimeout();
+      }
+
       if ((DestinyConnection.State & ConnectionState.Open) == 0)
-        DestinyConnection.Open();
+      {
+        DestinyConnection.OpenWithDefaultTimeout();
+      }
     }
 
     private void SchemaComparerForm_Load(object sender, EventArgs e)

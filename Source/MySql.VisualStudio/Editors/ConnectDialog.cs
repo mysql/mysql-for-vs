@@ -39,6 +39,7 @@ using MySql.Data.VisualStudio.Properties;
 using MySql.Utility.Classes.Logging;
 using MySql.Utility.Forms;
 using MySql.Utility.Classes.VisualStyles;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio
 {
@@ -215,7 +216,7 @@ namespace MySql.Data.VisualStudio
         using (DbConnection c = _factory.CreateConnection())
         {
           c.ConnectionString = _connectionStringBuilder.ConnectionString;
-          c.Open();
+          c.OpenWithDefaultTimeout();
           DbCommand cmd = c.CreateCommand();
           cmd.CommandText = "SHOW DATABASES";
           database.Items.Clear();
@@ -314,7 +315,7 @@ namespace MySql.Data.VisualStudio
        c.ConnectionString = _connectionStringBuilder.ConnectionString;
        try
         {
-           c.Open();         
+           c.OpenWithDefaultTimeout();
         }
         catch (MySqlException mysqlException)
         {
@@ -337,7 +338,7 @@ namespace MySql.Data.VisualStudio
                   {
                     if (AttemptToCreateDatabase(c.ConnectionString))
                     {
-                      c.Open();
+                      c.OpenWithDefaultTimeout();
                     }
                   }
                   catch

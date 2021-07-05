@@ -42,6 +42,7 @@ using System.Globalization;
 using System.IO;
 using MySql.Utility.Classes.Logging;
 using MySql.Data.VisualStudio.LanguageService;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -78,7 +79,10 @@ namespace MySql.Data.VisualStudio.Editors
         {
           connection = package.MysqlConnectionSelected;
           if (connection.State != ConnectionState.Open)
-            connection.Open();
+          {
+            connection.OpenWithDefaultTimeout();
+          }
+
           UpdateButtons();
         }
       }          

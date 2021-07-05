@@ -1,4 +1,4 @@
-// Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -37,7 +37,7 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio;
 using MySql.Data.MySqlClient;
-
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.WindowsForms
 {
@@ -127,7 +127,10 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
           select `constraint_name`, `table_name` from information_schema.referential_constraints 
           where `constraint_schema` = '{0}' and `referenced_table_name` = '{1}';", _con.Database, _constraintTable);
       if ((_con.State & ConnectionState.Open) == 0)
-        _con.Open();
+      {
+        _con.OpenWithDefaultTimeout();
+      }
+
       MySqlCommand cmd = new MySqlCommand(sql, _con);
       using (MySqlDataReader r = cmd.ExecuteReader())
       {
@@ -217,7 +220,7 @@ namespace MySql.Data.VisualStudio.Wizards.WindowsForms
       _tableName = wizardForm.TableName;
        lblTableName.Text = "Select form layout for table " + _tableName;
       _con = new MySqlConnection(wizardForm.ConnectionString);
-      _con.Open();
+      _con.OpenWithDefaultTimeout();
     }   
   }
 }

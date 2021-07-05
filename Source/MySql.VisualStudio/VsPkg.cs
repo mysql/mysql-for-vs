@@ -67,6 +67,9 @@ using MySql.VisualStudio.CustomAction;
 using System.Drawing;
 using System.Resources;
 using MySql.VisualStudio.CustomAction.Enums;
+using MySql.Data.VisualStudio.Wizards.ItemTemplates;
+using Microsoft.VisualStudio.TemplateWizard;
+using MySql.Data.VisualStudio.Common;
 #if NET_461_OR_GREATER
 using Microsoft.VSDesigner.ServerExplorer;
 #endif
@@ -413,7 +416,7 @@ namespace MySql.Data.VisualStudio
     /// <param name="frameworkVersion">The name of the default framework folder being used by Connector/NET.</param>
     private void SetConnectorNETInstallationPath(string frameworkVersionFolderName)
     {
-      string mySqlConnectorPath = Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
+      string mySqlConnectorPath = Utility.Classes.Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net");
       _connectorNETInstallationPath = !string.IsNullOrEmpty(mySqlConnectorPath)
                             ? string.Format(@"{0}Assemblies\{1}", mySqlConnectorPath, frameworkVersionFolderName)
                             : string.Empty;
@@ -479,7 +482,7 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
 
       // This feature can be shown only if Connector/Net is installed too.
-      if (string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
+      if (string.IsNullOrEmpty(Utility.Classes.Utilities.GetMySqlAppInstallLocation("MySQL Connector/Net")))
       {
         return;
       }
@@ -619,9 +622,9 @@ namespace MySql.Data.VisualStudio
 
     private void OpenMySQLUtilitiesCallback(object sender, EventArgs e)
     {
-      if (string.IsNullOrEmpty(Utilities.GetMySqlAppInstallLocation("MySQL Utilities")))
+      if (string.IsNullOrEmpty(Utility.Classes.Utilities.GetMySqlAppInstallLocation("MySQL Utilities")))
       {
-        var pathWorkbench = Utilities.GetMySqlAppInstallLocation("Workbench");
+        var pathWorkbench = Utility.Classes.Utilities.GetMySqlAppInstallLocation("Workbench");
         var pathUtilities = Path.Combine(pathWorkbench, "Utilities");
         if (!Directory.Exists(pathUtilities))
         {
@@ -687,7 +690,7 @@ namespace MySql.Data.VisualStudio
       IVsDataExplorerConnection con = GetConnection(conStr);
       // Get script
       MySqlConnection myCon = new MySqlConnection(con.Connection.DisplayConnectionString);
-      myCon.Open();
+      myCon.OpenWithDefaultTimeout();
       try
       {
         script = SelectObjects.GetDbScript(myCon);
@@ -873,7 +876,7 @@ namespace MySql.Data.VisualStudio
       var parameters = new ConnectionParameters();
       parameters.UserId = connectionStringBuilder.UserID;
       parameters.HostName = connectionStringBuilder.Server;
-      parameters.HostIPv4 = Utilities.GetIPv4ForHostName(connectionStringBuilder.Server);
+      parameters.HostIPv4 = Utility.Classes.Utilities.GetIPv4ForHostName(connectionStringBuilder.Server);
       parameters.Port = Convert.ToUInt32(connectionStringBuilder.Port);
       parameters.DataBaseName = connectionStringBuilder.Database;
       parameters.NamedPipesEnabled = string.IsNullOrEmpty(connectionStringBuilder.PipeName) ? false : true;
@@ -914,7 +917,8 @@ namespace MySql.Data.VisualStudio
           }
 
           // Matching connections by IP.
-          if (!Utilities.IsValidIpAddress(connection.Host) && Utilities.GetIPv4ForHostName(connection.Host) != parameters.HostIPv4)
+          if (!Utility.Classes.Utilities.IsValidIpAddress(connection.Host)
+              && Utility.Classes.Utilities.GetIPv4ForHostName(connection.Host) != parameters.HostIPv4)
           {
             continue;
           }

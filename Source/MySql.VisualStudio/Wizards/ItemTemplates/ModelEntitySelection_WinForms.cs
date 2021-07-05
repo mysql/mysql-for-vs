@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License, version 2.0, as
@@ -41,6 +41,7 @@ using MySql.Data.VisualStudio.DBExport;
 using VSLangProj;
 using System.Xml.Linq;
 using MySql.Utility.Classes.Logging;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 {
@@ -149,7 +150,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
     private List<MyListItem> GetForeignKeyConstraints()
     {
       _con = new MySqlConnection(ConnectionString);
-      _con.Open();
+      _con.OpenWithDefaultTimeout();
 
       if (SelectedEntity == _constraintTable)
       {
@@ -172,7 +173,7 @@ namespace MySql.Data.VisualStudio.Wizards.ItemTemplates
 
       if ((_con.State & ConnectionState.Open) == 0)
       {
-        _con.Open();
+        _con.OpenWithDefaultTimeout();
       }
 
       try

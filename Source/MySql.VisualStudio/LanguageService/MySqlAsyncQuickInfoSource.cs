@@ -37,6 +37,7 @@ using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Operations;
+using MySql.Data.VisualStudio.Common;
 
 namespace MySql.Data.VisualStudio.LanguageService
 {
@@ -163,7 +164,7 @@ namespace MySql.Data.VisualStudio.LanguageService
     {
       if (MySqlQuickInfoController.Connection.State != System.Data.ConnectionState.Open)
       {
-        MySqlQuickInfoController.Connection.Open();
+        MySqlQuickInfoController.Connection.OpenWithDefaultTimeout();
       }
 
       string sql = @"
