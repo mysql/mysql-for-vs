@@ -148,7 +148,8 @@ namespace MySql.Data.VisualStudio
     void ICompletionSource.AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
     {
       DbConnection connection = LanguageServiceUtil.GetConnection();
-      if( connection != null )
+      if( connection != null
+          && connection.State == ConnectionState.Open)
       {
         string database = LanguageServiceUtil.GetCurrentDatabase();
         if (string.IsNullOrEmpty(database)) database = connection.Database;
@@ -180,10 +181,18 @@ namespace MySql.Data.VisualStudio
         {
 
           m_compList = new List<Completion>();
-          DataTable schema = connection.GetSchema("Tables", new string[] { null, database });
-          schema.Merge(connection.GetSchema("Views", new string[] { null, database }));
-          string completionItem = null, completionItemUnq = null;
+          DataTable schema = null;
+          try
+          {
+            schema = connection.GetSchema("Tables", new string[] { null, database });
+            schema.Merge(connection.GetSchema("Views", new string[] { null, database }));
+          }
+          catch (MySqlException)
+          {
+            return;
+          }
 
+          string completionItem = null, completionItemUnq = null;
           foreach (DataRow row in schema.Rows)
           {
             completionItemUnq = row["TABLE_NAME"].ToString();
@@ -198,10 +207,20 @@ namespace MySql.Data.VisualStudio
             m_compList,
             null));
         }
+
         if (expectedToken == "proc_name")        
         {          
           m_compList = new List<Completion>();
-          DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS", new string[] { null, database });
+          DataTable schema = null;
+          try
+          {
+            schema = connection.GetSchema("PROCEDURES WITH PARAMETERS", new string[] { null, database });
+          }
+          catch (Exception)
+          {
+            return;
+          }
+
           DataView vi = schema.DefaultView;
           vi.Sort = "specific_name asc";
           string completionItem = null;
@@ -323,6 +342,12 @@ namespace MySql.Data.VisualStudio
 
     private List<string> GetColumns(DbConnection con, List<TableWithAlias> tables, string database)
     {
+      var columns = new List<string>();
+      if (con.State != ConnectionState.Open)
+      {
+        return columns;
+      }
+
       DbCommand cmd = con.CreateCommand();
       // information_schema.columns is available from MySql 5.0 and up.
       string sql =
@@ -332,16 +357,20 @@ namespace MySql.Data.VisualStudio
       bool hasDbExplicit;
       cmd.CommandText = BuildWhereGetColumns( database, sql, tables, out hasDbExplicit);
       Dictionary<string, List<string>> dicColumns = null;
-      DbDataReader r = cmd.ExecuteReader();
+      DbDataReader r = null;
       try
       {
+        r = cmd.ExecuteReader();
         dicColumns = BuildColumnList(r, tables.Count != 0 );
+      }
+      catch(MySqlException)
+      {
+        return columns;
       }
       finally
       {
         r.Close();
       }
-      List<string> columns = new List<string>();
       List<string> cols = new List<string>();
       if (tables.Count != 0)
       {
@@ -373,6 +402,7 @@ namespace MySql.Data.VisualStudio
           }
         }
       }
+
       return columns;
     }
 

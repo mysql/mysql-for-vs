@@ -205,7 +205,8 @@ namespace MySql.Data.VisualStudio
     internal static Version GetVersion()
     {
       DbConnection con = GetConnection();
-      if (con != null)
+      if (con != null
+          && con.State == System.Data.ConnectionState.Open)
       {
         return GetVersion(con.ServerVersion);
       }
