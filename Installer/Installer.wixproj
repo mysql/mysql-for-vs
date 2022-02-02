@@ -3,7 +3,7 @@
   <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion" />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -50,18 +50,18 @@
     <When Condition=" '$(VisualStudioVersion)' == '16.0'">
       <PropertyGroup>
         <Framework>4.7.2</Framework>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <TargetFrameworkVersion>16.0v4.7.2</TargetFrameworkVersion>
       </PropertyGroup>
     </When>
     <When Condition=" '$(VisualStudioVersion)' == '15.0'">
       <PropertyGroup>
         <Framework>4.6.1</Framework>
-        <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+        <TargetFrameworkVersion>15.0v4.6.1</TargetFrameworkVersion>
       </PropertyGroup>
     </When>
   </Choose>
   <PropertyGroup>
-    <MSBuildExe Condition=" '$(MSBuildExe)'=='' AND Exists('$(MSBuildExtensionsPath)\..\MSBuild\16.0') ">"$(MSBuildExtensionsPath)\..\MSBuild\16.0\Bin\msbuild.exe"</MSBuildExe>
+    <MSBuildExe Condition=" '$(MSBuildExe)'=='' AND Exists('$(MSBuildBinPath)') ">"$(MSBuildBinPath)\msbuild.exe"</MSBuildExe>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="core.wxs" />

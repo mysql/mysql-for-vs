@@ -28,18 +28,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
-using MySql.VisualStudio;
-using MySql.Data.VisualStudio.DBExport;
-using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.DBExport;using MySql.Data.MySqlClient;
 using System.IO;
 using System.Reflection;
 using System.IO.IsolatedStorage;
 using Microsoft.VisualStudio.Data.Services;
 using System.ComponentModel;
-
 
 namespace MySql.VisualStudio.Tests
 {

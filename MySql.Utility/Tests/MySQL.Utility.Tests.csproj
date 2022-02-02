@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9B82BEE1-6F40-4B17-AB58-54BA2CC3D915}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MySql.Utility.Tests</RootNamespace>
+    <AssemblyName>MySQL.Utility.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseX86|AnyCPU'">
+    <OutputPath>bin\ReleaseX86\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugX86|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugX86\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Source\Libraries\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BaseShell">
+      <HintPath>..\Source\Libraries\BaseShell.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MySqlWorkbench\MySqlWorkBenchTests.cs" />
+    <Compile Include="MySqlX\Base\BaseAdminAPIProperties.cs" />
+    <Compile Include="MySqlX\Base\BaseAdminAPITests.cs" />
+    <Compile Include="MySqlX\Base\BaseCollectionTests.cs" />
+    <Compile Include="MySqlX\GeneralTests.cs" />
+    <Compile Include="MySqlX\Base\BaseTableTests.cs" />
+    <Compile Include="MySqlX\Base\BaseTests.cs" />
+    <Compile Include="MySqlX\Base\CollectionTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\CollectionTestsPropertiesFactory.cs" />
+    <Compile Include="MySqlX\Base\JsCollectionTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\JsTableTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\MySqlBaseShell.cs" />
+    <Compile Include="MySqlX\Base\PyCollectionTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\PyTableTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\SetUpBaseShell.cs" />
+    <Compile Include="MySqlX\Base\TableTestsProperties.cs" />
+    <Compile Include="MySqlX\Base\TableTestsPropertiesFactory.cs" />
+    <Compile Include="MySqlX\Base\XecutorType.cs" />
+    <Compile Include="MySqlX\JsAdminAPITests.cs" />
+    <Compile Include="MySqlX\JsCollectionBaseShellTests.cs" />
+    <Compile Include="MySqlX\JsCollectionXProxyTests.cs" />
+    <Compile Include="MySqlX\JsTableXProxyTests.cs" />
+    <Compile Include="MySqlX\JsTableXShellTests.cs" />
+    <Compile Include="MySqlX\PyAdminAPITests.cs" />
+    <Compile Include="MySqlX\PyCollectionBaseShellTests.cs" />
+    <Compile Include="MySqlX\PyCollectionXProxyTests.cs" />
+    <Compile Include="MySqlX\PyGeneralXProxyTests.cs" />
+    <Compile Include="MySqlX\PyTableBaseShellTests.cs" />
+    <Compile Include="MySqlX\PyTableXProxyTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetUpDatabaseTestsBase.cs" />
+    <Compile Include="Spatial\GeometriesBinaryTests.cs" />
+    <Compile Include="Spatial\GeometriesTextTests.cs" />
+    <Compile Include="Tokenizers\TokenizerBaseTests.cs" />
+    <Compile Include="Tokenizers\JsTokenizerTests.cs" />
+    <Compile Include="Tokenizers\PyTokenizerTests.cs" />
+    <Compile Include="Tokenizers\SqlTokenizerTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySql.Utility.RegularExpressions.Tests\MySql.Utility.RegularExpressions.Tests.csproj">
+      <Project>{54ed66fe-cbd5-4b43-b457-36c3aa824814}</Project>
+      <Name>MySql.Utility.RegularExpressions.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Source\MySQL.Utility.csproj">
+      <Project>{B8A3BD3B-3CBD-48D5-84F5-076365655E0B}</Project>
+      <Name>MySQL.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\SetupBaseShell.js" />
+    <EmbeddedResource Include="Properties\SetupBaseShell.py" />
+    <EmbeddedResource Include="Properties\SetupBaseShell.sql" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>start /MIN xcopy "$(SolutionDir)Source\Libraries\*.*" "$(ProjectDir)$(OutDir)" /Y /S</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

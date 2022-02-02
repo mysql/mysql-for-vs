@@ -1,0 +1,750 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddOrEditConnectionsNotAllowed" xml:space="preserve">
+    <value>Adding or editing connections is not allowed when MySQL Workbench is running.</value>
+  </data>
+  <data name="BackButtonText" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="CancelButtonDefaultText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CloseWBAdviceToAddOrEditConnections" xml:space="preserve">
+    <value>If you want to create or edit connections, please close MySQL Workbench.</value>
+  </data>
+  <data name="ConnectionAlreadyExistsError" xml:space="preserve">
+    <value>A connection with the name "{0}" exists already. Please choose another name.</value>
+  </data>
+  <data name="ConnectionErrorDetailNoPassword" xml:space="preserve">
+    <value>Failed to connect to MySQL Server instance at {0} with user {1} and no password.</value>
+  </data>
+  <data name="ConnectionErrorDetailWithPassword" xml:space="preserve">
+    <value>Failed to connect to MySQL Server instance at {0} with user {1} and the given password.</value>
+  </data>
+  <data name="ConnectionErrorTitle" xml:space="preserve">
+    <value>Connection Error</value>
+  </data>
+  <data name="ConnectionNameRequiredError" xml:space="preserve">
+    <value>The connection name is required and cannot be empty.</value>
+  </data>
+  <data name="ConnectionsFileLoadingErrorTitle" xml:space="preserve">
+    <value>Error when loading database connections file</value>
+  </data>
+  <data name="ConnectionSuccessDetail" xml:space="preserve">
+    <value>MySql Server connection to {0} with user {1} was successful.</value>
+  </data>
+  <data name="ConnectionSuccessTitle" xml:space="preserve">
+    <value>Connection Success</value>
+  </data>
+  <data name="ErrorText" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="GenericErrorTitle" xml:space="preserve">
+    <value>An Error Ocurred</value>
+  </data>
+  <data name="HidePrefixText" xml:space="preserve">
+    <value>Hide {0}</value>
+  </data>
+  <data name="InformationText" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="MoreInfoText" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="MySQLInstallerNotInstalled" xml:space="preserve">
+    <value>Unable to find MySQL Installer.</value>
+  </data>
+  <data name="NoButtonText" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="OkButtonDefaultText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="YesButtonText" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="PressButtonText" xml:space="preserve">
+    <value>Press {0} to continue.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="SakilaLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SakilaLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShowPrefixText" xml:space="preserve">
+    <value>Show {0}</value>
+  </data>
+  <data name="SuccessText" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="WarningsText" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="WorkbenchNotInstalled" xml:space="preserve">
+    <value>Unable to find MySQL Workbench.</value>
+  </data>
+  <data name="ApplicationExceptionWithCustomMessageForLog" xml:space="preserve">
+    <value>{0}
+Thrown by: {1}.{2}
+Exception message: {3}</value>
+  </data>
+  <data name="ConnectionsFileSavingErrorTitle" xml:space="preserve">
+    <value>Unable to save database connections file</value>
+  </data>
+  <data name="ConsumerApplicationConnectionsFileDeleteErrorDetail" xml:space="preserve">
+    <value>Unable to delete {0}'s database connections file.</value>
+  </data>
+  <data name="MigrateConnectionsToWorkbenchInfoDetail" xml:space="preserve">
+    <value>Connections will be migrated to use MySQL Workbench's connections file.</value>
+  </data>
+  <data name="MigrateConnectionsToWorkbenchInfoMoreInfo" xml:space="preserve">
+    <value>{0} now works with the connections file used by MySQL Workbench if it is installed.
+
+{0} will attempt to merge all existing connections with MySQL Workbench and in order to do this MySQLWorkbench must not be running.
+
+Please make sure MySQL Workbench is closed to continue with the merging operation.
+If you choose not to migrate connections now, you will be prompted later to perform the migration.</value>
+  </data>
+  <data name="MigrateConnectionsToWorkbenchInfoTitle" xml:space="preserve">
+    <value>Database connections will be migrated</value>
+  </data>
+  <data name="UnableToMergeConnectionsErrorDetail" xml:space="preserve">
+    <value>Unable to merge existing connections with MySQL Workbench.</value>
+  </data>
+  <data name="UnableToMergeConnectionsErrorMoreInfo" xml:space="preserve">
+    <value>{0} now works with the connections file used by MySQL Workbench if it is installed.
+
+{0} attempted to merge all existing connections with MySQL Workbench but is unable to do that if MySQLWorkbench is running.
+
+Please close MySQL Workbench and restart {0} to perform the merge.</value>
+  </data>
+  <data name="CloseWBAdviceToDelete" xml:space="preserve">
+    <value>If you want to remove a connection, please close MySQL Workbench.</value>
+  </data>
+  <data name="ConnectionsMigratedDetail" xml:space="preserve">
+    <value>{0} database connections were processed for migration.</value>
+  </data>
+  <data name="ConnectionsMigratedSuccessfullyMoreInfo" xml:space="preserve">
+    <value>The following {0} connections were migrated to the MySQL Workbench connections file:</value>
+  </data>
+  <data name="ConnectionsMigrationErrorDetail" xml:space="preserve">
+    <value>Local database connections could not be migrated.</value>
+  </data>
+  <data name="ConnectionsMigrationErrorMoreInfo" xml:space="preserve">
+    <value>Database connections were not migrated because the following error ocurred:</value>
+  </data>
+  <data name="MigrateConnectionsToWorkbenchInfoSubDetail" xml:space="preserve">
+    <value>Do you want to migrate connections now?</value>
+  </data>
+  <data name="UnableToDeleteConnectionErrorDetail" xml:space="preserve">
+    <value>Unable to remove connection.</value>
+  </data>
+  <data name="UnableToDeleteConnectionsWhenWBRunning" xml:space="preserve">
+    <value>Deleting connections is not allowed while MySQL Workbench is running.</value>
+  </data>
+  <data name="WorkbenchConnectionsFileNotFoundError" xml:space="preserve">
+    <value>MySQLWorkbench connections file was not found.</value>
+  </data>
+  <data name="PasswordsFileLoadError" xml:space="preserve">
+    <value>Error loading password's vault file.</value>
+  </data>
+  <data name="PasswordsFileSaveError" xml:space="preserve">
+    <value>Error saving password's vault file.</value>
+  </data>
+  <data name="ConsumerApplicationPasswordsFileDeleteErrorDetail" xml:space="preserve">
+    <value>Unable to delete {0}'s passwords vault file.</value>
+  </data>
+  <data name="no" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\no.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="yes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\yes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ConnectionStatusBad" xml:space="preserve">
+    <value>Refusing Connections</value>
+  </data>
+  <data name="ConnectionStatusGood" xml:space="preserve">
+    <value>Accepting Connections</value>
+  </data>
+  <data name="ConnectionStatusNA" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="InvalidPrivateKeyFileDetail" xml:space="preserve">
+    <value>Private key file does not exist or is invalid.</value>
+  </data>
+  <data name="InvalidPrivateKeyFileTitle" xml:space="preserve">
+    <value>Invalid private key file</value>
+  </data>
+  <data name="GenericButton1DefaultText" xml:space="preserve">
+    <value>Button1</value>
+  </data>
+  <data name="GenericButton2DefaultText" xml:space="preserve">
+    <value>Button2</value>
+  </data>
+  <data name="GenericButton3DefaultText" xml:space="preserve">
+    <value>Button3</value>
+  </data>
+  <data name="BaseInstallerPath" xml:space="preserve">
+    <value>\MySQL\MySQL Installer</value>
+  </data>
+  <data name="CoreDllFileExtension" xml:space="preserve">
+    <value>.Core.dll</value>
+  </data>
+  <data name="ExeFileExtension" xml:space="preserve">
+    <value>.exe</value>
+  </data>
+  <data name="LegacyInstallerFilename" xml:space="preserve">
+    <value>WexInstaller</value>
+  </data>
+  <data name="NewInstallerFilename" xml:space="preserve">
+    <value>MySQLInstaller</value>
+  </data>
+  <data name="CommercialXMLFilePath" xml:space="preserve">
+    <value>C:\ProgramData\MySQL\MySQL Installer for Windows\settings-Commercial.xml</value>
+  </data>
+  <data name="CommunityXMLFilePath" xml:space="preserve">
+    <value>C:\ProgramData\MySQL\MySQL Installer for Windows\settings-Community.xml</value>
+  </data>
+  <data name="ConnectionPasswordsMigratedText" xml:space="preserve">
+    <value>Connection passwords were migrated successfully.</value>
+  </data>
+  <data name="ConnectionPasswordsNotMigratedText" xml:space="preserve">
+    <value>The following error was thrown when trying to migrate connection passwords:</value>
+  </data>
+  <data name="ConnectionsMigratedRenamedMoreInfo" xml:space="preserve">
+    <value>The following {0} connections were renamed before migrating them since Workbench connections already existed with those names:</value>
+  </data>
+  <data name="ConnectionsMigrationErrorTitle" xml:space="preserve">
+    <value>Error migrating connections.</value>
+  </data>
+  <data name="ConnectionsMigrationSuccessTitle" xml:space="preserve">
+    <value>Connections and passwords migrated successfully.</value>
+  </data>
+  <data name="ConnectionsMigrationWarningTitle" xml:space="preserve">
+    <value>Connections migrated successfully, but not passwords.</value>
+  </data>
+  <data name="ConnectionsNotMigratedMoreInfo" xml:space="preserve">
+    <value>The following {0} connections were not migrated since identical connections already existed in the Workbench connections file:</value>
+  </data>
+  <data name="SshPrivateKeyFilter" xml:space="preserve">
+    <value>Private Key Files|*.ppk|All files|*.*</value>
+  </data>
+  <data name="SshPrivateKeyTitle" xml:space="preserve">
+    <value>Select SSH private key file</value>
+  </data>
+  <data name="SslCertificateFilter" xml:space="preserve">
+    <value>Privacy Enhanced Mail|*.pem|All files|*.*</value>
+  </data>
+  <data name="SslCertificationAuthorityTitle" xml:space="preserve">
+    <value>Select SSL Certification Authority file</value>
+  </data>
+  <data name="SslClientCertificateTitle" xml:space="preserve">
+    <value>Select SSL Client Certificate file</value>
+  </data>
+  <data name="SslKeyTitle" xml:space="preserve">
+    <value>Select SSL Key file</value>
+  </data>
+  <data name="SslPfxFilter" xml:space="preserve">
+    <value>Personal Exchange Format|*.pfx|All files|*.*</value>
+  </data>
+  <data name="SslPfxTitle" xml:space="preserve">
+    <value>Select SSL PFX Certificate file</value>
+  </data>
+  <data name="InvalidPemFileDetail" xml:space="preserve">
+    <value>SSL PEM file does not exist or is invalid.</value>
+  </data>
+  <data name="InvalidPemFileTitle" xml:space="preserve">
+    <value>Invalid SSL PEM file</value>
+  </data>
+  <data name="warnings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\warnings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RepositoryFileSavingErrorDetail" xml:space="preserve">
+    <value>Unable to save repository XML file.</value>
+  </data>
+  <data name="DefaultSchemaNotRequiredHelpText" xml:space="preserve">
+    <value>The default schema, leave blank to select it later.</value>
+  </data>
+  <data name="DefaultSchemaRequiredHelpText" xml:space="preserve">
+    <value>The default schema, this field is required.</value>
+  </data>
+  <data name="SchemaValidationFailConnectionFailure" xml:space="preserve">
+    <value>Default schema can't be validated because a connection to MySQL Server instance at {0} could not be established.</value>
+  </data>
+  <data name="SchemaValidationFailNoSchemas" xml:space="preserve">
+    <value>Default schema can't be validated because the connected MySQL Server does not contain any schemas or schema information could not be retrieved.</value>
+  </data>
+  <data name="SchemaValidationFailSchemaNotFound" xml:space="preserve">
+    <value>Schema ´{0}´ does not exist in the connected MySQL Server.</value>
+  </data>
+  <data name="PasswordResetErrorDetailText" xml:space="preserve">
+    <value>An error ocurred trying to reset the password for the current user.
+Please select your MySQL connection again to retry.</value>
+  </data>
+  <data name="PasswordResetErrorTitleText" xml:space="preserve">
+    <value>Password Reset Error</value>
+  </data>
+  <data name="PasswordsMismatchErrorText" xml:space="preserve">
+    <value>The new password and its confirmation do not match. Please enter them again and make sure they match.</value>
+  </data>
+  <data name="ConnectFailedWarningTitle" xml:space="preserve">
+    <value>Connection attempt failed.</value>
+  </data>
+  <data name="ConnectSSLFailedDetailWarning" xml:space="preserve">
+    <value>A possible fail reason could be that your user requires a SSL connection that is not currently supported.
+
+Please check with the Administrator if you require a SSL Connection and if he can authorize your user to login without a SSL connection.</value>
+  </data>
+  <data name="GenericMySQLError" xml:space="preserve">
+    <value>MySQL Error {0}:{1}</value>
+  </data>
+  <data name="ConnectionPasswordLabelText" xml:space="preserve">
+    <value>Please enter the password for the connection:</value>
+  </data>
+  <data name="ConnectionPasswordWindowTitleText" xml:space="preserve">
+    <value>Connection Password</value>
+  </data>
+  <data name="ExpiredPasswordLabelText" xml:space="preserve">
+    <value>The password for the MySQL account has expired.
+Please enter a new password:</value>
+  </data>
+  <data name="ExpiredPasswordWindowTitleText" xml:space="preserve">
+    <value>Password Expired</value>
+  </data>
+  <data name="OldPasswordLabelText" xml:space="preserve">
+    <value>Old Password:</value>
+  </data>
+  <data name="PasswordLabelText" xml:space="preserve">
+    <value>Password:</value>
+  </data>
+  <data name="RepositoryFileLoadingErrorDetail" xml:space="preserve">
+    <value>Unable to load repository XML file.</value>
+  </data>
+  <data name="RepositoryFileRecreateDetail" xml:space="preserve">
+    <value>The repository XML file could not be loaded and it may be corrupt.</value>
+  </data>
+  <data name="RepositoryFileRecreateSubDetail" xml:space="preserve">
+    <value>Do you want to re-create the XML file from scratch?</value>
+  </data>
+  <data name="RepositoryFileRecreateTitle" xml:space="preserve">
+    <value>Recreate file</value>
+  </data>
+  <data name="RepositoryFileRecreatingErrorDetail" xml:space="preserve">
+    <value>Unable to re-create repository XML file.</value>
+  </data>
+  <data name="RepositoryFileRetryMoreInfo" xml:space="preserve">
+    <value>You can retry the loading of the XML file (up to {0} time{1}).
+If you choose not to retry or the number of retries hits the limit, you will be given the option to attempt to re-create the XML file from scratch, since it may be corrupt.
+
+Error message:
+{2}</value>
+  </data>
+  <data name="RepositoryFileRetrySubDetail" xml:space="preserve">
+    <value>Do you want to retry loading the file?</value>
+  </data>
+  <data name="RepositoryFileRetryTitle" xml:space="preserve">
+    <value>Retry?</value>
+  </data>
+  <data name="ConnectionsMigrationAlreadyText" xml:space="preserve">
+    <value>Already migrated</value>
+  </data>
+  <data name="ConnectionsMigrationIndefiniteText" xml:space="preserve">
+    <value>Indefinite, migrate manually</value>
+  </data>
+  <data name="ConnectionsMigrationNotNeededText" xml:space="preserve">
+    <value>No migration needed</value>
+  </data>
+  <data name="HighSeverityError" xml:space="preserve">
+    <value>High Severity Error</value>
+  </data>
+  <data name="UnhandledExceptionText" xml:space="preserve">
+    <value>Unhandled Exception</value>
+  </data>
+  <data name="ApplicationExceptionForMoreInfo" xml:space="preserve">
+    <value>Exception message:
+{2}
+
+Exception thrown by:
+{0}.{1}
+
+Stack trace:
+{3}</value>
+  </data>
+  <data name="PasswordResetErrorDetail" xml:space="preserve">
+    <value>Error resetting password.</value>
+  </data>
+  <data name="ApplicationExceptionText" xml:space="preserve">
+    <value>Application Exception</value>
+  </data>
+  <data name="FetchXProtocolError" xml:space="preserve">
+    <value>Cannot fetch the X Protocol port from the server {0}.</value>
+  </data>
+  <data name="TokenizerIndentedBlockExpectedError" xml:space="preserve">
+    <value>Expected an indented block.</value>
+  </data>
+  <data name="TokenizerUnexpectedDedentError" xml:space="preserve">
+    <value>Unindent does not match any outer indentation level.</value>
+  </data>
+  <data name="TokenizerUnexpectedIndentError" xml:space="preserve">
+    <value>Unexpected indentation.</value>
+  </data>
+  <data name="TokenizerUnexpectedCharAfterLineContinuatonError" xml:space="preserve">
+    <value>Unexpected character after line continuation character.</value>
+  </data>
+  <data name="HexToBytesValueLengthError" xml:space="preserve">
+    <value>Hexadecimal string has an invalid length.</value>
+  </data>
+  <data name="InvalidGeometryTypeError" xml:space="preserve">
+    <value>Invalid geometry type encountered in {0}.</value>
+  </data>
+  <data name="CurveInvalidNumberOfCoordinatesError" xml:space="preserve">
+    <value>The number of coordinates must be greater than 1 to define a Curve.</value>
+  </data>
+  <data name="InvalidGeometryParsedError" xml:space="preserve">
+    <value>Invalid geometry type encountered in {0}.</value>
+  </data>
+  <data name="UnexpectedEndOfStreamError" xml:space="preserve">
+    <value>Unexpectedly reached end of binary stream.
+Error : {0}</value>
+  </data>
+  <data name="UnexpectedStreamClosingError" xml:space="preserve">
+    <value>The binary stream was unexpectedly closed.
+Error : {0}</value>
+  </data>
+  <data name="UnknownIOError" xml:space="preserve">
+    <value>Unknown I/O error.
+Error : {0}</value>
+  </data>
+  <data name="LogFileNotExistsErrorText" xml:space="preserve">
+    <value>Log file {0} does not exist</value>
+  </data>
+  <data name="ServerUserMissingAuthenticationPlugin" xml:space="preserve">
+    <value>An authentication plugin must be specified for new users.</value>
+  </data>
+  <data name="ServerUserMissingUserName" xml:space="preserve">
+    <value>User name must be given for new users.</value>
+  </data>
+  <data name="ServerUserMissingWindowsTokensList" xml:space="preserve">
+    <value>Windows authorization requires a token list.</value>
+  </data>
+  <data name="StartValueGreaterThanEndValueExceptionText" xml:space="preserve">
+    <value>Start value is greater than end value</value>
+  </data>
+  <data name="MySqlServerClusterNameInvalid" xml:space="preserve">
+    <value>Please enter a valid cluster name.</value>
+  </data>
+  <data name="MySqlServerClusterNameMaxLengthExceeded" xml:space="preserve">
+    <value>Cluster name must not exceed 40 characters.</value>
+  </data>
+  <data name="MySqlServerClusterNameRequired" xml:space="preserve">
+    <value>Cluster name is required.</value>
+  </data>
+  <data name="MySqlServerInstanceInfoExecuteScriptExecutionSuccess" xml:space="preserve">
+    <value>Script executed successfully.</value>
+  </data>
+  <data name="MySqlServerInstanceInfoExecuteScriptsCannotConnectError" xml:space="preserve">
+    <value>Unable to connect to {0} at port {1}.</value>
+  </data>
+  <data name="MySqlServerInstanceInfoExecuteScriptsExecutionError" xml:space="preserve">
+    <value>The following error ocurred attempting to execute script:{1}{0}{1}</value>
+  </data>
+  <data name="MySqlServerInstanceInfoExecutingScript" xml:space="preserve">
+    <value>Executing script:</value>
+  </data>
+  <data name="MySqlServerInstanceInvalidHostOrIpError" xml:space="preserve">
+    <value>The host name or IP address is not well formed.</value>
+  </data>
+  <data name="MySqlServerInstanceRequiredHostOrIpError" xml:space="preserve">
+    <value>Host name or IP address is required.</value>
+  </data>
+  <data name="MySqlServerInvalidPortRange" xml:space="preserve">
+    <value>Port number is outside valid range of {0} and {1}.</value>
+  </data>
+  <data name="MySqlServerPasswordNotGoodEnough" xml:space="preserve">
+    <value>The password does not meet the minimum length requirement of 4 characters.</value>
+  </data>
+  <data name="MySqlServerPasswordRequired" xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="MySqlServerPortInUse" xml:space="preserve">
+    <value>The specified port is already in use.</value>
+  </data>
+  <data name="MySqlServerPortNumberInvalid" xml:space="preserve">
+    <value>The specified value is not valid.</value>
+  </data>
+  <data name="MySqlServerPortNumberRequired" xml:space="preserve">
+    <value>Port number is required</value>
+  </data>
+  <data name="MySqlServerUsernameInvalid" xml:space="preserve">
+    <value>Please enter a valid user name.</value>
+  </data>
+  <data name="MySqlServerUserNameInvalidRoot" xml:space="preserve">
+    <value>User name "root" is reserved and cannot be used.</value>
+  </data>
+  <data name="MySqlServerUsernameMaxLengthExceeded" xml:space="preserve">
+    <value>User name must not exceed 32 characters.</value>
+  </data>
+  <data name="MySqlServerUsernameRequired" xml:space="preserve">
+    <value>User name is required.</value>
+  </data>
+  <data name="ApplicationExceptionForLog" xml:space="preserve">
+    <value>{0}
+Thrown by: {1}.{2}</value>
+  </data>
+  <data name="LogFileNotDefinedError" xml:space="preserve">
+    <value>The Logger properties that define a log file path and name have not been set.</value>
+  </data>
+  <data name="PathContainsColonError" xml:space="preserve">
+    <value>The given path contains a colon (":") that is not part of a volume identifier (for example, "c:\").</value>
+  </data>
+  <data name="PathContainsInvalidCharactersError" xml:space="preserve">
+    <value>Invalid characters found in the path, or the path is badly formed.</value>
+  </data>
+  <data name="PathContainsNoFileError" xml:space="preserve">
+    <value>No file name was specified in the given path.</value>
+  </data>
+  <data name="PathIsNullError" xml:space="preserve">
+    <value>The given file path is null.</value>
+  </data>
+  <data name="PathNonExistentDirectoryError" xml:space="preserve">
+    <value>The directory in the given path does not exist.</value>
+  </data>
+  <data name="PathNotAbsoluteError" xml:space="preserve">
+    <value>The given path is not an absolute path.</value>
+  </data>
+  <data name="PathTooLongError" xml:space="preserve">
+    <value>Absolute path exceeds the maximum length allowed for a path.</value>
+  </data>
+  <data name="PathUnknownError" xml:space="preserve">
+    <value>The given file path is invalid.</value>
+  </data>
+  <data name="SingletonPropertySetError" xml:space="preserve">
+    <value>Can't set a value if the singleton is already instantiated.</value>
+  </data>
+  <data name="TEnumNotEnumTypeException" xml:space="preserve">
+    <value>Type parameter TEnum must be an Enum</value>
+  </data>
+  <data name="StartedAndExitedProcessSuccessfullyText" xml:space="preserve">
+    <value>Process for {0}, with ID {1}, was run successfully and exited with code {2}.</value>
+  </data>
+  <data name="StartedAndRunningProcessSuccessfullyText" xml:space="preserve">
+    <value>Process for {0}, with ID {1}, has been started successfully and is running.</value>
+  </data>
+  <data name="StartedProcessErrorText" xml:space="preserve">
+    <value>Process for {0} failed to start with the following error message:
+{1}</value>
+  </data>
+  <data name="StartingProcessDetailsText" xml:space="preserve">
+    <value>Starting process with command: {0} {1}...</value>
+  </data>
+  <data name="InfoDialogNoParentError" xml:space="preserve">
+    <value>Unable to find a parent form to attach the dialog to.</value>
+  </data>
+  <data name="ServerInstanceBinaryLogFlushedError" xml:space="preserve">
+    <value>An error occurred trying to flush the binary log.</value>
+  </data>
+  <data name="ServerInstanceBinaryLogFlushedSuccess" xml:space="preserve">
+    <value>Binary log flushed and master reset successfully.</value>
+  </data>
+  <data name="ServerInstanceFlushingBinaryLog" xml:space="preserve">
+    <value>Flushing binary log and resetting master...</value>
+  </data>
+  <data name="ServerInstanceGetGroupReplicationMemberRoleError" xml:space="preserve">
+    <value>An error occurred when trying to retrieve the group replication member role:</value>
+  </data>
+  <data name="PipeOrSharedMemoryNameBackSlashesError" xml:space="preserve">
+    <value>The {0} name cannot contain back slashes ('\').</value>
+  </data>
+  <data name="PipeOrSharedMemoryNameLengthError" xml:space="preserve">
+    <value>The entire {0} name string cannot be more than 256 characters long.</value>
+  </data>
+  <data name="PipeOrSharedMemoryNameRequiredError" xml:space="preserve">
+    <value>The {0} name is required, it cannot be null, empty or contain only white spaces.</value>
+  </data>
+  <data name="ServerInstanceGetVariableFail" xml:space="preserve">
+    <value>Failed to retrieve the value of {0}.</value>
+  </data>
+  <data name="ServerInstanceSetVariableFail" xml:space="preserve">
+    <value>Failed to set the variable {0}.</value>
+  </data>
+  <data name="PassphraseIsMissingError" xml:space="preserve">
+    <value>Private key is encrypted but passphrase is empty.</value>
+  </data>
+  <data name="FileDoesNotExistError" xml:space="preserve">
+    <value>File does not exist.</value>
+  </data>
+  <data name="MySqlSchemaTableNameAllDigitsError" xml:space="preserve">
+    <value>The name cannot consist of only digits.</value>
+  </data>
+  <data name="MySqlSchemaTableNameEmptyOrWhiteSpaceError" xml:space="preserve">
+    <value>The name cannot be empty or consist of only white space characters.</value>
+  </data>
+  <data name="MySqlSchemaTableNameEndsWithWhiteSpaceError" xml:space="preserve">
+    <value>The name cannot end with white space characters.</value>
+  </data>
+  <data name="MySqlUserNameRequiredError" xml:space="preserve">
+    <value>User name is required to establish a connection.</value>
+  </data>
+  <data name="FileRequiredError" xml:space="preserve">
+    <value>File is required.</value>
+  </data>
+  <data name="DefaultSchemaRequiredError" xml:space="preserve">
+    <value>A default schema is required.</value>
+  </data>
+  <data name="MySqlSchemaTableNameExceedsMaxLengthError" xml:space="preserve">
+    <value>The name cannot exceed the maximum allowed length of {0} characters.</value>
+  </data>
+  <data name="InstanceAlreadyDisposedError" xml:space="preserve">
+    <value>This instance has been already disposed.</value>
+  </data>
+  <data name="RegistryMonitorAlreadyRunningError" xml:space="preserve">
+    <value>Monitoring thread is already running.</value>
+  </data>
+  <data name="RegistryMonitorInvalidHiveError" xml:space="preserve">
+    <value>The registry hive '{0}' is not valid or recognized.</value>
+  </data>
+  <data name="ConnectionInsecureError" xml:space="preserve">
+    <value>The MySQL server is using SSL and requires a secure connection, but the client connection has SSL turned off.</value>
+  </data>
+  <data name="ConnectionIsInsecureAndRequiresRsaKeyRetrievalDetail" xml:space="preserve">
+    <value>This connection is not set to use SSL, but the MySQL server requires a secure connection.</value>
+  </data>
+  <data name="ConnectionIsInsecureAndRequiresRsaKeyRetrievalError" xml:space="preserve">
+    <value>Retrieval of the RSA public key is not enabled for insecure connections</value>
+  </data>
+  <data name="ConnectionIsInsecureAndRequiresRsaKeyRetrievalMoreInfo" xml:space="preserve">
+    <value>The MySQL server is using SSL and it requires a secure connection from the client.
+This connection is explicitly turning off the use of SSL (Use SSL = No).
+
+It is advised that the connection is set to use the "Preferred" or "Required" SSL mode in order to connect to this server.
+
+If, for some reason, using SSL is not an option, the password can still be sent to the server after encrypting it with a RSA key. The client can request the public key from the server, however this could be prone to man-in-the-middle attacks. You need to ensure the server is trusted.
+
+This is not the recommended option; it is better to use SSL with a "Preferred" or "Required" mode.</value>
+  </data>
+  <data name="ConnectionIsInsecureAndRequiresRsaKeyRetrievalSubDetail" xml:space="preserve">
+    <value>Do you trust the server to send an RSA key to encrypt the password?</value>
+  </data>
+  <data name="ConnectionIsInsecureAndRequiresRsaKeyRetrievalTitle" xml:space="preserve">
+    <value>The MySQL server requires a secure connection</value>
+  </data>
+</root>

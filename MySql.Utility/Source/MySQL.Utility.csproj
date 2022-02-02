@@ -1,0 +1,320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B8A3BD3B-3CBD-48D5-84F5-076365655E0B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MySql.Utility</RootNamespace>
+    <AssemblyName>MySQL.Utility</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseX86|AnyCPU'">
+    <OutputPath>bin\ReleaseX86\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugX86|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugX86\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(Configuration)|$(Platform)' == 'Release35|AnyCPU'">
+      <ItemGroup>
+        <Reference Include="MySql.Data">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>Libraries\v3.5\MySql.Data.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+      <ItemGroup>
+        <Reference Include="MySql.Data">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>Libraries\MySql.Data.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="'$(Configuration)|$(Platform)' == 'Debug35|AnyCPU'">
+      <ItemGroup>
+        <Reference Include="MySql.Data">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>Libraries\v3.5\MySql.Data.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+      <ItemGroup>
+        <Reference Include="MySql.Data">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>Libraries\MySql.Data.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Utility.RegularExpressions">
+      <HintPath>Libraries\MySql.Utility.RegularExpressions.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web.Extensions">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Web.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="BaseShell">
+      <HintPath>Libraries\BaseShell.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\Attributes\AlternateNameAttribute.cs" />
+    <Compile Include="Classes\AssemblyInfo.cs" />
+    <Compile Include="Classes\Attributes\ExcludeAttribute.cs" />
+    <Compile Include="Classes\Attributes\NumericCodeAttribute.cs" />
+    <Compile Include="Classes\DllImportConstants.cs" />
+    <Compile Include="Classes\ErrorProviderProperties.cs" />
+    <Compile Include="Classes\Logging\LogFile.cs" />
+    <Compile Include="Classes\Logging\LogFileMonitor.cs" />
+    <Compile Include="Classes\Logging\Logger.cs" />
+    <Compile Include="Classes\Logging\LoggerListener.cs" />
+    <Compile Include="Classes\Logging\LoggerPropertySetException.cs" />
+    <Compile Include="Classes\Logging\LoggerUndefinedLogFileException.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MigrationResult.cs" />
+    <Compile Include="Classes\MySqlX\BaseResult.cs" />
+    <Compile Include="Classes\MySqlX\DocResult.cs" />
+    <Compile Include="Classes\MySqlX\Result.cs" />
+    <Compile Include="Classes\MySql\MySqlServerInstance.cs" />
+    <Compile Include="Classes\MySql\MySqlServerUser.cs" />
+    <Compile Include="Classes\ProcessResult.cs" />
+    <Compile Include="Classes\Attributes\SupportedByAttribute.cs" />
+    <Compile Include="Classes\RegistryMonitor.cs" />
+    <Compile Include="Enums\BaseShellResultType.cs" />
+    <Compile Include="Classes\MySqlX\RowResult.cs" />
+    <Compile Include="Classes\MySqlX\SqlResult.cs" />
+    <Compile Include="Classes\Spatial\ByteOrderUtils.cs" />
+    <Compile Include="Classes\Spatial\Coordinate.cs" />
+    <Compile Include="Classes\Spatial\BoundingBox.cs" />
+    <Compile Include="Classes\Spatial\Curve.cs" />
+    <Compile Include="Classes\Spatial\Geometry.cs" />
+    <Compile Include="Classes\Spatial\GeometryCollection.cs" />
+    <Compile Include="Classes\Spatial\GeometryConverter.cs" />
+    <Compile Include="Classes\Spatial\LinearRing.cs" />
+    <Compile Include="Classes\Spatial\LineSegment.cs" />
+    <Compile Include="Classes\Spatial\LineString.cs" />
+    <Compile Include="Classes\Spatial\MultiCurve.cs" />
+    <Compile Include="Classes\Spatial\MultiLineString.cs" />
+    <Compile Include="Classes\Spatial\MultiPoint.cs" />
+    <Compile Include="Classes\Spatial\MultiPolygon.cs" />
+    <Compile Include="Classes\Spatial\MultiSurface.cs" />
+    <Compile Include="Classes\Spatial\Polygon.cs" />
+    <Compile Include="Classes\Spatial\Surface.cs" />
+    <Compile Include="Enums\ByteOrderType.cs" />
+    <Compile Include="Enums\GeometryAsTextFormatType.cs" />
+    <Compile Include="Enums\GeometryType.cs" />
+    <Compile Include="Classes\Spatial\Point.cs" />
+    <Compile Include="Classes\Spatial\WkbHandler.cs" />
+    <Compile Include="Classes\Tokenizers\TokenizerFactory.cs" />
+    <Compile Include="Enums\GroupReplicationMemberRoleType.cs" />
+    <Compile Include="Enums\RegistryChangeNotifyFilter.cs" />
+    <Compile Include="Enums\ValidHostNameType.cs" />
+    <Compile Include="Enums\MySqlAuthenticationPluginType.cs" />
+    <Compile Include="Enums\OsVersion.cs" />
+    <Compile Include="Enums\SchemaInformationType.cs" />
+    <Compile Include="Enums\TextCasingType.cs" />
+    <Compile Include="Forms\ValidatingBaseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ValidatingBaseDialog.Designer.cs">
+      <DependentUpon>ValidatingBaseDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\ISpatialElement.cs" />
+    <Compile Include="Interfaces\ITokenizer.cs" />
+    <Compile Include="Classes\Tokenizers\TokenizerException.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchConnectionExtraParameters.cs" />
+    <Compile Include="Classes\MySqlX\MySqlX.cs" />
+    <Compile Include="Classes\MySqlX\MySqlXProxy.cs" />
+    <Compile Include="Classes\Tokenizers\BaseTokenizer.cs" />
+    <Compile Include="Classes\CustomSettingsProvider.cs" />
+    <Compile Include="Classes\ExtensionMethods.cs" />
+    <Compile Include="Classes\CommandAreaProperties.cs" />
+    <Compile Include="Classes\InfoDialogProperties.cs" />
+    <Compile Include="Classes\IniFile.cs" />
+    <Compile Include="Classes\Tokenizers\MyJsTokenizer.cs" />
+    <Compile Include="Classes\Tokenizers\MyPythonTokenizer.cs" />
+    <Compile Include="Classes\MySqlInstaller\MySqlInstaller.cs" />
+    <Compile Include="Classes\MySql\MySqlStartupParameters.cs" />
+    <Compile Include="Classes\Tokenizers\MySqlTokenizer.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbench.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchConnection.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchConnectionCollection.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchConnectionExtraParametersCollection.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchPasswordVault.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchServer.cs" />
+    <Compile Include="Classes\MySqlWorkbench\MySqlWorkbenchServerCollection.cs" />
+    <Compile Include="Classes\Options.cs" />
+    <Compile Include="Classes\Service.cs" />
+    <Compile Include="Classes\TimeUtilities.cs" />
+    <Compile Include="Enums\TokenType.cs" />
+    <Compile Include="Classes\Utilities.cs" />
+    <Compile Include="Classes\VisualStyles\CustomVisualStyleElements.cs" />
+    <Compile Include="Classes\VisualStyles\StyleableHelper.cs" />
+    <Compile Include="Enums\ScriptLanguageType.cs" />
+    <Compile Include="Enums\ConnectionResultType.cs" />
+    <Compile Include="Forms\AutoStyleableBaseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AutoStyleableBaseDialog.Designer.cs">
+      <DependentUpon>AutoStyleableBaseDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AutoStyleableBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AutoStyleableBaseForm.Designer.cs">
+      <DependentUpon>AutoStyleableBaseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InfoDialog.Designer.cs">
+      <DependentUpon>InfoDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MySQLWorkbenchConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MySQLWorkbenchConnectionDialog.Designer.cs">
+      <DependentUpon>MySQLWorkbenchConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\XmlRepository.cs" />
+    <Compile Include="Forms\PasswordDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PasswordDialog.designer.cs">
+      <DependentUpon>PasswordDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\IconInfo.cs" />
+    <Compile Include="Structs\InfoDialogResult.cs" />
+    <Compile Include="Structs\PasswordDialogFlags.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\AutoStyleableBaseDialog.resx">
+      <DependentUpon>AutoStyleableBaseDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AutoStyleableBaseForm.resx">
+      <DependentUpon>AutoStyleableBaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InfoDialog.resx">
+      <DependentUpon>InfoDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MySQLWorkbenchConnectionDialog.resx">
+      <DependentUpon>MySQLWorkbenchConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PasswordDialog.resx">
+      <DependentUpon>PasswordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ValidatingBaseDialog.resx">
+      <DependentUpon>ValidatingBaseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SakilaLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\no.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\warnings.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)\InfoDialogTest\lib\" /y /c</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
