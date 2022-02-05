@@ -55,7 +55,7 @@ This project is configured to work with Visual Studio Community 2017 or 2019. If
     ```
 4. Use **msbuild** (included in your Visual Studio installation) to generate the packages.
     ```sh
-    C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" /p:Configuration=Release;NoPackage=n;PackageCommercial=y;VisualStudioVersion=16.0 /t:Clean,Build Package.sln
+    "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" /p:Configuration=Release;NoPackage=n;VisualStudioVersion=16.0 /t:Clean,Build Package.sln
     ```
 5. Generated packages, including the MySQL for Visual Studio MSI are located in the **packages** folder.
 

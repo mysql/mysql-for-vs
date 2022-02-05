@@ -3,7 +3,7 @@
   <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion" />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Enterprise</VisualStudioFlavor>
+    <VisualStudioFlavor Condition="'$(VisualStudioVersion)' == '15.0' Or '$(VisualStudioVersion)' == '16.0'">Community</VisualStudioFlavor>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '15.0'">2017</VisualStudioYear>
     <VisualStudioYear Condition="'$(VisualStudioVersion)' == '16.0'">2019</VisualStudioYear>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -57,57 +57,8 @@
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Commercial' ">
-    <IntermediateOutputPath>obj\Commercial\</IntermediateOutputPath>
-    <Cultures>en-US</Cultures>
-    <OutputPath>bin\Commercial\</OutputPath>
-    <DefineConstants>IsGPL=0</DefineConstants>
-    <IncludeSearchPaths>
-    </IncludeSearchPaths>
-    <Pedantic>False</Pedantic>
-    <ShowSourceTrace>False</ShowSourceTrace>
-    <SuppressSchemaValidation>False</SuppressSchemaValidation>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <VerboseOutput>False</VerboseOutput>
-    <AllowIdenticalRows>False</AllowIdenticalRows>
-    <CabinetCachePath>
-    </CabinetCachePath>
-    <CabinetCreationThreadCount>-1</CabinetCreationThreadCount>
-    <LeaveTemporaryFiles>False</LeaveTemporaryFiles>
-    <LinkerPedantic>False</LinkerPedantic>
-    <ReuseCabinetCache>False</ReuseCabinetCache>
-    <SetMsiAssemblyNameFileVersion>False</SetMsiAssemblyNameFileVersion>
-    <SuppressAclReset>False</SuppressAclReset>
-    <SuppressAssemblies>False</SuppressAssemblies>
-    <SuppressDefaultAdminSequenceActions>False</SuppressDefaultAdminSequenceActions>
-    <SuppressDefaultAdvSequenceActions>False</SuppressDefaultAdvSequenceActions>
-    <SuppressDefaultUISequenceActions>False</SuppressDefaultUISequenceActions>
-    <SuppressDroppingUnrealTables>False</SuppressDroppingUnrealTables>
-    <SuppressFileHashAndInfo>False</SuppressFileHashAndInfo>
-    <SuppressFiles>False</SuppressFiles>
-    <SuppressIces>
-    </SuppressIces>
-    <LinkerSuppressIntermediateFileVersionMatching>False</LinkerSuppressIntermediateFileVersionMatching>
-    <SuppressLayout>False</SuppressLayout>
-    <SuppressMsiAssemblyTableProcessing>False</SuppressMsiAssemblyTableProcessing>
-    <LinkerSuppressSchemaValidation>False</LinkerSuppressSchemaValidation>
-    <LinkerSuppressSpecificWarnings>
-    </LinkerSuppressSpecificWarnings>
-    <SuppressValidation>True</SuppressValidation>
-    <LinkerTreatWarningsAsErrors>False</LinkerTreatWarningsAsErrors>
-    <LinkerVerboseOutput>False</LinkerVerboseOutput>
-    <WixVariables>
-    </WixVariables>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GPL|x86' ">
     <DefineConstants>IsGPL=1;PackageSuffix=</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Commercial|x86' ">
-    <DefineConstants>IsGPL=0;PackageSuffix=-com</DefineConstants>
-    <WixVariables>
-    </WixVariables>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="core.wxs" />
