@@ -58,12 +58,12 @@
   <Choose>
     <When Condition=" '$(PackageCommercial)' == 'y' ">
       <PropertyGroup>
-        <BuildInstallerCommercial></BuildInstallerCommercial>
-        <PackageCleanCommercial></PackageCleanCommercial>
-        <PackageInstallCommercial></PackageInstallCommercial>
-        <PackageSigningCommercial></PackageSigningCommercial>
-        <PackageSourceCommercial></PackageSourceCommercial>
-        <PackageNoInstallCommercial></PackageNoInstallCommercial>
+        <BuildInstallerCommercial>BuildInstallerCommercial;</BuildInstallerCommercial>
+        <PackageCleanCommercial>PackageCleanCommercial;</PackageCleanCommercial>
+        <PackageInstallCommercial>PackageInstallCommercial;</PackageInstallCommercial>
+        <PackageSigningCommercial>PackageSigningCommercial;</PackageSigningCommercial>
+        <PackageSourceCommercial>PackageSourcePrepare;PackageSourceCommercial;</PackageSourceCommercial>
+        <PackageNoInstallCommercial>PackageNoInstallCommercial;</PackageNoInstallCommercial>
       </PropertyGroup>
     </When>
     <Otherwise>
@@ -121,9 +121,12 @@
     <Exec Command="$(MSBuildExe) MySqlForVisualStudio.sln /p:Configuration=Release;Platform=&quot;Any CPU&quot;;VisualStudioVersion=16.0" />
   </Target>
   <!-- Package Installer Build Targets -->
-  <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;" />
+  <Target Name="BuildInstaller" DependsOnTargets="BuildInstallerGPL;$(BuildInstallerCommercial)" />
   <Target Name="BuildInstallerGPL">
     <MSBuild Projects="Installer/PackageWix.wixproj" Properties="Configuration=GPL;Platform=x86" />
+  </Target>
+  <Target Name="BuildInstallerCommercial">
+    <MSBuild Projects="Installer/PackageWix.wixproj" Properties="Configuration=Commercial;Platform=x86" />
   </Target>
   <!-- Get product version -->
   <Target Name="GetPackageVersion">
@@ -132,7 +135,7 @@
     </GetVersion>
   </Target>
   <!-- Package Clean Targets -->
-  <Target Name="PackageClean" DependsOnTargets="PackageCleanGPL;" />
+  <Target Name="PackageClean" DependsOnTargets="PackageCleanGPL;$(PackageCleanCommercial)" />
   <Target Name="PackageCleanGPL">
     <Delete Files="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix).msi" TreatErrorsAsWarnings="true" />
     <Delete Files="bin/GPL/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" TreatErrorsAsWarnings="true" />
@@ -140,14 +143,25 @@
     <RemoveDir Directories="bin/GPL" ContinueOnError="true" />
     <MakeDir Directories="bin/GPL" ContinueOnError="true" />
   </Target>
+  <Target Name="PackageCleanCommercial">
+    <Delete Files="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix).msi" TreatErrorsAsWarnings="true" />
+    <Delete Files="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" TreatErrorsAsWarnings="true" />
+    <Delete Files="bin/Commercial/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip" TreatErrorsAsWarnings="true" />
+    <RemoveDir Directories="bin/Commercial" ContinueOnError="true" />
+    <MakeDir Directories="bin/Commercial" ContinueOnError="true" />
+  </Target>
   <!-- Signing Targets -->
-  <Target Name="PackageSigning" DependsOnTargets="PackageSigningGPL" />
+  <Target Name="PackageSigning" DependsOnTargets="PackageSigningGPL;$(PackageSigningCommercial)" />
   <Target Name="PackageSigningGPL">
     <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\Signing\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/GPL/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/GPL/signed&quot;" ContinueOnError="false" />
     <Copy SourceFiles="Installer/bin/GPL/signed/MySql.VisualStudio.Plugin.msi" DestinationFiles="Installer/bin/GPL/MySql.VisualStudio.Plugin.msi" />
   </Target>
+  <Target Name="PackageSigningCommercial">
+    <Exec Command="(set CODESIGNBUREAU_CREDFILE=C:\Jenkins\Signing\MySQL Installer\v3\wex_grp_config.properties) &amp; java -Xmx1024m -jar &quot;$(ClientPath)&quot; sign -sign_method microsoft -file_to_sign &quot;Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi&quot; -user $(SigningUser) -global_uid $(SigningGuid) -server $(SigningServer) -signed_location &quot;Installer/bin/Commercial/signed&quot;" ContinueOnError="false" />
+    <Copy SourceFiles="Installer/bin/Commercial/signed/MySql.VisualStudio.Plugin.msi" DestinationFiles="Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi" />
+  </Target>
   <!-- MSI Targets -->
-  <Target Name="PackageInstall" DependsOnTargets="PackageInstallPrepare;PackageInstallGPL" />
+  <Target Name="PackageInstall" DependsOnTargets="PackageInstallPrepare;PackageInstallGPL;$(PackageInstallCommercial)" />
   <Target Name="PackageInstallPrepare">
     <RemoveDir Directories="packages" ContinueOnError="true" />
     <MakeDir Directories="packages" ContinueOnError="true" />
@@ -155,8 +169,11 @@
   <Target Name="PackageInstallGPL">
     <Copy SourceFiles="Installer/bin/GPL/MySql.VisualStudio.Plugin.msi" DestinationFiles="packages/mysql-for-visualstudio-$(Version)$(Postfix).msi" />
   </Target>
+  <Target Name="PackageInstallCommercial">
+    <Copy SourceFiles="Installer/bin/Commercial/MySql.VisualStudio.Plugin.msi" DestinationFiles="packages/mysql-for-visualstudio-commercial-$(Version)$(Postfix).msi" />
+  </Target>
   <!-- No Install Targets -->
-  <Target Name="PackageNoInstall" DependsOnTargets="PackageNoInstallPrepare;PackageNoInstallGPL" />
+  <Target Name="PackageNoInstall" DependsOnTargets="PackageNoInstallPrepare;PackageNoInstallGPL;$(PackageNoInstallCommercial)" />
   <Target Name="PackageNoInstallPrepare">
     <ItemGroup>
       <V461Assemblies Include="Dependencies\v4.5\Release\MySql.Data.dll" />
@@ -207,13 +224,30 @@
     </ItemGroup>
     <Zip ZipFileName="packages/mysql-for-visualstudio-$(Version)$(Postfix)-noinstall.zip" Files="@(ZipFilesGPL)" workingDirectory="tmp" />
   </Target>
+  <Target Name="PackageNoInstallCommercial">
+    <ItemGroup>
+      <OtherCommercialFiles Include="README-Commercial" />
+      <OtherCommercialFiles Include="LICENSE-Commercial" />
+    </ItemGroup>
+    <Delete Files="tmp/README" TreatErrorsAsWarnings="true" />
+    <Copy SourceFiles="@(OtherCommercialFiles)" DestinationFolder="tmp" />
+    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
+    <Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
+    <ItemGroup>
+      <ZipFilesCommercial Include="tmp\**\*.*" />
+    </ItemGroup>
+    <Zip ZipFileName="packages/mysql-for-visualstudio-commercial-$(Version)$(Postfix)-noinstall.zip" Files="@(ZipFilesCommercial)" workingDirectory="tmp" />
+  </Target>
   <!-- Source Targets -->
-  <Target Name="PackageSource" DependsOnTargets="PackageSourcePrepare;PackageSourceGPL;PackageSourceClean" />
+  <Target Name="PackageSource" DependsOnTargets="PackageSourcePrepare;PackageSourceGPL;$(PackageSourceCommercial)PackageSourceClean" />
   <Target Name="PackageSourcePrepare">
     <RemoveDir Directories="tmp" ContinueOnError="true" />
     <MakeDir Directories="tmp" />
     <ItemGroup>
-      <SourceCodeFiles Include="**/**" Exclude="**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;**/installer/**;**/Package.csproj;**/Package.sln;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/UpgradeLog*.*;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
+      <CommercialOnlyFiles Include="**/README-Commercial;**/LICENSE-Commercial" />
+    </ItemGroup>
+    <ItemGroup>
+      <SourceCodeFiles Include="**/**" Exclude="@(CommercialOnlyFiles);**/tmp/**;**/bin/**;**/obj/**;**/.git/**;*.py;*.diff;.gitignore;.gitattributes;.reviewboardrc;*.suo;**/source/*.suo;**/*.user;**/packages/**;**/.svn/**;**/output/**;**/debug/**;**/release/**;**/*.wixobj;**/*.msi;**/*.msm;*.Design.*;**/installer/**;**/Package.csproj;**/Package.sln;**/*.cache;**/*.proj;**/*.bak;**/*.user;**/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/UpgradeLog*.*;**/*.~??;**/Scripts/**;**/NGShellClient/**" />
     </ItemGroup>
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="tmp/%(RecursiveDir)" />
   </Target>
@@ -222,6 +256,17 @@
       <FilesToZipGPL Include="tmp\**\*.*" />
     </ItemGroup>
     <Zip ZipFileName="packages/mysql-for-visualstudio-$(Version)$(Postfix)-src.zip" Files="@(FilesToZipGPL)" WorkingDirectory="tmp" />
+  </Target>
+  <Target Name="PackageSourceCommercial">
+    <Delete Files="tmp/README" />
+    <Delete Files="tmp/LICENSE" />
+    <Copy SourceFiles="@(CommercialOnlyFiles)" DestinationFolder="tmp\%(RecursiveDir)" />
+    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" />
+    <Move SourceFiles="tmp/LICENSE-Commercial" DestinationFiles="tmp/LICENSE" />
+    <ItemGroup>
+      <FilesToZipCommercial Include="tmp\**\*.*" />
+    </ItemGroup>
+    <Zip ZipFileName="packages/mysql-for-visualstudio-commercial-$(Version)$(Postfix)-src.zip" Files="@(FilesToZipCommercial)" WorkingDirectory="tmp" />
   </Target>
   <Target Name="PackageSourceClean">
     <RemoveDir Directories="tmp" ContinueOnError="true" />
