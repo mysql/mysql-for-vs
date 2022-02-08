@@ -51,8 +51,8 @@ Global
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Release|x86.ActiveCfg = Release|Any CPU
 		{D06AFC6E-EF13-4951-AEA7-0A9E16F22E52}.Release|x86.Build.0 = Release|Any CPU
 		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|Any CPU.ActiveCfg = GPL|x86
-		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|Mixed Platforms.ActiveCfg = Commercial|x86
-		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|Mixed Platforms.Build.0 = Commercial|x86
+		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|Mixed Platforms.ActiveCfg = GPL|x86
+		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|Mixed Platforms.Build.0 = GPL|x86
 		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|x86.ActiveCfg = Commercial|x86
 		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Debug|x86.Build.0 = Commercial|x86
 		{27261AC3-7564-4CD9-A13B-95315B72D49B}.Release|Any CPU.ActiveCfg = GPL|x86
@@ -78,3 +78,4 @@ Global
 		SolutionGuid = {FD802389-30CC-4E08-8963-3876921ADFF2}
 	EndGlobalSection
 EndGlobal
+
