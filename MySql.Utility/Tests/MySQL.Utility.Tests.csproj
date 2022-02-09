@@ -80,34 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MySqlWorkbench\MySqlWorkBenchTests.cs" />
-    <Compile Include="MySqlX\Base\BaseAdminAPIProperties.cs" />
-    <Compile Include="MySqlX\Base\BaseAdminAPITests.cs" />
-    <Compile Include="MySqlX\Base\BaseCollectionTests.cs" />
-    <Compile Include="MySqlX\GeneralTests.cs" />
-    <Compile Include="MySqlX\Base\BaseTableTests.cs" />
-    <Compile Include="MySqlX\Base\BaseTests.cs" />
-    <Compile Include="MySqlX\Base\CollectionTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\CollectionTestsPropertiesFactory.cs" />
-    <Compile Include="MySqlX\Base\JsCollectionTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\JsTableTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\MySqlBaseShell.cs" />
-    <Compile Include="MySqlX\Base\PyCollectionTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\PyTableTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\SetUpBaseShell.cs" />
-    <Compile Include="MySqlX\Base\TableTestsProperties.cs" />
-    <Compile Include="MySqlX\Base\TableTestsPropertiesFactory.cs" />
-    <Compile Include="MySqlX\Base\XecutorType.cs" />
-    <Compile Include="MySqlX\JsAdminAPITests.cs" />
-    <Compile Include="MySqlX\JsCollectionBaseShellTests.cs" />
-    <Compile Include="MySqlX\JsCollectionXProxyTests.cs" />
-    <Compile Include="MySqlX\JsTableXProxyTests.cs" />
-    <Compile Include="MySqlX\JsTableXShellTests.cs" />
-    <Compile Include="MySqlX\PyAdminAPITests.cs" />
-    <Compile Include="MySqlX\PyCollectionBaseShellTests.cs" />
-    <Compile Include="MySqlX\PyCollectionXProxyTests.cs" />
-    <Compile Include="MySqlX\PyGeneralXProxyTests.cs" />
-    <Compile Include="MySqlX\PyTableBaseShellTests.cs" />
-    <Compile Include="MySqlX\PyTableXProxyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUpDatabaseTestsBase.cs" />
     <Compile Include="Spatial\GeometriesBinaryTests.cs" />
@@ -129,11 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\SetupBaseShell.js" />
-    <EmbeddedResource Include="Properties\SetupBaseShell.py" />
-    <EmbeddedResource Include="Properties\SetupBaseShell.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
